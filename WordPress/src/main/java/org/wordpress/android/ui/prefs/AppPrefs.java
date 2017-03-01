@@ -9,14 +9,22 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
+    private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
+    public static final int MAX_RECENTLY_PICKED_SITES = 4;
 
     public interface PrefKey {
         String name();
@@ -52,6 +60,9 @@ public class AppPrefs {
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
 
+        // aztec editor enabled
+        AZTEC_EDITOR_ENABLED,
+
         // visual editor enabled
         VISUAL_EDITOR_ENABLED,
 
@@ -60,6 +71,18 @@ public class AppPrefs {
 
         // index of the last active status type in Comments activity
         COMMENTS_STATUS_TYPE_INDEX,
+
+        // index of the last active people list filter in People Management activity
+        PEOPLE_LIST_FILTER_INDEX,
+
+        // wpcom ID of the last push notification received
+        PUSH_NOTIFICATIONS_LAST_NOTE_ID,
+
+        // local time of the last push notification received
+        PUSH_NOTIFICATIONS_LAST_NOTE_TIME,
+
+        // local IDs of sites recently chosen in the site picker
+        RECENTLY_PICKED_SITE_IDS,
     }
 
     /**
@@ -87,6 +110,15 @@ public class AppPrefs {
 
         // When we need to show the Gravatar Change Promo Tooltip
         GRAVATAR_CHANGE_PROMO_REQUIRED,
+
+        // When we need to show the snackbar indicating how notifications can be navigated through
+        SWIPE_TO_NAVIGATE_NOTIFICATIONS,
+
+        // Same as above but for the reader
+        SWIPE_TO_NAVIGATE_READER,
+
+        // aztec editor available
+        AZTEC_EDITOR_AVAILABLE,
     }
 
     private static SharedPreferences prefs() {
@@ -236,6 +268,25 @@ public class AppPrefs {
         }
     }
 
+    public static PeopleListFilter getPeopleListFilter() {
+        int idx = getInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX);
+        PeopleListFilter[] values = PeopleListFilter.values();
+        if (values.length < idx) {
+            return values[0];
+        } else {
+            return values[idx];
+        }
+    }
+    public static void setPeopleListFilter(PeopleListFilter peopleListFilter) {
+        if (peopleListFilter != null) {
+            setInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX, peopleListFilter.ordinal());
+        } else {
+            prefs().edit()
+                    .remove(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX.name())
+                    .apply();
+        }
+    }
+
     // Store the version code of the app. Used to check it the app was upgraded.
     public static int getLastAppVersionCode() {
         return getInt(UndeletablePrefKey.LAST_APP_VERSION_INDEX);
@@ -318,6 +369,27 @@ public class AppPrefs {
         }
     }
 
+    // Aztec Editor
+    public static void setAztecEditorEnabled(boolean isEnabled) {
+        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
+        AnalyticsTracker.track(isEnabled ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
+    }
+
+    public static boolean isAztecEditorEnabled() {
+        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
+    }
+
+    public static void setAztecEditorAvailable(boolean aztecEditorAvailable) {
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, aztecEditorAvailable);
+        if (aztecEditorAvailable) {
+            AnalyticsTracker.track(Stat.EDITOR_AZTEC_ENABLED);
+        }
+    }
+
+    public static boolean isAztecEditorAvailable() {
+        return BuildConfig.AZTEC_EDITOR_AVAILABLE || getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, false);
+    }
+
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
@@ -332,11 +404,11 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorAvailable() {
-        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, false);
+        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, true);
+        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
     public static boolean isVisualEditorPromoRequired() {
@@ -365,10 +437,6 @@ public class AppPrefs {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
     }
 
-    public static boolean isInAppBillingAvailable() {
-        return BuildConfig.IN_APP_BILLING_AVAILABLE;
-    }
-
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {
         if (jsonOfFeatures != null) {
             setString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, jsonOfFeatures);
@@ -385,5 +453,76 @@ public class AppPrefs {
     }
     public static void setInAppPurchaseRefreshRequired(boolean required) {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
+    }
+
+    public static String getLastPushNotificationWpcomNoteId() {
+        return getString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID);
+    }
+    public static void setLastPushNotificationWpcomNoteId(String noteID) {
+        setString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, noteID);
+    }
+    public static long getLastPushNotificationTime() {
+        return getLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_TIME);
+    }
+    public static void setLastPushNotificationTime(long time) {
+        setLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, time);
+    }
+
+    public static boolean isNotificationsSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, false);
+    }
+
+    public static void setNotificationsSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, alreadyShown);
+    }
+
+    public static boolean isReaderSwipeToNavigateShown() {
+        return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, false);
+    }
+
+    public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
+        setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    /*
+     * returns a list of local IDs of sites recently chosen in the site picker
+     */
+    public static ArrayList<Integer> getRecentlyPickedSiteIds() {
+        String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
+        List<String> items = Arrays.asList(idsAsString.split(","));
+
+        ArrayList<Integer> siteIds = new ArrayList<>();
+        for (String item : items) {
+            siteIds.add(StringUtils.stringToInt(item));
+        }
+
+        return siteIds;
+    }
+
+    /*
+     * adds a local site ID to the top of list of recently chosen sites
+     */
+    public static void addRecentlyPickedSiteId(Integer localId) {
+        if (localId == 0) return;
+
+        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds();
+
+        // remove this ID if it already exists in the list
+        int index = currentIds.indexOf(localId);
+        if (index > -1) {
+            currentIds.remove(index);
+        }
+
+        // add this ID to the front of the list
+        currentIds.add(0, localId);
+
+        // remove at max
+        if (currentIds.size() > MAX_RECENTLY_PICKED_SITES) {
+            currentIds.remove(MAX_RECENTLY_PICKED_SITES);
+        }
+
+        // store in prefs
+        String idsAsString = TextUtils.join(",", currentIds);
+        setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
     }
 }

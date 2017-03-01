@@ -27,7 +27,11 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="swipeToRefreshStyle">@style/WordPress.SwipeToRefresh</item>
+        <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
     </style>
+
+    <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
+    <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
 
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
@@ -86,10 +90,14 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
-    <style name="FilteredRecyclerViewFilterContainer">
+    <style name="FilteredRecyclerViewToolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:paddingLeft">@dimen/margin_filter_spinner</item>
         <item name="android:elevation">@dimen/filter_subbar_elevation</item>
-        <item name="android:background">@color/blue_medium</item>
+        <item name="android:theme">@style/FilteredRecyclerViewToolbar.Theme</item>
+    </style>
+
+    <style name="FilteredRecyclerViewToolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:listDivider">@null</item>
     </style>
 
     <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
@@ -179,6 +187,13 @@
         <item name="android:textColor">@drawable/nux_flat_button_text_selector</item>
         <item name="android:background">@drawable/nux_flat_button_selector</item>
         <item name="android:padding">8dp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="WordPress.NUXFlatButtonNoBg">
+        <item name="android:textColor">@color/grey_lighten_10</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:padding">@dimen/margin_large</item>
         <item name="android:clickable">true</item>
     </style>
 
@@ -415,7 +430,7 @@
         <item name="android:layout_margin">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="PersonUsernameAndDisplayName">
+    <style name="PersonTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>

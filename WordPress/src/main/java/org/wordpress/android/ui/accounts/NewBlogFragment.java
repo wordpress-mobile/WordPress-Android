@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.ui.plans.PlansConstants;
@@ -170,10 +171,10 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
-        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
+        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
-                getRestClientUtils(), getActivity(), new ErrorListener(), new CreateUserAndBlog.Callback() {
+                getRestClientUtils(), new ErrorListener(), new CreateUserAndBlog.Callback() {
             @Override
             public void onStepFinished(CreateUserAndBlog.Step step) {
                 if (getActivity() != null) {
@@ -195,7 +196,8 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                     String blogId = details.getString("blogid");
                     String username = AccountHelper.getDefaultAccount().getUserName();
                     BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, null, null, null,
-                            true, true, PlansConstants.DEFAULT_PLAN_ID_FOR_NEW_BLOG, null, null);
+                            true, true, PlansConstants.DEFAULT_PLAN_ID_FOR_NEW_BLOG, null, null, false);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
                     ToastUtils.showToast(getActivity(), R.string.new_blog_wpcom_created);
                 } catch (JSONException e) {
                     AppLog.e(T.NUX, "Invalid JSON response from site/new", e);

@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 115;
+    private static final int DB_VERSION = 133;
 
     /*
      * version history
@@ -66,7 +66,25 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *  112 - no structural change, just reset db
      *  113 - added tag_title to tag tables
      *  114 - renamed tag_name to tag_slug in tag tables
-     *  115 - added tag_display_name to tag tables
+     *  115 - added ReaderSearchTable
+     *  116 - added tag_display_name to tag tables
+     *  117 - changed tbl_posts.timestamp from INTEGER to REAL
+     *  118 - renamed tbl_search_history to tbl_search_suggestions
+     *  119 - renamed tbl_posts.timestamp to sort_index
+     *  120 - added "format" to tbl_posts
+     *  121 - removed word_count from tbl_posts
+     *  122 - changed tbl_posts primary key to pseudo_id
+     *  123 - changed tbl_posts.published to tbl_posts.date
+     *  124 - returned tbl_posts.published
+     *  125 - added tbl_posts.railcar_json
+     *  126 - separate fields in tbl_posts for date_liked, date_tagged, date_published
+     *  127 - changed tbl_posts.sort_index to tbl_posts.score
+     *  128 - added indexes on tbl_posts.date_published and tbl_posts.date_tagged
+     *  129 - denormalized post storage, dropped tbl_post_tags
+     *  130 - added tbl_posts.blog_image_url
+     *  131 - added tbl_posts.card_type
+     *  132 - no schema changes, simply clearing to accommodate gallery card_type
+     *  133 - no schema changes, simply clearing to accommodate video card_type
      */
 
     /*
@@ -98,6 +116,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
         //copyDatabase(db);
+        //getDatabase().reset(db);
     }
 
     /*
@@ -142,6 +161,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderUserTable.createTables(db);
         ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
+        ReaderSearchTable.createTables(db);
     }
 
     private void dropAllTables(SQLiteDatabase db) {
@@ -152,6 +172,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderUserTable.dropTables(db);
         ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
+        ReaderSearchTable.dropTables(db);
     }
 
     /*

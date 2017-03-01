@@ -149,19 +149,19 @@
                 android:title="@string/site_settings_discussion_new_posts_header">
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_allow_comments"
+                    android:id="@+id/pref_allow_comments_nested"
                     android:key="@string/pref_key_site_allow_comments_nested"
                     android:title="@string/site_settings_allow_comments_title"
                     app:longClickHint="@string/site_settings_allow_comments_hint" />
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_send_pingbacks"
+                    android:id="@+id/pref_send_pingbacks_nested"
                     android:key="@string/pref_key_site_send_pingbacks_nested"
                     android:title="@string/site_settings_send_pingbacks_title"
                     app:longClickHint="@string/site_settings_send_pingbacks_hint" />
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_receive_pingbacks"
+                    android:id="@+id/pref_receive_pingbacks_nested"
                     android:key="@string/pref_key_site_receive_pingbacks_nested"
                     android:title="@string/site_settings_receive_pingbacks_title"
                     app:longClickHint="@string/site_settings_receive_pingbacks_hint" />
@@ -293,13 +293,14 @@
             <org.wordpress.android.ui.prefs.WPStartOverPreference
                 android:id="@+id/pref_start_over"
                 android:key="@string/pref_key_site_start_over"
-                android:icon="@drawable/gridicons_history"
                 android:title="@string/let_us_help"
                 android:summary="@string/start_over_text"
                 android:widgetLayout="@layout/start_over_preference_button"
                 android:layout="@layout/start_over_preference"
+                app:preficon="@drawable/gridicons_history"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="@string/contact_support"
+                app:buttonTextColor="@color/grey_dark"
                 app:buttonTextAllCaps="true" />
 
         </PreferenceScreen>

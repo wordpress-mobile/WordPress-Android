@@ -6,24 +6,33 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.FilterCriteria;
+import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PeopleListFragment extends Fragment {
@@ -33,8 +42,8 @@ public class PeopleListFragment extends Fragment {
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchPeopleListener mOnFetchPeopleListener;
 
-    private RecyclerView mRecyclerView;
-    private ProgressBar mProgress;
+    private FilteredRecyclerView mFilteredRecyclerView;
+    private PeopleListFilter mPeopleListFilter;
 
     public static PeopleListFragment newInstance(int localTableBlogID) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
@@ -71,60 +80,198 @@ public class PeopleListFragment extends Fragment {
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+        final Blog blog = WordPress.getBlog(mLocalTableBlogID);
+        final boolean isPrivate = blog != null && blog.isPrivate();
 
-        // progress bar that appears when loading more people
-        mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
-        mProgress.setVisibility(View.GONE);
+        mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
+        mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+        mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
+        mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
+
+        // the following will change the look and feel of the toolbar to match the current design
+        mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
+        mFilteredRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), R.color.white));
+        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredRecyclerView.setToolbarLeftAndRightPadding(
+                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
+                getResources().getDimensionPixelSize(R.dimen.margin_none));
+
+        mFilteredRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
+            @Override
+            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
+                ArrayList<FilterCriteria> list = new ArrayList<>();
+                Collections.addAll(list, PeopleListFilter.values());
+                // Only a private blog can have viewers
+                if (!isPrivate) {
+                    list.remove(PeopleListFilter.VIEWERS);
+                }
+                return list;
+            }
+
+            @Override
+            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+                // no-op
+            }
+
+            @Override
+            public FilterCriteria onRecallSelection() {
+                mPeopleListFilter = AppPrefs.getPeopleListFilter();
+
+                // if viewers is not available for this blog, set the filter to TEAM
+                if (mPeopleListFilter == PeopleListFilter.VIEWERS && !isPrivate) {
+                    mPeopleListFilter = PeopleListFilter.TEAM;
+                    AppPrefs.setPeopleListFilter(mPeopleListFilter);
+                }
+                return mPeopleListFilter;
+            }
+
+            @Override
+            public void onLoadData() {
+                updatePeople(false);
+            }
+
+            @Override
+            public void onFilterSelected(int position, FilterCriteria criteria) {
+                mPeopleListFilter = (PeopleListFilter) criteria;
+                AppPrefs.setPeopleListFilter(mPeopleListFilter);
+            }
+
+            @Override
+            public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
+                int stringId = 0;
+                switch (emptyViewMsgType) {
+                    case LOADING:
+                        stringId = R.string.people_fetching;
+                        break;
+                    case NETWORK_ERROR:
+                        stringId = R.string.no_network_message;
+                        break;
+                    case NO_CONTENT:
+                        switch (mPeopleListFilter) {
+                            case TEAM:
+                                stringId = R.string.people_empty_list_filtered_users;
+                                break;
+                            case FOLLOWERS:
+                                stringId = R.string.people_empty_list_filtered_followers;
+                                break;
+                            case EMAIL_FOLLOWERS:
+                                stringId = R.string.people_empty_list_filtered_email_followers;
+                                break;
+                            case VIEWERS:
+                                stringId = R.string.people_empty_list_filtered_viewers;
+                                break;
+                        }
+                        break;
+                    case GENERIC_ERROR:
+                        switch (mPeopleListFilter) {
+                            case TEAM:
+                                stringId = R.string.error_fetch_users_list;
+                                break;
+                            case FOLLOWERS:
+                                stringId = R.string.error_fetch_followers_list;
+                                break;
+                            case EMAIL_FOLLOWERS:
+                                stringId = R.string.error_fetch_email_followers_list;
+                                break;
+                            case VIEWERS:
+                                stringId = R.string.error_fetch_viewers_list;
+                                break;
+                        }
+                        break;
+                }
+                return getString(stringId);
+            }
+
+            @Override
+            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
+
+            }
+        });
 
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-
-        // refresh the first page to serve fresh data
-        if (mOnFetchPeopleListener != null) {
-            mOnFetchPeopleListener.onFetchFirstPage();
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        refreshPeopleList();
+        updatePeople(false);
     }
 
-    public void refreshPeopleList() {
-        if (!isAdded()) return;
+    private void updatePeople(boolean loadMore) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            mFilteredRecyclerView.setRefreshing(false);
+            return;
+        }
 
-        List<Person> peopleList = PeopleTable.getPeople(mLocalTableBlogID);
-        PeopleAdapter peopleAdapter = (PeopleAdapter) mRecyclerView.getAdapter();
-        if (peopleAdapter == null) {
-            peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
-            mRecyclerView.setAdapter(peopleAdapter);
-        } else {
-            peopleAdapter.setPeopleList(peopleList);
+        if (mOnFetchPeopleListener != null) {
+            if (loadMore) {
+                boolean isFetching = mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
+                if (isFetching) {
+                    mFilteredRecyclerView.showLoadingProgress();
+                }
+            } else {
+                boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
+                if (isFetching) {
+                    mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
+                } else {
+                    mFilteredRecyclerView.hideEmptyView();
+                    mFilteredRecyclerView.setRefreshing(false);
+                }
+                refreshPeopleList(isFetching);
+            }
         }
     }
 
-    /*
-    * show/hide progress bar which appears at the bottom of the activity when loading more people
-    */
-    public void showLoadingProgress(boolean showProgress) {
-        if (isAdded() && mProgress != null) {
-            if (showProgress) {
-                mProgress.bringToFront();
-                mProgress.setVisibility(View.VISIBLE);
+    public void refreshPeopleList(boolean isFetching) {
+        if (!isAdded()) return;
+
+        List<Person> peopleList;
+        switch (mPeopleListFilter) {
+            case TEAM:
+                peopleList = PeopleTable.getUsers(mLocalTableBlogID);
+                break;
+            case FOLLOWERS:
+                peopleList = PeopleTable.getFollowers(mLocalTableBlogID);
+                break;
+            case EMAIL_FOLLOWERS:
+                peopleList = PeopleTable.getEmailFollowers(mLocalTableBlogID);
+                break;
+            case VIEWERS:
+                peopleList = PeopleTable.getViewers(mLocalTableBlogID);
+                break;
+            default:
+                peopleList = new ArrayList<>();
+                break;
+        }
+        PeopleAdapter peopleAdapter = (PeopleAdapter) mFilteredRecyclerView.getAdapter();
+        if (peopleAdapter == null) {
+            peopleAdapter = new PeopleAdapter(getActivity(), peopleList);
+            mFilteredRecyclerView.setAdapter(peopleAdapter);
+        } else {
+            peopleAdapter.setPeopleList(peopleList);
+        }
+
+        if (!peopleList.isEmpty()) {
+            // if the list is not empty, don't show any message
+            mFilteredRecyclerView.hideEmptyView();
+        } else if (!isFetching) {
+            // if we are not fetching and list is empty, show no content message
+            mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+    }
+
+    public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
+        if (mPeopleListFilter == filter) {
+            if (isFirstPage) {
+                mFilteredRecyclerView.setRefreshing(false);
+                if (!isSuccessful) {
+                    mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                }
             } else {
-                mProgress.setVisibility(View.GONE);
+                mFilteredRecyclerView.hideLoadingProgress();
             }
         }
     }
@@ -135,11 +282,12 @@ public class PeopleListFragment extends Fragment {
     }
 
     public interface OnFetchPeopleListener {
-        void onFetchFirstPage();
-        void onFetchMorePeople();
+        boolean onFetchFirstPage(PeopleListFilter filter);
+
+        boolean onFetchMorePeople(PeopleListFilter filter);
     }
 
-    public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder> {
+    public class PeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final LayoutInflater mInflater;
         private List<Person> mPeopleList;
         private int mAvatarSz;
@@ -188,20 +336,40 @@ public class PeopleListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(PeopleAdapter.PeopleViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            PeopleViewHolder peopleViewHolder = (PeopleViewHolder) holder;
             final Person person = getPerson(position);
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
-                holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-                holder.txtDisplayName.setText(person.getDisplayName());
-                holder.txtUsername.setText(String.format("@%s", person.getUsername()));
-                holder.txtRole.setText(StringUtils.capitalize(person.getRole()));
+                peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+                peopleViewHolder.txtDisplayName.setText(StringUtils.unescapeHTML(person.getDisplayName()));
+                if (person.getRole() != null) {
+                    peopleViewHolder.txtRole.setVisibility(View.VISIBLE);
+                    peopleViewHolder.txtRole.setText(StringUtils.capitalize(person.getRole().toDisplayString()));
+                } else {
+                    peopleViewHolder.txtRole.setVisibility(View.GONE);
+                }
+                if (!person.getUsername().isEmpty()) {
+                    peopleViewHolder.txtUsername.setVisibility(View.VISIBLE);
+                    peopleViewHolder.txtUsername.setText(String.format("@%s", person.getUsername()));
+                } else {
+                    peopleViewHolder.txtUsername.setVisibility(View.GONE);
+                }
+                if (person.getPersonType() == Person.PersonType.USER
+                        || person.getPersonType() == Person.PersonType.VIEWER) {
+                    peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
+                } else {
+                    peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);
+                    String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
+                    String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
+                    peopleViewHolder.txtSubscribed.setText(dateText);
+                }
             }
 
             // end of list is reached
-            if (mOnFetchPeopleListener != null && position == getItemCount() - 1) {
-                mOnFetchPeopleListener.onFetchMorePeople();
+            if (position == getItemCount() - 1) {
+                updatePeople(true);
             }
         }
 
@@ -210,6 +378,7 @@ public class PeopleListFragment extends Fragment {
             private final TextView txtDisplayName;
             private final TextView txtUsername;
             private final TextView txtRole;
+            private final TextView txtSubscribed;
 
             public PeopleViewHolder(View view) {
                 super(view);
@@ -217,6 +386,7 @@ public class PeopleListFragment extends Fragment {
                 txtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
                 txtUsername = (TextView) view.findViewById(R.id.person_username);
                 txtRole = (TextView) view.findViewById(R.id.person_role);
+                txtSubscribed = (TextView) view.findViewById(R.id.follower_subscribed_date);
 
                 itemView.setOnClickListener(this);
             }

@@ -1,16 +1,15 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
-
-import com.optimizely.Optimizely;
-import com.optimizely.Variable.LiveVariable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -22,7 +21,6 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -38,6 +36,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
@@ -47,6 +46,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AppLockManager;
@@ -55,9 +55,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 public class ActivityLauncher {
-    private static LiveVariable<Boolean> isMagicLinkEnabledVariable = Optimizely.booleanForKey("isMagicLinkEnabled", false);
-    private static final String ARG_DID_SLIDE_IN_FROM_RIGHT = "did_slide_in_from_right";
-
     public static void showSitePickerForResult(Activity activity, int blogLocalTableId) {
         Intent intent = new Intent(activity, SitePickerActivity.class);
         intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, blogLocalTableId);
@@ -73,50 +70,50 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewBlogPlans(Context context, int blogLocalTableId) {
         Intent intent = new Intent(context, PlansActivity.class);
         intent.putExtra(PlansActivity.ARG_LOCAL_TABLE_BLOG_ID, blogLocalTableId);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewCurrentBlogPosts(Context context) {
         Intent intent = new Intent(context, PostsListActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_POSTS);
     }
 
     public static void viewCurrentBlogMedia(Context context) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
     }
 
     public static void viewCurrentBlogPages(Context context) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PAGES);
     }
 
     public static void viewCurrentBlogComments(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_COMMENTS);
     }
 
     public static void viewCurrentBlogThemes(Context context) {
         if (ThemeBrowserActivity.isAccessible()) {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
-            slideInFromRight(context, intent);
+            context.startActivity(intent);
         }
     }
 
     public static void viewCurrentBlogPeople(Context context) {
         Intent intent = new Intent(context, PeopleManagementActivity.class);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT);
     }
 
@@ -125,7 +122,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(BlogPreferencesActivity.ARG_LOCAL_BLOG_ID, blog.getLocalTableBlogId());
-        slideInFromRightForResult(activity, intent, RequestCodes.BLOG_SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, blog);
     }
 
@@ -134,16 +131,8 @@ public class ActivityLauncher {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String siteUrl = blog.getAlternativeHomeUrl();
-        Uri uri = Uri.parse(siteUrl);
-
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        context.startActivity(intent);
-        AppLockManager.getInstance().setExtendedTimeout();
+        openUrlExternal(context, blog.getAlternativeHomeUrl());
     }
 
     public static void viewBlogAdmin(Context context, Blog blog) {
@@ -151,16 +140,8 @@ public class ActivityLauncher {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String adminUrl = blog.getAdminUrl();
-        Uri uri = Uri.parse(adminUrl);
-
         AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, blog);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        context.startActivity(intent);
-        AppLockManager.getInstance().setExtendedTimeout();
+        openUrlExternal(context, blog.getAdminUrl());
     }
 
     public static void viewPostPreviewForResult(Activity activity, Post post, boolean isPage) {
@@ -170,7 +151,7 @@ public class ActivityLauncher {
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_POST_ID, post.getLocalTablePostId());
         intent.putExtra(PostPreviewActivity.ARG_LOCAL_BLOG_ID, post.getLocalTableBlogId());
         intent.putExtra(PostPreviewActivity.ARG_IS_PAGE, isPage);
-        slideInFromRightForResult(activity, intent, RequestCodes.PREVIEW_POST);
+        activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void addNewBlogPostOrPageForResult(Activity context, Blog blog, boolean isPage) {
@@ -203,8 +184,13 @@ public class ActivityLauncher {
         if (blog == null || post == null || TextUtils.isEmpty(post.getPermaLink())) return;
 
         // always add the preview parameter to avoid bumping stats when viewing posts
-        String url = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
-        WPWebViewActivity.openUrlByUsingBlogCredentials(context, blog, post, url);
+        String urlToLoad = UrlUtils.appendUrlParameter(post.getPermaLink(), "preview", "true");
+
+        // Add the original post URL to the list of allowed URLs.
+        // This is necessary because links are disabled in the webview, but WP removes "?preview=true" from the passed URL,
+        // and internally redirects to it. EX:Published posts on a site with Plain permalink structure settings.
+        // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
+        WPWebViewActivity.openPostOrPage(context, blog, post, urlToLoad, new String[] {post.getPermaLink()});
     }
 
     public static void addMedia(Activity activity) {
@@ -214,30 +200,30 @@ public class ActivityLauncher {
     public static void viewMyProfile(Context context) {
         Intent intent = new Intent(context, MyProfileActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_MY_PROFILE);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewAccountSettings(Context context) {
         Intent intent = new Intent(context, AccountSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_ACCOUNT_SETTINGS);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewAppSettings(Activity activity) {
         Intent intent = new Intent(activity, AppSettingsActivity.class);
         AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.OPENED_APP_SETTINGS);
-        slideInFromRightForResult(activity, intent, RequestCodes.APP_SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.APP_SETTINGS);
     }
 
     public static void viewNotificationsSettings(Activity activity) {
         Intent intent = new Intent(activity, NotificationsSettingsActivity.class);
-        slideInFromRight(activity, intent);
+        activity.startActivity(intent);
     }
 
     public static void viewHelpAndSupport(Context context, Tag origin) {
         Intent intent = new Intent(context, HelpActivity.class);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
-        slideInFromRight(context, intent);
+        context.startActivity(intent);
     }
 
     public static void viewSSLCerts(Context context) {
@@ -262,13 +248,8 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (isMagicLinkEnabledVariable.get() && WPActivityUtils.isEmailClientAvailable(activity)) {
-            Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
-            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-        } else {
-            Intent intent = new Intent(activity, SignInActivity.class);
-            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-        }
+        Intent intent = new Intent(activity, SignInActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void viewStatsSinglePostDetails(Context context, Post post, boolean isPage) {
@@ -302,38 +283,32 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void slideInFromRight(Context context, Intent intent) {
-        if (context instanceof Activity) {
-            intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
-            Activity activity = (Activity) context;
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.activity_slide_in_from_right,
-                    R.anim.do_nothing);
-            ActivityCompat.startActivity(activity, intent, options.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
-    }
-
-    public static void slideInFromRightForResult(Activity activity, Intent intent, int requestCode) {
-        intent.putExtra(ARG_DID_SLIDE_IN_FROM_RIGHT, true);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_right,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, intent, requestCode, options.toBundle());
+    public static void loginWithoutMagicLink(Activity activity) {
+        Intent signInIntent = new Intent(activity, SignInActivity.class);
+        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
+        activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
     }
 
     /*
-     * called in an activity's finish to slide it out to the right if it slid in
-     * from the right when started
+     * open the passed url in the device's external browser
      */
-    public static void slideOutToRight(Activity activity) {
-        if (activity != null
-                && activity.getIntent() != null
-                && activity.getIntent().hasExtra(ARG_DID_SLIDE_IN_FROM_RIGHT)) {
-            activity.overridePendingTransition(R.anim.do_nothing, R.anim.activity_slide_out_to_right);
+    public static void openUrlExternal(Context context, @NonNull String url) {
+        try {
+            // disable deeplinking activity so to not catch WP URLs
+            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
+
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(intent);
+            AppLockManager.getInstance().setExtendedTimeout();
+
+        } catch (ActivityNotFoundException e) {
+            ToastUtils.showToast(context, context.getString(R.string.no_default_app_available_to_open_link), ToastUtils.Duration.LONG);
+            AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);
+        } finally {
+            // re-enable deeplinking
+            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 }

@@ -1,10 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-08-23 18:32:37+0000
+Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;
+Generator: GlotPress/2.4.0-alpha
+Language: gd_GB
+-->
 <resources>
+	<string name="error_fetch_users_list">Cha b’ urrainn dhuinn cleachdaichean na làraich fhaighinn</string>
+	<string name="plans_manage">Stiùirich am plana agad aig\nWordPress.com/plans</string>
+	<string name="people_empty_list_filtered_viewers">Cha dug duine sam bith sùil air dad fhathast.</string>
+	<string name="title_follower">Neach-leantainn</string>
+	<string name="title_email_follower">Neach-leantainn puist-d</string>
+	<string name="people_empty_list_filtered_email_followers">Chan eil duine sam bith ’gad leantainn fhathast slighe puist-d.</string>
+	<string name="people_empty_list_filtered_followers">Chan eil duine sam bith ’gad leantainn fhathast.</string>
+	<string name="people_empty_list_filtered_users">Chan eil cleachdaiche sam bith agad fhathast.</string>
+	<string name="people_dropdown_item_email_followers">Luchd-leantainn puist-d</string>
+	<string name="people_dropdown_item_viewers">Luchd-coimhid</string>
+	<string name="people_dropdown_item_followers">Luchd-leantainn</string>
+	<string name="people_dropdown_item_team">Sgioba</string>
+	<string name="invite_message_usernames_limit">Thoir cuireadh do suas ri 10 puist-d agus/no ainmean-cleachdaichean WordPress.com. Mur eile ainm-cleachdaiche aig cuideigin, innsidh sinn dhaibh mar a gheibh iad fear.</string>
+	<string name="viewer_remove_confirmation_message">Ma bheir thu air falbh an neach-coimhid seo, chan urrainn dhaibh tuilleadh tadhal air an làrach.\n\nA bheil thu airson a thoirt air falbh fhathast?</string>
+	<string name="follower_remove_confirmation_message">Ma bheir thu an cleachdaiche seo air falbh, chan fhaigh iad brathan mun làrach seo tuilleadh ach ma nì iad leantainn às ùr.\n\nA bheil thu cinnteach gu bheil thu airson an neach-leantainn seo a thoirt air falbh?</string>
+	<string name="follower_subscribed_since">A-mach o %1$s</string>
+	<string name="reader_label_view_gallery">Seall an gailearaidh</string>
+	<string name="error_remove_follower">Cha b’ urrainn dhuinn an neach-leantainn a thoirt air falbh</string>
+	<string name="error_remove_viewer">Cha b’ urrainn dhuinn an neach-coimhid a thoirt air falbh</string>
+	<string name="error_fetch_email_followers_list">Cha b’ urrainn dhuinn na daoine a leanas an làrach slighe puist-d fhaighinn</string>
+	<string name="error_fetch_followers_list">Cha b’ urrainn dhuinn luchd-leantainn na làraich fhaighinn</string>
+	<string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
+	<string name="format_bar_description_html">Am modh HTML</string>
+	<string name="visual_editor">An deasaiche lèirsinneach</string>
+	<string name="image_thumbnail">Dealbhagan deilbh</string>
+	<string name="format_bar_description_ul">Liosta gun seòrsachadh</string>
+	<string name="format_bar_description_ol">Liosta air a sheòrsachadh</string>
+	<string name="format_bar_description_more">Cuir a-steach barrachd</string>
+	<string name="format_bar_description_media">Am modh cuir a-steach</string>
+	<string name="format_bar_description_strike">Loidhne troimhe</string>
+	<string name="format_bar_description_quote">Bloc-luaidh</string>
+	<string name="format_bar_description_link">Cuir a-steach ceangal</string>
+	<string name="format_bar_description_italic">Eadailteach</string>
+	<string name="format_bar_description_underline">Fo-loidhne</string>
+	<string name="image_settings_save_toast">Chaidh na h-atharraichean a shàbhaladh</string>
+	<string name="image_caption">Caipsean</string>
+	<string name="image_alt_text">Roghainn teacsa</string>
+	<string name="image_link_to">Ceangal ri</string>
+	<string name="image_width">Leud</string>
+	<string name="format_bar_description_bold">Trom</string>
+	<string name="image_settings_dismiss_dialog_title">A bheil thu airson na h-atharraichean nach deach a shàbhaladh a thilgeil air falbh?</string>
+	<string name="stop_upload_dialog_title">A bheil thu airson sgur dhen luchdadh suas?</string>
+	<string name="stop_upload_button">Sguir dhen luchdadh suas</string>
+	<string name="alert_error_adding_media">Thachair mearachd fhad ’s a bha sinn a’ cur a-steach a’ mheadhain</string>
+	<string name="alert_action_while_uploading">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
+	<string name="alert_insert_image_html_mode">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
+	<string name="uploading_gallery_placeholder">A’ luchdadh suas a’ ghailearaidh…</string>
+	<string name="invite_error_some_failed">Chaidh an cuireadh a chur ach thachair co-dhiù aon mhearachd!</string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
+	<string name="invite_sent">Chaidh an cuireadh a chur</string>
+	<string name="tap_to_try_again">Thoir gnogag airson fheuchainn ris a-rithist!</string>
+	<string name="invite_error_sending">Thachair mearachd nuair a dh’fheuch sinn ris an cuireadh a chur!</string>
+	<string name="invite_error_invalid_usernames_multiple">Cha ghabh a chur: Tha ainmean no puist-d ann nach eil dligheach</string>
+	<string name="invite_error_invalid_usernames_one">Cha ghabh a chur: Tha ainm no post-d ann nach eil dligheach</string>
 	<string name="tabbar_accessibility_label_my_site">An làrach agam</string>
 	<string name="tabbar_accessibility_label_me">Mise</string>
 	<string name="editor_toast_changes_saved">Chaidh na h-atharraichean a shàbhaladh</string>
 	<string name="passcodelock_prompt_message">Cuir a-steach am PIN agad</string>
-	<string name="push_auth_expired">Dh’fhalbh an ùine air an iarrtas. Clàraich a-steach gu WordPress.com a dh’fheuchainn ris a-rithist.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de sheallaidhean</string>
 	<string name="ignore">Leig seachad</string>
 	<string name="stats_insights_best_ever">Na seallaidhean as fhearr a-riamh</string>
@@ -14,13 +73,11 @@
 	<string name="stats_insights_popular">An latha ’s uair as fhèillmhoire</string>
 	<string name="stats_insights_all_time">Puist, seallaidhean is aoighean air fad</string>
 	<string name="stats_insights">Insights</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Clàraich a-steach gun chunntas WordPress.com leis an do cheangail thu Jetpack ris gus sùil a thoirt air na stats agad.</string>
 	<string name="stats_other_recent_stats_moved_label">A bheil an corr dhe na stats a bha agad o chionn goirid a dhìth ort? Chaidh an gluasad gu duilleag nan Insights.</string>
-	<string name="me_disconnect_from_wordpress_com">Dì-cheangail o WordPress.com</string>
 	<string name="me_btn_login_logout">Clàraich a-steach/a-mach</string>
-	<string name="me_connect_to_wordpress_com">Ceangail ri WordPress.com</string>
 	<string name="me_btn_support">Cobhair ⁊ taic</string>
 	<string name="site_picker_cant_hide_current_site">Cha deach “%s” a chur am falach a chionn ’s gur e sin an làrach làithreach</string>
+	<string name="account_settings">Roghainnean a\' chunntais</string>
 	<string name="site_picker_create_dotcom">Cruthaich làrach WordPress.com</string>
 	<string name="site_picker_edit_visibility">Seall/falaich làraichean</string>
 	<string name="site_picker_add_self_hosted">Cuir làrach air fèin-òstaireachd ris</string>
@@ -33,14 +90,10 @@
 	<string name="my_site_header_look_and_feel">Coltas</string>
 	<string name="my_site_btn_site_settings">Roghainnean</string>
 	<string name="my_site_btn_blog_posts">Puist bloga</string>
-	<string name="my_site_header_admin">Rianachd</string>
 	<string name="my_site_header_configuration">Rèiteachadh</string>
 	<string name="reader_label_new_posts_subtitle">Thoir gnogag gus an sealltainn</string>
-	<string name="notifications_account_required">Clàraich a-steach gu WordPress.com airson nam brathan</string>
 	<string name="stats_unknown_author">Ùghdar neo-aithnichte</string>
-	<string name="signout">Dì-cheangail</string>
 	<string name="image_added">Chaidh an dealbh a chur ris</string>
-	<string name="sign_out_wpcom_confirm">Ma dhì-cheanglas tu an cunntas agad, thèid an dàta WordPress.com air fad aig @%s a thoirt air falbh on uidheam seo, a’ gabhail a-steach dhreachdan is atharraichean ionadail.</string>
 	<string name="select_all">Tagh na h-uile</string>
 	<string name="hide">Falaich</string>
 	<string name="show">Seall</string>
@@ -61,8 +114,6 @@
 	<string name="no_media">Chan eil meadhanan ann</string>
 	<string name="loading_images">A’ luchdadh nan dealbhan</string>
 	<string name="loading_videos">A’ luchdadh nan videothan</string>
-	<string name="sign_in_jetpack">Clàraich a-steach dhan chunntas WordPress.com agad airson ceangal ri Jetpack.</string>
-	<string name="auth_required">Clàraich a-steach a-rithist airson leantainn air adhart.</string>
 	<string name="two_step_sms_sent">Thoir sùil air na teachdaireachdan teacsa agad airson a’ chòd dearbhaidh.</string>
 	<string name="two_step_footer_button">Cuir an còd slighe teachdaireachd teacsa</string>
 	<string name="two_step_footer_label">Cuir a-steach on aplacaid dearbhaidh agad.</string>
@@ -81,6 +132,8 @@
 	<string name="add_to_post">Cuir ris a’ phost</string>
 	<string name="language">Cànan</string>
 	<string name="device">Uidheam</string>
+	<string name="media_details_label_file_name">Ainm an fhaidhle</string>
+	<string name="media_details_label_file_type">Seòrsa an fhaidhle</string>
 	<string name="media_fetching">A’ faighinn nam meadhanan…</string>
 	<string name="posts_fetching">A’ faighinn nam post…</string>
 	<string name="pages_fetching">A’ faighinn nan duilleagan…</string>
@@ -108,6 +161,7 @@
 	<string name="stats_total">Iomlan</string>
 	<string name="stats_overall">San fharsaingeachd</string>
 	<string name="post_uploading">’Ga luchdadh suas</string>
+	<string name="reader_page_recommended_blogs">Bidh ùidh agad sna leanas is dòcha</string>
 	<string name="stats_comments_total_comments_followers">Puist air fad aig a bheil luchd-leantainn phost: %1$s</string>
 	<string name="stats_visitors">Aoighean</string>
 	<string name="stats_views">Seallaidhean</string>
@@ -175,7 +229,6 @@
 	<string name="delete_sure_page">Sguab às an duilleag seo</string>
 	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>
 	<string name="delete_sure_post">Sguab às am post seo</string>
-	<string name="signing_out">’Gad chlàradh a-mach…</string>
 	<string name="posting_post">A’ postadh “%s”</string>
 	<string name="media_empty_list_custom_date">Cha robh meadhan ann san eadaramh ùine seo</string>
 	<string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
@@ -211,6 +264,8 @@
 	<string name="browse_our_faq_button">Rùraich na CÀBHA agam</string>
 	<string name="faq_button">CÀBHA</string>
 	<string name="reader_empty_posts_liked">Cha duirt thu gur toil leat post sam bith fhathast</string>
+	<string name="reader_empty_followed_blogs_title">Chan eil thu a’ leantainn làrach sam bith fhathast</string>
+	<string name="more">Barrachd</string>
 	<string name="reader_menu_block_blog">Bac am bloga seo</string>
 	<string name="reader_toast_blog_blocked">Cha dèid puist on bhloga seo a shealltainn tuilleadh</string>
 	<string name="reader_toast_err_block_blog">Cha ghabh am bloga seo a bhacadh</string>
@@ -239,6 +294,10 @@
 	<string name="reader_toast_err_get_blog_info">Cha ghabh am bloga seo a shealltainn</string>
 	<string name="reader_title_subs">Tagaichean ⁊ blogaichean</string>
 	<string name="reader_page_followed_tags">Tagaichean a tha thu a’ leantainn</string>
+	<string name="reader_title_blog_preview">Bloga leughadair</string>
+	<string name="reader_title_tag_preview">Taga leughadair</string>
+	<string name="reader_page_followed_blogs">Làraichean a tha thu a’ leantainn</string>
+	<string name="reader_hint_add_tag_or_url">Cuir a-steach URL no taga gus a leantainn</string>
 	<string name="media_empty_list">Chan eil meadhanan ann</string>
 	<string name="ptr_tip_message">Gliocas: Tarraing a-nuas gus ath-nuadhachadh</string>
 	<string name="saving">’Ga shàbhaladh…</string>
@@ -310,6 +369,7 @@
 	<string name="out_of_memory">Chan eil cuimhne air fhàgail air an uidheam</string>
 	<string name="no_network_message">Chan eil lìonra ri làimh</string>
 	<string name="could_not_remove_account">Cha b’ urrainn dhuinn an làrach a thoirt air falbh</string>
+	<string name="invalid_url_message">Dèan cinnteach gu bheil an URL seo dligheach</string>
 	<string name="blog_title_invalid">Tiotal làraich mì-dhligheach</string>
 	<string name="blog_name_must_include_letters">Feumaidh co-dhiù aon litir (a-z) a bhith ann an seòladh làraich</string>
 	<string name="blog_name_invalid">Seòladh làraich mì-dhligheach</string>
@@ -411,6 +471,8 @@
 	<string name="edit_post">Deasaich am post</string>
 	<string name="add_comment">Cuir beachd ris</string>
 	<string name="xmlrpc_error">Cha b’ urrainn dhuinn ceangal a dhèanamh. Cuir a-steach an t-slighe shlàn gun xmlrpc.php air an làrach agad is feuch ris a-rithist.</string>
+	<string name="invalid_site_url_message">Dèan cinnteach gu bheil an URL a chuir thu a-steach dligheach</string>
+	<string name="notifications_empty_all">Chan eil brath ann… fhathast.</string>
 	<string name="share_link">Co-roinn an ceangal</string>
 	<string name="deleting_page">A’ sguabadh às na duilleige</string>
 	<string name="deleting_post">A’ sguabadh às a’ phuist</string>
@@ -437,18 +499,16 @@
 	<string name="reader_toast_err_get_post">Chan urrainn dhuinn am post seo fhaighinn dhut</string>
 	<string name="validating_user_data">A\' dearbhadh dàta a\' chleachdaiche</string>
 	<string name="validating_site_data">A\' dearbhadh dàta na làraich</string>
+	<string name="reader_empty_followed_blogs_description">Ach na gabh dragh, cha leig thu leas ach gnogag a thoirt air a ìomhaigheag gu h-àrd air an taobh deas gus an rùrachadh!</string>
 	<string name="password_invalid">Feumaidh tu facal-faire nas tèarainte. Dèan cinnteach gun cleachd thu co-dhiù 7 caractaran, measgachadh de litrichean mòra \'s beaga, àireamhan is caractaran sònraichte.</string>
 	<string name="nux_tap_continue">Air adhart</string>
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
 	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
-	<string name="nux_oops_not_selfhosted_blog">\'Gad chlàradh a-steach gu WordPress.com</string>
-	<string name="signing_in">’Gad chlàradh a-steach…</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
 	<string name="media_add_new_media_gallery">Cruthaich gailearaidh</string>
 	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
 	<string name="jetpack_message">Tha feum air plugan Jetpack mus fhaigh thu na stats. A bheil thu airson Jetpack a stàladh?</string>
 	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
-	<string name="reader_timespan_now">an-dràsta</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
 	<string name="reader_share_subject">Air a cho-roinneadh o %s</string>
 	<string name="reader_btn_share">Co-roinn</string>
@@ -464,13 +524,14 @@
 	<string name="reader_toast_err_share_intent">Cha ghabh a cho-roinneadh</string>
 	<string name="reader_toast_err_view_image">Cha ghabh an dealbh seo a shealltainn</string>
 	<string name="reader_toast_err_url_intent">Cha ghabh %s fhosgladh</string>
-	<string name="connecting_wpcom">A\' ceangal ri WordPress.com</string>
 	<string name="username_invalid">Ainm-cleachdaiche mì-dhligheach</string>
 	<string name="limit_reached">Chleachd thu na tha ceadaichte dhut. Feuch ris a-rithist ann am mionaid. Ma dh\'fheuchas tu ris roimhe sin, fàsaidh an ùine mus dèid an toirmeasg a thoirt dhìot. Ma tha thu dhen bheachd gur e mearachd a tha seo, cuir fios gun sgioba taice.</string>
 	<string name="nux_tutorial_get_started_title">Toiseach tòiseachaidh!</string>
 	<string name="create_account_wpcom">Cruthaich cunntas air WordPress.com</string>
 	<string name="reader_empty_followed_tags">Chan eil thu a’ leantainn taga sam bith</string>
 	<string name="empty_list_default">Tha an liosta seo falamh</string>
+	<string name="reader_hint_comment_on_comment">Freagair am beachd…</string>
+	<string name="button_next">Air adhart</string>
 	<string name="themes">Ùrlaran</string>
 	<string name="all">Na h-uile</string>
 	<string name="images">Dealbhan</string>
@@ -530,11 +591,12 @@
 	<string name="passcode_turn_off">Cuir glas a\' PIN dheth</string>
 	<string name="passcode_turn_on">Cuir glas a\' PIN air</string>
 	<string name="upload">Luchdadh suas</string>
-	<string name="sign_in">Clàraich a-steach</string>
+	<string name="discard">Tilg air falbh</string>
 	<string name="notifications">Brathan</string>
 	<string name="note_reply_successful">Chaidh an fhreagairt fhoillseachadh</string>
 	<string name="new_notifications">%d brath(an) ùra</string>
 	<string name="more_notifications">agus %d a bharrachd.</string>
+	<string name="follows">Daoine a lean</string>
 	<string name="loading">\'Ga luchdadh…</string>
 	<string name="httpuser">Ainm-cleachdaiche HTTP</string>
 	<string name="httppassword">Facal-faire HTTP</string>
@@ -562,12 +624,15 @@
 	<string name="scaled_image">Leud an deilbh sgèilichte</string>
 	<string name="scheduled">Air an sgeideal</string>
 	<string name="link_enter_url">URL</string>
+	<string name="uploading">’Ga luchdadh suas…</string>
 	<string name="version">Tionndadh</string>
 	<string name="tos">Teirmichean na seirbheise</string>
 	<string name="app_title">WordPress airson Android</string>
+	<string name="max_thumbnail_px_width">Leud bunaiteach an deilbh</string>
 	<string name="image_alignment">Co-thaobhadh</string>
 	<string name="refresh">Ath-nuadhaich</string>
 	<string name="untitled">Gun tiotal</string>
+	<string name="edit">Deasaich</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Duilleag</string>
 	<string name="post_password">Facal-faire (roghainneil)</string>
@@ -585,15 +650,17 @@
 	<string name="title">Tiotal</string>
 	<string name="tags_separate_with_commas">Tagaichean (sgar na tagaichean le cromagan)</string>
 	<string name="categories">Roinnean-seòrsa</string>
+	<string name="dlg_deleting_comments">A’ sguabadh às nam beachdan</string>
 	<string name="notification_blink">Boillsg solas</string>
-	<string name="notification_sound">Cluich fuaim</string>
 	<string name="notification_vibrate">Crith</string>
+	<string name="notification_sound">Fuaim bhrathan</string>
 	<string name="status">Staid</string>
 	<string name="location">Ionad</string>
 	<string name="sdcard_title">Tha feum air cairt SD</string>
 	<string name="select_video">Tagh video on ghailearaidh</string>
 	<string name="media">Meadhan</string>
 	<string name="delete">Sguab às</string>
+	<string name="approve">Thoir aonta ris</string>
 	<string name="none">Chan eil gin</string>
 	<string name="blogs">Blogaichean</string>
 	<string name="select_photo">Tagh dealbh on ghailearaidh</string>
@@ -607,4 +674,5 @@
 	<string name="yes">Tha</string>
 	<string name="no">Chan eil</string>
 	<string name="category_refresh_error">Mearachd le ath-nuadhachadh na roinn-seòrsa</string>
+	<string name="notification_settings">Roghainnean nam brathan</string>
 </resources>

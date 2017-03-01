@@ -31,7 +31,7 @@ a single section to highlight.
         ],
  */
 public class PlanFeaturesHighlightSection implements Serializable {
-    private String mTitle; // title (if available) of this section
+    private final String mTitle; // title (if available) of this section
     private ArrayList<String> mItems; // slug of the features to highlight in this section
 
     PlanFeaturesHighlightSection(JSONObject featureSection) throws JSONException{

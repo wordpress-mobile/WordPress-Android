@@ -46,7 +46,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         for (int widgetId : allWidgets) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
             int remoteBlogID = getRemoteBlogIDFromWidgetID(widgetId);
-            int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
+            int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
             Blog blog = WordPress.getBlog(localId);
             String name;
             if (blog != null) {
@@ -127,7 +127,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
+        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
         Blog blog = WordPress.getBlog(localId);
         if (blog == null) {
             AppLog.e(AppLog.T.STATS, "No blog found in the db!");
@@ -168,7 +168,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             }
 
             // Check if Jetpack or .com
-            int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
+            int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
             Blog blog = WordPress.getBlog(localId);
             if (blog == null) {
                 return;
@@ -206,7 +206,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
+        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
         Blog blog = WordPress.getBlog(localId);
         if (blog == null) {
             AppLog.e(AppLog.T.STATS, "No blog found in the db!");
@@ -501,7 +501,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             ArrayList<Integer> widgetsList = blogsToWidgetIDs.get(remoteBlogID);
             int[] currentWidgets = ArrayUtils.toPrimitive(widgetsList.toArray(new Integer[widgetsList.size()]));
 
-            int localId = StatsUtils.getLocalBlogIdFromRemoteBlogId(remoteBlogID);
+            int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
             Blog blog = WordPress.getBlog(localId);
             if (localId == 0 || blog == null) {
                 // No blog in the app

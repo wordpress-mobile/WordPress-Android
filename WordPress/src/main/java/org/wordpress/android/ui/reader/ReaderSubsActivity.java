@@ -30,7 +30,6 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -59,7 +58,7 @@ import de.greenrobot.event.EventBus;
  * followed tags, followed blogs, and recommended blogs
  */
 public class ReaderSubsActivity extends AppCompatActivity
-                                implements ReaderTagAdapter.TagDeletedListener {
+        implements ReaderTagAdapter.TagDeletedListener {
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
@@ -139,21 +138,15 @@ public class ReaderSubsActivity extends AppCompatActivity
             restorePreviousPage();
         }
 
-        // remember which page the user last viewed - note this listener must be assigned
-        // after we've already called restorePreviousPage()
+        // note this listener must be assigned after we've already called restorePreviousPage()
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                // remember which page the user last viewed
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 AppPrefs.setReaderSubsPageTitle(pageTitle);
             }
         });
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
@@ -260,7 +253,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         // is it a url or a tag?
         boolean isUrl = !entry.contains(" ")
-                     && (entry.contains(".") || entry.contains("://"));
+                && (entry.contains(".") || entry.contains("://"));
         if (isUrl) {
             addAsUrl(entry);
         } else {
@@ -332,30 +325,31 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
+        showProgress();
+        final ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
+
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (isFinishing()) return;
+                if (isFinishing()) {
+                    return;
+                }
 
+                hideProgress();
                 getPageAdapter().refreshFollowedTagFragment();
 
-                if (!succeeded) {
+                if (succeeded) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
+                    showInfoToast(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                    mLastAddedTagName = tag.getTagSlug();
+                } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
                 }
             }
         };
 
-        ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
-
-        if (ReaderTagActions.addTag(tag, actionListener)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-            mLastAddedTagName = tag.getTagSlug();
-            // make sure addition is reflected on followed tags
-            getPageAdapter().refreshFollowedTagFragment();
-            String labelAddedTag = getString(R.string.reader_label_added_tag);
-            showInfoToast(String.format(labelAddedTag, tag.getLabel()));
-        }
+        ReaderTagActions.addTag(tag, actionListener);
     }
 
     /*
@@ -369,7 +363,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
-        showAddUrlProgress();
+        showProgress();
 
         ReaderActions.OnRequestListener requestListener = new ReaderActions.OnRequestListener() {
             @Override
@@ -378,10 +372,11 @@ public class ReaderSubsActivity extends AppCompatActivity
                     followBlogUrl(blogUrl);
                 }
             }
+
             @Override
             public void onFailure(int statusCode) {
                 if (!isFinishing()) {
-                    hideAddUrlProgress();
+                    hideProgress();
                     String errMsg;
                     switch (statusCode) {
                         case 401:
@@ -409,7 +404,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 if (isFinishing()) {
                     return;
                 }
-                hideAddUrlProgress();
+                hideProgress();
                 if (succeeded) {
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
@@ -428,9 +423,9 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     /*
-     * called prior to following a url to show progress and disable controls
+     * called prior to following to show progress and disable controls
      */
-    private void showAddUrlProgress() {
+    private void showProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
         progress.setVisibility(View.VISIBLE);
         mEditAdd.setEnabled(false);
@@ -438,9 +433,9 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     /*
-     * called after following a url to hide progress and re-enable controls
+     * called after following to hide progress and re-enable controls
      */
-    private void hideAddUrlProgress() {
+    private void hideProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
         progress.setVisibility(View.GONE);
         mEditAdd.setEnabled(true);
@@ -456,6 +451,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
         toast.show();
     }
+
     /*
      * triggered by a tag fragment's adapter after user removes a tag - note that the network
      * request has already been made when this is called
@@ -525,7 +521,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         private void refreshFollowedTagFragment() {
-            for (Fragment fragment: mFragments) {
+            for (Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
                     ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
                     tagFragment.refresh();
@@ -534,7 +530,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         private void refreshBlogFragments(ReaderBlogType blogType) {
-            for (Fragment fragment: mFragments) {
+            for (Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderBlogFragment) {
                     ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
                     if (blogType == null || blogType.equals(blogFragment.getBlogType())) {

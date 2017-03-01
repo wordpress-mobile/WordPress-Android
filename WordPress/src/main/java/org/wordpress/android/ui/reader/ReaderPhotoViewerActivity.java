@@ -13,7 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
@@ -30,6 +31,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
+    private boolean mIsGallery;
     private String mContent;
     private WPViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
@@ -50,14 +52,16 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             mInitialImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+            mIsGallery = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_GALLERY);
             mContent = savedInstanceState.getString(ReaderConstants.ARG_CONTENT);
         } else if (getIntent() != null) {
             mInitialImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
+            mIsGallery = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_GALLERY, false);
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
 
-        mViewPager.setPageTransformer(false, new ReaderViewPagerTransformer(TransformType.FLOW));
+        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.FLOW));
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -70,13 +74,14 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
     }
 
     private void loadImageList() {
+        // content will be empty when viewing a single image, otherwise content is HTML
+        // so parse images from it
         final ReaderImageList imageList;
         if (TextUtils.isEmpty(mContent)) {
-            // content will be empty when we're viewing a single image
             imageList = new ReaderImageList(mIsPrivate);
         } else {
-            // otherwise content is HTML so parse images from it
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList();
+            int minImageWidth = mIsGallery ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
+            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(0, minImageWidth);
         }
 
         // make sure initial image is in the list
@@ -106,6 +111,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         }
 
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
+        outState.putBoolean(ReaderConstants.ARG_IS_GALLERY, mIsGallery);
         outState.putString(ReaderConstants.ARG_CONTENT, mContent);
 
         super.onSaveInstanceState(outState);

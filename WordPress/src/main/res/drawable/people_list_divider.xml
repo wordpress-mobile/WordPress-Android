@@ -2,7 +2,7 @@
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
        android:insetLeft="@dimen/people_list_divider_left_margin">
     <shape>
-        <solid android:color="@color/grey_lighten_20"/>
+        <solid android:color="@color/grey_lighten_30"/>
         <size android:height="@dimen/people_list_divider_height"/>
     </shape>
 </inset>

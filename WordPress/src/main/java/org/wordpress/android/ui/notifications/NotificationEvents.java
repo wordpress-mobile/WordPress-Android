@@ -1,33 +1,72 @@
 package org.wordpress.android.ui.notifications;
 
+import com.android.volley.VolleyError;
+
+import org.wordpress.android.models.Note;
+
+import java.util.List;
+
 public class NotificationEvents {
-    public static class SimperiumNotAuthorized {}
-    public static class NotificationsChanged {}
+    public static class NotificationsChanged {
+        final public boolean hasUnseenNotes;
+        public NotificationsChanged() {
+            this.hasUnseenNotes = false;
+        }
+        public NotificationsChanged(boolean hasUnseenNotes) {
+            this.hasUnseenNotes = hasUnseenNotes;
+        }
+    }
     public static class NoteModerationFailed {}
     public static class NoteModerationStatusChanged {
-        boolean mIsModerating;
-        String mNoteId;
+        final boolean isModerating;
+        final String noteId;
         public NoteModerationStatusChanged(String noteId, boolean isModerating) {
-            mNoteId = noteId;
-            mIsModerating = isModerating;
+            this.noteId = noteId;
+            this.isModerating = isModerating;
+        }
+    }
+    public static class NoteLikeStatusChanged {
+        final String noteId;
+        public NoteLikeStatusChanged(String noteId) {
+            this.noteId = noteId;
         }
     }
     public static class NoteVisibilityChanged {
-        boolean mIsHidden;
-        String mNoteId;
+        final boolean isHidden;
+        final String noteId;
         public NoteVisibilityChanged(String noteId, boolean isHidden) {
-            mNoteId = noteId;
-            mIsHidden = isHidden;
+            this.noteId = noteId;
+            this.isHidden = isHidden;
         }
     }
     public static class NotificationsSettingsStatusChanged {
-        String mMessage;
+        final String mMessage;
         public NotificationsSettingsStatusChanged(String message) {
             mMessage = message;
         }
 
         public String getMessage() {
             return mMessage;
+        }
+    }
+    public static class NotificationsUnseenStatus {
+        final public boolean hasUnseenNotes;
+        public NotificationsUnseenStatus(boolean hasUnseenNotes) {
+            this.hasUnseenNotes = hasUnseenNotes;
+        }
+    }
+    public static class NotificationsRefreshCompleted {
+        final List<Note> notes;
+        public NotificationsRefreshCompleted(List<Note> notes) {
+            this.notes = notes;
+        }
+    }
+    public static class NotificationsRefreshError {
+        VolleyError error;
+        public NotificationsRefreshError(VolleyError error) {
+            this.error = error;
+        }
+        public NotificationsRefreshError() {
         }
     }
 }

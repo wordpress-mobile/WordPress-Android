@@ -1,14 +1,21 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.NoSuchElementException;
+
+import static java.lang.String.format;
 
 /**
  * simple wrapper for Android log calls, enables recording and displaying log
@@ -164,17 +171,24 @@ public class AppLog {
     }
 
     private static class LogEntry {
-        LogLevel mLogLevel;
-        String mLogText;
-        T mLogTag;
+        final LogLevel mLogLevel;
+        final String mLogText;
+        final java.util.Date mDate;
+        final T mLogTag;
 
         public LogEntry(LogLevel logLevel, String logText, T logTag) {
             mLogLevel = logLevel;
-            mLogText = logText;
-            if (mLogText == null) {
+            mDate = DateTimeUtils.nowUTC();
+            if (logText == null) {
                 mLogText = "null";
+            } else {
+                mLogText = logText;
             }
             mLogTag = logTag;
+        }
+
+        private String formatLogDate() {
+            return new SimpleDateFormat("MMM-dd kk:mm", Locale.US).format(mDate);
         }
 
         private String toHtml() {
@@ -183,10 +197,10 @@ public class AppLog {
             sb.append(mLogLevel.toHtmlColor());
             sb.append("\">");
             sb.append("[");
-            sb.append(mLogTag.name());
-            sb.append("] ");
+            sb.append(formatLogDate()).append(" ");
+            sb.append(mLogTag.name()).append(" ");
             sb.append(mLogLevel.name());
-            sb.append(": ");
+            sb.append("] ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
             sb.append("</font>");
             return sb.toString();
@@ -228,6 +242,28 @@ public class AppLog {
         return errors.toString();
     }
 
+
+    private static String getAppInfoHeaderText(Context context) {
+        StringBuilder sb = new StringBuilder();
+        PackageManager packageManager = context.getPackageManager();
+        PackageInfo pkInfo = PackageUtils.getPackageInfo(context);
+
+        ApplicationInfo applicationInfo = pkInfo != null ? pkInfo.applicationInfo : null;
+        String appName;
+        if (applicationInfo != null && packageManager.getApplicationLabel(applicationInfo) != null) {
+            appName =  packageManager.getApplicationLabel(applicationInfo).toString();
+        } else {
+            appName = "Unknown";
+        }
+        sb.append(appName).append(" - ").append(PackageUtils.getVersionName(context))
+                .append(" - Version code: ").append(PackageUtils.getVersionCode(context));
+        return sb.toString();
+    }
+
+    private static String getDeviceInfoHeaderText(Context context) {
+        return "Android device name: " + DeviceUtils.getInstance().getDeviceName(context);
+    }
+
     /**
      * Returns entire log as html for display (see AppLogViewerActivity)
      * @param  context
@@ -237,8 +273,8 @@ public class AppLog {
         ArrayList<String> items = new ArrayList<String>();
 
         // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-        items.add("<strong>WordPress Android version: " + PackageUtils.getVersionName(context) + "</strong>");
-        items.add("<strong>Android device name: " + DeviceUtils.getInstance().getDeviceName(context) + "</strong>");
+        items.add("<strong>" + getAppInfoHeaderText(context) + "</strong>");
+        items.add("<strong>" + getDeviceInfoHeaderText(context) + "</strong>");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
         while (it.hasNext()) {
@@ -256,15 +292,20 @@ public class AppLog {
         StringBuilder sb = new StringBuilder();
 
         // add version & device info
-        sb.append("WordPress Android version: " + PackageUtils.getVersionName(context)).append("\n")
-                .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("\n\n");
+        sb.append(getAppInfoHeaderText(context)).append("\n")
+                .append(getDeviceInfoHeaderText(context)).append("\n\n");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;
         while (it.hasNext()) {
-            sb.append(String.format("%02d - ", lineNum))
-                    .append(it.next().mLogText)
-                    .append("\n");
+            LogEntry entry = it.next();
+            sb.append(format(Locale.US, "%02d - ", lineNum))
+                .append("[")
+                .append(entry.formatLogDate()).append(" ")
+                .append(entry.mLogTag.name())
+                .append("] ")
+                .append(entry.mLogText)
+                .append("\n");
             lineNum++;
         }
         return sb.toString();

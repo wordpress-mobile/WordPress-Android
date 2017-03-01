@@ -11,8 +11,9 @@ import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.os.SystemClock;
+import android.support.multidex.MultiDexApplication;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
@@ -36,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
@@ -44,11 +46,12 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
+import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.ui.plans.PlansUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
@@ -88,7 +91,7 @@ import java.util.TimerTask;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends Application {
+public class WordPress extends MultiDexApplication {
     public static String versionName;
     public static Blog currentBlog;
     public static WordPressDB wpDB;
@@ -103,14 +106,14 @@ public class WordPress extends Application {
     private static RestClientUtils mRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
-    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
+    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60;
     private static final int SECONDS_BETWEEN_DELETE_STATS = 5 * 60; // 5 minutes
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
     /**
-     *  Updates Options for the current blog in background.
+     * Updates Options for the current blog in background.
      */
     public static RateLimitedTask sUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
         protected boolean run() {
@@ -199,7 +202,12 @@ public class WordPress extends Application {
         // Volley networking setup
         setupVolleyQueue();
 
-        AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+        // PasscodeLock setup
+        if(!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            // Make sure that PasscodeLock isn't already in place.
+            // Notifications services can enable it before the app is started.
+            AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
+        }
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             AppLockManager.getInstance().getAppLock().setExemptActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
@@ -215,6 +223,12 @@ public class WordPress extends Application {
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
+
+        // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
+        // with memory usage and the use of Configuration). More informations:
+        // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
+        // Note: if removed, this will cause crashes on Android < 21
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -256,19 +270,11 @@ public class WordPress extends Application {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
-        configureSimperium();
 
-        // Refresh account informations
+        // Refresh account informations and Notifications
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
-        }
-    }
-
-    // Configure Simperium and start buckets if we are signed in to WP.com
-    private void configureSimperium() {
-        if (AccountHelper.isSignedInWordPressDotCom()) {
-            AppLog.i(T.NOTIFS, "Configuring Simperium");
-            SimperiumUtils.configureSimperium(this, AccountHelper.getDefaultAccount().getAccessToken());
+            NotificationsUpdateService.startService(getContext());
         }
     }
 
@@ -359,35 +365,6 @@ public class WordPress extends Application {
         return mRestClientUtilsVersion0;
     }
 
-    /**
-     * enables "strict mode" for testing - should NEVER be used in release builds
-     */
-    private static void enableStrictMode() {
-        // return if the build is not a debug build
-        if (!BuildConfig.DEBUG) {
-            AppLog.e(T.UTILS, "You should not call enableStrictMode() on a non debug build");
-            return;
-        }
-
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()
-                .penaltyLog()
-                .penaltyFlashScreen()
-                .build());
-
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectActivityLeaks()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .detectLeakedRegistrationObjects() // <-- requires Jelly Bean
-                .penaltyLog()
-                .build());
-
-        AppLog.w(T.UTILS, "Strict mode enabled");
-    }
-
     public boolean isGooglePlayServicesAvailable(Activity activity) {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
@@ -416,11 +393,11 @@ public class WordPress extends Application {
      * <p/>
      * If the current blog is not already set, try and determine the last active blog from the last
      * time the application was used. If we're not able to determine the last active blog, try to
-     * select the first visible blog. If there are no more visible blogs, try to select the first
-     * hidden blog. If there are no blogs at all, return null.
+     * select the first visible (and not automated-transfer) blog. If there are no more visible blogs,
+     * try to select the first hidden blog. If there are no blogs at all, return null.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
+        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId()) || currentBlog.isAutomatedTransfer()) {
             attemptToRestoreLastActiveBlog();
         }
 
@@ -454,12 +431,15 @@ public class WordPress extends Application {
             for (Map<String, Object> account : accounts) {
                 int id = Integer.valueOf(account.get("id").toString());
                 if (id == lastBlogId) {
-                    setCurrentBlog(id);
-                    return currentBlog;
+                    Blog lastBlog  = getBlog(id);
+                    if (lastBlog != null && !lastBlog.isAutomatedTransfer()) {
+                        setCurrentBlog(id);
+                        return currentBlog;
+                    }
                 }
             }
         }
-        // Previous active blog is hidden or deleted
+        // Previous active blog is hidden or deleted or has become an automated transfer blog
         currentBlog = null;
         return null;
     }
@@ -568,8 +548,8 @@ public class WordPress extends Application {
         StatsDatabaseHelper.getDatabase(context).reset();
         StatsWidgetProvider.updateWidgetsOnLogout(context);
 
-        // Reset Simperium buckets (removes local data)
-        SimperiumUtils.resetBucketsAndDeauthorize();
+        // Reset Notifications Data
+        NotificationsTable.reset();
     }
 
     public static String getLoginUrl(Blog blog) {
@@ -673,7 +653,7 @@ public class WordPress extends Application {
 
     private static void attemptToRestoreLastActiveBlog() {
         if (setCurrentBlogToLastActive() == null) {
-            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            int blogId = WordPress.wpDB.getFirstVisibleAndNonAutomatedTransferBlogId();
             if (blogId == 0) {
                 blogId = WordPress.wpDB.getFirstHiddenBlogId();
             }
@@ -835,13 +815,25 @@ public class WordPress extends Application {
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        private void onAppComesFromBackground() {
+        private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata();
             mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
+                // Refresh account informations and Notifications
+
+                if (AccountHelper.isSignedInWordPressDotCom()) {
+                    Intent intent = activity.getIntent();
+                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+                        NotificationsUpdateService.startService(getContext(),
+                                getNoteIdFromNoteDetailActivityIntent(activity.getIntent()));
+                    } else {
+                        NotificationsUpdateService.startService(getContext());
+                    }
+                }
+
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 
@@ -852,14 +844,23 @@ public class WordPress extends Application {
                 sUpdateCurrentBlogOption.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
-            PlansUtils.synchIAPsWordPressCom();
+        }
+
+        // gets the note id from the extras that started this activity, so
+        // we can remember to re-set that to unread once the note fetch update takes place
+        private String getNoteIdFromNoteDetailActivityIntent(Intent intent) {
+            String noteId = "";
+            if (intent != null) {
+                noteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
+            }
+            return noteId;
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
             if (mIsInBackground) {
                 // was in background before
-                onAppComesFromBackground();
+                onAppComesFromBackground(activity);
             }
             stopActivityTransitionTimer();
 

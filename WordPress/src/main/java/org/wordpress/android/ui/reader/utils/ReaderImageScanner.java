@@ -45,9 +45,10 @@ public class ReaderImageScanner {
     }
 
     /*
-     * returns a list of all images in the content
+     * returns a list of image URLs in the content up to the max above a certain width - pass zero
+     * to include all images regardless of size
      */
-    public ReaderImageList getImageList() {
+    public ReaderImageList getImageList(int maxImageCount, int minImageWidth) {
         ReaderImageList imageList = new ReaderImageList(mIsPrivate);
 
         if (!mContentContainsImages) {
@@ -57,10 +58,30 @@ public class ReaderImageScanner {
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
             String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
-            imageList.addImageUrl(ReaderHtmlUtils.getSrcAttrValue(imgTag));
+            String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
+
+            if (minImageWidth == 0) {
+                imageList.addImageUrl(imageUrl);
+            } else {
+                int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
+                if (width >= minImageWidth) {
+                    imageList.addImageUrl(imageUrl);
+                    if (maxImageCount > 0 && imageList.size() >= maxImageCount) {
+                        break;
+                    }
+                }
+            }
         }
 
         return imageList;
+    }
+
+    /*
+     * returns true if there at least `minImageCount` images in the post content that are at
+     * least `minImageWidth` in size
+     */
+    public boolean hasUsableImageCount(int minImageCount, int minImageWidth) {
+        return getImageList(minImageCount, minImageWidth).size() == minImageCount;
     }
 
     /*

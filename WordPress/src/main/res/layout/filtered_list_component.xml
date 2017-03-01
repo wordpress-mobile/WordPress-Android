@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,44 +7,25 @@
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
-        android:layout_height="@dimen/toolbar_subtitle_height"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_with_spinner"
+            style="@style/FilteredRecyclerViewToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/FilteredRecyclerViewFilterContainer"
+            android:layout_height="@dimen/toolbar_height"
+            android:focusableInTouchMode="true"
             app:contentInsetLeft="0dp"
             app:contentInsetStart="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/filter_spinner"
+                style="@style/FilteredRecyclerViewSpinner.WordPress"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_small"
-                android:layout_marginTop="@dimen/margin_small"
-                >
-
-                <Spinner
-                    style="@style/FilteredRecyclerViewSpinner.WordPress"
-                    android:id="@+id/filter_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:overlapAnchor="false"/>
-
-                <LinearLayout
-                    android:id="@+id/custom_components_toolbar_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    >
-                </LinearLayout>
-
-            </RelativeLayout>
+                android:overlapAnchor="false" />
 
         </android.support.v7.widget.Toolbar>
 

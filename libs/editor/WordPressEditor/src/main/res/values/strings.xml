@@ -52,18 +52,23 @@
     <string name="image_link_to">Link to</string>
     <string name="image_width">Width</string>
 
-    <string-array name="alignment_array">
-        <item>None</item>
-        <item>Left</item>
-        <item>Center</item>
-        <item>Right</item>
+    <string name="alignment_none">None</string>
+    <string name="alignment_left">Left</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_right">Right</string>
+
+    <string-array name="alignment_key_array" translatable="false">
+        <item>none</item>
+        <item>left</item>
+        <item>center</item>
+        <item>right</item>
     </string-array>
 
-    <string-array name="image_size_array">
-        <item>Thumbnail</item>
-        <item>Medium</item>
-        <item>Large</item>
-        <item>Full Size</item>
+    <string-array name="alignment_array" translatable="false">
+        <item>@string/alignment_none</item>
+        <item>@string/alignment_left</item>
+        <item>@string/alignment_center</item>
+        <item>@string/alignment_right</item>
     </string-array>
 
     <!-- Accessibility - format bar button descriptions -->
@@ -81,9 +86,25 @@
     <string name="visual_editor">Visual editor</string>
     <string name="image_thumbnail">Image thumbnail</string>
 
-
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
-    <string name="send_link">Send link</string>
+
+    <string name="editor_dropped_text_error">Error occurred while dropping text</string>
+    <string name="editor_dropped_title_images_not_allowed">Dropping images in the Title is not allowed</string>
+    <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
+    <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
+
+    <!-- AZTEC -->
+    <string name="edit_hint">Share your story here&#8230;</string>
+
+    <string name="dialog_title">Insert link</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
+
+    <string name="menu_undo">Undo</string>
+    <string name="menu_redo">Redo</string>
+
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
 </resources>

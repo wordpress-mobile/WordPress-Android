@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 
 import org.wordpress.android.WordPress;
@@ -15,6 +16,7 @@ import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -74,11 +76,12 @@ public class BlogUtils {
             if (blogMap.containsKey("planID")) {
                 planID = MapUtils.getMapLong(blogMap, "planID");
             }
+            boolean isAutomatedTransfer = MapUtils.getMapBool(blogMap, "isAutomatedTransfer");
             String planShortName = MapUtils.getMapStr(blogMap, "plan_product_name_short");
             String capabilities = MapUtils.getMapStr(blogMap, "capabilities");
 
             retValue |= addOrUpdateBlog(blogName, xmlrpc, homeUrl, blogId, username, password, httpUsername,
-                    httpPassword, isAdmin, isVisible, planID, planShortName, capabilities);
+                    httpPassword, isAdmin, isVisible, planID, planShortName, capabilities, isAutomatedTransfer);
         }
         return retValue;
     }
@@ -108,7 +111,7 @@ public class BlogUtils {
     public static boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
                                           String username, String password, String httpUsername, String httpPassword,
                                           boolean isAdmin, boolean isVisible,
-                                          long planID, String planShortName, String capabilities) {
+                                          long planID, String planShortName, String capabilities, boolean isAutomatedTransfer) {
         Blog blog;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
@@ -127,6 +130,7 @@ public class BlogUtils {
             blog.setDotcomFlag(WPUrlUtils.isWordPressCom(xmlRpcUrl));
             // assigned later in getOptions call
             blog.setWpVersion("");
+            blog.setAutomatedTransfer(isAutomatedTransfer);
             blog.setAdmin(isAdmin);
             blog.setHidden(!isVisible);
             blog.setPlanID(planID);
@@ -155,6 +159,10 @@ public class BlogUtils {
                 }
                 if (blog.getCapabilities() == null || !blog.getCapabilities().equals(capabilities)) {
                     blog.setCapabilities(capabilities);
+                    blogUpdated = true;
+                }
+                if (isAutomatedTransfer != blog.isAutomatedTransfer()) {
+                    blog.setAutomatedTransfer(isAutomatedTransfer);
                     blogUpdated = true;
                 }
                 if (blogUpdated) {
@@ -187,5 +195,24 @@ public class BlogUtils {
         if (!lowerCase.equals(s.toString())) {
             s.replace(0, s.length(), lowerCase);
         }
+    }
+
+    @NonNull
+    public static Set<String> planTags() {
+        String[] extraFields = {"plan_product_id"};
+        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+        Set<String> tags = new HashSet<>();
+
+        for (Map<String, Object> blog : blogs) {
+            int planId = MapUtils.getMapInt(blog, "plan_product_id");
+            if (planId == 0) {
+                // Skip unknown plans, MapUtils will turn any missing plan ID into 0
+                continue;
+            }
+            String tag = String.format(Locale.US, "plan:%d", planId);
+            tags.add(tag);
+        }
+
+        return tags;
     }
 }

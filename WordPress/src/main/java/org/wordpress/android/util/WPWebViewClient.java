@@ -24,6 +24,10 @@ import java.util.List;
  * username and password of the blog configured for this activity.
  */
 public class WPWebViewClient extends URLFilteredWebViewClient {
+
+    /** Timeout in milliseconds for read / connect timeouts */
+    private static final int TIMEOUT_MS = 30000;
+
     private final Blog mBlog;
     private String mToken;
 
@@ -102,8 +106,8 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
                 // Force use of HTTPS for the resource, otherwise the request will fail for private sites
                 HttpURLConnection urlConnection = (HttpURLConnection) imageUrl.openConnection();
                 urlConnection.setRequestProperty("Authorization", "Bearer " + mToken);
-                urlConnection.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
-                urlConnection.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
+                urlConnection.setReadTimeout(TIMEOUT_MS);
+                urlConnection.setConnectTimeout(TIMEOUT_MS);
                 WebResourceResponse response = new WebResourceResponse(urlConnection.getContentType(),
                         urlConnection.getContentEncoding(),
                         urlConnection.getInputStream());

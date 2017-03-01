@@ -51,7 +51,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ReaderMenuHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.popup_menu_item, parent, false);
+            convertView = mInflater.inflate(R.layout.reader_popup_menu_item, parent, false);
             holder = new ReaderMenuHolder(convertView);
             convertView.setTag(holder);
         } else {
@@ -59,26 +59,31 @@ public class ReaderMenuAdapter extends BaseAdapter {
         }
 
         int textRes;
+        int textColorRes;
         int iconRes;
         switch (mMenuItems.get(position)) {
             case ITEM_FOLLOW:
                 textRes = R.string.reader_btn_follow;
+                textColorRes = R.color.reader_follow;
                 iconRes = R.drawable.reader_follow;
                 break;
             case ITEM_UNFOLLOW:
                 textRes = R.string.reader_btn_unfollow;
+                textColorRes = R.color.reader_following;
                 iconRes = R.drawable.reader_following;
                 break;
             case ITEM_BLOCK:
                 textRes = R.string.reader_menu_block_blog;
+                textColorRes = R.color.grey_dark;
                 iconRes = 0;
                 break;
             default:
                 return convertView;
         }
 
-
         holder.text.setText(textRes);
+        holder.text.setTextColor(convertView.getContext().getResources().getColor(textColorRes));
+
         if (iconRes != 0) {
             holder.icon.setImageResource(iconRes);
         }

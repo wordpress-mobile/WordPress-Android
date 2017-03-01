@@ -5,6 +5,8 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ToggleButton;
 
+import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -80,7 +82,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         selectionArgs.put("id", "zss_field_content");
         mFragment.onSelectionChanged(selectionArgs);
 
-        waitFor(100);
+        waitFor(500);
 
         // The formatting buttons should be enabled while the content field is selected
         assertTrue(mediaButton.isEnabled());
@@ -99,7 +101,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         assertTrue(htmlButton.isEnabled());
     }
 
-    public void testHtmlModeToggleTextTransfer() throws InterruptedException {
+    public void testHtmlModeToggleTextTransfer() throws InterruptedException, IllegalEditorStateException {
         waitForOnDomLoaded();
 
         final View view = mFragment.getView();
@@ -130,6 +132,8 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
 
         uiThreadLatch1.await();
 
+        waitFor(500);
+
         // The HTML mode fields should be populated with the raw HTML loaded into the WebView on load
         // (see MockEditorActivity)
         assertEquals("A title", titleText.getText().toString());
@@ -146,8 +150,12 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
                 contentText.setText("new <b>content</b>");
 
                 // Check that getTitle() and getContent() return latest version even in HTML mode
-                assertEquals("new title", mFragment.getTitle());
-                assertEquals("new <b>content</b>", mFragment.getContent());
+                try {
+                    assertEquals("new title", mFragment.getTitle());
+                    assertEquals("new <b>content</b>", mFragment.getContent());
+                } catch (IllegalEditorStateException e) {
+                    throw new RuntimeException();
+                }
 
                 htmlButton.performClick(); // Turn off HTML mode
 

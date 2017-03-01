@@ -8,8 +8,7 @@
     <org.wordpress.android.ui.FilteredRecyclerView
         android:id="@+id/reader_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
     <include
         android:id="@+id/empty_custom_view"
@@ -30,8 +29,8 @@
         android:paddingRight="24dp"
         android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
-        tools:visibility="visible"
-        tools:targetApi="LOLLIPOP" >
+        tools:targetApi="LOLLIPOP"
+        tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"

@@ -279,10 +279,6 @@ public class Plan implements Serializable {
         return StringUtils.notNullStr(mExpiry);
     }
 
-    public String getAndroidSKU() {
-        return StringUtils.notNullStr(mAndroidSKU);
-    }
-
     public String getBundleSubscriptionID() {
         return StringUtils.notNullStr(mBundleSubscriptionID);
     }

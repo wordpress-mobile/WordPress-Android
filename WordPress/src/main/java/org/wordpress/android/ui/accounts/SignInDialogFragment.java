@@ -1,15 +1,16 @@
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
@@ -144,16 +145,19 @@ public class SignInDialogFragment extends DialogFragment {
         }
         switch (action) {
             case ACTION_OPEN_URL:
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(arguments.getString(ARG_OPEN_URL_PARAM)));
-                startActivity(intent);
-                dismissAllowingStateLoss();
+                String url = arguments.getString(ARG_OPEN_URL_PARAM);
+                if (TextUtils.isEmpty(url)) {
+                    return;
+                }
+                ActivityLauncher.openUrlExternal(getContext(), url);
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
                         SignInFragment.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         SignInFragment.ENTERED_USERNAME_KEY));
-                HelpshiftHelper.getInstance().showConversation(getActivity(), Tag.ORIGIN_LOGIN_SCREEN_ERROR);
+                Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
+                HelpshiftHelper.getInstance().showConversation(getActivity(), origin);
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:

@@ -1,8 +1,12 @@
 package org.wordpress.android.editor;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -12,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +24,7 @@ import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -35,6 +42,7 @@ import org.json.JSONObject;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ShortcodeUtils;
@@ -45,9 +53,11 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +68,11 @@ import java.util.concurrent.TimeUnit;
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
         EditorMediaUploadListener {
+
+    public class IllegalEditorStateException extends Exception {
+
+    }
+
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -71,6 +86,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private static final float TOOLBAR_ALPHA_ENABLED = 1;
     private static final float TOOLBAR_ALPHA_DISABLED = 0.5f;
+
+    private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = Arrays.asList(ClipDescription.MIMETYPE_TEXT_PLAIN,
+            ClipDescription.MIMETYPE_TEXT_HTML);
+    private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
+
     public static final int MAX_ACTION_TIME_MS = 2000;
 
     private String mTitle = "";
@@ -83,6 +103,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private int mSelectionStart;
     private int mSelectionEnd;
+
+    private String mFocusedFieldId;
 
     private String mTitlePlaceholder = "";
     private String mContentPlaceholder = "";
@@ -108,6 +130,130 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
     private long mActionStartedAt = -1;
+
+    private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
+        private long lastSetCoordsTimestamp;
+
+        private boolean isSupported(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
+            if (clipDescription == null) {
+                return false;
+            }
+
+            for (String supportedMimeType : mimeTypesToCheck) {
+                if (clipDescription.hasMimeType(supportedMimeType)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean onDrag(View view, DragEvent dragEvent) {
+            switch (dragEvent.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT) ||
+                            isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE);
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    // would be nice to start marking the place the item will drop
+                    break;
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    int x = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getX());
+                    int y = DisplayUtils.pxToDp(getActivity(), (int) dragEvent.getY());
+
+                    // don't call into JS too often
+                    long currentTimestamp = SystemClock.uptimeMillis();
+                    if ((currentTimestamp - lastSetCoordsTimestamp) > 150) {
+                        lastSetCoordsTimestamp = currentTimestamp;
+
+                        mWebView.execJavaScriptFromString("ZSSEditor.moveCaretToCoords(" + x + ", " + y + ");");
+                    }
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    // clear any drop marking maybe
+                    break;
+                case DragEvent.ACTION_DROP:
+                    if (mSourceView.getVisibility() == View.VISIBLE) {
+                        if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
+                            // don't allow dropping images into the HTML source
+                            ToastUtils.showToast(getActivity(), R.string.editor_dropped_html_images_not_allowed,
+                                    ToastUtils.Duration.LONG);
+                            return true;
+                        } else {
+                            // let the system handle the text drop
+                            return false;
+                        }
+                    }
+
+                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
+                            ("zss_field_title".equals(mFocusedFieldId))) {
+                        // don't allow dropping images into the title field
+                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed,
+                                ToastUtils.Duration.LONG);
+                        return true;
+                    }
+
+                    if (isAdded()) {
+                        mEditorDragAndDropListener.onRequestDragAndDropPermissions(dragEvent);
+                    }
+
+                    ClipDescription clipDescription = dragEvent.getClipDescription();
+                    if (clipDescription.getMimeTypeCount() < 1) {
+                        break;
+                    }
+
+                    ContentResolver contentResolver = getActivity().getContentResolver();
+                    ArrayList<Uri> uris = new ArrayList<>();
+                    boolean unsupportedDropsFound = false;
+
+                    for (int i = 0; i < dragEvent.getClipData().getItemCount(); i++) {
+                        ClipData.Item item = dragEvent.getClipData().getItemAt(i);
+                        Uri uri = item.getUri();
+
+                        final String uriType = uri != null ? contentResolver.getType(uri) : null;
+                        if (uriType != null && DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE.contains(uriType)) {
+                            uris.add(uri);
+                            continue;
+                        } else if (item.getText() != null) {
+                            insertTextToEditor(item.getText().toString());
+                            continue;
+                        } else if (item.getHtmlText() != null) {
+                            insertTextToEditor(item.getHtmlText());
+                            continue;
+                        }
+
+                        // any other drop types are not supported, including web URLs. We cannot proactively
+                        // determine their mime type for filtering
+                        unsupportedDropsFound = true;
+                    }
+
+                    if (unsupportedDropsFound) {
+                        ToastUtils.showToast(getActivity(), R.string.editor_dropped_unsupported_files, ToastUtils
+                                .Duration.LONG);
+                    }
+
+                    if (uris.size() > 0) {
+                        mEditorDragAndDropListener.onMediaDropped(uris);
+                    }
+
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    // clear any drop marking maybe
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        private void insertTextToEditor(String text) {
+            if (text != null) {
+                mWebView.execJavaScriptFromString("ZSSEditor.insertText('" + Utils.escapeHtml(text) + "', true);");
+            } else {
+                ToastUtils.showToast(getActivity(), R.string.editor_dropped_text_error, ToastUtils.Duration.SHORT);
+                AppLog.d(T.EDITOR, "Dropped text was null!");
+            }
+        }
+    };
 
     public static EditorFragment newInstance(String title, String content) {
         EditorFragment fragment = new EditorFragment();
@@ -148,9 +294,21 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mWebView = (EditorWebViewAbstract) view.findViewById(R.id.webview);
 
+        // Revert to compatibility WebView for custom ROMs using a 4.3 WebView in Android 4.4
+        if (mWebView.shouldSwitchToCompatibilityMode()) {
+            ViewGroup parent = (ViewGroup) mWebView.getParent();
+            int index = parent.indexOfChild(mWebView);
+            parent.removeView(mWebView);
+            mWebView = new EditorWebViewCompatibility(getActivity(), null);
+            mWebView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            parent.addView(mWebView, index);
+        }
+
         mWebView.setOnTouchListener(this);
         mWebView.setOnImeBackListener(this);
         mWebView.setAuthHeaderRequestListener(this);
+
+        mWebView.setOnDragListener(mOnDragListener);
 
         if (mCustomHttpHeaders != null && mCustomHttpHeaders.size() > 0) {
             for (Map.Entry<String, String> entry : mCustomHttpHeaders.entrySet()) {
@@ -207,6 +365,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mSourceViewTitle.setHint(mTitlePlaceholder);
         mSourceViewContent.setHint("<p>" + mContentPlaceholder + "</p>");
 
+        // attach drag-and-drop handler
+        mSourceViewTitle.setOnDragListener(mOnDragListener);
+        mSourceViewContent.setOnDragListener(mOnDragListener);
+
         // -- Format bar configuration
 
         setupFormatBarButtonMap(view);
@@ -237,6 +399,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mEditorDragAndDropListener = (EditorDragAndDropListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
+        }
+    }
+
+    @Override
     public void onDetach() {
         // Soft cancel (delete flag off) all media uploads currently in progress
         for (String mediaId : mUploadingMedia.keySet()) {
@@ -255,8 +428,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putCharSequence(KEY_TITLE, getTitle());
-        outState.putCharSequence(KEY_CONTENT, getContent());
+        try {
+            outState.putCharSequence(KEY_TITLE, getTitle());
+            outState.putCharSequence(KEY_CONTENT, getContent());
+        } catch (IllegalEditorStateException e) {
+            AppLog.e(T.EDITOR, "onSaveInstanceState: unable to get title or content");
+        }
     }
 
     private ActionBar getActionBar() {
@@ -468,9 +645,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
 
                     // Update mTitle and mContentHtml with the latest state from the ZSSEditor
-                    getTitle();
-                    getContent();
-
+                    try {
+                        getTitle();
+                        getContent();
+                    } catch (IllegalEditorStateException e) {
+                        AppLog.e(T.EDITOR, "toggleHtmlMode: unable to get title or content");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                toggleButton.setChecked(false);
+                            }
+                        });
+                        return;
+                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -754,9 +941,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getTitle() {
+    public CharSequence getTitle() throws IllegalEditorStateException {
         if (!isAdded()) {
-            return "";
+            throw new IllegalEditorStateException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -793,9 +980,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getContent() {
+    public CharSequence getContent() throws IllegalEditorStateException {
         if (!isAdded()) {
-            return "";
+            throw new IllegalEditorStateException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -1116,12 +1303,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     public void onSelectionChanged(final Map<String, String> selectionArgs) {
-        final String focusedFieldId = selectionArgs.get("id"); // The field now in focus
+        mFocusedFieldId = selectionArgs.get("id"); // The field now in focus
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                if (!focusedFieldId.isEmpty()) {
-                    switch (focusedFieldId) {
+                if (!mFocusedFieldId.isEmpty()) {
+                    switch (mFocusedFieldId) {
                         case "zss_field_title":
                             updateFormatBarEnabledState(false);
                             break;

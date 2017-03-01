@@ -269,17 +269,18 @@ public class ReaderUpdateService extends Service {
                 ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
                 ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
-                boolean followedBlogsChanged = !localBlogs.isSameList(serverBlogs);
-
-                if (followedBlogsChanged) {
+                if (!localBlogs.isSameList(serverBlogs)) {
+                    // always update the list of followed blogs if there are *any* changes between
+                    // server and local (including subscription count, description, etc.)
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
-                    AppLog.d(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                }
-
-                int numberOfDeletedPosts = ReaderPostTable.deletePostsFromUnfollowedBlogs();
-
-                if (followedBlogsChanged || numberOfDeletedPosts > 0) {
-                    EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
+                    // ...but only update the follow status and alert that followed blogs have
+                    // changed if the server list doesn't have the same blogs as the local list
+                    // (ie: a blog has been followed/unfollowed since local was last updated)
+                    if (!localBlogs.hasSameBlogs(serverBlogs)) {
+                        ReaderPostTable.updateFollowedStatus();
+                        AppLog.i(AppLog.T.READER, "reader blogs service > followed blogs changed");
+                        EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
+                    }
                 }
 
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);

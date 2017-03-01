@@ -25,6 +25,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.BlogUtils;
@@ -64,10 +65,11 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private RelativeLayout mPeopleView;
+    private RelativeLayout mPageView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
-    private LinearLayout mAdminView;
+    private RelativeLayout mAdminView;
     private View mFabView;
     private LinearLayout mNoSiteView;
     private ScrollView mScrollView;
@@ -85,7 +87,6 @@ public class MySiteFragment extends Fragment
 
     public void setBlog(@Nullable final Blog blog) {
         mBlogLocalId = BlogUtils.getBlogLocalId(blog);
-
         refreshBlogDetails(blog);
     }
 
@@ -94,14 +95,6 @@ public class MySiteFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         mBlogLocalId = BlogUtils.getBlogLocalId(WordPress.getCurrentBlog());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mFabView.getVisibility() == View.VISIBLE) {
-            AniUtils.showFab(mFabView, false);
-        }
     }
 
     @Override
@@ -149,12 +142,18 @@ public class MySiteFragment extends Fragment
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
-        mAdminView = (LinearLayout) rootView.findViewById(R.id.admin_section);
+        mAdminView = (RelativeLayout) rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
+        mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
+
+        // hide the FAB the first time the fragment is created in order to animate it in onResume()
+        if (savedInstanceState == null) {
+            mFabView.setVisibility(View.INVISIBLE);
+        }
 
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,14 +183,12 @@ public class MySiteFragment extends Fragment
             }
         });
 
-        if (isPlansEnabled()) {
-            mPlanContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
-                }
-            });
-        }
+        mPlanContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogPlans(getActivity(), mBlogLocalId);
+            }
+        });
 
         rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,13 +256,6 @@ public class MySiteFragment extends Fragment
         return rootView;
     }
 
-    /*
-     * plans is a work-in-progress and is currently only exposed to alpha testers
-     */
-    private static boolean isPlansEnabled() {
-        return AppPrefs.isInAppBillingAvailable();
-    }
-
     private void showSitePicker() {
         if (isAdded()) {
             ActivityLauncher.showSitePickerForResult(getActivity(), mBlogLocalId);
@@ -329,7 +319,7 @@ public class MySiteFragment extends Fragment
         }
     }
 
-    private void refreshBlogDetails(@Nullable final Blog blog) {
+    private void refreshBlogDetails(@Nullable Blog blog) {
         if (!isAdded()) {
             return;
         }
@@ -385,18 +375,18 @@ public class MySiteFragment extends Fragment
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(homeURL);
 
-        // Hide the Plan item if the Plans feature is not available.
-        if (isPlansEnabled()) {
-            String planShortName = blog.getPlanShortName();
-            if (!TextUtils.isEmpty(planShortName)) {
-                mCurrentPlanNameTextView.setText(planShortName);
-                mPlanContainer.setVisibility(View.VISIBLE);
-            } else {
-                mPlanContainer.setVisibility(View.GONE);
-            }
+        // Hide the Plan item if the Plans feature is not available for this blog
+        String planShortName = blog.getPlanShortName();
+        if (!TextUtils.isEmpty(planShortName) && blog.isAdmin()) {
+            mCurrentPlanNameTextView.setText(planShortName);
+            mPlanContainer.setVisibility(View.VISIBLE);
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
+
+        // Do not show pages menu item to Collaborators.
+        int pageVisibility = (isAdminOrSelfHosted || blog.hasCapability(Capability.EDIT_PAGES)) ? View.VISIBLE : View.GONE;
+        mPageView.setVisibility(pageVisibility);
     }
 
     private void toggleAdminVisibility(@Nullable final Blog blog) {
@@ -460,6 +450,23 @@ public class MySiteFragment extends Fragment
             return;
         }
 
-        refreshBlogDetails(WordPress.getBlog(mBlogLocalId));
+        // refresh current blog object so it gets updated with latest information coming from the server
+        Blog currentBlog = udpateBlogObjectAndId();
+        refreshBlogDetails(currentBlog);
+    }
+
+    private Blog udpateBlogObjectAndId() {
+        // this is needed, in the case this blog doesn't exist anymore locally after refreshing
+        // the database, calling setCurrentBLog will make currentblog null if mBlogLocalId doesn't
+        // exist, and thus then calling
+        // getCurrentBlog afterwards goes through the process of finding the next available blog, if
+        // an available blog is there (cascading through last active blog > first visible blogs >
+        // first hidden blog).
+        WordPress.setCurrentBlog(mBlogLocalId);
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null) {
+            mBlogLocalId = currentBlog.getLocalTableBlogId();
+        }
+        return currentBlog;
     }
 }

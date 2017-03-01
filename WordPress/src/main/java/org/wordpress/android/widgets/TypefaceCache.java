@@ -49,6 +49,7 @@ public class TypefaceCache {
             return getTypefaceForTypefaceName(context, typefaceName);
         }
 
+
         // default system font
         if (family == FAMILY_DEFAULT_LIGHT) {
             return Typeface.create("sans-serif-light", fontStyle);

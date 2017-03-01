@@ -5,28 +5,34 @@ import android.support.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
-    private long personID;
-    private String blogId;
-    private int localTableBlogId;
+    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER }
 
-    private String username;
-    private String firstName;
-    private String lastName;
+    private long personID;
+    private int localTableBlogId;
     private String displayName;
     private String avatarUrl;
-    private String role;
+    private PersonType personType;
 
-    public Person(long personID, String blogId, int localTableBlogId) {
+    // Only users have a role
+    private Role role;
+
+    // Users, followers & viewers has a username, email followers don't
+    private String username;
+
+    // Only followers & email followers have a subscribed date
+    private String subscribed;
+
+    public Person(long personID, int localTableBlogId) {
         this.personID = personID;
-        this.blogId = blogId;
         this.localTableBlogId = localTableBlogId;
     }
 
     @Nullable
-    public static Person fromJSON(JSONObject json, String blogId, int localTableBlogId) throws JSONException {
+    public static Person userFromJSON(JSONObject json, int localTableBlogId) throws JSONException {
         if (json == null) {
             return null;
         }
@@ -34,15 +40,63 @@ public class Person {
         // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
         try {
             long personID = Long.parseLong(json.getString("ID"));
-            Person person = new Person(personID, blogId, localTableBlogId);
+            Person person = new Person(personID, localTableBlogId);
             person.setUsername(json.optString("login"));
-            person.setFirstName(json.optString("first_name"));
-            person.setLastName(json.optString("last_name"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
+            person.personType = PersonType.USER;
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
-            person.setRole(role);
+            person.setRole(Role.fromString(role));
+
+            return person;
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static Person followerFromJSON(JSONObject json, int localTableBlogId, boolean isEmailFollower)
+            throws JSONException {
+        if (json == null) {
+            return null;
+        }
+
+        // Response parameters are in: https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/stats/followers/
+        try {
+            long personID = Long.parseLong(json.getString("ID"));
+            Person person = new Person(personID, localTableBlogId);
+            person.setDisplayName(json.optString("label"));
+            person.setUsername(json.optString("login"));
+            person.setAvatarUrl(json.optString("avatar"));
+            person.setSubscribed(json.optString("date_subscribed"));
+            person.personType = isEmailFollower ? PersonType.EMAIL_FOLLOWER : PersonType.FOLLOWER;
+
+            return person;
+        } catch (NumberFormatException e) {
+            AppLog.e(AppLog.T.PEOPLE, "The ID parsed from the JSON couldn't be converted to long: " + e);
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static Person viewerFromJSON(JSONObject json, int localTableBlogId) throws JSONException {
+        if (json == null) {
+            return null;
+        }
+
+        // Similar response parameters in:
+        // https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/users/%24user_id/
+        try {
+            long personID = Long.parseLong(json.getString("ID"));
+            Person person = new Person(personID, localTableBlogId);
+            person.setUsername(json.optString("login"));
+            person.setDisplayName(json.optString("name"));
+            person.setAvatarUrl(json.optString("avatar_URL"));
+            person.setPersonType(PersonType.VIEWER);
 
             return person;
         } catch (NumberFormatException e) {
@@ -54,10 +108,6 @@ public class Person {
 
     public long getPersonID() {
         return personID;
-    }
-
-    public String getBlogId() {
-        return StringUtils.notNullStr(blogId);
     }
 
     public int getLocalTableBlogId() {
@@ -72,22 +122,6 @@ public class Person {
         this.username = username;
     }
 
-    public String getFirstName() {
-        return StringUtils.notNullStr(firstName);
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return StringUtils.notNullStr(lastName);
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getDisplayName() {
         return StringUtils.notNullStr(displayName);
     }
@@ -96,11 +130,11 @@ public class Person {
         this.displayName = displayName;
     }
 
-    public String getRole() {
-        return StringUtils.notNullStr(role);
+    public Role getRole() {
+        return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -110,5 +144,31 @@ public class Person {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getSubscribed() {
+        return StringUtils.notNullStr(subscribed);
+    }
+
+    public void setSubscribed(String subscribed) {
+        this.subscribed = StringUtils.notNullStr(subscribed);
+    }
+
+    /*
+     * converts iso8601 subscribed date to an actual java date
+     */
+    private transient java.util.Date dtSubscribed;
+    public java.util.Date getDateSubscribed() {
+        if (dtSubscribed == null)
+            dtSubscribed = DateTimeUtils.dateFromIso8601(subscribed);
+        return dtSubscribed;
+    }
+
+    public PersonType getPersonType() {
+        return personType;
+    }
+
+    public void setPersonType(PersonType personType) {
+        this.personType = personType;
     }
 }

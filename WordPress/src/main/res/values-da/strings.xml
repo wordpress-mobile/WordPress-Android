@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2017-02-02 00:38:20+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.4.0-alpha
+Language: da_DK
+-->
 <resources>
+	<string name="signout">Log ud</string>
+	<string name="reader_label_image_count_one">1 billede</string>
+	<string name="role_contributor">Bidragsyder</string>
+	<string name="role_editor">Redaktør</string>
+	<string name="role_admin">Administrator</string>
+	<string name="alignment_left">Venstre</string>
+	<string name="error_fetch_users_list">Kunne ikke hente sidens brugere</string>
+	<string name="people_dropdown_item_team">Gruppe</string>
 	<string name="plans_post_purchase_button_themes">Gennemse temaer</string>
 	<string name="plans_post_purchase_title_themes">Find et perfekt, premium tema</string>
 	<string name="plans_post_purchase_button_video">Start på nyt indlæg</string>
 	<string name="plans_post_purchase_title_customize">Tilpas skrifttyper og farver</string>
-	<string name="plan_purchase_now">Køb nu</string>
 	<string name="plan">Plan</string>
 	<string name="plans">Planer</string>
 	<string name="plans_loading_error">Kunne ikke hente planer</string>
@@ -20,15 +33,11 @@
 	<string name="contact_support">Kontakt support</string>
 	<string name="site_settings_advanced_header">Avanceret</string>
 	<string name="button_skip">Spring over</string>
-	<string name="align_left">Venstre</string>
-	<string name="align_center">Centreret</string>
 	<string name="theme_free">Gratis</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
-	<string name="align_none">Ingen</string>
 	<string name="theme_all">Alle</string>
 	<string name="theme_premium">Premium</string>
-	<string name="align_right">Højre</string>
 	<string name="post_format_chat">Chat</string>
 	<string name="post_format_gallery">Galleri</string>
 	<string name="post_format_image">Billede</string>
@@ -36,11 +45,15 @@
 	<string name="post_format_quote">Citat</string>
 	<string name="post_format_standard">Standard</string>
 	<string name="post_format_audio">Lyd</string>
+	<string name="reader_discover_visit_blog">Besøg %s</string>
+	<string name="reader_short_like_count_multi">%s Likes</string>
+	<string name="reader_short_like_count_one">1 Like</string>
+	<string name="reader_label_follow_count">%,d følgere</string>
+	<string name="reader_short_like_count_none">Like</string>
 	<string name="tabbar_accessibility_label_my_site">Mit websted</string>
 	<string name="tabbar_accessibility_label_me">Mig</string>
 	<string name="passcodelock_prompt_message">Indtast din PIN</string>
 	<string name="editor_toast_changes_saved">Ændringer gemt</string>
-	<string name="push_auth_expired">Forspørgslen er udløbet. Log ind på WordPress.com for at prøve igen.</string>
 	<string name="ignore">Ignorer</string>
 	<string name="stats_insights_best_ever">Bedste visninger nogensinde</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% af visninger</string>
@@ -50,8 +63,6 @@
 	<string name="stats_insights_today">Dagens statistikker</string>
 	<string name="stats_insights_all_time">Totale indlæg, visninger og besøgende</string>
 	<string name="stats_insights">Indsigt</string>
-	<string name="me_disconnect_from_wordpress_com">Afbryd forbindelse til WordPress.com</string>
-	<string name="me_connect_to_wordpress_com">Forbind til WordPress.com</string>
 	<string name="me_btn_login_logout">Log ind/ud</string>
 	<string name="me_btn_support">Hjælp &amp; Support</string>
 	<string name="site_picker_cant_hide_current_site">"%s" blev ikke skjult, fordi det er det aktuelle websted</string>
@@ -67,12 +78,9 @@
 	<string name="my_site_header_publish">Udgiv</string>
 	<string name="my_site_header_look_and_feel">Udseende</string>
 	<string name="my_site_btn_blog_posts">Blogindlæg</string>
-	<string name="my_site_header_admin">Administrator</string>
 	<string name="my_site_header_configuration">Konfiguration</string>
-	<string name="notifications_account_required">Log ind på WordPress.com for notifikationer</string>
 	<string name="stats_unknown_author">Ukendt forfatter</string>
 	<string name="image_added">Billede tilføjet</string>
-	<string name="signout">Afbryd</string>
 	<string name="deselect_all">Fravælg alle</string>
 	<string name="show">Vis</string>
 	<string name="hide">Skjul</string>
@@ -97,7 +105,6 @@
 	<string name="invalid_verification_code">Ugyldig godkendelseskode</string>
 	<string name="verification_code">Godkendelseskode</string>
 	<string name="verify">Bekræft</string>
-	<string name="auth_required">Log ind igen for at fortsætte.</string>
 	<string name="tab_title_device_images">Enhedsbilleder</string>
 	<string name="tab_title_device_videos">Enhedsvideoer</string>
 	<string name="tab_title_site_images">Webstedsbilleder</string>
@@ -109,7 +116,6 @@
 	<string name="take_video">Optag en video</string>
 	<string name="take_photo">Tag et billede</string>
 	<string name="language">Sprog</string>
-	<string name="sign_in_jetpack">Log ind på din WordPress.com-konto og forbind til Jetpack.</string>
 	<string name="error_publish_no_network">Kan ikke udgive uden forbindelse. Gemt som kladde.</string>
 	<string name="media_details_label_file_name">Filnavn</string>
 	<string name="stats_followers_total_email_paged">Viser %1$d - %2$d af %3$s følgere på e-mail</string>
@@ -216,7 +222,6 @@
 	<string name="uploading_total">Overfører %1$d af %2$d</string>
 	<string name="comment_reply_to_user">Besvar %s</string>
 	<string name="older_month">Ældre end en måned</string>
-	<string name="signing_out">Logger ud...</string>
 	<string name="more">Mere</string>
 	<string name="older_two_days">Ældre end 2 dage</string>
 	<string name="comment_trashed">Kommentar slettet</string>
@@ -458,10 +463,8 @@
 	<string name="pick_photo">Vælg foto</string>
 	<string name="select_time">Vælg tidspunkt</string>
 	<string name="select_date">Vælg dato</string>
-	<string name="nux_oops_not_selfhosted_blog">Log ind på WordPress.com</string>
 	<string name="nux_tap_continue">Fortsæt</string>
 	<string name="nux_welcome_create_account">Opret konto</string>
-	<string name="signing_in">Logger ind...</string>
 	<string name="nux_add_selfhosted_blog">Tilføj websted fra egen udbyder</string>
 	<string name="password_invalid">Din adgangskode skal være mere sikker. Sørg for at benytte mindst 7 tegn og blande store og små bogstaver, tal eller specielle tegn.</string>
 	<string name="reader_toast_err_tag_exists">Du følger allerede dette tag</string>
@@ -471,7 +474,6 @@
 	<string name="reader_toast_err_share_intent">Kunne ikke dele</string>
 	<string name="reader_toast_err_url_intent">Kunne ikke åbne %s</string>
 	<string name="reader_empty_followed_tags">Du følger ikke nogen tags</string>
-	<string name="connecting_wpcom">Forbinder til WordPress.com</string>
 	<string name="create_account_wpcom">Opret en konto på WordPress.com</string>
 	<string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt tag</string>
 	<string name="jetpack_not_found">Jetpack-pluginnet blev ikke fundet</string>
@@ -481,7 +483,6 @@
 	<string name="media_add_new_media_gallery">Opret galleri</string>
 	<string name="empty_list_default">Listen er tom</string>
 	<string name="select_from_media_library">Vælg fra mediebiblioteket</string>
-	<string name="reader_timespan_now">nu</string>
 	<string name="reader_label_added_tag">Tilføjede %s</string>
 	<string name="reader_label_removed_tag">Fjernede %s</string>
 	<string name="reader_likes_only_you">Du synes godt om dette</string>
@@ -548,7 +549,6 @@
 	<string name="passcode_set">PIN ændret</string>
 	<string name="media_gallery_type_slideshow">Slideshow</string>
 	<string name="upload">Overfør</string>
-	<string name="sign_in">Log ind</string>
 	<string name="notifications">Meddelelser</string>
 	<string name="note_reply_successful">Svar sendt</string>
 	<string name="new_notifications">%d nye notifikationer</string>
@@ -588,6 +588,7 @@
 	<string name="image_alignment">Justering</string>
 	<string name="refresh">Genindlæs</string>
 	<string name="untitled">Ikke-navngivet</string>
+	<string name="edit">Rediger</string>
 	<string name="post_id">Indlæg</string>
 	<string name="page_id">Side</string>
 	<string name="post_password">Kodeord (valgfrit)</string>
@@ -607,7 +608,6 @@
 	<string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
 	<string name="dlg_deleting_comments">Sletter kommentarer</string>
 	<string name="notification_vibrate">Vibrer</string>
-	<string name="notification_sound">Afspil beskedlyd</string>
 	<string name="notification_blink">Blink beskedlys</string>
 	<string name="status">Status</string>
 	<string name="select_video">Vælg en video fra galleriet</string>
@@ -615,6 +615,7 @@
 	<string name="location">Placering</string>
 	<string name="media">Medier</string>
 	<string name="delete">Slet</string>
+	<string name="approve">Godkend</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogs</string>
 	<string name="select_photo">Vælg et billede fra galleri</string>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
+import org.wordpress.android.ui.stats.ScrollViewExt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
@@ -58,16 +60,23 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
 
     @Override
     protected View onCreateDialogView() {
-        LinearLayout view = new LinearLayout(getContext());
-        view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-        view.setOrientation(LinearLayout.VERTICAL);
+
+        ScrollView outerView = new ScrollView(getContext());
+        outerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        LinearLayout innerView = new LinearLayout(getContext());
+        innerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        innerView.setOrientation(LinearLayout.VERTICAL);
 
         View spacerView = new View(getContext());
         int spacerHeight = getContext().getResources().getDimensionPixelSize(R.dimen.margin_medium);
         spacerView.setLayoutParams(new ViewGroup.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, spacerHeight));
-        view.addView(spacerView);
+        innerView.addView(spacerView);
 
-        return configureLayoutForView(view);
+        outerView.addView(innerView);
+        configureLayoutForView(innerView);
+
+        return outerView;
     }
 
     private View configureLayoutForView(LinearLayout view) {

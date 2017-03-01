@@ -16,6 +16,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -50,10 +52,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -85,7 +85,7 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
-    private static final int DATABASE_VERSION = 47;
+    private static final int DATABASE_VERSION = 52;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -201,6 +201,7 @@ public class WordPressDB {
     private static final String ADD_HOME_URL = "alter table accounts add homeURL text default '';";
 
     private static final String ADD_BLOG_OPTIONS = "alter table accounts add blog_options text default '';";
+    private static final String ADD_BLOG_AUTOMATED_TRANSFER = "alter table accounts add isAutomatedTransfer boolean default 0;";
 
     // add category parent id to keep track of category hierarchy
     private static final String ADD_PARENTID_IN_CATEGORIES = "alter table cats add parent_id integer default 0;";
@@ -229,6 +230,12 @@ public class WordPressDB {
     // add capabilities to blog
     private static final String ADD_BLOGS_CAPABILITIES = "alter table accounts add capabilities text default '';";
 
+    // add field to store time of last udpated draft
+    private static final String ADD_DRAFT_POST_LAST_UPDATED_DATE = "alter table posts add dateLastUpdated date;";
+
+    // add field to store time of last time we notified the user there was a draft post pending publishing
+    private static final String ADD_DRAFT_POST_LAST_NOTIFIED_DATE = "alter table posts add dateLastNotified date;";
+
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
@@ -254,6 +261,7 @@ public class WordPressDB {
         SiteSettingsTable.createTable(db);
         CommentTable.createTables(db);
         SuggestionTable.createTables(db);
+        NotificationsTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
@@ -423,6 +431,23 @@ public class WordPressDB {
                 AppPrefs.setVisualEditorAvailable(true);
                 AppPrefs.setVisualEditorEnabled(true);
                 currentVersion++;
+            case 47:
+                PeopleTable.reset(db);
+                currentVersion++;
+            case 48:
+                PeopleTable.createViewersTable(db);
+                currentVersion++;
+            case 49:
+                // Delete simperium DB since we're removing Simperium from the app.
+                ctx.deleteDatabase("simperium-store");
+                currentVersion++;
+            case 50:
+                db.execSQL(ADD_DRAFT_POST_LAST_UPDATED_DATE);
+                db.execSQL(ADD_DRAFT_POST_LAST_NOTIFIED_DATE);
+                currentVersion++;
+            case 51:
+                db.execSQL(ADD_BLOG_AUTOMATED_TRANSFER);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -534,6 +559,7 @@ public class WordPressDB {
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
         values.put("capabilities", blog.getCapabilities());
+        values.put("isAutomatedTransfer", blog.isAutomatedTransfer());
         return db.insert(BLOGS_TABLE, null, values) > -1;
     }
 
@@ -559,7 +585,7 @@ public class WordPressDB {
     public List<Map<String, Object>> getBlogsBy(String byString, String[] extraFields,
                                                 int limit, boolean hideJetpackWithoutCredentials) {
         if (db == null) {
-            return new Vector<>();
+            return new ArrayList<>();
         }
 
         if (hideJetpackWithoutCredentials) {
@@ -585,7 +611,7 @@ public class WordPressDB {
         Cursor c = db.query(BLOGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             int id = c.getInt(0);
             String blogName = c.getString(1);
@@ -620,6 +646,10 @@ public class WordPressDB {
 
     public int getFirstVisibleBlogId() {
         return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 LIMIT 1", null);
+    }
+
+    public int getFirstVisibleAndNonAutomatedTransferBlogId() {
+        return SqlUtils.intForQuery(db, "SELECT id FROM " + BLOGS_TABLE + " WHERE isHidden = 0 AND isAutomatedTransfer = 0 LIMIT 1", null);
     }
 
     public int getFirstHiddenBlogId() {
@@ -731,10 +761,10 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
-        values.put("isHidden", blog.isHidden());
         values.put("plan_product_id", blog.getPlanID());
         values.put("plan_product_name_short", blog.getPlanShortName());
         values.put("capabilities", blog.getCapabilities());
+        values.put("isAutomatedTransfer", blog.isAutomatedTransfer());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
@@ -831,7 +861,7 @@ public class WordPressDB {
                              "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden",
-                             "plan_product_id", "plan_product_name_short", "capabilities"};
+                             "plan_product_id", "plan_product_name_short", "capabilities", "isAutomatedTransfer"};
         Cursor c = db.query(BLOGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
 
         Blog blog = null;
@@ -886,6 +916,7 @@ public class WordPressDB {
                     blog.setBlogOptions(c.getString(c.getColumnIndex("blog_options")));
                 }
                 blog.setAdmin(c.getInt(c.getColumnIndex("isAdmin")) > 0);
+                blog.setAutomatedTransfer(c.getInt(c.getColumnIndex("isAutomatedTransfer")) > 0);
                 blog.setHidden(c.getInt(c.getColumnIndex("isHidden")) > 0);
                 blog.setPlanID(c.getLong(c.getColumnIndex("plan_product_id")));
                 blog.setPlanShortName(c.getString(c.getColumnIndex("plan_product_name_short")));
@@ -901,9 +932,27 @@ public class WordPressDB {
      * self-hosted blogs that don't use jetpack)
      */
     public boolean isRemoteBlogIdDotComOrJetpack(int remoteBlogId) {
-        int localId = getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
-        Blog blog = instantiateBlogByLocalId(localId);
+        Blog blog = instantiateBlogByRemoteId(remoteBlogId);
         return blog != null && (blog.isDotcomFlag() || blog.isJetpackPowered());
+    }
+
+    public Blog instantiateBlogByRemoteId(int remoteBlogId) {
+        int localId = getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogId);
+        Blog blog = instantiateBlogByLocalId(localId);
+        return blog;
+    }
+
+    public int getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(int remoteBlogId) {
+        //first try checking if a jetpack site is configured on this device site list with that remote id
+        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
+        // the current wpcom account. We need to load the correct localID here, otherwise options are
+        // blank
+        int localId = getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
+
+        if (localId == 0) {
+            localId = getLocalTableBlogIdForWpComRemoteBlogId(remoteBlogId);
+        }
+        return localId;
     }
 
     public Blog getBlogForDotComBlogId(String dotComBlogId) {
@@ -923,16 +972,16 @@ public class WordPressDB {
 
         c.moveToFirst();
 
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         if (c.getString(0) != null) {
-            returnVector.add(c.getString(0));
-            returnVector.add(decryptPassword(c.getString(1)));
+            list.add(c.getString(0));
+            list.add(decryptPassword(c.getString(1)));
         } else {
-            returnVector = null;
+            list = null;
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     /*
@@ -953,6 +1002,15 @@ public class WordPressDB {
 
     public int getLocalTableBlogIdForRemoteBlogId(int remoteBlogId) {
         int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=?",
+                new String[]{Integer.toString(remoteBlogId)});
+        if (localBlogID == 0) {
+            localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
+        }
+        return localBlogID;
+    }
+
+    public int getLocalTableBlogIdForWpComRemoteBlogId(int remoteBlogId) {
+        int localBlogID = SqlUtils.intForQuery(db, "SELECT id FROM accounts WHERE blogId=? and dotcomFlag=1",
                 new String[]{Integer.toString(remoteBlogId)});
         if (localBlogID == 0) {
             localBlogID = this.getLocalTableBlogIdForJetpackRemoteID(remoteBlogId, null);
@@ -1193,6 +1251,24 @@ public class WordPressDB {
         }
     }
 
+    /*
+     * returns list of posts that are in draft or have local changes
+     */
+    public ArrayList<Post> getDraftPostList(int localBlogId) {
+        ArrayList<Post> postList = new ArrayList<>();
+
+        String[] args = {Integer.toString(localBlogId)};
+        Cursor c = db.query(POSTS_TABLE, null, "blogID=? AND (localDraft=1 OR isLocalChange=1)", args, null, null, "localDraft DESC, date_created_gmt DESC");
+        try {
+            while (c.moveToNext()) {
+                postList.add(getPostFromCursor(c));
+            }
+            return postList;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     private Post getPostFromCursor(Cursor c) {
         Post post = new Post();
 
@@ -1202,6 +1278,8 @@ public class WordPressDB {
         post.setTitle(StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title"))));
         post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
         post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
+        post.setDateLastUpdated(c.getLong(c.getColumnIndex("dateLastUpdated")));
+        post.setDateLastNotified(c.getLong(c.getColumnIndex("dateLastNotified")));
         post.setCategories(c.getString(c.getColumnIndex("categories")));
         post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
         post.setDescription(c.getString(c.getColumnIndex("description")));
@@ -1244,6 +1322,8 @@ public class WordPressDB {
             values.put("blogID", post.getLocalTableBlogId());
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
+            values.put("dateLastUpdated", post.getDateLastUpdated());
+            values.put("dateLastNotified", post.getDateLastNotified());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
 
@@ -1279,6 +1359,8 @@ public class WordPressDB {
             ContentValues values = new ContentValues();
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
+            values.put("dateLastUpdated", post.getDateLastUpdated());
+            values.put("dateLastNotified", post.getDateLastNotified());
             values.put("description", post.getDescription());
             values.put("mt_text_more", post.getMoreText());
             values.put("postid", post.getRemotePostId());
@@ -1364,17 +1446,17 @@ public class WordPressDB {
                 "category_name" }, "blog_id=" + Integer.toString(id), null, null, null, null);
         int numRows = c.getCount();
         c.moveToFirst();
-        List<String> returnVector = new Vector<String>();
+        List<String> list = new ArrayList<>();
         for (int i = 0; i < numRows; ++i) {
             String category_name = c.getString(2);
             if (category_name != null) {
-                returnVector.add(category_name);
+                list.add(category_name);
             }
             c.moveToNext();
         }
         c.close();
 
-        return returnVector;
+        return list;
     }
 
     public int getCategoryId(int id, String category) {
@@ -1435,12 +1517,12 @@ public class WordPressDB {
         String id, name;
         int numRows = c.getCount();
         c.moveToFirst();
-        List<Map<String, Object>> blogs = new Vector<Map<String, Object>>();
+        List<Map<String, Object>> blogs = new ArrayList<>();
         for (int i = 0; i < numRows; i++) {
             id = c.getString(0);
             name = c.getString(2);
             if (id != null) {
-                Map<String, Object> thisHash = new HashMap<String, Object>();
+                Map<String, Object> thisHash = new HashMap<>();
 
                 thisHash.put("id", id);
                 thisHash.put("name", name);
@@ -1635,7 +1717,7 @@ public class WordPressDB {
         // Currently on WordPress.com, the media search engine only searches the title.
         // We'll match this.
 
-        String term = searchTerm.toLowerCase(Locale.getDefault());
+        String term = searchTerm.toLowerCase(LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()));
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId <> '' AND title LIKE ? AND (uploadState IS NULL OR uploadState ='uploaded') ORDER BY (uploadState=?) DESC, date_created_gmt DESC", new String[]{blogId, "%" + term + "%", "uploading"});
     }
 

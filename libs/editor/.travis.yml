@@ -1,5 +1,5 @@
 language: android
-jdk: oraclejdk7
+jdk: oraclejdk8
 
 android:
   components:
@@ -7,14 +7,18 @@ android:
     - extra-android-support
     - platform-tools
     - tools
-    - build-tools-23.0.3
-    - android-23
+    - build-tools-24.0.2
+    - android-24
 
 env:
   global:
     - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
     - ANDROID_SDKS=android-16
     - ANDROID_TARGET=android-16
+
+before_install:
+  # TODO: Remove the following line when Travis' platform-tools are updated to v24+
+  - echo yes | android update sdk -a --filter platform-tools --no-ui --force
 
 script:
   - ./gradlew build

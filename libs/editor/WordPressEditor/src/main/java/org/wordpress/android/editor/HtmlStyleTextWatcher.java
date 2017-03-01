@@ -192,6 +192,12 @@ public class HtmlStyleTextWatcher implements TextWatcher {
         if (spanStart > content.length() || spanEnd > content.length()) {
             AppLog.d(T.EDITOR, "The specified span range was beyond the Spannable's length");
             return;
+        } else if (spanStart >= spanEnd) {
+            // If the span start is after the end position (probably due to a multi-line deletion), selective
+            // re-styling won't work
+            // Instead, do a clean re-styling of the whole document
+            spanStart = 0;
+            spanEnd = content.length();
         }
 
         HtmlStyleUtils.clearSpans(content, spanStart, spanEnd);

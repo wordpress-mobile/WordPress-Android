@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -51,6 +50,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -174,7 +174,7 @@ public class EditPostSettingsFragment extends Fragment
         mFeaturedImageView = (NetworkImageView) mRootView.findViewById(R.id.featuredImage);
         mFeaturedImageButton = (Button) mRootView.findViewById(R.id.addFeaturedImage);
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -376,6 +376,20 @@ public class EditPostSettingsFragment extends Fragment
             case PRIVATE:
                 mStatusSpinner.setSelection(3, true);
                 break;
+        }
+
+        if (!mPost.isPage()) {
+            if (mPost.getJSONCategories() != null) {
+                mCategories = JSONUtils.fromJSONArrayToStringList(mPost.getJSONCategories());
+            }
+        }
+        String tags = mPost.getKeywords();
+        if (!tags.equals("")) {
+            mTagsEditText.setText(tags);
+        }
+
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+            updateFeaturedImage(mPost.getFeaturedImageId());
         }
     }
 
@@ -648,7 +662,7 @@ public class EditPostSettingsFragment extends Fragment
             mPost.setJSONCategories(new JSONArray(mCategories));
         }
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             mPost.setFeaturedImageId(mFeaturedImageId);
         }
 
@@ -925,8 +939,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void viewLocation() {
         if (mPostLocation != null && mPostLocation.isValid()) {
-            String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
-            startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+            String locationString = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
+            ActivityLauncher.openUrlExternal(getActivity(), locationString);
         } else {
             showLocationNotAvailableError();
             showLocationAdd();

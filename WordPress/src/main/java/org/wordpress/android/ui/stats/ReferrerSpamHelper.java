@@ -21,6 +21,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 class ReferrerSpamHelper {
 
@@ -78,10 +79,10 @@ class ReferrerSpamHelper {
                 final String restPath;
                 final boolean isMarkingAsSpamInProgress;
                 if (referrerGroup.isMarkedAsSpam) {
-                    restPath = String.format("/sites/%s/stats/referrers/spam/delete/?domain=%s", referrerGroup.getBlogId(), getDomain(referrerGroup));
+                    restPath = String.format(Locale.US, "/sites/%s/stats/referrers/spam/delete/?domain=%s", referrerGroup.getBlogId(), getDomain(referrerGroup));
                     isMarkingAsSpamInProgress = false;
                 } else {
-                    restPath = String.format("/sites/%s/stats/referrers/spam/new/?domain=%s", referrerGroup.getBlogId(), getDomain(referrerGroup));
+                    restPath = String.format(Locale.US, "/sites/%s/stats/referrers/spam/new/?domain=%s", referrerGroup.getBlogId(), getDomain(referrerGroup));
                     isMarkingAsSpamInProgress = true;
                 }
 
@@ -119,7 +120,7 @@ class ReferrerSpamHelper {
                 boolean success = response.optBoolean("success");
                 if (success) {
                     mReferrerGroup.isMarkedAsSpam = isMarkingAsSpamInProgress;
-                    int localBlogID = StatsUtils.getLocalBlogIdFromRemoteBlogId(
+                    int localBlogID = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
                             Integer.parseInt(mReferrerGroup.getBlogId())
                     );
                     StatsTable.deleteStatsForBlog(mActivityRef.get(), localBlogID, StatsService.StatsEndpointsEnum.REFERRERS);

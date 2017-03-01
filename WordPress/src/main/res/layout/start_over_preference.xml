@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+android:id/icon"
+            android:id="@+id/pref_icon"
             android:layout_width="@dimen/start_over_icon_size"
             android:layout_height="@dimen/start_over_icon_size"
             android:layout_marginRight="@dimen/start_over_icon_margin_right"

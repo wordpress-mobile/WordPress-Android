@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/toolbar_height"
     android:gravity="center"
     android:orientation="vertical"
     android:visibility="gone"
@@ -13,7 +14,9 @@
         android:id="@+id/layout_box_images"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/empty_tags_box_bottom"
@@ -66,6 +69,7 @@
         android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:layout_marginTop="@dimen/margin_medium"
         android:text="@string/reader_empty_posts_in_tag"
         app:fixWidowWords="true" />
 

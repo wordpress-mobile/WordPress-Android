@@ -19,6 +19,7 @@
     </declare-styleable>
 
     <declare-styleable name="WPStartOverPreference">
+        <attr name="preficon" format="reference" />
         <attr name="buttonText" format="string" />
         <attr name="buttonTextColor" format="reference|color" />
         <attr name="buttonTextAllCaps" format="boolean" />
@@ -64,6 +65,13 @@
     </declare-styleable>
 
     <!--
+        ReaderFollowButton attributes
+    -->
+    <declare-styleable name="ReaderFollowButton">
+        <attr name="wpShowFollowButtonCaption" format="boolean" />
+    </declare-styleable>
+
+    <!--
         PostListButton attributes
     -->
     <declare-styleable name="wpPostListButton">
@@ -79,6 +87,10 @@
             <enum name="more" value="8" />
             <enum name="back" value="9" />
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="wpBoundedWidth">
+        <attr name="bounded_width" format="dimension" />
     </declare-styleable>
 
 </resources>

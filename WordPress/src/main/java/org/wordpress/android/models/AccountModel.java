@@ -64,7 +64,7 @@ public class AccountModel {
         mVisibleSiteCount = json.optInt("visible_site_count");
         mEmail = json.optString("email");
 
-        Date date = DateTimeUtils.iso8601ToJavaDate(json.optString("date"));
+        Date date = DateTimeUtils.dateFromIso8601(json.optString("date"));
         if (date != null) {
             mDateCreated = date;
         } else {

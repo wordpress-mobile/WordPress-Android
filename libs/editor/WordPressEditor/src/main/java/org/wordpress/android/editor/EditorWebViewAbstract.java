@@ -179,6 +179,11 @@ public abstract class EditorWebViewAbstract extends WebView {
         super.setVisibility(visibility);
     }
 
+
+    public boolean shouldSwitchToCompatibilityMode() {
+        return false;
+    }
+
     public void setDebugModeEnabled(boolean enabled) {
         mDebugModeEnabled = enabled;
     }

@@ -41,531 +41,100 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
-        Map<String, Object> predefinedEventProperties = new HashMap<String, Object>();
-        String eventName;
-
-        switch (stat) {
-            case APPLICATION_OPENED:
-                eventName = "application_opened";
-                break;
-            case APPLICATION_CLOSED:
-                eventName = "application_closed";
-                break;
-            case APPLICATION_INSTALLED:
-                eventName = "application_installed";
-                break;
-            case APPLICATION_UPGRADED:
-                eventName = "application_upgraded";
-                break;
-            case READER_ACCESSED:
-                eventName = "reader_accessed";
-                break;
-            case READER_ARTICLE_COMMENTED_ON:
-                eventName = "reader_article_commented_on";
-                break;
-            case READER_ARTICLE_LIKED:
-                eventName = "reader_article_liked";
-                break;
-            case READER_ARTICLE_OPENED:
-                eventName = "reader_article_opened";
-                break;
-            case READER_ARTICLE_UNLIKED:
-                eventName = "reader_article_unliked";
-                break;
-            case READER_BLOG_BLOCKED:
-                eventName = "reader_blog_blocked";
-                break;
-            case READER_BLOG_FOLLOWED:
-                eventName = "reader_site_followed";
-                break;
-            case READER_BLOG_PREVIEWED:
-                eventName = "reader_blog_previewed";
-                break;
-            case READER_BLOG_UNFOLLOWED:
-                eventName = "reader_site_unfollowed";
-                break;
-            case READER_DISCOVER_VIEWED:
-                eventName = "reader_discover_viewed";
-                break;
-            case READER_INFINITE_SCROLL:
-                eventName = "reader_infinite_scroll_performed";
-                break;
-            case READER_LIST_FOLLOWED:
-                eventName = "reader_list_followed";
-                break;
-            case READER_LIST_LOADED:
-                eventName = "reader_list_loaded";
-                break;
-            case READER_LIST_PREVIEWED:
-                eventName = "reader_list_previewed";
-                break;
-            case READER_LIST_UNFOLLOWED:
-                eventName = "reader_list_unfollowed";
-                break;
-            case READER_TAG_FOLLOWED:
-                eventName = "reader_reader_tag_followed";
-                break;
-            case READER_TAG_LOADED:
-                eventName = "reader_tag_loaded";
-                break;
-            case READER_TAG_PREVIEWED:
-                eventName = "reader_tag_previewed";
-                break;
-            case READER_TAG_UNFOLLOWED:
-                eventName = "reader_reader_tag_unfollowed";
-                break;
-            case EDITOR_CREATED_POST:
-                eventName = "editor_post_created";
-                break;
-            case EDITOR_SAVED_DRAFT:
-                eventName = "editor_draft_saved";
-                break;
-            case EDITOR_DISCARDED_CHANGES:
-                eventName = "editor_discarded_changes";
-                break;
-            case EDITOR_EDITED_IMAGE:
-                eventName = "editor_image_edited";
-                break;
-            case EDITOR_ENABLED_NEW_VERSION:
-                eventName = "editor_enabled_new_version";
-                break;
-            case EDITOR_TOGGLED_OFF:
-                eventName = "editor_toggled_off";
-                break;
-            case EDITOR_TOGGLED_ON:
-                eventName = "editor_toggled_on";
-                break;
-            case EDITOR_UPLOAD_MEDIA_FAILED:
-                eventName = "editor_upload_media_failed";
-                break;
-            case EDITOR_UPLOAD_MEDIA_RETRIED:
-                eventName = "editor_upload_media_retried";
-                break;
-            case EDITOR_CLOSED:
-                eventName = "editor_closed";
-                break;
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
-                eventName = "editor_photo_added";
-                predefinedEventProperties.put("via", "local_library");
-                break;
-            case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
-                eventName = "editor_photo_added";
-                predefinedEventProperties.put("via", "media_library");
-                break;
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
-                eventName = "editor_video_added";
-                predefinedEventProperties.put("via", "local_library");
-                break;
-            case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
-                eventName = "editor_video_added";
-                predefinedEventProperties.put("via", "media_library");
-                break;
-            case EDITOR_PUBLISHED_POST:
-                eventName = "editor_post_published";
-                break;
-            case EDITOR_UPDATED_POST:
-                eventName = "editor_post_updated";
-                break;
-            case EDITOR_SCHEDULED_POST:
-                eventName = "editor_post_scheduled";
-                break;
-            case EDITOR_TAPPED_BLOCKQUOTE:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "blockquote");
-                break;
-            case EDITOR_TAPPED_BOLD:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "bold");
-                break;
-            case EDITOR_TAPPED_IMAGE:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "image");
-                break;
-            case EDITOR_TAPPED_ITALIC:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "italic");
-                break;
-            case EDITOR_TAPPED_LINK:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "link");
-                break;
-            case EDITOR_TAPPED_MORE:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "more");
-                break;
-            case EDITOR_TAPPED_STRIKETHROUGH:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "strikethrough");
-                break;
-            case EDITOR_TAPPED_UNDERLINE:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "underline");
-                break;
-            case EDITOR_TAPPED_HTML:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "html");
-                break;
-            case EDITOR_TAPPED_ORDERED_LIST:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "ordered_list");
-                break;
-            case EDITOR_TAPPED_UNLINK:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "unlink");
-                break;
-            case EDITOR_TAPPED_UNORDERED_LIST:
-                eventName = "editor_button_tapped";
-                predefinedEventProperties.put("button", "unordered_list");
-                break;
-            case NOTIFICATIONS_ACCESSED:
-                eventName = "notifications_accessed";
-                break;
-            case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
-                eventName = "notifications_notification_details_opened";
-                break;
-            case NOTIFICATION_APPROVED:
-                eventName = "notifications_approved";
-                break;
-            case NOTIFICATION_UNAPPROVED:
-                eventName = "notifications_unapproved";
-                break;
-            case NOTIFICATION_REPLIED_TO:
-                eventName = "notifications_replied_to";
-                break;
-            case NOTIFICATION_TRASHED:
-                eventName = "notifications_trashed";
-                break;
-            case NOTIFICATION_FLAGGED_AS_SPAM:
-                eventName = "notifications_flagged_as_spam";
-                break;
-            case NOTIFICATION_LIKED:
-                eventName = "notifications_comment_liked";
-                break;
-            case NOTIFICATION_UNLIKED:
-                eventName = "notifications_comment_unliked";
-                break;
-            case OPENED_POSTS:
-                eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "posts");
-                break;
-            case OPENED_PAGES:
-                eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "pages");
-                break;
-            case OPENED_COMMENTS:
-                eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "comments");
-                break;
-            case OPENED_VIEW_SITE:
-                eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "view_site");
-                break;
-            case OPENED_VIEW_ADMIN:
-                eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "view_admin");
-                break;
-            case OPENED_MEDIA_LIBRARY:
-                eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "media_library");
-                break;
-            case OPENED_BLOG_SETTINGS:
-                eventName = "site_menu_opened";
-                predefinedEventProperties.put("menu_item", "site_settings");
-                break;
-            case OPENED_ACCOUNT_SETTINGS:
-                eventName = "account_settings_opened";
-                break;
-            case OPENED_APP_SETTINGS:
-                eventName = "app_settings_opened";
-                break;
-            case OPENED_MY_PROFILE:
-                eventName = "my_profile_opened";
-                break;
-            case OPENED_PEOPLE_MANAGEMENT:
-                eventName = "people_management_list_opened";
-                break;
-            case OPENED_PERSON:
-                eventName = "people_management_details_opened";
-                break;
-            case CREATED_ACCOUNT:
-                eventName = "account_created";
-                break;
-            case SHARED_ITEM:
-                eventName = "item_shared";
-                break;
-            case ADDED_SELF_HOSTED_SITE:
-                eventName = "self_hosted_blog_added";
-                break;
-            case SIGNED_IN:
-                eventName = "signed_in";
-                break;
-            case SIGNED_INTO_JETPACK:
-                eventName = "signed_into_jetpack";
-                break;
-            case ACCOUNT_LOGOUT:
-                eventName = "account_logout";
-                break;
-            case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
-                eventName = "stats_screen_signed_into_jetpack";
-                break;
-            case STATS_ACCESSED:
-                eventName = "stats_accessed";
-                break;
-            case STATS_INSIGHTS_ACCESSED:
-                eventName = "stats_insights_accessed";
-                break;
-            case STATS_PERIOD_DAYS_ACCESSED:
-                eventName = "stats_period_accessed";
-                predefinedEventProperties.put("period", "days");
-                break;
-            case STATS_PERIOD_WEEKS_ACCESSED:
-                eventName = "stats_period_accessed";
-                predefinedEventProperties.put("period", "weeks");
-                break;
-            case STATS_PERIOD_MONTHS_ACCESSED:
-                eventName = "stats_period_accessed";
-                predefinedEventProperties.put("period", "months");
-                break;
-            case STATS_PERIOD_YEARS_ACCESSED:
-                eventName = "stats_period_accessed";
-                predefinedEventProperties.put("period", "years");
-                break;
-            case STATS_VIEW_ALL_ACCESSED:
-                eventName = "stats_view_all_accessed";
-                break;
-            case STATS_SINGLE_POST_ACCESSED:
-                eventName = "stats_single_post_accessed";
-                break;
-            case STATS_TAPPED_BAR_CHART:
-                eventName = "stats_bar_chart_tapped";
-                break;
-            case STATS_SCROLLED_TO_BOTTOM:
-                eventName = "stats_scrolled_to_bottom";
-                break;
-            case STATS_SELECTED_INSTALL_JETPACK:
-                eventName = "stats_install_jetpack_selected";
-                break;
-            case STATS_SELECTED_CONNECT_JETPACK:
-                eventName = "stats_connect_jetpack_selected";
-                break;
-            case STATS_WIDGET_ADDED:
-                eventName = "stats_widget_added";
-                break;
-            case STATS_WIDGET_REMOVED:
-                eventName = "stats_widget_removed";
-                break;
-            case STATS_WIDGET_TAPPED:
-                eventName = "stats_widget_tapped";
-                break;
-            case PUSH_NOTIFICATION_RECEIVED:
-                eventName = "push_notification_received";
-                break;
-            case PUSH_NOTIFICATION_TAPPED:
-                eventName = "push_notification_alert_tapped";
-                break;
-            case SUPPORT_OPENED_HELPSHIFT_SCREEN:
-                eventName = "support_helpshift_screen_opened";
-                break;
-            case SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE:
-                eventName = "support_reply_to_support_message_sent";
-                break;
-            case LOGIN_MAGIC_LINK_EXITED:
-                eventName = "login_magic_link_exited";
-                break;
-            case LOGIN_MAGIC_LINK_FAILED:
-                eventName = "login_magic_link_failed";
-                break;
-            case LOGIN_MAGIC_LINK_OPENED:
-                eventName = "login_magic_link_opened";
-                break;
-            case LOGIN_MAGIC_LINK_REQUESTED:
-                eventName = "login_magic_link_requested";
-                break;
-            case LOGIN_MAGIC_LINK_SUCCEEDED:
-                eventName = "login_magic_link_succeeded";
-                break;
-            case LOGIN_FAILED:
-                eventName = "login_failed_to_login";
-                break;
-            case LOGIN_FAILED_TO_GUESS_XMLRPC:
-                eventName = "login_failed_to_guess_xmlrpc";
-                break;
-            case LOGIN_INSERTED_INVALID_URL:
-                eventName = "login_inserted_invalid_url";
-                break;
-            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
-                eventName = "login_autofill_credentials_filled";
-                break;
-            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
-                eventName = "login_autofill_credentials_updated";
-                break;
-            case PERSON_REMOVED:
-                eventName = "people_management_person_removed";
-                break;
-            case PERSON_UPDATED:
-                eventName = "people_management_person_updated";
-                break;
-            case PUSH_AUTHENTICATION_APPROVED:
-                eventName = "push_authentication_approved";
-                break;
-            case PUSH_AUTHENTICATION_EXPIRED:
-                eventName = "push_authentication_expired";
-                break;
-            case PUSH_AUTHENTICATION_FAILED:
-                eventName = "push_authentication_failed";
-                break;
-            case PUSH_AUTHENTICATION_IGNORED:
-                eventName = "push_authentication_ignored";
-                break;
-            case NOTIFICATION_SETTINGS_LIST_OPENED:
-                eventName = "notification_settings_list_opened";
-                break;
-            case NOTIFICATION_SETTINGS_STREAMS_OPENED:
-                eventName = "notification_settings_streams_opened";
-                break;
-            case NOTIFICATION_SETTINGS_DETAILS_OPENED:
-                eventName = "notification_settings_details_opened";
-                break;
-            case ME_ACCESSED:
-                eventName = "me_tab_accessed";
-                break;
-            case ME_GRAVATAR_TAPPED:
-                eventName = "me_gravatar_tapped";
-                break;
-            case ME_GRAVATAR_TOOLTIP_TAPPED:
-                eventName = "me_gravatar_tooltip_tapped";
-                break;
-            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
-                eventName = "me_gravatar_permissions_interrupted";
-                break;
-            case ME_GRAVATAR_PERMISSIONS_DENIED:
-                eventName = "me_gravatar_permissions_denied";
-                break;
-            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
-                eventName = "me_gravatar_permissions_accepted";
-                break;
-            case ME_GRAVATAR_SHOT_NEW:
-                eventName = "me_gravatar_shot_new";
-                break;
-            case ME_GRAVATAR_GALLERY_PICKED:
-                eventName = "me_gravatar_gallery_picked";
-                break;
-            case ME_GRAVATAR_CROPPED:
-                eventName = "me_gravatar_cropped";
-                break;
-            case ME_GRAVATAR_UPLOADED:
-                eventName = "me_gravatar_uploaded";
-                break;
-            case ME_GRAVATAR_UPLOAD_UNSUCCESSFUL:
-                eventName = "me_gravatar_upload_unsuccessful";
-                break;
-            case ME_GRAVATAR_UPLOAD_EXCEPTION:
-                eventName = "me_gravatar_upload_exception";
-                break;
-            case MY_SITE_ACCESSED:
-                eventName = "my_site_tab_accessed";
-                break;
-            case THEMES_ACCESSED_THEMES_BROWSER:
-                eventName = "themes_theme_browser_accessed";
-                break;
-            case THEMES_ACCESSED_SEARCH:
-                eventName = "themes_search_accessed";
-                break;
-            case THEMES_CHANGED_THEME:
-                eventName = "themes_theme_changed";
-                break;
-            case THEMES_PREVIEWED_SITE:
-                eventName = "themes_theme_for_site_previewed";
-                break;
-            case THEMES_DEMO_ACCESSED:
-                eventName = "themes_demo_accessed";
-                break;
-            case THEMES_CUSTOMIZE_ACCESSED:
-                eventName = "themes_customize_accessed";
-                break;
-            case THEMES_SUPPORT_ACCESSED:
-                eventName = "themes_support_accessed";
-                break;
-            case THEMES_DETAILS_ACCESSED:
-                eventName = "themes_details_accessed";
-                break;
-            case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
-                eventName = "account_settings_language_changed";
-                break;
-            case SITE_SETTINGS_ACCESSED:
-                eventName = "site_settings_accessed";
-                break;
-            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
-                eventName = "site_settings_more_settings_accessed";
-                break;
-            case SITE_SETTINGS_ADDED_LIST_ITEM:
-                eventName = "site_settings_added_list_item";
-                break;
-            case SITE_SETTINGS_DELETED_LIST_ITEMS:
-                eventName = "site_settings_deleted_list_items";
-                break;
-            case SITE_SETTINGS_HINT_TOAST_SHOWN:
-                eventName = "site_settings_hint_toast_shown";
-                break;
-            case SITE_SETTINGS_LEARN_MORE_CLICKED:
-                eventName = "site_settings_learn_more_clicked";
-                break;
-            case SITE_SETTINGS_LEARN_MORE_LOADED:
-                eventName = "site_settings_learn_more_loaded";
-                break;
-            case SITE_SETTINGS_SAVED_REMOTELY:
-                eventName = "site_settings_saved_remotely";
-                break;
-            case SITE_SETTINGS_START_OVER_ACCESSED:
-                eventName = "site_settings_start_over_accessed";
-                break;
-            case SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED:
-                eventName = "site_settings_start_over_contact_support_clicked";
-                break;
-            case SITE_SETTINGS_EXPORT_SITE_ACCESSED:
-                eventName = "site_settings_export_site_accessed";
-                break;
-            case SITE_SETTINGS_EXPORT_SITE_REQUESTED:
-                eventName = "site_settings_export_site_requested";
-                break;
-            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK:
-                eventName = "site_settings_export_site_response_ok";
-                break;
-            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR:
-                eventName = "site_settings_export_site_response_error";
-                break;
-            case SITE_SETTINGS_DELETE_SITE_ACCESSED:
-                eventName = "site_settings_delete_site_accessed";
-                break;
-            case SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED:
-                eventName = "site_settings_delete_site_purchases_requested";
-                break;
-            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
-                eventName = "site_settings_delete_site_purchases_shown";
-                break;
-            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED:
-                eventName = "site_settings_delete_site_purchases_show_clicked";
-                break;
-            case SITE_SETTINGS_DELETE_SITE_REQUESTED:
-                eventName = "site_settings_delete_site_requested";
-                break;
-            case SITE_SETTINGS_DELETE_SITE_RESPONSE_OK:
-                eventName = "site_settings_delete_site_response_ok";
-                break;
-            case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
-                eventName = "site_settings_delete_site_response_error";
-                break;
-            case ABTEST_START:
-                eventName = "abtest_start";
-                break;
-            default:
-                eventName = null;
-                break;
-        }
-
+        String eventName = getEventNameForStat(stat);
         if (eventName == null) {
             AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
             return;
+        }
+
+        Map<String, Object> predefinedEventProperties = new HashMap<String, Object>();
+        switch (stat) {
+            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+                predefinedEventProperties.put("via", "local_library");
+                break;
+            case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
+                predefinedEventProperties.put("via", "media_library");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+                predefinedEventProperties.put("via", "local_library");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
+                predefinedEventProperties.put("via", "media_library");
+                break;
+            case EDITOR_TAPPED_BLOCKQUOTE:
+                predefinedEventProperties.put("button", "blockquote");
+                break;
+            case EDITOR_TAPPED_BOLD:
+                predefinedEventProperties.put("button", "bold");
+                break;
+            case EDITOR_TAPPED_IMAGE:
+                predefinedEventProperties.put("button", "image");
+                break;
+            case EDITOR_TAPPED_ITALIC:
+                predefinedEventProperties.put("button", "italic");
+                break;
+            case EDITOR_TAPPED_LINK:
+                predefinedEventProperties.put("button", "link");
+                break;
+            case EDITOR_TAPPED_MORE:
+                predefinedEventProperties.put("button", "more");
+                break;
+            case EDITOR_TAPPED_STRIKETHROUGH:
+                predefinedEventProperties.put("button", "strikethrough");
+                break;
+            case EDITOR_TAPPED_UNDERLINE:
+                predefinedEventProperties.put("button", "underline");
+                break;
+            case EDITOR_TAPPED_HTML:
+                predefinedEventProperties.put("button", "html");
+                break;
+            case EDITOR_TAPPED_ORDERED_LIST:
+                predefinedEventProperties.put("button", "ordered_list");
+                break;
+            case EDITOR_TAPPED_UNLINK:
+                predefinedEventProperties.put("button", "unlink");
+                break;
+            case EDITOR_TAPPED_UNORDERED_LIST:
+                predefinedEventProperties.put("button", "unordered_list");
+                break;
+            case OPENED_POSTS:
+                predefinedEventProperties.put("menu_item", "posts");
+                break;
+            case OPENED_PAGES:
+                predefinedEventProperties.put("menu_item", "pages");
+                break;
+            case OPENED_COMMENTS:
+                predefinedEventProperties.put("menu_item", "comments");
+                break;
+            case OPENED_VIEW_SITE:
+                predefinedEventProperties.put("menu_item", "view_site");
+                break;
+            case OPENED_VIEW_ADMIN:
+                predefinedEventProperties.put("menu_item", "view_admin");
+                break;
+            case OPENED_MEDIA_LIBRARY:
+                predefinedEventProperties.put("menu_item", "media_library");
+                break;
+            case OPENED_BLOG_SETTINGS:
+                predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case STATS_PERIOD_DAYS_ACCESSED:
+                predefinedEventProperties.put("period", "days");
+                break;
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                predefinedEventProperties.put("period", "weeks");
+                break;
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                predefinedEventProperties.put("period", "months");
+                break;
+            case STATS_PERIOD_YEARS_ACCESSED:
+                predefinedEventProperties.put("period", "years");
+                break;
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+                predefinedEventProperties.put("is_quick_action", true);
+                break;
         }
 
         final String user;
@@ -631,23 +200,22 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     @Override
-    public void refreshMetadata(boolean isUserConnected, boolean isWordPressComUser, boolean isJetpackUser,
-                                int sessionCount, int numBlogs, int versionCode, String username, String email) {
+    public void refreshMetadata(AnalyticsMetadata metadata) {
         if (mNosaraClient == null) {
             return;
         }
 
         try {
             JSONObject properties = new JSONObject();
-            properties.put(JETPACK_USER, isJetpackUser);
-            properties.put(NUMBER_OF_BLOGS, numBlogs);
+            properties.put(JETPACK_USER, metadata.isJetpackUser());
+            properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
 
-        if (isUserConnected && isWordPressComUser) {
-            setWordPressComUserName(username);
+        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+            setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
                 mNosaraClient.trackAliasUser(getWordPressComUserName(), getAnonID(), TracksClient.NosaraUserType.WPCOM);
@@ -677,5 +245,417 @@ public class AnalyticsTrackerNosara extends Tracker {
     @Override
     public void registerPushNotificationToken(String regId) {
         return;
+    }
+
+    public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
+        switch (stat) {
+            case APPLICATION_OPENED:
+                return "application_opened";
+            case APPLICATION_CLOSED:
+                return "application_closed";
+            case APPLICATION_INSTALLED:
+                return "application_installed";
+            case APPLICATION_UPGRADED:
+                return "application_upgraded";
+            case READER_ACCESSED:
+                return "reader_accessed";
+            case READER_ARTICLE_COMMENTED_ON:
+                return "reader_article_commented_on";
+            case READER_ARTICLE_COMMENTS_OPENED:
+                return "reader_article_comments_opened";
+            case READER_ARTICLE_COMMENT_LIKED:
+                return "reader_article_comment_liked";
+            case READER_ARTICLE_COMMENT_UNLIKED:
+                return "reader_article_comment_unliked";
+            case READER_ARTICLE_LIKED:
+                return "reader_article_liked";
+            case READER_ARTICLE_OPENED:
+                return "reader_article_opened";
+            case READER_ARTICLE_UNLIKED:
+                return "reader_article_unliked";
+            case READER_ARTICLE_RENDERED :
+                return "reader_article_rendered";
+            case READER_BLOG_BLOCKED:
+                return "reader_blog_blocked";
+            case READER_BLOG_FOLLOWED:
+                return "reader_site_followed";
+            case READER_BLOG_PREVIEWED:
+                return "reader_blog_previewed";
+            case READER_BLOG_UNFOLLOWED:
+                return "reader_site_unfollowed";
+            case READER_DISCOVER_VIEWED:
+                return "reader_discover_viewed";
+            case READER_INFINITE_SCROLL:
+                return "reader_infinite_scroll_performed";
+            case READER_LIST_FOLLOWED:
+                return "reader_list_followed";
+            case READER_LIST_LOADED:
+                return "reader_list_loaded";
+            case READER_LIST_PREVIEWED:
+                return "reader_list_previewed";
+            case READER_LIST_UNFOLLOWED:
+                return "reader_list_unfollowed";
+            case READER_TAG_FOLLOWED:
+                return "reader_reader_tag_followed";
+            case READER_TAG_LOADED:
+                return "reader_tag_loaded";
+            case READER_TAG_PREVIEWED:
+                return "reader_tag_previewed";
+            case READER_SEARCH_LOADED:
+                return "reader_search_loaded";
+            case READER_SEARCH_PERFORMED:
+                return "reader_search_performed";
+            case READER_SEARCH_RESULT_TAPPED:
+                return "reader_searchcard_clicked";
+            case READER_TAG_UNFOLLOWED:
+                return "reader_reader_tag_unfollowed";
+            case READER_GLOBAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_other_site_clicked";
+            case READER_LOCAL_RELATED_POST_CLICKED:
+                return "reader_related_post_from_same_site_clicked";
+            case READER_VIEWPOST_INTERCEPTED:
+                return "reader_viewpost_intercepted";
+            case READER_BLOG_POST_INTERCEPTED:
+                return "reader_blog_post_intercepted";
+            case READER_FEED_POST_INTERCEPTED:
+                return "reader_feed_post_intercepted";
+            case READER_WPCOM_BLOG_POST_INTERCEPTED:
+                return "reader_wpcom_blog_post_intercepted";
+            case READER_SIGN_IN_INITIATED:
+                return "reader_sign_in_initiated";
+            case READER_WPCOM_SIGN_IN_NEEDED:
+                return "reader_wpcom_sign_in_needed";
+            case READER_USER_UNAUTHORIZED:
+                return "reader_user_unauthorized";
+            case EDITOR_CREATED_POST:
+                return "editor_post_created";
+            case EDITOR_SAVED_DRAFT:
+                return "editor_draft_saved";
+            case EDITOR_DISCARDED_CHANGES:
+                return "editor_discarded_changes";
+            case EDITOR_EDITED_IMAGE:
+                return "editor_image_edited";
+            case EDITOR_ENABLED_NEW_VERSION:
+                return "editor_enabled_new_version";
+            case EDITOR_TOGGLED_OFF:
+                return "editor_toggled_off";
+            case EDITOR_TOGGLED_ON:
+                return "editor_toggled_on";
+            case EDITOR_UPLOAD_MEDIA_FAILED:
+                return "editor_upload_media_failed";
+            case EDITOR_UPLOAD_MEDIA_RETRIED:
+                return "editor_upload_media_retried";
+            case EDITOR_CLOSED:
+                return "editor_closed";
+            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+                return "editor_photo_added";
+            case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
+                return "editor_photo_added";
+            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+                return "editor_video_added";
+            case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
+                return "editor_video_added";
+            case EDITOR_RESIZED_PHOTO:
+                return "editor_resized_photo";
+            case EDITOR_RESIZED_PHOTO_ERROR:
+                return "editor_resized_photo_error";
+            case EDITOR_PUBLISHED_POST:
+                return "editor_post_published";
+            case EDITOR_UPDATED_POST:
+                return "editor_post_updated";
+            case EDITOR_SCHEDULED_POST:
+                return "editor_post_scheduled";
+            case EDITOR_TAPPED_BLOCKQUOTE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_BOLD:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_IMAGE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_ITALIC:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_LINK:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_MORE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_STRIKETHROUGH:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_UNDERLINE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HTML:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_ORDERED_LIST:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_UNLINK:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_UNORDERED_LIST:
+                return "editor_button_tapped";
+            case NOTIFICATIONS_ACCESSED:
+                return "notifications_accessed";
+            case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
+                return "notifications_notification_details_opened";
+            case NOTIFICATION_APPROVED:
+            case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+                return "notifications_approved";
+            case NOTIFICATION_UNAPPROVED:
+                return "notifications_unapproved";
+            case NOTIFICATION_REPLIED_TO:
+            case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
+                return "notifications_replied_to";
+            case NOTIFICATION_TRASHED:
+                return "notifications_trashed";
+            case NOTIFICATION_FLAGGED_AS_SPAM:
+                return "notifications_flagged_as_spam";
+            case NOTIFICATION_SWIPE_PAGE_CHANGED:
+                return "notifications_swipe_page_changed";
+            case NOTIFICATION_PENDING_DRAFTS_TAPPED:
+                return "notifications_pending_drafts_tapped";
+            case NOTIFICATION_PENDING_DRAFTS_IGNORED:
+                return "notifications_pending_drafts_ignored";
+            case NOTIFICATION_PENDING_DRAFTS_DISMISSED:
+                return "notifications_pending_drafts_dismissed";
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED:
+                return "notifications_pending_drafts_settings_enabled";
+            case NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED:
+                return "notifications_pending_drafts_settings_disabled";
+            case NOTIFICATION_LIKED:
+            case NOTIFICATION_QUICK_ACTIONS_LIKED:
+                return "notifications_comment_liked";
+            case NOTIFICATION_UNLIKED:
+                return "notifications_comment_unliked";
+            case OPENED_POSTS:
+                return "site_menu_opened";
+            case OPENED_PAGES:
+                return "site_menu_opened";
+            case OPENED_COMMENTS:
+                return "site_menu_opened";
+            case OPENED_VIEW_SITE:
+                return "site_menu_opened";
+            case OPENED_VIEW_ADMIN:
+                return "site_menu_opened";
+            case OPENED_MEDIA_LIBRARY:
+                return "site_menu_opened";
+            case OPENED_BLOG_SETTINGS:
+                return "site_menu_opened";
+            case OPENED_ACCOUNT_SETTINGS:
+                return "account_settings_opened";
+            case OPENED_APP_SETTINGS:
+                return "app_settings_opened";
+            case OPENED_MY_PROFILE:
+                return "my_profile_opened";
+            case OPENED_PEOPLE_MANAGEMENT:
+                return "people_management_list_opened";
+            case OPENED_PERSON:
+                return "people_management_details_opened";
+            case CREATE_ACCOUNT_INITIATED:
+                return "account_create_initiated";
+            case CREATE_ACCOUNT_EMAIL_EXISTS:
+                return "account_create_email_exists";
+            case CREATE_ACCOUNT_USERNAME_EXISTS:
+                return "account_create_username_exists";
+            case CREATE_ACCOUNT_FAILED:
+                return "account_create_failed";
+            case CREATED_ACCOUNT:
+                return "account_created";
+            case CREATED_SITE:
+                return "site_created";
+            case SHARED_ITEM:
+                return "item_shared";
+            case ADDED_SELF_HOSTED_SITE:
+                return "self_hosted_blog_added";
+            case SIGNED_IN:
+                return "signed_in";
+            case SIGNED_INTO_JETPACK:
+                return "signed_into_jetpack";
+            case ACCOUNT_LOGOUT:
+                return "account_logout";
+            case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
+                return "stats_screen_signed_into_jetpack";
+            case STATS_ACCESSED:
+                return "stats_accessed";
+            case STATS_INSIGHTS_ACCESSED:
+                return "stats_insights_accessed";
+            case STATS_PERIOD_DAYS_ACCESSED:
+                return "stats_period_accessed";
+            case STATS_PERIOD_WEEKS_ACCESSED:
+                return "stats_period_accessed";
+            case STATS_PERIOD_MONTHS_ACCESSED:
+                return "stats_period_accessed";
+            case STATS_PERIOD_YEARS_ACCESSED:
+                return "stats_period_accessed";
+            case STATS_VIEW_ALL_ACCESSED:
+                return "stats_view_all_accessed";
+            case STATS_SINGLE_POST_ACCESSED:
+                return "stats_single_post_accessed";
+            case STATS_TAPPED_BAR_CHART:
+                return "stats_bar_chart_tapped";
+            case STATS_SCROLLED_TO_BOTTOM:
+                return "stats_scrolled_to_bottom";
+            case STATS_SELECTED_INSTALL_JETPACK:
+                return "stats_install_jetpack_selected";
+            case STATS_SELECTED_CONNECT_JETPACK:
+                return "stats_connect_jetpack_selected";
+            case STATS_WIDGET_ADDED:
+                return "stats_widget_added";
+            case STATS_WIDGET_REMOVED:
+                return "stats_widget_removed";
+            case STATS_WIDGET_TAPPED:
+                return "stats_widget_tapped";
+            case PUSH_NOTIFICATION_RECEIVED:
+                return "push_notification_received";
+            case PUSH_NOTIFICATION_TAPPED:
+                return "push_notification_alert_tapped";
+            case SUPPORT_OPENED_HELPSHIFT_SCREEN:
+                return "support_helpshift_screen_opened";
+            case SUPPORT_USER_ACCEPTED_THE_SOLUTION:
+                return "support_user_accepted_the_solution";
+            case SUPPORT_USER_REJECTED_THE_SOLUTION:
+                return "support_user_rejected_the_solution";
+            case SUPPORT_USER_SENT_SCREENSHOT:
+                return "support_user_sent_screenshot";
+            case SUPPORT_USER_REVIEWED_THE_APP:
+                return "support_user_reviewed_the_app";
+            case SUPPORT_USER_REPLIED_TO_HELPSHIFT:
+                return "support_user_replied_to_helpshift";
+            case LOGIN_ACCESSED:
+                return "login_accessed";
+            case LOGIN_MAGIC_LINK_EXITED:
+                return "login_magic_link_exited";
+            case LOGIN_MAGIC_LINK_FAILED:
+                return "login_magic_link_failed";
+            case LOGIN_MAGIC_LINK_OPENED:
+                return "login_magic_link_opened";
+            case LOGIN_MAGIC_LINK_REQUESTED:
+                return "login_magic_link_requested";
+            case LOGIN_MAGIC_LINK_SUCCEEDED:
+                return "login_magic_link_succeeded";
+            case LOGIN_FAILED:
+                return "login_failed_to_login";
+            case LOGIN_FAILED_TO_GUESS_XMLRPC:
+                return "login_failed_to_guess_xmlrpc";
+            case LOGIN_INSERTED_INVALID_URL:
+                return "login_inserted_invalid_url";
+            case LOGIN_AUTOFILL_CREDENTIALS_FILLED:
+                return "login_autofill_credentials_filled";
+            case LOGIN_AUTOFILL_CREDENTIALS_UPDATED:
+                return "login_autofill_credentials_updated";
+            case PERSON_REMOVED:
+                return "people_management_person_removed";
+            case PERSON_UPDATED:
+                return "people_management_person_updated";
+            case PUSH_AUTHENTICATION_APPROVED:
+                return "push_authentication_approved";
+            case PUSH_AUTHENTICATION_EXPIRED:
+                return "push_authentication_expired";
+            case PUSH_AUTHENTICATION_FAILED:
+                return "push_authentication_failed";
+            case PUSH_AUTHENTICATION_IGNORED:
+                return "push_authentication_ignored";
+            case NOTIFICATION_SETTINGS_LIST_OPENED:
+                return "notification_settings_list_opened";
+            case NOTIFICATION_SETTINGS_STREAMS_OPENED:
+                return "notification_settings_streams_opened";
+            case NOTIFICATION_SETTINGS_DETAILS_OPENED:
+                return "notification_settings_details_opened";
+            case ME_ACCESSED:
+                return "me_tab_accessed";
+            case ME_GRAVATAR_TAPPED:
+                return "me_gravatar_tapped";
+            case ME_GRAVATAR_TOOLTIP_TAPPED:
+                return "me_gravatar_tooltip_tapped";
+            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
+                return "me_gravatar_permissions_interrupted";
+            case ME_GRAVATAR_PERMISSIONS_DENIED:
+                return "me_gravatar_permissions_denied";
+            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
+                return "me_gravatar_permissions_accepted";
+            case ME_GRAVATAR_SHOT_NEW:
+                return "me_gravatar_shot_new";
+            case ME_GRAVATAR_GALLERY_PICKED:
+                return "me_gravatar_gallery_picked";
+            case ME_GRAVATAR_CROPPED:
+                return "me_gravatar_cropped";
+            case ME_GRAVATAR_UPLOADED:
+                return "me_gravatar_uploaded";
+            case ME_GRAVATAR_UPLOAD_UNSUCCESSFUL:
+                return "me_gravatar_upload_unsuccessful";
+            case ME_GRAVATAR_UPLOAD_EXCEPTION:
+                return "me_gravatar_upload_exception";
+            case MY_SITE_ACCESSED:
+                return "my_site_tab_accessed";
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                return "themes_theme_browser_accessed";
+            case THEMES_ACCESSED_SEARCH:
+                return "themes_search_accessed";
+            case THEMES_CHANGED_THEME:
+                return "themes_theme_changed";
+            case THEMES_PREVIEWED_SITE:
+                return "themes_theme_for_site_previewed";
+            case THEMES_DEMO_ACCESSED:
+                return "themes_demo_accessed";
+            case THEMES_CUSTOMIZE_ACCESSED:
+                return "themes_customize_accessed";
+            case THEMES_SUPPORT_ACCESSED:
+                return "themes_support_accessed";
+            case THEMES_DETAILS_ACCESSED:
+                return "themes_details_accessed";
+            case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
+                return "account_settings_language_changed";
+            case SITE_SETTINGS_ACCESSED:
+                return "site_settings_accessed";
+            case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
+                return "site_settings_more_settings_accessed";
+            case SITE_SETTINGS_ADDED_LIST_ITEM:
+                return "site_settings_added_list_item";
+            case SITE_SETTINGS_DELETED_LIST_ITEMS:
+                return "site_settings_deleted_list_items";
+            case SITE_SETTINGS_HINT_TOAST_SHOWN:
+                return "site_settings_hint_toast_shown";
+            case SITE_SETTINGS_LEARN_MORE_CLICKED:
+                return "site_settings_learn_more_clicked";
+            case SITE_SETTINGS_LEARN_MORE_LOADED:
+                return "site_settings_learn_more_loaded";
+            case SITE_SETTINGS_SAVED_REMOTELY:
+                return "site_settings_saved_remotely";
+            case SITE_SETTINGS_START_OVER_ACCESSED:
+                return "site_settings_start_over_accessed";
+            case SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED:
+                return "site_settings_start_over_contact_support_clicked";
+            case SITE_SETTINGS_EXPORT_SITE_ACCESSED:
+                return "site_settings_export_site_accessed";
+            case SITE_SETTINGS_EXPORT_SITE_REQUESTED:
+                return "site_settings_export_site_requested";
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK:
+                return "site_settings_export_site_response_ok";
+            case SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR:
+                return "site_settings_export_site_response_error";
+            case SITE_SETTINGS_DELETE_SITE_ACCESSED:
+                return "site_settings_delete_site_accessed";
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_REQUESTED:
+                return "site_settings_delete_site_purchases_requested";
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN:
+                return "site_settings_delete_site_purchases_shown";
+            case SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOW_CLICKED:
+                return "site_settings_delete_site_purchases_show_clicked";
+            case SITE_SETTINGS_DELETE_SITE_REQUESTED:
+                return "site_settings_delete_site_requested";
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_OK:
+                return "site_settings_delete_site_response_ok";
+            case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
+                return "site_settings_delete_site_response_error";
+            case ABTEST_START:
+                return "abtest_start";
+            case TRAIN_TRACKS_RENDER:
+                return "traintracks_render";
+            case TRAIN_TRACKS_INTERACT:
+                return "traintracks_interact";
+            case DEEP_LINKED:
+                return "deep_linked";
+            case DEEP_LINKED_FALLBACK:
+                return "deep_linked_fallback";
+            case DEEP_LINK_NOT_DEFAULT_HANDER:
+                return "deep_link_not_default_handler";
+            default:
+                return null;
+        }
     }
 }

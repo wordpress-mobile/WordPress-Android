@@ -98,7 +98,8 @@ public class HtmlStyleUtils {
      * @param regex the pattern to match for styling
      */
     private static void applySpansByRegex(Spannable content, int start, int end, String regex) {
-        if (content == null || start < 0 || end < 0 || start > content.length() || end > content.length()) {
+        if (content == null || start < 0 || end < 0 || start > content.length() || end > content.length() ||
+                start >= end) {
             AppLog.d(AppLog.T.EDITOR, "applySpansByRegex() received invalid input");
             return;
         }

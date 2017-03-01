@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.accounts.AbstractFragment.ErrorListener;
 import org.wordpress.android.util.AppLog;
@@ -20,27 +21,23 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Locale;
 import java.util.Map;
 
 public class CreateUserAndBlog {
     public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_PUBLIC = 1;
-    public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_BLOCK_SEARCH_ENGINE = 0;
-    public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_PRIVATE = -1;
     private String mEmail;
     private String mUsername;
     private String mPassword;
     private String mSiteUrl;
     private String mSiteName;
     private String mLanguage;
-    private Context mContext;
     private Callback mCallback;
     private ErrorListener mErrorListener;
     private RestClientUtils mRestClient;
     private ResponseHandler mResponseHandler;
 
     public CreateUserAndBlog(String email, String username, String password, String siteUrl, String siteName,
-                             String language, RestClientUtils restClient, Context context,
+                             String language, RestClientUtils restClient,
                              ErrorListener errorListener, Callback callback) {
         mEmail = email;
         mUsername = username;
@@ -49,19 +46,19 @@ public class CreateUserAndBlog {
         mSiteName = siteName;
         mLanguage = language;
         mCallback = callback;
-        mContext = context;
         mErrorListener = errorListener;
         mRestClient = restClient;
         mResponseHandler = new ResponseHandler();
     }
 
-    public static String getDeviceLanguage(Resources resources) {
+    public static String getDeviceLanguage(Context context) {
+        Resources resources = context.getResources();
         XmlResourceParser parser = resources.getXml(R.xml.wpcom_languages);
         Hashtable<String, String> entries = new Hashtable<String, String>();
         String matchedDeviceLanguage = "en - English";
         try {
             int eventType = parser.getEventType();
-            String deviceLanguageCode = Locale.getDefault().getLanguage();
+            String deviceLanguageCode = LanguageUtils.getPatchedCurrentDeviceLanguage(context);
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
@@ -119,6 +116,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.VALIDATE_USER);
+        mErrorListener.setStep(Step.VALIDATE_USER);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -133,6 +131,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.VALIDATE_SITE);
+        mErrorListener.setStep(Step.VALIDATE_SITE);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -146,6 +145,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.CREATE_USER);
+        mErrorListener.setStep(Step.CREATE_USER);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -163,11 +163,12 @@ public class CreateUserAndBlog {
 
             @Override
             public void onError(int errorMessageId, boolean twoStepCodeRequired, boolean httpAuthRequired, boolean erroneousSslCertificate) {
-                mErrorListener.onErrorResponse(new VolleyError("Sign in failed."));
+                mErrorListener.onErrorResponse(new VolleyError("Log in failed."));
             }
         });
 
         mResponseHandler.setStep(Step.AUTHENTICATE_USER);
+        mErrorListener.setStep(Step.AUTHENTICATE_USER);
     }
 
     private void createBlog() {
@@ -181,6 +182,7 @@ public class CreateUserAndBlog {
         params.put("client_id", BuildConfig.OAUTH_APP_ID);
         params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.CREATE_SITE);
+        mErrorListener.setStep(Step.CREATE_SITE);
         WordPress.getRestClientUtils().post(path, params, null, mResponseHandler, mErrorListener);
     }
 
@@ -188,7 +190,7 @@ public class CreateUserAndBlog {
         VALIDATE_USER, VALIDATE_SITE, CREATE_USER, AUTHENTICATE_USER, CREATE_SITE
     }
 
-    private enum Mode {CREATE_USER_AND_BLOG, CREATE_BLOG_ONLY}
+    public enum Mode {CREATE_USER_AND_BLOG, CREATE_BLOG_ONLY}
 
     public interface Callback {
         void onStepFinished(Step step);

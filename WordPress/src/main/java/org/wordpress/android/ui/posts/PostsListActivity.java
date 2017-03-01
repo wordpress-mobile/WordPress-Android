@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ToastUtils;
 
 public class PostsListActivity extends AppCompatActivity {
@@ -54,17 +53,15 @@ public class PostsListActivity extends AppCompatActivity {
         ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
-    }
-
     /**
      * intent extras will contain error info if this activity was started from an
      * upload error notification
      */
     private void showErrorDialogIfNeeded(Bundle extras) {
+        if (WordPress.getCurrentBlog() == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            finish();
+        }
         if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
             return;
         }

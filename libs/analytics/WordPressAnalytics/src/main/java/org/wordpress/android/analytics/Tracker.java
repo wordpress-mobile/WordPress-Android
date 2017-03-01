@@ -15,8 +15,7 @@ public abstract class Tracker {
     abstract void track(Stat stat, Map<String, ?> properties);
     abstract void endSession();
     abstract void flush();
-    abstract void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
-                         int sessionCount, int numBlogs, int versionCode, String username, String email);
+    abstract void refreshMetadata(AnalyticsMetadata metadata);
     abstract void registerPushNotificationToken(String regId);
     abstract String getAnonIdPrefKey();
 

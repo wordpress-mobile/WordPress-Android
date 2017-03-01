@@ -2,21 +2,25 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spanned;
+import android.view.DragEvent;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
-    public abstract CharSequence getTitle();
-    public abstract CharSequence getContent();
+    public abstract CharSequence getTitle() throws IllegalEditorStateException;
+    public abstract CharSequence getContent() throws IllegalEditorStateException;
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
@@ -49,6 +53,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     private static final String FEATURED_IMAGE_WIDTH_KEY   = "featured-image-width";
 
     protected EditorFragmentListener mEditorFragmentListener;
+    protected EditorDragAndDropListener mEditorDragAndDropListener;
     protected boolean mFeaturedImageSupported;
     protected long mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
@@ -148,6 +153,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
         // TODO: remove saveMediaFile, it's currently needed for the legacy editor
         void saveMediaFile(MediaFile mediaFile);
         void onTrackableEvent(TrackableEvent event);
+    }
+
+    /**
+     * Callbacks for drag and drop support
+     */
+    public interface EditorDragAndDropListener {
+        void onMediaDropped(ArrayList<Uri> mediaUri);
+        void onRequestDragAndDropPermissions(DragEvent dragEvent);
     }
 
     public enum TrackableEvent {

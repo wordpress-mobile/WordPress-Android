@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -13,7 +13,7 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar"/>
+            layout="@layout/toolbar" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
@@ -23,7 +23,8 @@
             android:background="@color/tab_background"
             android:visibility="gone"
             app:tabIndicatorColor="@color/tab_indicator"
-            tools:visibility="visible"/>
+            app:tabMode="scrollable"
+            tools:visibility="visible" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -31,10 +32,10 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/frame_purchase"
+        android:layout_above="@+id/frame_manage"
         android:layout_below="@+id/appbar"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/progress_loading_plans"
@@ -43,10 +44,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <FrameLayout
-        android:id="@+id/frame_purchase"
+        android:id="@+id/frame_manage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -55,43 +56,20 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <LinearLayout
-            android:id="@+id/purchase_container"
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_manage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:gravity="center_vertical|right"
+            android:autoLink="web"
+            android:gravity="center"
+            android:linksClickable="false"
             android:minHeight="@dimen/toolbar_height"
-            android:orientation="horizontal"
             android:paddingLeft="@dimen/content_margin"
-            android:paddingRight="@dimen/content_margin">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_purchase_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="$99"/>
-
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"
-                android:text="@string/vertical_line"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"/>
-
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/plan_purchase_now"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"/>
-        </LinearLayout>
+            android:paddingRight="@dimen/content_margin"
+            android:text="@string/plans_manage"
+            android:textColor="@color/white"
+            android:textColorLink="@color/blue_light"
+            android:textSize="@dimen/text_sz_large" />
     </FrameLayout>
 
 </RelativeLayout>

@@ -64,8 +64,7 @@ class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                         // Still empty. Do not eat the event, but let's open the default Web Browser.
                         return super.onTouchEvent(widget, buffer, event);
                     }
-                    WPWebViewActivity.openUrlByUsingWPCOMCredentials(widget.getContext(),
-                            url, statsAuthenticatedUser);
+                    WPWebViewActivity.openUrlByUsingWPCOMCredentials(widget.getContext(), url);
                     return true;
                 } else if (url.startsWith("https") || url.startsWith("http")) {
                     AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);

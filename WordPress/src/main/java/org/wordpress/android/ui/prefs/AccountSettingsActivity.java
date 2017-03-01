@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 
 public class AccountSettingsActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.account_settings);
         }
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -39,11 +41,5 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
     }
 }

@@ -292,22 +292,6 @@ public class StatsUtils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
-    public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
-        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
-        // the current wpcom account. We need to load the correct localID here, otherwise options are
-        // blank
-        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
-                remoteBlogID,
-                null);
-        if (localId == 0) {
-            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                    remoteBlogID
-            );
-        }
-
-        return localId;
-    }
-
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
         if (volleyError == null) {
             AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null!");
@@ -331,6 +315,34 @@ public class StatsUtils {
         if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
             String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
             return errorMessage.contains("api calls") && errorMessage.contains("disabled");
+        } else {
+            AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
+            return false;
+        }
+    }
+
+    public static synchronized boolean isJetpackDisconnectedOrDeactivatedError(final Serializable error) {
+        if (error == null || !(error instanceof com.android.volley.ServerError)) {
+            return false;
+        }
+        com.android.volley.ServerError volleyError = (com.android.volley.ServerError) error;
+        if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            return errorMessage.contains("jetpack") && errorMessage.contains("connected");
+        } else {
+            AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
+            return false;
+        }
+    }
+
+    public static synchronized boolean isJetpackStatsModuleDisabledError(final Serializable error) {
+        if (error == null || !(error instanceof com.android.volley.ServerError)) {
+            return false;
+        }
+        com.android.volley.ServerError volleyError = (com.android.volley.ServerError) error;
+        if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            return errorMessage.contains("stats") && errorMessage.contains("module") && errorMessage.contains("enabled");
         } else {
             AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
             return false;

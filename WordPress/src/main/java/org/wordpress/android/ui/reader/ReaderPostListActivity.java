@@ -9,8 +9,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 
@@ -41,23 +43,40 @@ public class ReaderPostListActivity extends AppCompatActivity {
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            setTitle(R.string.reader_title_blog_preview);
-            if (savedInstanceState == null) {
-                long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
-                if (feedId != 0) {
-                    showListFragmentForFeed(feedId);
-                } else {
-                    showListFragmentForBlog(blogId);
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            // show an X in the toolbar which closes the activity - if this is tag preview, then
+            // using the back button will navigate through tags if the user explores beyond a single tag
+            toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+
+            if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+                setTitle(R.string.reader_title_blog_preview);
+                if (savedInstanceState == null) {
+                    long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                    long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
+                    if (feedId != 0) {
+                        showListFragmentForFeed(feedId);
+                    } else {
+                        showListFragmentForBlog(blogId);
+                    }
+                }
+            } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+                setTitle(R.string.reader_title_tag_preview);
+                ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+                if (tag != null && savedInstanceState == null) {
+                    showListFragmentForTag(tag, mPostListType);
                 }
             }
-        } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-            setTitle(R.string.reader_title_tag_preview);
-            ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
-            if (tag != null && savedInstanceState == null) {
-                showListFragmentForTag(tag, mPostListType);
-            }
+        }
+
+        // restore the activity title
+        if (savedInstanceState != null && savedInstanceState.containsKey(ReaderConstants.KEY_ACTIVITY_TITLE)) {
+            setTitle(savedInstanceState.getString(ReaderConstants.KEY_ACTIVITY_TITLE));
         }
     }
 
@@ -99,13 +118,19 @@ public class ReaderPostListActivity extends AppCompatActivity {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
+        // store the title for blog/tag preview so we can restore it upon recreation
+        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW || getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+            outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, getTitle().toString());
+        }
+
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onBackPressed() {
         ReaderPostListFragment fragment = getListFragment();
-        if (fragment == null || !fragment.goBackInTagHistory()) {
+        if (fragment == null || !fragment.onActivityBackPressed()) {
             super.onBackPressed();
         }
     }
@@ -131,6 +156,8 @@ public class ReaderPostListActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
+
+        setTitle(tag.getTagDisplayName());
     }
 
     /*
@@ -145,6 +172,12 @@ public class ReaderPostListActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
+
+        String title = ReaderBlogTable.getBlogName(blogId);
+        if (title.isEmpty()) {
+            title = getString(R.string.reader_title_blog_preview);
+        }
+        setTitle(title);
     }
 
     private void showListFragmentForFeed(long feedId) {
@@ -156,6 +189,12 @@ public class ReaderPostListActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
+
+        String title = ReaderBlogTable.getFeedName(feedId);
+        if (title.isEmpty()) {
+            title = getString(R.string.reader_title_blog_preview);
+        }
+        setTitle(title);
     }
 
     private ReaderPostListFragment getListFragment() {

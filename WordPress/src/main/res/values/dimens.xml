@@ -18,6 +18,7 @@
 
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
+    <dimen name="card_gutters">12dp</dimen>
 
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
@@ -49,14 +50,13 @@
     <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_normal_landscape">48dp</dimen>
     <dimen name="content_margin_tablet">48dp</dimen>
-    <dimen name="content_margin_tablet_landscape">96dp</dimen>
+    <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
 
     <!-- spacing between icons in main tab strip -->
-    <dimen name="tabstrip_icon_spacing_normal">0dp</dimen>
-    <dimen name="tabstrip_icon_spacing_landscape">24dp</dimen>
-    <dimen name="tabstrip_icon_spacing_tablet">24dp</dimen>
-    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
+    <dimen name="tabstrip_icon_spacing_zero">0dp</dimen>
+    <dimen name="tabstrip_icon_spacing_medium">24dp</dimen>
+    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_zero</dimen>
 
     <!--
         native reader dimens
@@ -67,24 +67,36 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
+    <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
+
+    <item name="wp_match_parent" type="dimen">-1</item>
+    <dimen name="reader_webview_width">@dimen/wp_match_parent</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
-    <dimen name="reader_card_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>
-    <dimen name="reader_card_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_card_margin_tablet_big">96dp</dimen>
     <dimen name="reader_card_margin">@dimen/reader_card_margin_normal</dimen>
 
     <!-- left/right margin for reader detail -->
     <dimen name="reader_detail_margin_normal">24dp</dimen>
-    <dimen name="reader_detail_margin_normal_landscape">48dp</dimen>
     <dimen name="reader_detail_margin_tablet">48dp</dimen>
-    <dimen name="reader_detail_margin_tablet_landscape">96dp</dimen>
+    <dimen name="reader_detail_margin_tablet_big">96dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <!-- height of divider between cards -->
-    <dimen name="reader_card_gutters">12dp</dimen>
+    <dimen name="reader_detail_header_avatar">48dp</dimen>
+    <dimen name="reader_detail_header_blavatar">56dp</dimen>
+    <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
+
+    <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
+    <dimen name="reader_tag_header_image_height">128dp</dimen>
+    <dimen name="reader_xpost_padding_left">50dp</dimen>
+
+    <dimen name="reader_card_gutters">1px</dimen>
+    <dimen name="reader_card_elevation">0dp</dimen>
+
+    <dimen name="reader_video_overlay_size">56dp</dimen>
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
@@ -97,6 +109,7 @@
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_triple_extra_large">26sp</dimen>
 
+    <dimen name="avatar_sz_tiny">18dp</dimen>
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">38dp</dimen>
@@ -105,13 +118,25 @@
     <dimen name="blavatar_sz">40dp</dimen>
 
     <dimen name="reader_button_icon">24dp</dimen>
+    <dimen name="reader_count_icon">20dp</dimen>
+    <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
-    <dimen name="reader_more_icon">48dp</dimen>
+    <dimen name="reader_follow_icon_no_caption">24dp</dimen>
+    <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
+
+    <dimen name="reader_detail_tag_height">48dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
+
+    <dimen name="reader_featured_image_height_cardview">100dp</dimen>
+
+    <dimen name="reader_simple_post_image_width">72dp</dimen>
+
+    <item name="reader_photo_title_shadow_offset" type="dimen" format="float">3.0</item>
+    <item name="reader_photo_title_shadow_radius" type="dimen" format="float">1.5</item>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
@@ -126,6 +151,8 @@
     <dimen name="empty_list_description_bottom_margin">8dp</dimen>
     <dimen name="empty_list_description_side_margin">48dp</dimen>
 
+    <dimen name="nux_logotype_margin_bottom">24dp</dimen>
+    <dimen name="nux_logotype_font_size">28sp</dimen>
     <dimen name="nux_title_font_size">28sp</dimen>
     <dimen name="nux_edit_field_font_size">16sp</dimen>
     <dimen name="nux_main_button_height">48dp</dimen>
@@ -215,8 +242,6 @@
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
     <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
-    <dimen name="site_picker_container_padding_bottom">11dp</dimen>
-    <dimen name="site_picker_container_padding_top">10dp</dimen>
 
     <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">168dp</dimen>
@@ -231,6 +256,7 @@
     <dimen name="related_posts_dialog_padding_right">24dp</dimen>
     <dimen name="related_posts_dialog_padding_bottom">12dp</dimen>
     <dimen name="text_sz_related_post_small">11sp</dimen>
+    <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
     <dimen name="start_over_padding_top">40dp</dimen>
     <dimen name="start_over_margin">20dp</dimen>

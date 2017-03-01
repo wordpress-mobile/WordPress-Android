@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-08-19 20:02:12+0000
+Plural-Forms: nplurals=1; plural=0;
+Generator: GlotPress/2.4.0-alpha
+Language: uz
+-->
 <resources>
 	<string name="loading_videos">Videolarni yuklash</string>
 	<string name="loading_images">Rasmlarni yuklash</string>
@@ -24,7 +30,6 @@
 	<string name="nux_welcome_create_account">Akkaunt ochish</string>
 	<string name="media_add_new_media_gallery">Yangi galereya</string>
 	<string name="reader_untitled_post">(Nomsiz)</string>
-	<string name="reader_timespan_now">hozir</string>
 	<string name="jetpack_not_found">Jetpack plagini topilmadi</string>
 	<string name="media_add_popup_title">Media kutubxonasiga qo‘sh</string>
 	<string name="empty_list_default">Ushbu ro‘yxat bo‘sh</string>
@@ -46,7 +51,6 @@
 	<string name="reader_likes_only_you">Siz yoqtirgansiz</string>
 	<string name="reader_empty_followed_tags">Birorta ham teg kuzatmayapsiz</string>
 	<string name="create_account_wpcom">Wordpress.com da akkaunt oching</string>
-	<string name="connecting_wpcom">Wordpress.com ga bog‘lanmoqda</string>
 	<string name="username_invalid">Yaroqsiz foydalanuvchi nomi</string>
 	<string name="limit_reached">Chegaraga yetib keldik. Bir minutdan keyin harakat qilib ko‘rishingiz mumkin. Bu vaqtdan avval harakatga o‘tishingiz kutish vaqtining yanada uzayishiga olib keladi. Agar bu biror tushunmovchilik natijasi deb o‘ylasangiz, yordam xizmatiga murojaat qiling.</string>
 	<string name="all">Hammasi</string>
@@ -108,11 +112,11 @@
 	<string name="media_edit_caption_hint">Titr kiriting</string>
 	<string name="media_edit_description_hint">Izoh kiriting</string>
 	<string name="upload">Yuklash</string>
+	<string name="discard">Bekor qilish</string>
 	<string name="notifications">Xabarlar</string>
 	<string name="note_reply_successful">Javob chop qilindi</string>
 	<string name="new_notifications">%d ta yangi xabarlar</string>
 	<string name="more_notifications">va yana %d ta.</string>
-	<string name="sign_in">Kirish</string>
 	<string name="loading">Yuklanmoqda...</string>
 	<string name="httppassword">HTTP parol</string>
 	<string name="httpuser">HTTP foydalanuvchi nomi</string>
@@ -146,6 +150,7 @@
 	<string name="image_alignment">Tekislash</string>
 	<string name="refresh">Yangila</string>
 	<string name="untitled">Nomsiz</string>
+	<string name="edit">Tahrir qil</string>
 	<string name="post_id">Post</string>
 	<string name="page_id">Sahifa</string>
 	<string name="post_password">Parol (ixtiyoriy)</string>
@@ -163,13 +168,13 @@
 	<string name="categories">Bo‘limlar</string>
 	<string name="notification_vibrate">Vibratsiya</string>
 	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
-	<string name="notification_sound">Ovozli xabar</string>
 	<string name="status">Status</string>
 	<string name="location">Manzil</string>
 	<string name="select_video">Galereyadan video tanla</string>
 	<string name="sdcard_title">SD karta kerak</string>
 	<string name="media">Media</string>
 	<string name="delete">O‘chir</string>
+	<string name="approve">Tasdiqla</string>
 	<string name="none">Hech bir</string>
 	<string name="blogs">Bloglar</string>
 	<string name="select_photo">Galereyadan rasm tanlash</string>

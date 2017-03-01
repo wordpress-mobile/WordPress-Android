@@ -225,10 +225,10 @@ public class StringUtils {
      * Used to convert a language code ([lc]_[rc] where lc is language code (en, fr, es, etc...)
      * and rc is region code (zh-CN, zh-HK, zh-TW, etc...) to a displayable string with the languages
      * name.
-     * <p/>
+     *
      * The input string must be between 2 and 6 characters, inclusive. An empty string is returned
      * if that is not the case.
-     * <p/>
+     *
      * If the input string is recognized by {@link Locale} the result of this method is the given
      *
      * @return non-null

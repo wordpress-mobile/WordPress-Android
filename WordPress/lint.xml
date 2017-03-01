@@ -5,7 +5,7 @@
     <issue id="RtlCompat" severity="warning" />
 
     <issue id="InvalidPackage">
-        <ignore regexp="okio-1.6.0.jar" />
+        <ignore regexp="okio-1.9.0.jar" />
     </issue>
 
     <issue id="NewApi">
@@ -21,8 +21,4 @@
     <issue id="IconDipSize" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
-
-    <issue id="MissingPrefix">
-        <ignore regexp="Unexpected namespace prefix &quot;app&quot; found for tag `Image.*`" />
-    </issue>
 </lint>
