@@ -29,6 +29,7 @@ public class SiteSettingsModel {
     public static final String LANGUAGE_COLUMN_NAME = "language";
     public static final String PRIVACY_COLUMN_NAME = "privacy";
     public static final String LOCATION_COLUMN_NAME = "location";
+    public static final String OPTIMIZE_IMAGE_COLUMN_NAME = "optimizeImage";
     public static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
     public static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
     public static final String CATEGORIES_COLUMN_NAME = "categories";
@@ -66,6 +67,7 @@ public class SiteSettingsModel {
                     LANGUAGE_COLUMN_NAME + " INTEGER, " +
                     PRIVACY_COLUMN_NAME + " INTEGER, " +
                     LOCATION_COLUMN_NAME + " BOOLEAN, " +
+                    OPTIMIZE_IMAGE_COLUMN_NAME + " BOOLEAN, " +
                     DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
                     DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
                     CATEGORIES_COLUMN_NAME + " TEXT, " +
@@ -102,6 +104,7 @@ public class SiteSettingsModel {
     public int languageId;
     public int privacy;
     public boolean location;
+    public boolean optimizeImage;
     public int defaultCategory;
     public CategoryModel[] categories;
     public String defaultPostFormat;
@@ -133,14 +136,20 @@ public class SiteSettingsModel {
         SiteSettingsModel otherModel = (SiteSettingsModel) other;
 
         return localTableId == otherModel.localTableId &&
-                address.equals(otherModel.address) &&
-                username.equals(otherModel.username) &&
-                password.equals(otherModel.password) &&
-                title.equals(otherModel.title) &&
-                tagline.equals(otherModel.tagline) &&
+                ((address == null && otherModel.address == null) ||
+                        (address != null && otherModel.address != null && address.equals(otherModel.address))) &&
+                ((username == null && otherModel.username == null) ||
+                        (username != null && otherModel.username != null && username.equals(otherModel.username))) &&
+                ((password == null && otherModel.password == null) ||
+                        (password != null && otherModel.password != null && password.equals(otherModel.password))) &&
+                ((title == null && otherModel.title == null) ||
+                        (title != null && otherModel.title != null && title.equals(otherModel.title))) &&
+                ((tagline == null && otherModel.tagline == null) ||
+                        (tagline != null && otherModel.tagline != null && tagline.equals(otherModel.tagline))) &&
                 languageId == otherModel.languageId &&
                 privacy == otherModel.privacy &&
                 location == otherModel.location &&
+                optimizeImage == otherModel.optimizeImage &&
                 defaultPostFormat.equals(otherModel.defaultPostFormat) &&
                 defaultCategory == otherModel.defaultCategory &&
                 showRelatedPosts == otherModel.showRelatedPosts &&
@@ -158,8 +167,9 @@ public class SiteSettingsModel {
                 commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
                 maxLinks == otherModel.maxLinks &&
-                holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
-                blacklist != null && blacklist.equals(otherModel.blacklist);
+                holdForModeration != null && otherModel.holdForModeration != null
+                    && holdForModeration.equals(otherModel.holdForModeration) &&
+                blacklist != null && otherModel.blacklist != null && blacklist.equals(otherModel.blacklist);
     }
 
     /**
@@ -180,6 +190,7 @@ public class SiteSettingsModel {
         languageId = other.languageId;
         privacy = other.privacy;
         location = other.location;
+        optimizeImage = other.optimizeImage;
         defaultCategory = other.defaultCategory;
         categories = other.categories;
         defaultPostFormat = other.defaultPostFormat;
@@ -227,6 +238,7 @@ public class SiteSettingsModel {
         defaultCategory = getIntFromCursor(cursor, DEF_CATEGORY_COLUMN_NAME);
         defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
         location = getBooleanFromCursor(cursor, LOCATION_COLUMN_NAME);
+        optimizeImage = getBooleanFromCursor(cursor, OPTIMIZE_IMAGE_COLUMN_NAME);
         hasVerifiedCredentials = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
         allowComments = getBooleanFromCursor(cursor, ALLOW_COMMENTS_COLUMN_NAME);
         sendPingbacks = getBooleanFromCursor(cursor, SEND_PINGBACKS_COLUMN_NAME);
@@ -297,6 +309,7 @@ public class SiteSettingsModel {
         values.put(PRIVACY_COLUMN_NAME, privacy);
         values.put(LANGUAGE_COLUMN_NAME, languageId);
         values.put(LOCATION_COLUMN_NAME, location);
+        values.put(OPTIMIZE_IMAGE_COLUMN_NAME, optimizeImage);
         values.put(DEF_CATEGORY_COLUMN_NAME, defaultCategory);
         values.put(CATEGORIES_COLUMN_NAME, categoryIdList(categories));
         values.put(DEF_POST_FORMAT_COLUMN_NAME, defaultPostFormat);

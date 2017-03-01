@@ -139,9 +139,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             // postFormats setting is not returned by this api call so copy it over
                             final Map<String, String> currentPostFormats = mSettings.postFormats;
 
+                            // Local settings
+                            boolean location = mSettings.location;
+                            boolean optimizeImage = mSettings.optimizeImage;
+
                             mSettings.copyFrom(mRemoteSettings);
 
                             mSettings.postFormats = currentPostFormats;
+                            mSettings.location = location;
+                            mSettings.optimizeImage = optimizeImage;
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
