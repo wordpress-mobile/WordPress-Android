@@ -369,7 +369,7 @@ public class MediaGridFragment extends Fragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnMediaListFetched(OnMediaListFetched event) {
+    public void onMediaListFetched(OnMediaListFetched event) {
         if (event.isError()) {
             handleFetchAllMediaError(event.error.type);
             return;

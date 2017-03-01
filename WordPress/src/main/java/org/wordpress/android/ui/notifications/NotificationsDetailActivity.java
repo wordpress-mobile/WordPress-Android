@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -291,10 +292,16 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     public void showStatsActivityForSite(long siteId, NoteBlockRangeType rangeType) {
         SiteModel site = mSiteStore.getSiteBySiteId(siteId);
+        if (site == null) {
+            // One way the site can be null: new site created, receive a notification from this site,
+            // but the site list is not yet updated in the app.
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            return;
+        }
         showStatsActivityForSite(site, rangeType);
     }
 
-    public void showStatsActivityForSite(SiteModel mSite, NoteBlockRangeType rangeType) {
+    public void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
         if (isFinishing()) return;
 
         if (rangeType == NoteBlockRangeType.FOLLOW) {
@@ -302,11 +309,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
             intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
-            intent.putExtra(WordPress.SITE, mSite);
+            intent.putExtra(WordPress.SITE, site);
             intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, getString(R.string.stats_view_followers));
             startActivity(intent);
         } else {
-            ActivityLauncher.viewBlogStats(this, mSite);
+            ActivityLauncher.viewBlogStats(this, site);
         }
     }
 

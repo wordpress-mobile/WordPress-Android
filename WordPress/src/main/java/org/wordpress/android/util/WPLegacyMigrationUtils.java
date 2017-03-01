@@ -43,7 +43,7 @@ public class WPLegacyMigrationUtils {
      * The access token has historically existed in preferences and two DB tables.
      */
     public static String migrateAccessTokenToAccountStore(Context context, Dispatcher dispatcher) {
-        String token = getLatestDeprecatedAccessToken(context);
+        String token = getLatestDeprecatedAccessToken(context.getApplicationContext());
 
         // updating from previous app version
         if (!TextUtils.isEmpty(token)) {
@@ -60,7 +60,7 @@ public class WPLegacyMigrationUtils {
      * Existing sites are retained in the deprecated accounts table after migration.
      */
     public static List<SiteModel> migrateSelfHostedSitesFromDeprecatedDB(Context context, Dispatcher dispatcher) {
-        List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context);
+        List<SiteModel> siteList = getSelfHostedSitesFromDeprecatedDB(context.getApplicationContext());
         if (siteList != null) {
             AppLog.i(T.DB, "Starting migration of " + siteList.size() + " self-hosted sites to FluxC");
             for (SiteModel siteModel : siteList) {
@@ -77,7 +77,7 @@ public class WPLegacyMigrationUtils {
      * Existing posts are retained in the deprecated posts table after migration.
      */
     public static void migrateDraftsFromDeprecatedDB(Context context, Dispatcher dispatcher, SiteStore siteStore) {
-        List<PostModel> postList = getDraftsFromDeprecatedDB(context, siteStore);
+        List<PostModel> postList = getDraftsFromDeprecatedDB(context.getApplicationContext(), siteStore);
         if (postList != null) {
             AppLog.i(T.DB, "Starting migration of " + postList.size() + " drafts to FluxC");
             for (PostModel postModel : postList) {
@@ -102,10 +102,10 @@ public class WPLegacyMigrationUtils {
         return latestToken;
     }
 
-    private static String getAccessTokenFromTable(Context context, String tableName) {
+    static String getAccessTokenFromTable(Context context, String tableName) {
         String token = null;
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             Cursor c = db.rawQuery("SELECT " + DEPRECATED_ACCESS_TOKEN_COLUMN
                     + " FROM " + tableName + " WHERE local_id=0", null);
             if (c.moveToFirst() && c.getColumnIndex(DEPRECATED_ACCESS_TOKEN_COLUMN) != -1) {
@@ -121,7 +121,7 @@ public class WPLegacyMigrationUtils {
 
     public static boolean hasSelfHostedSiteToMigrate(Context context) {
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
 
             // To exclude the jetpack sites we need to check for empty password
@@ -132,6 +132,7 @@ public class WPLegacyMigrationUtils {
             c.moveToFirst();
             for (int i = 0; i < numRows; i++) {
                 if (!TextUtils.isEmpty(c.getString(5))) {
+                    c.moveToNext();
                     continue;
                 }
                 c.close();
@@ -144,10 +145,10 @@ public class WPLegacyMigrationUtils {
         }
     }
 
-    private static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
+    static List<SiteModel> getSelfHostedSitesFromDeprecatedDB(Context context) {
         List<SiteModel> siteList = new ArrayList<>();
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
 
             // To exclude the jetpack sites we need to check for empty password
@@ -160,18 +161,36 @@ public class WPLegacyMigrationUtils {
                 // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
                 // account, so we want to skip it.
                 if (!TextUtils.isEmpty(c.getString(5))) {
+                    c.moveToNext();
                     continue;
                 }
-                SiteModel siteModel = new SiteModel();
-                siteModel.setUsername(c.getString(0));
-                // Decrypt password before migrating since we no longer encrypt passwords in FluxC
-                String encryptedPwd = c.getString(1);
-                siteModel.setPassword(decryptPassword(encryptedPwd));
 
+                String username = c.getString(0);
+                String encryptedPwd = c.getString(1);
                 String xmlrpcUrl = c.getString(2);
+
+                if (TextUtils.isEmpty(username)) {
+                    AppLog.d(T.DB, "Found a self-hosted site with no username - skipping it.");
+                    c.moveToNext();
+                    continue;
+                }
+
+                if (TextUtils.isEmpty(xmlrpcUrl)) {
+                    AppLog.d(T.DB, "Found a self-hosted site with no XML-RPC URL - skipping it.");
+                    c.moveToNext();
+                    continue;
+                }
+
+                SiteModel siteModel = new SiteModel();
+                siteModel.setUsername(username);
+                // Decrypt password before migrating since we no longer encrypt passwords in FluxC
+                siteModel.setPassword(decryptPassword(encryptedPwd));
                 siteModel.setXmlRpcUrl(xmlrpcUrl);
+
                 String url = c.getString(3);
-                siteModel.setUrl(url);
+                if (!TextUtils.isEmpty(url)) {
+                    siteModel.setUrl(url);
+                }
 
                 siteModel.setSelfHostedSiteId(c.getLong(4));
                 siteList.add(siteModel);
@@ -186,7 +205,7 @@ public class WPLegacyMigrationUtils {
 
     public static boolean hasDraftsToMigrate(Context context) {
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
 
             String byString = "localDraft=1 OR isLocalChange=1";
             Cursor c = db.query(DEPRECATED_POSTS_TABLE, null, byString, null, null, null, null);
@@ -201,10 +220,10 @@ public class WPLegacyMigrationUtils {
         }
     }
 
-    private static List<PostModel> getDraftsFromDeprecatedDB(Context context, SiteStore siteStore) {
+    static List<PostModel> getDraftsFromDeprecatedDB(Context context, SiteStore siteStore) {
         List<PostModel> postList = new ArrayList<>();
         try {
-            SQLiteDatabase db = context.getApplicationContext().openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
+            SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
 
             String byString = "localDraft=1 OR isLocalChange=1";
             Cursor c = db.query(DEPRECATED_POSTS_TABLE, null, byString, null, null, null, null);
@@ -240,9 +259,10 @@ public class WPLegacyMigrationUtils {
                     postModel.setLocalSiteId(migratedSiteLocalId);
                     siteCursor.close();
                 } else {
-                    AppLog.i(T.DB, "Couldn't find site corresponding to draft in deprecated DB! " +
-                            "Site local id " + c.getInt(c.getColumnIndex("blogId")) +
+                    AppLog.d(T.DB, "Couldn't find site corresponding to draft in deprecated DB! " +
+                            "Site local id " + c.getInt(c.getColumnIndex("blogID")) +
                             " - Post title: " + c.getString(c.getColumnIndex("title")));
+                    c.moveToNext();
                     siteCursor.close();
                     continue;
                 }
@@ -250,8 +270,9 @@ public class WPLegacyMigrationUtils {
                 postModel.setIsLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
                 postModel.setIsLocallyChanged(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
 
-                if (!c.getString(c.getColumnIndex("postid")).equals("")) {
-                    postModel.setRemotePostId(Long.valueOf(c.getString(c.getColumnIndex("postid"))));
+                String postId = c.getString(c.getColumnIndex("postid"));
+                if (!TextUtils.isEmpty(postId)) {
+                    postModel.setRemotePostId(Long.valueOf(postId));
                 }
 
                 postModel.setTitle(StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title"))));

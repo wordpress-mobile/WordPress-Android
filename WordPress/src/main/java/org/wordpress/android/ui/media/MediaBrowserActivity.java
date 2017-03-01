@@ -58,6 +58,9 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -512,7 +515,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+    public void onMediaChanged(OnMediaChanged event) {
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
                                      + " - " + event.error.message);
@@ -525,8 +528,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 if (event.mediaList == null || event.mediaList.isEmpty()) {
                     break;
                 }
-
-                MediaModel media = event.mediaList.get(0);
 
                 // If the media was deleted, remove it from multi select (if it was selected) and hide it from the
                 // detail view (if it was the one displayed)
@@ -550,7 +551,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
+    public void onMediaListFetched(OnMediaListFetched event) {
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received OnMediaListFetched error: " + event.error.type
                     + " - " + event.error.message);
@@ -562,7 +563,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+    public void onMediaUploaded(OnMediaUploaded event) {
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                                      + " - " + event.error.message);
