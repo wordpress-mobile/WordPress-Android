@@ -85,7 +85,7 @@ public class TaxonomyStore extends Store {
     }
 
     // OnChanged events
-    public class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
+    public static class OnTaxonomyChanged extends OnChanged<TaxonomyError> {
         public int rowsAffected;
         public String taxonomyName;
         public TaxonomyAction causeOfChange;
@@ -100,7 +100,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    public class OnTermInstantiated extends OnChanged<TaxonomyError> {
+    public static class OnTermInstantiated extends OnChanged<TaxonomyError> {
         public TermModel term;
 
         public OnTermInstantiated(TermModel term) {
@@ -108,7 +108,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    public class OnTermUploaded extends OnChanged<TaxonomyError> {
+    public static class OnTermUploaded extends OnChanged<TaxonomyError> {
         public TermModel term;
 
         public OnTermUploaded(TermModel term) {

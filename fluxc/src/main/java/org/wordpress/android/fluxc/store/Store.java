@@ -13,7 +13,7 @@ public abstract class Store {
 
     public interface OnChangedError {}
 
-    public class OnChanged<T extends OnChangedError> {
+    public static class OnChanged<T extends OnChangedError> {
         public T error = null;
 
         public boolean isError() {
