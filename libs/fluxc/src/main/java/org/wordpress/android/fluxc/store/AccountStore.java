@@ -93,25 +93,25 @@ public class AccountStore extends Store {
     }
 
     // OnChanged Events
-    public class OnAccountChanged extends OnChanged<AccountError> {
+    public static class OnAccountChanged extends OnChanged<AccountError> {
         public boolean accountInfosChanged;
         public AccountAction causeOfChange;
     }
 
-    public class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
+    public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
     }
 
-    public class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
+    public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
         public String failedEndpoint;
     }
 
-    public class OnNewUserCreated extends OnChanged<NewUserError> {
+    public static class OnNewUserCreated extends OnChanged<NewUserError> {
         public boolean dryRun;
     }
 
-    public class OnAvailabilityChecked extends OnChanged<IsAvailableError> {
+    public static class OnAvailabilityChecked extends OnChanged<IsAvailableError> {
         public IsAvailable type;
         public String value;
         public boolean isAvailable;
@@ -124,7 +124,7 @@ public class AccountStore extends Store {
         }
     }
 
-    public class OnAuthEmailSent extends OnChanged<AuthEmailError> {}
+    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {}
 
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;

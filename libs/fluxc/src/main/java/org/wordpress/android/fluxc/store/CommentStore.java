@@ -166,7 +166,7 @@ public class CommentStore extends Store {
 
     // Actions
 
-    public class OnCommentChanged extends OnChanged<CommentError> {
+    public static class OnCommentChanged extends OnChanged<CommentError> {
         public int rowsAffected;
         public CommentAction causeOfChange;
         public List<Integer> changedCommentsLocalIds = new ArrayList<>();
@@ -175,7 +175,7 @@ public class CommentStore extends Store {
         }
     }
 
-    public class OnCommentInstantiated extends OnChanged<CommentError> {
+    public static class OnCommentInstantiated extends OnChanged<CommentError> {
         public CommentModel comment;
         public OnCommentInstantiated(CommentModel comment) {
             this.comment = comment;

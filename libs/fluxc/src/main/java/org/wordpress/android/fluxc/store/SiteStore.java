@@ -120,51 +120,51 @@ public class SiteStore extends Store {
     }
 
     // OnChanged Events
-    public class OnSiteChanged extends OnChanged<SiteError> {
+    public static class OnSiteChanged extends OnChanged<SiteError> {
         public int rowsAffected;
         public OnSiteChanged(int rowsAffected) {
             this.rowsAffected = rowsAffected;
         }
     }
 
-    public class OnSiteRemoved extends OnChanged<SiteError> {
+    public static class OnSiteRemoved extends OnChanged<SiteError> {
         public int mRowsAffected;
         public OnSiteRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
     }
 
-    public class OnAllSitesRemoved extends OnChanged<SiteError> {
+    public static class OnAllSitesRemoved extends OnChanged<SiteError> {
         public int mRowsAffected;
         public OnAllSitesRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
         }
     }
 
-    public class OnNewSiteCreated extends OnChanged<NewSiteError> {
+    public static class OnNewSiteCreated extends OnChanged<NewSiteError> {
         public boolean dryRun;
         public long newSiteRemoteId;
     }
 
-    public class OnSiteDeleted extends OnChanged<DeleteSiteError> {
+    public static class OnSiteDeleted extends OnChanged<DeleteSiteError> {
         public OnSiteDeleted(DeleteSiteError error) {
             this.error = error;
         }
     }
 
-    public class OnSiteExported extends OnChanged<ExportSiteError> {
+    public static class OnSiteExported extends OnChanged<ExportSiteError> {
         public OnSiteExported() {
         }
     }
 
-    public class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
+    public static class OnPostFormatsChanged extends OnChanged<PostFormatsError> {
         public SiteModel site;
         public OnPostFormatsChanged(SiteModel site) {
             this.site = site;
         }
     }
 
-    public class OnURLChecked extends OnChanged<SiteError> {
+    public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
         public OnURLChecked(@NonNull String url) {
