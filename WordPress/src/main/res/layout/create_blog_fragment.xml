@@ -36,7 +36,7 @@
                 android:background="@color/white"
                 android:id="@+id/relativeLayout">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/site_title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 android:background="@color/white"
                 android:layout_marginBottom="16dp">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/site_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"

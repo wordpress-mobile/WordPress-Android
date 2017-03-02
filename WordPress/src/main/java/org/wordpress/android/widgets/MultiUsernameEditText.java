@@ -7,12 +7,12 @@ import android.view.View;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-
+import android.widget.EditText;
 
 /**
  * Used to handle backspace in People Management username field
  */
-public class MultiUsernameEditText extends WPEditText {
+public class MultiUsernameEditText extends EditText {
 
     private OnBackspacePressedListener mOnBackspacePressedListener;
 

@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/account_details" />
 
-            <org.wordpress.android.widgets.WPEditText
+            <EditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:maxLength="@integer/max_length_username"
                 android:singleLine="true" />
 
-            <org.wordpress.android.widgets.WPEditText
+            <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/http_credentials" />
 
-            <org.wordpress.android.widgets.WPEditText
+            <EditText
                 android:id="@+id/httpuser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:maxLength="@integer/max_length_username"
                 android:hint="@string/httpuser" />
 
-            <org.wordpress.android.widgets.WPEditText
+            <EditText
                 android:id="@+id/httppassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/scaled_image" />
 
-            <org.wordpress.android.widgets.WPEditText
+            <EditText
                 android:id="@+id/scaledImageWidth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                 android:singleLine="true" />
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPButton
+        <Button
             android:id="@+id/remove_account"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_width="match_parent"

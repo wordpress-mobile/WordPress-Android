@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/email_address"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 android:background="@color/white"
                 android:id="@+id/relativeLayout">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/username"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                 android:background="@color/white"
                 android:id="@+id/relativeLayout2">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/password"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                 android:background="@color/white"
                 android:layout_marginBottom="16dp">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/site_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
