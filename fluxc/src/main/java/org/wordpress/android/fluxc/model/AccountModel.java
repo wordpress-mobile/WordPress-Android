@@ -10,7 +10,7 @@ import org.wordpress.android.util.StringUtils;
 
 @Table
 public class AccountModel extends Payload implements Identifiable {
-    @PrimaryKey
+    @PrimaryKey(autoincrement = false)
     @Column private int mId;
 
     // Account attributes
