@@ -656,16 +656,23 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         sortLanguages();
 
+        boolean isAccessibleViaWPComAPI = SiteUtils.isAccessibleViaWPComAPI(mSite);
+
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
-        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
-            removeSelfHostedOnlyPreferences();
+        if (!isAccessibleViaWPComAPI) {
+            // self-hosted, non-jetpack site
+            removeNonSelfHostedPreferences();
+        } else if (mSite.isJetpackConnected()) {
+            // jetpack site
+            removeNonJetpackPreferences();
         } else {
-            removeDotComOnlyPreferences();
+            // wp.com site
+            removeNonDotComPreferences();
         }
 
         // hide Admin options depending of capabilities on this site
-        if ((!mSite.isWPCom() && !mSite.isSelfHostedAdmin())
-            || (mSite.isWPCom() && !mSite.getHasCapabilityManageOptions())) {
+        if ((!isAccessibleViaWPComAPI && !mSite.isSelfHostedAdmin())
+            || (isAccessibleViaWPComAPI && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
 
@@ -1205,14 +1212,19 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
     }
 
-    private void removeDotComOnlyPreferences() {
+    private void removeNonSelfHostedPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
     }
 
-    private void removeSelfHostedOnlyPreferences() {
+    private void removeNonJetpackPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_delete_site_screen);
+    }
+
+    private void removeNonDotComPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
     }
 
     private Preference getChangePref(int id) {

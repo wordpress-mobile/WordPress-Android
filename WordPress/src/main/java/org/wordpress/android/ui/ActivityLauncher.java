@@ -69,7 +69,6 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
-        if (site == null) return;
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);

@@ -225,26 +225,6 @@ public class WordPress extends MultiDexApplication {
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        // If the migration was not done and if we have something to migrate
-        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.wereSelfHostedSitesMigratedToFluxC()
-            || !AppPrefs.wereDraftsMigratedToFluxC())
-            && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
-                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null
-                || WPLegacyMigrationUtils.hasDraftsToMigrate(this))) {
-            sIsMigrationInProgress = true;
-
-            // No connection? Then exit and ask the user to come back.
-            if (!NetworkUtils.isNetworkAvailable(this)) {
-                AppLog.i(T.DB, "No connection - aborting migration");
-                ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
-                        ToastUtils.Duration.LONG);
-                new Handler().postDelayed(sShutdown, 3500);
-                return;
-            }
-
-            migrateAccessToken();
-        }
-
         ProfilingUtils.start("App Startup");
         // Enable log recording
         AppLog.enableRecording(true);
@@ -253,6 +233,9 @@ public class WordPress extends MultiDexApplication {
         if (!PackageUtils.isDebugBuild()) {
             Fabric.with(this, new Crashlytics());
         }
+
+        // If the migration was not done and if we have something to migrate
+        runFluxCMigration();
 
         versionName = PackageUtils.getVersionName(this);
         initWpDb();
@@ -296,6 +279,28 @@ public class WordPress extends MultiDexApplication {
         // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
+    private void runFluxCMigration() {
+        // If the migration was not done and if we have something to migrate
+        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.wereSelfHostedSitesMigratedToFluxC()
+                || !AppPrefs.wereDraftsMigratedToFluxC())
+                && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
+                || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null
+                || WPLegacyMigrationUtils.hasDraftsToMigrate(this))) {
+            sIsMigrationInProgress = true;
+
+            // No connection? Then exit and ask the user to come back.
+            if (!NetworkUtils.isNetworkAvailable(this)) {
+                AppLog.i(T.DB, "No connection - aborting migration");
+                ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
+                        ToastUtils.Duration.LONG);
+                new Handler().postDelayed(sShutdown, 3500);
+                return;
+            }
+
+            migrateAccessToken();
+        }
     }
 
     private void migrateAccessToken() {
@@ -410,8 +415,10 @@ public class WordPress extends MultiDexApplication {
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+            if (!sIsMigrationInProgress) {
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+            }
             NotificationsUpdateService.startService(getContext());
         }
     }

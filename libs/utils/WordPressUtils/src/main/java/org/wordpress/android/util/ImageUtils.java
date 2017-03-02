@@ -622,7 +622,7 @@ public class ImageUtils {
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
-            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 90, stream);
+            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, maxWidth, orientation, 75, stream);
             if (!res) {
                 AppLog.w(AppLog.T.MEDIA, "Failed to compress the resized image. Use the full picture instead.");
                 return null;

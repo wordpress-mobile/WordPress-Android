@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -154,7 +155,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
+    public void onMediaListFetched(OnMediaListFetched event) {
         mIsFetching = false;
         if (event.isError()) {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
