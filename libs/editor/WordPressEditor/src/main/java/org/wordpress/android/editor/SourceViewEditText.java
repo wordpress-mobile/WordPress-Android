@@ -23,12 +23,10 @@ public class SourceViewEditText extends EditText {
 
     public SourceViewEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setCustomTypeface(attrs);
     }
 
     public SourceViewEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setCustomTypeface(attrs);
     }
 
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
@@ -42,19 +40,5 @@ public class SourceViewEditText extends EditText {
 
     public void setOnImeBackListener(OnImeBackListener listener) {
         this.mOnImeBackListener = listener;
-    }
-
-    private void setCustomTypeface(AttributeSet attrs) {
-        TypedArray values = getContext().obtainStyledAttributes(attrs, R.styleable.SourceViewEditText);
-        String typefaceName = values.getString(R.styleable.SourceViewEditText_fontFile);
-        if (typefaceName != null) {
-            try {
-                Typeface typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/" + typefaceName);
-                this.setTypeface(typeface);
-            } catch (RuntimeException e) {
-                AppLog.e(AppLog.T.EDITOR, "Could not load typeface " + typefaceName);
-            }
-        }
-        values.recycle();
     }
 }

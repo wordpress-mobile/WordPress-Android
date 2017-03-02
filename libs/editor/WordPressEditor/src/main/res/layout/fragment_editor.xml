@@ -42,7 +42,7 @@
                 android:textColorHint="@color/sourceview_placeholder_text"
                 android:inputType="textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
-                editor:fontFile="Merriweather-Bold.ttf"/>
+                android:fontFamily="serif"/>
 
             <View
                 android:id="@+id/sourceview_horizontal_divider"
@@ -68,7 +68,8 @@
                 android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
                 android:lineSpacingExtra="4dp"
                 android:imeOptions="flagNoExtractUi"
-                android:typeface="monospace"/>
+                android:typeface="monospace"
+                android:fontFamily="monospace"/>
         </LinearLayout>
     </ScrollView>
 
