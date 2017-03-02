@@ -221,7 +221,7 @@
                 android:background="@color/white"
                 android:visibility="gone">
 
-                <EditText
+                <org.wordpress.persistentedittext.PersistentEditText
                     android:id="@+id/nux_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
