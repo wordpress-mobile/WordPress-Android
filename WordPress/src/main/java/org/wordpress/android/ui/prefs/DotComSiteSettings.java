@@ -141,13 +141,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                             // Local settings
                             boolean location = mSettings.location;
-                            boolean optimizeImage = mSettings.optimizeImage;
+                            boolean optimizeImaged = mSettings.optimizedImage;
 
                             mSettings.copyFrom(mRemoteSettings);
 
                             mSettings.postFormats = currentPostFormats;
                             mSettings.location = location;
-                            mSettings.optimizeImage = optimizeImage;
+                            mSettings.optimizedImage = optimizeImaged;
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);

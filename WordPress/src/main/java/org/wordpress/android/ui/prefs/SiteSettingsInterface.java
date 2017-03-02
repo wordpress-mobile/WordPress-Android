@@ -45,7 +45,7 @@ import javax.inject.Inject;
  * - Username (.org only)
  * - Password (.org only)
  * - Location (local device setting, not saved remotely)
- * - Optimize Image (local device setting, not saved remotely)
+ * - Optimized Image (local device setting, not saved remotely)
  * - Default Category
  * - Default Format
  * - Related Posts
@@ -277,8 +277,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.location;
     }
 
-    public boolean getOptmizeImage() {
-        return mSettings.optimizeImage;
+    public boolean getOptimizedImage() {
+        return mSettings.optimizedImage;
     }
 
     public @NonNull Map<String, String> getFormats() {
@@ -561,7 +561,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setOptimizeImage(boolean optimizeImage) {
-        mSettings.optimizeImage = optimizeImage;
+        mSettings.optimizedImage = optimizeImage;
     }
 
     public void setAllowComments(boolean allowComments) {
@@ -779,7 +779,7 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
             mRemoteSettings.location = mSettings.location;
-            mRemoteSettings.optimizeImage = mSettings.optimizeImage;
+            mRemoteSettings.optimizedImage = mSettings.optimizedImage;
             localSettings.close();
             notifyUpdatedOnUiThread(null);
         } else {
