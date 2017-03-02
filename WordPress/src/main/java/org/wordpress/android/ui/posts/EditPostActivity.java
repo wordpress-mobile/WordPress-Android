@@ -1540,7 +1540,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (!isVideo && SiteSettingsInterface.getInterface(this, mSite, null).init(false).getOptimizedImage() &&
                !NetworkUtils.isWiFiConnected(this)) {
             // Not on WiFi and optimize image is set to ON
-            // If the user has selected a maximum image width for uploads, rescale the image accordingly
             String optimizedPath = ImageUtils.optimizeImage(this, path);
 
             if (optimizedPath == null) {
