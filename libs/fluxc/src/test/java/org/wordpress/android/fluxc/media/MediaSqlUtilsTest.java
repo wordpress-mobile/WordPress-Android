@@ -376,6 +376,36 @@ public class MediaSqlUtilsTest {
                 MediaSqlUtils.getMediaWithStatesAsCursor(site, NOT_DELETED_STATES).getCount());
     }
 
+    @Test
+    public void testPushAndFetchCollision() throws InterruptedException {
+        // Test uploading media, fetching remote media and updating the db from the fetch first
+
+        MediaModel mediaModel = getTestMedia(0);
+        MediaSqlUtils.insertMediaForResult(mediaModel);
+
+        SiteModel site = getTestSiteWithLocalId(TEST_LOCAL_SITE_ID);
+
+        // The media item after uploading, updated with the remote media ID, about to be saved locally
+        MediaModel mediaFromUploadResponse = MediaSqlUtils.getAllSiteMedia(site).get(0);
+        mediaFromUploadResponse.setUploadState(UploadState.UPLOADED.name());
+        mediaFromUploadResponse.setMediaId(42);
+
+        // The same media, but fetched from the server from FETCH_MEDIA_LIST (so no local ID until insertion)
+        final MediaModel mediaFromMediaListFetch = MediaSqlUtils.getAllSiteMedia(site).get(0);
+        mediaFromMediaListFetch.setUploadState(UploadState.UPLOADED.name());
+        mediaFromMediaListFetch.setMediaId(42);
+        mediaFromMediaListFetch.setId(0);
+
+        MediaSqlUtils.insertOrUpdateMedia(mediaFromMediaListFetch);
+        MediaSqlUtils.insertOrUpdateMedia(mediaFromUploadResponse);
+
+        Assert.assertEquals(1, MediaSqlUtils.getAllSiteMedia(site).size());
+
+        MediaModel finalMedia = MediaSqlUtils.getAllSiteMedia(site).get(0);
+        Assert.assertEquals(42, finalMedia.getMediaId());
+        Assert.assertEquals(mediaModel.getLocalSiteId(), finalMedia.getLocalSiteId());
+    }
+
     // Utilities
 
     private long[] insertBasicTestItems(int num) {
