@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
@@ -100,7 +99,6 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -132,8 +130,7 @@ import java.util.regex.Pattern;
 import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
-        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        WPAlertDialogFragment.OnDialogConfirmListener, WPAlertDialogFragment.OnDialogDismissListener {
+        ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -598,7 +595,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mViewPager.setCurrentItem(PAGE_CONTENT);
                 invalidateOptionsMenu();
             } else {
-                showSaveDialog();
+                savePost();
             }
             return true;
         }
@@ -629,7 +626,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private boolean publishPost() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
-            new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            savePostLocally();
             ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
             return false;
         }
@@ -867,7 +864,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditorFragment != null && !mEditorFragment.onBackPressed()) {
-            showSaveDialog();
+            savePost();
         }
     }
 
@@ -928,16 +925,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void showSaveDialog() {
+    private void savePost() {
 
-        try {
-            updatePostObject(false);
-        } catch (IllegalEditorStateException e) {
-            AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
-            return;
-        }
+        if (mPost.isPublishable() || !isNewPost()) {
 
-        if (mPost.isPublishable()) {
             if (isNewPost()) {
                 // new post - user just left the editor without publishing, they probably want
                 // to keep the post as a draft
@@ -945,53 +936,28 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mEditPostSettingsFragment != null) {
                     mEditPostSettingsFragment.updateStatusSpinner();
                 }
-
-                PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
-                        getString(R.string.editor_save_dialog_message),
-                        getString(R.string.save),
-                        getString(R.string.discard),
-                        SAVE_DIALOG_TAG);
-            } else if (mOriginalPost != null && mPost.hasChanges(mOriginalPost)) {
-                // changes detected
-                if (mPost.getStatusEnum() == PostStatus.DRAFT) {
-                    PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
-                            getString(R.string.editor_save_dialog_message),
-                            getString(R.string.update_draft),
-                            getString(R.string.discard),
-                            SAVE_DIALOG_TAG);
-                } else {
-                    PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
-                            getString(R.string.editor_save_dialog_message),
-                            getString(R.string.keep_editing),
-                            getString(R.string.discard),
-                            SAVE_DIALOG_TAG);
-                }
-            } else {
-                finish();
             }
-        } else if (mOriginalPost != null && mPost.hasChanges(mOriginalPost)) {
-            PostUtils.showCustomDialog(this, getString(R.string.editor_save_dialog_title),
-                    getString(R.string.editor_save_dialog_empty_message),
-                    getString(R.string.keep_editing),
-                    getString(R.string.discard),
-                    SAVE_DIALOG_TAG);
-        } else {
-            finish();
-        }
-    }
 
-    @Override
-    public void onDialogConfirm() {
-        // just dismiss the dialog for published posts - users should publish changes using
-        // the Update button
-        if (mPost.getStatusEnum() != PostStatus.PUBLISHED && mPost.isPublishable()) {
-            publishPost();
-        }
-    }
+            try {
+                updatePostObject(false);
+            } catch (IllegalEditorStateException e) {
+                AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+                return;
+            }
 
-    @Override
-    public void onDialogDismiss() {
+            if (mPost.getStatusEnum() != PostStatus.PUBLISHED && mPost.isPublishable()) {
+                publishPost();
+            }
+            else {
+                savePostLocally();
+            }
+        }
+
         deleteIfNewAndFinish();
+    }
+
+    private void savePostLocally() {
+        new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void deleteIfNewAndFinish() {
