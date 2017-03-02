@@ -204,10 +204,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         if (mIsSelectOneItem) {
             // Single select, just finish the activity once an item is selected
             mGridAdapter.setItemSelectedByPosition(position, true);
-            Intent intent = new Intent();
-            intent.putExtra(RESULT_IDS, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
-            setResult(RESULT_OK, intent);
-            finish();
+            setResultIdsAndFinish();
         } else {
             mGridAdapter.toggleItemSelected(position);
             mActionMode.setTitle(String.format(getString(R.string.cab_selected),
@@ -222,12 +219,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        Intent intent = new Intent();
-        if (!mGridAdapter.getSelectedItems().isEmpty()) {
-            intent.putExtra(RESULT_IDS, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
-        }
-        setResult(RESULT_OK, intent);
-        finish();
+        setResultIdsAndFinish();
     }
 
     @Override
@@ -282,6 +274,19 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
+    }
+
+    private void setResultIdsAndFinish() {
+        Intent intent = new Intent();
+        if (!mGridAdapter.getSelectedItems().isEmpty()) {
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            for (Integer localId : mGridAdapter.getSelectedItems()) {
+                remoteMediaIds.add(mMediaStore.getMediaWithLocalId(localId).getMediaId());
+            }
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+        }
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void noMediaFinish() {
