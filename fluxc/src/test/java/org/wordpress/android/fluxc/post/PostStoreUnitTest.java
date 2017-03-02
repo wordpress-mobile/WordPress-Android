@@ -98,6 +98,10 @@ public class PostStoreUnitTest {
         PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postFromUploadResponse);
 
         assertEquals(1, PostTestUtils.getPosts().size());
+
+        PostModel finalPost = PostTestUtils.getPosts().get(0);
+        assertEquals(42, finalPost.getRemotePostId());
+        assertEquals(postModel.getLocalSiteId(), finalPost.getLocalSiteId());
     }
 
     @Test
