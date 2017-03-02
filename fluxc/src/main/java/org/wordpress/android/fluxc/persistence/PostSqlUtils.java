@@ -39,6 +39,13 @@ public class PostSqlUtils {
             WellSql.insert(post).asSingleTransaction(true).execute();
             return 1;
         } else {
+            if (postResult.size() > 1) {
+                // We've ended up with a duplicate entry, probably due to a push/fetch race condition
+                // One matches based on local ID (this is the one we're trying to update with a remote post ID)
+                // The other matches based on local site ID + remote post ID, and we got it from a fetch
+                // Just remove the entry without a remote post ID (the one matching the current post's local ID)
+                return WellSql.delete(PostModel.class).whereId(post.getId());
+            }
             // Update only if local changes for this post don't exist
             if (overwriteLocalChanges || !postResult.get(0).isLocallyChanged()) {
                 int oldId = postResult.get(0).getId();
