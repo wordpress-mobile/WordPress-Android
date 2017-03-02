@@ -6,8 +6,6 @@ import org.wordpress.android.fluxc.network.Response;
 import java.util.List;
 
 public class SiteWPComRestResponse extends Payload implements Response {
-    public static final long VIP_PLAN_ID = 31337;
-
     public class SitesResponse {
         public List<SiteWPComRestResponse> sites;
     }
