@@ -192,20 +192,15 @@ public class MediaSqlUtils {
     public static int insertOrUpdateMedia(MediaModel media) {
         if (media == null) return 0;
 
-        // If the site already exist and has an id, we want to update it.
         List<MediaModel> existingMedia = WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.ID, media.getId())
+                .or()
+                .beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
+                .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
+                .endGroup()
                 .endGroup().endWhere().getAsModel();
-
-        // Looks like a new media, make sure we don't already have it by site id / media id.
-        if (existingMedia.isEmpty()) {
-            existingMedia = WellSql.select(MediaModel.class)
-                    .where().beginGroup()
-                    .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
-                    .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
-                    .endGroup().endWhere().getAsModel();
-        }
 
         if (existingMedia.isEmpty()) {
             // insert, media item does not exist
