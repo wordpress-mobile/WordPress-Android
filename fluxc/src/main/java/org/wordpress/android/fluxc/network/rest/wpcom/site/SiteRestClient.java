@@ -328,7 +328,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             } catch (NumberFormatException e) {
                 // VIP sites return a String plan ID ('vip') rather than a number
                 if (from.plan.product_id.equals("vip")) {
-                    site.setPlanId(SiteWPComRestResponse.VIP_PLAN_ID);
+                    site.setPlanId(SiteModel.VIP_PLAN_ID);
                 }
             }
             site.setPlanShortName(from.plan.product_name_short);
