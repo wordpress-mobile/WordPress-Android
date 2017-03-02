@@ -192,15 +192,23 @@ public class MediaSqlUtils {
     public static int insertOrUpdateMedia(MediaModel media) {
         if (media == null) return 0;
 
-        List<MediaModel> existingMedia = WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.ID, media.getId())
-                .or()
-                .beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
-                .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
-                .endGroup()
-                .endGroup().endWhere().getAsModel();
+        List<MediaModel> existingMedia;
+        if (media.getMediaId() == 0) {
+            existingMedia = WellSql.select(MediaModel.class)
+                    .where()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .endWhere().getAsModel();
+        } else {
+            existingMedia = WellSql.select(MediaModel.class)
+                    .where().beginGroup()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .or()
+                    .beginGroup()
+                    .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
+                    .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
+                    .endGroup()
+                    .endGroup().endWhere().getAsModel();
+        }
 
         if (existingMedia.isEmpty()) {
             // insert, media item does not exist
