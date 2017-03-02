@@ -28,7 +28,9 @@ import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 
 import org.ccil.cowan.tagsoup.Parser;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
@@ -42,6 +44,8 @@ import org.xml.sax.XMLReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+
+import javax.inject.Inject;
 
 public class HtmlToSpannedConverter implements ContentHandler {
     private static final float[] HEADER_SIZES = { 1.5f, 1.4f, 1.3f, 1.2f, 1.1f,
@@ -59,9 +63,13 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
     private String mysteryTagName;
 
+    @Inject MediaStore mMediaStore;
+
     public HtmlToSpannedConverter(String source,
                                   WPHtml.ImageGetter imageGetter, WPHtml.TagHandler tagHandler,
                                   Parser parser, Context context, PostModel p, int maxImageWidth) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
+
         mSource = source;
         mSpannableStringBuilder = new SpannableStringBuilder();
         mImageGetter = imageGetter;
