@@ -260,8 +260,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
-        //AppPrefs.setAztecEditorAvailable(true);
-        //AppPrefs.setAztecEditorEnabled(true);
+        AppPrefs.setAztecEditorAvailable(true);
+        AppPrefs.setAztecEditorEnabled(true);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
@@ -563,9 +563,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
         }
 
-        // disable the formatting toolbar while photo chooser is showing
         if (mAztecEditorFragment != null) {
-            mAztecEditorFragment.enableFormattingToolbar(false);
+            mAztecEditorFragment.enableMediaMode(true);
         }
     }
 
@@ -581,7 +580,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mAztecEditorFragment != null) {
-            mAztecEditorFragment.enableFormattingToolbar(true);
+            mAztecEditorFragment.enableMediaMode(false);
         }
     }
 

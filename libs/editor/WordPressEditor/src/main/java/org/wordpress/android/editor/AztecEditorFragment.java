@@ -334,6 +334,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         formattingToolbar.enableFormatButtons(enable);
     }
 
+    public void enableMediaMode(boolean enable) {
+        // TODO: enableMediaMode was added to Aztec in the develop branch but has not been released
+        // yet, so this requires adding the develop SNAPSHOP to WordPressEditor's build.gradle, eg:
+        // compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:develop-SNAPSHOT')
+        formattingToolbar.enableMediaMode(enable);
+    }
+
     @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
