@@ -1851,7 +1851,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
                     android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
             if (thumb != null) {
-                thumb.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
                 thumbnailPath = outputFile.getAbsolutePath();
             }
         } catch (IOException e) {
