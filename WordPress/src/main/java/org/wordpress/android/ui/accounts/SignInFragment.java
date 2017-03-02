@@ -77,6 +77,7 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
 
+import java.net.URL;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +100,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final Pattern DOT_COM_RESERVED_NAMES =
             Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
     private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
+    private static final Pattern WPCOM_DOMAIN = Pattern.compile("[a-z0-9]+\\.wordpress\\.com");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -988,7 +990,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 return;
             }
 
-            mUsername = EditTextUtils.getText(mUsernameEditText).trim();
+            mUsername = EditTextUtils.getText(mUsernameEditText).trim().toLowerCase();
             mPassword = EditTextUtils.getText(mPasswordEditText).trim();
             mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
             if (isWPComLogin()) {
@@ -1005,10 +1007,102 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             if (isUsernameEmail()) {
                 startProgress(getActivity().getString(R.string.checking_email));
                 requestWPComEmailCheck();
+            } else if (isWPComDomain(mUsername)) {
+                // If a wpcom domain was entered, check if the subdomain matches an existing username.
+                String maybeUsername = extractWPComSubDomain(mUsername);
+                if (maybeUsername.length() > 0) {
+                    // See if the username exists.
+                    startProgress(getActivity().getString(R.string.checking_username));
+                    requestWPComUsernameCheck(maybeUsername);
+                } else {
+                    // The text that was entered was .wordpress.com or the like.
+                    // Its invalid so just show an error.
+                    showUsernameError(R.string.username_invalid);
+                }
             } else {
                 showPasswordFieldAndFocus();
             }
         }
+    }
+
+    /**
+     * Tests the specified string to see if it contains a wpcom subdomain.
+     *
+     * @param string The string to check
+     * @return True if the string contains a wpcom subdomain, else false.
+     */
+    private boolean isWPComDomain(String string) {
+        Matcher matcher = WPCOM_DOMAIN.matcher(string);
+        return matcher.find();
+    }
+
+    /**
+     * Extracts the subdomain from a wpcom domain string.
+     * @param domain A wpcom domain is expected.
+     * @return A wpcom subdomain or an empty string.
+     */
+    private String extractWPComSubDomain(String domain) {
+        String str = UrlUtils.addUrlSchemeIfNeeded(domain, false);
+        String host = UrlUtils.getHost(str);
+        if (host.length() > 0) {
+            String[] parts = host.split("\\.");
+            if (parts.length > 0) {
+                return parts[0];
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Performs an API request to see if the specified username exists.
+     * If a username does exist, the username field is updated and the password field is displayed.
+     *
+     * @param name The username to check.
+     */
+    private void requestWPComUsernameCheck(String name) {
+        final String username = name;
+        WordPress.getRestClientUtilsV0().isUsernameAvailable(UrlUtils.urlEncode(username), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (!isAdded()) {
+                    return;
+                }
+                endProgress();
+                try {
+                    // If the error is that the username is taken we treat this as our success condition.
+                    String errorReason = response.getString(REASON_ERROR);
+                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
+                        // Update the username field and show the password field.
+                        mUsername = username;
+                        mUsernameEditText.setText(username);
+                        showPasswordFieldAndFocus();
+
+                    } else if (errorReason == null) {
+                        // The username does not exist.
+                        // Do not show the password field, just
+                        // prompt that the username does't exist.
+                        showUsernameError(R.string.username_invalid);
+                    } else {
+                        // Just prompt for the error.
+                        showUsernameError(R.string.username_invalid);
+                    }
+                } catch (JSONException error) {
+                    AppLog.e(AppLog.T.MAIN, error);
+                    // Just prompt for the error.
+                    showUsernameError(R.string.username_invalid);
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (!isAdded()) {
+                    return;
+                }
+                endProgress();
+                // Just prompt for the error.
+                showUsernameError(R.string.username_invalid);
+            }
+        });
     }
 
     private void onWPComEmailCheckError(boolean forceWordPressComDisplay) {
@@ -1029,7 +1123,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void requestWPComEmailCheck() {
-        WordPress.getRestClientUtilsV0().isAvailable(UrlUtils.urlEncode(mUsername), new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV0().isEmailAvailable(UrlUtils.urlEncode(mUsername), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (!isAdded()) {
