@@ -1537,6 +1537,26 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        if (!isVideo && SiteSettingsInterface.getInterface(this, mSite, null).init(false).getOptimizedImage() &&
+               !NetworkUtils.isWiFiConnected(this)) {
+            // Not on WiFi and optimize image is set to ON
+            // If the user has selected a maximum image width for uploads, rescale the image accordingly
+            String optimizedPath = ImageUtils.optimizeImage(this, path);
+
+            if (optimizedPath == null) {
+                AppLog.e(T.EDITOR, "Optimized picture was null!");
+                //TODO: track analytics here
+                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
+            } else {
+                //TODO: track analytics here
+                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
+                Uri optimizedImageUri = Uri.parse(optimizedPath);
+                if (optimizedImageUri != null) {
+                    uri = optimizedImageUri;
+                }
+            }
+        }
+
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         trackAddMediaFromDeviceEvents(isVideo, null, path);
