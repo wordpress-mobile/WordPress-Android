@@ -237,9 +237,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         mIsMultiSelectEnabled = enable;
         mSelectedPositions.clear();
 
-        if (enable) {
-            loadSites();
-        }
+        loadSites();
     }
 
     int getNumSelected() {
