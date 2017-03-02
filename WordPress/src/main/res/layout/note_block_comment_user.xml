@@ -95,7 +95,7 @@
         android:paddingBottom="@dimen/margin_medium"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
-        app:wpFontFamily="merriweather"
+        android:fontFamily="serif"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />
 
     <View
