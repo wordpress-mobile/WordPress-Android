@@ -207,6 +207,13 @@ public class MediaSqlUtils {
             WellSql.insert(media).asSingleTransaction(true).execute();
             return 1;
         } else {
+            if (existingMedia.size() > 1) {
+                // We've ended up with a duplicate entry, probably due to a push/fetch race condition
+                // One matches based on local ID (this is the one we're trying to update with a remote media ID)
+                // The other matches based on local site ID + remote media ID, and we got it from a fetch
+                // Just remove the entry without a remote media ID (the one matching the current media's local ID)
+                return WellSql.delete(MediaModel.class).whereId(media.getId());
+            }
             // update, media item already exists
             int oldId = existingMedia.get(0).getId();
             return WellSql.update(MediaModel.class).whereId(oldId)
