@@ -68,7 +68,6 @@
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
-    <string name="pref_key_site_delete_site_screen" translatable="false">wp_pref_site_delete_site_screen</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_export_site" translatable="false">pref_key_site_export_site</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
