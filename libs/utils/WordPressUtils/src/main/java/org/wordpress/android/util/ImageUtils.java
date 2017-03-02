@@ -495,7 +495,7 @@ public class ImageUtils {
         }
 
         Bitmap.CompressFormat fmt;
-        if (fileExtension != null && fileExtension.equalsIgnoreCase("png")) {
+        if (fileExtension != null && fileExtension.contains("png")) {
             fmt = Bitmap.CompressFormat.PNG;
         } else {
             fmt = Bitmap.CompressFormat.JPEG;
@@ -559,7 +559,7 @@ public class ImageUtils {
         FileOutputStream out;
 
         try {
-            resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+            resizedImageFile = File.createTempFile("wp-image-", "." + fileExtension);
             out = new FileOutputStream(resizedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage. Use the original picture instead.");
