@@ -552,7 +552,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // slide in the photo chooser
         if (!isPhotoChooserShowing()) {
-            AniUtils.animateBottomBar(mPhotoChooserContainer, true);
+            AniUtils.animateBottomBar(mPhotoChooserContainer, true, AniUtils.Duration.MEDIUM);
             mPhotoChooserFragment.refresh();
         }
 
