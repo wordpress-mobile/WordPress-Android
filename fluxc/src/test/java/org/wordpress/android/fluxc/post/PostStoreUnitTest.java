@@ -85,7 +85,7 @@ public class PostStoreUnitTest {
         PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
         PostSqlUtils.insertPostForResult(postModel);
 
-        // The post after uploading, updating with the remote post ID, about to be saved locally
+        // The post after uploading, updated with the remote post ID, about to be saved locally
         PostModel postFromUploadResponse = PostTestUtils.getPosts().get(0);
         postFromUploadResponse.setIsLocalDraft(false);
         postFromUploadResponse.setRemotePostId(42);
