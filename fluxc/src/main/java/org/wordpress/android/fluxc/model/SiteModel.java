@@ -19,6 +19,8 @@ import java.net.URISyntaxException;
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
 public class SiteModel extends Payload implements Identifiable, Serializable {
+    public static final long VIP_PLAN_ID = 31337;
+
     @PrimaryKey
     @Column private int mId;
     // Only given a value for wpcom and Jetpack sites - self-hosted sites use mSelfHostedSiteId
