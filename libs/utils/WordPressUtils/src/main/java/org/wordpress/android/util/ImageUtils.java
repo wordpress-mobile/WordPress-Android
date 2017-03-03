@@ -530,9 +530,13 @@ public class ImageUtils {
     /**
      * Given the path to an image, optimize (compress for now) the image
      * @param path the path to the original image
-     * @return the path to the optmized image
+     * @return the path to the optimized image
      */
     public static String optimizeImage(Context context, String path) {
+        if (context == null || TextUtils.isEmpty(path)) {
+            return path;
+        }
+
         File file = new File(path);
         if (!file.exists()) {
             return path;
@@ -544,16 +548,23 @@ public class ImageUtils {
             return path;
         }
 
+        Uri imageUri = Uri.parse(path);
+        if (imageUri == null) {
+            return path;
+        }
+
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-        int[] dimensions = getImageSize(Uri.fromFile(file), context);
-        int orientation = getImageOrientation(context, path);
-
-        Uri imageUri = Uri.parse(path);
-        if (context == null || imageUri == null) {
-            return path;
+        int[] dimensions = getImageSize(imageUri, context);
+        int selectedWidth = dimensions[0];
+        final int maxImageWidth = 3000;
+        if (selectedWidth > maxImageWidth) {
+            // Image width > 3000px. Resize it.
+            selectedWidth = maxImageWidth;
         }
+
+        int orientation = getImageOrientation(context, path);
 
         File resizedImageFile;
         FileOutputStream out;
@@ -570,9 +581,9 @@ public class ImageUtils {
         }
 
         try {
-            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, dimensions[0], orientation, 85, out);
+            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, selectedWidth, orientation, 85, out);
             if (!res) {
-                AppLog.w(AppLog.T.MEDIA, "Failed to compress the optmized image. Use the original picture instead.");
+                AppLog.w(AppLog.T.MEDIA, "Failed to compress the optimized image. Use the original picture instead.");
                 return path;
             }
         } catch (IOException e) {
@@ -595,7 +606,7 @@ public class ImageUtils {
         if (!TextUtils.isEmpty(tempFilePath)) {
             return tempFilePath;
         } else {
-            AppLog.e(AppLog.T.MEDIA, "Failed to create resized image. Use the full picture instead.");
+            AppLog.e(AppLog.T.MEDIA, "Failed to create optimized image. Use the full picture instead.");
         }
 
         return path;
