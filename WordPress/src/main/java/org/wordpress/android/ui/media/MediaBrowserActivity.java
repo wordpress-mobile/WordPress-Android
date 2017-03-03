@@ -79,6 +79,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -355,6 +356,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
+                AppLockManager.getInstance().setExtendedTimeout();
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                     showNewMediaMenu();
                 }
