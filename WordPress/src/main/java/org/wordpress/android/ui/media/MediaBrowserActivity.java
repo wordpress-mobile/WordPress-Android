@@ -356,6 +356,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
+                AppLockManager.getInstance().setExtendedTimeout();
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                     showNewMediaMenu();
                 }
@@ -769,7 +770,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.notifyDataSetChanged();
 
-                AppLockManager.getInstance().setExtendedTimeout();
                 if (position == 0) {
                     MediaBrowserActivity enclosingActivity = MediaBrowserActivity.this;
                     WordPressMediaUtils.launchCamera(enclosingActivity, BuildConfig.APPLICATION_ID, enclosingActivity);
