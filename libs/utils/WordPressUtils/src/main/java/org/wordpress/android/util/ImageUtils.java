@@ -548,16 +548,19 @@ public class ImageUtils {
             return path;
         }
 
-        Uri imageUri = Uri.parse(path);
-        if (imageUri == null) {
+        Uri srcImageUri = Uri.parse(path);
+        if (srcImageUri == null) {
             return path;
         }
 
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-        int[] dimensions = getImageSize(imageUri, context);
-        int selectedWidth = dimensions[0];
+        int selectedWidth = getImageSize(srcImageUri, context)[0];
+        if (selectedWidth == 0) {
+            // Can't read the src dimensions.
+            return path;
+        }
         final int maxImageWidth = 3000;
         if (selectedWidth > maxImageWidth) {
             // Image width > 3000px. Resize it.
@@ -581,7 +584,7 @@ public class ImageUtils {
         }
 
         try {
-            boolean res = resizeImageAndWriteToStream(context, imageUri, fileExtension, selectedWidth, orientation, 85, out);
+            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedWidth, orientation, 85, out);
             if (!res) {
                 AppLog.w(AppLog.T.MEDIA, "Failed to compress the optimized image. Use the original picture instead.");
                 return path;
