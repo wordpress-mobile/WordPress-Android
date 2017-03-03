@@ -282,21 +282,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         switch (requestCode) {
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data != null) {
-                        Uri imageUri = data.getData();
-                        String mimeType = getContentResolver().getType(imageUri);
-                        fetchMedia(imageUri, mimeType);
-                    }
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Uri imageUri = data.getData();
+                    String mimeType = getContentResolver().getType(imageUri);
+                    fetchMedia(imageUri, mimeType);
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
-                if (resultCode == Activity.RESULT_OK) {
-                    if (data != null) {
-                        Uri uri = Uri.parse(mMediaCapturePath);
-                        mMediaCapturePath = null;
-                        queueFileForUpload(uri, getContentResolver().getType(uri));
-                    }
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Uri uri = Uri.parse(mMediaCapturePath);
+                    mMediaCapturePath = null;
+                    queueFileForUpload(uri, getContentResolver().getType(uri));
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
