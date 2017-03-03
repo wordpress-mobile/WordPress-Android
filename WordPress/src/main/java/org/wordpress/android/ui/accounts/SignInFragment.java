@@ -103,6 +103,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final Pattern DOT_COM_RESERVED_NAMES =
             Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
     private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
+    private static final Pattern WPCOM_DOMAIN = Pattern.compile("[a-z0-9]+\\.wordpress\\.com");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -142,6 +143,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected String mHttpUsername;
     protected String mHttpPassword;
     protected SiteModel mJetpackSite;
+    protected String isAvailableUsername = "";
 
     protected WPTextView mSignInButton;
     protected WPTextView mCreateAccountButton;
@@ -887,7 +889,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 return;
             }
 
-            mUsername = EditTextUtils.getText(mUsernameEditText).trim();
+            mUsername = EditTextUtils.getText(mUsernameEditText).trim().toLowerCase();
             mPassword = EditTextUtils.getText(mPasswordEditText).trim();
             mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
             if (isWPComLogin()) {
@@ -907,10 +909,35 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             if (isUsernameEmail()) {
                 startProgress(getActivity().getString(R.string.checking_email));
                 mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(mUsername));
+            } else if (isWPComDomain(mUsername)) {
+                // If a wpcom domain was entered, check if the subdomain matches an existing username.
+                isAvailableUsername = UrlUtils.extractSubDomain(mUsername);
+                if (isAvailableUsername.length() > 0) {
+                    // See if the username exists.
+                    startProgress(getActivity().getString(R.string.checking_username));
+                    mDispatcher.dispatch(AccountActionBuilder.newIsAvailableUsernameAction(isAvailableUsername));
+
+                } else {
+                    // The text that was entered was .wordpress.com or the like.
+                    // Its invalid so just show an error.
+                    isAvailableUsername = "";
+                    showUsernameError(R.string.username_invalid);
+                }
             } else {
                 showPasswordFieldAndFocus();
             }
         }
+    }
+
+    /**
+     * Tests the specified string to see if it contains a wpcom subdomain.
+     *
+     * @param string The string to check
+     * @return True if the string contains a wpcom subdomain, else false.
+     */
+    private boolean isWPComDomain(String string) {
+        Matcher matcher = WPCOM_DOMAIN.matcher(string);
+        return matcher.find();
     }
 
     private boolean isUsernameEmail() {
@@ -1267,7 +1294,24 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }
 
-        if (event.type == IsAvailable.EMAIL && !event.isAvailable) {
+        switch(event.type) {
+            case EMAIL:
+                handleEmailAvailabilityEvent(event);
+                break;
+            case USERNAME:
+                handleUsernameAvailabilityEvent(event);
+                break;
+            default:
+                // Failsafe
+                showSelfHostedSignInForm();
+        }
+    }
+
+    private void handleEmailAvailabilityEvent(OnAvailabilityChecked event) {
+        if (event.type != IsAvailable.EMAIL) {
+            return;
+        }
+        if (!event.isAvailable) {
             // Email address exists in WordPress.com
             if (mListener != null) {
                 mListener.onMagicLinkRequestSuccess(mUsername);
@@ -1276,6 +1320,23 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // Email address doesn't exist in WordPress.com, show the self hosted sign in form
             showSelfHostedSignInForm();
         }
+    }
+
+    private void handleUsernameAvailabilityEvent(OnAvailabilityChecked event) {
+        endProgress();
+        if (event.type != IsAvailable.USERNAME ) {
+            return;
+        }
+        if (!event.isAvailable) {
+            // Username exists in WordPress.com
+            mUsername = isAvailableUsername;
+            mUsernameEditText.setText(isAvailableUsername);
+            showPasswordFieldAndFocus();
+        } else {
+            // Email address doesn't exist in WordPress.com, show the self hosted sign in form
+            showUsernameError(R.string.username_invalid);
+        }
+        isAvailableUsername = "";
     }
 
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
