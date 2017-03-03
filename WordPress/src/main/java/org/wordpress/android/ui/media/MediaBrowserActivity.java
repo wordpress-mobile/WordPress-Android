@@ -79,6 +79,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -282,17 +283,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         switch (requestCode) {
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
-                Uri imageUri = data.getData();
-                String mimeType = getContentResolver().getType(imageUri);
-                fetchMedia(imageUri, mimeType);
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    Uri imageUri = data.getData();
+                    String mimeType = getContentResolver().getType(imageUri);
+                    fetchMedia(imageUri, mimeType);
+                }
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    if (data != null) {
-                        Uri uri = Uri.parse(mMediaCapturePath);
-                        mMediaCapturePath = null;
-                        queueFileForUpload(uri, getContentResolver().getType(uri));
-                    }
+                    Uri uri = Uri.parse(mMediaCapturePath);
+                    mMediaCapturePath = null;
+                    queueFileForUpload(uri, getContentResolver().getType(uri));
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
@@ -355,6 +356,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
+                AppLockManager.getInstance().setExtendedTimeout();
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                     showNewMediaMenu();
                 }

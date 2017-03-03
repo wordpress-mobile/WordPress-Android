@@ -542,11 +542,9 @@ public class WPMainActivity extends AppCompatActivity {
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
             case RequestCodes.CREATE_SITE:
-                if (resultCode == RESULT_OK) {
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
-                    }
+                MySiteFragment mySiteFragment = getMySiteFragment();
+                if (mySiteFragment != null) {
+                    mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.ADD_ACCOUNT:

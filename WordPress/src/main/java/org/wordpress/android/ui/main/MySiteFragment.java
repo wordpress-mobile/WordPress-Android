@@ -281,10 +281,6 @@ public class MySiteFragment extends Fragment
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
-            case RequestCodes.CREATE_SITE:
-                // user created a new blog, select it
-                // TODO: FluxC: setSelectedSite(newly created site);
-                break;
         }
     }
 
