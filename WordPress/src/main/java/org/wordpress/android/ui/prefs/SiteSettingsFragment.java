@@ -507,7 +507,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mLocationPref) {
             mSiteSettings.setLocation((Boolean) newValue);
         } else if (preference == mOptimizedImage) {
-            mSiteSettings.setOptimizeImage((Boolean) newValue);
+            mSiteSettings.setOptimizedImage((Boolean) newValue);
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,

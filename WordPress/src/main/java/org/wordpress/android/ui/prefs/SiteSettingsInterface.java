@@ -560,7 +560,7 @@ public abstract class SiteSettingsInterface {
         mSettings.location = location;
     }
 
-    public void setOptimizeImage(boolean optimizeImage) {
+    public void setOptimizedImage(boolean optimizeImage) {
         mSettings.optimizedImage = optimizeImage;
     }
 
