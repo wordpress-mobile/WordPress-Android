@@ -1008,7 +1008,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 requestWPComEmailCheck();
             } else if (isWPComDomain(mUsername)) {
                 // If a wpcom domain was entered, check if the subdomain matches an existing username.
-                String maybeUsername = extractWPComSubDomain(mUsername);
+                String maybeUsername = UrlUtils.extractSubDomain(mUsername);
                 if (maybeUsername.length() > 0) {
                     // See if the username exists.
                     startProgress(getActivity().getString(R.string.checking_username));
@@ -1033,23 +1033,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private boolean isWPComDomain(String string) {
         Matcher matcher = WPCOM_DOMAIN.matcher(string);
         return matcher.find();
-    }
-
-    /**
-     * Extracts the subdomain from a wpcom domain string.
-     * @param domain A wpcom domain is expected.
-     * @return A wpcom subdomain or an empty string.
-     */
-    private String extractWPComSubDomain(String domain) {
-        String str = UrlUtils.addUrlSchemeIfNeeded(domain, false);
-        String host = UrlUtils.getHost(str);
-        if (host.length() > 0) {
-            String[] parts = host.split("\\.");
-            if (parts.length > 0) {
-                return parts[0];
-            }
-        }
-        return "";
     }
 
     /**
