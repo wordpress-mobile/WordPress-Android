@@ -96,6 +96,7 @@
                     android:paddingEnd="16dp"
                     android:scrollbars="vertical"
                     android:textColorHint="@color/hint_text"
+                    android:background="@null"
                     android:textSize="14sp"
                     android:visibility="gone" >
                 </org.wordpress.aztec.source.SourceViewEditText>

@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -63,9 +64,7 @@ public class MediaEditFragment extends Fragment {
 
     private MediaEditFragmentCallback mCallback;
 
-    private boolean mIsMediaUpdating = false;
-
-    private long mMediaId = MISSING_MEDIA_ID;
+    private int mLocalMediaId = MISSING_MEDIA_ID;
     private ScrollView mScrollView;
     private View mLinearLayout;
     private ImageLoader mImageLoader;
@@ -77,13 +76,13 @@ public class MediaEditFragment extends Fragment {
         void onResume(Fragment fragment);
         void setLookClosable();
         void onPause(Fragment fragment);
-        void onSavedEdit(long mediaId, boolean result);
+        void onSavedEdit(int localMediaId, boolean result);
     }
 
-    public static MediaEditFragment newInstance(SiteModel site, long mediaId) {
+    public static MediaEditFragment newInstance(SiteModel site, int localMediaId) {
         MediaEditFragment fragment = new MediaEditFragment();
         Bundle args = new Bundle();
-        args.putLong(ARGS_MEDIA_ID, mediaId);
+        args.putInt(ARGS_MEDIA_ID, localMediaId);
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
@@ -169,12 +168,12 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
-    public long getMediaId() {
-        if (mMediaId != MISSING_MEDIA_ID) {
-            return mMediaId;
+    public int getLocalMediaId() {
+        if (mLocalMediaId != MISSING_MEDIA_ID) {
+            return mLocalMediaId;
         } else if (getArguments() != null) {
-            mMediaId = getArguments().getLong(ARGS_MEDIA_ID);
-            return mMediaId;
+            mLocalMediaId = getArguments().getInt(ARGS_MEDIA_ID);
+            return mLocalMediaId;
         } else {
             return MISSING_MEDIA_ID;
         }
@@ -191,7 +190,7 @@ public class MediaEditFragment extends Fragment {
         mLocalImageView = (ImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_local);
         mNetworkImageView = (NetworkImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_network);
 
-        loadMedia(getMediaId());
+        loadMedia(getLocalMediaId());
 
         return mScrollView;
     }
@@ -202,10 +201,10 @@ public class MediaEditFragment extends Fragment {
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
-    public void loadMedia(long mediaId) {
-        mMediaId = mediaId;
-        if (getActivity() != null && mMediaId != MISSING_MEDIA_ID) {
-            mMediaModel = mMediaStore.getSiteMediaWithId(mSite, mMediaId);
+    public void loadMedia(int localMediaId) {
+        mLocalMediaId = localMediaId;
+        if (getActivity() != null && mLocalMediaId != MISSING_MEDIA_ID) {
+            mMediaModel = mMediaStore.getMediaWithLocalId(mLocalMediaId);
             refreshViews(mMediaModel);
         } else {
             refreshViews(null);
@@ -344,7 +343,7 @@ public class MediaEditFragment extends Fragment {
     }
 
     public boolean isDirty() {
-        return mMediaId != MISSING_MEDIA_ID &&
+        return mLocalMediaId != MISSING_MEDIA_ID &&
                 (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
                 || !StringUtils.equals(mCaptionOriginal, mCaptionView.getText().toString())
                 || !StringUtils.equals(mDescriptionOriginal, mDescriptionView.getText().toString()));
@@ -354,15 +353,14 @@ public class MediaEditFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        mIsMediaUpdating = false;
+    public void onMediaChanged(OnMediaChanged event) {
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
             Toast.makeText(getActivity(), event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
                     Toast.LENGTH_LONG).show();
         }
         if (hasCallback()) {
-            mCallback.onSavedEdit(mMediaId, !event.isError());
+            mCallback.onSavedEdit(mLocalMediaId, !event.isError());
         }
     }
 }

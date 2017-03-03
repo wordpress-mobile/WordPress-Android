@@ -188,7 +188,7 @@ public class PostUploadNotifier {
 
         // Simple way to show progress of entire post upload
         // Would be better if we could get total bytes for all media items.
-        double currentChunkProgress = (notificationData.itemProgressSize * progress) / 100;
+        double currentChunkProgress = (notificationData.itemProgressSize * progress);
 
         if (notificationData.currentMediaItem > 1) {
             currentChunkProgress += notificationData.itemProgressSize * (notificationData.currentMediaItem - 1);

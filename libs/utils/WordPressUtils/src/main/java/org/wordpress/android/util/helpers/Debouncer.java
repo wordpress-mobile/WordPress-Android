@@ -15,6 +15,9 @@ public class Debouncer {
      * or cancels its execution if the method is called with the same key within the {@code delay} again.
      */
     public void debounce(final Object key, final Runnable runnable, long delay, TimeUnit unit) {
+        if (mScheduler.isShutdown()) {
+            return;
+        }
         final Future<?> prev = mDelayedMap.put(key, mScheduler.schedule(new Runnable() {
             @Override
             public void run() {

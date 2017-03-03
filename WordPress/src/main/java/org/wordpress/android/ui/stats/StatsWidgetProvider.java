@@ -119,7 +119,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             updateTabValue(context, remoteViews, R.id.stats_widget_likes, data.optString("likes", " 0"));
 
             Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+            intent.putExtra(WordPress.SITE, site);
             intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsActivity.StatsLaunchedFrom.STATS_WIDGET);
             intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -468,7 +468,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     private static void refreshWidgets(Context context, int[] appWidgetIds, SiteStore siteStore) {
-        // TODO: STORES: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
+        // TODO: FluxC: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
         // here in the AppWidgetProvider.
         // if (!mAccountStore.isSignedIn()) {
         //     showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));

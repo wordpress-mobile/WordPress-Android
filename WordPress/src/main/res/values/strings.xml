@@ -92,6 +92,7 @@
     <string name="send">Send</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="no_default_app_available_to_open_link">Unable to open the link</string>
+    <string name="retry">Retry</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -966,7 +967,8 @@
     <string name="post_format_standard">Standard</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
-    <string-array name="post_formats_array" translatable="false">
+    <string-array name="post_format_display_names" translatable="false">
+        <item>@string/post_format_standard</item>
         <item>@string/post_format_aside</item>
         <item>@string/post_format_audio</item>
         <item>@string/post_format_chat</item>
@@ -974,7 +976,6 @@
         <item>@string/post_format_image</item>
         <item>@string/post_format_link</item>
         <item>@string/post_format_quote</item>
-        <item>@string/post_format_standard</item>
         <item>@string/post_format_status</item>
         <item>@string/post_format_video</item>
     </string-array>
@@ -1145,6 +1146,11 @@
     <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
+
+    <!-- Default tags -->
+    <string name="reader_discover_default_tag">Discover</string>
+    <string name="reader_followed_default_tag">Followed Sites</string>
+    <string name="reader_liked_default_tag">Posts I Like</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
@@ -1354,7 +1360,7 @@
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
-    <string name="migration_message">Migration in progress&#8230;</string>
+    <string name="migration_message">Updating the WordPress app&#8230;</string>
     <string name="migration_error_not_connected">Migration process failed: try launching the app when you have a
         network connection.</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>

@@ -69,7 +69,6 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
-        if (site == null) return;
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
@@ -130,7 +129,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.SITE_SETTINGS);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
@@ -262,7 +261,7 @@ public class ActivityLauncher {
     public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity, NewBlogActivity.class);
         intent.putExtra(NewBlogActivity.KEY_START_MODE, NewBlogActivity.CREATE_BLOG);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_BLOG);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
     public static void showSignInForResult(Activity activity) {

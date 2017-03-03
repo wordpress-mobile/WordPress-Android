@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
@@ -65,11 +64,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.List;
@@ -96,7 +95,6 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
-    @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -352,7 +350,7 @@ public class WPMainActivity extends AppCompatActivity {
                     return;
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply, NotesAdapter.FILTERS.FILTER_ALL);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL);
                 }
 
             } else {
@@ -543,12 +541,10 @@ public class WPMainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
-            case RequestCodes.CREATE_BLOG:
-                if (resultCode == RESULT_OK) {
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
-                    }
+            case RequestCodes.CREATE_SITE:
+                MySiteFragment mySiteFragment = getMySiteFragment();
+                if (mySiteFragment != null) {
+                    mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -577,7 +573,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 }
                 break;
-            case RequestCodes.BLOG_SETTINGS:
+            case RequestCodes.SITE_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
                     handleBlogRemoved();
                 }

@@ -14,7 +14,7 @@ public class FluxCUtils {
         return accountStore.hasAccessToken() || siteStore.hasSelfHostedSite();
     }
 
-    public static MediaModel fromMediaFile(MediaFile file) {
+    public static MediaModel mediaModelFromMediaFile(MediaFile file) {
         if (file == null) {
             return null;
         }
@@ -29,7 +29,7 @@ public class FluxCUtils {
         mediaModel.setTitle(file.getTitle());
         mediaModel.setDescription(file.getDescription());
         mediaModel.setCaption(file.getCaption());
-        mediaModel.setMediaId(Long.valueOf(file.getMediaId()));
+        mediaModel.setMediaId(file.getMediaId() != null ? Long.valueOf(file.getMediaId()) : 0);
         mediaModel.setId(file.getId());
         mediaModel.setUploadState(file.getUploadState());
         mediaModel.setLocalSiteId(Integer.valueOf(file.getBlogId()));
@@ -37,14 +37,14 @@ public class FluxCUtils {
         return mediaModel;
     }
 
-    public static MediaFile fromMediaModel(MediaModel media) {
+    public static MediaFile mediaFileFromMediaModel(MediaModel media) {
         if (media == null) {
-            return  null;
+            return null;
         }
 
         MediaFile mediaFile = new MediaFile();
         mediaFile.setBlogId(String.valueOf(media.getLocalSiteId()));
-        mediaFile.setMediaId(String.valueOf(media.getMediaId()));
+        mediaFile.setMediaId(media.getMediaId() > 0 ? String.valueOf(media.getMediaId()) : null);
         mediaFile.setId(media.getId());
         mediaFile.setFileName(media.getFileName());
         mediaFile.setFilePath(media.getFilePath());

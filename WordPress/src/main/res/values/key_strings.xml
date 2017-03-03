@@ -68,7 +68,6 @@
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
-    <string name="pref_key_site_delete_site_screen" translatable="false">wp_pref_site_delete_site_screen</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_export_site" translatable="false">pref_key_site_export_site</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
@@ -269,6 +268,20 @@
     <string name="asset_statements" translatable="false">
         [{\"include\": \"https://wordpress.com/.well-known/assetlinks.json\"}]
     </string>
+
+    <string-array name="post_format_keys" translatable="false">
+        <item>standard</item>
+        <item>aside</item>
+        <item>audio</item>
+        <item>chat</item>
+        <item>gallery</item>
+        <item>image</item>
+        <item>link</item>
+        <item>quote</item>
+        <item>status</item>
+        <item>video</item>
+    </string-array>
+
 
     <string name="wordpresscom_sample_post" translatable="false">https://en.blog.wordpress.com/2016/09/26/the-best-of-wordpress-september-2016/</string>
 </resources>

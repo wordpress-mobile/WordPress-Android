@@ -169,7 +169,9 @@ public class MediaUploadService extends Service {
 
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(T.MEDIA, "Error uploading media: " + event.error.message);
+        // TODO: Don't update the state here, it needs to be done in FluxC
         mCurrentUpload.setUploadState(UploadState.FAILED.name());
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentUpload));
         completeCurrentUpload();
         if (mListener != null) {
             mListener.onUploadError(event.media, event.error);
@@ -262,7 +264,6 @@ public class MediaUploadService extends Service {
     }
 
     private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
-        // TODO
         return mCurrentUpload != null && media.getLocalSiteId() == mCurrentUpload.getLocalSiteId();
     }
 

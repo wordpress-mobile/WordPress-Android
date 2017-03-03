@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-09 08:28:15+0000
+Translation-Revision-Date: 2017-02-22 12:41:47+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Tidak ada situs yang cocok</string>
+	<string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
+	<string name="visual_editor_disabled">Editor Visual nonaktif</string>
+	<string name="preference_editor_visual">Visual</string>
+	<string name="preference_editor_legacy">Lawas</string>
+	<string name="preference_editor_type">Atur jenis editor</string>
+	<string name="pending_draft_one_generic">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
+	<string name="pending_draft_one_month">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' masih berupa konsep. Ingatlah untuk menerbitkannya!</string>
+	<string name="pending_draft_one_week_1">Konsep \'%1$s\' menanti Anda - pastikan untuk menerbitkannya!</string>
+	<string name="pending_draft_one_day_2">Tahukah Anda bahwa \'%1$s\' masih berupa konsep? Terbitkan saja!</string>
+	<string name="pending_draft_one_day_1">Anda membuat konsep \'%1$s\' kemarin. Jangan lupa menerbitkannya!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Plugin Jetpack terhubung, tetapi modul Statistik tidak aktif. Hubungi administrator situs.</string>
+	<string name="jetpack_stats_module_disabled_message">Plugin Jetpack terhubung, tetapi modul Statistik tidak aktif. Apakah Anda ingin mengaktifkan Statistik?</string>
+	<string name="jetpack_info">Info Jetpack</string>
 	<string name="reader_photo_by">Foto oleh %s</string>
 	<string name="reader_label_visit">Kunjungi</string>
-	<string name="all_your_sites">Semua Situsku</string>
+	<string name="all_your_sites">Semua Situs Saya</string>
 	<string name="pending_draft_more">Anda mengonsep %d pos namun belum menerbitkannya. Sentuh untuk melihatnya.</string>
-	<string name="pending_draft_one">Anda mengonsep \'%1$s\' %2$d hari yang lalu namun belum menerbitkannya.</string>
-	<string name="pending_draft_one_generic">Anda mengonsep \'%s\' namun belum menerbitkannya.</string>
 	<string name="no_default_app_available_to_open_link">Tak bisa membuka tautan</string>
 	<string name="notification_pending_drafts">Beritahu saya tentang konsep yang tertunda</string>
 	<string name="invalid_verification_code_format">Harus angka enam digit</string>
@@ -27,29 +40,29 @@ Language: id
 	<string name="reader_title_post_detail_wpcom">Pos WordPress.com</string>
 	<string name="reader_title_deeplink">Pembaca WordPress</string>
 	<string name="error_notif_q_action_reply">Tak bisa membalas komentar. Silakan coba lagi nanti.</string>
-	<string name="error_notif_q_action_approve">Tak bisa menyetujui komentar. Silakan coba lagi nanti.</string>
-	<string name="error_notif_q_action_like">Tak bisa menyukai komentar. Silakan coba lagi nanti.</string>
+	<string name="error_notif_q_action_approve">Tidak bisa menyetujui komentar. Silakan coba lagi nanti.</string>
+	<string name="error_notif_q_action_like">Tidak bisa menyukai komentar. Silakan coba lagi nanti.</string>
 	<string name="notifications_label_new_notifications_subtitle">Ketuk untuk menampilkannya</string>
 	<string name="notifications_label_new_notifications">Pemberitahuan baru</string>
-	<string name="comment_q_action_replying">Membalas...</string>
-	<string name="comment_q_action_approving">Menyetujui...</string>
-	<string name="comment_q_action_liking">Menyukai...</string>
+	<string name="comment_q_action_replying">Membalas…</string>
+	<string name="comment_q_action_approving">Menyetujui…</string>
+	<string name="comment_q_action_liking">Menyukai…</string>
 	<string name="comment_q_action_processing">Memproses...</string>
-	<string name="comment_q_action_done_generic">Tindakan berhasil!</string>
-	<string name="comment_liked">Komentar disukai</string>
-	<string name="signout">Log out</string>
-	<string name="sign_in_wpcom">Log in ke WordPress.com</string>
-	<string name="reader_label_global_related_posts">Selengkapnya di WordPress.com</string>
-	<string name="reader_label_local_related_posts">Selengkapnya di %s</string>
+	<string name="comment_q_action_done_generic">Tindakan selesai!</string>
+	<string name="comment_liked">Komentar tersukai</string>
+	<string name="signout">Keluar</string>
+	<string name="sign_in_wpcom">Masuk ke WordPress.com</string>
+	<string name="reader_label_global_related_posts">Lainnya di WordPress.com</string>
+	<string name="reader_label_local_related_posts">Lainnya di %s</string>
 	<string name="preference_open_device_settings">Buka pengaturan perangkat</string>
 	<string name="comment_moderated_unapproved">Komentar tidak disetujui</string>
-	<string name="invite_invalid_email">%s: email tak valid</string>
+	<string name="invite_invalid_email">%s: Email tidak valid</string>
 	<string name="invite_user_blocked_invites">%s: Pengguna memblokir undangan</string>
 	<string name="invite_already_following">%s: Sudah mengikuti</string>
 	<string name="invite_already_a_member">%s: Sudah jadi anggota</string>
-	<string name="invite_username_not_found">%s: Pengguna tak ditemukan</string>
+	<string name="invite_username_not_found">%s: Pengguna tidak ditemukan</string>
 	<string name="comment_moderated_approved">Komentar disetujui!</string>
-	<string name="like">Menyukai</string>
+	<string name="like">Suka</string>
 	<string name="reader_label_image_count_one">1 gambar</string>
 	<string name="timespan_now">kini</string>
 	<string name="role_viewer">Penonton</string>
@@ -291,7 +304,6 @@ Language: id
 	<string name="editor_page_title_placeholder">Judul Halaman</string>
 	<string name="editor_post_title_placeholder">Judul Kiriman</string>
 	<string name="email_address">Alamat email</string>
-	<string name="preference_show_visual_editor">Tampilkan editor visual</string>
 	<string name="preference_editor">Penyunting</string>
 	<string name="dlg_sure_to_delete_comments">Hapus komentar ini secara permanen?</string>
 	<string name="dlg_sure_to_delete_comment">Hapus komentar ini secara permanen?</string>

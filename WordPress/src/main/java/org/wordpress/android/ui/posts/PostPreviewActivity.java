@@ -316,7 +316,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnPostChanged(OnPostChanged event) {
+    public void onPostChanged(OnPostChanged event) {
         switch (event.causeOfChange) {
             case UPDATE_POST:
                 mIsUpdatingPost = false;

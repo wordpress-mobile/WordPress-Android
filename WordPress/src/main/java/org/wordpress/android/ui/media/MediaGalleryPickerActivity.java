@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -67,16 +68,16 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        ArrayList<Long> selectedItems = new ArrayList<>();
+        ArrayList<Integer> selectedItems = new ArrayList<>();
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
-        ArrayList<Long> prevSelectedItems = ListUtils.fromLongArray(getIntent().getLongArrayExtra(PARAM_SELECTED_IDS));
+        ArrayList<Integer> prevSelectedItems = ListUtils.fromIntArray(getIntent().getIntArrayExtra(PARAM_SELECTED_IDS));
         if (prevSelectedItems != null) {
             selectedItems.addAll(prevSelectedItems);
         }
 
         if (savedInstanceState != null) {
-            ArrayList<Long> list = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_SELECTED_ITEMS));
+            ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
             selectedItems.addAll(list);
             mFilteredItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_FILTERED_ITEMS));
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
@@ -147,14 +148,14 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLongArray(STATE_SELECTED_ITEMS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
+        outState.putIntArray(STATE_SELECTED_ITEMS, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
         outState.putLongArray(STATE_FILTERED_ITEMS, ListUtils.toLongArray(mFilteredItems));
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnMediaListFetched(MediaStore.OnMediaListFetched event) {
+    public void onMediaListFetched(OnMediaListFetched event) {
         mIsFetching = false;
         if (event.isError()) {
             MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
@@ -202,11 +203,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mIsSelectOneItem) {
             // Single select, just finish the activity once an item is selected
-            mGridAdapter.setItemSelected(position, true);
-            Intent intent = new Intent();
-            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
-            setResult(RESULT_OK, intent);
-            finish();
+            mGridAdapter.setItemSelectedByPosition(position, true);
+            setResultIdsAndFinish();
         } else {
             mGridAdapter.toggleItemSelected(position);
             mActionMode.setTitle(String.format(getString(R.string.cab_selected),
@@ -216,17 +214,12 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        mGridAdapter.setItemSelected(position, checked);
+        mGridAdapter.setItemSelectedByPosition(position, checked);
     }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        Intent intent = new Intent();
-        if (!mGridAdapter.getSelectedItems().isEmpty()) {
-            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(mGridAdapter.getSelectedItems()));
-        }
-        setResult(RESULT_OK, intent);
-        finish();
+        setResultIdsAndFinish();
     }
 
     @Override
@@ -252,7 +245,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRetryUpload(long mediaId) {
+    public void onRetryUpload(int localMediaId) {
     }
 
     @Override
@@ -281,6 +274,19 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
+    }
+
+    private void setResultIdsAndFinish() {
+        Intent intent = new Intent();
+        if (!mGridAdapter.getSelectedItems().isEmpty()) {
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            for (Integer localId : mGridAdapter.getSelectedItems()) {
+                remoteMediaIds.add(mMediaStore.getMediaWithLocalId(localId).getMediaId());
+            }
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+        }
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void noMediaFinish() {
