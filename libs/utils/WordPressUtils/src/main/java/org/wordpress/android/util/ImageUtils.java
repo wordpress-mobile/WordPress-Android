@@ -533,7 +533,7 @@ public class ImageUtils {
      * @param path the path to the original image
      * @return the path to the optimized image
      */
-    public static String optimizeImage(Context context, String path) {
+    public static String optimizeImage(Context context, String path, int maxImageWidth, int quality) {
         if (context == null || TextUtils.isEmpty(path)) {
             return path;
         }
@@ -562,9 +562,7 @@ public class ImageUtils {
             // Can't read the src dimensions.
             return path;
         }
-        final int maxImageWidth = 3000;
         if (selectedWidth > maxImageWidth) {
-            // Image width > 3000px. Resize it.
             selectedWidth = maxImageWidth;
         }
 
@@ -585,7 +583,7 @@ public class ImageUtils {
         }
 
         try {
-            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedWidth, orientation, 85, out);
+            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedWidth, orientation, quality, out);
             if (!res) {
                 AppLog.w(AppLog.T.MEDIA, "Failed to compress the optimized image. Use the original picture instead.");
                 return path;
