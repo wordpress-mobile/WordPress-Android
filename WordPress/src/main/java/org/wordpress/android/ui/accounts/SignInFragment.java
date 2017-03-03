@@ -1069,7 +1069,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 try {
                     // If the error is that the username is taken we treat this as our success condition.
                     String errorReason = response.getString(REASON_ERROR);
-                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN) && mListener != null) {
+                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN)) {
                         // Update the username field and show the password field.
                         mUsername = username;
                         mUsernameEditText.setText(username);
