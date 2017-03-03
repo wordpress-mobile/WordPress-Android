@@ -528,7 +528,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mEditPostSettingsFragment.showLocationSearch();
 
                     // After permission request was granted add GeoTag to the new post (if GeoTagging is enabled)
-                    if (SiteSettingsInterface.getGeotagging(this) && isNewPost()) {
+                    if (SiteSettingsInterface.getInterface(this, mSite, null).init(false).getLocation() && isNewPost()) {
                         mEditPostSettingsFragment.searchLocation();
                     }
 
@@ -1537,6 +1537,26 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        if (!isVideo && SiteSettingsInterface.getInterface(this, mSite, null).init(false).getOptimizedImage() &&
+               !NetworkUtils.isWiFiConnected(this)) {
+            // Not on WiFi and optimize image is set to ON
+            // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
+            String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
+
+            if (optimizedPath == null) {
+                AppLog.e(T.EDITOR, "Optimized picture was null!");
+                // TODO: track analytics here
+                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
+            } else {
+                // TODO: track analytics here
+                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
+                Uri optimizedImageUri = Uri.parse(optimizedPath);
+                if (optimizedImageUri != null) {
+                    uri = optimizedImageUri;
+                }
+            }
+        }
+
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         trackAddMediaFromDeviceEvents(isVideo, null, path);
@@ -1832,7 +1852,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             Bitmap thumb = ThumbnailUtils.createVideoThumbnail(videoPath,
                     android.provider.MediaStore.Images.Thumbnails.MINI_KIND);
             if (thumb != null) {
-                thumb.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
                 thumbnailPath = outputFile.getAbsolutePath();
             }
         } catch (IOException e) {

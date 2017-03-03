@@ -181,7 +181,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mBlacklistPref;
 
     // This Device settings
-    private WPSwitchPreference mUploadAndLinkPref;
+    private WPSwitchPreference mOptimizedImage;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -506,6 +506,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
         } else if (preference == mLocationPref) {
             mSiteSettings.setLocation((Boolean) newValue);
+        } else if (preference == mOptimizedImage) {
+            mSiteSettings.setOptimizedImage((Boolean) newValue);
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -647,7 +649,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
-        mUploadAndLinkPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_upload_and_link_image);
+        mOptimizedImage = (WPSwitchPreference) getChangePref(R.string.pref_key_optimize_image);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
@@ -673,6 +675,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             || (isAccessibleViaWPComAPI && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
+
+        // Set Local settings
+        mLocationPref.setChecked(mSiteSettings.getLocation());
+        mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -684,7 +690,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mUploadAndLinkPref, mDeleteSitePref
+                mOptimizedImage, mDeleteSitePref
         };
 
         for(Preference preference : editablePreference) {
@@ -887,6 +893,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setPreferencesFromSiteSettings() {
         mLocationPref.setChecked(mSiteSettings.getLocation());
+        mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
         changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
