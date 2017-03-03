@@ -1066,29 +1066,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     return;
                 }
                 endProgress();
-                try {
-                    // If the error is that the username is taken we treat this as our success condition.
-                    String errorReason = response.getString(REASON_ERROR);
-                    if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN)) {
-                        // Update the username field and show the password field.
-                        mUsername = username;
-                        mUsernameEditText.setText(username);
-                        showPasswordFieldAndFocus();
 
-                    } else if (errorReason == null) {
-                        // The username does not exist.
-                        // Do not show the password field, just
-                        // prompt that the username is invalid.
-                        showUsernameError(R.string.username_invalid);
-                    } else {
-                        // Just prompt for the error.
-                        showUsernameError(R.string.username_invalid);
-                    }
-                } catch (JSONException error) {
-                    AppLog.e(AppLog.T.MAIN, error);
-                    // Fail silently since we're trying to do something clever
-                    // and just show the password field.
+                // If the error is that the username is taken we treat this as our success condition.
+                String errorReason = response.optString(REASON_ERROR);
+                if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN)) {
+                    // Update the username field and show the password field.
+                    mUsername = username;
+                    mUsernameEditText.setText(username);
                     showPasswordFieldAndFocus();
+
+                 } else {
+                    // Just prompt for the error.
+                    showUsernameError(R.string.username_invalid);
                 }
             }
         }, new RestRequest.ErrorListener() {
