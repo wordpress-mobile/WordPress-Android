@@ -79,6 +79,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -768,6 +769,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.notifyDataSetChanged();
 
+                AppLockManager.getInstance().setExtendedTimeout();
                 if (position == 0) {
                     MediaBrowserActivity enclosingActivity = MediaBrowserActivity.this;
                     WordPressMediaUtils.launchCamera(enclosingActivity, BuildConfig.APPLICATION_ID, enclosingActivity);
