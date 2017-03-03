@@ -527,8 +527,11 @@ public class ImageUtils {
     }
 
     /**
-     * Given the path to an image, optimize (compress for now) the image
+     * Given the path to an image, compress and resize it.
+     * @param context the passed context
      * @param path the path to the original image
+     * @param maxImageWidth the maximum allowed width
+     * @param quality the encoder quality
      * @return the path to the optimized image
      */
     public static String optimizeImage(Context context, String path, int maxImageWidth, int quality) {
