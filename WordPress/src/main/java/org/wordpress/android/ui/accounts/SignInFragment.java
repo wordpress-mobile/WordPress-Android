@@ -1080,7 +1080,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     } else if (errorReason == null) {
                         // The username does not exist.
                         // Do not show the password field, just
-                        // prompt that the username does't exist.
+                        // prompt that the username is invalid.
                         showUsernameError(R.string.username_invalid);
                     } else {
                         // Just prompt for the error.
@@ -1088,8 +1088,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                     }
                 } catch (JSONException error) {
                     AppLog.e(AppLog.T.MAIN, error);
-                    // Just prompt for the error.
-                    showUsernameError(R.string.username_invalid);
+                    // Fail silently since we're trying to do something clever
+                    // and just show the password field.
+                    showPasswordFieldAndFocus();
                 }
             }
         }, new RestRequest.ErrorListener() {
@@ -1098,9 +1099,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 if (!isAdded()) {
                     return;
                 }
-                endProgress();
-                // Just prompt for the error.
-                showUsernameError(R.string.username_invalid);
+                // Fail silently since we're trying to do something clever
+                // and just show the password field.
+                showPasswordFieldAndFocus();
             }
         });
     }
