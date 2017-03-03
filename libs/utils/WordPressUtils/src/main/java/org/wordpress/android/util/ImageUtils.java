@@ -523,8 +523,6 @@ public class ImageUtils {
         }
 
         boolean result = bmpRotated.compress(fmt, quality, outStream);
-        bmpRotated.recycle();
-        bmpResized.recycle();
         return result;
     }
 
