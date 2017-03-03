@@ -1056,10 +1056,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * Performs an API request to see if the specified username exists.
      * If a username does exist, the username field is updated and the password field is displayed.
      *
-     * @param name The username to check.
+     * @param username The username to check.
      */
-    private void requestWPComUsernameCheck(String name) {
-        final String username = name;
+    private void requestWPComUsernameCheck(final String username) {
         WordPress.getRestClientUtilsV0().isUsernameAvailable(UrlUtils.urlEncode(username), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
