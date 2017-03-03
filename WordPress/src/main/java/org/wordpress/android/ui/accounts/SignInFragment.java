@@ -77,7 +77,6 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
 
-import java.net.URL;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
