@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
@@ -28,6 +30,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -47,6 +50,8 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     private boolean mSignoutOnCancelMode;
     private boolean mAutoCompleteUrl;
+
+    private long mNewSiteRemoteId;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -325,6 +330,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
+        mNewSiteRemoteId = event.newSiteRemoteId;
         // Site created, update sites
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
@@ -338,7 +344,10 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         endProgress();
-        getActivity().setResult(Activity.RESULT_OK);
+        Intent intent = new Intent();
+        SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
     }
 }

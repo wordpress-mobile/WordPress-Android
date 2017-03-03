@@ -415,8 +415,10 @@ public class WordPress extends MultiDexApplication {
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+            if (!sIsMigrationInProgress) {
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+            }
             NotificationsUpdateService.startService(getContext());
         }
     }

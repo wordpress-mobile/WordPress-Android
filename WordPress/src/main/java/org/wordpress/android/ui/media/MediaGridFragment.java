@@ -681,7 +681,8 @@ public class MediaGridFragment extends Fragment
             return;
         }
         ArrayList<Integer> ids = mGridAdapter.getSelectedItems();
-        ActivityLauncher.newMediaPost(getActivity(), mSite, ids.iterator().next());
+        MediaModel mediaModel = mMediaStore.getMediaWithLocalId(ids.iterator().next());
+        ActivityLauncher.newMediaPost(getActivity(), mSite, mediaModel.getMediaId());
     }
 
     private void handleMultiSelectDelete() {
