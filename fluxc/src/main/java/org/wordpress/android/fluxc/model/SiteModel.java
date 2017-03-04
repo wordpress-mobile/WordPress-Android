@@ -33,7 +33,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private boolean mIsWPCom;
     @Column private boolean mIsFeaturedImageSupported;
     @Column private String mDefaultCommentStatus = "open";
-    @Column private String mTimezone;
+    @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
 
     // Self hosted specifics
     // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
