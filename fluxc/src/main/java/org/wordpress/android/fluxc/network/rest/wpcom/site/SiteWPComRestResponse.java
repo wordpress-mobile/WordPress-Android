@@ -16,7 +16,7 @@ public class SiteWPComRestResponse extends Payload implements Response {
         public boolean is_automated_transfer;
         public String admin_url;
         public String login_url;
-        public String timezone;
+        public String gmt_offset;
     }
 
     public class Plan {
