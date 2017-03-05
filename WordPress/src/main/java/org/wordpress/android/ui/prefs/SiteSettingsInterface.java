@@ -45,6 +45,7 @@ import javax.inject.Inject;
  * - Username (.org only)
  * - Password (.org only)
  * - Location (local device setting, not saved remotely)
+ * - Optimized Image (local device setting, not saved remotely)
  * - Default Category
  * - Default Format
  * - Related Posts
@@ -79,11 +80,6 @@ public abstract class SiteSettingsInterface {
      * Key used to access the language preference stored in {@link SharedPreferences}.
      */
     public static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
-
-    /**
-     * Key used to access the location preference stored in {@link SharedPreferences}.
-     */
-    public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
 
     /**
      * Key used to access the default category preference stored in {@link SharedPreferences}.
@@ -141,10 +137,10 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Gets the geo-tagging value stored in {@link SharedPreferences}, false by default.
+     * Gets the geo-tagging value
      */
-    public static boolean getGeotagging(Context context) {
-        return siteSettingsPreferences(context).getBoolean(LOCATION_PREF_KEY, false);
+    public boolean getGeotagging() {
+        return mSettings.location;
     }
 
     /**
@@ -231,7 +227,6 @@ public abstract class SiteSettingsInterface {
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
         siteSettingsPreferences(mActivity).edit().putString(LANGUAGE_PREF_KEY, mSettings.language).apply();
-        siteSettingsPreferences(mActivity).edit().putBoolean(LOCATION_PREF_KEY, mSettings.location).apply();
         siteSettingsPreferences(mActivity).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
         siteSettingsPreferences(mActivity).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
     }
@@ -280,6 +275,10 @@ public abstract class SiteSettingsInterface {
 
     public boolean getLocation() {
         return mSettings.location;
+    }
+
+    public boolean getOptimizedImage() {
+        return mSettings.optimizedImage;
     }
 
     public @NonNull Map<String, String> getFormats() {
@@ -561,6 +560,10 @@ public abstract class SiteSettingsInterface {
         mSettings.location = location;
     }
 
+    public void setOptimizedImage(boolean optimizeImage) {
+        mSettings.optimizedImage = optimizeImage;
+    }
+
     public void setAllowComments(boolean allowComments) {
         mSettings.allowComments = allowComments;
     }
@@ -764,7 +767,7 @@ public abstract class SiteSettingsInterface {
      * Need to defer loading the cached settings to a thread so it completes after initialization.
      */
     private void loadCachedSettings() {
-        Cursor localSettings = SiteSettingsTable.getSettings(mSite.getSiteId());
+        Cursor localSettings = SiteSettingsTable.getSettings(mSite.getId());
 
         if (localSettings != null) {
             Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
@@ -776,6 +779,7 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
             mRemoteSettings.location = mSettings.location;
+            mRemoteSettings.optimizedImage = mSettings.optimizedImage;
             localSettings.close();
             notifyUpdatedOnUiThread(null);
         } else {

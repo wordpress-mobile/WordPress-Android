@@ -467,6 +467,7 @@
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_image_original_size">Original Size</string>
+    <string name="site_settings_optimize_images">Optimize Images</string>
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
     <string name="site_settings_upload_and_link_image_title" translatable="false">@string/upload_full_size_image</string>
     <string name="site_settings_related_posts_title" translatable="false">@string/related_posts</string>
@@ -552,7 +553,7 @@
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
-    <string name="site_settings_upload_and_link_image_hint">Enable to always upload the fullsize image</string>
+    <string name="site_settings_optimize_images_hint">Enable to save bandwidth on mobile connections</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
