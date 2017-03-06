@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.widgets.HeaderGridView;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * A fragment for display the results of a theme search
@@ -45,7 +47,21 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        view.findViewById(R.id.frame_premium_themes).setVisibility(View.VISIBLE);
+        ViewGroup premiumLink = (ViewGroup) view.findViewById(R.id.frame_premium_themes);
+        premiumLink.setVisibility(View.VISIBLE);
+        premiumLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Blog blog = WordPress.getCurrentBlog();
+                if (blog == null) {
+                    // TODO show toast to the user
+                    return;
+                }
+                String domain = UrlUtils.getHost(blog.getUrl());
+                String premiumThemesUrl = "https://wordpress.com/design/premium/" + domain;
+                ActivityLauncher.openUrlExternal(view.getContext(), premiumThemesUrl);
+            }
+        });
         return view;
     }
 
