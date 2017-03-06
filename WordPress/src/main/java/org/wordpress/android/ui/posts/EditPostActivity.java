@@ -108,7 +108,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
@@ -161,11 +160,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
-    private static final String SAVE_DIALOG_TAG = "SAVE_DIALOG_TAG";
-
     private Handler mHandler;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
+    private boolean mPostSavedLocally;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
     private Map<Long, List<String>> mPendingGalleryUploads = new HashMap<>();
@@ -927,7 +925,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void savePost() {
 
+        try {
+            updatePostObject(false);
+        } catch (IllegalEditorStateException e) {
+            AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+            return;
+        }
+
         if (mPost.isPublishable() || !isNewPost()) {
+
+            mPostSavedLocally = false;
 
             if (isNewPost()) {
                 // new post - user just left the editor without publishing, they probably want
@@ -938,13 +945,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
 
-            try {
-                updatePostObject(false);
-            } catch (IllegalEditorStateException e) {
-                AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
-                return;
-            }
-
             if (mPost.getStatusEnum() != PostStatus.PUBLISHED && mPost.isPublishable()) {
                 publishPost();
             }
@@ -953,16 +953,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        deleteIfNewAndFinish();
+        deleteIfNewAndEmptyThenFinish();
     }
 
     private void savePostLocally() {
+        mPostSavedLocally = true;
         new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void deleteIfNewAndFinish() {
-        if (isNewPost()) {
+    private void deleteIfNewAndEmptyThenFinish() {
+        if (isNewPost() && !mPost.isPublishable()) {
             WordPress.wpDB.deletePost(getPost());
+        } else {
+            Intent i = getIntent();
+            i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, mPostSavedLocally);
+            i.putExtra(EXTRA_IS_PAGE, mIsPage);
+            setResult(RESULT_OK, i);
         }
         finish();
     }
