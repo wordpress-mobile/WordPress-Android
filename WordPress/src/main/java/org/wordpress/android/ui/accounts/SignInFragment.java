@@ -1305,6 +1305,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    /**
+     * Handler for an email availability event. If a user enters an email address for their
+     * username an API checks to see if it belongs to a wpcom account.  If it exists the magic links
+     * flow is followed. Otherwise the self-hosted sign in form is shown.
+     * @param event
+     */
     private void handleEmailAvailabilityEvent(OnAvailabilityChecked event) {
         if (event.type != IsAvailable.EMAIL) {
             return;
@@ -1320,20 +1326,28 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    /**
+     * Handler for a username availability event. If a user enters a wpcom domain as their username
+     * an API call is made to check if the subdomain is a valid username. This method is handles
+     * the result of that API call, showing an error if the subdomain was not a valid username,
+     * or showing the password field if it was a valid username.
+     *
+     * @param event
+     */
     private void handleUsernameAvailabilityEvent(OnAvailabilityChecked event) {
         endProgress();
         if (event.type != IsAvailable.USERNAME ) {
             return;
         }
-        if (!event.isAvailable) {
-            // Username exists in WordPress.com
-            mUsername = event.value;
-            mUsernameEditText.setText(event.value);
-            showPasswordFieldAndFocus();
-        } else {
-            // Email address doesn't exist in WordPress.com, show the self hosted sign in form
+        if (event.isAvailable) {
+            // Username doesn't exist in WordPress.com, show just show an error.
             showUsernameError(R.string.username_invalid);
+            return;
         }
+        // Username exists in WordPress.com. Update the form and show the password field.
+        mUsername = event.value;
+        mUsernameEditText.setText(event.value);
+        showPasswordFieldAndFocus();
     }
 
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
