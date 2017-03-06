@@ -192,18 +192,21 @@ public class MediaSqlUtils {
     public static int insertOrUpdateMedia(MediaModel media) {
         if (media == null) return 0;
 
-        // If the site already exist and has an id, we want to update it.
-        List<MediaModel> existingMedia = WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.ID, media.getId())
-                .endGroup().endWhere().getAsModel();
-
-        // Looks like a new media, make sure we don't already have it by site id / media id.
-        if (existingMedia.isEmpty()) {
+        List<MediaModel> existingMedia;
+        if (media.getMediaId() == 0) {
+            existingMedia = WellSql.select(MediaModel.class)
+                    .where()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .endWhere().getAsModel();
+        } else {
             existingMedia = WellSql.select(MediaModel.class)
                     .where().beginGroup()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .or()
+                    .beginGroup()
                     .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
                     .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
+                    .endGroup()
                     .endGroup().endWhere().getAsModel();
         }
 
@@ -212,6 +215,13 @@ public class MediaSqlUtils {
             WellSql.insert(media).asSingleTransaction(true).execute();
             return 1;
         } else {
+            if (existingMedia.size() > 1) {
+                // We've ended up with a duplicate entry, probably due to a push/fetch race condition
+                // One matches based on local ID (this is the one we're trying to update with a remote media ID)
+                // The other matches based on local site ID + remote media ID, and we got it from a fetch
+                // Just remove the entry without a remote media ID (the one matching the current media's local ID)
+                return WellSql.delete(MediaModel.class).whereId(media.getId());
+            }
             // update, media item already exists
             int oldId = existingMedia.get(0).getId();
             return WellSql.update(MediaModel.class).whereId(oldId)
