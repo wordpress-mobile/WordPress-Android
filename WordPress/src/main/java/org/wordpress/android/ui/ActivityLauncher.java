@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -24,7 +23,6 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -51,7 +49,6 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
@@ -159,16 +156,6 @@ public class ActivityLauncher {
         intent.putExtra(PostPreviewActivity.EXTRA_POST, post);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
-    }
-
-    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
-        if (site == null) return;
-        // Create a new post object and assign default settings
-        Intent intent = new Intent(context, EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, ListUtils.toLongArray(mediaIds));
-        intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
-        context.startActivity(intent);
     }
 
     public static void newMediaPost(Activity context, SiteModel site, long mediaId) {
@@ -305,17 +292,6 @@ public class ActivityLauncher {
             intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
         }
         activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-    }
-
-    public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,
-                                               @Nullable MediaGallery mediaGallery) {
-        Intent intent = new Intent(activity, MediaGalleryActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
-        if (mediaGallery == null) {
-            intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
-        }
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
