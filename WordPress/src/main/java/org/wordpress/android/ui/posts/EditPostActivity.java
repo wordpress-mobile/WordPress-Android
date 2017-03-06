@@ -136,6 +136,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
+    public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -917,6 +918,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 Intent i = new Intent();
                 i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
                 i.putExtra(EXTRA_IS_PAGE, mIsPage);
+                i.putExtra(EXTRA_HAS_CHANGES, mPost.hasChanges(mOriginalPost));
                 setResult(RESULT_OK, i);
             }
             finish();
@@ -968,6 +970,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             Intent i = getIntent();
             i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, mPostSavedLocally);
             i.putExtra(EXTRA_IS_PAGE, mIsPage);
+            i.putExtra(EXTRA_HAS_CHANGES, mPost.hasChanges(mOriginalPost));
             setResult(RESULT_OK, i);
         }
         finish();

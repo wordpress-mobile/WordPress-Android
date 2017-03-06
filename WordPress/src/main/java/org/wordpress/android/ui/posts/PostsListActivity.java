@@ -60,7 +60,7 @@ public class PostsListActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (data != null) {
+            if (data != null && data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)) {
                 if (data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     Snackbar.make(findViewById(R.id.coordinator), R.string.editor_post_saved_locally, Snackbar.LENGTH_LONG).show();
                 } else {
