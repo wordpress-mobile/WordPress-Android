@@ -143,7 +143,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected String mHttpUsername;
     protected String mHttpPassword;
     protected SiteModel mJetpackSite;
-    protected String isAvailableUsername = "";
 
     protected WPTextView mSignInButton;
     protected WPTextView mCreateAccountButton;
@@ -911,16 +910,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(mUsername));
             } else if (isWPComDomain(mUsername)) {
                 // If a wpcom domain was entered, check if the subdomain matches an existing username.
-                isAvailableUsername = UrlUtils.extractSubDomain(mUsername);
-                if (isAvailableUsername.length() > 0) {
+                String maybeUsername = UrlUtils.extractSubDomain(mUsername);
+                if (maybeUsername.length() > 0) {
                     // See if the username exists.
                     startProgress(getActivity().getString(R.string.checking_username));
-                    mDispatcher.dispatch(AccountActionBuilder.newIsAvailableUsernameAction(isAvailableUsername));
+                    mDispatcher.dispatch(AccountActionBuilder.newIsAvailableUsernameAction(maybeUsername));
 
                 } else {
                     // The text that was entered was .wordpress.com or the like.
                     // Its invalid so just show an error.
-                    isAvailableUsername = "";
                     showUsernameError(R.string.username_invalid);
                 }
             } else {
@@ -1329,14 +1327,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
         if (!event.isAvailable) {
             // Username exists in WordPress.com
-            mUsername = isAvailableUsername;
-            mUsernameEditText.setText(isAvailableUsername);
+            mUsername = event.value;
+            mUsernameEditText.setText(event.value);
             showPasswordFieldAndFocus();
         } else {
             // Email address doesn't exist in WordPress.com, show the self hosted sign in form
             showUsernameError(R.string.username_invalid);
         }
-        isAvailableUsername = "";
     }
 
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
