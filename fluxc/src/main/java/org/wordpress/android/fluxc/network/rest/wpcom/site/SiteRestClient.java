@@ -320,7 +320,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setIsAutomatedTransfer(from.options.is_automated_transfer);
             site.setAdminUrl(from.options.admin_url);
             site.setLoginUrl(from.options.login_url);
-            site.setTimezone(from.options.timezone);
+            site.setTimezone(from.options.gmt_offset);
         }
         if (from.plan != null) {
             try {
