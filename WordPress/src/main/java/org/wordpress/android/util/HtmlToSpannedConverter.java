@@ -29,6 +29,7 @@ import android.text.style.URLSpan;
 
 import org.ccil.cowan.tagsoup.Parser;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -363,12 +364,12 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
             WPImageSpan is = new WPImageSpan(mContext, resizedBitmap, curStream);
 
-            // get the MediaFile data from db
-            // TODO: Use MediaStore
-            //MediaFile mf = WordPress.wpDB.getMediaFile(src, mPost);
-            MediaFile mf = null;
-            if (mf != null) {
-                is.setMediaFile(mf);
+            // Get the MediaFile data from db
+            MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost.getId(), src);
+            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
+
+            if (mediaFile != null) {
+                is.setMediaFile(mediaFile);
                 is.setImageSource(curStream);
                 text.setSpan(is, len, text.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
