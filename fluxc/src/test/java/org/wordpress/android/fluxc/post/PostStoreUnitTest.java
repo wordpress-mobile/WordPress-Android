@@ -79,6 +79,32 @@ public class PostStoreUnitTest {
     }
 
     @Test
+    public void testPushAndFetchCollision() throws InterruptedException {
+        // Test uploading a post, fetching remote posts and updating the db from the fetch first
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+        PostSqlUtils.insertPostForResult(postModel);
+
+        // The post after uploading, updated with the remote post ID, about to be saved locally
+        PostModel postFromUploadResponse = PostTestUtils.getPosts().get(0);
+        postFromUploadResponse.setIsLocalDraft(false);
+        postFromUploadResponse.setRemotePostId(42);
+
+        // The same post, but fetched from the server from FETCH_POSTS (so no local ID until insertion)
+        final PostModel postFromPostListFetch = postFromUploadResponse.clone();
+        postFromPostListFetch.setId(0);
+
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postFromPostListFetch);
+        PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postFromUploadResponse);
+
+        assertEquals(1, PostTestUtils.getPosts().size());
+
+        PostModel finalPost = PostTestUtils.getPosts().get(0);
+        assertEquals(42, finalPost.getRemotePostId());
+        assertEquals(postModel.getLocalSiteId(), finalPost.getLocalSiteId());
+    }
+
+    @Test
     public void testInsertWithoutLocalChanges() {
         PostModel postModel = PostTestUtils.generateSampleUploadedPost();
         PostSqlUtils.insertPostForResult(postModel);
