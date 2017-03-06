@@ -1328,7 +1328,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     /**
      * Handler for a username availability event. If a user enters a wpcom domain as their username
-     * an API call is made to check if the subdomain is a valid username. This method is handles
+     * an API call is made to check if the subdomain is a valid username. This method handles
      * the result of that API call, showing an error if the subdomain was not a valid username,
      * or showing the password field if it was a valid username.
      *
