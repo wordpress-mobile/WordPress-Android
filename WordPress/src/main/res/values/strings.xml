@@ -959,6 +959,8 @@
     <string name="editor_post_title_placeholder">Post Title</string>
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
+    <string name="editor_post_saved_locally">Your post was saved locally.</string>
+    <string name="editor_post_saved_online">Your post was saved online.</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
@@ -970,9 +972,6 @@
     editor. Try it out by creating a new post.</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
-    <string name="editor_save_dialog_title">Local changes</string>
-    <string name="editor_save_dialog_message">There are unsaved changes.</string>
-    <string name="editor_save_dialog_empty_message">The post is empty.</string>
 
     <!-- editor post settings -->
     <string name="editor_post_settings_featured_image">Featured Image</string>
@@ -1082,7 +1081,7 @@
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
-    <string name="error_publish_empty_post">Can\'t publish an empty post. Saved locally.</string>
+    <string name="error_publish_empty_post">Can\'t publish an empty post.</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
