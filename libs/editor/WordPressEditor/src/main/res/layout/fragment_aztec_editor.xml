@@ -64,6 +64,7 @@
                     android:paddingStart="16dp"
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
+                    android:fontFamily="serif"
                     aztec:bulletColor="@color/bullet"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
@@ -98,7 +99,8 @@
                     android:textColorHint="@color/hint_text"
                     android:background="@null"
                     android:textSize="14sp"
-                    android:visibility="gone" >
+                    android:visibility="gone"
+                    android:fontFamily="monospace">
                 </org.wordpress.aztec.source.SourceViewEditText>
 
             </FrameLayout>
