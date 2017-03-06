@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -59,6 +61,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
                 }
                 String domain = UrlUtils.getHost(blog.getUrl());
                 String premiumThemesUrl = "https://wordpress.com/design/premium/" + domain;
+                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_PREMIUM_THEMES);
                 ActivityLauncher.openUrlExternal(view.getContext(), premiumThemesUrl);
             }
         });
