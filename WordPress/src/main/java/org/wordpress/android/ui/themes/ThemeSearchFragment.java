@@ -9,10 +9,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.widgets.HeaderGridView;
 
 /**
  * A fragment for display the results of a theme search
@@ -38,6 +40,13 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        view.findViewById(R.id.frame_premium_themes).setVisibility(View.VISIBLE);
+        return view;
     }
 
     @Override

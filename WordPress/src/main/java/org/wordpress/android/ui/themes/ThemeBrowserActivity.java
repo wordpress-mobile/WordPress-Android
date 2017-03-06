@@ -352,14 +352,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         toolbarSearch.setTitle("");
         findViewById(R.id.toolbar).setVisibility(View.GONE);
         findViewById(R.id.toolbar_search).setVisibility(View.VISIBLE);
-        ViewGroup premiumLink =  (ViewGroup) findViewById(R.id.frame_premium_themes);
-        premiumLink.setVisibility(View.VISIBLE);
     }
 
     private void hideSearchToolbar() {
         findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
         findViewById(R.id.toolbar_search).setVisibility(View.GONE);
-        findViewById(R.id.frame_premium_themes).setVisibility(View.GONE);
     }
 
     private void addBrowserFragment() {
