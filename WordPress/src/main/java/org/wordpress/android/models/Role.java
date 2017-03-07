@@ -4,6 +4,7 @@ import android.support.annotation.StringRes;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 
@@ -90,11 +91,16 @@ public enum Role {
             case VIEWER:
                 // the remote expects "follower" as the role parameter even if the role is "viewer"
                 return "follower";
+            case SUBSCRIBER:
+                return "subscriber";
         }
         throw new IllegalArgumentException("All roles must be handled");
     }
 
-    public static Role[] userRoles() {
+    public static Role[] userRoles(SiteModel site) {
+        if (site.isJetpackConnected()) {
+            return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER };
+        }
         return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
     }
 
