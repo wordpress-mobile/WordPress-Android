@@ -75,6 +75,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
         super();
+        setHasStableIds(true);
 
         mContext = context;
         mSite = site;
@@ -88,6 +89,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 
         setImageLoader(imageLoader);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return getLocalMediaIdAtPosition(position);
     }
 
     void setImageLoader(ImageLoader imageLoader) {
