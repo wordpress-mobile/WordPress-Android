@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -97,6 +97,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.1'
     compile 'com.android.support:design:25.1.1'
     compile 'com.android.support:percent:25.1.1'
+    compile 'com.android.support:preference-v7:25.1.1'
 
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.google.android.gms:play-services-auth:9.0.2'
