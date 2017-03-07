@@ -2,18 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <org.wordpress.android.ui.CheckableFrameLayout
         android:id="@+id/media_grid_frame_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/media_gallery_grid_cell">
+        android:padding="@dimen/margin_small">
 
         <org.wordpress.android.ui.FadeInNetworkImageView
             android:id="@+id/media_grid_item_image"
-            android:layout_width="@dimen/media_grid_image_size"
-            android:layout_height="@dimen/media_grid_image_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop" />
 
         <RelativeLayout
