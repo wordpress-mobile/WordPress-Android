@@ -1,13 +1,13 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
-import android.widget.EditText;
 
 /**
  * WPEditText which notifies when text is cut, copied, or pasted.
  */
-public class ContextMenuEditText extends EditText {
+public class ContextMenuEditText extends AppCompatEditText {
     public interface OnContextMenuListener {
         void onCut();
         void onCopy();

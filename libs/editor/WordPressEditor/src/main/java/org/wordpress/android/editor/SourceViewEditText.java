@@ -1,19 +1,15 @@
 package org.wordpress.android.editor;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Typeface;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.widget.EditText;
-
-import org.wordpress.android.util.AppLog;
 
 /**
  * An EditText with support for {@link org.wordpress.android.editor.OnImeBackListener} and typeface setting
  * using a custom XML attribute.
  */
-public class SourceViewEditText extends EditText {
+public class SourceViewEditText extends AppCompatEditText {
 
     private OnImeBackListener mOnImeBackListener;
 
