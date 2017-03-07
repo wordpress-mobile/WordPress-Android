@@ -609,7 +609,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (itemId == R.id.menu_save_post) {
-            return publishPost();
+            boolean result = publishPost();
+            setResult(RESULT_OK);
+            finish();
+            return result;
         } else if (itemId == R.id.menu_preview_post) {
             mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == R.id.menu_post_settings) {
@@ -675,10 +678,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
                 PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getLocalTablePostId());
-                setResult(RESULT_OK);
-                finish();
             }
         }).start();
+
         return true;
     }
 
