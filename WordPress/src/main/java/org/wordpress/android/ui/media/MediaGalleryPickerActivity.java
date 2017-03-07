@@ -78,7 +78,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
-            if (savedInstanceState.containsKey(STATE_FILTERED_ITEMS)) {
+            if (savedInstanceState.containsKey(STATE_SELECTED_ITEMS)) {
                 ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
                 selectedItems.addAll(list);
             }
