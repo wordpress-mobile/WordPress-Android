@@ -630,7 +630,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean publishPost() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             savePostLocally();
-            ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
             return false;
         }
 

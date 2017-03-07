@@ -135,31 +135,35 @@ public class PostsListFragment extends Fragment
             boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
 
             if (hasChanges) {
-                if (isPublishable) {
-                    if (savedLocally) {
-                        Snackbar.make(getActivity().findViewById(R.id.coordinator), R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.button_publish, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
-                                        publishPost(post);
-                                    }
-                                }).show();
-                    } else {
-                        Snackbar.make(getActivity().findViewById(R.id.coordinator), R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.button_publish, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
-                                        publishPost(post);
-                                    }
-                                }).show();
-                    }
+                if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                    ToastUtils.showToast(getActivity(), R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
                 } else {
-                    if (savedLocally) {
-                        ToastUtils.showToast(getActivity(), R.string.editor_post_saved_locally);
+                    if (isPublishable) {
+                        if (savedLocally) {
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator), R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.button_publish, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
+                                            publishPost(post);
+                                        }
+                                    }).show();
+                        } else {
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator), R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.button_publish, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
+                                            publishPost(post);
+                                        }
+                                    }).show();
+                        }
                     } else {
-                        ToastUtils.showToast(getActivity(), R.string.editor_post_saved_online);
+                        if (savedLocally) {
+                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_locally);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_online);
+                        }
                     }
                 }
             }
