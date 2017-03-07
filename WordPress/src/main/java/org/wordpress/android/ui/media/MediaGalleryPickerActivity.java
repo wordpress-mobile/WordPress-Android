@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -35,7 +35,8 @@ import javax.inject.Inject;
  * can choose a single image to embed into their post.
  */
 public class MediaGalleryPickerActivity extends AppCompatActivity
-        implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback {
+        implements ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback {
+
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
     public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
@@ -46,8 +47,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
     private static final String STATE_IS_SELECT_ONE_ITEM = "STATE_IS_SELECT_ONE_ITEM";
 
-    private GridView mGridView;
+    private RecyclerView mRecycler;
     private MediaGridAdapter mGridAdapter;
+    private GridLayoutManager mGridManager;
     private ActionMode mActionMode;
 
     private ArrayList<Long> mFilteredItems;
@@ -94,16 +96,19 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
-        mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
-        mGridView.setMultiChoiceModeListener(this);
+        mRecycler = (RecyclerView) findViewById(R.id.recycler);
+
+        int numColumns = MediaGridAdapter.getColumnCount(this);
+        mGridManager = new GridLayoutManager(this, numColumns);
+        mRecycler.setLayoutManager(mGridManager);
 
         // TODO: We want to inject the image loader in this class instead of using a static field.
         mGridAdapter = new MediaGridAdapter(this, mSite, WordPress.sImageLoader);
+        mGridAdapter.setAllowMultiselect(!mIsSelectOneItem);
         mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
 
-        // TODO:
-        //mGridView.setAdapter(mGridAdapter);
+        mRecycler.setAdapter(mGridAdapter);
 
         if (mIsSelectOneItem) {
             setTitle(R.string.select_from_media_library);
@@ -158,9 +163,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     public void onMediaListFetched(OnMediaListFetched event) {
         mIsFetching = false;
         if (event.isError()) {
-            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
             mHasRetrievedAllMedia = true;
-            adapter.setHasRetrievedAll(true);
+            mGridAdapter.setHasRetrievedAll(true);
             String message = null;
             switch (event.error.type) {
                 case GENERIC_ERROR:
@@ -177,9 +181,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 mGridAdapter.setRefreshing(false);
             }
         } else {
-            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
             mHasRetrievedAllMedia = !event.canLoadMore;
-            adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+            mGridAdapter.setHasRetrievedAll(mHasRetrievedAllMedia);
             if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
                 // There is no media at all
                 noMediaFinish();
@@ -199,10 +202,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        mGridAdapter.setItemSelectedByPosition(position, checked);
-    }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
@@ -250,7 +249,15 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        // noop - multi-select isn't enabled so ingore this
+        if (count == 0 && mActionMode != null) {
+            mActionMode.finish();
+        } else if (mActionMode == null) {
+            startActionMode(this);
+        }
+
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
+        }
     }
 
     private void refreshViews() {
