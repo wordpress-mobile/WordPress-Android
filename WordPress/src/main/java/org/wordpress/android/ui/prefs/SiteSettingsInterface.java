@@ -45,7 +45,6 @@ import javax.inject.Inject;
  * - Language
  * - Username (.org only)
  * - Password (.org only)
- * - Location (local device setting, not saved remotely)
  * - Optimized Image (local device setting, not saved remotely)
  * - Default Category
  * - Default Format
@@ -268,9 +267,6 @@ public abstract class SiteSettingsInterface {
         return mSettings.password == null ? "" : mSettings.password;
     }
 
-    public boolean isLocationEnabled() {
-        return mSettings.location;
-    }
 
     public boolean getOptimizedImage() {
         return mSettings.optimizedImage;
@@ -551,10 +547,6 @@ public abstract class SiteSettingsInterface {
         mSettings.password = password;
     }
 
-    public void setLocationEnabled(boolean location) {
-        mSettings.location = location;
-    }
-
     public void setOptimizedImage(boolean optimizeImage) {
         mSettings.optimizedImage = optimizeImage;
     }
@@ -773,7 +765,6 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
-            mRemoteSettings.location = mSettings.location;
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
             localSettings.close();
             notifyUpdatedOnUiThread(null);

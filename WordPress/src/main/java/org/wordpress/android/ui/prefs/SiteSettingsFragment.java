@@ -152,7 +152,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mPasswordPref;
 
     // Writing settings
-    private WPSwitchPreference mLocationPref;
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
     private Preference mRelatedPostsPref;
@@ -504,8 +503,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPasswordPref) {
             mSiteSettings.setPassword(newValue.toString());
             changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
-        } else if (preference == mLocationPref) {
-            mSiteSettings.setLocationEnabled((Boolean) newValue);
         } else if (preference == mOptimizedImage) {
             mSiteSettings.setOptimizedImage((Boolean) newValue);
         } else if (preference == mCategoryPref) {
@@ -628,7 +625,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mLanguagePref = (DetailListPreference) getChangePref(R.string.pref_key_site_language);
         mUsernamePref = (EditTextPreference) getChangePref(R.string.pref_key_site_username);
         mPasswordPref = (EditTextPreference) getChangePref(R.string.pref_key_site_password);
-        mLocationPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_location);
         mCategoryPref = (DetailListPreference) getChangePref(R.string.pref_key_site_category);
         mFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_format);
         mAllowCommentsPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_allow_comments);
@@ -677,7 +673,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // Set Local settings
-        mLocationPref.setChecked(mSiteSettings.isLocationEnabled());
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
     }
 
@@ -685,7 +680,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // excludes mAddressPref, mMorePreference
         final Preference[] editablePreference = {
                 mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
-                mPasswordPref, mLocationPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
+                mPasswordPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
@@ -693,8 +688,8 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mOptimizedImage, mDeleteSitePref
         };
 
-        for(Preference preference : editablePreference) {
-            if(preference!=null) preference.setEnabled(enabled);
+        for (Preference preference : editablePreference) {
+            if (preference != null) preference.setEnabled(enabled);
         }
 
         mEditingEnabled = enabled;
@@ -892,7 +887,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setPreferencesFromSiteSettings() {
-        mLocationPref.setChecked(mSiteSettings.isLocationEnabled());
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());

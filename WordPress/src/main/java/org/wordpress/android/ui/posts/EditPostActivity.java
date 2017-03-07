@@ -528,11 +528,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mEditPostSettingsFragment.showLocationSearch();
 
                     // After permission request was granted add GeoTag to the new post (if GeoTagging is enabled)
-                    SiteSettingsInterface siteSettingsInterface = SiteSettingsInterface.getInterface(this, mSite, null);
-                    if ((siteSettingsInterface != null && siteSettingsInterface.init(false).isLocationEnabled())
-                        && isNewPost()) {
-                        mEditPostSettingsFragment.searchLocation();
-                    }
+                    mEditPostSettingsFragment.searchLocation();
 
                     return;
                 }
