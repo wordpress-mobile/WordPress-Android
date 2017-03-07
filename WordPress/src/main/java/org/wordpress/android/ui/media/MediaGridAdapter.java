@@ -217,7 +217,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                             if (!isInMultiSelect()) {
                                 ((TextView) v).setText(R.string.upload_queued);
                                 v.setOnClickListener(null);
-                                mCallback.onAdapterRetryUpload(localMediaId);
+                                if (mCallback != null) {
+                                    mCallback.onAdapterRetryUpload(localMediaId);
+                                }
                             }
                         }
                     });
@@ -460,7 +462,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             mSelectedItems.remove(Integer.valueOf(localMediaId));
         }
-        mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+        if (mCallback != null) {
+            mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+        }
         notifyDataSetChanged();
     }
 
