@@ -709,12 +709,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // Generate the featured image url for each post
-            String imageUrl;
+            String imageUrl = null;
             for (PostModel post : tmpPosts) {
                 if (post.isLocalDraft()) {
                     imageUrl = null;
                 } else if (post.getFeaturedImageId() != 0) {
-                    imageUrl = mMediaStore.getThumbnailUrlForSiteMediaWithId(mSite, post.getFeaturedImageId());
+                    MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
+                    if (media != null) {
+                        imageUrl = media.getUrl();
+                    }
                     // If the imageUrl isn't found it means the featured image info hasn't been added to
                     // the local media library yet, so add to the list of media IDs to request info for
                     if (TextUtils.isEmpty(imageUrl)) {
