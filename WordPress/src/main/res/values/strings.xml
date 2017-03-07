@@ -959,8 +959,10 @@
     <string name="editor_post_title_placeholder">Post Title</string>
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
-    <string name="editor_post_saved_locally">The post was saved on your device.</string>
-    <string name="editor_post_saved_online">The post was saved online.</string>
+    <string name="editor_post_saved_locally">The post was saved on your device</string>
+    <string name="editor_post_saved_locally_not_published">The post was saved on your device, but wasn\'t published.</string>
+    <string name="editor_post_saved_online">The post was saved online</string>
+    <string name="editor_post_saved_online_not_published">The post was saved online, but wasn\'t published.</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
