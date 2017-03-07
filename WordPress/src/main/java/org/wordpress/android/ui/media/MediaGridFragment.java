@@ -286,10 +286,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         setFilterSpinnerVisible(count == 0);
         updateActionButtons(count);
-
-        if (mActionMode != null) {
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
-        }
+        updateActionModeTitle(count);
     }
 
     @SuppressWarnings("unused")
@@ -586,6 +583,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    private void updateActionModeTitle(int selectCount) {
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
+        }
+    }
+
     private void handleNewPost() {
         if (!isAdded()) {
             return;
@@ -770,7 +773,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mActionMode = mode;
             int selectCount = mGridAdapter.getSelectedItemCount();
-            mode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.media_multiselect, menu);
             mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
@@ -778,6 +780,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             setSwipeToRefreshEnabled(false);
             mGridAdapter.setInMultiSelect(true);
             updateActionButtons(selectCount);
+            updateActionModeTitle(selectCount);
             return true;
         }
 

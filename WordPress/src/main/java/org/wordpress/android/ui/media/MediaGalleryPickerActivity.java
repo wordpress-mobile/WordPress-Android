@@ -35,7 +35,7 @@ import javax.inject.Inject;
  * can choose a single image to embed into their post.
  */
 public class MediaGalleryPickerActivity extends AppCompatActivity
-        implements ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback {
+        implements MediaGridAdapter.MediaGridAdapterCallback {
 
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
@@ -76,17 +76,17 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
 
         if (savedInstanceState != null) {
-            ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
-            selectedItems.addAll(list);
-            mFilteredItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_FILTERED_ITEMS));
-            mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
-        }
-
-
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-        } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+            if (savedInstanceState.containsKey(STATE_FILTERED_ITEMS)) {
+                ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
+                selectedItems.addAll(list);
+            }
+            if (savedInstanceState.containsKey(STATE_FILTERED_ITEMS)) {
+                mFilteredItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_FILTERED_ITEMS));
+            }
+        } else {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -104,22 +104,21 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
         // TODO: We want to inject the image loader in this class instead of using a static field.
         mGridAdapter = new MediaGridAdapter(this, mSite, WordPress.sImageLoader);
-        mGridAdapter.setAllowMultiselect(!mIsSelectOneItem);
-        mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
 
         mRecycler.setAdapter(mGridAdapter);
 
         if (mIsSelectOneItem) {
+            mGridAdapter.setAllowMultiselect(false);
             setTitle(R.string.select_from_media_library);
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
         } else {
-            mActionMode = startActionMode(this);
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
-                    mGridAdapter.getSelectedItems().size()));
+            mGridAdapter.setAllowMultiselect(true);
+            mGridAdapter.setInMultiSelect(true);
+            mGridAdapter.setSelectedItems(selectedItems);
         }
     }
 
@@ -202,32 +201,11 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
     }
 
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        setResultIdsAndFinish();
-    }
-
     @Override
     public void onAdapterFetchMoreData() {
         if (!mHasRetrievedAllMedia) {
             refreshMediaFromServer(true);
         }
-    }
-
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
     }
 
     @Override
@@ -238,12 +216,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     public void onAdapterItemSelected(int position) {
         if (mIsSelectOneItem) {
             // Single select, just finish the activity once an item is selected
-            mGridAdapter.setItemSelectedByPosition(position, true);
-            setResultIdsAndFinish();
-        } else {
-            mGridAdapter.toggleItemSelected(position);
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
-                    mGridAdapter.getSelectedItems().size()));
+            Intent intent = new Intent();
+            int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            remoteMediaIds.add(mMediaStore.getMediaWithLocalId(localId).getMediaId());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
@@ -252,9 +231,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         if (count == 0 && mActionMode != null) {
             mActionMode.finish();
         } else if (mActionMode == null) {
-            startActionMode(this);
+            startActionMode(new ActionModeCallback());
         }
 
+        updateActionModeTitle(count);
+    }
+
+    private void updateActionModeTitle(int count) {
         if (mActionMode != null) {
             mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
         }
@@ -285,7 +268,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     private void setResultIdsAndFinish() {
         Intent intent = new Intent();
-        if (!mGridAdapter.getSelectedItems().isEmpty()) {
+        if (mGridAdapter.getSelectedItemCount() > 0) {
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             for (Integer localId : mGridAdapter.getSelectedItems()) {
                 remoteMediaIds.add(mMediaStore.getMediaWithLocalId(localId).getMediaId());
@@ -305,5 +288,29 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 finish();
             }
         }, 1500);
+    }
+
+    private final class ActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mActionMode = mode;
+            updateActionModeTitle(mGridAdapter.getSelectedItemCount());
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            setResultIdsAndFinish();
+        }
     }
 }
