@@ -46,6 +46,8 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import de.greenrobot.event.EventBus;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
@@ -121,6 +123,48 @@ public class PostsListFragment extends Fragment
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data != null && isAdded()) {
+
+            boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+            final long postId = data.getLongExtra(EditPostActivity.EXTRA_POSTID, -1);
+            boolean isPublishable = data.getBooleanExtra(EditPostActivity.EXTRA_IS_PUBLISHABLE, false) && postId != -1;
+            boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
+
+            if (hasChanges) {
+                if (isPublishable) {
+                    if (savedLocally) {
+                        Snackbar.make(getActivity().findViewById(R.id.coordinator), R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.button_publish, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
+                                        publishPost(post);
+                                    }
+                                }).show();
+                    } else {
+                        Snackbar.make(getActivity().findViewById(R.id.coordinator), R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.button_publish, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
+                                        publishPost(post);
+                                    }
+                                }).show();
+                    }
+                } else {
+                    if (savedLocally) {
+                        ToastUtils.showToast(getActivity(), R.string.editor_post_saved_locally);
+                    } else {
+                        ToastUtils.showToast(getActivity(), R.string.editor_post_saved_online);
+                    }
+                }
+            }
+        }
+
     }
 
     private void initSwipeToRefreshHelper() {

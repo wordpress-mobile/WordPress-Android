@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,18 +55,8 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            if (data != null && data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)) {
-                if (data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
-                    Snackbar.make(findViewById(R.id.coordinator), R.string.editor_post_saved_locally, Snackbar.LENGTH_LONG).show();
-                } else {
-                    Snackbar.make(findViewById(R.id.coordinator), R.string.editor_post_saved_online, Snackbar.LENGTH_LONG).show();
-                }
-            }
-        }
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        mPostList.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
