@@ -137,6 +137,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
+    public static final String EXTRA_IS_PUBLISHABLE = "isPublishable";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -594,7 +595,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mViewPager.setCurrentItem(PAGE_CONTENT);
                 invalidateOptionsMenu();
             } else {
-                savePost();
+                savePostAndFinish();
             }
             return true;
         }
@@ -865,7 +866,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditorFragment != null && !mEditorFragment.onBackPressed()) {
-            savePost();
+            savePostAndFinish();
         }
     }
 
@@ -873,7 +874,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mIsNewPost;
     }
 
-    private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+    private class SavePostLocallyAndFinishTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -916,18 +917,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         protected void onPostExecute(Boolean saved) {
-            if (saved) {
-                Intent i = new Intent();
-                i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
-                i.putExtra(EXTRA_IS_PAGE, mIsPage);
-                i.putExtra(EXTRA_HAS_CHANGES, mPost.hasChanges(mOriginalPost));
-                setResult(RESULT_OK, i);
-            }
+            returnResult(saved);
             finish();
         }
     }
 
-    private void savePost() {
+    private void returnResult(boolean saved) {
+        Intent i = getIntent();
+        i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, mPostSavedLocally);
+        i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_HAS_CHANGES, saved);
+        i.putExtra(EXTRA_IS_PUBLISHABLE, mPost.isPublishable());
+        i.putExtra(EXTRA_POSTID, mPost.getLocalTablePostId());
+        setResult(RESULT_OK, i);
+    }
+
+    private void savePostAndFinish() {
 
         try {
             updatePostObject(false);
@@ -936,7 +941,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        if (mPost.isPublishable() || !isNewPost()) {
+        boolean shouldSave = mPost.hasChanges(mOriginalPost) && (mPost.isPublishable() || !isNewPost());
+        if (shouldSave) {
 
             mPostSavedLocally = false;
 
@@ -957,25 +963,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        deleteIfNewAndEmptyThenFinish();
+        // discard post if new & empty
+        if (isNewPost() && !mPost.isPublishable()) {
+            WordPress.wpDB.deletePost(getPost());
+        }
+
+        // if post saved locally, the activity will be finished async
+        if (!mPostSavedLocally) {
+            returnResult(shouldSave);
+            finish();
+        }
     }
 
     private void savePostLocally() {
         mPostSavedLocally = true;
-        new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void deleteIfNewAndEmptyThenFinish() {
-        if (isNewPost() && !mPost.isPublishable()) {
-            WordPress.wpDB.deletePost(getPost());
-        } else {
-            Intent i = getIntent();
-            i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, mPostSavedLocally);
-            i.putExtra(EXTRA_IS_PAGE, mIsPage);
-            i.putExtra(EXTRA_HAS_CHANGES, mPost.hasChanges(mOriginalPost));
-            setResult(RESULT_OK, i);
-        }
-        finish();
+        new SavePostLocallyAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
