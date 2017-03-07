@@ -41,10 +41,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private MediaGridAdapterCallback mCallback;
     private boolean mHasRetrievedAll;
     private boolean mIsRefreshing;
-    private int mGridItemWidth;
+
+    private boolean mAllowMultiselect;
+    private boolean mInMultiSelect;
+
     private final Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
     private final Handler mHandler;
     private final LayoutInflater mInflater;
+
     private ImageLoader mImageLoader;
     private Context mContext;
     private SiteModel mSite;
@@ -57,10 +61,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private ArrayList<Integer> mSelectedItems;
 
     public interface MediaGridAdapterCallback {
-        void fetchMoreData();
-        void onRetryUpload(int localMediaId);
+        void onAdapterFetchMoreData();
+        void onAdapterRetryUpload(int localMediaId);
         void onAdapterItemSelected(int position);
-        boolean isInMultiSelect();
+        void onAdapterSelectionCountChanged(int count);
     }
 
     interface BitmapReadyCallback {
@@ -71,6 +75,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
         super();
+
         mContext = context;
         mSite = site;
         mSelectedItems = new ArrayList<>();
@@ -148,7 +153,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (isLocalFile) {
             loadLocalImage(mCursor, holder.imageView);
         } else {
-            String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mGridItemWidth);
+            String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
             WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
         }
 
@@ -209,10 +214,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (!inMultiSelect()) {
+                            if (!isInMultiSelect()) {
                                 ((TextView) v).setText(R.string.upload_queued);
                                 v.setOnClickListener(null);
-                                mCallback.onRetryUpload(localMediaId);
+                                mCallback.onAdapterRetryUpload(localMediaId);
                             }
                         }
                     });
@@ -227,7 +232,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // if we are near the end, make a call to fetch more
         if (position == getItemCount() - 1 && !mHasRetrievedAll) {
             if (mCallback != null) {
-                mCallback.fetchMoreData();
+                mCallback.onAdapterFetchMoreData();
             }
         }
     }
@@ -262,6 +267,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mSelectedItems;
     }
 
+    public int getSelectedItemCount() {
+        return mSelectedItems.size();
+    }
+
     class GridViewHolder extends RecyclerView.ViewHolder {
         private final TextView filenameView;
         private final TextView titleView;
@@ -294,19 +303,44 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mCallback != null) {
-                        int position = getAdapterPosition();
+                    int position = getAdapterPosition();
+                    if (isInMultiSelect()) {
+                        toggleItemSelected(position);
+                    } else if (mCallback != null) {
                         mCallback.onAdapterItemSelected(position);
                     }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = getAdapterPosition();
+                    if (isInMultiSelect()) {
+                        toggleItemSelected(position);
+                    } else if (mAllowMultiselect) {
+                        setItemSelectedByPosition(position, true);
+                    }
+                    return true;
                 }
             });
         }
     }
 
-    private boolean inMultiSelect() {
-        return mCallback.isInMultiSelect();
+    public void setAllowMultiselect(boolean allow) {
+        mAllowMultiselect = allow;
     }
 
+    public boolean isInMultiSelect() {
+        return mInMultiSelect;
+    }
+
+    public void setInMultiSelect(boolean value) {
+        if (mInMultiSelect != value) {
+            mInMultiSelect = value;
+            clearSelection();
+        }
+    }
     private boolean isValidPosition(int position) {
         return position >= 0 && position < getItemCount();
     }
@@ -426,6 +460,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             mSelectedItems.remove(Integer.valueOf(localMediaId));
         }
+        mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         notifyDataSetChanged();
     }
 
@@ -437,12 +472,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
         if (columnIndex != -1) {
             int localMediaId = mCursor.getInt(columnIndex);
-            if (mSelectedItems.contains(localMediaId)) {
-                mSelectedItems.remove(Integer.valueOf(localMediaId));
-            } else {
-                mSelectedItems.add(localMediaId);
-            }
-            notifyDataSetChanged();
+            boolean isSelected = mSelectedItems.contains(localMediaId);
+            setItemSelectedByLocalId(localMediaId, !isSelected);
         }
     }
 

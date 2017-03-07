@@ -8,9 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -61,8 +61,7 @@ import javax.inject.Inject;
 /**
  * The grid displaying the media items.
  */
-public class MediaGridFragment extends Fragment
-        implements MediaGridAdapterCallback, GridView.MultiChoiceModeListener {
+public class MediaGridFragment extends Fragment implements MediaGridAdapterCallback {
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
@@ -92,7 +91,6 @@ public class MediaGridFragment extends Fragment
 
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
-    private boolean mIsMultiSelect;
     private ActionMode mActionMode;
     private String mSearchTerm;
 
@@ -201,18 +199,20 @@ public class MediaGridFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFiltersText = new String[Filter.values().length];
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, WordPress.sImageLoader);
-        mGridAdapter.setCallback(this);
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
+
         int numColumns = MediaGridAdapter.getColumnCount(getActivity());
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
-        // TODO: handle click, multiselect
+
+        // TODO: We want to inject the image loader in this class instead of using a static field.
+        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, WordPress.sImageLoader);
+        mGridAdapter.setCallback(this);
+        mGridAdapter.setAllowMultiselect(true);
         mRecycler.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
@@ -259,73 +259,14 @@ public class MediaGridFragment extends Fragment
     }
 
     @Override
-    public void fetchMoreData() {
+    public void onAdapterFetchMoreData() {
         if (!mHasRetrievedAllMedia) {
             fetchMediaList(true);
         }
     }
 
     @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        mActionMode = mode;
-        int selectCount = mGridAdapter.getSelectedItems().size();
-        mode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
-        MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.media_multiselect, menu);
-        mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
-        mNewGalleryButton = menu.findItem(R.id.media_multiselect_actionbar_gallery);
-        setSwipeToRefreshEnabled(false);
-        mIsMultiSelect = true;
-        updateActionButtons(selectCount);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        int i = item.getItemId();
-        if (i == R.id.media_multiselect_actionbar_post) {
-            handleNewPost();
-            return true;
-        } else if (i == R.id.media_multiselect_actionbar_gallery) {
-            handleMultiSelectPost();
-            return true;
-        } else if (i == R.id.media_multiselect_actionbar_trash) {
-            handleMultiSelectDelete();
-            return true;
-        }
-        return true;
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        mGridAdapter.clearSelection();
-        setSwipeToRefreshEnabled(true);
-        mIsMultiSelect = false;
-        mActionMode = null;
-        setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
-    }
-
-    @Override
-    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        mGridAdapter.setItemSelectedByPosition(position, checked);
-        int selectCount = mGridAdapter.getSelectedItems().size();
-        setFilterSpinnerVisible(selectCount == 0);
-        mode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
-        updateActionButtons(selectCount);
-    }
-
-    @Override
-    public boolean isInMultiSelect() {
-        return mIsMultiSelect;
-    }
-
-    @Override
-    public void onRetryUpload(int localMediaId) {
+    public void onAdapterRetryUpload(int localMediaId) {
         mListener.onRetryUpload(localMediaId);
     }
 
@@ -333,6 +274,22 @@ public class MediaGridFragment extends Fragment
     public void onAdapterItemSelected(int position) {
         int localMediaId = mGridAdapter.getLocalMediaIdAtPosition(position);
         mListener.onMediaItemSelected(localMediaId);
+    }
+
+    @Override
+    public void onAdapterSelectionCountChanged(int count) {
+        if (count == 0 && mActionMode != null) {
+            mActionMode.finish();
+        } else if (mActionMode == null) {
+            ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
+        }
+
+        setFilterSpinnerVisible(count == 0);
+        updateActionButtons(count);
+
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
+        }
     }
 
     @SuppressWarnings("unused")
@@ -408,7 +365,7 @@ public class MediaGridFragment extends Fragment
         mGridAdapter.clearSelection();
     }
 
-    public void setFilterSpinnerVisible(boolean visible) {
+    private void setFilterSpinnerVisible(boolean visible) {
         if (visible) {
             mSpinner.setEnabled(true);
             mSpinnerContainer.setEnabled(true);
@@ -421,17 +378,17 @@ public class MediaGridFragment extends Fragment
     }
 
     public void removeFromMultiSelect(int localMediaId) {
-        if (isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
+        if (mGridAdapter.isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
             mGridAdapter.setItemSelectedByLocalId(localMediaId, false);
             setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
         }
     }
 
-    public void setRefreshing(boolean refreshing) {
+    private void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    public void setSwipeToRefreshEnabled(boolean enabled) {
+    private void setSwipeToRefreshEnabled(boolean enabled) {
         mSwipeToRefreshHelper.setEnabled(enabled);
     }
 
@@ -527,18 +484,6 @@ public class MediaGridFragment extends Fragment
         mDatePickerDialog.show();
     }
 
-    /*
-     * called by activity when blog is changed
-     */
-    protected void reset() {
-        mGridAdapter.clearSelection();
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter.setImageLoader(WordPress.sImageLoader);
-        mGridAdapter.setCursor(null);
-        resetSpinnerAdapter();
-        mHasRetrievedAllMedia = false;
-    }
-
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView != null) {
             if (mGridAdapter.getItemCount() == 0) {
@@ -588,7 +533,7 @@ public class MediaGridFragment extends Fragment
         outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridManager.findFirstCompletelyVisibleItemPosition());
         outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
-        outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
+        outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, mGridAdapter.isInMultiSelect());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
 
@@ -820,6 +765,52 @@ public class MediaGridFragment extends Fragment
                     }
                 }
             });
+        }
+    }
+
+    private final class ActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mActionMode = mode;
+            int selectCount = mGridAdapter.getSelectedItemCount();
+            mode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.media_multiselect, menu);
+            mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
+            mNewGalleryButton = menu.findItem(R.id.media_multiselect_actionbar_gallery);
+            setSwipeToRefreshEnabled(false);
+            mGridAdapter.setInMultiSelect(true);
+            updateActionButtons(selectCount);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int i = item.getItemId();
+            if (i == R.id.media_multiselect_actionbar_post) {
+                handleNewPost();
+                return true;
+            } else if (i == R.id.media_multiselect_actionbar_gallery) {
+                handleMultiSelectPost();
+                return true;
+            } else if (i == R.id.media_multiselect_actionbar_trash) {
+                handleMultiSelectDelete();
+                return true;
+            }
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            setSwipeToRefreshEnabled(true);
+            mGridAdapter.setInMultiSelect(false);
+            mActionMode = null;
+            setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
         }
     }
 }

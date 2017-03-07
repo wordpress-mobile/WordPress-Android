@@ -210,7 +210,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void fetchMoreData() {
+    public void onAdapterFetchMoreData() {
         if (!mHasRetrievedAllMedia) {
             refreshMediaFromServer(true);
         }
@@ -232,7 +232,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRetryUpload(int localMediaId) {
+    public void onAdapterRetryUpload(int localMediaId) {
     }
 
     @Override
@@ -249,8 +249,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean isInMultiSelect() {
-        return false;
+    public void onAdapterSelectionCountChanged(int count) {
+        // noop - multi-select isn't enabled so ingore this
     }
 
     private void refreshViews() {
