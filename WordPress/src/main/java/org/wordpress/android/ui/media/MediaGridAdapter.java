@@ -151,8 +151,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // dimensions
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        TextView dimensionView = (TextView) holder.dimensionView.findViewById(R.id.media_grid_item_dimension);
-        if (dimensionView != null) {
+        if (holder.dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
                 int width = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.WIDTH));
                 int height = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.HEIGHT));
@@ -332,7 +331,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public void setRefreshing(boolean refreshing) {
         mIsRefreshing = refreshing;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     private void setGridItemWidth() {
