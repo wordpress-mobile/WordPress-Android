@@ -50,12 +50,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final LayoutInflater mInflater;
 
     private ImageLoader mImageLoader;
-    private Context mContext;
-    private SiteModel mSite;
+    private final Context mContext;
+    private final SiteModel mSite;
     private Cursor mCursor;
 
-    private int mThumbWidth;
-    private int mThumbHeight;
+    private final int mThumbWidth;
+    private final int mThumbHeight;
 
     // Must be an ArrayList (order is important for galleries)
     private ArrayList<Integer> mSelectedItems;
@@ -71,7 +71,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         void onBitmapReady(Bitmap bitmap);
     }
 
-    public static final int INVALID_POSITION = -1;
+    private static final int INVALID_POSITION = -1;
 
     public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
         super();
@@ -96,16 +96,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return getLocalMediaIdAtPosition(position);
     }
 
-    void setImageLoader(ImageLoader imageLoader) {
+    private void setImageLoader(ImageLoader imageLoader) {
         if (imageLoader != null) {
             mImageLoader = imageLoader;
         } else {
             mImageLoader = WordPress.sImageLoader;
         }
-    }
-
-    public Cursor getCursor() {
-        return mCursor;
     }
 
     public void setCursor(Cursor cursor) {
@@ -451,7 +447,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mSelectedItems.contains(localMediaId);
     }
 
-    public void setItemSelectedByPosition(int position, boolean selected) {
+    private void setItemSelectedByPosition(int position, boolean selected) {
         if (mCursor == null || !isValidPosition(position)) {
             return;
         }
@@ -475,7 +471,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         notifyDataSetChanged();
     }
 
-    public void toggleItemSelected(int position) {
+    private void toggleItemSelected(int position) {
         if (mCursor == null || !isValidPosition(position)) {
             return;
         }
