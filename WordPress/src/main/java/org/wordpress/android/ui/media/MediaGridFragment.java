@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -27,9 +26,6 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader.ImageContainer;
-import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.wellsql.generated.MediaModelTable;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -46,7 +42,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
@@ -70,7 +65,7 @@ import javax.inject.Inject;
  * The grid displaying the media items.
  */
 public class MediaGridFragment extends Fragment
-        implements OnItemClickListener, MediaGridAdapterCallback, RecyclerListener, GridView.MultiChoiceModeListener {
+        implements OnItemClickListener, MediaGridAdapterCallback, GridView.MultiChoiceModeListener {
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
@@ -217,7 +212,8 @@ public class MediaGridFragment extends Fragment
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
-        mGridManager = new GridLayoutManager(getActivity(), MediaGridAdapter.getColumnCount(getActivity()));
+        int numColumns = MediaGridAdapter.getColumnCount(getActivity());
+        mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
         // TODO: handle click, multiselect
         mRecycler.setAdapter(mGridAdapter);
@@ -269,34 +265,6 @@ public class MediaGridFragment extends Fragment
     public void fetchMoreData() {
         if (!mHasRetrievedAllMedia) {
             fetchMediaList(true);
-        }
-    }
-
-    @Override
-    public void onMovedToScrapHeap(View view) {
-        // cancel image fetch requests if the view has been moved to recycler.
-
-        View imageView = view.findViewById(R.id.media_grid_item_image);
-        if (imageView != null) {
-            // this tag is set in the MediaGridAdapter class
-            String tag = (String) imageView.getTag();
-            if (tag != null && tag.startsWith("http")) {
-                // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.sImageLoader.get(tag, new ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) { }
-
-                    @Override
-                    public void onResponse(ImageContainer response, boolean isImmediate) { }
-
-                });
-                container.cancelRequest();
-            }
-        }
-
-        CheckableFrameLayout layout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
-        if (layout != null) {
-            layout.setOnCheckedChangeListener(null);
         }
     }
 

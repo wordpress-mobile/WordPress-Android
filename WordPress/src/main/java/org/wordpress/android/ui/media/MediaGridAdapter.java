@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.wellsql.generated.MediaModelTable;
 
@@ -43,12 +44,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private int mGridItemWidth;
     private final Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
     private final Handler mHandler;
-    private final int mImageSize;
     private final LayoutInflater mInflater;
     private ImageLoader mImageLoader;
     private Context mContext;
     private SiteModel mSite;
     private Cursor mCursor;
+
+    private int mThumbWidth;
+    private int mThumbHeight;
 
     // Must be an ArrayList (order is important for galleries)
     private ArrayList<Integer> mSelectedItems;
@@ -68,10 +71,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mContext = context;
         mSite = site;
         mSelectedItems = new ArrayList<>();
-        mImageSize = context.getResources().getDimensionPixelSize(R.dimen.media_grid_image_size);
         mInflater = LayoutInflater.from(context);
         mFilePathToCallbackMap = new HashMap<>();
         mHandler = new Handler();
+
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
+        mThumbWidth = displayWidth / getColumnCount(mContext);
+        mThumbHeight = (int) (mThumbWidth * 0.75f);
+
         setImageLoader(imageLoader);
     }
 
@@ -218,6 +225,32 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    @Override
+    public void onViewRecycled(GridViewHolder holder) {
+        super.onViewRecycled(holder);
+
+        // cancel image fetch requests if the view has been moved to recycler.
+        if (holder.imageView != null) {
+            String tag = (String) holder.imageView.getTag();
+            if (tag != null && tag.startsWith("http")) {
+                // need a listener to cancel request, even if the listener does nothing
+                ImageLoader.ImageContainer container = WordPress.sImageLoader.get(tag, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) { }
+
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) { }
+
+                });
+                container.cancelRequest();
+            }
+        }
+
+        if (holder.frameLayout != null) {
+            holder.frameLayout.setOnCheckedChangeListener(null);
+        }
+    }
+
     public ArrayList<Integer> getSelectedItems() {
         return mSelectedItems;
     }
@@ -247,6 +280,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
+
+            imageView.getLayoutParams().width = mThumbWidth;
+            imageView.getLayoutParams().height = mThumbHeight;
         }
     }
 
@@ -290,7 +326,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void fetchBitmap(final String filePath) {
-        BitmapWorkerTask task = new BitmapWorkerTask(null, mImageSize, mImageSize, new BitmapWorkerCallback() {
+        BitmapWorkerTask task = new BitmapWorkerTask(null, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
             @Override
             public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
                 mHandler.post(new Runnable() {
@@ -316,7 +352,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mCursor != null ? mCursor.getCount() : 0;
     }
 
-    /** Return the number of columns in the media grid **/
     public static int getColumnCount(Context context) {
         return context.getResources().getInteger(R.integer.media_grid_num_columns);
     }
@@ -334,18 +369,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         //notifyDataSetChanged();
     }
 
-    private void setGridItemWidth() {
-        int maxWidth = mContext.getResources().getDisplayMetrics().widthPixels;
-        int columnCount = getColumnCount(mContext);
-        if (columnCount > 0) {
-            int dp8 = DisplayUtils.dpToPx(mContext, 8);
-            int padding = (columnCount + 1) * dp8;
-            mGridItemWidth = (maxWidth - padding) / columnCount;
-        }
-    }
-
     public void clearSelection() {
-        mSelectedItems.clear();
+        if (mSelectedItems.size() > 0) {
+            mSelectedItems.clear();
+            notifyDataSetChanged();
+        }
     }
 
     public boolean isItemSelected(int localMediaId) {
