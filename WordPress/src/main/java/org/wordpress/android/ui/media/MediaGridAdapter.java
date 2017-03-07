@@ -192,7 +192,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         holder.frameLayout.setTag(localMediaId);
-        holder.frameLayout.setChecked(mSelectedItems.contains(localMediaId));
+        holder.frameLayout.setChecked(isItemSelected(localMediaId));
 
         // show upload state
         if (holder.stateTextView != null) {
@@ -327,6 +327,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     if (isInMultiSelect()) {
                         toggleItemSelected(position);
                     } else if (mAllowMultiselect) {
+                        setInMultiSelect(true);
                         setItemSelectedByPosition(position, true);
                     }
                     return true;
