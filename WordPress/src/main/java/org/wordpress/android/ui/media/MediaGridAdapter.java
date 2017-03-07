@@ -59,6 +59,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public interface MediaGridAdapterCallback {
         void fetchMoreData();
         void onRetryUpload(int localMediaId);
+        void onAdapterItemSelected(int position);
         boolean isInMultiSelect();
     }
 
@@ -283,11 +284,27 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             imageView.getLayoutParams().width = mThumbWidth;
             imageView.getLayoutParams().height = mThumbHeight;
+
+            itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCallback != null) {
+                        int position = getAdapterPosition();
+                        mCallback.onAdapterItemSelected(position);
+                    }
+                }
+            });
         }
     }
 
     private boolean inMultiSelect() {
         return mCallback.isInMultiSelect();
+    }
+
+    public int getLocalMediaIdAtPosition(int position) {
+        // TODO: make sure position is valid
+        mCursor.moveToPosition(position);
+        return mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
     }
 
     private synchronized void loadLocalImage(Cursor cursor, final FadeInNetworkImageView imageView) {

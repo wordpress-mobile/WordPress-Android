@@ -9,9 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -37,8 +35,7 @@ import javax.inject.Inject;
  * can choose a single image to embed into their post.
  */
 public class MediaGalleryPickerActivity extends AppCompatActivity
-        implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
-                   AdapterView.OnItemClickListener {
+        implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback {
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
     public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
@@ -99,13 +96,15 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         setContentView(R.layout.media_gallery_picker_layout);
         mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiChoiceModeListener(this);
-        mGridView.setOnItemClickListener(this);
+
         // TODO: We want to inject the image loader in this class instead of using a static field.
         mGridAdapter = new MediaGridAdapter(this, mSite, WordPress.sImageLoader);
         mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
+
         // TODO:
         //mGridView.setAdapter(mGridAdapter);
+
         if (mIsSelectOneItem) {
             setTitle(R.string.select_from_media_library);
             ActionBar actionBar = getSupportActionBar();
@@ -201,19 +200,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mIsSelectOneItem) {
-            // Single select, just finish the activity once an item is selected
-            mGridAdapter.setItemSelectedByPosition(position, true);
-            setResultIdsAndFinish();
-        } else {
-            mGridAdapter.toggleItemSelected(position);
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
-                    mGridAdapter.getSelectedItems().size()));
-        }
-    }
-
-    @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
         mGridAdapter.setItemSelectedByPosition(position, checked);
     }
@@ -247,6 +233,19 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onRetryUpload(int localMediaId) {
+    }
+
+    @Override
+    public void onAdapterItemSelected(int position) {
+        if (mIsSelectOneItem) {
+            // Single select, just finish the activity once an item is selected
+            mGridAdapter.setItemSelectedByPosition(position, true);
+            setResultIdsAndFinish();
+        } else {
+            mGridAdapter.toggleItemSelected(position);
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
+                    mGridAdapter.getSelectedItems().size()));
+        }
     }
 
     @Override

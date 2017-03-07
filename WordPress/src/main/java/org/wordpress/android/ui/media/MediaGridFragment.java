@@ -18,15 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.wellsql.generated.MediaModelTable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -65,7 +62,7 @@ import javax.inject.Inject;
  * The grid displaying the media items.
  */
 public class MediaGridFragment extends Fragment
-        implements OnItemClickListener, MediaGridAdapterCallback, GridView.MultiChoiceModeListener {
+        implements MediaGridAdapterCallback, GridView.MultiChoiceModeListener {
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
@@ -328,15 +325,14 @@ public class MediaGridFragment extends Fragment
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Cursor cursor = ((MediaGridAdapter) parent.getAdapter()).getCursor();
-        int localMediaId = cursor.getInt(cursor.getColumnIndex(MediaModelTable.ID));
-        mListener.onMediaItemSelected(localMediaId);
+    public void onRetryUpload(int localMediaId) {
+        mListener.onRetryUpload(localMediaId);
     }
 
     @Override
-    public void onRetryUpload(int localMediaId) {
-        mListener.onRetryUpload(localMediaId);
+    public void onAdapterItemSelected(int position) {
+        int localMediaId = mGridAdapter.getLocalMediaIdAtPosition(position);
+        mListener.onMediaItemSelected(localMediaId);
     }
 
     @SuppressWarnings("unused")
