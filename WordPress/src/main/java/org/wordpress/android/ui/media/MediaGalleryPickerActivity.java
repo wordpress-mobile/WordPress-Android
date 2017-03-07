@@ -101,7 +101,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
         // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(this, mSite, null, 0, WordPress.sImageLoader);
+        mGridAdapter = new MediaGridAdapter(this, mSite, WordPress.sImageLoader);
         mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
         // TODO:

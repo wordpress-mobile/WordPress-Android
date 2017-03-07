@@ -210,7 +210,7 @@ public class MediaGridFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
         mFiltersText = new String[Filter.values().length];
         // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, null, 0, WordPress.sImageLoader);
+        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, WordPress.sImageLoader);
         mGridAdapter.setCallback(this);
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);

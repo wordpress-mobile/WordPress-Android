@@ -43,7 +43,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private int mGridItemWidth;
     private final Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
     private final Handler mHandler;
-    private final int mLocalImageWidth;
+    private final int mImageSize;
     private final LayoutInflater mInflater;
     private ImageLoader mImageLoader;
     private Context mContext;
@@ -63,16 +63,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         void onBitmapReady(Bitmap bitmap);
     }
 
-    public MediaGridAdapter(Context context, SiteModel site, Cursor c, int flags, ImageLoader imageLoader) {
+    public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
         super();
         mContext = context;
         mSite = site;
         mSelectedItems = new ArrayList<>();
-        mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
+        mImageSize = context.getResources().getDimensionPixelSize(R.dimen.media_grid_image_size);
         mInflater = LayoutInflater.from(context);
         mFilePathToCallbackMap = new HashMap<>();
         mHandler = new Handler();
-        mCursor = c;
         setImageLoader(imageLoader);
     }
 
@@ -291,7 +290,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void fetchBitmap(final String filePath) {
-        BitmapWorkerTask task = new BitmapWorkerTask(null, mLocalImageWidth, mLocalImageWidth, new BitmapWorkerCallback() {
+        BitmapWorkerTask task = new BitmapWorkerTask(null, mImageSize, mImageSize, new BitmapWorkerCallback() {
             @Override
             public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
                 mHandler.post(new Runnable() {
