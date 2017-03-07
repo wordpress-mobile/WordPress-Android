@@ -645,18 +645,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
 
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
-
-        if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
-            ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
-            mGridAdapter.setSelectedItems(selectedItems);
-            if (isInMultiSelectMode) {
+        if (isInMultiSelectMode) {
+            mGridAdapter.setInMultiSelect(true);
+            if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
+                ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
+                mGridAdapter.setSelectedItems(selectedItems);
                 setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
                 mSwipeToRefreshHelper.setEnabled(false);
             }
         }
-
-        // TODO:
-        //mGridManager.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
 
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));

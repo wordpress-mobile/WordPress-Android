@@ -490,6 +490,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public void setSelectedItems(ArrayList<Integer> selectedItems) {
         mSelectedItems = selectedItems;
+        if (mCallback != null) {
+            mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+        }
         notifyDataSetChanged();
     }
 }
