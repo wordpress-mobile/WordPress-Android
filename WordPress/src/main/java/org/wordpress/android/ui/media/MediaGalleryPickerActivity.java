@@ -104,7 +104,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         mGridAdapter = new MediaGridAdapter(this, mSite, null, 0, WordPress.sImageLoader);
         mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
-        mGridView.setAdapter(mGridAdapter);
+        // TODO:
+        //mGridView.setAdapter(mGridAdapter);
         if (mIsSelectOneItem) {
             setTitle(R.string.select_from_media_library);
             ActionBar actionBar = getSupportActionBar();
@@ -190,10 +191,10 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 mGridAdapter.setRefreshing(false);
                 if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
                     Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-                    mGridAdapter.swapCursor(cursor);
+                    mGridAdapter.setCursor(cursor);
                 } else {
                     Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
-                    mGridAdapter.swapCursor(cursor);
+                    mGridAdapter.setCursor(cursor);
                 }
             }
         }
@@ -259,7 +260,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
         } else {
             cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-            mGridAdapter.swapCursor(cursor);
+            mGridAdapter.setCursor(cursor);
         }
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(false);

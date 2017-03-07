@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -90,7 +92,9 @@ public class MediaGridFragment extends Fragment
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
-    private GridView mGridView;
+
+    private RecyclerView mRecycler;
+    private GridLayoutManager mGridManager;
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
 
@@ -211,12 +215,12 @@ public class MediaGridFragment extends Fragment
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
 
-        mGridView = (GridView) view.findViewById(R.id.media_gridview);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setRecyclerListener(this);
-        mGridView.setMultiChoiceModeListener(this);
-        mGridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-        mGridView.setAdapter(mGridAdapter);
+        mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
+        mRecycler.setHasFixedSize(true);
+        mGridManager = new GridLayoutManager(getActivity(), MediaGridAdapter.getColumnCount(getActivity()));
+        mRecycler.setLayoutManager(mGridManager);
+        // TODO: handle click, multiselect
+        mRecycler.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.empty_view_title);
@@ -387,7 +391,7 @@ public class MediaGridFragment extends Fragment
         setFilter(mFilter);
         updateFilterText();
         updateSpinnerAdapter();
-        if (isAdded() && mGridAdapter.getDataCount() == 0) {
+        if (isAdded() && mGridAdapter.getItemCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
                     fetchMediaList(false);
@@ -401,7 +405,7 @@ public class MediaGridFragment extends Fragment
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
         Cursor cursor = mMediaStore.searchSiteMediaByTitleAsCursor(mSite, mSearchTerm);
-        mGridAdapter.changeCursor(cursor);
+        mGridAdapter.setCursor(cursor);
     }
 
     public void setFilterVisibility(int visibility) {
@@ -417,11 +421,11 @@ public class MediaGridFragment extends Fragment
             mResultView.setVisibility(View.GONE);
         }
         if (cursor != null && cursor.getCount() != 0) {
-            mGridAdapter.swapCursor(cursor);
+            mGridAdapter.setCursor(cursor);
             hideEmptyView();
         } else {
             // No data to display. Clear the GridView and display a message in the empty view
-            mGridAdapter.changeCursor(null);
+            mGridAdapter.setCursor(null);
         }
         if (filter != Filter.CUSTOM_DATE) {
             // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
@@ -488,7 +492,7 @@ public class MediaGridFragment extends Fragment
         // long one_day = 24 * 60 * 60 * 1000;
         // TODO: Filter images by date using `startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day`
         Cursor cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-        mGridAdapter.swapCursor(cursor);
+        mGridAdapter.setCursor(cursor);
 
         if (cursor != null && cursor.moveToFirst()) {
             mResultView.setVisibility(View.VISIBLE);
@@ -564,19 +568,16 @@ public class MediaGridFragment extends Fragment
      */
     protected void reset() {
         mGridAdapter.clearSelection();
-        mGridView.setSelection(0);
-        mGridView.requestFocusFromTouch();
-        mGridView.setSelection(0);
         // TODO: We want to inject the image loader in this class instead of using a static field.
         mGridAdapter.setImageLoader(WordPress.sImageLoader);
-        mGridAdapter.changeCursor(null);
+        mGridAdapter.setCursor(null);
         resetSpinnerAdapter();
         mHasRetrievedAllMedia = false;
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView != null) {
-            if (mGridAdapter.getDataCount() == 0) {
+            if (mGridAdapter.getItemCount() == 0) {
                 int stringId = 0;
                 switch (emptyViewMessageType) {
                     case LOADING:
@@ -621,7 +622,7 @@ public class MediaGridFragment extends Fragment
 
     private void saveState(Bundle outState) {
         outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
-        outState.putInt(BUNDLE_SCROLL_POSITION, mGridView.getFirstVisiblePosition());
+        outState.putInt(BUNDLE_SCROLL_POSITION, mGridManager.findFirstCompletelyVisibleItemPosition());
         outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, isInMultiSelect());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
@@ -745,7 +746,9 @@ public class MediaGridFragment extends Fragment
             }
         }
 
-        mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
+        // TODO:
+        //mGridManager.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
+
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
@@ -796,10 +799,10 @@ public class MediaGridFragment extends Fragment
     }
 
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
-        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+        MediaGridAdapter adapter = (MediaGridAdapter) mRecycler.getAdapter();
 
         Cursor mediaCursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-        adapter.swapCursor(mediaCursor);
+        adapter.setCursor(mediaCursor);
 
         mHasRetrievedAllMedia = !event.canLoadMore;
         adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
@@ -834,7 +837,7 @@ public class MediaGridFragment extends Fragment
                 }
             }
         }
-        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
+        MediaGridAdapter adapter = (MediaGridAdapter) mRecycler.getAdapter();
         mHasRetrievedAllMedia = true;
         adapter.setHasRetrievedAll(true);
 
