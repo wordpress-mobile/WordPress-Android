@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -15,6 +15,7 @@ repositories {
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+
 }
 
 apply plugin: 'com.android.application'
@@ -30,23 +31,26 @@ android {
     }
 
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-32"
-        versionCode 341
+        versionName "6.9-rc-1"
+        versionCode 354
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+
+        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
     }
 
     productFlavors {
         vanilla {} // used for release and beta
 
         zalpha { // alpha version - enable experimental features
+            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
@@ -84,21 +88,22 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    compile 'com.android.support:support-compat:25.0.1'
-    compile 'com.android.support:support-core-ui:25.0.1'
-    compile 'com.android.support:support-fragment:25.0.1'
+    compile 'com.android.support:support-compat:25.1.1'
+    compile 'com.android.support:support-core-ui:25.1.1'
+    compile 'com.android.support:support-fragment:25.1.1'
 
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:cardview-v7:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
-    compile 'com.android.support:percent:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:cardview-v7:25.1.1'
+    compile 'com.android.support:recyclerview-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:percent:25.1.1'
+    compile 'com.android.support:preference-v7:25.1.1'
 
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.google.android.gms:play-services-auth:9.0.2'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.helpshift:android-helpshift-aar:4.7.0'
+    compile 'com.helpshift:android-helpshift-aar:4.8.1'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.7'
     compile 'org.wordpress:graphview:3.4.0'
@@ -127,6 +132,9 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
+
+    // Debug
+    debugCompile 'com.facebook.stetho:stetho:1.4.2'
 }
 
 configurations.all {

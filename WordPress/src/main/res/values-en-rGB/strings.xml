@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-20 22:46:32+0000
+Translation-Revision-Date: 2017-02-15 08:28:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
+	<string name="reader_hint_search_followed_sites">Search followed sites</string>
+	<string name="visual_editor_disabled">Visual Editor disabled</string>
+	<string name="preference_editor_visual">Visual</string>
+	<string name="preference_editor_legacy">Legacy</string>
+	<string name="preference_editor_type">Set editor type</string>
+	<string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+	<string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
+	<string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+	<string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
+	<string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
+	<string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
+	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Photo by %s</string>
 	<string name="reader_label_visit">Visit</string>
 	<string name="all_your_sites">All My Sites</string>
 	<string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
-	<string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
-	<string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
 	<string name="no_default_app_available_to_open_link">Unable to open the link</string>
 	<string name="notification_pending_drafts">Notify me on pending drafts</string>
 	<string name="invalid_verification_code_format">Must be a six-digit number</string>
@@ -291,7 +304,6 @@ Language: en_GB
 	<string name="editor_page_title_placeholder">Page Title</string>
 	<string name="editor_post_title_placeholder">Post Title</string>
 	<string name="email_address">Email address</string>
-	<string name="preference_show_visual_editor">Show visual editor</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
 	<string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>

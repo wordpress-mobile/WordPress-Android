@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="44dp"
-    android:height="44dp"
-    android:viewportWidth="44"
-    android:viewportHeight="44">
 
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="44dp"
+    android:width="44dp"
+    android:viewportHeight="44"
+    android:viewportWidth="44" >
+
+    <!-- @color/wp_grey_lighten_20 -->
     <path
-        android:fillColor="#E8EEF2"
-        android:pathData="M 20.536 15 L 20.109 17 L 21.609 17 L 19.263 28 L 17.763 28 L 17.336 30 L 23.464 30 L 23.89 28 L 22.39 28 L 24.737 17 L 26.237 17 L 26.664 15 Z" />
+        android:fillColor="#ffc8d7e1"
+        android:pathData="M 20.536 15 L 20.109 17 L 21.609 17 L 19.263 28 L 17.763 28 L 17.336 30 L 23.464 30 L 23.89 28 L 22.39 28 L 24.737 17 L 26.237 17 L 26.664 15 Z" >
+    </path>
+
 </vector>

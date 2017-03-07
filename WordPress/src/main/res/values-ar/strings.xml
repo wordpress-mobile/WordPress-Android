@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-09-09 15:09:54+0000
+Translation-Revision-Date: 2017-02-06 20:58:49+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+	<string name="reader_photo_by">صورة بواسطة %s</string>
+	<string name="all_your_sites">جميع مواقعي</string>
+	<string name="reader_label_image_count_one">صورة واحدة</string>
+	<string name="timespan_now">الآن</string>
 	<string name="role_admin">المسؤول</string>
 	<string name="role_editor">المحرر</string>
 	<string name="role_author">الكاتب</string>
 	<string name="role_contributor">المساهم</string>
 	<string name="role_follower">المتابع</string>
-	<string name="role_viewer">المشاهد</string>
+	<string name="role_viewer">المشاهدة</string>
 	<string name="error_post_my_profile_no_connection">لا يوجد اتصال، تعذر حفظ ملفك الشخصي</string>
 	<string name="alignment_none">لا شيء</string>
 	<string name="alignment_left">يسار</string>
 	<string name="alignment_right">يمين</string>
+	<string name="site_settings_list_editor_action_mode_title">تم تحديد %1$d</string>
 	<string name="error_fetch_users_list">تعذر استرداد مستخدمي الموقع</string>
 	<string name="plans_manage">إدارة باقتك على\nWordPress.com/plans</string>
 	<string name="people_empty_list_filtered_viewers">ليس لديك أي مشاهدين بعد.</string>
@@ -32,7 +37,9 @@ Language: ar
 	<string name="invite_message_usernames_limit">دعوة ما يقارب 10 عناوين بريد إلكتروني و/أو أسماء مستخدمين في وردبرس.كوم. سيتم إرسال تعليمات عن كيفية إنشاء اسم مستخدم لمَن لا يملك اسم مستخدم.</string>
 	<string name="viewer_remove_confirmation_message">إذا قمت بإزالة هذا المشاهد، فلن يتمكن بعد الآن من زيارة هذا الموقع.\n\nألا تزال تريد إزالة هذا المشاهد؟</string>
 	<string name="follower_remove_confirmation_message">في حالة إزالة المتابع، فسيتم وقف إرسال التنبيهات إليه عن هذا الموقع، ما لم يتابع مرة أخرى.\n\nألا تزال تريد إزالة هذا المتابع؟</string>
+	<string name="follower_subscribed_since">منذ %1$s</string>
 	<string name="reader_label_view_gallery">عرض المعرض</string>
+	<string name="reader_label_image_count_multi">%d صور</string>
 	<string name="error_remove_follower">تعذر إزالة المتابع</string>
 	<string name="error_remove_viewer">تعذر إزالة المشاهد</string>
 	<string name="error_fetch_email_followers_list">تعذر استرداد متابعي الموقع عبر البريد الإلكتروني</string>
@@ -181,6 +188,7 @@ Language: ar
 	<string name="xmlrpc_missing_method_error">تعذر الاتصال. طرق XML-RPC غير موجودة على الخادم.</string>
 	<string name="post_format_status">الحالة</string>
 	<string name="post_format_video">الفيديو</string>
+	<string name="alignment_center">وسط</string>
 	<string name="theme_free">مجانًا</string>
 	<string name="theme_all">الكل</string>
 	<string name="theme_premium">Premium</string>
@@ -239,7 +247,6 @@ Language: ar
 	<string name="editor_page_title_placeholder">عنوان الصفحة</string>
 	<string name="editor_post_title_placeholder">عنوان المقالة</string>
 	<string name="email_address">عنوان البريد الإلكتروني</string>
-	<string name="preference_show_visual_editor">إظهار محرر مرئي</string>
 	<string name="dlg_sure_to_delete_comments">هل ترغب في إزالة هذه التعليقات نهائيًا؟</string>
 	<string name="preference_editor">المحرر</string>
 	<string name="dlg_sure_to_delete_comment">هل ترغب في إزالة هذا التعليق نهائيًا؟</string>

@@ -341,8 +341,13 @@
     <string name="comment_q_action_replying">Replying…</string>
 
     <!-- pending draft local notifications -->
-    <string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
-    <string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
+    <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
+    <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
+    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+    <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
+    <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+    <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+
     <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
@@ -638,7 +643,23 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
-    <string name="preference_show_visual_editor">Show visual editor</string>
+    <string name="preference_editor_type">Set editor type</string>
+
+    <string name="preference_editor_legacy">Legacy</string>
+    <string name="preference_editor_visual">Visual</string>
+    <string name="preference_editor_aztec" translatable="false">Aztec</string>
+
+    <string-array name="editor_entries" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+        <item>@string/preference_editor_aztec</item>
+    </string-array>
+
+    <string-array name="editor_entries_without_aztec" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+    </string-array>
+
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -937,6 +958,10 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="visual_editor_disabled">Visual Editor disabled</string>
+    <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
+    <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
+    <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
     <string name="new_editor_promo_button_label">Great, thanks!</string>
     <string name="new_editor_promo_title">Brand new editor</string>
     <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
@@ -1134,6 +1159,11 @@
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
 
+    <!-- Default tags -->
+    <string name="reader_discover_default_tag">Discover</string>
+    <string name="reader_followed_default_tag">Followed Sites</string>
+    <string name="reader_liked_default_tag">Posts I Like</string>
+
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
 
@@ -1154,6 +1184,7 @@
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress.com</string>
+    <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -1240,6 +1271,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
@@ -1397,11 +1429,6 @@
     <string name="site_privacy_private_desc">I would like my site to be private, visible only to users I choose</string>
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
-
-    <!-- Static URLs -->
-    <string name="privacy_settings_url" translatable="false">https://en.support.wordpress.com/privacy-settings</string>
-    <string name="language_settings_url" translatable="false">https://en.support.wordpress.com/language-settings</string>
-    <string name="role_info_url" translatable="false">https://en.support.wordpress.com/user-roles/</string>
 
     <string name="date_range_start_date">Start Date</string>
     <string name="date_range_end_date">End Date</string>

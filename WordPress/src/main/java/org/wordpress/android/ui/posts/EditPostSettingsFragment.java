@@ -174,7 +174,7 @@ public class EditPostSettingsFragment extends Fragment
         mFeaturedImageView = (NetworkImageView) mRootView.findViewById(R.id.featuredImage);
         mFeaturedImageButton = (Button) mRootView.findViewById(R.id.addFeaturedImage);
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -370,7 +370,7 @@ public class EditPostSettingsFragment extends Fragment
             mTagsEditText.setText(tags);
         }
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
         }
     }
@@ -644,7 +644,7 @@ public class EditPostSettingsFragment extends Fragment
             mPost.setJSONCategories(new JSONArray(mCategories));
         }
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             mPost.setFeaturedImageId(mFeaturedImageId);
         }
 

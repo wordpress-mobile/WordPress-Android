@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-04 11:51:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
@@ -280,7 +280,6 @@ Language: gl_ES
 	<string name="editor_page_title_placeholder">Título da páxina</string>
 	<string name="editor_post_title_placeholder">Título do artigo</string>
 	<string name="email_address">Correo electrónico</string>
-	<string name="preference_show_visual_editor">Mostrar o editor visual</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Eliminar definitivamente estes comentarios?</string>
 	<string name="dlg_sure_to_delete_comment">Eliminar definitivamente este comentario?</string>

@@ -55,6 +55,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -82,6 +83,8 @@ import org.wordpress.android.ui.media.MediaSourceWPVideos;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaEvents;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -159,6 +162,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
     private Handler mHandler;
+    private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
 
     // Each element is a list of media IDs being uploaded to a gallery, keyed by gallery ID
@@ -187,6 +191,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private Post mPost;
     private Post mOriginalPost;
 
+    private AztecEditorFragment mAztecEditorFragment;
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
@@ -222,6 +227,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
+        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
@@ -435,7 +441,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (mShowNewEditor) {
+        if (mShowNewEditor || mShowAztecEditor) {
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
@@ -608,7 +614,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (itemId == R.id.menu_post_settings) {
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-            if (mShowNewEditor) {
+            if (mShowNewEditor || mShowAztecEditor) {
                 mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
             }
             mViewPager.setCurrentItem(PAGE_SETTINGS);
@@ -664,8 +670,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 PostUtils.trackSavePostAnalytics(mPost);
 
                 PostUploadService.addPostToUpload(mPost);
-                PostUploadService.setLegacyMode(!mShowNewEditor);
+                PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
                 startService(new Intent(EditPostActivity.this, PostUploadService.class));
+                PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getLocalTablePostId());
                 setResult(RESULT_OK);
                 finish();
             }
@@ -789,7 +796,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Update post object from fragment fields
         if (mEditorFragment != null) {
-            if (mShowNewEditor) {
+            if (mShowNewEditor || mShowAztecEditor) {
                 updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                         (String) mEditorFragment.getContent());
             } else {
@@ -860,6 +867,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // Fetch post title and content from editor fields and update the Post object
@@ -884,7 +892,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 // changes have been made, save the post and ask for the post list to refresh.
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (mShowNewEditor) {
+                if (mShowNewEditor || mShowAztecEditor) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                     savePostToDb();
@@ -897,7 +905,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     }
                     savePostToDb();
                 }
+
+                // now set the pending notification alarm to be triggered in the next day, week, and month
+                PendingDraftsNotificationsUtils.scheduleNextNotifications(EditPostActivity.this, mPost);
             }
+
             return true;
         }
 
@@ -915,6 +927,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void saveAndFinish() {
+        if (mShowAztecEditor && mAztecEditorFragment != null) {
+            mAztecEditorFragment.saveContentFromSource();
+        }
+
         new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -951,8 +967,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    // TODO: switch between legacy and new editor here (AB test?)
-                    if (mShowNewEditor) {
+                    // TODO: Remove editor options after testing.
+                    if (mShowAztecEditor) {
+                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
+                        mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
+                        return mAztecEditorFragment;
+                    } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
                     } else {
@@ -990,7 +1010,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         public int getCount() {
-            return (mShowNewEditor ? NUM_PAGES_VISUAL_EDITOR : NUM_PAGES_LEGACY_EDITOR);
+            return ((mShowNewEditor || mShowAztecEditor) ? NUM_PAGES_VISUAL_EDITOR : NUM_PAGES_LEGACY_EDITOR);
         }
     }
 
@@ -1079,7 +1099,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mediaFile == null) {
             return;
         }
-        trackAddMediaEvents(mediaFile.isVideo(), true);
+        trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), mediaId);
         mEditorFragment.appendMediaFile(mediaFile, getMediaUrl(mediaFile), WordPress.imageLoader);
     }
 
@@ -1162,7 +1182,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
                 if (uri != null && stringUri.contains("content:")) {
-                    path = getPathFromContentUri(uri);
+                    path = MediaUtils.getPathFromContentUri(this, uri);
                     if (path == null) {
                         continue;
                     }
@@ -1211,7 +1231,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (post.isLocalDraft() && !mShowNewEditor) {
+                if (post.isLocalDraft() && !mShowNewEditor && !mShowAztecEditor) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -1278,11 +1298,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             // Create an <a href> element around links
             text = AutolinkUtils.autoCreateLinks(text);
-            if (mEditorFragment instanceof EditorFragment) {
-                mEditorFragment.setContent(text);
-            } else {
+            if (mEditorFragment instanceof LegacyEditorFragment) {
                 mEditorFragment.setContent(WPHtml.fromHtml(StringUtils.addPTags(text), this, getPost(),
                         getMaximumThumbnailWidthForEditor()));
+            } else {
+                mEditorFragment.setContent(text);
             }
         }
 
@@ -1522,13 +1542,44 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         task.execute(apiArgs);
     }
 
-    private void trackAddMediaEvents(boolean isVideo, boolean fromMediaLibrary) {
+    /**
+     * Analytics about new media
+     *
+     * @param isVideo Whether is a video or not
+     * @param uri The URI of the media on the device, or null
+     * @param path The path of the media on the device, or null
+     */
+    private void trackAddMediaFromDeviceEvents(boolean isVideo, Uri uri, String path) {
+        if (TextUtils.isEmpty(path) && uri == null) {
+            AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
+            return;
+        }
+
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
+
         if (isVideo) {
-            AnalyticsTracker.track(fromMediaLibrary ? Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY
-                    : Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY);
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY, properties);
         } else {
-            AnalyticsTracker.track(fromMediaLibrary ? Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY
-                    : Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, properties);
+        }
+    }
+
+    /**
+     * Analytics about media already available in the blog's library.
+     *
+     * @param isVideo Whether is a video or not
+     * @param mediaId The ID of the media in the WP blog's library, or null if device media.
+     */
+    private void trackAddMediaFromWPLibraryEvents(boolean isVideo, String mediaId) {
+        if (TextUtils.isEmpty(mediaId)) {
+            AppLog.e(T.MEDIA, "Cannot track media events if mediaId is null!!");
+            return;
+        }
+
+        if (isVideo) {
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY);
+        } else {
+            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
         }
     }
 
@@ -1542,32 +1593,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-        trackAddMediaEvents(isVideo, false);
 
-        if (mShowNewEditor) {
-            // TODO: add video param
-            return addMediaVisualEditor(mediaUri);
+        if (mShowNewEditor || mShowAztecEditor) {
+            return addMediaVisualEditor(mediaUri, isVideo);
         } else {
             return addMediaLegacyEditor(mediaUri, isVideo);
         }
     }
 
-    private String getPathFromContentUri(Uri imageUri) {
-        String path = null;
-        String[] projection = new String[]{MediaStore.Images.Media.DATA};
-        Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
-        if (cur != null && cur.moveToFirst()) {
-            int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-            path = cur.getString(dataColumn);
-        }
-        SqlUtils.closeCursor(cur);
-        return path;
-    }
-
-    private boolean addMediaVisualEditor(Uri imageUri) {
-        String path = "";
+    private boolean addMediaVisualEditor(Uri imageUri, boolean isVideo) {
+        String path;
         if (imageUri.toString().contains("content:")) {
-            path = getPathFromContentUri(imageUri);
+            path = MediaUtils.getPathFromContentUri(this, imageUri);
         } else {
             // File is not in media library
             path = imageUri.toString().replace("file://", "");
@@ -1579,10 +1616,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         Blog blog = WordPress.getCurrentBlog();
-        if (MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
-            // If the user has selected a maximum image width for uploads, rescale the image accordingly
+        // If the user has selected a maximum image width for uploads, rescale the image accordingly
+        if (!isVideo && MediaUtils.getImageWidthSettingFromString(blog.getMaxImageWidth()) != Integer.MAX_VALUE) {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("resize_width", blog.getMaxImageWidth());
+            // Bump analytics about picture resized
+            AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO, properties);
             path = ImageUtils.createResizedImageWithMaxWidth(this, path, Integer.parseInt(blog.getMaxImageWidth()));
+            if (path == null) {
+                AppLog.e(T.EDITOR, "Resized picture was null!");
+                AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR, properties);
+                ToastUtils.showToast(this, R.string.file_error_create, Duration.SHORT);
+                return false;
+            }
         }
+
+        trackAddMediaFromDeviceEvents(isVideo, null, path);
 
         MediaFile mediaFile = queueFileForUpload(path, new ArrayList<String>());
         if (mediaFile != null) {
@@ -1593,6 +1642,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
+        trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
         String mediaTitle;
         if (isVideo) {
             mediaTitle = getResources().getString(R.string.video);

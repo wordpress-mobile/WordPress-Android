@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-03 23:47:21+0000
+Translation-Revision-Date: 2017-02-15 11:05:13+0000
 Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: is
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Engir vefir fundust</string>
+	<string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
+	<string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
+	<string name="preference_editor_type">Skilgreina tegund ritils</string>
+	<string name="preference_editor_visual">Ritþór</string>
+	<string name="preference_editor_legacy">Eldri</string>
+	<string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
+	<string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
+	<string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>
+	<string name="pending_draft_one_week_1">Drögin að ‘%1$s’ bíða þín - vertu viss um að birta þau!</string>
+	<string name="pending_draft_one_day_2">Vissir þú að ‘%1$s’ er enn í drögum? Birtu!</string>
+	<string name="pending_draft_one_day_1">Þú skrifaðir drög að ‘%1$s’ í gær. Ekki gleyma að birta!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Jetpack viðbótin er tengd, en tölfræðieiningin er ekki virk. Hafðu samband við vefstjóra.</string>
+	<string name="jetpack_stats_module_disabled_message">Jetpack viðbótin er tengd, en tölfræðieiningin er ekki virk. Viltu virkja tölfræðina?</string>
+	<string name="jetpack_info">Jetpack upplýsingar</string>
 	<string name="reader_photo_by">Mynd eftir %s</string>
 	<string name="all_your_sites">Allir mínir vefir</string>
 	<string name="reader_label_visit">Heimsækja</string>
 	<string name="pending_draft_more">Þú hefur skrifað %d drög en aldrei birt þau. Ýttu til þess að skoða.</string>
-	<string name="pending_draft_one">Þú skrifaðir drög að \'%1$s\' fyrir %2$d dögum síðan en birtir aldrei.</string>
-	<string name="pending_draft_one_generic">Þú skrifaðir drög að \'%s\' en birtir aldrei.</string>
 	<string name="no_default_app_available_to_open_link">Gat ekki opnað tengilinn</string>
 	<string name="notification_pending_drafts">Láta mig vita ef drög bíða</string>
 	<string name="confirm_discard_changes">Hætta við óvistaðar breytingar?</string>
@@ -129,8 +142,8 @@ Language: is
 	<string name="invite_names_title">Notendanöfn eða netföng</string>
 	<string name="invite_people">Bjóða fólki</string>
 	<string name="send_link">Senda tengil</string>
-	<string name="my_site_header_external">Utanaðkomandi</string>
 	<string name="signup_succeed_signin_failed">Reikningurinn þinn hefur verið búinn til en villa kom upp við að skrá þig\n        inn. Reyndu að skrá þig inn með nýja notandanafinu og lykilorðinu.</string>
+	<string name="my_site_header_external">Út á við</string>
 	<string name="label_clear_search_history">Hreinsa leitarsögu</string>
 	<string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
 	<string name="reader_empty_posts_in_search_description">Engar færslur fundust fyrir %s á þínu tungumáli</string>
@@ -182,8 +195,8 @@ Language: is
 	<string name="plans_post_purchase_title_video">Lífgaðu upp á færslurnar með myndbandi</string>
 	<string name="plans_post_purchase_button_customize">Sérsníða vefinn minn</string>
 	<string name="plans_post_purchase_text_customize">Þú hefur núna aðgang að sérsniðnum leturgerðum, litum og möguleikum á CSS breytingum.</string>
-	<string name="plans_post_purchase_title_customize">Sérsniða letur &amp; liti</string>
 	<string name="plans_post_purchase_text_intro">Vefurinn þinn er að springa úr spenningi! Skoðaðu nýja möguleika vefsins þíns og veldu hvar þú vilt byrja.</string>
+	<string name="plans_post_purchase_title_customize">Sérsniða letur og liti</string>
 	<string name="plans_post_purchase_title_intro">Þetta er allt þitt, til hamingju!</string>
 	<string name="plan">Plön</string>
 	<string name="plans">Áskriftarleiðir</string>
@@ -244,8 +257,8 @@ Language: is
 	<string name="post_format_standard">Staðlað</string>
 	<string name="post_format_aside">Innskot</string>
 	<string name="post_format_audio">Hljóðupptaka</string>
-	<string name="notif_events">Upplýsingar um WordPress.com námskeið og viðburði (á netinu &amp; í kjötheimum).</string>
-	<string name="notif_surveys">Tækifæri til þess að taka þátt í WordPress.com rannsóknum &amp; könnunum.</string>
+	<string name="notif_events">Upplýsingar um WordPress.com námskeið og viðburði (á netinu og í kjötheimum).</string>
+	<string name="notif_surveys">Tækifæri til þess að taka þátt í WordPress.com rannsóknum og könnunum.</string>
 	<string name="notif_tips">Ábendingar um hvernig þú færð sem mest út úr WordPress.com.</string>
 	<string name="notif_community">Samfélag</string>
 	<string name="notif_suggestions">Tillögur</string>
@@ -291,7 +304,6 @@ Language: is
 	<string name="editor_page_title_placeholder">Titill síðu</string>
 	<string name="editor_post_title_placeholder">Titill</string>
 	<string name="email_address">Netfang</string>
-	<string name="preference_show_visual_editor">Sýna sjónrænan ritil</string>
 	<string name="preference_editor">Ritstjóri</string>
 	<string name="dlg_sure_to_delete_comments">Eyða þessum athugasemdum endanlega?</string>
 	<string name="dlg_sure_to_delete_comment">Eyða þessari athugasemd endanlega?</string>
@@ -451,7 +463,7 @@ Language: is
 	<string name="theme_view">Skoða</string>
 	<string name="theme_done">LOKIÐ</string>
 	<string name="theme_manage_site">SÝSLA MEÐ VEF</string>
-	<string name="theme_try_and_customize">Prófaðu &amp; sérsníddu</string>
+	<string name="theme_try_and_customize">Prófaðu og sérsníddu</string>
 	<string name="theme_activate">Virkja</string>
 	<string name="title_activity_theme_support">Þemu</string>
 	<string name="active">Virkir</string>
@@ -582,9 +594,9 @@ Language: is
 	<string name="me_disconnect_from_wordpress_com">Skrá út úr WordPress.com</string>
 	<string name="me_btn_login_logout">Innskrá/útskrá</string>
 	<string name="me_connect_to_wordpress_com">WordPress.com innskráning</string>
-	<string name="me_btn_support">Hjálp &amp; aðstoð</string>
 	<string name="account_settings">Stillingar notandareiknings</string>
 	<string name="site_picker_cant_hide_current_site">"%s" var ekki falið þar sem það er núverandi vefur</string>
+	<string name="me_btn_support">Hjálp og aðstoð</string>
 	<string name="site_picker_create_dotcom">Stofna WordPress.com vef</string>
 	<string name="site_picker_add_self_hosted">Bæta við sjálf-hýstum vef</string>
 	<string name="site_picker_add_site">Bæta við vef</string>
@@ -686,7 +698,6 @@ Language: is
 	<string name="stats_entry_clicks_link">Tengill</string>
 	<string name="stats_view_countries">Lönd</string>
 	<string name="stats_comments_by_authors">Eftir höfundum</string>
-	<string name="stats_comments_by_posts_and_pages">Eftir færslum &amp; síðum</string>
 	<string name="stats_entry_top_commenter">Höfundur</string>
 	<string name="stats_followers_days">%1$d dagar</string>
 	<string name="stats_followers_a_minute_ago">fyrir mínútu síðan</string>
@@ -700,9 +711,7 @@ Language: is
 	<string name="stats_followers_a_year">Á ári</string>
 	<string name="stats_empty_clicks_title">Engir smellir skráðir</string>
 	<string name="stats_empty_geoviews">Engin lönd skráð</string>
-	<string name="stats_empty_top_posts_title">Engir póstar eða síður heimsóttar</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
-	<string name="stats_view_top_posts_and_pages">Færslur &amp; síður</string>
 	<string name="stats_likes">Líkar við</string>
 	<string name="stats_visitors">Gestir</string>
 	<string name="stats_empty_referrers_title">Engar tilvísanir skráðar</string>
@@ -731,6 +740,9 @@ Language: is
 	<string name="stats_empty_referrers_desc">Lærðu meira um sýnileika vefsins þíns með því að skoða vefina og leitarvélarnar sem mesta umferðin kemur frá á vefinn þinn</string>
 	<string name="stats_empty_top_authors_desc">Haltu utan um flettingar á færslu hvers höfundar og þysjaðu inn til þess að uppgötva hvað er vinsælasta efnið hjá hverjum höfundi.</string>
 	<string name="stats_empty_video_desc">Ef þú hefur hlaðið inn myndband með VideoPress, sjáðu þá hversu oft það hefur verið spilað.</string>
+	<string name="stats_comments_by_posts_and_pages">Eftir færslum og síðum</string>
+	<string name="stats_empty_top_posts_title">Engir færslur eða síður heimsóttar</string>
+	<string name="stats_view_top_posts_and_pages">Færslur og síður</string>
 	<string name="ssl_certificate_details">Upplýsingar</string>
 	<string name="cab_selected">%d valið</string>
 	<string name="confirm_delete_media">Eyða völdu atriði?</string>
@@ -804,13 +816,13 @@ Language: is
 	<string name="reader_label_tag_preview">Færslur merktar %s</string>
 	<string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>
 	<string name="reader_page_followed_tags">Merki sem ég fylgi</string>
-	<string name="reader_title_subs">Merki &amp; blogg</string>
 	<string name="reader_empty_recommended_blogs">Engin blogg til að mæla með</string>
 	<string name="reader_hint_add_tag_or_url">Sláðu inn vefslóð eða merki til þess að fylgja</string>
 	<string name="reader_title_blog_preview">Blogg lesara</string>
 	<string name="reader_title_tag_preview">Merki lesara</string>
 	<string name="reader_toast_err_already_follow_blog">Þú fylgir þessu bloggi nú þegar</string>
 	<string name="reader_toast_err_follow_blog">Tókst ekki að fylgja þessu bloggi</string>
+	<string name="reader_title_subs">Merki og blogg</string>
 	<string name="media_empty_list">Engar skrár</string>
 	<string name="saving">Vista...</string>
 	<string name="ptr_tip_message">Ábending: Dragðu niður til að endurfríska</string>
@@ -1090,7 +1102,6 @@ Language: is
 	<string name="all">Allt</string>
 	<string name="media_gallery_type_squares">Kassar</string>
 	<string name="custom_date">Sérsniðin dagsetning</string>
-	<string name="stats_view_tags_and_categories">Merki &amp; flokkar</string>
 	<string name="media_edit_failure">Uppfærsla mistókst</string>
 	<string name="passcode_enter_old_passcode">Sláðu inn gamla PIN númerið þitt</string>
 	<string name="passcode_enter_passcode">Sláðu inn PIN númer</string>
@@ -1106,14 +1117,15 @@ Language: is
 	<string name="theme_set_success">Þema skilgreint</string>
 	<string name="theme_auth_error_title">Tókst ekki að sækja þemu</string>
 	<string name="stats_view_visitors_and_views">Gestir og flettingar</string>
+	<string name="stats_view_tags_and_categories">Merki og flokkar</string>
 	<string name="upload">Hlaða upp</string>
 	<string name="discard">Henda</string>
 	<string name="notifications">Tilkynningar</string>
 	<string name="new_notifications">%d nýjar tilkynningar</string>
-	<string name="more_notifications">og %d til viðbótar.</string>
 	<string name="sign_in">Innskráning</string>
 	<string name="follows">Fylgist með</string>
 	<string name="note_reply_successful">Svar birt</string>
+	<string name="more_notifications">og %d til viðbótar.</string>
 	<string name="loading">Hleð...</string>
 	<string name="httppassword">HTTP lykilorð</string>
 	<string name="httpuser">HTTP notandanafn</string>
@@ -1130,11 +1142,11 @@ Language: is
 	<string name="posts">Færslur</string>
 	<string name="page">Síða</string>
 	<string name="post">Færsla</string>
-	<string name="featured">Nota sem einkennandi mynd</string>
 	<string name="anonymous">Nafnlaust</string>
 	<string name="caption">Myndatexti (valkvæmt)</string>
 	<string name="no_network_title">Ekkert net tiltækt</string>
 	<string name="featured_in_post">Hafa mynd með í efni færslu</string>
+	<string name="featured">Nota sem einkennismynd</string>
 	<string name="ok">Í lagi</string>
 	<string name="blogusername">bloggnotandanafn</string>
 	<string name="scaled_image">Breidd minnkaðrar myndar</string>

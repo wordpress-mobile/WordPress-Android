@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-05 02:03:38+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: vi_VN
 -->
 <resources>
@@ -210,7 +210,6 @@ Language: vi_VN
 	<string name="editor_page_title_placeholder">Tiêu đề Trang</string>
 	<string name="editor_post_title_placeholder">Tiêu đề Bài viết</string>
 	<string name="email_address">Địa chỉ email</string>
-	<string name="preference_show_visual_editor">Hiện trình biên tập trực quan</string>
 	<string name="preference_editor">Trình biên tập</string>
 	<string name="dlg_sure_to_delete_comments">Xóa vĩnh viễn những bình luận này?</string>
 	<string name="dlg_sure_to_delete_comment">Xóa vĩnh viễn bình luận này?</string>

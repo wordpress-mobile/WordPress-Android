@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,7 +20,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPActivityUtils;
 
 /*
  * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
@@ -25,8 +29,11 @@ public class ReaderBlogFragment extends Fragment
     private ReaderRecyclerView mRecyclerView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
-    private boolean mWasPaused;
+    private String mSearchFilter;
+    private boolean mIgnoreNextSearch;
+
     private static final String ARG_BLOG_TYPE = "blog_type";
+    private static final String KEY_SEARCH_FILTER = "search_filter";
 
     static ReaderBlogFragment newInstance(ReaderBlogType blogType) {
         AppLog.d(AppLog.T.READER, "reader blog fragment > newInstance");
@@ -48,6 +55,7 @@ public class ReaderBlogFragment extends Fragment
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.READER, "reader blog fragment > restoring instance state");
+            mIgnoreNextSearch = true;
             restoreState(savedInstanceState);
         }
     }
@@ -56,6 +64,10 @@ public class ReaderBlogFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mRecyclerView = (ReaderRecyclerView) view.findViewById(R.id.recycler_view);
+
+        // options menu (with search) only appears for followed blogs
+        setHasOptionsMenu(getBlogType() == ReaderBlogType.FOLLOWED);
+
         return view;
     }
 
@@ -72,7 +84,11 @@ public class ReaderBlogFragment extends Fragment
                     emptyView.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
-                    emptyView.setText(R.string.reader_empty_followed_blogs_title);
+                    if (getBlogAdapter().hasSearchFilter()) {
+                        emptyView.setText(R.string.reader_empty_followed_blogs_search_title);
+                    } else {
+                        emptyView.setText(R.string.reader_empty_followed_blogs_title);
+                    }
                     break;
             }
         }
@@ -83,39 +99,83 @@ public class ReaderBlogFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView.setAdapter(getBlogAdapter());
-        refresh();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
-        outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        if (getBlogAdapter().hasSearchFilter()) {
+            outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
+        }
         super.onSaveInstanceState(outState);
     }
 
     private void restoreState(Bundle args) {
         if (args != null) {
-            mWasPaused = args.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
+            }
+            if (args.containsKey(KEY_SEARCH_FILTER)) {
+                mSearchFilter = args.getString(KEY_SEARCH_FILTER);
             }
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mWasPaused = true;
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        // refresh the adapter if the fragment is resuming from a paused state so that changes
-        // made in another activity (such as follow state) are reflected here
-        if (mWasPaused) {
-            mWasPaused = false;
-            refresh();
+        refresh();
+    }
+
+    /*
+     * note this will only be called for followed blogs
+     */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.reader_subs, menu);
+
+        MenuItem searchMenu = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) searchMenu.getActionView();
+        searchView.setQueryHint(getString(R.string.reader_hint_search_followed_sites));
+
+        MenuItemCompat.setOnActionExpandListener(searchMenu, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                return true;
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setSearchFilter(query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // when the fragment is recreated this will be called with an empty query
+                // string, causing the existing search query to be lost - work around this
+                // by ignoring the next search performed after recreation
+                if (mIgnoreNextSearch) {
+                    mIgnoreNextSearch = false;
+                    AppLog.i(AppLog.T.READER, "reader subs > ignoring search");
+                } else {
+                    setSearchFilter(newText);
+                }
+                return false;
+            }
+        });
+
+        // make sure the search view is expanded and reflects the current filter
+        if (!TextUtils.isEmpty(mSearchFilter)) {
+            searchMenu.expandActionView();
+            searchView.clearFocus();
+            searchView.setQuery(mSearchFilter, false);
         }
     }
 
@@ -126,14 +186,18 @@ public class ReaderBlogFragment extends Fragment
         }
     }
 
+    private void setSearchFilter(String constraint) {
+        mSearchFilter = constraint;
+        getBlogAdapter().setSearchFilter(constraint);
+    }
+
     private boolean hasBlogAdapter() {
         return (mAdapter != null);
     }
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            Context context = WPActivityUtils.getThemedContext(getActivity());
-            mAdapter = new ReaderBlogAdapter(context, getBlogType());
+            mAdapter = new ReaderBlogAdapter(getBlogType(), mSearchFilter);
             mAdapter.setBlogClickListener(this);
             mAdapter.setDataLoadedListener(new ReaderInterfaces.DataLoadedListener() {
                 @Override

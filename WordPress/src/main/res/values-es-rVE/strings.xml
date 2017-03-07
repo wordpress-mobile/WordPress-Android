@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-06 15:48:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: es_VE
 -->
 <resources>
@@ -283,7 +283,6 @@ Language: es_VE
 	<string name="editor_page_title_placeholder">Título página</string>
 	<string name="editor_post_title_placeholder">Título entrada</string>
 	<string name="email_address">Correo electrónico</string>
-	<string name="preference_show_visual_editor">Mostrar editor visual</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">¿Eliminar de forma permanente estos comentarios?</string>
 	<string name="dlg_sure_to_delete_comment">¿Eliminar de forma permanente este comentario?</string>

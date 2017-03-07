@@ -2,6 +2,8 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -18,8 +20,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
     // these are the default tags, which aren't localized in the /read/menu/ response
     private static final String TAG_TITLE_LIKED = "Posts I Like";
     private static final String TAG_TITLE_DISCOVER = "Discover";
-    public  static final String TAG_TITLE_DEFAULT = TAG_TITLE_DISCOVER;
     public  static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public  static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
 
     public ReaderTag(String slug,
                      String displayName,
@@ -174,7 +176,17 @@ public class ReaderTag implements Serializable, FilterCriteria {
     @Override
     public String getLabel() {
         if (tagType == ReaderTagType.DEFAULT) {
-            return getTagTitle();
+            // translate default tags
+            // ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5240
+            if (isDiscover()) {
+                return WordPress.getContext().getString(R.string.reader_discover_default_tag);
+            } else if (isFollowedSites()) {
+                return WordPress.getContext().getString(R.string.reader_followed_default_tag);
+            } else if (isPostsILike()) {
+                return WordPress.getContext().getString(R.string.reader_liked_default_tag);
+            } else {
+                return getTagTitle();
+            }
         } else if (isTagDisplayNameAlphaNumeric()) {
             return getTagDisplayName().toLowerCase();
         } else if (hasTagTitle()) {

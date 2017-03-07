@@ -232,7 +232,15 @@ public class PostUploadService extends Service {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
 
-            String descriptionContent = processPostMedia(mPost.getDescription());
+            String descriptionContent = mPost.getDescription();
+            // Get rid of ZERO WIDTH SPACE character that the Visual editor can insert
+            // at the beginning of the content.
+            // http://www.fileformat.info/info/unicode/char/200b/index.htm
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/5009
+            if (descriptionContent.length() > 0 && descriptionContent.charAt(0) == '\u200B') {
+                descriptionContent = descriptionContent.substring(1, descriptionContent.length());
+            }
+            descriptionContent = processPostMedia(descriptionContent);
 
             String moreContent = "";
             if (!TextUtils.isEmpty(mPost.getMoreText())) {
@@ -353,12 +361,20 @@ public class PostUploadService extends Service {
                 if (featuredImageID != -1) {
                     contentStruct.put("wp_post_thumbnail", featuredImageID);
                 }
-            } else if (mPost.featuredImageHasChanged()) {
-                if (mPost.getFeaturedImageId() < 1 && !mPost.isLocalDraft()) {
-                    // The featured image was removed from a live post
-                    contentStruct.put("wp_post_thumbnail", "");
-                } else {
-                    contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+            } else {
+                if (mPost.isLocalDraft()) {
+                    // publishing a new post.
+                    if (mPost.getFeaturedImageId() > 1) {
+                        contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                    }
+                } else if (mPost.featuredImageHasChanged()) {
+                    // Live post
+                    if (mPost.getFeaturedImageId() < 1) {
+                        // The featured image was removed from a live post
+                        contentStruct.put("wp_post_thumbnail", "");
+                    } else {
+                        contentStruct.put("wp_post_thumbnail", mPost.getFeaturedImageId());
+                    }
                 }
             }
 

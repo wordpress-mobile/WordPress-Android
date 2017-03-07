@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-25 15:43:25+0000
+Translation-Revision-Date: 2017-02-17 11:43:21+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Neodpovídají žádné weby</string>
+	<string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
+	<string name="visual_editor_disabled">Vizuální editor zakázán</string>
+	<string name="preference_editor_visual">Vizuální</string>
+	<string name="preference_editor_legacy">Odkaz</string>
+	<string name="preference_editor_type">Nastavit typ editoru</string>
+	<string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
+	<string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>
+	<string name="pending_draft_one_week_1">Váš koncept \'%1$s\' čeká na vás - publikujte ho!</string>
+	<string name="pending_draft_one_day_2">Věděli jste, že \'%1$s\' je stále koncept? Publikujte ho!</string>
+	<string name="pending_draft_one_day_1">Vaše včerejší koncepty \'%1$s\'. Nezapomeňte je publikovat!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Plugin Jetpack je připojen, ale modul statistik není aktivní. Kontaktujte administrátora webu.</string>
+	<string name="jetpack_stats_module_disabled_message">Plugin Jetpack je připojen, ale modul statistik není aktivní. Chcete aktivovat statistiky?</string>
+	<string name="jetpack_info">Jetpack info</string>
 	<string name="reader_photo_by">Fotka od %s</string>
 	<string name="reader_label_visit">Návštěva</string>
 	<string name="all_your_sites">Všechny moje stránky</string>
 	<string name="pending_draft_more">Váš koncept příspěvku %d nebude nikdy publikován. Klepnutím to zkontrolujete.</string>
-	<string name="pending_draft_one">Váš koncept \'%1$s\' starý %2$d dní nebude nikdy publikován.</string>
-	<string name="pending_draft_one_generic">Váš koncept \'%s\' nebude nikdy publikován.</string>
 	<string name="no_default_app_available_to_open_link">Nelze otevřít odkaz</string>
 	<string name="notification_pending_drafts">Upozornit na čekající koncepty</string>
 	<string name="invalid_verification_code_format">Musí být šestimístné číslo</string>
@@ -291,7 +304,6 @@ Language: cs_CZ
 	<string name="editor_page_title_placeholder">Název stránky</string>
 	<string name="editor_post_title_placeholder">Název příspěvku</string>
 	<string name="email_address">Emailová adresa</string>
-	<string name="preference_show_visual_editor">Zobrazit vizuální editor</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Smazat trvale tyto komentáře?</string>
 	<string name="dlg_sure_to_delete_comment">Smazat trvale tento komentář?</string>

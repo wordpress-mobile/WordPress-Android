@@ -11,7 +11,6 @@ import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
@@ -51,7 +50,6 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.notifications.services.NotificationsPendingDraftsService;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -277,7 +275,6 @@ public class WordPress extends MultiDexApplication {
         if (AccountHelper.isSignedInWordPressDotCom()) {
             AccountHelper.getDefaultAccount().fetchAccountDetails();
             NotificationsUpdateService.startService(getContext());
-            NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
         }
     }
 
@@ -368,35 +365,6 @@ public class WordPress extends MultiDexApplication {
         return mRestClientUtilsVersion0;
     }
 
-    /**
-     * enables "strict mode" for testing - should NEVER be used in release builds
-     */
-    private static void enableStrictMode() {
-        // return if the build is not a debug build
-        if (!BuildConfig.DEBUG) {
-            AppLog.e(T.UTILS, "You should not call enableStrictMode() on a non debug build");
-            return;
-        }
-
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()
-                .penaltyLog()
-                .penaltyFlashScreen()
-                .build());
-
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectActivityLeaks()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .detectLeakedRegistrationObjects() // <-- requires Jelly Bean
-                .penaltyLog()
-                .build());
-
-        AppLog.w(T.UTILS, "Strict mode enabled");
-    }
-
     public boolean isGooglePlayServicesAvailable(Activity activity) {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
@@ -425,11 +393,11 @@ public class WordPress extends MultiDexApplication {
      * <p/>
      * If the current blog is not already set, try and determine the last active blog from the last
      * time the application was used. If we're not able to determine the last active blog, try to
-     * select the first visible blog. If there are no more visible blogs, try to select the first
-     * hidden blog. If there are no blogs at all, return null.
+     * select the first visible (and not automated-transfer) blog. If there are no more visible blogs,
+     * try to select the first hidden blog. If there are no blogs at all, return null.
      */
     public static Blog getCurrentBlog() {
-        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId())) {
+        if (currentBlog == null || !wpDB.isDotComBlogVisible(currentBlog.getRemoteBlogId()) || currentBlog.isAutomatedTransfer()) {
             attemptToRestoreLastActiveBlog();
         }
 
@@ -463,12 +431,15 @@ public class WordPress extends MultiDexApplication {
             for (Map<String, Object> account : accounts) {
                 int id = Integer.valueOf(account.get("id").toString());
                 if (id == lastBlogId) {
-                    setCurrentBlog(id);
-                    return currentBlog;
+                    Blog lastBlog  = getBlog(id);
+                    if (lastBlog != null && !lastBlog.isAutomatedTransfer()) {
+                        setCurrentBlog(id);
+                        return currentBlog;
+                    }
                 }
             }
         }
-        // Previous active blog is hidden or deleted
+        // Previous active blog is hidden or deleted or has become an automated transfer blog
         currentBlog = null;
         return null;
     }
@@ -682,7 +653,7 @@ public class WordPress extends MultiDexApplication {
 
     private static void attemptToRestoreLastActiveBlog() {
         if (setCurrentBlogToLastActive() == null) {
-            int blogId = WordPress.wpDB.getFirstVisibleBlogId();
+            int blogId = WordPress.wpDB.getFirstVisibleAndNonAutomatedTransferBlogId();
             if (blogId == 0) {
                 blogId = WordPress.wpDB.getFirstHiddenBlogId();
             }
@@ -861,7 +832,6 @@ public class WordPress extends MultiDexApplication {
                     } else {
                         NotificationsUpdateService.startService(getContext());
                     }
-                    NotificationsPendingDraftsService.checkPrefsAndStartService(getContext());
                 }
 
                 // Rate limited PN Token Update

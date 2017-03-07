@@ -1,11 +1,13 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +21,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,7 +51,7 @@ public class AnalyticsUtils {
      * Utility method to refresh mixpanel metadata.
      *
      * @param username WordPress.com username
-     * @param email WordPress.com email address
+     * @param email    WordPress.com email address
      */
     public static void refreshMetadata(String username, String email) {
         AnalyticsMetadata metadata = new AnalyticsMetadata();
@@ -94,7 +97,6 @@ public class AnalyticsUtils {
      * Bump Analytics for the passed Stat and CURRENT blog details into properties.
      *
      * @param stat The Stat to bump
-     *
      */
     public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat) {
         trackWithCurrentBlogDetails(stat, null);
@@ -103,9 +105,8 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics for the passed Stat and CURRENT blog details into properties.
      *
-     * @param stat The Stat to bump
+     * @param stat       The Stat to bump
      * @param properties Properties to attach to the event
-     *
      */
     public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat, Map<String, Object> properties) {
         trackWithBlogDetails(stat, WordPress.getCurrentBlog(), properties);
@@ -116,7 +117,6 @@ public class AnalyticsUtils {
      *
      * @param stat The Stat to bump
      * @param blog The blog object
-     *
      */
     public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog blog) {
         trackWithBlogDetails(stat, blog, null);
@@ -125,10 +125,9 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics for the passed Stat and add blog details into properties.
      *
-     * @param stat The Stat to bump
-     * @param blog The blog object
+     * @param stat       The Stat to bump
+     * @param blog       The blog object
      * @param properties Properties to attach to the event
-     *
      */
     public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog blog, Map<String, Object> properties) {
         if (blog == null || (!blog.isDotcomFlag() && !blog.isJetpackPowered())) {
@@ -160,12 +159,11 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics and add blog_id into properties
      *
-     * @param stat The Stat to bump
+     * @param stat   The Stat to bump
      * @param blogID The REMOTE blog ID.
-     *
      */
     public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Long blogID) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         if (blogID != null) {
             properties.put(BLOG_ID_KEY, blogID);
         }
@@ -175,9 +173,8 @@ public class AnalyticsUtils {
     /**
      * Bump Analytics and add blog_id into properties
      *
-     * @param stat The Stat to bump
+     * @param stat   The Stat to bump
      * @param blogID The REMOTE blog ID.
-     *
      */
     public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, String blogID) {
         try {
@@ -193,14 +190,13 @@ public class AnalyticsUtils {
      *
      * @param stat The Stat to bump
      * @param post The reader post to track
-     *
      */
     public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post) {
         if (post == null) return;
 
         // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
         // RSS pass should pass: feed_id, feed_item_id, is_jetpack
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         if (post.isWP() || post.isJetpack) {
             properties.put(BLOG_ID_KEY, post.blogId);
             properties.put(POST_ID_KEY, post.postId);
@@ -223,7 +219,7 @@ public class AnalyticsUtils {
     }
 
     public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(BLOG_ID_KEY, blogId);
         properties.put(POST_ID_KEY, postId);
 
@@ -232,7 +228,7 @@ public class AnalyticsUtils {
 
     public static void trackWithBlogPostDetails(AnalyticsTracker.Stat stat, String blogId, String postId, int
             commentId) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(BLOG_ID_KEY, blogId);
         properties.put(POST_ID_KEY, postId);
         properties.put(COMMENT_ID_KEY, commentId);
@@ -241,7 +237,7 @@ public class AnalyticsUtils {
     }
 
     public static void trackWithFeedPostDetails(AnalyticsTracker.Stat stat, long feedId, long feedItemId) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(FEED_ID_KEY, feedId);
         properties.put(FEED_ITEM_ID_KEY, feedItemId);
 
@@ -251,13 +247,12 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking
      *
-     * @param stat The Stat to bump
+     * @param stat   The Stat to bump
      * @param action The Intent action the app was started with
-     * @param data The data URI the app was started with
-     *
+     * @param data   The data URI the app was started with
      */
     public static void trackWithDeepLinkData(AnalyticsTracker.Stat stat, String action, Uri data) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(INTENT_ACTION, action);
         properties.put(INTENT_DATA, data != null ? data.toString() : null);
 
@@ -267,12 +262,11 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking but then fell back to external browser
      *
-     * @param stat The Stat to bump
+     * @param stat           The Stat to bump
      * @param interceptedUri The fallback URI the app was started with
-     *
      */
     public static void trackWithInterceptedUri(AnalyticsTracker.Stat stat, String interceptedUri) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(INTERCEPTED_URI, interceptedUri);
 
         AnalyticsTracker.track(stat, properties);
@@ -281,12 +275,11 @@ public class AnalyticsUtils {
     /**
      * Track when app launched via deep-linking but then fell back to external browser
      *
-     * @param stat The Stat to bump
+     * @param stat                 The Stat to bump
      * @param interceptorClassname The name of the class that handles the intercept by default
-     *
      */
     public static void trackWithDefaultInterceptor(AnalyticsTracker.Stat stat, String interceptorClassname) {
-        Map<String, Object> properties =  new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put(INTERCEPTOR_CLASSNAME, interceptorClassname);
 
         AnalyticsTracker.track(stat, properties);
@@ -352,4 +345,62 @@ public class AnalyticsUtils {
         return properties;
     }
 
+    public static Map<String, Object> getMediaProperties(Context context, boolean isVideo, Uri mediaURI, String path) {
+        Map<String, Object> properties = new HashMap<>();
+        if(context == null) {
+            AppLog.e(AppLog.T.MEDIA, "In order to track media properties Context cannot be null.");
+            return properties;
+        }
+        if(mediaURI == null && TextUtils.isEmpty(path)) {
+            AppLog.e(AppLog.T.MEDIA, "In order to track media properties mediaURI and path cannot be both null!!");
+            return properties;
+        }
+
+        if(mediaURI != null) {
+            if (mediaURI.toString().contains("content:")) {
+                path = MediaUtils.getPathFromContentUri(context, mediaURI);
+            } else {
+                // File is not in media library
+                path = mediaURI.toString().replace("file://", "");
+            }
+        }
+
+        if (TextUtils.isEmpty(path) ) {
+            return  properties;
+        }
+
+        // File not found
+        File file = new File(path);
+        try {
+            if (!file.exists()) {
+                AppLog.e(AppLog.T.MEDIA, "Can't access the media file. It doesn't exists anymore!! Properties are not being tracked.");
+                return properties;
+            }
+        } catch (SecurityException e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't access the media file. Properties are not being tracked.", e);
+            return properties;
+        }
+
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        properties.put("mime", mimeType);
+
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+        properties.put("ext", fileExtension);
+
+        if (!isVideo) {
+            int[] dimensions = ImageUtils.getImageSize(Uri.fromFile(file), context);
+            double megapixels = dimensions[0] * dimensions[1];
+            megapixels = megapixels / 1000000;
+            megapixels = Math.floor(megapixels);
+            properties.put("megapixels", (int) megapixels);
+        } else {
+            long videoDurationMS = MediaUtils.getVideoDurationMS(context, file);
+            properties.put("duration_secs", (int)videoDurationMS/1000);
+        }
+
+        properties.put("bytes", file.length());
+
+        return  properties;
+    }
 }

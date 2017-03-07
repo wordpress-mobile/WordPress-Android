@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-28 10:51:02+0000
+Translation-Revision-Date: 2017-02-15 08:15:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Geen sites gevonden</string>
+	<string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
+	<string name="visual_editor_disabled">Visuele editor uitgeschakeld</string>
+	<string name="preference_editor_visual">Visueel</string>
+	<string name="preference_editor_legacy">Ouderwets</string>
+	<string name="preference_editor_type">Editor type instellen</string>
+	<string name="pending_draft_one_generic">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
+	<string name="pending_draft_one_month">Niet weggaan! \'%1$s\' moet nog gepubliceerd worden.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' blijft een concept. Vergeet niet deze te publiceren!</string>
+	<string name="pending_draft_one_week_1">Je concept \'%1$s\' wacht op je - vergeet niet deze te publiceren!</string>
+	<string name="pending_draft_one_day_2">Wist je dat \'%1$s\' nog steeds een concept is? Publiceren maar!</string>
+	<string name="pending_draft_one_day_1">Je hebt gisteren \'%1$s\' opgeslagen als concept. Vergeet niet deze te publiceren!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">De Jetpack plugin is verbonden, maar de Stats module is niet actief. Neem contact op met de site beheerder.</string>
+	<string name="jetpack_stats_module_disabled_message">De Jetpack plugin is verbonden, maar de Stats module is niet actief. Wil je Stats activeren?</string>
+	<string name="jetpack_info">Jetpack info</string>
+	<string name="reader_photo_by">Foto van %s</string>
+	<string name="reader_label_visit">Bezoek</string>
+	<string name="all_your_sites">Al mijn sites</string>
+	<string name="pending_draft_more">Je hebt %d berichten als concept opgeslagen, maar ze nooit gepubliceerd. Tik om ze te controleren.</string>
+	<string name="no_default_app_available_to_open_link">Kan de link niet openen</string>
+	<string name="notification_pending_drafts">Geef me een melding van openstaande concepten</string>
+	<string name="invalid_verification_code_format">Moet een zescijferig nummer zijn</string>
+	<string name="confirm_discard_changes">Niet-opgeslagen wijzigingen verwijderen?</string>
+	<string name="swipe_for_more">Veeg voor meer</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com of gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Je hebt geen toestemming om dit bericht te lezen. Gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Je kunt niet liken terwijl je bent uitgelogd bij WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Je hebt die reactie al geliket</string>
+	<string name="reader_toast_err_comment_not_found">Reactie niet gevonden.</string>
+	<string name="reader_toast_err_cannot_like_post">Kan dit bericht niet liken</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com-bericht</string>
+	<string name="reader_title_deeplink">WordPress Reader</string>
+	<string name="error_notif_q_action_reply">Kan niet reageren op reactie. Probeer het later opnieuw.</string>
+	<string name="error_notif_q_action_approve">Kan reactie niet goedkeuren. Probeer het later opnieuw.</string>
+	<string name="error_notif_q_action_like">Kan reactie niet liken. Probeer het later opnieuw.</string>
+	<string name="notifications_label_new_notifications_subtitle">Tik om ze te tonen</string>
+	<string name="notifications_label_new_notifications">Nieuwe meldingen</string>
+	<string name="comment_q_action_replying">Bezig met reageren...</string>
+	<string name="comment_q_action_approving">Bezig met goedkeuren...</string>
+	<string name="comment_q_action_liking">Bezig met liken...</string>
+	<string name="comment_q_action_processing">Bezig met verwerken…</string>
+	<string name="comment_q_action_done_generic">Actie voltooid.</string>
+	<string name="comment_liked">Reactie geliket</string>
+	<string name="signout">Uitloggen</string>
+	<string name="sign_in_wpcom">Inloggen op WordPress.com</string>
 	<string name="reader_label_global_related_posts">Meer op WordPress.com</string>
 	<string name="reader_label_local_related_posts">Meer in %s</string>
 	<string name="preference_open_device_settings">Open apparaat instellingen</string>
@@ -97,6 +143,7 @@ Language: nl
 	<string name="invite_people">Mensen uitnodigen</string>
 	<string name="my_site_header_external">Extern</string>
 	<string name="send_link">Stuur link</string>
+	<string name="signup_succeed_signin_failed">Je account is aangemaakt maar er is een fout opgetreden bij het\n inloggen. Probeer je in te loggen met je nieuwe gebruikersnaam en wachtwoord.</string>
 	<string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
 	<string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
 	<string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
@@ -131,6 +178,7 @@ Language: nl
 	<string name="check_your_email">Controleer je e-mail</string>
 	<string name="magic_link_unavailable_error_message">Momenteel niet beschikbaar. Voer je wachtwoord in</string>
 	<string name="logging_in">Inloggen</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Ontvang een link die wordt verzonden naar je e-mail om je meteen aan te melden.</string>
 	<string name="enter_your_password_instead">Voer je wachtwoord in</string>
 	<string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
 	<string name="username_email">E-mail of gebruikersnaam</string>
@@ -256,7 +304,6 @@ Language: nl
 	<string name="editor_page_title_placeholder">Paginatitel</string>
 	<string name="editor_post_title_placeholder">Berichttitel</string>
 	<string name="email_address">E-mailadres</string>
-	<string name="preference_show_visual_editor">Visual Editor weergeven</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Deze reacties permanent verwijderen?</string>
 	<string name="dlg_sure_to_delete_comment">Deze reactie permanent verwijderen?</string>
@@ -301,6 +348,7 @@ Language: nl
 	<string name="error_post_remote_site_settings">Kan site-informatie niet opslaan</string>
 	<string name="error_fetch_remote_site_settings">Kan site-informatie niet ophalen</string>
 	<string name="error_media_upload_connection">Er is een verbindingsfout opgetreden bij het uploaden van media</string>
+	<string name="site_settings_disconnected_toast">Niet ingelogd, bewerken uitgeschakeld.</string>
 	<string name="site_settings_unsupported_version_error">Niet-ondersteunde versie van WordPress</string>
 	<string name="site_settings_multiple_links_dialog_description">Vereist goedkeuring voor reacties die meer dan dit aantal koppelingen bevatten.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automatisch afsluiten</string>
@@ -367,6 +415,7 @@ Language: nl
 	<string name="site_settings_paging_title">Weergave pagina\'s</string>
 	<string name="site_settings_threading_title">Weergave threads</string>
 	<string name="site_settings_sort_by_title">Sorteren op</string>
+	<string name="site_settings_account_required_title">Gebruikers moeten ingelogd zijn</string>
 	<string name="site_settings_identity_required_title">Moet naam en e-mail bevatten</string>
 	<string name="site_settings_receive_pingbacks_title">Pingbacks ontvangen</string>
 	<string name="site_settings_send_pingbacks_title">Pingbacks verzenden</string>
@@ -530,6 +579,7 @@ Language: nl
 	<string name="tabbar_accessibility_label_my_site">Mijn site</string>
 	<string name="editor_toast_changes_saved">De wijzigingen zijn opgeslagen.</string>
 	<string name="passcodelock_prompt_message">Je PIN invullen.</string>
+	<string name="push_auth_expired">Je verzoek is verlopen. Log in bij WordPress.com probeer opnieuw.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% van weergaven</string>
 	<string name="ignore">Negeren</string>
 	<string name="stats_insights_best_ever">Best bekeken ooit</string>
@@ -539,8 +589,11 @@ Language: nl
 	<string name="stats_insights_popular">De meest populaire dag en tijd.</string>
 	<string name="stats_insights_all_time">Alle berichten, weergaven en bezoekers</string>
 	<string name="stats_insights">Inzichten</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Om de statistieken te bekijken moet je je met je WordPress.com account aanmelden en deze verbinden met Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Op zoek naar je andere recente statistieken? We hebben ze verplaatst naar de pagina Inzichten.</string>
+	<string name="me_disconnect_from_wordpress_com">Uitloggen van WordPress.com</string>
 	<string name="me_btn_login_logout">Inloggen/uitloggen</string>
+	<string name="me_connect_to_wordpress_com">Inloggen op WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" was niet verborgen omdat het de huidige site is</string>
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="account_settings">Accountinstellingen</string>
@@ -558,8 +611,10 @@ Language: nl
 	<string name="my_site_btn_blog_posts">Blogberichten</string>
 	<string name="reader_label_new_posts_subtitle">Tik om ze te tonen</string>
 	<string name="my_site_header_configuration">Configuratie</string>
+	<string name="notifications_account_required">Log in bij WordPress.com voor meldingen</string>
 	<string name="stats_unknown_author">Onbekende auteur</string>
 	<string name="image_added">Afbeelding toegevoegd</string>
+	<string name="sign_out_wpcom_confirm">Als je je account loskoppelt, worden alle WordPress.com gegevens van @%s verwijderd van dit apparaat, inclusief lokale concepten en lokale wijzigingen.</string>
 	<string name="select_all">Alles selecteren</string>
 	<string name="hide">Verbergen</string>
 	<string name="show">Tonen</string>
@@ -580,6 +635,8 @@ Language: nl
 	<string name="no_media">Geen media</string>
 	<string name="loading_images">Afbeeldingen laden</string>
 	<string name="loading_videos">Video\'s laden</string>
+	<string name="auth_required">Log opnieuw in om door te gaan.</string>
+	<string name="sign_in_jetpack">Log in met je WordPress.com account om verbinding te maken met Jetpack.</string>
 	<string name="two_step_sms_sent">Kijk in je sms\'jes voor de verificatiecode.</string>
 	<string name="two_step_footer_button">Verzend code via sms</string>
 	<string name="two_step_footer_label">Voer de code in vanuit je Authenticator-app.</string>
@@ -695,6 +752,7 @@ Language: nl
 	<string name="delete_sure_page">Deze pagina verwijderen</string>
 	<string name="delete_sure">Dit concept verwijderen</string>
 	<string name="delete_sure_post">Dit bericht verwijderen</string>
+	<string name="signing_out">Uitloggen…</string>
 	<string name="posting_post">Publiceren "%s"</string>
 	<string name="media_empty_list_custom_date">Geen media in dit tijdsinterval</string>
 	<string name="pages_empty_list">Nog geen pagina\'s. Waarom maak je er niet een?</string>
@@ -967,13 +1025,16 @@ Language: nl
 	<string name="reader_empty_followed_blogs_description">Geen zorgen, tap het tag icoon om te beginnen.</string>
 	<string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
 	<string name="select_time">Selecteer tijd</string>
+	<string name="nux_oops_not_selfhosted_blog">Log in op WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Voeg zelf gehoste site toe</string>
+	<string name="signing_in">Inloggen…</string>
 	<string name="nux_welcome_create_account">Maak account aan</string>
 	<string name="nux_tap_continue">Ga door</string>
 	<string name="password_invalid">Je hebt een veiliger wachtwoord nodig. Let erop dat je 7 of meer karakters gebruikt, gebruik hoofd- en kleine letters, nummers of speciale karakters.</string>
 	<string name="nux_tutorial_get_started_title">Begin!</string>
 	<string name="limit_reached">Limiet bereikt. Je kan het na 1 minuut nogmaals proberen. Als je het eerder probeert dan zul je langer moeten wachten totdat de ban wordt opgeheven. Neem contact op met de helpdesk wanneer je denk dat dit niet klopt.</string>
 	<string name="username_invalid">Ongeldige gebruikersnaam</string>
+	<string name="connecting_wpcom">Inloggen bij Wordpress.com</string>
 	<string name="button_next">Volgende</string>
 	<string name="create_account_wpcom">Maak een account op Wordpress.com aan</string>
 	<string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
@@ -1064,6 +1125,7 @@ Language: nl
 	<string name="follows">Volgt</string>
 	<string name="note_reply_successful">Reactie gepubliceerd</string>
 	<string name="notifications">Notificaties</string>
+	<string name="sign_in">Inloggen</string>
 	<string name="loading">Laden...</string>
 	<string name="httppassword">HTTP wachtwoord</string>
 	<string name="httpuser">HTTP gebruikersnaam</string>

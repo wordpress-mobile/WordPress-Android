@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -173,32 +172,8 @@ public class ReaderPost {
         // xpost info
         assignXpostIdsFromJson(post, json.optJSONArray("metadata"));
 
-        // if there's no featured image, check if featured media has been set - this is sometimes
-        // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
-        // it as a video
-        if (!post.hasFeaturedImage()) {
-            JSONObject jsonMedia = json.optJSONObject("featured_media");
-            if (jsonMedia != null && jsonMedia.length() > 0) {
-                String mediaUrl = JSONUtils.getString(jsonMedia, "uri");
-                if (!TextUtils.isEmpty(mediaUrl)) {
-                    String type = JSONUtils.getString(jsonMedia, "type");
-                    boolean isVideo = (type != null && type.equals("video"));
-                    if (isVideo) {
-                        post.featuredVideo = mediaUrl;
-                    } else {
-                        post.featuredImage = mediaUrl;
-                    }
-                }
-            }
-        }
-        // if the post still doesn't have a featured image but we have attachment data, check whether
-        // we can find a suitable featured image from the attachments
-        if (!post.hasFeaturedImage() && post.hasAttachments()) {
-            post.featuredImage = new ImageSizeMap(post.attachmentsJson)
-                    .getLargestImageUrl(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
-        }
-        // if we *still* don't have a featured image but the text contains an IMG tag, check whether
-        // we can find a suitable image from the text
+        // if the post doesn't have a featured image but it contains an IMG tag, check whether
+        // we can find a suitable image from the content
         if (!post.hasFeaturedImage() && post.hasImages()) {
             post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);

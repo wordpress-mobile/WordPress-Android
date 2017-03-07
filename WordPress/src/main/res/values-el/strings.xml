@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-05 09:23:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: el_GR
 -->
 <resources>
@@ -276,7 +276,6 @@ Language: el_GR
 	<string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
 	<string name="editor_post_title_placeholder">Τίτλος Άρθρου</string>
 	<string name="email_address">Διεύθυνση email</string>
-	<string name="preference_show_visual_editor">Προβολή οπτικοποιημένου επεξεργαστή</string>
 	<string name="preference_editor">Επεξεργαστής</string>
 	<string name="dlg_sure_to_delete_comments">Να διαγραφούν οριστικά αυτά τα σχόλια;</string>
 	<string name="dlg_sure_to_delete_comment">Οριστική διαγραφή αυτού του σχολίου;</string>

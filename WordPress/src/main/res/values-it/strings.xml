@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-23 09:07:48+0000
+Translation-Revision-Date: 2017-02-18 11:30:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
+	<string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
+	<string name="visual_editor_disabled">Editor visuale disabilitato</string>
+	<string name="preference_editor_visual">Visuale</string>
+	<string name="preference_editor_legacy">Attuale</string>
+	<string name="preference_editor_type">Imposta il tipo di editor</string>
+	<string name="pending_draft_one_generic">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
+	<string name="pending_draft_one_month">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' rimane una bozza. Ricordati di pubblicarlo!</string>
+	<string name="pending_draft_one_week_1">La tua bozza di \'%1$s\' ti sta aspettando - assicurati di pubblicarla!</string>
+	<string name="pending_draft_one_day_2">Lo sapevi che \'%1$s\' è ancora una bozza? Pubblicalo!</string>
+	<string name="pending_draft_one_day_1">Ieri hai messo in bozza \'%1$s\'. Non dimenticarti di pubblicarlo!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Il plugin Jetpack plugin è connesso ma il modulo Statistiche non è attivo. Contattare l\'amministratore del sito.</string>
+	<string name="jetpack_stats_module_disabled_message">Il plugin Jetpack plugin è connesso ma il modulo Statistiche non è attivo. Vuoi attivare le Statistiche?</string>
+	<string name="jetpack_info">Informazioni su Jetpack</string>
 	<string name="reader_photo_by">Foto di %s</string>
 	<string name="reader_label_visit">Visita</string>
 	<string name="all_your_sites">Tutti i miei siti</string>
 	<string name="pending_draft_more">Hai abbozzato %d articoli ma non li hai mai pubblicati. Clicca per verificare.</string>
-	<string name="pending_draft_one">Hai abbozzato \'%1$s\' %2$d giorni fa ma non lo hai mai pubblicato.</string>
-	<string name="pending_draft_one_generic">Hai abbozzato \'%s\' ma non l\'hai mai pubblicato.</string>
 	<string name="no_default_app_available_to_open_link">Impossibile aprire il link</string>
 	<string name="notification_pending_drafts">Avvisami su gli articoli abbozzati</string>
 	<string name="invalid_verification_code_format">Deve essere un numero a sei cifre</string>
@@ -291,7 +304,6 @@ Language: it
 	<string name="editor_page_title_placeholder">Titolo della pagina</string>
 	<string name="editor_post_title_placeholder">Titolo dell\'articolo</string>
 	<string name="email_address">Indirizzo e-mail</string>
-	<string name="preference_show_visual_editor">Mostra editor visuale</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>
 	<string name="dlg_sure_to_delete_comment">Eliminare in modo permanente questo commento?</string>
