@@ -45,8 +45,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fadeScrollbars="true"
-                android:paddingLeft="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small"
                 android:scrollbars="vertical"
                 tools:listitem="@layout/media_grid_item" />
 
