@@ -67,6 +67,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         void onBitmapReady(Bitmap bitmap);
     }
 
+    public static final int INVALID_POSITION = -1;
+
     public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
         super();
         mContext = context;
@@ -112,6 +114,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
+        if (!isValidPosition(position)) {
+            return;
+        }
+
         mCursor.moveToPosition(position);
 
         final int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
@@ -301,10 +307,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mCallback.isInMultiSelect();
     }
 
+    private boolean isValidPosition(int position) {
+        return position >= 0 && position < getItemCount();
+    }
     public int getLocalMediaIdAtPosition(int position) {
-        // TODO: make sure position is valid
-        mCursor.moveToPosition(position);
-        return mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
+        if (isValidPosition(position)) {
+            mCursor.moveToPosition(position);
+            return mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
+        }
+        return INVALID_POSITION;
     }
 
     private synchronized void loadLocalImage(Cursor cursor, final FadeInNetworkImageView imageView) {
@@ -398,7 +409,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setItemSelectedByPosition(int position, boolean selected) {
-        if (mCursor == null) {
+        if (mCursor == null || !isValidPosition(position)) {
             return;
         }
         mCursor.moveToPosition(position);
@@ -419,7 +430,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void toggleItemSelected(int position) {
-        if (mCursor == null) {
+        if (mCursor == null || !isValidPosition(position)) {
             return;
         }
         mCursor.moveToPosition(position);
