@@ -1,6 +1,9 @@
-* {outline: 0px solid transparent;
+* {
+    outline: 0px solid transparent;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-touch-callout: none;
+    font-family: 'Noto Serif', serif;
+    font-style: normal;
 }
 
 html {
@@ -10,7 +13,6 @@ html {
 
 html, body {
     margin:0;
-    font-family:'Noto Serif', serif, sans-serif;
     font-size:1em;
     color:#2D2D2D;
 }
@@ -379,7 +381,6 @@ div.field[placeholderText][contenteditable=true]:empty:focus:before {
 }
 
 #zss_field_title, #zss_field_title p {
-    font-family: 'Noto Serif', serif;
     font-weight: bold;
     font-size: 24px;
     line-height: 32px;
