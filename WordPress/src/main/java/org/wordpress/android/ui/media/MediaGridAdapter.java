@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
@@ -23,6 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.CheckableFrameLayout;
+import org.wordpress.android.ui.FadeInNetworkImageView;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -120,8 +120,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // title of media
         String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
-        if (title == null || title.equals(""))
+        if (TextUtils.isEmpty(title)) {
             title = fileName;
+        }
         holder.titleView.setText(title);
 
         // upload date
@@ -135,7 +136,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             loadLocalImage(mCursor, holder.imageView);
         } else {
             String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mGridItemWidth);
-            WordPressMediaUtils.loadNetworkImage(thumbUrl, (NetworkImageView) holder.imageView, mImageLoader);
+            WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
         }
 
         // get the file extension from the fileURL
@@ -226,7 +227,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final TextView filenameView;
         private final TextView titleView;
         private final TextView uploadDateView;
-        private final ImageView imageView;
+        private final FadeInNetworkImageView imageView;
         private final TextView fileTypeView;
         private final TextView dimensionView;
         private final CheckableFrameLayout frameLayout;
@@ -240,7 +241,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
             titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
             uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
-            imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
+            imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
             fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
             dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
             frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
@@ -254,7 +255,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mCallback.isInMultiSelect();
     }
 
-    private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
+    private synchronized void loadLocalImage(Cursor cursor, final FadeInNetworkImageView imageView) {
         final String filePath = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH));
         imageView.setTag(filePath);
 
