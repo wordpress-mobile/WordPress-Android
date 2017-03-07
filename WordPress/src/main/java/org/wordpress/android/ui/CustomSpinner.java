@@ -1,8 +1,8 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatSpinner;
 import android.util.AttributeSet;
-import android.widget.Spinner;
 
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
@@ -10,7 +10,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.lang.reflect.Field;
 
-public class CustomSpinner extends Spinner {
+public class CustomSpinner extends AppCompatSpinner {
     OnItemSelectedListener listener;
 
     public CustomSpinner(Context context, AttributeSet attrs) {
