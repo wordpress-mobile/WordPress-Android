@@ -42,6 +42,7 @@
                 android:textColorHint="@color/sourceview_placeholder_text"
                 android:inputType="textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
+                android:textStyle="bold"
                 android:fontFamily="serif"/>
 
             <View
