@@ -853,8 +853,12 @@ public class EditPostSettingsFragment extends Fragment
         updateLocation.setOnClickListener(this);
         removeLocation.setOnClickListener(this);
 
-        // this is where we ask for location permission when EditPostActivity is oppened
-        if (SiteSettingsInterface.getInterface(getActivity(), mSite, null).init(false).getLocation() && !checkForLocationPermission()) return;
+        // this is where we ask for location permission when EditPostActivity is opened
+        SiteSettingsInterface siteSettingsInterface = SiteSettingsInterface.getInterface(getActivity(), mSite, null);
+        if ((siteSettingsInterface != null && siteSettingsInterface.init(false).isLocationEnabled())
+            && !checkForLocationPermission()) {
+            return;
+        }
 
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {
@@ -864,7 +868,7 @@ public class EditPostSettingsFragment extends Fragment
         } else {
             // Search for current location to geotag post if preferences allow
             EditPostActivity activity = (EditPostActivity) getActivity();
-            if (SiteSettingsInterface.getInterface(getActivity(), mSite, null).init(false).getLocation() && activity.isNewPost()) {
+            if (SiteSettingsInterface.getInterface(getActivity(), mSite, null).init(false).isLocationEnabled() && activity.isNewPost()) {
                 searchLocation();
             } else {
                 showLocationAdd();

@@ -505,7 +505,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setPassword(newValue.toString());
             changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
         } else if (preference == mLocationPref) {
-            mSiteSettings.setLocation((Boolean) newValue);
+            mSiteSettings.setLocationEnabled((Boolean) newValue);
         } else if (preference == mOptimizedImage) {
             mSiteSettings.setOptimizedImage((Boolean) newValue);
         } else if (preference == mCategoryPref) {
@@ -677,7 +677,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // Set Local settings
-        mLocationPref.setChecked(mSiteSettings.getLocation());
+        mLocationPref.setChecked(mSiteSettings.isLocationEnabled());
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
     }
 
@@ -892,7 +892,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setPreferencesFromSiteSettings() {
-        mLocationPref.setChecked(mSiteSettings.getLocation());
+        mLocationPref.setChecked(mSiteSettings.isLocationEnabled());
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -119,6 +120,7 @@ public abstract class SiteSettingsInterface {
     /**
      * Instantiates the appropriate (self-hosted or .com) SiteSettingsInterface.
      */
+    @Nullable
     public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
         if (host == null || site == null) return null;
 
@@ -134,13 +136,6 @@ public abstract class SiteSettingsInterface {
      */
     public static SharedPreferences siteSettingsPreferences(Context context) {
         return context.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
-    }
-
-    /**
-     * Gets the geo-tagging value
-     */
-    public boolean getGeotagging() {
-        return mSettings.location;
     }
 
     /**
@@ -273,7 +268,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.password == null ? "" : mSettings.password;
     }
 
-    public boolean getLocation() {
+    public boolean isLocationEnabled() {
         return mSettings.location;
     }
 
@@ -556,7 +551,7 @@ public abstract class SiteSettingsInterface {
         mSettings.password = password;
     }
 
-    public void setLocation(boolean location) {
+    public void setLocationEnabled(boolean location) {
         mSettings.location = location;
     }
 
