@@ -132,6 +132,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         HttpUrl url = new HttpUrl.Builder()
                 .scheme(xmlrpcUrl.getProtocol())
                 .host(xmlrpcUrl.getHost())
+                .port(xmlrpcUrl.getPort())
                 .encodedPath(xmlrpcUrl.getPath())
                 .username(site.getUsername())
                 .password(site.getPassword())
