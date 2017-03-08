@@ -59,6 +59,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
@@ -132,6 +133,7 @@ public class EditPostSettingsFragment extends Fragment
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
+    @Inject FluxCImageLoader mImageLoader;
 
     public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
@@ -438,7 +440,8 @@ public class EditPostSettingsFragment extends Fragment
                 int padding = DisplayUtils.dpToPx(getActivity(), 16);
                 int imageWidth = (maxWidth - padding);
 
-                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl() + "?w=" + imageWidth, mFeaturedImageView);
+                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl() + "?w=" + imageWidth, mFeaturedImageView,
+                        mImageLoader);
             } else {
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageButton.setVisibility(View.VISIBLE);
