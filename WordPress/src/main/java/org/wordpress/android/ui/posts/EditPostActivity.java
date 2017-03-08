@@ -745,9 +745,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void onUploadBegin(MediaModel media) {
-    }
-
     private void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
