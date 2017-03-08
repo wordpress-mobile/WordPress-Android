@@ -659,16 +659,23 @@ public class MediaGridFragment extends Fragment
     }
 
     private void updateActionButtons(int selectCount) {
-        mNewPostButton.setVisible(selectCount == 1);
+        mNewPostButton.setVisible(selectCount > 0);
     }
 
     private void handleNewPost() {
         if (!isAdded()) {
             return;
         }
-        ArrayList<Integer> ids = mGridAdapter.getSelectedItems();
-        MediaModel mediaModel = mMediaStore.getMediaWithLocalId(ids.iterator().next());
-        ActivityLauncher.newMediaPost(getActivity(), mSite, mediaModel.getMediaId());
+
+        ArrayList<Integer> localIds = mGridAdapter.getSelectedItems();
+        ArrayList<Long> mediaIds = new ArrayList<>();
+        for (Integer localId : localIds) {
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localId);
+            if (mediaModel != null) {
+                mediaIds.add(mediaModel.getMediaId());
+            }
+        }
+        ActivityLauncher.newMediaPost(getActivity(), mSite, mediaIds);
     }
 
     private void handleMultiSelectDelete() {
