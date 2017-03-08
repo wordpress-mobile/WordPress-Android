@@ -34,18 +34,8 @@ import javax.inject.Inject;
 
 public class MediaUploadService extends Service {
     public static final String SITE_KEY = "mediaSite";
-    public static final String LISTENER_KEY = "mediaUploadListener";
     public static final String MEDIA_LIST_KEY = "mediaList";
 
-    public interface MediaUploadListener extends Serializable {
-        void onUploadBegin(MediaModel media);
-        void onUploadSuccess(MediaModel media);
-        void onUploadCanceled(MediaModel media);
-        void onUploadError(MediaModel media, MediaError error);
-        void onUploadProgress(MediaModel media, float progress);
-    }
-
-    private MediaUploadListener mListener;
     private SiteModel mSite;
     private MediaModel mCurrentUpload;
 
@@ -123,25 +113,18 @@ public class MediaUploadService extends Service {
         if (event.canceled) {
             // Upload canceled
             AppLog.i(AppLog.T.MEDIA, "Upload successfully canceled.");
-            if (mListener != null) {
-                mListener.onUploadCanceled(event.media);
-            }
             completeCurrentUpload();
             uploadNextInQueue();
         } else if (event.completed) {
             // Upload completed
             AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
-            if (mListener != null) {
-                mListener.onUploadSuccess(event.media);
-            }
             mCurrentUpload.setMediaId(event.media.getMediaId());
             completeCurrentUpload();
             uploadNextInQueue();
         } else {
             // Upload Progress
-            if (mListener != null) {
-                mListener.onUploadProgress(event.media, event.progress);
-            }
+            // TODO check if we need to broadcast event.media, event.progress or we're just fine with
+            // listening to  event.media, event.progress
         }
     }
 
@@ -151,9 +134,8 @@ public class MediaUploadService extends Service {
         mCurrentUpload.setUploadState(UploadState.FAILED.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentUpload));
         completeCurrentUpload();
-        if (mListener != null) {
-            mListener.onUploadError(event.media, event.error);
-        }
+        // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
+        // event.media, event.error
         uploadNextInQueue();
     }
 
@@ -211,8 +193,6 @@ public class MediaUploadService extends Service {
 
     private void unpackIntent(@NonNull Intent intent) {
         mSite = (SiteModel) intent.getSerializableExtra(SITE_KEY);
-        mListener = (MediaUploadListener) intent.getSerializableExtra(LISTENER_KEY);
-
 
         // add local queued media from store
         List<MediaModel> localMedia = mMediaStore.getLocalSiteMedia(mSite);
@@ -261,9 +241,6 @@ public class MediaUploadService extends Service {
         MediaPayload payload = new MediaPayload(mSite, media);
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
-        if (mListener != null) {
-            mListener.onUploadBegin(mCurrentUpload);
-        }
     }
 
     private void dispatchCancelAction(@NonNull final MediaModel media) {
