@@ -343,6 +343,24 @@ public class EditPostSettingsFragment extends Fragment
             mPasswordEditText.setText(mPost.getPassword());
         }
 
+        updateStatusSpinner();
+
+        if (!mPost.isPage()) {
+            if (mPost.getJSONCategories() != null) {
+                mCategories = JSONUtils.fromJSONArrayToStringList(mPost.getJSONCategories());
+            }
+        }
+        String tags = mPost.getKeywords();
+        if (!tags.equals("")) {
+            mTagsEditText.setText(tags);
+        }
+
+        if (AppPrefs.isVisualEditorEnabled()) {
+            updateFeaturedImage(mPost.getFeaturedImageId());
+        }
+    }
+
+    public void updateStatusSpinner() {
         switch (mPost.getStatusEnum()) {
             case PUBLISHED:
             case SCHEDULED:
