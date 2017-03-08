@@ -15,7 +15,7 @@ public enum Role {
     CONTRIBUTOR(R.string.role_contributor),
     FOLLOWER(R.string.role_follower),
     VIEWER(R.string.role_viewer),
-    SUBSCRIBER(R.string.role_subscriber);
+    SUBSCRIBER(R.string.role_subscriber); // Jetpack only
 
     private final int mLabelResId;
 
