@@ -563,7 +563,7 @@ public class GCMMessageService extends GcmListenerService {
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
             PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(context, commentLikeIntent);
-            builder.addAction(R.drawable.ic_star_grey_32dp, context.getText(R.string.like), commentLikePendingIntent);
+            builder.addAction(R.drawable.ic_star_32dp, context.getText(R.string.like), commentLikePendingIntent);
         }
 
         private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -581,7 +581,7 @@ public class GCMMessageService extends GcmListenerService {
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
             PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(context, commentApproveIntent);
-            builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve), commentApprovePendingIntent);
+            builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve), commentApprovePendingIntent);
         }
 
         private PendingIntent getCommentActionPendingIntent(Context context, Intent intent){
@@ -990,7 +990,7 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-                builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve), authApprovePendingIntent);
+                builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve), authApprovePendingIntent);
 
 
                 Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
