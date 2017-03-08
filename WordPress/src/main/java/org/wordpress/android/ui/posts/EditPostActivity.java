@@ -5,12 +5,10 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -87,7 +85,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
@@ -118,7 +115,6 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
-import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
@@ -156,8 +152,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private static final int CAPTURE_PHOTO_MENU_POSITION = 1;
     private static final int SELECT_VIDEO_MENU_POSITION = 2;
     private static final int CAPTURE_VIDEO_MENU_POSITION = 3;
-    private static final int ADD_GALLERY_MENU_POSITION = 4;
-    private static final int SELECT_LIBRARY_MENU_POSITION = 5;
+    private static final int SELECT_LIBRARY_MENU_POSITION = 4;
 
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
@@ -263,7 +258,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST)
                     ||Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
-                    || NEW_MEDIA_GALLERY.equals(action)
                     || NEW_MEDIA_POST.equals(action)
                     || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
                     || (extras != null && extras.getInt("quick-media", -1) > -1)) {
@@ -415,13 +409,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     protected void onPause() {
         super.onPause();
-
-        try {
-            unregisterReceiver(mGalleryReceiver);
-        } catch (IllegalArgumentException e) {
-            AppLog.d(T.EDITOR, "Illegal state! Can't unregister receiver that was no registered");
-        }
-
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
     }
@@ -550,8 +537,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                                 shouldShowContextMenu = false;
                             } else {
-                                registerReceiver(mGalleryReceiver,
-                                        new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
                                 refreshBlogMedia();
                             }
                             break;
@@ -721,7 +706,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             menu.add(0, CAPTURE_VIDEO_MENU_POSITION, 0, getResources().getText(R.string.media_add_popup_capture_video));
         }
 
-        menu.add(0, ADD_GALLERY_MENU_POSITION, 0, getResources().getText(R.string.media_add_new_media_gallery));
         menu.add(0, SELECT_LIBRARY_MENU_POSITION, 0, getResources().getText(R.string.select_from_media_library));
     }
 
@@ -739,9 +723,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 return true;
             case CAPTURE_VIDEO_MENU_POSITION:
                 launchVideoCamera();
-                return true;
-            case ADD_GALLERY_MENU_POSITION:
-                startMediaGalleryActivity(null);
                 return true;
             case SELECT_LIBRARY_MENU_POSITION:
                 startMediaGalleryAddActivity();
@@ -842,7 +823,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Post created with share with WordPress
             normalizedSourceName = "shared-from-external-app";
         }
-        if (EditPostActivity.NEW_MEDIA_GALLERY.equals(action) || EditPostActivity.NEW_MEDIA_POST.equals(
+        if (EditPostActivity.NEW_MEDIA_POST.equals(
                 action)) {
             // Post created from the media library
             normalizedSourceName = "media-library";
@@ -1090,8 +1071,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     // Moved from EditPostContentFragment
-    public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
-    public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
     private String mMediaCapturePath = "";
@@ -1228,8 +1207,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             setPostContentFromShareAction();
-        } else if (NEW_MEDIA_GALLERY.equals(action)) {
-            prepareMediaGallery();
         } else if (NEW_MEDIA_POST.equals(action)) {
             prepareMediaPost();
         }
@@ -1290,18 +1267,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         }
-    }
-
-    private void startMediaGalleryActivity(MediaGallery mediaGallery) {
-        ActivityLauncher.viewMediaGalleryForSiteAndGallery(this, mSite, mediaGallery);
-    }
-
-    private void prepareMediaGallery() {
-        MediaGallery mediaGallery = new MediaGallery();
-        long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
-        ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
-        mediaGallery.setIds(idsList);
-        startMediaGalleryActivity(mediaGallery);
     }
 
     private void prepareMediaPost() {
@@ -1591,11 +1556,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
-                case MediaGalleryActivity.REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK) {
-                        handleMediaGalleryResult(data);
-                    }
-                    break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryPickerResult(data);
@@ -1718,25 +1678,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         long mediaId = ids.get(0);
         addExistingMediaToEditor(mediaId);
     }
-
-    private void handleMediaGalleryResult(Intent data) {
-        MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
-
-        // if blank gallery returned, don't add to span
-        if (gallery == null || gallery.getIds().size() == 0) {
-            return;
-        }
-        mEditorFragment.appendGallery(gallery);
-    }
-
-    private BroadcastReceiver mGalleryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED.equals(intent.getAction())) {
-                startMediaGalleryActivity((MediaGallery)intent.getSerializableExtra(LegacyEditorFragment.EXTRA_MEDIA_GALLERY));
-            }
-        }
-    };
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {

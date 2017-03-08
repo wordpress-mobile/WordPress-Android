@@ -231,7 +231,6 @@
         <activity
             android:name=".ui.media.MediaBrowserActivity"
             android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.media.MediaGalleryActivity" />
         <activity android:name=".ui.media.MediaGalleryPickerActivity" />
 
         <!-- Theme Activities -->

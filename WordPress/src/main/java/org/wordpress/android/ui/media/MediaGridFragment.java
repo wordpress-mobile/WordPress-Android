@@ -116,7 +116,6 @@ public class MediaGridFragment extends Fragment
     private AlertDialog mDatePickerDialog;
 
     private MenuItem mNewPostButton;
-    private MenuItem mNewGalleryButton;
 
     private SiteModel mSite;
 
@@ -304,7 +303,6 @@ public class MediaGridFragment extends Fragment
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.media_multiselect, menu);
         mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
-        mNewGalleryButton = menu.findItem(R.id.media_multiselect_actionbar_gallery);
         setSwipeToRefreshEnabled(false);
         mIsMultiSelect = true;
         updateActionButtons(selectCount);
@@ -321,9 +319,6 @@ public class MediaGridFragment extends Fragment
         int i = item.getItemId();
         if (i == R.id.media_multiselect_actionbar_post) {
             handleNewPost();
-            return true;
-        } else if (i == R.id.media_multiselect_actionbar_gallery) {
-            handleMultiSelectPost();
             return true;
         } else if (i == R.id.media_multiselect_actionbar_trash) {
             handleMultiSelectDelete();
@@ -667,11 +662,9 @@ public class MediaGridFragment extends Fragment
         switch (selectCount) {
             case 1:
                 mNewPostButton.setVisible(true);
-                mNewGalleryButton.setVisible(false);
                 break;
             default:
                 mNewPostButton.setVisible(false);
-                mNewGalleryButton.setVisible(true);
                 break;
         }
     }
@@ -714,20 +707,6 @@ public class MediaGridFragment extends Fragment
                         }).setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    private void handleMultiSelectPost() {
-        if (!isAdded()) {
-            return;
-        }
-
-        ArrayList<Long> remoteMediaIds = new ArrayList<>();
-        for (int localMediaId : mGridAdapter.getSelectedItems()) {
-            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localMediaId);
-            remoteMediaIds.add(mediaModel.getMediaId());
-        }
-
-        ActivityLauncher.newGalleryPost(getActivity(), mSite, remoteMediaIds);
     }
 
     private void restoreState(Bundle savedInstanceState) {

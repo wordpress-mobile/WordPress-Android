@@ -32,7 +32,6 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
-import org.wordpress.android.ui.media.MediaGalleryEditFragment;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.MediaItemFragment;
@@ -146,7 +145,6 @@ public interface AppComponent {
     void inject(MediaGridFragment object);
     void inject(MediaItemFragment object);
     void inject(MediaEditFragment object);
-    void inject(MediaGalleryEditFragment object);
     void inject(MediaGalleryPickerActivity object);
 
     void inject(EditPostActivity object);
