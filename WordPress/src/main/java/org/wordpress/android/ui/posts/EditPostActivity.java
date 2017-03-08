@@ -945,6 +945,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             mPostSavedLocally = false;
 
+            if (isNewPost()) {
+                // new post - user just left the editor without publishing, they probably want
+                // to keep the post as a draft
+                mPost.setPostStatus(PostStatus.toString(PostStatus.DRAFT));
+                if (mEditPostSettingsFragment != null) {
+                    mEditPostSettingsFragment.updateStatusSpinner();
+                }
+            }
+
             if (mPost.getStatusEnum() != PostStatus.PUBLISHED && mPost.isPublishable()) {
                 publishPost();
             }
