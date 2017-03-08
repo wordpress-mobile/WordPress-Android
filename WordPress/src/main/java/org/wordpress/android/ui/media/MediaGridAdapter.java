@@ -105,10 +105,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setCursor(Cursor cursor) {
-        if (mCursor != null) {
-            mCursor.close();
-            mCursor = null;
-        }
         mCursor = cursor;
         notifyDataSetChanged();
     }
