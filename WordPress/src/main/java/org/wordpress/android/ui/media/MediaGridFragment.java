@@ -659,14 +659,7 @@ public class MediaGridFragment extends Fragment
     }
 
     private void updateActionButtons(int selectCount) {
-        switch (selectCount) {
-            case 1:
-                mNewPostButton.setVisible(true);
-                break;
-            default:
-                mNewPostButton.setVisible(false);
-                break;
-        }
+        mNewPostButton.setVisible(selectCount == 1);
     }
 
     private void handleNewPost() {
