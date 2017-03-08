@@ -240,7 +240,6 @@ public class MediaUploadService extends Service {
 
         MediaPayload payload = new MediaPayload(mSite, media);
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
-
     }
 
     private void dispatchCancelAction(@NonNull final MediaModel media) {
