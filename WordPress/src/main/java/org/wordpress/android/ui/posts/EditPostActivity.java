@@ -1836,6 +1836,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         MediaModel media = buildMediaModel(uri, mimeType, startingState);
+        media.setPostId(mPost.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         mPendingUploads.add(media);
         startMediaUploadService();
