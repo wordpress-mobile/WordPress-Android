@@ -17,6 +17,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -61,6 +63,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +105,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         mGridManager = new GridLayoutManager(this, numColumns);
         mRecycler.setLayoutManager(mGridManager);
 
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(this, mSite, WordPress.sImageLoader);
+        mGridAdapter = new MediaGridAdapter(this, mSite, mImageLoader);
         mGridAdapter.setCallback(this);
 
         mRecycler.setAdapter(mGridAdapter);

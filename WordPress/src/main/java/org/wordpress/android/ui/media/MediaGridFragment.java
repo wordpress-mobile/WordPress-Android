@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CustomSpinner;
@@ -80,6 +81,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
@@ -209,8 +211,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
 
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, WordPress.sImageLoader);
+        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
         mGridAdapter.setAllowMultiselect(true);
         mRecycler.setAdapter(mGridAdapter);

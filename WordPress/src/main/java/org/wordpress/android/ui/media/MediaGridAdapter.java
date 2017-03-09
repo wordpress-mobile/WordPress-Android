@@ -97,11 +97,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void setImageLoader(ImageLoader imageLoader) {
-        if (imageLoader != null) {
-            mImageLoader = imageLoader;
-        } else {
-            mImageLoader = WordPress.sImageLoader;
-        }
+        mImageLoader = imageLoader;
     }
 
     public void setCursor(Cursor cursor) {
@@ -246,7 +242,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             String tag = (String) holder.imageView.getTag();
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageLoader.ImageContainer container = WordPress.sImageLoader.get(tag, new ImageLoader.ImageListener() {
+                ImageLoader.ImageContainer container = mImageLoader.get(tag, new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) { }
 
