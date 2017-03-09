@@ -125,8 +125,7 @@ public class PostsListFragment extends Fragment
         return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void handleEditPostResult(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null && isAdded()) {
 
             boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
