@@ -17,14 +17,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -221,10 +221,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             Intent intent = new Intent();
             int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
-            remoteMediaIds.add(mMediaStore.getMediaWithLocalId(localId).getMediaId());
-            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
-            setResult(RESULT_OK, intent);
-            finish();
+            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+            if (media != null) {
+                remoteMediaIds.add(media.getMediaId());
+                intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         }
     }
 
@@ -273,7 +276,10 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         if (mGridAdapter.getSelectedItemCount() > 0) {
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             for (Integer localId : mGridAdapter.getSelectedItems()) {
-                remoteMediaIds.add(mMediaStore.getMediaWithLocalId(localId).getMediaId());
+                MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                if (media != null) {
+                    remoteMediaIds.add(media.getMediaId());
+                }
             }
             intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
         }

@@ -143,9 +143,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.uploadDateView.setText(date);
         }
 
-        // load image after resetting it
+        // load image
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        holder.imageView.setImageDrawable(null);
         if (isLocalFile) {
             loadLocalImage(filePath, holder.imageView);
         } else {
