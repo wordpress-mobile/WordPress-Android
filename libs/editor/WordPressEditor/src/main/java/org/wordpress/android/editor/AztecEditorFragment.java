@@ -217,10 +217,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        // disable undo/redo in media mode
-        boolean isMediaMode = formattingToolbar.isMediaModeEnabled();
-        boolean canUndo = content.history.undoValid() && !isMediaMode;
-        boolean canRedo = content.history.redoValid() && !isMediaMode;
+        // TODO: disable undo/redo in media mode
+        boolean canUndo = content.history.undoValid();
+        boolean canRedo = content.history.redoValid();
         menu.findItem(R.id.undo).setEnabled(canUndo);
         menu.findItem(R.id.redo).setEnabled(canRedo);
     }
@@ -347,10 +346,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     public void enableMediaMode(boolean enable) {
-        // TODO: enableMediaMode was added to Aztec in the develop branch but has not been released
-        // yet, so this requires adding the develop SNAPSHOP to WordPressEditor's build.gradle, eg:
-        // compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:develop-SNAPSHOT')
-        formattingToolbar.enableMediaMode(enable);
+        // TODO: this won't be available until the next Aztec release
+        //formattingToolbar.enableMediaMode(enable);
         getActivity().invalidateOptionsMenu();
     }
 
