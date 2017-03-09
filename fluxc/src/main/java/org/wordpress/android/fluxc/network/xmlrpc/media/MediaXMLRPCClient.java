@@ -452,7 +452,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
             Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             if (obj instanceof Map) {
-                media.setMediaId(MapUtils.getMapLong((Map) obj, "attachment_id"));
+                media.setMediaId(MapUtils.getMapLong((Map) obj, "id"));
             }
         } catch (IOException | XmlPullParserException e) {
             AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
