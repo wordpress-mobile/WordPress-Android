@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -226,23 +225,6 @@ public class PeopleManagementActivity extends AppCompatActivity
         if (!navigateBackToPeopleListFragment()) {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        MenuItem inviteItem = menu.findItem(R.id.invite);
-        if (inviteItem != null) {
-            if (mSite.isJetpackConnected()) {
-                // User invitations aren't currently supported for Jetpack sites
-                inviteItem.setVisible(false);
-            } else {
-                inviteItem.setVisible(true);
-            }
-        }
-
-        return true;
     }
 
     @Override
