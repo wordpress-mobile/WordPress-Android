@@ -143,9 +143,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.uploadDateView.setText(date);
         }
 
-        // load image
+        // load image after resetting it
+        String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
+        holder.imageView.setImageDrawable(null);
         if (isLocalFile) {
-            loadLocalImage(mCursor, holder.imageView);
+            loadLocalImage(filePath, holder.imageView);
         } else {
             String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
             WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
@@ -163,7 +165,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         // dimensions
-        String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         if (holder.dimensionView != null) {
             if( MediaUtils.isValidImage(filePath)) {
                 int width = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.WIDTH));
@@ -349,8 +350,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return INVALID_POSITION;
     }
 
-    private synchronized void loadLocalImage(Cursor cursor, final FadeInNetworkImageView imageView) {
-        final String filePath = cursor.getString(cursor.getColumnIndex(MediaModelTable.FILE_PATH));
+    private synchronized void loadLocalImage(final String filePath, final FadeInNetworkImageView imageView) {
         imageView.setTag(filePath);
 
         Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
