@@ -39,7 +39,7 @@ public class SiteUtils {
 
     public static String getSiteIconUrl(SiteModel site, int size) {
         if (!TextUtils.isEmpty(site.getIconUrl())) {
-            return StringUtils.getPhotonUrl(site.getIconUrl(), size);
+            return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH);
         } else {
             return GravatarUtils.blavatarFromUrl(site.getUrl(), size);
         }
