@@ -258,12 +258,6 @@
         android:title="@string/site_settings_this_device_header">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_enable_location"
-            android:key="@string/pref_key_site_location"
-            android:title="@string/site_settings_location_title"
-            app:longClickHint="@string/site_settings_location_hint" />
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
             android:key="@string/pref_key_optimize_image"
             android:title="@string/site_settings_optimize_images"

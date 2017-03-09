@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -44,7 +45,6 @@ import javax.inject.Inject;
  * - Language
  * - Username (.org only)
  * - Password (.org only)
- * - Location (local device setting, not saved remotely)
  * - Optimized Image (local device setting, not saved remotely)
  * - Default Category
  * - Default Format
@@ -119,6 +119,7 @@ public abstract class SiteSettingsInterface {
     /**
      * Instantiates the appropriate (self-hosted or .com) SiteSettingsInterface.
      */
+    @Nullable
     public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
         if (host == null || site == null) return null;
 
@@ -134,13 +135,6 @@ public abstract class SiteSettingsInterface {
      */
     public static SharedPreferences siteSettingsPreferences(Context context) {
         return context.getSharedPreferences(SITE_SETTINGS_PREFS, Context.MODE_PRIVATE);
-    }
-
-    /**
-     * Gets the geo-tagging value
-     */
-    public boolean getGeotagging() {
-        return mSettings.location;
     }
 
     /**
@@ -273,9 +267,6 @@ public abstract class SiteSettingsInterface {
         return mSettings.password == null ? "" : mSettings.password;
     }
 
-    public boolean getLocation() {
-        return mSettings.location;
-    }
 
     public boolean getOptimizedImage() {
         return mSettings.optimizedImage;
@@ -556,10 +547,6 @@ public abstract class SiteSettingsInterface {
         mSettings.password = password;
     }
 
-    public void setLocation(boolean location) {
-        mSettings.location = location;
-    }
-
     public void setOptimizedImage(boolean optimizeImage) {
         mSettings.optimizedImage = optimizeImage;
     }
@@ -778,7 +765,6 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
-            mRemoteSettings.location = mSettings.location;
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
             localSettings.close();
             notifyUpdatedOnUiThread(null);

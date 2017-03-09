@@ -86,11 +86,7 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     void setImageLoader(ImageLoader imageLoader) {
-        if (imageLoader != null) {
-            mImageLoader = imageLoader;
-        } else {
-            mImageLoader = WordPress.sImageLoader;
-        }
+        mImageLoader = imageLoader;
     }
 
     public ArrayList<Integer> getSelectedItems() {

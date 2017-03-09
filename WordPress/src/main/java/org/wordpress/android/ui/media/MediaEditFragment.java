@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -31,6 +30,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -49,8 +49,9 @@ public class MediaEditFragment extends Fragment {
     public static final String TAG = "MediaEditFragment";
     public static final int MISSING_MEDIA_ID = -1;
 
-    @Inject MediaStore mMediaStore;
     @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     private NetworkImageView mNetworkImageView;
     private ImageView mLocalImageView;
@@ -67,7 +68,6 @@ public class MediaEditFragment extends Fragment {
     private int mLocalMediaId = MISSING_MEDIA_ID;
     private ScrollView mScrollView;
     private View mLinearLayout;
-    private ImageLoader mImageLoader;
 
     private SiteModel mSite;
     private MediaModel mMediaModel;
@@ -109,8 +109,6 @@ public class MediaEditFragment extends Fragment {
         }
 
         setHasOptionsMenu(true);
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mImageLoader = WordPress.sImageLoader;
 
         // retain this fragment across configuration changes
         setRetainInstance(true);

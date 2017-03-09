@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CheckableFrameLayout;
@@ -87,6 +88,7 @@ public class MediaGridFragment extends Fragment
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
@@ -205,8 +207,7 @@ public class MediaGridFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         mFiltersText = new String[Filter.values().length];
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, null, 0, WordPress.sImageLoader);
+        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, null, 0, mImageLoader);
         mGridAdapter.setCallback(this);
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container);
@@ -278,7 +279,7 @@ public class MediaGridFragment extends Fragment
             String tag = (String) imageView.getTag();
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.sImageLoader.get(tag, new ImageListener() {
+                ImageContainer container = mImageLoader.get(tag, new ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) { }
 
@@ -567,8 +568,7 @@ public class MediaGridFragment extends Fragment
         mGridView.setSelection(0);
         mGridView.requestFocusFromTouch();
         mGridView.setSelection(0);
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter.setImageLoader(WordPress.sImageLoader);
+        mGridAdapter.setImageLoader(mImageLoader);
         mGridAdapter.changeCursor(null);
         resetSpinnerAdapter();
         mHasRetrievedAllMedia = false;

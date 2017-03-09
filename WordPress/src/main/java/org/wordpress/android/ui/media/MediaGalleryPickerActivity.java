@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -62,6 +63,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +102,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
         mGridView.setMultiChoiceModeListener(this);
         mGridView.setOnItemClickListener(this);
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(this, mSite, null, 0, WordPress.sImageLoader);
+        mGridAdapter = new MediaGridAdapter(this, mSite, null, 0, mImageLoader);
         mGridAdapter.setSelectedItems(selectedItems);
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
