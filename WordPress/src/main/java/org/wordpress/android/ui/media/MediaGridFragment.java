@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -53,9 +52,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 import javax.inject.Inject;
 
@@ -69,15 +66,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
     private static final String BUNDLE_FILTER = "BUNDLE_FILTER";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
-
-    private static final String BUNDLE_DATE_FILTER_SET = "BUNDLE_DATE_FILTER_SET";
-    private static final String BUNDLE_DATE_FILTER_VISIBLE = "BUNDLE_DATE_FILTER_VISIBLE";
-    private static final String BUNDLE_DATE_FILTER_START_YEAR = "BUNDLE_DATE_FILTER_START_YEAR";
-    private static final String BUNDLE_DATE_FILTER_START_MONTH = "BUNDLE_DATE_FILTER_START_MONTH";
-    private static final String BUNDLE_DATE_FILTER_START_DAY = "BUNDLE_DATE_FILTER_START_DAY";
-    private static final String BUNDLE_DATE_FILTER_END_YEAR = "BUNDLE_DATE_FILTER_END_YEAR";
-    private static final String BUNDLE_DATE_FILTER_END_MONTH = "BUNDLE_DATE_FILTER_END_MONTH";
-    private static final String BUNDLE_DATE_FILTER_END_DAY = "BUNDLE_DATE_FILTER_END_DAY";
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -105,11 +93,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private TextView mEmptyViewTitle;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
-    private boolean mIsDateFilterSet;
     private boolean mSpinnerHasLaunched;
-
-    private int mStartYear, mStartMonth, mStartDay, mEndYear, mEndMonth, mEndDay;
-    private AlertDialog mDatePickerDialog;
 
     private MenuItem mNewPostButton;
 
@@ -121,7 +105,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public enum Filter {
-        ALL, IMAGES, UNATTACHED, CUSTOM_DATE;
+        ALL, IMAGES, UNATTACHED;
 
         public static Filter getFilter(int filterPos) {
             if (filterPos > Filter.values().length)
@@ -138,9 +122,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             if (!mSpinnerHasLaunched) {
                 mSpinnerHasLaunched = true;
                 return;
-            }
-            if (position == Filter.CUSTOM_DATE.ordinal()) {
-                mIsDateFilterSet = true;
             }
             setFilter(Filter.getFilter(position));
         }
@@ -334,7 +315,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void setFilter(Filter filter) {
         mFilter = filter;
         Cursor cursor = filterItems(mFilter);
-        if (filter != Filter.CUSTOM_DATE || cursor == null || cursor.getCount() == 0) {
+        if (cursor == null || cursor.getCount() == 0) {
             mResultView.setVisibility(View.GONE);
         }
         if (cursor != null && cursor.getCount() != 0) {
@@ -344,16 +325,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             // No data to display. Clear the GridView and display a message in the empty view
             mGridAdapter.setCursor(null);
         }
-        if (filter != Filter.CUSTOM_DATE) {
-            // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
-            if (mEmptyViewMessageType == EmptyViewMessageType.LOADING ||
-                    mEmptyViewMessageType == EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE) {
-                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-            } else {
-                updateEmptyView(mEmptyViewMessageType);
-            }
+        // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
+        if (mEmptyViewMessageType == EmptyViewMessageType.LOADING ||
+                mEmptyViewMessageType == EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         } else {
-            updateEmptyView(EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE);
+            updateEmptyView(mEmptyViewMessageType);
         }
     }
 
@@ -402,30 +379,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         setFiltersText(countAll, countImages, countUnattached);
     }
 
-    private Cursor setDateFilter() {
-        GregorianCalendar startDate = new GregorianCalendar(mStartYear, mStartMonth, mStartDay);
-        GregorianCalendar endDate = new GregorianCalendar(mEndYear, mEndMonth, mEndDay);
-
-        // long one_day = 24 * 60 * 60 * 1000;
-        // TODO: Filter images by date using `startDate.getTimeInMillis(), endDate.getTimeInMillis() + one_day`
-        Cursor cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-        mGridAdapter.setCursor(cursor);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            mResultView.setVisibility(View.VISIBLE);
-            hideEmptyView();
-            DateFormat format = DateFormat.getDateInstance();
-            String formattedStart = format.format(startDate.getTime());
-            String formattedEnd = format.format(endDate.getTime());
-            mResultView.setText(String.format(getString(R.string.media_gallery_date_range), formattedStart,
-                    formattedEnd));
-            return cursor;
-        } else {
-            updateEmptyView(EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE);
-        }
-        return null;
-    }
-
     private Cursor filterItems(Filter filter) {
         switch (filter) {
             case ALL:
@@ -434,50 +387,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 return mMediaStore.getNotDeletedSiteImagesAsCursor(mSite);
             case UNATTACHED:
                 return mMediaStore.getNotDeletedUnattachedMediaAsCursor(mSite);
-            case CUSTOM_DATE:
-                // show date picker only when the user clicks on the spinner, not when we are doing syncing
-                if (mIsDateFilterSet) {
-                    mIsDateFilterSet = false;
-                    showDatePicker();
-                } else {
-                    return setDateFilter();
-                }
-                break;
         }
         return null;
-    }
-
-    private void showDatePicker() {
-        // Inflate your custom layout containing 2 DatePickers
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View customView = inflater.inflate(R.layout.date_range_dialog, null);
-
-        // Define your date pickers
-        final DatePicker dpStartDate = (DatePicker) customView.findViewById(R.id.dpStartDate);
-        final DatePicker dpEndDate = (DatePicker) customView.findViewById(R.id.dpEndDate);
-
-        // Build the dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(customView); // Set the view of the dialog to your custom layout
-        builder.setTitle("Select start and end date");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mStartYear = dpStartDate.getYear();
-                mStartMonth = dpStartDate.getMonth();
-                mStartDay = dpStartDate.getDayOfMonth();
-                mEndYear = dpEndDate.getYear();
-                mEndMonth = dpEndDate.getMonth();
-                mEndDay = dpEndDate.getDayOfMonth();
-                setDateFilter();
-
-                dialog.dismiss();
-            }
-        });
-
-        // Create and show the dialog
-        mDatePickerDialog = builder.create();
-        mDatePickerDialog.show();
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
@@ -532,15 +443,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, mGridAdapter.isInMultiSelect());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
-
-        outState.putBoolean(BUNDLE_DATE_FILTER_SET, mIsDateFilterSet);
-        outState.putBoolean(BUNDLE_DATE_FILTER_VISIBLE, (mDatePickerDialog != null && mDatePickerDialog.isShowing()));
-        outState.putInt(BUNDLE_DATE_FILTER_START_DAY, mStartDay);
-        outState.putInt(BUNDLE_DATE_FILTER_START_MONTH, mStartMonth);
-        outState.putInt(BUNDLE_DATE_FILTER_START_YEAR, mStartYear);
-        outState.putInt(BUNDLE_DATE_FILTER_END_DAY, mEndDay);
-        outState.putInt(BUNDLE_DATE_FILTER_END_MONTH, mEndMonth);
-        outState.putInt(BUNDLE_DATE_FILTER_END_YEAR, mEndYear);
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
@@ -566,7 +468,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
         mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
         mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
-        mFiltersText[3] = getResources().getString(R.string.custom_date) + "...";
     }
 
     private void updateActionButtons(int selectCount) {
@@ -644,30 +545,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
-
-        mIsDateFilterSet = savedInstanceState.getBoolean(BUNDLE_DATE_FILTER_SET, false);
-        mStartDay = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_DAY);
-        mStartMonth = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_MONTH);
-        mStartYear = savedInstanceState.getInt(BUNDLE_DATE_FILTER_START_YEAR);
-        mEndDay = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_DAY);
-        mEndMonth = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_MONTH);
-        mEndYear = savedInstanceState.getInt(BUNDLE_DATE_FILTER_END_YEAR);
-
-        boolean datePickerShowing = savedInstanceState.getBoolean(BUNDLE_DATE_FILTER_VISIBLE);
-        if (datePickerShowing)
-            showDatePicker();
     }
 
     private void fetchMediaList(boolean loadMore) {
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            setRefreshing(false);
-            return;
-        }
-
-        // do not refresh if custom date filter is shown
-        if (mFilter == Filter.CUSTOM_DATE) {
             setRefreshing(false);
             return;
         }
