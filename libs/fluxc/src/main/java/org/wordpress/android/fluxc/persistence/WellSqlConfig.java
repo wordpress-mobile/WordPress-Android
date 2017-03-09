@@ -57,6 +57,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         }
     }
 
+    @SuppressWarnings({"FallThrough"})
     @Override
     public void onUpgrade(SQLiteDatabase db, WellTableManager helper, int oldVersion, int newVersion) {
         AppLog.d(T.DB, "Upgrading database from version " + oldVersion + " to " + newVersion);
