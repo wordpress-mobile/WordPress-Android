@@ -104,6 +104,11 @@ public enum Role {
         return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
     }
 
+    public static Role[] inviteRoles(SiteModel site) {
+        if (site.isJetpackConnected()) {
+            return new Role[] { FOLLOWER };
+        }
+
         if (site.isPrivate()) {
             return new Role[] { VIEWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
         }
