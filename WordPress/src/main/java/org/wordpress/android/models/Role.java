@@ -17,6 +17,12 @@ public enum Role {
     VIEWER(R.string.role_viewer),
     SUBSCRIBER(R.string.role_subscriber); // Jetpack only
 
+    private static final Role[] USER_ROLES_WPCOM = { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    private static final Role[] USER_ROLES_JETPACK = { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER };
+    private static final Role[] INVITE_ROLES_WPCOM = { FOLLOWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    private static final Role[] INVITE_ROLES_WPCOM_PRIVATE = { VIEWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    private static final Role[] INVITE_ROLES_JETPACK = { FOLLOWER };
+
     private final int mLabelResId;
 
     Role(@StringRes int labelResId) {
@@ -99,19 +105,19 @@ public enum Role {
 
     public static Role[] userRoles(SiteModel site) {
         if (site.isJetpackConnected()) {
-            return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER };
+            return USER_ROLES_JETPACK;
         }
-        return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+        return USER_ROLES_WPCOM;
     }
 
     public static Role[] inviteRoles(SiteModel site) {
         if (site.isJetpackConnected()) {
-            return new Role[] { FOLLOWER };
+            return INVITE_ROLES_JETPACK;
         }
 
         if (site.isPrivate()) {
-            return new Role[] { VIEWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+            return INVITE_ROLES_WPCOM_PRIVATE;
         }
-        return new Role[] { FOLLOWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+        return INVITE_ROLES_WPCOM;
     }
 }
