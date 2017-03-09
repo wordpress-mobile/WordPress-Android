@@ -325,9 +325,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             // No data to display. Clear the GridView and display a message in the empty view
             mGridAdapter.setCursor(null);
         }
-        // Overwrite the LOADING and NO_CONTENT_CUSTOM_DATE messages
-        if (mEmptyViewMessageType == EmptyViewMessageType.LOADING ||
-                mEmptyViewMessageType == EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE) {
+        // Overwrite the LOADING message
+        if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         } else {
             updateEmptyView(mEmptyViewMessageType);
@@ -403,11 +402,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         stringId = R.string.media_empty_list;
                         break;
                     case NETWORK_ERROR:
-                        // Don't overwrite NO_CONTENT_CUSTOM_DATE message, since refresh is disabled with that filter on
-                        if (mEmptyViewMessageType == EmptyViewMessageType.NO_CONTENT_CUSTOM_DATE) {
-                            mEmptyView.setVisibility(View.VISIBLE);
-                            return;
-                        }
                         stringId = R.string.no_network_message;
                         break;
                     case PERMISSION_ERROR:
@@ -415,9 +409,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         break;
                     case GENERIC_ERROR:
                         stringId = R.string.error_refresh_media;
-                        break;
-                    case NO_CONTENT_CUSTOM_DATE:
-                        stringId = R.string.media_empty_list_custom_date;
                         break;
                 }
 
