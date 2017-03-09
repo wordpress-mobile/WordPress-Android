@@ -212,7 +212,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite.isPrivate());
+                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite);
             }
         });
 
@@ -285,7 +285,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     private Role getDefaultRole() {
-        Role[] inviteRoles = Role.inviteRoles(mSite.isPrivate());
+        Role[] inviteRoles = Role.inviteRoles(mSite);
         return inviteRoles[0];
     }
 

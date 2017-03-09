@@ -104,8 +104,7 @@ public enum Role {
         return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
     }
 
-    public static Role[] inviteRoles(boolean isPrivateSite) {
-        if (isPrivateSite) {
+        if (site.isPrivate()) {
             return new Role[] { VIEWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
         }
         return new Role[] { FOLLOWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
