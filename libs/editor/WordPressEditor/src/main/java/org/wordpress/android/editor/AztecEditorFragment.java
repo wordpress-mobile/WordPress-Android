@@ -341,10 +341,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     }
 
-    public void enableFormattingToolbar(boolean enable) {
-        formattingToolbar.enableFormatButtons(enable);
-    }
-
     public void enableMediaMode(boolean enable) {
         // TODO: this won't be available until the next Aztec release
         //formattingToolbar.enableMediaMode(enable);
