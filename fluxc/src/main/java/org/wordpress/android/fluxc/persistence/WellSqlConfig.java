@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.network.HTTPAuthModel;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -56,8 +58,17 @@ public class WellSqlConfig extends DefaultWellConfig {
     }
 
     @Override
-        // drop+create or migrate
     public void onUpgrade(SQLiteDatabase db, WellTableManager helper, int oldVersion, int newVersion) {
+        AppLog.d(T.DB, "Upgrading database from version " + oldVersion + " to " + newVersion);
+
+        db.beginTransaction();
+        switch (oldVersion) {
+            case 1:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add ICON_URL text;");
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     @Override
