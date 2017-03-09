@@ -28,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.GravatarUtils;
@@ -49,6 +50,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     public List<String> accountNames = new ArrayList<>();
 
     @Inject SiteStore mSiteStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -211,7 +213,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             blogUsername.setText(
                     StringUtils.unescapeHTML(username));
             blavatar.setErrorImageResId(R.drawable.blavatar_placeholder);
-            blavatar.setImageUrl(blavatars[position], WordPress.sImageLoader);
+            blavatar.setImageUrl(blavatars[position], mImageLoader);
 
             return view;
 
