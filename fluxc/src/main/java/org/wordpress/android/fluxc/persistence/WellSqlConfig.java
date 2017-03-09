@@ -56,8 +56,8 @@ public class WellSqlConfig extends DefaultWellConfig {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, WellTableManager helper, int newVersion, int oldVersion) {
         // drop+create or migrate
+    public void onUpgrade(SQLiteDatabase db, WellTableManager helper, int oldVersion, int newVersion) {
     }
 
     @Override
