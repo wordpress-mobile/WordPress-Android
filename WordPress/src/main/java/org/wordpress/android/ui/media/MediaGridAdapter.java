@@ -145,19 +145,23 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // load image
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        if (isLocalFile) {
-            loadLocalImage(filePath, holder.imageView);
+        String mimeType = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE));
+        if (mimeType.contains("image")) {
+            if (isLocalFile) {
+                loadLocalImage(filePath, holder.imageView);
+            } else {
+                String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
+                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+            }
         } else {
-            String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
-            WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+            holder.imageView.setImageDrawable(null);
         }
 
         // get the file extension from the fileURL
-        String mimeType = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE));
         String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
         fileExtension = fileExtension.toUpperCase();
         // file type
-        if  (DisplayUtils.isXLarge(mContext) && !TextUtils.isEmpty(fileExtension)) {
+        if (DisplayUtils.isXLarge(mContext) && !TextUtils.isEmpty(fileExtension)) {
             holder.fileTypeView.setText(String.format(mContext.getString(R.string.media_file_type), fileExtension));
         } else {
             holder.fileTypeView.setText(fileExtension);
@@ -165,7 +169,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // dimensions
         if (holder.dimensionView != null) {
-            if( MediaUtils.isValidImage(filePath)) {
+            if (MediaUtils.isValidImage(filePath)) {
                 int width = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.WIDTH));
                 int height = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.HEIGHT));
 
