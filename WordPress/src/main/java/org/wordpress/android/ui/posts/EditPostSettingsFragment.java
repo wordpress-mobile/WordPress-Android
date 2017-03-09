@@ -65,7 +65,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -856,22 +855,13 @@ public class EditPostSettingsFragment extends Fragment
         updateLocation.setOnClickListener(this);
         removeLocation.setOnClickListener(this);
 
-        // this is where we ask for location permission when EditPostActivity is oppened
-        if (SiteSettingsInterface.getInterface(getActivity(), mSite, null).init(false).getLocation() && !checkForLocationPermission()) return;
-
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {
             showLocationView();
             PostLocation location = mPost.getLocation();
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            // Search for current location to geotag post if preferences allow
-            EditPostActivity activity = (EditPostActivity) getActivity();
-            if (SiteSettingsInterface.getInterface(getActivity(), mSite, null).init(false).getLocation() && activity.isNewPost()) {
-                searchLocation();
-            } else {
-                showLocationAdd();
-            }
+            showLocationAdd();
         }
     }
 
