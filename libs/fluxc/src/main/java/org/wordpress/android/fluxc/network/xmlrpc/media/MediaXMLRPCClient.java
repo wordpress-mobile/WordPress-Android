@@ -129,16 +129,16 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         XmlrpcUploadRequestBody requestBody = new XmlrpcUploadRequestBody(media, this, site);
-        HttpUrl.Builder builder = new HttpUrl.Builder()
+        HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
                 .scheme(xmlrpcUrl.getProtocol())
                 .host(xmlrpcUrl.getHost())
                 .encodedPath(xmlrpcUrl.getPath())
                 .username(site.getUsername())
                 .password(site.getPassword());
         if (xmlrpcUrl.getPort() > 0) {
-            builder.port(xmlrpcUrl.getPort());
+            urlBuilder.port(xmlrpcUrl.getPort());
         }
-        HttpUrl url = builder.build();
+        HttpUrl url = urlBuilder.build();
 
         // Use the HTTP Auth Manager to check if we need HTTP Auth for this url
         HTTPAuthModel httpAuthModel = mHTTPAuthManager.getHTTPAuthModel(xmlrpcUrl.toString());
