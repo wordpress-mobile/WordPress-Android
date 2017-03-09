@@ -617,14 +617,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    /*
-     * user tapped the close button above the photo chooser to hide it
-     */
-    @Override
-    public void onPhotoChooserRequestClose() {
-        hidePhotoChooser();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
