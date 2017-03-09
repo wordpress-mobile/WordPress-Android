@@ -171,13 +171,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newMediaPost(Activity context, SiteModel site, long mediaId) {
+    public static void newMediaPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
         if (site == null) return;
-        // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.setAction(EditPostActivity.NEW_MEDIA_POST);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, mediaId);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS, ListUtils.toLongArray(mediaIds));
         context.startActivity(intent);
     }
 
