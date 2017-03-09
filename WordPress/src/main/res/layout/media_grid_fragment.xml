@@ -19,7 +19,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="16dp">
 
-            <org.wordpress.android.ui.CustomSpinner
+            <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/media_filter_spinner"
                 style="@style/DropDownNav.WordPress"
                 android:layout_width="match_parent"

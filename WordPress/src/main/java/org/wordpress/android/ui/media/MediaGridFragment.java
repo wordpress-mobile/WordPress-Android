@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,7 +41,6 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
@@ -98,7 +98,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private View mSpinnerContainer;
     private TextView mResultView;
-    private CustomSpinner mSpinner;
+    private AppCompatSpinner mSpinner;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     private LinearLayout mEmptyView;
@@ -221,9 +221,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
 
         mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
-        mSpinner = (CustomSpinner) view.findViewById(R.id.media_filter_spinner);
+        mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
         mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
-        mSpinner.setOnItemSelectedEvenIfUnchangedListener(mFilterSelectedListener);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
