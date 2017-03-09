@@ -412,6 +412,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mForgotPassword.setVisibility(View.VISIBLE);
             if (!mSelfHosted) {
                 mPasswordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                showWPComLogoType(true);
             }
             mSignInButton.setText(R.string.sign_in);
         }
@@ -440,6 +441,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
         switchToDotOrgIcon(false);
         switchBackgroundToDotOrg(false, false);
+        showWPComLogoType(false);
     }
 
     protected void showSelfHostedSignInForm(){
@@ -456,24 +458,18 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (mIconSwitcher.getDisplayedChild() == 0) {
             if (showDotOrg) {
                 mIconSwitcher.showNext();
-                mWpcomLogotype.setVisibility(View.GONE);
             }
+            showWPComLogoType(false);
         } else {
             if (!showDotOrg) {
                 mIconSwitcher.showPrevious();
-
-                // reinstate the logotype into the layout so the switcher can compute sizes
-                mWpcomLogotype.setVisibility(View.INVISIBLE);
-
-                // delay the actual appearance of the logotype for smoother coordination with the rest of animations
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWpcomLogotype.setVisibility(View.VISIBLE);
-                    }
-                }, 300);
             }
         }
+    }
+
+    private void showWPComLogoType(boolean show) {
+        int visibility = show ? View.VISIBLE : View.GONE;
+        mWpcomLogotype.setVisibility(visibility);
     }
 
     private void switchBackgroundToDotOrg(boolean useDotOrg, boolean noFading) {

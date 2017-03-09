@@ -84,6 +84,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -211,6 +212,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     private SiteModel mSite;
 
@@ -322,7 +324,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mHasSetPostContent = mEditorFragment != null) {
-            mEditorFragment.setImageLoader(WordPress.sImageLoader);
+            mEditorFragment.setImageLoader(mImageLoader);
         }
 
         // Ensure we have a valid post
@@ -522,9 +524,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mEditPostSettingsFragment.showLocationSearch();
 
                     // After permission request was granted add GeoTag to the new post (if GeoTagging is enabled)
-                    if (SiteSettingsInterface.getInterface(this, mSite, null).init(false).getLocation() && isNewPost()) {
-                        mEditPostSettingsFragment.searchLocation();
-                    }
+                    mEditPostSettingsFragment.searchLocation();
 
                     return;
                 }
@@ -1095,7 +1095,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (media != null) {
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            mEditorFragment.appendMediaFile(mediaFile, media.getUrl(), WordPress.sImageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, media.getUrl(), mImageLoader);
         }
     }
 
@@ -1547,7 +1547,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
         trackAddMediaFromDeviceEvents(isVideo, null, path);
         if (media != null) {
-            mEditorFragment.appendMediaFile(mediaFile, path, WordPress.sImageLoader);
+            mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
 
         return true;
@@ -1567,7 +1567,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
 
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.sImageLoader);
+        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
         return true;
     }
 

@@ -41,7 +41,6 @@
     <string name="pref_key_site_username" translatable="false">wp_pref_site_username</string>
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
-    <string name="pref_key_site_location" translatable="false">wp_pref_site_location</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
     <string name="pref_key_site_this_device" translatable="false">wp_pref_site_default_this_device</string>

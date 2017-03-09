@@ -13,7 +13,6 @@ import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -30,11 +29,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
     }
 
     void setImageLoader(ImageLoader imageLoader) {
-        if (imageLoader != null) {
-            mImageLoader = imageLoader;
-        } else {
-            mImageLoader = WordPress.sImageLoader;
-        }
+        mImageLoader = imageLoader;
     }
 
     private static class GridViewHolder {

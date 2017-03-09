@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -21,10 +19,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -37,8 +37,8 @@ import javax.inject.Inject;
  * can choose a single image to embed into their post.
  */
 public class MediaGalleryPickerActivity extends AppCompatActivity
-        implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
-                   AdapterView.OnItemClickListener {
+        implements MediaGridAdapter.MediaGridAdapterCallback {
+
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
     public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
@@ -49,8 +49,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
     private static final String STATE_IS_SELECT_ONE_ITEM = "STATE_IS_SELECT_ONE_ITEM";
 
-    private GridView mGridView;
+    private RecyclerView mRecycler;
     private MediaGridAdapter mGridAdapter;
+    private GridLayoutManager mGridManager;
     private ActionMode mActionMode;
 
     private ArrayList<Long> mFilteredItems;
@@ -62,6 +63,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,17 +79,17 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
 
         if (savedInstanceState != null) {
-            ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
-            selectedItems.addAll(list);
-            mFilteredItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_FILTERED_ITEMS));
-            mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
-        }
-
-
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-        } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+            if (savedInstanceState.containsKey(STATE_SELECTED_ITEMS)) {
+                ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
+                selectedItems.addAll(list);
+            }
+            if (savedInstanceState.containsKey(STATE_FILTERED_ITEMS)) {
+                mFilteredItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_FILTERED_ITEMS));
+            }
+        } else {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -97,24 +99,28 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
-        mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
-        mGridView.setMultiChoiceModeListener(this);
-        mGridView.setOnItemClickListener(this);
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGridAdapter(this, mSite, null, 0, WordPress.sImageLoader);
-        mGridAdapter.setSelectedItems(selectedItems);
+        mRecycler = (RecyclerView) findViewById(R.id.recycler);
+
+        int numColumns = MediaGridAdapter.getColumnCount(this);
+        mGridManager = new GridLayoutManager(this, numColumns);
+        mRecycler.setLayoutManager(mGridManager);
+
+        mGridAdapter = new MediaGridAdapter(this, mSite, mImageLoader);
         mGridAdapter.setCallback(this);
-        mGridView.setAdapter(mGridAdapter);
+
+        mRecycler.setAdapter(mGridAdapter);
+
         if (mIsSelectOneItem) {
+            mGridAdapter.setAllowMultiselect(false);
             setTitle(R.string.select_from_media_library);
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
         } else {
-            mActionMode = startActionMode(this);
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
-                    mGridAdapter.getSelectedItems().size()));
+            mGridAdapter.setAllowMultiselect(true);
+            mGridAdapter.setInMultiSelect(true);
+            mGridAdapter.setSelectedItems(selectedItems);
         }
     }
 
@@ -158,9 +164,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     public void onMediaListFetched(OnMediaListFetched event) {
         mIsFetching = false;
         if (event.isError()) {
-            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
             mHasRetrievedAllMedia = true;
-            adapter.setHasRetrievedAll(true);
+            mGridAdapter.setHasRetrievedAll(true);
             String message = null;
             switch (event.error.type) {
                 case GENERIC_ERROR:
@@ -177,9 +182,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 mGridAdapter.setRefreshing(false);
             }
         } else {
-            MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
             mHasRetrievedAllMedia = !event.canLoadMore;
-            adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+            mGridAdapter.setHasRetrievedAll(mHasRetrievedAllMedia);
             if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
                 // There is no media at all
                 noMediaFinish();
@@ -190,67 +194,58 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 mGridAdapter.setRefreshing(false);
                 if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
                     Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-                    mGridAdapter.swapCursor(cursor);
+                    mGridAdapter.setCursor(cursor);
                 } else {
                     Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
-                    mGridAdapter.swapCursor(cursor);
+                    mGridAdapter.setCursor(cursor);
                 }
             }
         }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mIsSelectOneItem) {
-            // Single select, just finish the activity once an item is selected
-            mGridAdapter.setItemSelectedByPosition(position, true);
-            setResultIdsAndFinish();
-        } else {
-            mGridAdapter.toggleItemSelected(position);
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
-                    mGridAdapter.getSelectedItems().size()));
-        }
-    }
-
-    @Override
-    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        mGridAdapter.setItemSelectedByPosition(position, checked);
-    }
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        setResultIdsAndFinish();
-    }
-
-    @Override
-    public void fetchMoreData() {
+    public void onAdapterFetchMoreData() {
         if (!mHasRetrievedAllMedia) {
             refreshMediaFromServer(true);
         }
     }
 
     @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return true;
+    public void onAdapterRetryUpload(int localMediaId) {
     }
 
     @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
+    public void onAdapterItemSelected(int position) {
+        if (mIsSelectOneItem) {
+            // Single select, just finish the activity once an item is selected
+            Intent intent = new Intent();
+            int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+            if (media != null) {
+                remoteMediaIds.add(media.getMediaId());
+                intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }
     }
 
     @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
+    public void onAdapterSelectionCountChanged(int count) {
+        if (count == 0 && mActionMode != null) {
+            mActionMode.finish();
+        } else if (mActionMode == null) {
+            startActionMode(new ActionModeCallback());
+        }
+
+        updateActionModeTitle(count);
     }
 
-    @Override
-    public void onRetryUpload(int localMediaId) {
-    }
-
-    @Override
-    public boolean isInMultiSelect() {
-        return false;
+    private void updateActionModeTitle(int count) {
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
+        }
     }
 
     private void refreshViews() {
@@ -259,7 +254,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
         } else {
             cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-            mGridAdapter.swapCursor(cursor);
+            mGridAdapter.setCursor(cursor);
         }
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(false);
@@ -278,10 +273,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     private void setResultIdsAndFinish() {
         Intent intent = new Intent();
-        if (!mGridAdapter.getSelectedItems().isEmpty()) {
+        if (mGridAdapter.getSelectedItemCount() > 0) {
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             for (Integer localId : mGridAdapter.getSelectedItems()) {
-                remoteMediaIds.add(mMediaStore.getMediaWithLocalId(localId).getMediaId());
+                MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                if (media != null) {
+                    remoteMediaIds.add(media.getMediaId());
+                }
             }
             intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
         }
@@ -298,5 +296,29 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 finish();
             }
         }, 1500);
+    }
+
+    private final class ActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mActionMode = mode;
+            updateActionModeTitle(mGridAdapter.getSelectedItemCount());
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            setResultIdsAndFinish();
+        }
     }
 }

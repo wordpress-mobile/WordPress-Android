@@ -763,7 +763,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     loc[1] + view.getHeight() + y_offset);
         } else {
             // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
-            View gridView = findViewById(R.id.media_gridview);
+            View gridView = findViewById(R.id.recycler);
             mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
         }
     }
