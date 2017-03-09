@@ -463,7 +463,6 @@
     <string name="site_settings_language_title" translatable="false">@string/language</string>
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
-    <string name="site_settings_location_title">Enable Location</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_image_original_size">Original Size</string>
@@ -549,7 +548,6 @@
     <string name="site_settings_language_hint">Language this blog is primarily written in</string>
     <string name="site_settings_username_hint">Current user account</string>
     <string name="site_settings_password_hint">Change your password</string>
-    <string name="site_settings_location_hint">Automatically add location data to your posts</string>
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
