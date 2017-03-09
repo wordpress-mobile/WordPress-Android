@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -41,6 +42,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     private SiteModel mSite;
 
     @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,9 +60,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
             mIds = ListUtils.fromLongArray(savedInstanceState.getLongArray(SAVED_MEDIA_IDS));
         }
 
-        // TODO: We want to inject the image loader in this class instead of using a static field.
-        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true,
-                WordPress.sImageLoader);
+        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true, mImageLoader);
 
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
 
