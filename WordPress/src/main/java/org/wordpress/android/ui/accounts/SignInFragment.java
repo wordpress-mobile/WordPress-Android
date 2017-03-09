@@ -26,6 +26,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,6 +72,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.ContextMenuEditText;
@@ -103,7 +106,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
 
-    protected EditText mUsernameEditText;
+    protected AutoCompleteTextView mUsernameEditText;
     protected EditText mPasswordEditText;
     protected EditText mUrlEditText;
     protected ContextMenuEditText mTwoStepEditText;
@@ -178,10 +181,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUsernameLayout.setOnClickListener(mOnLoginFormClickListener);
         mPasswordLayout = (RelativeLayout) rootView.findViewById(R.id.nux_password_layout);
         mPasswordLayout.setOnClickListener(mOnLoginFormClickListener);
-
-        mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
+        mUsernameEditText = (AutoCompleteTextView) rootView.findViewById(R.id.nux_username);
         mUsernameEditText.addTextChangedListener(this);
         mUsernameEditText.setOnClickListener(mOnLoginFormClickListener);
+        mUsernameEditText.setAdapter(new ArrayAdapter<String>(container.getContext(),
+                android.R.layout.simple_spinner_dropdown_item, UserEmailUtils.getAccountEmails(container.getContext())));
         mPasswordEditText = (EditText) rootView.findViewById(R.id.nux_password);
         mPasswordEditText.addTextChangedListener(this);
         mPasswordEditText.setOnClickListener(mOnLoginFormClickListener);
