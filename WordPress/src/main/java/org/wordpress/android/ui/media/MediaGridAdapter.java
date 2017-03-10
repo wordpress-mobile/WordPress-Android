@@ -170,22 +170,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.fileTypeView.setText(fileExtension);
         }
 
-        // dimensions
-        if (holder.dimensionView != null) {
-            if (MediaUtils.isValidImage(filePath)) {
-                int width = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.WIDTH));
-                int height = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.HEIGHT));
-
-                if (width > 0 && height > 0) {
-                    String dimensions = width + "x" + height;
-                    holder.dimensionView.setText(dimensions);
-                    holder.dimensionView.setVisibility(View.VISIBLE);
-                }
-            } else {
-                holder.dimensionView.setVisibility(View.GONE);
-            }
-        }
-
         boolean isSelected = isItemSelected(localMediaId);
         holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         if (isSelected) {
@@ -287,7 +271,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final TextView uploadDateView;
         private final FadeInNetworkImageView imageView;
         private final TextView fileTypeView;
-        private final TextView dimensionView;
         private final TextView selectionCountTextView;
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
@@ -300,7 +283,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
             imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
             fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-            dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
 
             selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
