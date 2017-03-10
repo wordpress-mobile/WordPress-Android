@@ -115,16 +115,21 @@ public class AniUtils {
      * used when animating a toolbar in/out
      */
     public static void animateTopBar(View view, boolean show) {
-        animateBar(view, show, true);
+        animateBar(view, show, true, Duration.SHORT);
     }
 
     public static void animateBottomBar(View view, boolean show) {
-        animateBar(view, show, false);
+        animateBar(view, show, false, Duration.SHORT);
     }
 
-    private static void animateBar(final View view,
-                                   final boolean show,
-                                   final boolean isTopBar) {
+    public static void animateBottomBar(View view, boolean show, Duration duration) {
+        animateBar(view, show, false, duration);
+    }
+
+    private static void animateBar(View view,
+                                   boolean show,
+                                   boolean isTopBar,
+                                   Duration duration) {
         int newVisibility = (show ? View.VISIBLE : View.GONE);
         if (view == null || view.getVisibility() == newVisibility) {
             return;
@@ -145,7 +150,7 @@ public class AniUtils {
                 Animation.RELATIVE_TO_SELF, fromY,
                 Animation.RELATIVE_TO_SELF, toY);
 
-        long durationMillis = Duration.SHORT.toMillis(view.getContext());
+        long durationMillis = duration.toMillis(view.getContext());
         animation.setDuration(durationMillis);
 
         if (show) {
