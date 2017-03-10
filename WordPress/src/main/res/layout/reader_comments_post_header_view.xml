@@ -4,7 +4,6 @@
     post header on reader comment activity
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_post_header"
     android:layout_width="match_parent"
