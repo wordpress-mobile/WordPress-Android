@@ -161,16 +161,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
-        if (site == null) return;
-        // Create a new post object and assign default settings
-        Intent intent = new Intent(context, EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, ListUtils.toLongArray(mediaIds));
-        intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
-        context.startActivity(intent);
-    }
-
     public static void newMediaPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
         if (site == null || mediaIds == null) return;
         // Create a new post object and assign default settings
