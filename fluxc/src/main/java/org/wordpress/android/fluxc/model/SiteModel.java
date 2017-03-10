@@ -56,6 +56,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private boolean mIsVideoPressSupported;
     @Column private long mPlanId;
     @Column private String mPlanShortName;
+    @Column private String mIconUrl;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -406,6 +407,14 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setPlanId(long planId) {
         mPlanId = planId;
+    }
+
+    public String getIconUrl() {
+        return mIconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        mIconUrl = iconUrl;
     }
 
     public boolean isJetpackInstalled() {

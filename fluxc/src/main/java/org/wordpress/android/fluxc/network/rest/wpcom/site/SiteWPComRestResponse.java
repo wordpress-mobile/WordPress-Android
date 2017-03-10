@@ -45,6 +45,10 @@ public class SiteWPComRestResponse extends Payload implements Response {
         public boolean view_stats;
     }
 
+    public class Icon {
+        public String img;
+    }
+
 
     public class Meta {
         public class Links {
@@ -64,5 +68,6 @@ public class SiteWPComRestResponse extends Payload implements Response {
     public Options options;
     public Capabilities capabilities;
     public Plan plan;
+    public Icon icon;
     public Meta meta;
 }
