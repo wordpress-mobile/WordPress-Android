@@ -60,6 +60,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     // Must be an ArrayList (order is important for galleries)
     private ArrayList<Integer> mSelectedItems;
 
+    private static final float SCALE_NORMAL = 1.0f;
+    private static final float SCALE_SELECTED = .85f;
+
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
         void onAdapterRetryUpload(int localMediaId);
@@ -183,8 +186,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         }
 
+        boolean isSelected = isItemSelected(localMediaId);
         holder.frameLayout.setTag(localMediaId);
-        holder.frameLayout.setChecked(isItemSelected(localMediaId));
+        holder.frameLayout.setChecked(isSelected);
+        holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        if (isSelected) {
+            int count = mSelectedItems.indexOf(localMediaId) + 1;
+            holder.selectionCountTextView.setText(Integer.toString(count));
+        }
 
         // show upload state
         if (holder.stateTextView != null) {
@@ -279,7 +288,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final TextView fileTypeView;
         private final TextView dimensionView;
         private final CheckableFrameLayout frameLayout;
-
+        private final TextView selectionCountTextView;
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
 
@@ -293,7 +302,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
             dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
             frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
-
+            selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
 

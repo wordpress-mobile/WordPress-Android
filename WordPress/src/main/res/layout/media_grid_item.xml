@@ -17,6 +17,19 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop" />
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_selection_count"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_oval_blue"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
+            android:visibility="gone"
+            tools:text="5"
+            tools:visibility="visible" />
+
         <RelativeLayout
             android:id="@+id/media_grid_item_upload_state_container"
             android:layout_width="match_parent"
