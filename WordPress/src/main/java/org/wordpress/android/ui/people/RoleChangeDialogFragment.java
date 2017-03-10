@@ -13,13 +13,14 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Role;
 
 import de.greenrobot.event.EventBus;
 
 public class RoleChangeDialogFragment extends DialogFragment {
     private static final String PERSON_ID_TAG = "person_id";
-    private static final String PERSON_LOCAL_TABLE_BLOG_ID_TAG = "local_table_blog_id";
     private static final String ROLE_TAG = "role";
 
     private RoleListAdapter mRoleListAdapter;
@@ -31,15 +32,15 @@ public class RoleChangeDialogFragment extends DialogFragment {
         outState.putSerializable(ROLE_TAG, role);
     }
 
-    public static RoleChangeDialogFragment newInstance(long personID, int localTableBlogId, Role role) {
+    public static RoleChangeDialogFragment newInstance(long personID, SiteModel site, Role role) {
         RoleChangeDialogFragment roleChangeDialogFragment = new RoleChangeDialogFragment();
         Bundle args = new Bundle();
 
         args.putLong(PERSON_ID_TAG, personID);
-        args.putInt(PERSON_LOCAL_TABLE_BLOG_ID_TAG, localTableBlogId);
         if (role != null) {
             args.putSerializable(ROLE_TAG, role);
         }
+        args.putSerializable(WordPress.SITE, site);
 
         roleChangeDialogFragment.setArguments(args);
         return roleChangeDialogFragment;
@@ -47,6 +48,8 @@ public class RoleChangeDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final SiteModel site = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.role);
         builder.setNegativeButton(R.string.cancel, null);
@@ -57,14 +60,15 @@ public class RoleChangeDialogFragment extends DialogFragment {
                 Bundle args = getArguments();
                 if (args != null) {
                     long personID = args.getLong(PERSON_ID_TAG);
-                    int localTableBlogId = args.getInt(PERSON_LOCAL_TABLE_BLOG_ID_TAG);
-                    EventBus.getDefault().post(new RoleChangeEvent(personID, localTableBlogId, role));
+                    if (site != null) {
+                        EventBus.getDefault().post(new RoleChangeEvent(personID, site.getId(), role));
+                    }
                 }
             }
         });
 
         if (mRoleListAdapter == null) {
-            final Role[] userRoles = Role.userRoles();
+            final Role[] userRoles = Role.userRoles(site);
             mRoleListAdapter = new RoleListAdapter(getActivity(), R.layout.role_list_row, userRoles);
         }
         if (savedInstanceState != null) {

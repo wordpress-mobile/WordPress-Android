@@ -208,14 +208,6 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             populateUsernameButtons(usernames);
         }
 
-
-        view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite.isPrivate());
-            }
-        });
-
         mRoleTextView = (TextView) view.findViewById(R.id.role);
         setRole(role);
         ImageView imgRoleInfo = (ImageView) view.findViewById(R.id.imgRoleInfo);
@@ -225,6 +217,18 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                 ActivityLauncher.openUrlExternal(v.getContext(), URL_USER_ROLES_DOCUMENTATION);
             }
         });
+
+        if (Role.inviteRoles(mSite).length > 1) {
+            view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite);
+                }
+            });
+        } else {
+            // Don't show drop-down arrow or role selector if there's only one role available
+            mRoleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
@@ -285,7 +289,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     private Role getDefaultRole() {
-        Role[] inviteRoles = Role.inviteRoles(mSite.isPrivate());
+        Role[] inviteRoles = Role.inviteRoles(mSite);
         return inviteRoles[0];
     }
 

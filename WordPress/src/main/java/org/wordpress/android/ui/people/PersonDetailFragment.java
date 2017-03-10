@@ -189,7 +189,7 @@ public class PersonDetailFragment extends Fragment {
         }
 
         RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
-                person.getLocalTableBlogId(), person.getRole());
+                mSiteStore.getSiteByLocalId(mLocalTableBlogId), person.getRole());
         dialog.show(getFragmentManager(), null);
     }
 
