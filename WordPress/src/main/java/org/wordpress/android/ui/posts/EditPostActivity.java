@@ -279,7 +279,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST)
                     ||Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
-                    || NEW_MEDIA_GALLERY.equals(action)
                     || NEW_MEDIA_POST.equals(action)
                     || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
                     || (extras != null && extras.getInt("quick-media", -1) > -1)) {
@@ -1034,7 +1033,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Post created with share with WordPress
             normalizedSourceName = "shared-from-external-app";
         }
-        if (EditPostActivity.NEW_MEDIA_GALLERY.equals(action) || EditPostActivity.NEW_MEDIA_POST.equals(
+        if (EditPostActivity.NEW_MEDIA_POST.equals(
                 action)) {
             // Post created from the media library
             normalizedSourceName = "media-library";
@@ -1287,10 +1286,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     // Moved from EditPostContentFragment
-    public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
-    public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
-    public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
+    public static final String NEW_MEDIA_POST_EXTRA_IDS = "NEW_MEDIA_POST_EXTRA_IDS";
     private String mMediaCapturePath = "";
     private int mMaxThumbWidth = 0;
 
@@ -1425,8 +1422,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String action = getIntent().getAction();
         if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             setPostContentFromShareAction();
-        } else if (NEW_MEDIA_GALLERY.equals(action)) {
-            prepareMediaGallery();
         } else if (NEW_MEDIA_POST.equals(action)) {
             prepareMediaPost();
         }
@@ -1493,17 +1488,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ActivityLauncher.viewMediaGalleryForSiteAndGallery(this, mSite, mediaGallery);
     }
 
-    private void prepareMediaGallery() {
-        MediaGallery mediaGallery = new MediaGallery();
-        long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_GALLERY_EXTRA_IDS);
-        ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
-        mediaGallery.setIds(idsList);
-        startMediaGalleryActivity(mediaGallery);
-    }
-
     private void prepareMediaPost() {
-        long mediaId = getIntent().getLongExtra(NEW_MEDIA_POST_EXTRA, 0);
-        addExistingMediaToEditor(mediaId);
+        long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
+        ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
+        for (Long id: idsList) {
+            addExistingMediaToEditor(id);
+        }
     }
 
     // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
