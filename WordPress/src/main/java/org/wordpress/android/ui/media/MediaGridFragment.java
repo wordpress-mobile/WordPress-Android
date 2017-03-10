@@ -264,7 +264,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
         }
 
-        setFilterSpinnerVisible(count == 0);
+        setFilterEnabled(count == 0);
         updateActionButtons(count);
         updateActionModeTitle(count);
     }
@@ -306,9 +306,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridAdapter.setCursor(cursor);
     }
 
-    public void setFilterVisibility(int visibility) {
+    public void setFilterEnabled(boolean enabled) {
         if (mSpinner != null) {
-            mSpinner.setVisibility(visibility);
+            mSpinner.setEnabled(enabled);
         }
     }
 
@@ -337,22 +337,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridAdapter.clearSelection();
     }
 
-    private void setFilterSpinnerVisible(boolean visible) {
-        if (visible) {
-            mSpinner.setEnabled(true);
-            mSpinnerContainer.setEnabled(true);
-            mSpinnerContainer.setVisibility(View.VISIBLE);
-        } else {
-            mSpinner.setEnabled(false);
-            mSpinnerContainer.setEnabled(false);
-            mSpinnerContainer.setVisibility(View.GONE);
-        }
-    }
-
     public void removeFromMultiSelect(int localMediaId) {
         if (mGridAdapter.isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
             mGridAdapter.setItemSelectedByLocalId(localMediaId, false);
-            setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
+            setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
         }
     }
 
@@ -527,7 +515,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
                 ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
                 mGridAdapter.setSelectedItems(selectedItems);
-                setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
+                setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
                 mSwipeToRefreshHelper.setEnabled(false);
             }
         }
@@ -662,7 +650,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             setSwipeToRefreshEnabled(true);
             mGridAdapter.setInMultiSelect(false);
             mActionMode = null;
-            setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
+            setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
         }
     }
 }
