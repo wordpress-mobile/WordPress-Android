@@ -301,7 +301,7 @@ public class ActivityLauncher {
                                                      @NonNull ArrayList<Long> mediaIds) {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        if (!mediaIds.isEmpty()) {
+        if (mediaIds != null && !mediaIds.isEmpty()) {
             intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
         }
         activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);

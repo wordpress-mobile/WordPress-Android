@@ -1,5 +1,7 @@
 package org.wordpress.android.util;
 
+import android.text.TextUtils;
+
 import org.wordpress.android.fluxc.model.SiteModel;
 
 public class SiteUtils {
@@ -33,5 +35,13 @@ public class SiteUtils {
 
     public static boolean isAccessibleViaWPComAPI(SiteModel site) {
         return site.isWPCom() || site.isJetpackConnected();
+    }
+
+    public static String getSiteIconUrl(SiteModel site, int size) {
+        if (!TextUtils.isEmpty(site.getIconUrl())) {
+            return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH);
+        } else {
+            return GravatarUtils.blavatarFromUrl(site.getUrl(), size);
+        }
     }
 }

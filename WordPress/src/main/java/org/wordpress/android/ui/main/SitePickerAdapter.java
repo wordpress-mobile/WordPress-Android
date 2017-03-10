@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -508,7 +507,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
             blogName = SiteUtils.getSiteNameOrHomeURL(siteModel);
             homeURL = SiteUtils.getHomeURLOrHostName(siteModel);
             url = siteModel.getUrl();
-            blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
+            blavatarUrl = SiteUtils.getSiteIconUrl(siteModel, mBlavatarSz);
             isHidden = !siteModel.isVisible();
         }
 

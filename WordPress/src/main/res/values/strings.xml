@@ -1519,6 +1519,7 @@
     <string name="role_contributor">Contributor</string>
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
+    <string name="role_subscriber">Subscriber</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
