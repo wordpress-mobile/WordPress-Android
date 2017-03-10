@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <org.wordpress.android.ui.CheckableFrameLayout
+    <FrameLayout
         android:id="@+id/media_grid_frame_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -96,6 +96,6 @@
                 android:textColor="@color/media_gallery_grid_label"
                 android:textSize="@dimen/text_sz_small" />
         </RelativeLayout>
-    </org.wordpress.android.ui.CheckableFrameLayout>
+    </FrameLayout>
 
 </LinearLayout>

@@ -22,7 +22,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.FadeInNetworkImageView;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
@@ -187,8 +186,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         boolean isSelected = isItemSelected(localMediaId);
-        holder.frameLayout.setTag(localMediaId);
-        holder.frameLayout.setChecked(isSelected);
         holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         if (isSelected) {
             int count = mSelectedItems.indexOf(localMediaId) + 1;
@@ -266,10 +263,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 container.cancelRequest();
             }
         }
-
-        if (holder.frameLayout != null) {
-            holder.frameLayout.setOnCheckedChangeListener(null);
-        }
     }
 
     public ArrayList<Integer> getSelectedItems() {
@@ -287,7 +280,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final FadeInNetworkImageView imageView;
         private final TextView fileTypeView;
         private final TextView dimensionView;
-        private final CheckableFrameLayout frameLayout;
         private final TextView selectionCountTextView;
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
@@ -301,7 +293,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
             fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
             dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
-            frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
+
             selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
