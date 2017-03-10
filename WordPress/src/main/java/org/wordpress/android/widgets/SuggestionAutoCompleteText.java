@@ -25,21 +25,20 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
 
     public SuggestionAutoCompleteText(Context context) {
         super(context, null);
-        init(context, null);
+        init(context);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(context);
     }
 
     public SuggestionAutoCompleteText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, attrs);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs) {
-        TypefaceCache.setCustomTypeface(context, this, attrs);
+    private void init(Context context) {
         setTokenizer(new SuggestionTokenizer());
         setThreshold(1);
         mPersistentEditTextHelper = new PersistentEditTextHelper(context);
