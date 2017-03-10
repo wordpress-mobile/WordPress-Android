@@ -11,8 +11,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
@@ -20,6 +22,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -111,11 +114,12 @@ public class MediaUploadService extends Service {
         } else if (event.completed) {
             // Upload completed
             AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
+            // TODO here we need to EDIT THE CORRESPONDING POST
+            // TODO here we need to EDIT THE CORRESPONDING POST
+            // TODO here we need to EDIT THE CORRESPONDING POST
+            // TODO here we need to EDIT THE CORRESPONDING POST
+            updatePostWithMediaUrl(event.media);
             completeUploadWithId(event.media.getId());
-            // TODO here we need to EDIT THE CORRESPONDING POST
-            // TODO here we need to EDIT THE CORRESPONDING POST
-            // TODO here we need to EDIT THE CORRESPONDING POST
-            // TODO here we need to EDIT THE CORRESPONDING POST
             uploadNextInQueue();
             completed();
         } else {
@@ -135,6 +139,32 @@ public class MediaUploadService extends Service {
         }
         completeUploadWithId(event.media.getId());
         uploadNextInQueue();
+    }
+
+    private void updatePostWithMediaUrl(MediaModel media){
+        if (media != null) {
+            PostModel post = mPostStore.getPostByLocalPostId(media.getPostId());
+            if (post != null) {
+                String content = post.getContent();
+                if (content != null) {
+
+                    // TODO actually replace the media ID with the media uri
+
+                    // we changed the post, so let’s mark this down
+                    if (!post.isLocalDraft()) {
+                        post.setIsLocallyChanged(true);
+                    }
+                    post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+
+                    // finally save the post
+                    savePostToDb(post);
+                }
+            }
+        }
+    }
+
+    private synchronized void savePostToDb(PostModel post) {
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
     }
 
     private void uploadNextInQueue() {
