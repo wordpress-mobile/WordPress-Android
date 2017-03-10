@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.FadeInNetworkImageView;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -313,7 +314,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isInMultiSelect()) {
-                        toggleItemSelected(position);
+                        toggleItemSelected(GridViewHolder.this, position);
                     } else if (mCallback != null) {
                         mCallback.onAdapterItemSelected(position);
                     }
@@ -325,10 +326,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
                     if (isInMultiSelect()) {
-                        toggleItemSelected(position);
+                        toggleItemSelected(GridViewHolder.this, position);
                     } else if (mAllowMultiselect) {
                         setInMultiSelect(true);
-                        setItemSelectedByPosition(position, true);
+                        setItemSelectedByPosition(GridViewHolder.this, position, true);
                     }
                     return true;
                 }
@@ -450,33 +451,66 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mSelectedItems.contains(localMediaId);
     }
 
-    private void setItemSelectedByPosition(int position, boolean selected) {
-        if (mCursor == null || !isValidPosition(position)) {
-            return;
-        }
-        mCursor.moveToPosition(position);
-        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
-        if (columnIndex != -1) {
-            int localMediaId = mCursor.getInt(columnIndex);
-            setItemSelectedByLocalId(localMediaId, selected);
-        }
-    }
-
     public void setItemSelectedByLocalId(int localMediaId, boolean selected) {
         if (selected) {
             mSelectedItems.add(localMediaId);
         } else {
             mSelectedItems.remove(Integer.valueOf(localMediaId));
         }
+        if (mCallback != null) {
+            mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+        }
+        notifyDataSetChanged();
+    }
+
+    private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
+        if (mCursor == null || !isValidPosition(position)) {
+            return;
+        }
+
+        mCursor.moveToPosition(position);
+        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
+        if (columnIndex == -1) {
+            return;
+        }
+
+        int localMediaId = mCursor.getInt(columnIndex);
+        if (selected) {
+            mSelectedItems.add(localMediaId);
+        } else {
+            mSelectedItems.remove(Integer.valueOf(localMediaId));
+        }
+
+        // show and animate the count
+        if (selected) {
+            holder.selectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(localMediaId)));
+        }
+        AniUtils.startAnimation(holder.selectionCountTextView,
+                selected ? R.anim.cab_select : R.anim.cab_deselect);
+        holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
+
+        // scale the thumbnail
+        if (selected) {
+            AniUtils.scale(holder.imageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
+        } else {
+            AniUtils.scale(holder.imageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
+        }
+
+        // redraw after the scale animation completes
+        long delayMs = AniUtils.Duration.SHORT.toMillis(mContext);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        }, delayMs);
 
         if (mCallback != null) {
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
-
-        notifyDataSetChanged();
     }
 
-    private void toggleItemSelected(int position) {
+    private void toggleItemSelected(GridViewHolder holder, int position) {
         if (mCursor == null || !isValidPosition(position)) {
             return;
         }
@@ -485,7 +519,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (columnIndex != -1) {
             int localMediaId = mCursor.getInt(columnIndex);
             boolean isSelected = mSelectedItems.contains(localMediaId);
-            setItemSelectedByLocalId(localMediaId, !isSelected);
+            setItemSelectedByPosition(holder, position, !isSelected);
         }
     }
 
