@@ -129,14 +129,16 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         XmlrpcUploadRequestBody requestBody = new XmlrpcUploadRequestBody(media, this, site);
-        HttpUrl url = new HttpUrl.Builder()
+        HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
                 .scheme(xmlrpcUrl.getProtocol())
                 .host(xmlrpcUrl.getHost())
-                .port(xmlrpcUrl.getPort())
                 .encodedPath(xmlrpcUrl.getPath())
                 .username(site.getUsername())
-                .password(site.getPassword())
-                .build();
+                .password(site.getPassword());
+        if (xmlrpcUrl.getPort() > 0) {
+            urlBuilder.port(xmlrpcUrl.getPort());
+        }
+        HttpUrl url = urlBuilder.build();
 
         // Use the HTTP Auth Manager to check if we need HTTP Auth for this url
         HTTPAuthModel httpAuthModel = mHTTPAuthManager.getHTTPAuthModel(xmlrpcUrl.toString());
@@ -452,7 +454,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
             Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             if (obj instanceof Map) {
-                media.setMediaId(MapUtils.getMapLong((Map) obj, "attachment_id"));
+                media.setMediaId(MapUtils.getMapLong((Map) obj, "id"));
             }
         } catch (IOException | XmlPullParserException e) {
             AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
