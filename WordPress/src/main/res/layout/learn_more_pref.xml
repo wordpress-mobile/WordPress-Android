@@ -21,7 +21,7 @@
         android:textSize="@dimen/text_sz_small"
         android:textColor="@color/grey_darken_10" />
 
-    <org.wordpress.android.widgets.WPButton
+    <Button
         android:id="@+id/learn_more_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

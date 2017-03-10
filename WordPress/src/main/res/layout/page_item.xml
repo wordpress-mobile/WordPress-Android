@@ -65,7 +65,7 @@
                     android:maxLines="3"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_large"
-                    app:wpFontFamily="merriweather"
+                    android:fontFamily="serif"
                     tools:text="text_title" />
 
                 <org.wordpress.android.widgets.WPTextView
