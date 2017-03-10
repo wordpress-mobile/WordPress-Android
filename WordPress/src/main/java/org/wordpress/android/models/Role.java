@@ -4,6 +4,7 @@ import android.support.annotation.StringRes;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 
@@ -13,7 +14,14 @@ public enum Role {
     AUTHOR(R.string.role_author),
     CONTRIBUTOR(R.string.role_contributor),
     FOLLOWER(R.string.role_follower),
-    VIEWER(R.string.role_viewer);
+    VIEWER(R.string.role_viewer),
+    SUBSCRIBER(R.string.role_subscriber); // Jetpack only
+
+    private static final Role[] USER_ROLES_WPCOM = { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    private static final Role[] USER_ROLES_JETPACK = { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER };
+    private static final Role[] INVITE_ROLES_WPCOM = { FOLLOWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    private static final Role[] INVITE_ROLES_WPCOM_PRIVATE = { VIEWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    private static final Role[] INVITE_ROLES_JETPACK = { FOLLOWER };
 
     private final int mLabelResId;
 
@@ -39,6 +47,8 @@ public enum Role {
                 return FOLLOWER;
             case "viewer":
                 return VIEWER;
+            case "subscriber":
+                return SUBSCRIBER;
         }
         Exception e = new IllegalArgumentException("All roles must be handled: " + role);
         CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.PEOPLE);
@@ -63,6 +73,8 @@ public enum Role {
                 return "follower";
             case VIEWER:
                 return "viewer";
+            case SUBSCRIBER:
+                return "subscriber";
         }
         throw new IllegalArgumentException("All roles must be handled");
     }
@@ -85,18 +97,27 @@ public enum Role {
             case VIEWER:
                 // the remote expects "follower" as the role parameter even if the role is "viewer"
                 return "follower";
+            case SUBSCRIBER:
+                return "subscriber";
         }
         throw new IllegalArgumentException("All roles must be handled");
     }
 
-    public static Role[] userRoles() {
-        return new Role[] { ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    public static Role[] userRoles(SiteModel site) {
+        if (site.isJetpackConnected()) {
+            return USER_ROLES_JETPACK;
+        }
+        return USER_ROLES_WPCOM;
     }
 
-    public static Role[] inviteRoles(boolean isPrivateSite) {
-        if (isPrivateSite) {
-            return new Role[] { VIEWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+    public static Role[] inviteRoles(SiteModel site) {
+        if (site.isJetpackConnected()) {
+            return INVITE_ROLES_JETPACK;
         }
-        return new Role[] { FOLLOWER, ADMIN, EDITOR, AUTHOR, CONTRIBUTOR };
+
+        if (site.isPrivate()) {
+            return INVITE_ROLES_WPCOM_PRIVATE;
+        }
+        return INVITE_ROLES_WPCOM;
     }
 }
