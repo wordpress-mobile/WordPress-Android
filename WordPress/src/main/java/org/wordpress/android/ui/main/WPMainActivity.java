@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
@@ -757,7 +758,31 @@ public class WPMainActivity extends AppCompatActivity {
 
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
+            if (site.isJetpackConnected() && !TextUtils.isEmpty(site.getPassword())) {
+                // The user added a Jetpack-connected site as a self-hosted site - this isn't supported
+                if (!mAccountStore.hasAccessToken()) {
+                    // Ask user to sign in to WordPress.com to access their Jetpack site
+                    Intent signInIntent = new Intent(this, SignInActivity.class);
+                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, site.getId());
+                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
+                            getString(R.string.jetpack_use_com_account)
+                    );
+                    startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
+                    finish();
+                } else {
+                    // Remove the site and send the user back to the site list
+                    ToastUtils.showToast(this, R.string.jetpack_different_com_account, ToastUtils.Duration.LONG);
+                    mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
+                }
+                return;
+            }
             mSelectedSite = site;
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteRemoved(OnSiteRemoved event) {
+        handleBlogRemoved();
     }
 }
