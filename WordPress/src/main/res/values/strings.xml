@@ -1115,9 +1115,11 @@
     <string name="jetpack_info">Jetpack info</string>
     <string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
     <string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
+    <string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_not_connected">Jetpack plugin not connected</string>
     <string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
+    <string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
     <string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
     <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
 
@@ -1521,6 +1523,7 @@
     <string name="role_contributor">Contributor</string>
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
+    <string name="role_subscriber">Subscriber</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

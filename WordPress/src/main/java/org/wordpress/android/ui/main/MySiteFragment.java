@@ -36,7 +36,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -350,7 +349,7 @@ public class MySiteFragment extends Fragment
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(site.getUrl(), mBlavatarSz), WPNetworkImageView
+        mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView
                 .ImageType.BLAVATAR);
         String homeUrl = SiteUtils.getHomeURLOrHostName(site);
         String blogTitle = SiteUtils.getSiteNameOrHomeURL(site);

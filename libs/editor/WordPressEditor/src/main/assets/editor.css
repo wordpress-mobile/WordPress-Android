@@ -1,35 +1,9 @@
-@font-face {
-    font-family: 'Merriweather';
-    src: local("Merriweather Light"),
-         url('fonts/Merriweather-Light.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Merriweather';
-    src: local("Merriweather-Italic"),
-         url('fonts/Merriweather-Italic.ttf');
-    font-weight: normal;
-    font-style: italic;
-}
-@font-face {
-    font-family: 'Merriweather';
-    src: local("Merriweather-Bold"),
-         url('fonts/Merriweather-Bold.ttf');
-    font-weight: bold;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Merriweather';
-    src: local("Merriweather-BoldItalic"),
-         url('fonts/Merriweather-BoldItalic.ttf');
-    font-weight: bold;
-    font-style: italic;
-}
-
-* {outline: 0px solid transparent;
+* {
+    outline: 0px solid transparent;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-touch-callout: none;
+    font-family: 'Noto Serif', serif;
+    font-style: normal;
 }
 
 html {
@@ -39,7 +13,6 @@ html {
 
 html, body {
     margin:0;
-    font-family:'Merriweather', sans-serif;
     font-size:1em;
     color:#2D2D2D;
 }
@@ -408,7 +381,6 @@ div.field[placeholderText][contenteditable=true]:empty:focus:before {
 }
 
 #zss_field_title, #zss_field_title p {
-    font-family:'Merriweather', serif;
     font-weight: bold;
     font-size: 24px;
     line-height: 32px;

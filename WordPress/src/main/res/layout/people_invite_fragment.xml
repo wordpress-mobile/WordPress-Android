@@ -148,7 +148,7 @@
             android:background="@drawable/invites_border"
             android:padding="2dp">
 
-            <org.wordpress.android.widgets.WPEditText
+            <EditText
                 android:id="@+id/message"
                 style="@style/WordPress.NUXEditText"
                 android:layout_width="match_parent"

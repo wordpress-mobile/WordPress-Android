@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.widgets.TypefaceCache;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
@@ -240,7 +239,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             params.weight = 1;
-            rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
             if (i == 0) {
                 params.setMargins(0, 0, dp4, 0);
             } else {
