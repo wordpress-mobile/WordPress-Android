@@ -125,31 +125,24 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         final int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
 
         String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-        boolean isLocalFile = MediaUtils.isLocalFile(state);
-
-        // file name
         String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
-        if (holder.filenameView != null) {
-            holder.filenameView.setText(fileName);
-        }
-
-        // title of media
         String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
-        if (TextUtils.isEmpty(title)) {
-            title = fileName;
-        }
-        holder.titleView.setText(title);
-
-        // upload date
-        if (holder.uploadDateView != null) {
-            String date = MediaUtils.getDate(mCursor.getLong(mCursor.getColumnIndex(MediaModelTable.UPLOAD_DATE)));
-            holder.uploadDateView.setText(date);
-        }
-
-        // load image
+        String date = MediaUtils.getDate(mCursor.getLong(mCursor.getColumnIndex(MediaModelTable.UPLOAD_DATE)));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String mimeType = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE));
-        if (mimeType.contains("image")) {
+
+        boolean isLocalFile = MediaUtils.isLocalFile(state);
+        boolean isSelected = isItemSelected(localMediaId);
+        boolean isImage = mimeType.contains("image");
+
+        holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
+        holder.uploadDateView.setText(date);
+
+        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
+        holder.fileTypeView.setText(fileExtension.toUpperCase());
+
+        // load image
+        if (isImage) {
             if (isLocalFile) {
                 loadLocalImage(filePath, holder.imageView);
             } else {
@@ -160,17 +153,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.imageView.setImageDrawable(null);
         }
 
-        // get the file extension from the fileURL
-        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
-        fileExtension = fileExtension.toUpperCase();
-        // file type
-        if (DisplayUtils.isXLarge(mContext) && !TextUtils.isEmpty(fileExtension)) {
-            holder.fileTypeView.setText(String.format(mContext.getString(R.string.media_file_type), fileExtension));
-        } else {
-            holder.fileTypeView.setText(fileExtension);
-        }
-
-        boolean isSelected = isItemSelected(localMediaId);
+        // show selection count when selected
         holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         if (isSelected) {
             int count = mSelectedItems.indexOf(localMediaId) + 1;
@@ -185,53 +168,50 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         // show upload state
-        if (holder.stateTextView != null) {
-            if (state != null && state.length() > 0) {
-                holder.stateTextView.setVisibility(View.VISIBLE);
-                holder.stateTextView.setText(state);
+        if (state != null && state.length() > 0) {
+            holder.stateTextView.setVisibility(View.VISIBLE);
+            holder.stateTextView.setText(state);
 
-                // hide the progressbar only if the state is Uploaded or failed
-                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
-                        state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                    holder.progressUpload.setVisibility(View.GONE);
-                } else {
-                    holder.progressUpload.setVisibility(View.VISIBLE);
-                }
-
-                // Hide the state text only if the it's Uploaded
-                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
-                    holder.stateTextView.setVisibility(View.GONE);
-                }
-
-                // add onclick to retry failed uploads
-                if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                    holder.stateTextView.setVisibility(View.VISIBLE);
-                    holder.stateTextView.setText(mContext.getString(R.string.retry));
-                    holder.stateTextView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (!isInMultiSelect()) {
-                                ((TextView) v).setText(R.string.upload_queued);
-                                v.setOnClickListener(null);
-                                if (mCallback != null) {
-                                    mCallback.onAdapterRetryUpload(localMediaId);
-                                }
-                            }
-                        }
-                    });
-                }
-
-            } else {
+            // hide the progressbar only if the state is Uploaded or failed
+            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
+                    state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                 holder.progressUpload.setVisibility(View.GONE);
+            } else {
+                holder.progressUpload.setVisibility(View.VISIBLE);
+            }
+
+            // Hide the state text only if the it's Uploaded
+            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
                 holder.stateTextView.setVisibility(View.GONE);
             }
+
+            // add onclick to retry failed uploads
+            if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
+                holder.stateTextView.setVisibility(View.VISIBLE);
+                holder.stateTextView.setText(mContext.getString(R.string.retry));
+                holder.stateTextView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!isInMultiSelect()) {
+                            ((TextView) v).setText(R.string.upload_queued);
+                            v.setOnClickListener(null);
+                            if (mCallback != null) {
+                                mCallback.onAdapterRetryUpload(localMediaId);
+                            }
+                        }
+                    }
+                });
+            }
+        } else {
+            holder.progressUpload.setVisibility(View.GONE);
+            holder.stateTextView.setVisibility(View.GONE);
         }
 
         // if we are near the end, make a call to fetch more
-        if (position == getItemCount() - 1 && !mHasRetrievedAll) {
-            if (mCallback != null) {
-                mCallback.onAdapterFetchMoreData();
-            }
+        if (position == getItemCount() - 1
+                && !mHasRetrievedAll
+                && mCallback != null) {
+            mCallback.onAdapterFetchMoreData();
         }
     }
 
