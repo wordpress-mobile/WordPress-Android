@@ -214,6 +214,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // TODO: disable undo/redo in media mode
+        boolean canUndo = content.history.undoValid();
+        boolean canRedo = content.history.redoValid();
+        menu.findItem(R.id.undo).setEnabled(canUndo);
+        menu.findItem(R.id.redo).setEnabled(canRedo);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.undo) {
@@ -328,6 +339,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         if (source.getVisibility() == View.VISIBLE) {
             updateFailedMediaList();
         }
+    }
+
+    public void enableMediaMode(boolean enable) {
+        // TODO: this won't be available until the next Aztec release
+        //formattingToolbar.enableMediaMode(enable);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override

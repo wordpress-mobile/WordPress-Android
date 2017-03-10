@@ -161,6 +161,9 @@
             android:label="@string/add_new_category"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
+            android:name=".ui.posts.photochooser.PhotoChooserPreviewActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/Theme.AppCompat.Light.Dialog"
