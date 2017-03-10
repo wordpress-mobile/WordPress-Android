@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:id="@+id/media_gallery_picker_gridview"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:scrollbarStyle="outsideOverlay"
-          android:stretchMode="columnWidth"
-          android:paddingLeft="@dimen/margin_small"
-          android:paddingRight="@dimen/margin_small"
-          android:verticalSpacing="@dimen/margin_small"
-          android:horizontalSpacing="@dimen/margin_small"
-          android:numColumns="@integer/media_grid_num_columns"/>
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recycler"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fadeScrollbars="true"
+    android:scrollbars="vertical"
+    tools:listitem="@layout/media_grid_item" />

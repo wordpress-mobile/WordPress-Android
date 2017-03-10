@@ -17,10 +17,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -36,19 +36,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class PeopleListFragment extends Fragment {
-    private static final String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
-
-    private int mLocalTableBlogID;
+    private SiteModel mSite;
     private OnPersonSelectedListener mOnPersonSelectedListener;
     private OnFetchPeopleListener mOnFetchPeopleListener;
 
     private FilteredRecyclerView mFilteredRecyclerView;
     private PeopleListFilter mPeopleListFilter;
 
-    public static PeopleListFragment newInstance(int localTableBlogID) {
+    public static PeopleListFragment newInstance(SiteModel site) {
         PeopleListFragment peopleListFragment = new PeopleListFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        bundle.putSerializable(WordPress.SITE, site);
         peopleListFragment.setArguments(bundle);
         return peopleListFragment;
     }
@@ -80,9 +78,8 @@ public class PeopleListFragment extends Fragment {
 
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
-        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
-        final Blog blog = WordPress.getBlog(mLocalTableBlogID);
-        final boolean isPrivate = blog != null && blog.isPrivate();
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        final boolean isPrivate =  mSite != null && mSite.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
@@ -231,16 +228,16 @@ public class PeopleListFragment extends Fragment {
         List<Person> peopleList;
         switch (mPeopleListFilter) {
             case TEAM:
-                peopleList = PeopleTable.getUsers(mLocalTableBlogID);
+                peopleList = PeopleTable.getUsers(mSite.getId());
                 break;
             case FOLLOWERS:
-                peopleList = PeopleTable.getFollowers(mLocalTableBlogID);
+                peopleList = PeopleTable.getFollowers(mSite.getId());
                 break;
             case EMAIL_FOLLOWERS:
-                peopleList = PeopleTable.getEmailFollowers(mLocalTableBlogID);
+                peopleList = PeopleTable.getEmailFollowers(mSite.getId());
                 break;
             case VIEWERS:
-                peopleList = PeopleTable.getViewers(mLocalTableBlogID);
+                peopleList = PeopleTable.getViewers(mSite.getId());
                 break;
             default:
                 peopleList = new ArrayList<>();

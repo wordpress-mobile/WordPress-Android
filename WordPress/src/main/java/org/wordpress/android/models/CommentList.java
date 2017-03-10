@@ -1,16 +1,16 @@
 package org.wordpress.android.models;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.CommentStatus;
 
 import java.util.ArrayList;
 
-public class CommentList extends ArrayList<Comment> {
+public class CommentList extends ArrayList<CommentModel> {
     public int indexOfCommentId(long commentId) {
-        for (int i=0; i < this.size(); i++) {
-            if (commentId==this.get(i).commentID)
+        for (int i = 0; i < this.size(); i++) {
+            if (commentId == this.get(i).getRemoteCommentId()) {
                 return i;
+            }
         }
         return -1;
     }
@@ -19,12 +19,14 @@ public class CommentList extends ArrayList<Comment> {
      * replace comments in this list that match the passed list
      */
     public void replaceComments(final CommentList comments) {
-        if (comments == null || comments.size() == 0)
+        if (comments == null || comments.size() == 0) {
             return;
-        for (Comment comment: comments) {
-            int index = indexOfCommentId(comment.commentID);
-            if (index > -1)
+        }
+        for (CommentModel comment : comments) {
+            int index = indexOfCommentId(comment.getRemoteCommentId());
+            if (index > -1) {
                 set(index, comment);
+            }
         }
     }
 
@@ -32,12 +34,14 @@ public class CommentList extends ArrayList<Comment> {
      * delete comments in this list that match the passed list
      */
     public void deleteComments(final CommentList comments) {
-        if (comments == null || comments.size() == 0)
+        if (comments == null || comments.size() == 0) {
             return;
-        for (Comment comment: comments) {
-            int index = indexOfCommentId(comment.commentID);
-            if (index > -1)
+        }
+        for (CommentModel comment : comments) {
+            int index = indexOfCommentId(comment.getRemoteCommentId());
+            if (index > -1) {
                 remove(index);
+            }
         }
     }
 
@@ -45,9 +49,10 @@ public class CommentList extends ArrayList<Comment> {
      * returns true if any comments in this list have the passed status
      */
     public boolean hasAnyWithStatus(CommentStatus status) {
-        for (Comment comment: this) {
-            if (comment.getStatusEnum().equals(status))
+        for (CommentModel comment : this) {
+            if (status.toString().equals(comment.getStatus())) {
                 return true;
+            }
         }
         return false;
     }
@@ -56,9 +61,10 @@ public class CommentList extends ArrayList<Comment> {
      * returns true if any comments in this list do NOT have the passed status
      */
     public boolean hasAnyWithoutStatus(CommentStatus status) {
-        for (Comment comment: this) {
-            if (!comment.getStatusEnum().equals(status))
+        for (CommentModel comment : this) {
+            if (!status.toString().equals(comment.getStatus())) {
                 return true;
+            }
         }
         return false;
     }
@@ -67,41 +73,33 @@ public class CommentList extends ArrayList<Comment> {
      * does passed list contain the same comments as this list?
      */
     public boolean isSameList(CommentList comments) {
-        if (comments == null || comments.size() != this.size())
+        if (comments == null || comments.size() != this.size()) {
             return false;
+        }
 
-        for (final Comment comment: comments) {
-            int index = this.indexOfCommentId(comment.commentID);
-            if (index == -1)
+        for (final CommentModel comment : comments) {
+            int index = this.indexOfCommentId(comment.getRemoteCommentId());
+            if (index == -1) {
                 return false;
-            final Comment thisComment = this.get(index);
-            if (!thisComment.getStatus().equals(comment.getStatus()))
+            }
+            final CommentModel thisComment = this.get(index);
+            if (!thisComment.getStatus().equals(comment.getStatus())) {
                 return false;
-            if (!thisComment.getCommentText().equals(comment.getCommentText()))
+            }
+            if (!thisComment.getContent().equals(comment.getContent())) {
                 return false;
-            if (!thisComment.getAuthorName().equals(comment.getAuthorName()))
+            }
+            if (!thisComment.getAuthorName().equals(comment.getAuthorName())) {
                 return false;
-            if (!thisComment.getAuthorEmail().equals(comment.getAuthorEmail()))
+            }
+            if (!thisComment.getAuthorEmail().equals(comment.getAuthorEmail())) {
                 return false;
-            if (!thisComment.getAuthorUrl().equals(comment.getAuthorUrl()))
+            }
+            if (!thisComment.getAuthorUrl().equals(comment.getAuthorUrl())) {
                 return false;
-
+            }
         }
 
         return true;
-    }
-
-    public static CommentList fromJSONV1_1(JSONObject object) throws JSONException {
-        CommentList commentList = new CommentList();
-        if (object == null) {
-            return null;
-        } else {
-            JSONArray comments = object.getJSONArray("comments");
-            for (int i=0; i < comments.length(); i++){
-                JSONObject commentJson = comments.getJSONObject(i);
-                commentList.add(Comment.fromJSON(commentJson));
-            }
-            return commentList;
-        }
     }
 }

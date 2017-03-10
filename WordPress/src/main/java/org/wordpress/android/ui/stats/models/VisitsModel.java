@@ -16,10 +16,10 @@ public class VisitsModel extends BaseStatsModel {
     private String mFields; // Holds a JSON Object
     private String mUnit;
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private List<VisitModel> mVisits;
 
-    public VisitsModel(String blogID, JSONObject response) throws JSONException {
+    public VisitsModel(long blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.setDate(response.getString("date"));
         this.setUnit(response.getString("unit"));
@@ -86,11 +86,11 @@ public class VisitsModel extends BaseStatsModel {
         return mVisits;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    private void setBlogID(String blogID) {
+    private void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

@@ -17,9 +17,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 
 import java.io.File;
 import java.util.HashMap;
@@ -48,43 +49,34 @@ public class AnalyticsUtils {
     private static String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
     /**
-     * Utility method to refresh mixpanel metadata.
-     *
-     * @param username WordPress.com username
-     * @param email    WordPress.com email address
+     * Utility methods to refresh Mixpanel metadata.
      */
-    public static void refreshMetadata(String username, String email) {
+    public static void refreshMetadata(AccountStore accountStore, SiteStore siteStore) {
         AnalyticsMetadata metadata = new AnalyticsMetadata();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
 
         metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
-        metadata.setUserConnected(AccountHelper.isSignedIn());
-        metadata.setWordPressComUser(AccountHelper.isSignedInWordPressDotCom());
-        metadata.setJetpackUser(AccountHelper.isJetPackUser());
-        metadata.setNumBlogs(WordPress.wpDB.getNumBlogs());
-        metadata.setUsername(username);
-        metadata.setEmail(email);
+        metadata.setUserConnected(FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore));
+        metadata.setWordPressComUser(accountStore.hasAccessToken());
+        metadata.setJetpackUser(siteStore.hasJetpackSite());
+        metadata.setNumBlogs(siteStore.getSitesCount());
+        metadata.setUsername(accountStore.getAccount().getUserName());
+        metadata.setEmail(accountStore.getAccount().getEmail());
 
         AnalyticsTracker.refreshMetadata(metadata);
     }
 
-    /**
-     * Utility method to refresh mixpanel metadata.
-     */
-    public static void refreshMetadata() {
+    public static void refreshMetadataNewUser(String username, String email) {
         AnalyticsMetadata metadata = new AnalyticsMetadata();
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-
         metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
-        metadata.setUserConnected(AccountHelper.isSignedIn());
-        metadata.setWordPressComUser(AccountHelper.isSignedInWordPressDotCom());
-        metadata.setJetpackUser(AccountHelper.isJetPackUser());
-        metadata.setNumBlogs(WordPress.wpDB.getNumBlogs());
-        metadata.setUsername(AccountHelper.getDefaultAccount().getUserName());
-        metadata.setEmail(AccountHelper.getDefaultAccount().getEmail());
-
+        metadata.setUserConnected(true);
+        metadata.setWordPressComUser(true);
+        metadata.setJetpackUser(false);
+        metadata.setNumBlogs(1);
+        metadata.setUsername(username);
+        metadata.setEmail(email);
         AnalyticsTracker.refreshMetadata(metadata);
     }
 
@@ -94,59 +86,37 @@ public class AnalyticsUtils {
     }
 
     /**
-     * Bump Analytics for the passed Stat and CURRENT blog details into properties.
+     * Bump Analytics for the passed Stat and add blog details into properties.
      *
      * @param stat The Stat to bump
-     */
-    public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat) {
-        trackWithCurrentBlogDetails(stat, null);
-    }
-
-    /**
-     * Bump Analytics for the passed Stat and CURRENT blog details into properties.
+     * @param site The site object
      *
-     * @param stat       The Stat to bump
-     * @param properties Properties to attach to the event
      */
-    public static void trackWithCurrentBlogDetails(AnalyticsTracker.Stat stat, Map<String, Object> properties) {
-        trackWithBlogDetails(stat, WordPress.getCurrentBlog(), properties);
+    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site) {
+        trackWithSiteDetails(stat, site, null);
     }
 
     /**
      * Bump Analytics for the passed Stat and add blog details into properties.
      *
      * @param stat The Stat to bump
-     * @param blog The blog object
-     */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog blog) {
-        trackWithBlogDetails(stat, blog, null);
-    }
-
-    /**
-     * Bump Analytics for the passed Stat and add blog details into properties.
-     *
-     * @param stat       The Stat to bump
-     * @param blog       The blog object
+     * @param site The site object
      * @param properties Properties to attach to the event
      */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Blog blog, Map<String, Object> properties) {
-        if (blog == null || (!blog.isDotcomFlag() && !blog.isJetpackPowered())) {
+    public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
+                                            Map<String, Object> properties) {
+        if (site == null || !SiteUtils.isAccessibleViaWPComAPI(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
             AnalyticsTracker.track(stat, properties);
             return;
         }
 
-        String blogID = blog.getDotComBlogId();
-        if (blogID != null) {
+        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
             if (properties == null) {
                 properties = new HashMap<>();
             }
-            properties.put(BLOG_ID_KEY, blogID);
-            properties.put(IS_JETPACK_KEY, blog.isJetpackPowered());
-        } else {
-            // When the blog ID is null here does mean the blog is not hosted on wpcom.
-            // It may be a Jetpack blog still in synch for options, or a self-hosted.
-            // In both of these cases skip adding blog details into properties.
+            properties.put(BLOG_ID_KEY, site.getSiteId());
+            properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
         }
 
         if (properties == null) {
@@ -162,27 +132,12 @@ public class AnalyticsUtils {
      * @param stat   The Stat to bump
      * @param blogID The REMOTE blog ID.
      */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, Long blogID) {
+    public static void trackWithSiteId(AnalyticsTracker.Stat stat, long blogID) {
         Map<String, Object> properties = new HashMap<>();
-        if (blogID != null) {
+        if (blogID != 0) {
             properties.put(BLOG_ID_KEY, blogID);
         }
         AnalyticsTracker.track(stat, properties);
-    }
-
-    /**
-     * Bump Analytics and add blog_id into properties
-     *
-     * @param stat   The Stat to bump
-     * @param blogID The REMOTE blog ID.
-     */
-    public static void trackWithBlogDetails(AnalyticsTracker.Stat stat, String blogID) {
-        try {
-            Long remoteID = Long.parseLong(blogID);
-            trackWithBlogDetails(stat, remoteID);
-        } catch (NumberFormatException err) {
-            AnalyticsTracker.track(stat);
-        }
     }
 
     /**
@@ -214,6 +169,12 @@ public class AnalyticsUtils {
         }
     }
 
+    /**
+     * Track when a railcar item has been rendered
+     *
+     * @param railcarJson The JSON string of the railcar
+     *
+     */
     public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, long blogId, long postId) {
         trackWithReaderPostDetails(stat, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
@@ -291,7 +252,9 @@ public class AnalyticsUtils {
      * @param post The JSON string of the railcar
      */
     public static void trackRailcarRender(String railcarJson) {
-        if (TextUtils.isEmpty(railcarJson)) return;
+        if (TextUtils.isEmpty(railcarJson)) {
+            return;
+        }
 
         AnalyticsTracker.track(TRAIN_TRACKS_RENDER, railcarJsonToProperties(railcarJson));
     }
@@ -300,7 +263,8 @@ public class AnalyticsUtils {
      * Track when a railcar item has been interacted with
      *
      * @param stat The event that caused the interaction
-     * @param post The JSON string of the railcar
+     * @param railcarJson The JSON string of the railcar
+     *
      */
     private static void trackRailcarInteraction(AnalyticsTracker.Stat stat, String railcarJson) {
         if (TextUtils.isEmpty(railcarJson)) return;

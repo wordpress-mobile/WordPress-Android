@@ -26,7 +26,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -68,6 +69,8 @@ import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -119,6 +122,9 @@ public class ReaderPostDetailFragment extends Fragment
     // min scroll distance before toggling toolbar
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(false, blogId, postId, null, 0, false, null, null, false);
     }
@@ -156,6 +162,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         if (savedInstanceState != null) {
             mPostHistory.restoreInstance(savedInstanceState);
         }
@@ -415,7 +422,8 @@ public class ReaderPostDetailFragment extends Fragment
             likeCount.setSelected(isAskingToLike);
             ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
+            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike,
+                    mAccountStore.getAccount().getUserId());
             if (!success) {
                 likeCount.setSelected(!isAskingToLike);
                 return;
@@ -698,7 +706,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setCount(mPost.numLikes);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
-            if (ReaderUtils.isLoggedOutReader()) {
+            if (!mAccountStore.hasAccessToken()) {
                 countLikes.setEnabled(false);
             } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
@@ -726,7 +734,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             Snackbar.make(getView(), R.string.reader_snackbar_err_cannot_like_post_logged_out, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.sign_in, mSignInClickListener).show();
             return;
@@ -863,7 +871,7 @@ public class ReaderPostDetailFragment extends Fragment
                 case 401:
                 case 403:
                     final boolean offerSignIn = WPUrlUtils.isWordPressCom(mInterceptedUri)
-                            && !AccountHelper.isSignedInWordPressDotCom();
+                            && !mAccountStore.hasAccessToken();
 
                     if (!offerSignIn) {
                         errMsgResId = (mInterceptedUri == null)
@@ -1042,11 +1050,7 @@ public class ReaderPostDetailFragment extends Fragment
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
-            // only enable showing blog preview from the header if we're not already
-            // previewing a blog
-            headerView.setEnableBlogPreview(getPostListType() != ReaderPostListType.BLOG_PREVIEW);
-
-            headerView.setPost(mPost);
+            headerView.setPost(mPost, mAccountStore.hasAccessToken());
             tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
@@ -1145,9 +1149,9 @@ public class ReaderPostDetailFragment extends Fragment
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
-            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
-            if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            long siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
+            if (siteId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), siteId);
             }
             return true;
         }
@@ -1269,7 +1273,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             return mPost.numReplies > 0;
         }
         return mPost.isWP()
@@ -1282,7 +1286,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             return mPost.numLikes > 0;
         }
         return mPost.canLikePost() || mPost.numLikes > 0;

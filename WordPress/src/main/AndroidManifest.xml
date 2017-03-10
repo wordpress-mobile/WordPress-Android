@@ -72,7 +72,7 @@
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@style/NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -228,10 +228,6 @@
             android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Media Activities -->
-        <activity
-            android:name=".ui.media.MediaPickerActivity"
-            android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.media.MediaBrowserActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -456,14 +452,6 @@
         <service
             android:name=".ui.posts.services.PostUploadService"
             android:label="Post Upload Service" />
-        <service
-            android:name=".ui.posts.services.PostMediaService"
-            android:exported="false"
-            android:label="Post Media Service" />
-        <service
-            android:name=".ui.posts.services.PostUpdateService"
-            android:exported="false"
-            android:label="Post Update Service" />
         <service
             android:name=".ui.media.services.MediaUploadService"
             android:label="Media Upload Service" />

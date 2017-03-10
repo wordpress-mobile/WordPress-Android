@@ -21,9 +21,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
@@ -31,13 +30,14 @@ import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import javax.inject.Inject;
+
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, SignInFragment.OnMagicLinkRequestInteraction,
-        MagicLinkSentFragment.OnMagicLinkSentInteraction, JetpackCallbacks {
+        MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, JetpackCallbacks,
+        SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
-    public static final int SHOW_CERT_DETAILS = 4;
     public static final int SMART_LOCK_SAVE = 5;
     public static final int SMART_LOCK_READ = 6;
 
@@ -52,11 +52,15 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     private SmartLockHelper mSmartLockHelper;
     private ProgressDialog mProgressDialog;
-    private Blog mJetpackBlog;
+    private SiteModel mJetpackSite;
+
+    @Inject SiteStore mSiteStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
 
@@ -102,9 +106,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SHOW_CERT_DETAILS) {
-            getSignInFragment().askForSslTrust();
-        } else if (requestCode == SMART_LOCK_SAVE) {
+        if (requestCode == SMART_LOCK_SAVE) {
             if (resultCode == RESULT_OK) {
                 AnalyticsTracker.track(Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
                 AppLog.d(T.NUX, "Credentials saved");
@@ -159,10 +161,10 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         if (extras != null) {
             actionMode = extras.getInt(EXTRA_START_FRAGMENT, -1);
             if (extras.containsKey(EXTRA_JETPACK_SITE_AUTH)) {
-                mJetpackBlog = WordPress.getBlog(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
-                if (mJetpackBlog != null) {
+                mJetpackSite = mSiteStore.getSiteByLocalId(extras.getInt(EXTRA_JETPACK_SITE_AUTH));
+                if (mJetpackSite != null) {
                     String customMessage = extras.getString(EXTRA_JETPACK_MESSAGE_AUTH, null);
-                    getSignInFragment().setCustomMessageForJetpackAuth(customMessage);
+                    getSignInFragment().setBlogAndCustomMessageForJetpackAuth(mJetpackSite, customMessage);
                 }
             } else if (extras.containsKey(EXTRA_IS_AUTH_ERROR)) {
                 getSignInFragment().showAuthErrorMessage();
@@ -190,12 +192,6 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     public SmartLockHelper getSmartLockHelper() {
         return mSmartLockHelper;
-    }
-
-    private void saveEmailToAccount(String email) {
-        Account account = AccountHelper.getDefaultAccount();
-        account.setUserName(email);
-        account.save();
     }
 
     private void popBackStackToSignInFragment() {
@@ -276,19 +272,17 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     @Override
     public void onMagicLinkRequestSuccess(String email) {
-        saveEmailToAccount(email);
-
         MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
         slideInFragment(magicLinkRequestFragment);
     }
 
     @Override
     public boolean isJetpackAuth() {
-        return mJetpackBlog != null;
+        return mJetpackSite != null;
     }
 
     @Override
-    public Blog getJetpackBlog() {
-        return mJetpackBlog;
+    public SiteModel getJetpackSite() {
+        return mJetpackSite;
     }
 }

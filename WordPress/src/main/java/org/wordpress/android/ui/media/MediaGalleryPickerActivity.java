@@ -6,90 +6,134 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * An activity where the user can add new images to their media gallery or where the user
  * can choose a single image to embed into their post.
  */
 public class MediaGalleryPickerActivity extends AppCompatActivity
-        implements MultiChoiceModeListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
-                   AdapterView.OnItemClickListener {
-    private GridView mGridView;
-    private MediaGridAdapter mGridAdapter;
-    private ActionMode mActionMode;
+        implements MediaGridAdapter.MediaGridAdapterCallback {
 
-    private ArrayList<String> mFilteredItems;
-    private boolean mIsSelectOneItem;
-    private boolean mIsRefreshing;
-    private boolean mHasRetrievedAllMedia;
+    public static final int REQUEST_CODE = 4000;
+    public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
+    public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
+    public static final String RESULT_IDS = "RESULT_IDS";
+    public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
 
     private static final String STATE_FILTERED_ITEMS = "STATE_FILTERED_ITEMS";
     private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
     private static final String STATE_IS_SELECT_ONE_ITEM = "STATE_IS_SELECT_ONE_ITEM";
 
-    public static final int REQUEST_CODE = 4000;
-    public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
-    private static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
-    public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
-    public static final String RESULT_IDS = "RESULT_IDS";
-    public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
+    private RecyclerView mRecycler;
+    private MediaGridAdapter mGridAdapter;
+    private GridLayoutManager mGridManager;
+    private ActionMode mActionMode;
 
-    private int mOldMediaSyncOffset = 0;
+    private ArrayList<Long> mFilteredItems;
+    private boolean mIsSelectOneItem;
+    private boolean mIsFetching;
+    private boolean mHasRetrievedAllMedia;
+
+    private SiteModel mSite;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
-        ArrayList<String> selectedItems = new ArrayList<String>();
-        mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
+        ArrayList<Integer> selectedItems = new ArrayList<>();
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
-        ArrayList<String> prevSelectedItems = getIntent().getStringArrayListExtra(PARAM_SELECTED_IDS);
+        ArrayList<Integer> prevSelectedItems = ListUtils.fromIntArray(getIntent().getIntArrayExtra(PARAM_SELECTED_IDS));
         if (prevSelectedItems != null) {
             selectedItems.addAll(prevSelectedItems);
         }
 
         if (savedInstanceState != null) {
-            selectedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
-            mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+            if (savedInstanceState.containsKey(STATE_SELECTED_ITEMS)) {
+                ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
+                selectedItems.addAll(list);
+            }
+            if (savedInstanceState.containsKey(STATE_FILTERED_ITEMS)) {
+                mFilteredItems = ListUtils.fromLongArray(savedInstanceState.getLongArray(STATE_FILTERED_ITEMS));
+            }
+        } else {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
-        mGridView = (GridView) findViewById(R.id.media_gallery_picker_gridview);
-        mGridView.setMultiChoiceModeListener(this);
-        mGridView.setOnItemClickListener(this);
-        mGridAdapter = new MediaGridAdapter(this, null, 0, MediaImageLoader.getInstance());
-        mGridAdapter.setSelectedItems(selectedItems);
+        mRecycler = (RecyclerView) findViewById(R.id.recycler);
+
+        int numColumns = MediaGridAdapter.getColumnCount(this);
+        mGridManager = new GridLayoutManager(this, numColumns);
+        mRecycler.setLayoutManager(mGridManager);
+
+        mGridAdapter = new MediaGridAdapter(this, mSite, mImageLoader);
         mGridAdapter.setCallback(this);
-        mGridView.setAdapter(mGridAdapter);
+
+        mRecycler.setAdapter(mGridAdapter);
+
         if (mIsSelectOneItem) {
+            mGridAdapter.setAllowMultiselect(false);
             setTitle(R.string.select_from_media_library);
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
         } else {
-            mActionMode = startActionMode(this);
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
-                    mGridAdapter.getSelectedItems().size()));
+            mGridAdapter.setAllowMultiselect(true);
+            mGridAdapter.setInMultiSelect(true);
+            mGridAdapter.setSelectedItems(selectedItems);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -99,25 +143,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putStringArrayList(STATE_SELECTED_ITEMS, mGridAdapter.getSelectedItems());
-        outState.putStringArrayList(STATE_FILTERED_ITEMS, mFilteredItems);
-        outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
-    }
-
-    private void refreshViews() {
-        if (WordPress.getCurrentBlog() == null)
-            return;
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
-        if (cursor.getCount() == 0) {
-            refreshMediaFromServer(0);
-        } else {
-            mGridAdapter.swapCursor(cursor);
-        }
-    }
-
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             setResult(RESULT_CANCELED, new Intent());
@@ -127,63 +152,139 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntArray(STATE_SELECTED_ITEMS, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
+        outState.putLongArray(STATE_FILTERED_ITEMS, ListUtils.toLongArray(mFilteredItems));
+        outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaListFetched(OnMediaListFetched event) {
+        mIsFetching = false;
+        if (event.isError()) {
+            mHasRetrievedAllMedia = true;
+            mGridAdapter.setHasRetrievedAll(true);
+            String message = null;
+            switch (event.error.type) {
+                case GENERIC_ERROR:
+                    message = getString(R.string.error_refresh_media);
+                    break;
+            }
+
+            if (message != null) {
+                Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+
+            // the activity may be done by the time we get this, so check for it
+            if (!isFinishing()) {
+                mGridAdapter.setRefreshing(false);
+            }
+        } else {
+            mHasRetrievedAllMedia = !event.canLoadMore;
+            mGridAdapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+            if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
+                // There is no media at all
+                noMediaFinish();
+            }
+
+            // the activity may be gone by the time this finishes, so check for it
+            if (!isFinishing()) {
+                mGridAdapter.setRefreshing(false);
+                if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
+                    Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+                    mGridAdapter.setCursor(cursor);
+                } else {
+                    Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
+                    mGridAdapter.setCursor(cursor);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAdapterFetchMoreData() {
+        if (!mHasRetrievedAllMedia) {
+            refreshMediaFromServer(true);
+        }
+    }
+
+    @Override
+    public void onAdapterRetryUpload(int localMediaId) {
+    }
+
+    @Override
+    public void onAdapterItemSelected(int position) {
         if (mIsSelectOneItem) {
             // Single select, just finish the activity once an item is selected
-            mGridAdapter.setItemSelected(position, true);
             Intent intent = new Intent();
-            intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
-            setResult(RESULT_OK, intent);
-            finish();
-        } else {
-            mGridAdapter.toggleItemSelected(position);
-            mActionMode.setTitle(String.format(getString(R.string.cab_selected),
-                    mGridAdapter.getSelectedItems().size()));
+            int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+            if (media != null) {
+                remoteMediaIds.add(media.getMediaId());
+                intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         }
     }
 
     @Override
-    public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        mGridAdapter.setItemSelected(position, checked);
+    public void onAdapterSelectionCountChanged(int count) {
+        if (count == 0 && mActionMode != null) {
+            mActionMode.finish();
+        } else if (mActionMode == null) {
+            startActionMode(new ActionModeCallback());
+        }
+
+        updateActionModeTitle(count);
     }
 
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        return true;
+    private void updateActionModeTitle(int count) {
+        if (mActionMode != null) {
+            mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
+        }
     }
 
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return false;
+    private void refreshViews() {
+        final Cursor cursor;
+        if (mFilteredItems != null) {
+            cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+        } else {
+            cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
+            mGridAdapter.setCursor(cursor);
+        }
+        if (cursor.getCount() == 0) {
+            refreshMediaFromServer(false);
+        }
     }
 
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        return false;
+    private void refreshMediaFromServer(boolean loadMore) {
+        if (!mIsFetching) {
+            mIsFetching = true;
+            mGridAdapter.setRefreshing(true);
+
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
+            mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
+        }
     }
 
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
+    private void setResultIdsAndFinish() {
         Intent intent = new Intent();
-        intent.putStringArrayListExtra(RESULT_IDS, mGridAdapter.getSelectedItems());
+        if (mGridAdapter.getSelectedItemCount() > 0) {
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            for (Integer localId : mGridAdapter.getSelectedItems()) {
+                MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                if (media != null) {
+                    remoteMediaIds.add(media.getMediaId());
+                }
+            }
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+        }
         setResult(RESULT_OK, intent);
         finish();
-    }
-
-    @Override
-    public void fetchMoreData(int offset) {
-        if (!mHasRetrievedAllMedia) {
-            refreshMediaFromServer(offset);
-        }
-    }
-
-    @Override
-    public void onRetryUpload(String mediaId) {
-    }
-
-    @Override
-    public boolean isInMultiSelect() {
-        return false;
     }
 
     private void noMediaFinish() {
@@ -197,79 +298,27 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }, 1500);
     }
 
-    void refreshMediaFromServer(int offset) {
-        if (offset == 0 || !mIsRefreshing) {
-            if (offset == mOldMediaSyncOffset) {
-                // we're pulling the same data again for some reason. Pull from the beginning.
-                offset = 0;
-            }
-            mOldMediaSyncOffset = offset;
-            mIsRefreshing = true;
-            mGridAdapter.setRefreshing(true);
+    private final class ActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mActionMode = mode;
+            updateActionModeTitle(mGridAdapter.getSelectedItemCount());
+            return true;
+        }
 
-            List<Object> apiArgs = new ArrayList<Object>();
-            apiArgs.add(WordPress.getCurrentBlog());
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
 
-            ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
-                // refersh db from server. If returned count is 0, we've retrieved all the media.
-                // stop retrieving until the user manually refreshes
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
 
-                @Override
-                public void onSuccess(int count) {
-                    MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-                    mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                    if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
-                        // There is no media at all
-                        noMediaFinish();
-                    }
-                    mIsRefreshing = false;
-
-                    // the activity may be gone by the time this finishes, so check for it
-                    if (!isFinishing()) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //mListener.onMediaItemListDownloaded();
-                                mGridAdapter.setRefreshing(false);
-                                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                                Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
-                                mGridAdapter.swapCursor(cursor);
-
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                    if (errorType != ApiHelper.ErrorType.NO_ERROR) {
-                        String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP
-                                ? getString(R.string.media_error_no_permission)
-                                : getString(R.string.error_refresh_media);
-                        Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
-                        MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
-                        mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-                    }
-
-                    // the activity may be cone by the time we get this, so check for it
-                    if (!isFinishing()) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mIsRefreshing = false;
-                                mGridAdapter.setRefreshing(false);
-                            }
-                        });
-                    }
-
-                }
-            };
-
-            ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(offset, MediaGridFragment.Filter.ALL, callback);
-            getMediaTask.execute(apiArgs);
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            setResultIdsAndFinish();
         }
     }
 }

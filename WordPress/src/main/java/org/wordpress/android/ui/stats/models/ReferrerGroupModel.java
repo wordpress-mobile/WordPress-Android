@@ -17,7 +17,7 @@ import java.util.List;
  * A model to represent a referrer group stat
  */
 public class ReferrerGroupModel implements Serializable {
-    private String mBlogId;
+    private long mBlogId;
     private long mDate;
 
     private String mGroupId;
@@ -30,7 +30,7 @@ public class ReferrerGroupModel implements Serializable {
     public transient boolean isRestCallInProgress = false;
     public transient boolean isMarkedAsSpam = false;
 
-    public ReferrerGroupModel(String blogId, String date, JSONObject groupJSON) throws JSONException {
+    public ReferrerGroupModel(long blogId, String date, JSONObject groupJSON) throws JSONException {
         setBlogId(blogId);
         setDate(StatsUtils.toMs(date));
 
@@ -64,12 +64,12 @@ public class ReferrerGroupModel implements Serializable {
         }
     }
 
-    public String getBlogId() {
+    public long getBlogId() {
         return mBlogId;
     }
 
-    private void setBlogId(String blogId) {
-        this.mBlogId = blogId;
+    public void setBlogId(long blogId) {
+        mBlogId = blogId;
     }
 
     public long getDate() {

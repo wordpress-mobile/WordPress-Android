@@ -51,7 +51,7 @@ public class SuggestionTable {
         return WordPress.wpDB.getDatabase();
     }
 
-    public static void insertSuggestionsForSite(final int siteId, final List<Suggestion> suggestions) {
+    public static void insertSuggestionsForSite(final long siteId, final List<Suggestion> suggestions) {
         // we want to delete the current suggestions, so that removed users will not show up as a suggestion
         deleteSuggestionsForSite(siteId);
 
@@ -75,10 +75,10 @@ public class SuggestionTable {
         getWritableDb().insertWithOnConflict(SUGGESTIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static List<Suggestion> getSuggestionsForSite(int siteId) {
+    public static List<Suggestion> getSuggestionsForSite(long siteId) {
         List<Suggestion> suggestions = new ArrayList<Suggestion>();
 
-        String[] args = {Integer.toString(siteId)};
+        String[] args = {Long.toString(siteId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + SUGGESTIONS_TABLE + " WHERE site_id=? ORDER BY user_login ASC", args);
 
         try {
@@ -95,8 +95,8 @@ public class SuggestionTable {
         }
     }
 
-    public static int deleteSuggestionsForSite(int siteId) {
-        return getWritableDb().delete(SUGGESTIONS_TABLE, "site_id=?", new String[]{Integer.toString(siteId)});
+    public static int deleteSuggestionsForSite(long siteId) {
+        return getWritableDb().delete(SUGGESTIONS_TABLE, "site_id=?", new String[]{Long.toString(siteId)});
     }
 
     private static Suggestion getSuggestionFromCursor(Cursor c) {
@@ -105,7 +105,7 @@ public class SuggestionTable {
         final String imageUrl = c.getString(c.getColumnIndex("image_url"));
         final String taxonomy = c.getString(c.getColumnIndex("taxonomy"));
 
-        int siteId = c.getInt(c.getColumnIndex("site_id"));
+        long siteId = c.getLong(c.getColumnIndex("site_id"));
 
         return new Suggestion(
                 siteId,
@@ -115,7 +115,7 @@ public class SuggestionTable {
                 taxonomy);
     }
 
-    public static void insertTagsForSite(final int siteId, final List<Tag> tags) {
+    public static void insertTagsForSite(final long siteId, final List<Tag> tags) {
         // we want to delete the current tags, so that removed tags will not show up
         deleteTagsForSite(siteId);
 
@@ -137,10 +137,10 @@ public class SuggestionTable {
         getWritableDb().insertWithOnConflict(TAXONOMY_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static List<Tag> getTagsForSite(int siteId) {
+    public static List<Tag> getTagsForSite(long siteId) {
         List<Tag> tags = new ArrayList<Tag>();
 
-        String[] args = {Integer.toString(siteId)};
+        String[] args = {Long.toString(siteId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + TAXONOMY_TABLE + " WHERE site_id=? ORDER BY tag ASC", args);
 
         try {
@@ -157,14 +157,14 @@ public class SuggestionTable {
         }
     }
 
-    public static int deleteTagsForSite(int siteId) {
-        return getWritableDb().delete(TAXONOMY_TABLE, "site_id=?", new String[]{Integer.toString(siteId)});
+    public static int deleteTagsForSite(long siteId) {
+        return getWritableDb().delete(TAXONOMY_TABLE, "site_id=?", new String[]{Long.toString(siteId)});
     }
 
     private static Tag getTagFromCursor(Cursor c) {
         final String tag = c.getString(c.getColumnIndex("tag"));
 
-        int siteId = c.getInt(c.getColumnIndex("site_id"));
+        long siteId = c.getLong(c.getColumnIndex("site_id"));
 
         return new Tag(
                 siteId,

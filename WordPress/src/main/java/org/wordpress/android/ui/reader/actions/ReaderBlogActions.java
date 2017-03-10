@@ -50,9 +50,9 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId);
         } else {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -418,7 +418,7 @@ public class ReaderBlogActions {
                 blogUrl,
                 listener,
                 errorListener);
-        WordPress.requestQueue.add(request);
+        WordPress.sRequestQueue.add(request);
     }
 
     /*

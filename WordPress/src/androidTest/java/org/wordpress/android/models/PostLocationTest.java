@@ -4,6 +4,8 @@ import android.test.InstrumentationTestCase;
 
 import junit.framework.Assert;
 
+import org.wordpress.android.fluxc.model.post.PostLocation;
+
 public class PostLocationTest extends InstrumentationTestCase {
     public static final double MAX_LAT = 90;
     public static final double MIN_LAT = -90;
