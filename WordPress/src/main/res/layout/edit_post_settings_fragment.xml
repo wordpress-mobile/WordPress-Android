@@ -95,7 +95,7 @@
                 android:inputType="textAutoCorrect" />
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPEditText
+        <EditText
             android:id="@+id/postExcerpt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
             android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
             android:minLines="1" />
 
-        <org.wordpress.android.widgets.WPEditText
+        <EditText
             android:id="@+id/post_password"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginLeft="@dimen/margin_small"

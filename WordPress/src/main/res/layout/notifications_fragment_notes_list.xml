@@ -90,13 +90,13 @@
                     android:checkedButton="@+id/notifications_filter_all"
                     android:orientation="horizontal">
 
-                    <org.wordpress.android.widgets.WPRadioButton
+                    <RadioButton
                         android:id="@+id/notifications_filter_all"
                         style="@style/Calypso.SegmentedControl"
                         android:background="@drawable/calypso_segmented_control_button_start"
                         android:text="@string/all" />
 
-                    <org.wordpress.android.widgets.WPRadioButton
+                    <RadioButton
                         android:id="@+id/notifications_filter_unread"
                         style="@style/Calypso.SegmentedControl"
                         android:layout_marginLeft="-1dp"
@@ -104,7 +104,7 @@
                         android:background="@drawable/calypso_segmented_control_button"
                         android:text="@string/unread" />
 
-                    <org.wordpress.android.widgets.WPRadioButton
+                    <RadioButton
                         android:id="@+id/notifications_filter_comments"
                         style="@style/Calypso.SegmentedControl"
                         android:layout_marginLeft="-1dp"
@@ -112,7 +112,7 @@
                         android:background="@drawable/calypso_segmented_control_button"
                         android:text="@string/tab_comments" />
 
-                    <org.wordpress.android.widgets.WPRadioButton
+                    <RadioButton
                         android:id="@+id/notifications_filter_follows"
                         style="@style/Calypso.SegmentedControl"
                         android:layout_marginLeft="-1dp"
@@ -120,7 +120,7 @@
                         android:background="@drawable/calypso_segmented_control_button"
                         android:text="@string/follows" />
 
-                    <org.wordpress.android.widgets.WPRadioButton
+                    <RadioButton
                         android:id="@+id/notifications_filter_likes"
                         style="@style/Calypso.SegmentedControl"
                         android:layout_marginLeft="-1dp"

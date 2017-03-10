@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -93,7 +92,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 accountUsers[i] = site.getUsername();
                 siteIds[i] = site.getId();
                 if (site.getUrl() != null) {
-                    blavatars[i] = GravatarUtils.blavatarFromUrl(site.getUrl(), 60);
+                    blavatars[i] = SiteUtils.getSiteIconUrl(site, 60);
                 } else {
                     blavatars[i] = "";
                 }
