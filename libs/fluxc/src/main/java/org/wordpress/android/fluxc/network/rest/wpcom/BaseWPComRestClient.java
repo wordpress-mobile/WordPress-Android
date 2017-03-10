@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
-import org.wordpress.android.fluxc.utils.ErrorUtils.OnParseError;
+import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.LanguageUtils;
 
 public class BaseWPComRestClient {
@@ -40,7 +40,7 @@ public class BaseWPComRestClient {
         };
         mOnParseErrorListener = new OnParseErrorListener() {
             @Override
-            public void onParseError(OnParseError event) {
+            public void onParseError(OnUnexpectedError event) {
                 mDispatcher.emitChange(event);
             }
         };
