@@ -9,10 +9,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * A fragment for display the results of a theme search
@@ -38,6 +44,28 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup premiumLink = (ViewGroup) view.findViewById(R.id.frame_premium_themes);
+        premiumLink.setVisibility(View.VISIBLE);
+        premiumLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Blog blog = WordPress.getCurrentBlog();
+                if (blog == null) {
+                    // TODO show toast to the user
+                    return;
+                }
+                String domain = UrlUtils.getHost(blog.getUrl());
+                String premiumThemesUrl = "https://wordpress.com/design/premium/" + domain;
+                AnalyticsUtils.trackWithCurrentBlogDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_PREMIUM_THEMES);
+                ActivityLauncher.openUrlExternal(view.getContext(), premiumThemesUrl);
+            }
+        });
+        return view;
     }
 
     @Override

@@ -584,6 +584,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "my_site_tab_accessed";
             case THEMES_ACCESSED_THEMES_BROWSER:
                 return "themes_theme_browser_accessed";
+            case THEMES_ACCESSED_PREMIUM_THEMES:
+                return "themes_premium_themes_accessed";
             case THEMES_ACCESSED_SEARCH:
                 return "themes_search_accessed";
             case THEMES_CHANGED_THEME:

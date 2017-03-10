@@ -1128,6 +1128,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
                 instructions.setCurrentDateForPeopleProperty("last_time_accessed_theme_browser");
                 break;
+            case THEMES_ACCESSED_PREMIUM_THEMES:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Accessed Premium Themes");
+                break;
             case THEMES_ACCESSED_SEARCH:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Themes - Accessed Theme");

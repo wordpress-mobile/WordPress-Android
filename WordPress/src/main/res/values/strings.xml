@@ -215,6 +215,7 @@
     <string name="theme_premium_theme">Premium theme</string>
     <string name="theme_no_search_result_found">Sorry, no themes found.</string>
     <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
+    <string name="theme_browse_premium_themes">Browse premium themes for more ></string>
 
     <!-- link view -->
     <string name="link_enter_url">URL</string>

@@ -71,4 +71,31 @@
             app:fixWidowWords="true"/>
     </RelativeLayout>
 
+
+    <FrameLayout
+        android:id="@+id/frame_premium_themes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_primary"
+        android:elevation="@dimen/appbar_elevation"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_premium_themes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:gravity="center"
+            android:linksClickable="false"
+            android:minHeight="@dimen/toolbar_height"
+            android:paddingLeft="@dimen/content_margin"
+            android:paddingRight="@dimen/content_margin"
+            android:text="@string/theme_browse_premium_themes"
+            android:textColor="@color/white"
+            android:textColorLink="@color/blue_light"
+            android:textSize="@dimen/text_sz_large" />
+    </FrameLayout>
+
 </RelativeLayout>
