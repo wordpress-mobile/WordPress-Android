@@ -9,10 +9,10 @@ import java.util.List;
 
 public class TagsContainerModel extends BaseStatsModel {
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private List<TagsModel> mTags;
 
-    public TagsContainerModel(String blogID, JSONObject response) throws JSONException {
+    public TagsContainerModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mDate = response.getString("date");
         JSONArray outerTags = response.getJSONArray("tags");
@@ -29,11 +29,11 @@ public class TagsContainerModel extends BaseStatsModel {
         return mTags;
     }
 
-    public String getBlogId() {
+    public long getBlogId() {
         return mBlogID;
     }
 
-    public void setBlogId(String blogId) {
+    public void setBlogId(long blogId) {
         this.mBlogID = blogId;
     }
 

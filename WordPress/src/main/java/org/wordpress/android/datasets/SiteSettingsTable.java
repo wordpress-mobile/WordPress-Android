@@ -33,6 +33,12 @@ public final class SiteSettingsTable {
         }
     }
 
+    public static void addOptimizedImageToSiteSettingsTable(SQLiteDatabase db) {
+        if (db != null) {
+            db.execSQL(SiteSettingsModel.ADD_OPTIMIZED_IMAGE);
+        }
+    }
+
     public static Map<Integer, CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);

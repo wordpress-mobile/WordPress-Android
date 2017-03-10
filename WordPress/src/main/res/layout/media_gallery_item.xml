@@ -27,7 +27,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/drag_handle"
         android:inflatedId="@+id/media_grid_item_image"
-        android:scaleType="fitCenter" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"

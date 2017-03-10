@@ -14,11 +14,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Capability;
 import org.wordpress.android.models.Person;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
@@ -27,13 +25,17 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.SimpleDateFormat;
 
+import javax.inject.Inject;
+
 public class PersonDetailFragment extends Fragment {
+    private static String ARG_CURRENT_USER_ID = "current_user_id";
     private static String ARG_PERSON_ID = "person_id";
     private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
     private static String ARG_PERSON_TYPE = "person_type";
 
-    private long mPersonID;
-    private int mLocalTableBlogID;
+    private long mCurrentUserId;
+    private long mPersonId;
+    private int mLocalTableBlogId;
     private Person.PersonType mPersonType;
 
     private WPNetworkImageView mAvatarImageView;
@@ -45,14 +47,24 @@ public class PersonDetailFragment extends Fragment {
     private TextView mSubscribedDateTitleView;
     private TextView mSubscribedDateTextView;
 
-    public static PersonDetailFragment newInstance(long personID, int localTableBlogID, Person.PersonType personType) {
+    @Inject SiteStore mSiteStore;
+
+    public static PersonDetailFragment newInstance(long currentUserId, long personId, int localTableBlogId,
+                                                   Person.PersonType personType) {
         PersonDetailFragment personDetailFragment = new PersonDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong(ARG_PERSON_ID, personID);
-        bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        bundle.putLong(ARG_CURRENT_USER_ID, currentUserId);
+        bundle.putLong(ARG_PERSON_ID, personId);
+        bundle.putInt(ARG_LOCAL_TABLE_BLOG_ID, localTableBlogId);
         bundle.putSerializable(ARG_PERSON_TYPE, personType);
         personDetailFragment.setArguments(bundle);
         return personDetailFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
     }
 
     @Override
@@ -65,8 +77,9 @@ public class PersonDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
 
-        mPersonID = getArguments().getLong(ARG_PERSON_ID);
-        mLocalTableBlogID = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
+        mCurrentUserId = getArguments().getLong(ARG_CURRENT_USER_ID);
+        mPersonId = getArguments().getLong(ARG_PERSON_ID);
+        mLocalTableBlogId = getArguments().getInt(ARG_LOCAL_TABLE_BLOG_ID);
         mPersonType = (Person.PersonType) getArguments().getSerializable(ARG_PERSON_TYPE);
 
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.person_avatar);
@@ -78,10 +91,9 @@ public class PersonDetailFragment extends Fragment {
         mSubscribedDateTitleView = (TextView) rootView.findViewById(R.id.subscribed_date_title);
         mSubscribedDateTextView = (TextView) rootView.findViewById(R.id.subscribed_date_text);
 
-        Account account = AccountHelper.getDefaultAccount();
-        boolean isCurrentUser = account.getUserId() == mPersonID;
-        Blog blog = WordPress.getBlog(mLocalTableBlogID);
-        if (!isCurrentUser && blog != null && blog.hasCapability(Capability.REMOVE_USERS)) {
+        boolean isCurrentUser = mCurrentUserId == mPersonId;
+        SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
+        if (!isCurrentUser && site != null && site.getHasCapabilityRemoveUsers()) {
             setHasOptionsMenu(true);
         }
 
@@ -139,23 +151,22 @@ public class PersonDetailFragment extends Fragment {
                     ? (int) getResources().getDimension(R.dimen.margin_small) : 0;
             changeDisplayNameTopPadding(padding);
         } else {
-            AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonID
-                    + " & localTableBlogID: " + mLocalTableBlogID);
+            AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonId
+                    + " & localTableBlogID: " + mLocalTableBlogId);
         }
     }
 
     public void setPersonDetails(long personID, int localTableBlogID) {
-        mPersonID = personID;
-        mLocalTableBlogID = localTableBlogID;
+        mPersonId = personID;
+        mLocalTableBlogId = localTableBlogID;
         refreshPersonDetails();
     }
 
     // Checks current user's capabilities to decide whether she can change the role or not
     private void setupRoleContainerForCapability() {
-        Blog blog = WordPress.getBlog(mLocalTableBlogID);
-        Account account = AccountHelper.getDefaultAccount();
-        boolean isCurrentUser = account.getUserId() == mPersonID;
-        boolean canChangeRole = (blog != null) && !isCurrentUser && blog.hasCapability(Capability.PROMOTE_USERS);
+        SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
+        boolean isCurrentUser = mCurrentUserId == mPersonId;
+        boolean canChangeRole = (site != null) && !isCurrentUser && site.getHasCapabilityPromoteUsers();
         if (canChangeRole) {
             mRoleContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -178,7 +189,7 @@ public class PersonDetailFragment extends Fragment {
         }
 
         RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
-                person.getLocalTableBlogId(), person.getRole());
+                mSiteStore.getSiteByLocalId(mLocalTableBlogId), person.getRole());
         dialog.show(getFragmentManager(), null);
     }
 
@@ -204,6 +215,6 @@ public class PersonDetailFragment extends Fragment {
     }
 
     public Person loadPerson() {
-        return PeopleTable.getPerson(mPersonID, mLocalTableBlogID, mPersonType);
+        return PeopleTable.getPerson(mPersonId, mLocalTableBlogId, mPersonType);
     }
 }

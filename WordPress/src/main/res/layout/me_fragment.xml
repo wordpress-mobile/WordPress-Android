@@ -173,7 +173,7 @@
                 app:srcCompat="@drawable/ic_help_grey_24dp"
                 android:contentDescription="@string/me_btn_support"/>
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/me_support_text_view"
                 style="@style/MeListRowTextView"
                 android:text="@string/me_btn_support" />
@@ -192,7 +192,7 @@
                 app:srcCompat="@drawable/ic_sign_out_grey_24dp"
                 android:contentDescription="@string/me_btn_login_logout"/>
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/me_login_logout_text_view"
                 style="@style/MeListRowTextView"
                 tools:text="@string/me_btn_login_logout" />

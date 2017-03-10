@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -39,6 +40,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -75,6 +77,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -117,6 +121,8 @@ public class ReaderPostListFragment extends Fragment
     private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
+
+    @Inject AccountStore mAccountStore;
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
@@ -220,6 +226,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -509,8 +516,8 @@ public class ReaderPostListFragment extends Fragment
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
 
         // add a menu to the filtered recycler's toolbar
-        if (!ReaderUtils.isLoggedOutReader()
-                && (getPostListType() == ReaderPostListType.TAG_FOLLOWED || getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
+        if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED ||
+                getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
             setupRecyclerToolbar();
         }
 
@@ -793,7 +800,7 @@ public class ReaderPostListFragment extends Fragment
         // they can be restored if the user undoes the block
         final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         // Only pass the blogID if available. Do not track feedID
-        AnalyticsUtils.trackWithBlogDetails(
+        AnalyticsUtils.trackWithSiteId(
                 AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
                 mCurrentBlogId != 0 ? mCurrentBlogId : null
         );

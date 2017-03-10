@@ -88,7 +88,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private LinearLayout mRecentWeeksList;
     private RelativeLayout mRecentWeeksHeader;
     private LinearLayout mRecentWeeksEmptyPlaceholder;
-    private String mRemoteBlogID, mRemoteItemID, mRemoteItemType, mItemTitle, mItemURL;
+    private long mRemoteBlogID;
+    private String mRemoteItemID, mRemoteItemType, mItemTitle, mItemURL;
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
     private int mPrevNumberOfBarsGraph = -1;
@@ -156,7 +157,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mRemoteItemID = savedInstanceState.getString(ARG_REMOTE_ITEM_ID);
-            mRemoteBlogID = savedInstanceState.getString(ARG_REMOTE_BLOG_ID);
+            mRemoteBlogID = savedInstanceState.getLong(ARG_REMOTE_BLOG_ID, 0);
             mRemoteItemType = savedInstanceState.getString(ARG_REMOTE_ITEM_TYPE);
             mItemTitle = savedInstanceState.getString(ARG_ITEM_TITLE);
             mItemURL = savedInstanceState.getString(ARG_ITEM_URL);
@@ -186,7 +187,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         } else if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle extras = getIntent().getExtras();
             mRemoteItemID = extras.getString(ARG_REMOTE_ITEM_ID);
-            mRemoteBlogID = extras.getString(ARG_REMOTE_BLOG_ID);
+            mRemoteBlogID = extras.getLong(ARG_REMOTE_BLOG_ID, 0);
             mRemoteItemType = extras.getString(ARG_REMOTE_ITEM_TYPE);
             mItemTitle = extras.getString(ARG_ITEM_TITLE);
             mItemURL = extras.getString(ARG_ITEM_URL);
@@ -194,14 +195,14 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             mSelectedBarGraphIndex = extras.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         }
 
-        if (mRemoteBlogID == null || mRemoteItemID == null) {
+        if (mRemoteBlogID == 0 || mRemoteItemID == null) {
             Toast.makeText(this, R.string.stats_generic_error, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithBlogDetails(
+            AnalyticsUtils.trackWithSiteId(
                     AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED,
                     mRemoteBlogID
             );
@@ -237,7 +238,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
         outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
-        outState.putString(ARG_REMOTE_BLOG_ID, mRemoteBlogID);
+        outState.putLong(ARG_REMOTE_BLOG_ID, mRemoteBlogID);
         outState.putString(ARG_REMOTE_ITEM_ID, mRemoteItemID);
         outState.putString(ARG_REMOTE_ITEM_TYPE, mRemoteItemType);
         outState.putString(ARG_ITEM_TITLE, mItemTitle);

@@ -14,12 +14,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Theme;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+
+import static com.android.volley.Request.Method.HEAD;
 
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";
@@ -40,15 +42,15 @@ public class ThemeWebActivity extends WPWebViewActivity {
         SUPPORT
     }
 
-    public static void openTheme(Activity activity, String themeId, ThemeWebActivityType type, boolean isCurrentTheme) {
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        Theme currentTheme = WordPress.wpDB.getTheme(blogId, themeId);
+    public static void openTheme(Activity activity, SiteModel site, String themeId, ThemeWebActivityType type,
+                                 boolean isCurrentTheme) {
+        Theme currentTheme = WordPress.wpDB.getTheme(String.valueOf(site.getSiteId()), themeId);
         if (currentTheme == null) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
             return;
         }
 
-        String url = getUrl(currentTheme, type, currentTheme.isPremium());
+        String url = getUrl(site, currentTheme, type, currentTheme.isPremium());
 
         if (type == ThemeWebActivityType.PREVIEW) {
             // Do not open the Customizer with the in-app browser.
@@ -57,34 +59,34 @@ public class ThemeWebActivity extends WPWebViewActivity {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4934
             ActivityLauncher.openUrlExternal(activity, url);
         } else {
-            openWPCOMURL(activity, url, currentTheme, WordPress.getCurrentBlog(), isCurrentTheme);
+            openWPCOMURL(activity, url, currentTheme, site, isCurrentTheme);
         }
     }
 
     /*
      * opens the current theme for the current blog
      */
-    public static void openCurrentTheme(Activity activity, ThemeWebActivityType type) {
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        String themeId = WordPress.wpDB.getCurrentThemeId(blogId);
+    public static void openCurrentTheme(Activity activity, SiteModel site, ThemeWebActivityType type) {
+        String themeId = WordPress.wpDB.getCurrentThemeId(String.valueOf(site.getSiteId()));
         if (themeId.isEmpty()) {
-            requestAndOpenCurrentTheme(activity, blogId);
+            requestAndOpenCurrentTheme(activity, site);
         } else {
-            openTheme(activity, themeId, type, true);
+            openTheme(activity, site, themeId, type, true);
         }
     }
 
-    private static void requestAndOpenCurrentTheme(final Activity activity, final String blogId) {
-        WordPress.getRestClientUtilsV1_1().getCurrentTheme(blogId, new RestRequest.Listener() {
+    private static void requestAndOpenCurrentTheme(final Activity activity, final SiteModel site) {
+        WordPress.getRestClientUtilsV1_1().getCurrentTheme(site.getSiteId(),
+                new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Theme currentTheme = Theme.fromJSONV1_1(response);
+                    Theme currentTheme = Theme.fromJSONV1_1(response, site);
                     if (currentTheme != null) {
                         currentTheme.setIsCurrent(true);
                         currentTheme.save();
-                        WordPress.wpDB.setCurrentTheme(blogId, currentTheme.getId());
-                        openTheme(activity, currentTheme.getId(), ThemeWebActivityType.PREVIEW, true);
+                        WordPress.wpDB.setCurrentTheme(String.valueOf(site.getSiteId()), currentTheme.getId());
+                        openTheme(activity, site, currentTheme.getId(), ThemeWebActivityType.PREVIEW, true);
                     }
                 } catch (JSONException e) {
                     ToastUtils.showToast(activity, R.string.could_not_load_theme);
@@ -99,8 +101,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
         });
     }
 
-    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, Blog blog,
-                                     boolean isCurrentTheme) {
+    private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, SiteModel site, Boolean
+            isCurrentTheme) {
         if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -113,11 +115,11 @@ public class ThemeWebActivity extends WPWebViewActivity {
             return;
         }
 
-        String authURL = ThemeWebActivity.getBlogLoginUrl(blog);
+        String authURL = ThemeWebActivity.getSiteLoginUrl(site);
         Intent intent = new Intent(activity, ThemeWebActivity.class);
-        intent.putExtra(ThemeWebActivity.URL_TO_LOAD, url);
-        intent.putExtra(ThemeWebActivity.AUTHENTICATION_URL, authURL);
-        intent.putExtra(ThemeWebActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
         intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
@@ -127,9 +129,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
         activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
-    public static String getUrl(Theme theme, ThemeWebActivityType type, boolean isPremium) {
+    public static String getUrl(SiteModel site, Theme theme, ThemeWebActivityType type, boolean isPremium) {
         String url = "";
-        String homeURL = WordPress.getCurrentBlog().getHomeURL();
+        String homeURL = site.getUrl();
         String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
 
         switch (type) {

@@ -31,7 +31,7 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
-        <item name="wpFontFamily">merriweather</item>
+        <item name="android:fontFamily">serif</item>
     </style>
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
@@ -45,7 +45,7 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
-        <item name="wpFontFamily">merriweather</item>
+        <item name="android:fontFamily">serif</item>
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>

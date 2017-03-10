@@ -7,14 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 /**
  * An activity to handle deep linking and intercepting
@@ -26,19 +29,16 @@ import org.wordpress.android.util.ToastUtils;
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private static final int INTENT_WELCOME = 0;
 
-    private enum InterceptType {
-        VIEWPOST,
-        READER_BLOG,
-        READER_FEED
-    }
-
     private String mInterceptedUri;
     private String mBlogId;
     private String mPostId;
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
@@ -52,9 +52,9 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             mBlogId = uri.getQueryParameter("blogId");
             mPostId = uri.getQueryParameter("postId");
 
-            // if user is logged in, show the post right away - otherwise show welcome activity
-            // and then show the post once the user has logged in
-            if (AccountHelper.isSignedInWordPressDotCom()) {
+            // if user is signed in wpcom show the post right away - otherwise show welcome activity
+            // and then show the post once the user has signed in
+            if (mAccountStore.hasAccessToken()) {
                 showPost();
             } else {
                 Intent intent = new Intent(this, SignInActivity.class);

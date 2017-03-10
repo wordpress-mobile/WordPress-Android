@@ -28,8 +28,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
@@ -37,13 +39,13 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -70,9 +72,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
     private PreferenceCategory mBlogsCategory;
 
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         addPreferencesFromResource(R.xml.notifications_settings);
         setHasOptionsMenu(true);
@@ -186,6 +192,10 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
             updateUIForNotificationsEnabledState();
         }
 
+        if (!mAccountStore.hasAccessToken()) {
+            return;
+        }
+
         NotificationsUtils.getPushNotificationSettings(getActivity(), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -292,19 +302,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
 
     private void configureBlogsSettings(PreferenceCategory blogsCategory, boolean showAll) {
         if (!isAdded()) return;
-        // Retrieve blogs (including jetpack sites) originally retrieved through FetchBlogListWPCom
-        // They will have an empty (but encrypted) password
-        String args = "password='" + WordPressDB.encryptPassword("") + "'";
 
-        // Check if user has typed in a search query
-        String trimmedQuery = null;
+        List<SiteModel> sites;
+        String trimmedQuery = "";
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             trimmedQuery = mSearchView.getQuery().toString().trim();
-            args += " AND (url LIKE '%" + trimmedQuery + "%' OR blogName LIKE '%" + trimmedQuery + "%')";
+            sites = mSiteStore.getWPComAndJetpackSitesByNameOrUrlMatching(trimmedQuery);
+        } else {
+            sites = mSiteStore.getWPComAndJetpackSites();
         }
-
-        List<Map<String, Object>> blogs = WordPress.wpDB.getBlogsBy(args, null, 0, false);
-        mSiteCount = blogs.size();
+        mSiteCount = sites.size();
 
         Context context = getActivity();
 
@@ -312,21 +319,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
 
         int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
         int count = 0;
-        for (Map blog : blogs) {
+        for (SiteModel site : sites) {
             if (context == null) return;
 
             count++;
             if (maxSitesToShow != NO_MAXIMUM && count > maxSitesToShow) break;
 
-            String siteUrl = MapUtils.getMapStr(blog, "url");
-            String title = MapUtils.getMapStr(blog, "blogName");
-            long blogId = MapUtils.getMapLong(blog, "blogId");
-
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
-            prefScreen.setTitle(title);
-            prefScreen.setSummary(UrlUtils.getHost(siteUrl));
-
-            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, blogId);
+            prefScreen.setTitle(SiteUtils.getSiteNameOrHomeURL(site));
+            prefScreen.setSummary(SiteUtils.getHomeURLOrHostName(site));
+            addPreferencesForPreferenceScreen(prefScreen, Channel.BLOGS, site.getSiteId());
             blogsCategory.addPreference(prefScreen);
         }
 

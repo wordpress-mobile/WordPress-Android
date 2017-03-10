@@ -26,28 +26,35 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 public class AddQuickPressShortcutActivity extends ListActivity {
     static final int ADD_ACCOUNT_REQUEST = 0;
 
-    public List<Map<String, Object>> accounts;
     public String[] blogNames;
-    public int[] accountIDs;
+    public int[] siteIds;
     public String[] accountUsers;
     public String[] blavatars;
     public List<String> accountNames = new ArrayList<>();
 
+    @Inject SiteStore mSiteStore;
+    @Inject FluxCImageLoader mImageLoader;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.add_quickpress_shortcut);
         setTitle(getResources().getText(R.string.quickpress_window_title));
@@ -56,7 +63,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     }
 
     private void displayAccounts() {
-        accounts = WordPress.wpDB.getVisibleBlogs();
+        List<SiteModel> sites = mSiteStore.getVisibleSites();
 
         ListView listView = (ListView) findViewById(android.R.id.list);
 
@@ -66,7 +73,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         listView.setVerticalFadingEdgeEnabled(false);
         listView.setVerticalScrollBarEnabled(true);
 
-        if (accounts.size() > 0) {
+        if (sites.size() > 0) {
             ScrollView sv = new ScrollView(this);
             sv.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             LinearLayout layout = new LinearLayout(this);
@@ -75,28 +82,21 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
             layout.setOrientation(LinearLayout.VERTICAL);
 
-            blogNames = new String[accounts.size()];
-            accountIDs = new int[accounts.size()];
-            accountUsers = new String[accounts.size()];
-            blavatars = new String[accounts.size()];
-            int validBlogCtr = 0;
-            for (int i = 0; i < accounts.size(); i++) {
-                Map<String, Object> curHash = accounts.get(i);
-                blogNames[validBlogCtr] = curHash.get("blogName").toString();
-                accountUsers[validBlogCtr] = curHash.get("username").toString();
-                accountIDs[validBlogCtr] = (Integer)curHash.get("id");
-                String url = curHash.get("url").toString();
-                if (url != null) {
-                    blavatars[validBlogCtr] = GravatarUtils.blavatarFromUrl(url, 60);
+            blogNames = new String[sites.size()];
+            siteIds = new int[sites.size()];
+            accountUsers = new String[sites.size()];
+            blavatars = new String[sites.size()];
+            for (int i = 0; i < sites.size(); i++) {
+                SiteModel site = sites.get(i);
+                blogNames[i] = SiteUtils.getSiteNameOrHomeURL(site);
+                accountUsers[i] = site.getUsername();
+                siteIds[i] = site.getId();
+                if (site.getUrl() != null) {
+                    blavatars[i] = SiteUtils.getSiteIconUrl(site, 60);
                 } else {
-                    blavatars[validBlogCtr] = "";
+                    blavatars[i] = "";
                 }
-                accountNames.add(validBlogCtr, blogNames[i]);
-                validBlogCtr++;
-            }
-
-            if (validBlogCtr < accounts.size()){
-                accounts = WordPress.wpDB.getVisibleBlogs();
+                accountNames.add(i, blogNames[i]);
             }
 
             setListAdapter(new HomeListAdapter());
@@ -107,7 +107,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 }
             });
 
-            if(accounts.size() == 1) {
+            if (sites.size() == 1) {
                 AddQuickPressShortcutActivity.this.buildDialog(0);
             }
 
@@ -118,9 +118,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         }
     }
 
-    private void buildDialog(int positionParam) {
-        final int position = positionParam;
-
+    private void buildDialog(final int position) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddQuickPressShortcutActivity.this);
         dialogBuilder.setTitle(R.string.quickpress_add_alert_title);
 
@@ -138,7 +136,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     shortcutIntent.setAction(Intent.ACTION_MAIN);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    shortcutIntent.putExtra(EditPostActivity.EXTRA_QUICKPRESS_BLOG_ID, accountIDs[position]);
+                    shortcutIntent.putExtra(EditPostActivity.EXTRA_QUICKPRESS_BLOG_ID, siteIds[position]);
                     shortcutIntent.putExtra(EditPostActivity.EXTRA_IS_QUICKPRESS, true);
 
                     Intent addIntent = new Intent();
@@ -147,12 +145,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext
                             (AddQuickPressShortcutActivity.this, R.mipmap.app_icon));
 
-                    WordPress.wpDB.addQuickPressShortcut(accountIDs[position], quickPressShortcutName.getText().toString());
-
-                    if (WordPress.currentBlog == null) {
-                        WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(accountIDs[position]);
-                        WordPress.wpDB.updateLastBlogId(accountIDs[position]);
-                    }
+                    WordPress.wpDB.addQuickPressShortcut(siteIds[position], quickPressShortcutName.getText().toString());
 
                     addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
                     AddQuickPressShortcutActivity.this.sendBroadcast(addIntent);
@@ -175,8 +168,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         switch (requestCode) {
             case ADD_ACCOUNT_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    accounts = WordPress.wpDB.getVisibleBlogs();
-                    if (accounts.size() > 0) {
+                    if (mSiteStore.getVisibleSitesCount() > 0) {
                         displayAccounts();
                         break;
                     }
@@ -191,7 +183,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         }
 
         public int getCount() {
-            return accounts.size();
+            return mSiteStore.getVisibleSitesCount();
         }
 
         public Object getItem(int position) {
@@ -209,7 +201,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 view = (RelativeLayout)inflater.inflate(R.layout.home_row, parent, false);
             }
             String username = accountUsers[position];
-            view.setId(Integer.valueOf(accountIDs[position]));
+            view.setId(Integer.valueOf(siteIds[position]));
 
             TextView blogName = (TextView)view.findViewById(R.id.blogName);
             TextView blogUsername = (TextView)view.findViewById(R.id.blogUser);
@@ -220,7 +212,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             blogUsername.setText(
                     StringUtils.unescapeHTML(username));
             blavatar.setErrorImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
-            blavatar.setImageUrl(blavatars[position], WordPress.imageLoader);
+            blavatar.setImageUrl(blavatars[position], mImageLoader);
 
             return view;
 

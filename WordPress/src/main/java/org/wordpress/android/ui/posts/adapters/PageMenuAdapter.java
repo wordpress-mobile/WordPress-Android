@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.widgets.PostListButton;
 
 import java.util.ArrayList;
@@ -26,12 +26,12 @@ public class PageMenuAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private final List<Integer> mMenuItems = new ArrayList<>();
 
-    public PageMenuAdapter(Context context, @NonNull PostsListPost page) {
+    public PageMenuAdapter(Context context, @NonNull PostModel page) {
         super();
         mInflater = LayoutInflater.from(context);
 
-        boolean showViewItem = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
-        boolean showStatsItem = !page.isLocalDraft() && page.getStatusEnum() == PostStatus.PUBLISHED;
+        boolean showViewItem = !page.isLocalDraft() && PostStatus.fromPost(page) == PostStatus.PUBLISHED;
+        boolean showStatsItem = !page.isLocalDraft() && PostStatus.fromPost(page) == PostStatus.PUBLISHED;
         boolean showTrashItem = !page.isLocalDraft();
         boolean showDeleteItem = !showTrashItem;
 

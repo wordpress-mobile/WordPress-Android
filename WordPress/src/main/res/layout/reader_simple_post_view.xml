@@ -86,7 +86,7 @@
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
-        app:wpFontFamily="merriweather"
+        android:fontFamily="serif"
         tools:text="text_simple_post_title" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -100,7 +100,7 @@
         android:maxLines="3"
         android:textColor="@color/grey_darken_20"
         android:textSize="@dimen/text_sz_medium"
-        app:wpFontFamily="merriweather"
+        android:fontFamily="serif"
         tools:text="text_simple_post_excerpt\ntext_simple_post_excerpt\ntext_simple_post_excerpt" />
 
 </RelativeLayout>

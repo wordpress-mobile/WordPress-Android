@@ -18,19 +18,29 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.models.PostsListPostList;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUpdateService;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -40,11 +50,13 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.PostListButton;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.ErrorType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-
 
 public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
@@ -68,20 +80,64 @@ public class PostsListFragment extends Fragment
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
-    private long mPostIdForPostToBeDeleted = 0;
+    private int mPostIdForPostToBeDeleted = 0;
 
-    private final PostsListPostList mTrashedPosts = new PostsListPostList();
+    private final List<PostModel> mTrashedPosts = new ArrayList<>();
+
+    private SiteModel mSite;
+
+    @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
+    @Inject Dispatcher mDispatcher;
+
+    public static PostsListFragment newInstance(SiteModel site) {
+        PostsListFragment fragment = new PostsListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(WordPress.SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
+
+        updateSiteOrFinishActivity(savedInstanceState);
 
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
+
+        super.onDestroy();
+    }
+
+    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
         }
     }
 
@@ -143,8 +199,8 @@ public class PostsListFragment extends Fragment
     }
 
     private @Nullable PostsListAdapter getPostListAdapter() {
-        if (mPostsListAdapter == null && WordPress.getCurrentBlog() != null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), WordPress.getCurrentBlog(), mIsPage);
+        if (mPostsListAdapter == null) {
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -158,9 +214,9 @@ public class PostsListFragment extends Fragment
         return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
     }
 
-    private void loadPosts() {
+    private void loadPosts(LoadMode mode) {
         if (getPostListAdapter() != null) {
-            getPostListAdapter().loadPosts();
+            getPostListAdapter().loadPosts(mode);
         }
     }
 
@@ -179,12 +235,7 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (!isAdded()) return;
-
-        if (WordPress.getCurrentBlog() != null) {
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), mIsPage);
-        } else {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found);
-        }
+        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage);
     }
 
     public void onResume() {
@@ -194,10 +245,8 @@ public class PostsListFragment extends Fragment
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        if (WordPress.getCurrentBlog() != null) {
-            // always (re)load when resumed to reflect changes made elsewhere
-            loadPosts();
-        }
+        // always (re)load when resumed to reflect changes made elsewhere
+        loadPosts(LoadMode.IF_CHANGED);
 
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
@@ -239,7 +288,14 @@ public class PostsListFragment extends Fragment
         if (loadMore) {
             showLoadMoreProgress();
         }
-        PostUpdateService.startServiceForBlog(getActivity(), WordPress.getCurrentLocalTableBlogId(), mIsPage, loadMore);
+
+        FetchPostsPayload payload = new FetchPostsPayload(mSite, loadMore);
+
+        if (mIsPage) {
+            mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
+        } else {
+            mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
+        }
     }
 
     private void showLoadMoreProgress() {
@@ -270,46 +326,8 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalBlogId) {
-            loadPosts();
-        }
-    }
-
-    /*
-     * upload ended, reload regardless of success/fail so correct status of uploaded post appears
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostUploadEnded event) {
-        if (isAdded() && WordPress.getCurrentLocalTableBlogId() == event.mLocalBlogId) {
-            loadPosts();
-        }
-    }
-
-    /*
-     * PostUpdateService finished a request to retrieve new posts
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.RequestPosts event) {
-        mIsFetchingPosts = false;
-        if (isAdded() && event.getBlogId() == WordPress.getCurrentLocalTableBlogId()) {
-            setRefreshing(false);
-            hideLoadMoreProgress();
-            if (!event.getFailed()) {
-                mCanLoadMorePosts = event.canLoadMore();
-                loadPosts();
-            } else {
-                ApiHelper.ErrorType errorType = event.getErrorType();
-                if (errorType != null && errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
-                    switch (errorType) {
-                        case UNAUTHORIZED:
-                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            break;
-                        default:
-                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            break;
-                    }
-                }
-            }
+        if (isAdded() && mSite.getId() == event.mLocalBlogId) {
+            loadPosts(LoadMode.FORCED);
         }
     }
 
@@ -337,7 +355,8 @@ public class PostsListFragment extends Fragment
         }
 
         mEmptyViewTitle.setText(getText(stringId));
-        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE : View.GONE);
+        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE :
+                View.GONE);
         mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
@@ -345,18 +364,6 @@ public class PostsListFragment extends Fragment
         if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
     }
 
     @Override
@@ -404,7 +411,7 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks a post
      */
     @Override
-    public void onPostSelected(PostsListPost post) {
+    public void onPostSelected(PostModel post) {
         onPostButtonClicked(PostListButton.BUTTON_EDIT, post);
     }
 
@@ -412,76 +419,63 @@ public class PostsListFragment extends Fragment
      * called by the adapter when the user clicks the edit/view/stats/trash button for a post
      */
     @Override
-    public void onPostButtonClicked(int buttonType, PostsListPost post) {
+    public void onPostButtonClicked(int buttonType, PostModel post) {
         if (!isAdded()) return;
-
-        Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
-        if (fullPost == null) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found);
-            return;
-        }
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
-                ActivityLauncher.editBlogPostOrPageForResult(getActivity(), post.getPostId(), mIsPage);
+                ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_PUBLISH:
-                publishPost(fullPost);
+                publishPost(post);
                 break;
             case PostListButton.BUTTON_VIEW:
-                ActivityLauncher.browsePostOrPage(getActivity(), WordPress.getCurrentBlog(), fullPost);
+                ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), fullPost, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post, mIsPage);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), fullPost, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 // prevent deleting post while it's being uploaded
-                if (!post.isUploading()) {
+                if (!PostUploadService.isPostUploading(post)) {
                     trashPost(post);
                 }
                 break;
         }
     }
 
-    private void publishPost(final Post post) {
+    private void publishPost(final PostModel post) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             ToastUtils.showToast(getActivity(), R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
             return;
         }
 
         // If the post is empty, don't publish
-        if (!post.isPublishable()) {
+        if (!PostUtils.isPublishable(post)) {
             ToastUtils.showToast(getActivity(), R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
             return;
         }
 
-        post.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
-        post.setChangedFromDraftToPublished(true);
+        post.setStatus(PostStatus.PUBLISHED.toString());
 
         PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
-        PostUtils.trackSavePostAnalytics(post);
+        PostUtils.trackSavePostAnalytics(post, mSite);
     }
 
     /*
      * send the passed post to the trash with undo
      */
-    private void trashPost(final PostsListPost post) {
+    private void trashPost(final PostModel post) {
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
         if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
             || getPostListAdapter() == null) {
-            return;
-        }
-
-        final Post fullPost = WordPress.wpDB.getPostForLocalTablePostId(post.getPostId());
-        if (fullPost == null) {
-            ToastUtils.showToast(getActivity(), R.string.post_not_found);
             return;
         }
 
@@ -532,23 +526,74 @@ public class PostsListFragment extends Fragment
                 // https://code.google.com/p/android/issues/detail?id=190529
                 mTrashedPosts.remove(post);
 
-                WordPress.wpDB.deletePost(fullPost);
-
-                if (!post.isLocalDraft()) {
-                    new ApiHelper.DeleteSinglePostTask().execute(WordPress.getCurrentBlog(),
-                            fullPost.getRemotePostId(), mIsPage);
-                } else  {
-                    mShouldCancelPendingDraftNotification = false;
+                if (post.isLocalDraft()) {
+                    mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
 
                     // delete the pending draft notification if available
-                    int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getPostId());
+                    mShouldCancelPendingDraftNotification = false;
+                    int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getId());
                     NativeNotificationsUtils.dismissNotification(pushId, getActivity());
+                } else {
+                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(new RemotePostPayload(post, mSite)));
                 }
             }
         });
 
-        mPostIdForPostToBeDeleted = post.getPostId();
+        mPostIdForPostToBeDeleted = post.getId();
         mShouldCancelPendingDraftNotification = true;
         snackbar.show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostChanged(OnPostChanged event) {
+        switch (event.causeOfChange) {
+            case FETCH_POSTS:
+            case FETCH_PAGES:
+                mIsFetchingPosts = false;
+                if (!isAdded()) {
+                    return;
+                }
+
+                setRefreshing(false);
+                hideLoadMoreProgress();
+                if (!event.isError()) {
+                    mCanLoadMorePosts = event.canLoadMore;
+                    loadPosts(LoadMode.IF_CHANGED);
+                } else {
+                    PostError error = event.error;
+                    switch (error.type) {
+                        case UNAUTHORIZED:
+                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                            break;
+                        default:
+                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                            break;
+                    }
+                }
+                break;
+            case DELETE_POST:
+                if (event.isError()) {
+                    String message = String.format(getText(R.string.error_delete_post).toString(),
+                            mIsPage ? "page" : "post");
+                    ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
+                    loadPosts(LoadMode.IF_CHANGED);
+                }
+                break;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(OnPostUploaded event) {
+        if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
+            loadPosts(LoadMode.FORCED);
+        }
     }
 }

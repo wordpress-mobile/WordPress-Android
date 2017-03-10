@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -80,19 +79,18 @@ public class ReaderLikeTable {
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
     }
 
-    public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked) {
+    public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked, long wpComUserId) {
         if (post == null) {
             return;
         }
-        long currentUserId = AccountHelper.getDefaultAccount().getUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", post.blogId);
             values.put("post_id", post.postId);
-            values.put("user_id", currentUserId);
+            values.put("user_id", wpComUserId);
             ReaderDatabase.getWritableDb().insert("tbl_post_likes", null, values);
         } else {
-            String args[] = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(currentUserId)};
+            String args[] = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(wpComUserId)};
             ReaderDatabase.getWritableDb().delete("tbl_post_likes", "blog_id=? AND post_id=? AND user_id=?", args);
         }
     }
@@ -166,22 +164,21 @@ public class ReaderLikeTable {
                 "SELECT count(*) FROM tbl_comment_likes WHERE blog_id=? AND comment_id=?", args);
     }
 
-    public static void setCurrentUserLikesComment(ReaderComment comment, boolean isLiked) {
+    public static void setCurrentUserLikesComment(ReaderComment comment, boolean isLiked, long wpComUserId) {
         if (comment == null) {
             return;
         }
 
-        long currentUserId = AccountHelper.getDefaultAccount().getUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", comment.blogId);
             values.put("comment_id", comment.commentId);
-            values.put("user_id", currentUserId);
+            values.put("user_id", wpComUserId);
             ReaderDatabase.getWritableDb().insert("tbl_comment_likes", null, values);
         } else {
             String args[] = {Long.toString(comment.blogId),
                              Long.toString(comment.commentId),
-                             Long.toString(currentUserId)};
+                             Long.toString(wpComUserId)};
             ReaderDatabase.getWritableDb().delete("tbl_comment_likes",
                     "blog_id=? AND comment_id=? AND user_id=?", args);
         }

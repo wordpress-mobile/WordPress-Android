@@ -159,6 +159,4 @@ public class ReaderTagHeaderView extends RelativeLayout {
             return tag.getTagSlug();
         }
     }
-
-
 }

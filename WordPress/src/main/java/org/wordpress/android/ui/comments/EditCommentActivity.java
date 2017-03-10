@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,50 +17,49 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONObject;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.CommentAction;
+import org.wordpress.android.fluxc.generated.CommentActionBuilder;
+import org.wordpress.android.fluxc.model.CommentModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.CommentStore;
+import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.VolleyUtils;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCException;
-import org.xmlrpc.android.XMLRPCFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import javax.inject.Inject;
 
 public class EditCommentActivity extends AppCompatActivity {
-    static final String ARG_LOCAL_BLOG_ID = "blog_id";
-    static final String ARG_COMMENT_ID = "comment_id";
-    static final String ARG_NOTE_ID = "note_id";
+    static final String KEY_COMMENT = "KEY_COMMENT";
+    static final String KEY_NOTE_ID = "KEY_NOTE_ID";
 
     private static final int ID_DIALOG_SAVING = 0;
 
-    private int mLocalBlogId;
-    private long mCommentId;
-    private Comment mComment;
+    private SiteModel mSite;
+    private CommentModel mComment;
     private Note mNote;
+    private boolean mFetchingComment;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject SiteStore mSiteStore;
+    @Inject CommentStore mCommentStore;
 
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.comment_edit_activity);
         setTitle(getString(R.string.edit_comment));
@@ -77,30 +75,52 @@ public class EditCommentActivity extends AppCompatActivity {
         ActivityId.trackLastActivity(ActivityId.COMMENT_EDITOR);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
     private void loadComment(Intent intent) {
         if (intent == null) {
             showErrorAndFinish();
             return;
         }
 
-        mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
-        mCommentId = intent.getLongExtra(ARG_COMMENT_ID, 0);
-        final String noteId = intent.getStringExtra(ARG_NOTE_ID);
-        if (noteId == null) {
-            mComment = CommentTable.getComment(mLocalBlogId, mCommentId);
-            if (mComment == null) {
-                showErrorAndFinish();
-                return;
-            }
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+        mComment = (CommentModel) intent.getSerializableExtra(KEY_COMMENT);
+        final String noteId = intent.getStringExtra(KEY_NOTE_ID);
 
-            configureViews();
+        // If the noteId is passed, load the comment from the note
+        if (noteId != null) {
+            loadCommentFromNote(noteId);
+            return;
+        }
+
+        // Else make sure the comment has been passed
+        if (mComment == null) {
+            showErrorAndFinish();
+            return;
+        }
+        configureViews();
+    }
+
+    private void loadCommentFromNote(String noteId) {
+        mNote = NotificationsTable.getNoteById(noteId);
+        if (mNote != null) {
+            setFetchProgressVisible(true);
+            mSite = mSiteStore.getSiteBySiteId(mNote.getSiteId());
+            RemoteCommentPayload payload = new RemoteCommentPayload(mSite, mNote.getCommentId());
+            mFetchingComment = true;
+            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentAction(payload));
         } else {
-            mNote = NotificationsTable.getNoteById(noteId);
-            if (mNote != null) {
-                requestFullCommentForNote(mNote);
-            } else {
-                showErrorAndFinish();
-            }
+            showErrorAndFinish();
         }
     }
 
@@ -110,24 +130,8 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void configureViews() {
-        final EditText editAuthorName = (EditText) this.findViewById(R.id.author_name);
-        editAuthorName.setText(mComment.getAuthorName());
-
-        final EditText editAuthorEmail = (EditText) this.findViewById(R.id.author_email);
-        editAuthorEmail.setText(mComment.getAuthorEmail());
-
-        final EditText editAuthorUrl = (EditText) this.findViewById(R.id.author_url);
-        editAuthorUrl.setText(mComment.getAuthorUrl());
-
-        // REST API can currently only edit comment content
-        if (mNote != null) {
-            editAuthorName.setVisibility(View.GONE);
-            editAuthorEmail.setVisibility(View.GONE);
-            editAuthorUrl.setVisibility(View.GONE);
-        }
-
         final EditText editContent = (EditText) this.findViewById(R.id.edit_comment_content);
-        editContent.setText(mComment.getCommentText());
+        editContent.setText(mComment.getContent());
 
         // show error when comment content is empty
         editContent.addTextChangedListener(new TextWatcher() {
@@ -192,57 +196,24 @@ public class EditCommentActivity extends AppCompatActivity {
         }
 
         // make sure we have an active connection
-        if (!NetworkUtils.checkConnection(this))
+        if (!NetworkUtils.checkConnection(this)) {
             return;
-
-        if (mNote != null) {
-            // Edit comment via REST API :)
-            showSaveDialog();
-            WordPress.getRestClientUtils().editCommentContent(mNote.getSiteId(),
-                    mNote.getCommentId(),
-                    EditTextUtils.getText(editContent),
-                    new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (isFinishing()) return;
-
-                            dismissSaveDialog();
-                            setResult(RESULT_OK);
-                            finish();
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (isFinishing()) return;
-
-                            dismissSaveDialog();
-                            showEditErrorAlert();
-                        }
-                    });
-        } else {
-            // Edit comment via XML-RPC :(
-            if (mIsUpdateTaskRunning)
-                AppLog.w(AppLog.T.COMMENTS, "update task already running");
-            new UpdateCommentTask().execute();
         }
+
+        showSaveDialog();
+        mComment.setContent(getEditTextStr(R.id.edit_comment_content));
+        mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, mComment)));
     }
 
     /*
      * returns true if user made any changes to the comment
      */
     private boolean isCommentEdited() {
-        if (mComment == null)
+        if (mComment == null) {
             return false;
-
-        final String authorName = getEditTextStr(R.id.author_name);
-        final String authorEmail = getEditTextStr(R.id.author_email);
-        final String authorUrl = getEditTextStr(R.id.author_url);
+        }
         final String content = getEditTextStr(R.id.edit_comment_content);
-
-        return !(authorName.equals(mComment.getAuthorName())
-                && authorEmail.equals(mComment.getAuthorEmail())
-                && authorUrl.equals(mComment.getAuthorUrl())
-                && content.equals(mComment.getCommentText()));
+        return !content.equals(mComment.getContent());
     }
 
     @Override
@@ -269,89 +240,6 @@ public class EditCommentActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     * AsyncTask to save comment to server
-     */
-    private boolean mIsUpdateTaskRunning = false;
-    private class UpdateCommentTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected void onPreExecute() {
-            mIsUpdateTaskRunning = true;
-            showSaveDialog();
-        }
-        @Override
-        protected void onCancelled() {
-            mIsUpdateTaskRunning = false;
-            dismissSaveDialog();
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            final Blog blog;
-            blog = WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId);
-            if (blog == null) {
-                AppLog.e(AppLog.T.COMMENTS, "Invalid local blog id:" + mLocalBlogId);
-                return false;
-            }
-            final String authorName = getEditTextStr(R.id.author_name);
-            final String authorEmail = getEditTextStr(R.id.author_email);
-            final String authorUrl = getEditTextStr(R.id.author_url);
-            final String content = getEditTextStr(R.id.edit_comment_content);
-
-            final Map<String, String> postHash = new HashMap<>();
-
-            // using CommentStatus.toString() rather than getStatus() ensures that the XML-RPC
-            // status value is used - important since comment may have been loaded via the
-            // REST API, which uses different status values
-            postHash.put("status",       CommentStatus.toString(mComment.getStatusEnum()));
-            postHash.put("content",      content);
-            postHash.put("author",       authorName);
-            postHash.put("author_url",   authorUrl);
-            postHash.put("author_email", authorEmail);
-
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
-            Object[] xmlParams = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), Long.toString(
-                    mCommentId), postHash};
-
-            try {
-                Object result = client.call(Method.EDIT_COMMENT, xmlParams);
-                boolean isSaved = (result != null && Boolean.parseBoolean(result.toString()));
-                if (isSaved) {
-                    mComment.setAuthorEmail(authorEmail);
-                    mComment.setAuthorUrl(authorUrl);
-                    mComment.setAuthorName(authorName);
-                    mComment.setCommentText(content);
-                    CommentTable.updateComment(mLocalBlogId, mComment);
-                }
-                return isSaved;
-            } catch (XMLRPCException e) {
-                AppLog.e(AppLog.T.COMMENTS, e);
-                return false;
-            } catch (IOException e) {
-                AppLog.e(AppLog.T.COMMENTS, e);
-                return false;
-            } catch (XmlPullParserException e) {
-                AppLog.e(AppLog.T.COMMENTS, e);
-                return false;
-            }
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (isFinishing()) return;
-
-            mIsUpdateTaskRunning = false;
-            dismissSaveDialog();
-
-            if (result) {
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                // alert user to error
-                showEditErrorAlert();
-            }
-        }
-    }
-
     private void showEditErrorAlert() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.error));
@@ -365,9 +253,7 @@ public class EditCommentActivity extends AppCompatActivity {
         dialogBuilder.create().show();
     }
 
-    // Request a comment via the REST API for a note
-    private void requestFullCommentForNote(Note note) {
-        if (isFinishing()) return;
+    private void setFetchProgressVisible(boolean progressVisible) {
         final ProgressBar progress = (ProgressBar)findViewById(R.id.edit_comment_progress);
         final View editContainer = findViewById(R.id.edit_comment_container);
 
@@ -375,38 +261,8 @@ public class EditCommentActivity extends AppCompatActivity {
             return;
         }
 
-        editContainer.setVisibility(View.GONE);
-        progress.setVisibility(View.VISIBLE);
-
-        RestRequest.Listener restListener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                if (!isFinishing()) {
-                    progress.setVisibility(View.GONE);
-                    editContainer.setVisibility(View.VISIBLE);
-                    Comment comment = Comment.fromJSON(jsonObject);
-                    if (comment != null) {
-                        mComment = comment;
-                        configureViews();
-                    } else {
-                        showErrorAndFinish();
-                    }
-                }
-            }
-        };
-        RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.COMMENTS, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
-                if (!isFinishing()) {
-                    progress.setVisibility(View.GONE);
-                    showErrorAndFinish();
-                }
-            }
-        };
-
-        final String path = String.format(Locale.US, "/sites/%s/comments/%s", note.getSiteId(), note.getCommentId());
-        WordPress.getRestClientUtils().get(path, restListener, restErrListener);
+        progress.setVisibility(progressVisible ? View.VISIBLE : View.GONE);
+        editContainer.setVisibility(progressVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -433,6 +289,54 @@ public class EditCommentActivity extends AppCompatActivity {
             dialogBuilder.create().show();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void onCommentPushed(OnCommentChanged event) {
+        if (isFinishing()) return;
+
+        dismissSaveDialog();
+
+        if (event.isError()) {
+            AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
+            showEditErrorAlert();
+            return;
+        }
+
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    private void onCommentFetched(OnCommentChanged event) {
+        if (isFinishing() || !mFetchingComment) return;
+        mFetchingComment = false;
+        setFetchProgressVisible(false);
+
+        if (event.isError()) {
+            AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
+            showErrorAndFinish();
+            return;
+        }
+
+        if (mNote != null) {
+            mComment = mCommentStore.getCommentBySiteAndRemoteId(mSite, mNote.getCommentId());
+        } else if (mComment != null) {
+            // Reload the comment
+            mComment = mCommentStore.getCommentByLocalId(mComment.getId());
+        }
+        configureViews();
+    }
+
+    // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCommentChanged(OnCommentChanged event) {
+        if (event.causeOfChange == CommentAction.FETCH_COMMENT) {
+            onCommentFetched(event);
+        }
+        if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
+            onCommentPushed(event);
         }
     }
 }

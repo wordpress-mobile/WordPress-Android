@@ -20,14 +20,16 @@ import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.EnumSet;
 import java.util.Iterator;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -47,6 +49,8 @@ public class ReaderUpdateService extends Service {
     private EnumSet<UpdateTask> mCurrentTasks;
     private static final String ARG_UPDATE_TASKS = "update_tasks";
 
+    @Inject AccountStore mAccountStore;
+
     public static void startService(Context context, EnumSet<UpdateTask> tasks) {
         if (context == null || tasks == null || tasks.size() == 0) {
             return;
@@ -64,6 +68,7 @@ public class ReaderUpdateService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.READER, "reader service > created");
     }
 
@@ -143,7 +148,7 @@ public class ReaderUpdateService extends Service {
                 // reader since user won't have any followed tags
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
-                if (ReaderUtils.isLoggedOutReader()) {
+                if (!mAccountStore.hasAccessToken()) {
                     serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
                 } else {
                     serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
@@ -167,7 +172,7 @@ public class ReaderUpdateService extends Service {
                 }
 
                 // save changes to recommended topics
-                if (!ReaderUtils.isLoggedOutReader()) {
+                if (mAccountStore.hasAccessToken()) {
                     ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
                     ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
                     if (!serverRecommended.isSameList(localRecommended)) {

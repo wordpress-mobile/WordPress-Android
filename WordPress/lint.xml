@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-    <issue id="MissingTranslation" severity="ignore" />
-    <issue id="ExtraTranslation" severity="ignore" />
+    <!-- WARNING -->
     <issue id="RtlCompat" severity="warning" />
-
-    <issue id="InvalidPackage">
-        <ignore regexp="okio-1.9.0.jar" />
-    </issue>
 
     <issue id="NewApi">
         <warning path="src/main/res/values/reader_styles.xml" />
         <warning path="src/main/res/values/styles.xml" />
     </issue>
-    <issue id="InvalidPackage">
-        <ignore regexp="okio-1.6.0.jar" />
-    </issue>
 
+    <!-- ERROR -->
+    <issue id="InconsistentArrays" severity="error" />
     <issue id="HardcodedText" severity="error" />
     <issue id="IconDuplicates" severity="error" />
     <issue id="IconDipSize" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
+
+    <!-- IGNORE -->
+    <issue id="MissingTranslation" severity="ignore" />
+    <issue id="ExtraTranslation" severity="ignore" />
+
+    <issue id="InvalidPackage">
+        <ignore regexp="okio-1.9.0.jar" />
+    </issue>
 </lint>

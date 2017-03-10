@@ -10,14 +10,14 @@ import org.wordpress.android.util.UrlUtils;
 import java.io.Serializable;
 
 public class FollowerModel implements Serializable {
-    private String mBlogId;
+    private long mBlogId;
     private String mLabel;
     private String mAvatar;
     private String mUrl;
     private FollowDataModel mFollowData;
     private String mDateSubscribed;
 
-    public FollowerModel(String mBlogId, JSONObject followerJSONData) throws JSONException{
+    public FollowerModel(long mBlogId, JSONObject followerJSONData) throws JSONException{
         this.mBlogId = mBlogId;
         this.mLabel = followerJSONData.getString("label");
 
@@ -32,11 +32,11 @@ public class FollowerModel implements Serializable {
         }
     }
 
-    public String getBlogId() {
+    public long getBlogId() {
         return mBlogId;
     }
 
-    public void setBlogId(String blogId) {
+    public void setBlogId(long blogId) {
         this.mBlogId = blogId;
     }
 
@@ -63,9 +63,6 @@ public class FollowerModel implements Serializable {
     public String getAvatar() {
         return mAvatar;
     }
-
-
-
 
     private void setAvatar(String icon) {
         this.mAvatar = icon;
