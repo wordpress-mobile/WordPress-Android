@@ -87,14 +87,6 @@ public class CommentStore extends Store {
         }
     }
 
-    public static class InstantiateCommentPayload extends Payload {
-        @NonNull public final SiteModel site;
-
-        public InstantiateCommentPayload(@NonNull SiteModel site) {
-            this.site = site;
-        }
-    }
-
     public static class FetchCommentsResponsePayload extends Payload {
         @NonNull public final List<CommentModel> comments;
         @NonNull public final SiteModel site;
@@ -175,13 +167,6 @@ public class CommentStore extends Store {
         }
     }
 
-    public static class OnCommentInstantiated extends OnChanged<CommentError> {
-        public CommentModel comment;
-        public OnCommentInstantiated(CommentModel comment) {
-            this.comment = comment;
-        }
-    }
-
     // Constructor
 
     @Inject
@@ -244,9 +229,6 @@ public class CommentStore extends Store {
             case FETCHED_COMMENT:
                 handleFetchCommentResponse((RemoteCommentResponsePayload) action.getPayload());
                 break;
-            case INSTANTIATE_COMMENT:
-                instantiateComment((InstantiateCommentPayload) action.getPayload());
-                break;
             case CREATE_NEW_COMMENT:
                 createNewComment((RemoteCreateCommentPayload) action.getPayload());
                 break;
@@ -289,6 +271,26 @@ public class CommentStore extends Store {
     @Override
     public void onRegister() {
         AppLog.d(T.API, this.getClass().getName() + ": onRegister");
+    }
+
+    public CommentModel instantiateCommentModel(SiteModel site) {
+        CommentModel comment = new CommentModel();
+        comment.setLocalSiteId(site.getId());
+        // Init with defaults
+        comment.setContent("");
+        comment.setDatePublished(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
+        comment.setStatus(CommentStatus.APPROVED.toString());
+        comment.setAuthorName("");
+        comment.setAuthorEmail("");
+        comment.setAuthorUrl("");
+        // Insert in the DB
+        comment = CommentSqlUtils.insertCommentForResult(comment);
+
+        if (comment.getId() == -1) {
+            comment = null;
+        }
+
+        return comment;
     }
 
     // Private methods
@@ -358,21 +360,6 @@ public class CommentStore extends Store {
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         event.causeOfChange = CommentAction.REMOVE_ALL_COMMENTS;
         emitChange(event);
-    }
-
-    private void instantiateComment(InstantiateCommentPayload payload) {
-        CommentModel comment = new CommentModel();
-        comment.setLocalSiteId(payload.site.getId());
-        // Init with defaults
-        comment.setContent("");
-        comment.setDatePublished(DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC()));
-        comment.setStatus(CommentStatus.APPROVED.toString());
-        comment.setAuthorName("");
-        comment.setAuthorEmail("");
-        comment.setAuthorUrl("");
-        // Insert in the DB
-        CommentSqlUtils.insertOrUpdateComment(comment);
-        emitChange(new OnCommentInstantiated(comment));
     }
 
     private void deleteComment(RemoteCommentPayload payload) {

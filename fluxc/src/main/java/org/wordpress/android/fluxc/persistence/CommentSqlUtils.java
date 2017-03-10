@@ -49,6 +49,12 @@ public class CommentSqlUtils {
         }
     }
 
+    public static CommentModel insertCommentForResult(CommentModel comment) {
+        WellSql.insert(comment).asSingleTransaction(true).execute();
+
+        return comment;
+    }
+
     public static int removeComment(CommentModel comment) {
         if (comment == null) {
             return 0;
