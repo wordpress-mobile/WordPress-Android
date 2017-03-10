@@ -339,7 +339,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void removeFromMultiSelect(int localMediaId) {
         if (mGridAdapter.isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
-            mGridAdapter.setItemSelectedByLocalId(localMediaId, false);
+            mGridAdapter.removeSelectionByLocalId(localMediaId);
             setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
         }
     }

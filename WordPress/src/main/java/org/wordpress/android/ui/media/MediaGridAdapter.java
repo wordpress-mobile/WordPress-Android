@@ -407,16 +407,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mSelectedItems.contains(localMediaId);
     }
 
-    public void setItemSelectedByLocalId(int localMediaId, boolean selected) {
-        if (selected) {
-            mSelectedItems.add(localMediaId);
-        } else {
+    public void removeSelectionByLocalId(int localMediaId) {
+        if (isItemSelected(localMediaId)) {
             mSelectedItems.remove(Integer.valueOf(localMediaId));
+            if (mCallback != null) {
+                mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+            }
+            notifyDataSetChanged();
         }
-        if (mCallback != null) {
-            mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
-        }
-        notifyDataSetChanged();
     }
 
     private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
