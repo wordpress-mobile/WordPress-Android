@@ -17,7 +17,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -250,7 +249,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             blogName = SiteUtils.getSiteNameOrHomeURL(site);
             homeURL = SiteUtils.getHomeURLOrHostName(site);
             url = site.getUrl();
-            blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
+            blavatarUrl = SiteUtils.getSiteIconUrl(site, mBlavatarSz);
             isDotComOrJetpack = SiteUtils.isAccessibleViaWPComAPI(site);
             isHidden = !site.isVisible();
         }
