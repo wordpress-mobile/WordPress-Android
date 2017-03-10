@@ -8,9 +8,11 @@ import com.android.volley.RequestQueue;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.BaseRequest.OnAuthFailedListener;
+import org.wordpress.android.fluxc.network.BaseRequest.OnParseErrorListener;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.utils.ErrorUtils.OnParseError;
 import org.wordpress.android.util.LanguageUtils;
 
 public class BaseWPComRestClient {
@@ -21,6 +23,7 @@ public class BaseWPComRestClient {
     protected UserAgent mUserAgent;
 
     protected OnAuthFailedListener mOnAuthFailedListener;
+    protected OnParseErrorListener mOnParseErrorListener;
 
     public BaseWPComRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                                AccessToken accessToken, UserAgent userAgent) {
@@ -33,6 +36,12 @@ public class BaseWPComRestClient {
             @Override
             public void onAuthFailed(AuthenticateErrorPayload authError) {
                 mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateErrorAction(authError));
+            }
+        };
+        mOnParseErrorListener = new OnParseErrorListener() {
+            @Override
+            public void onParseError(OnParseError event) {
+                mDispatcher.emitChange(event);
             }
         };
     }
@@ -56,6 +65,7 @@ public class BaseWPComRestClient {
 
     private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
+        request.setOnParseErrorListener(mOnParseErrorListener);
         request.setUserAgent(mUserAgent.getUserAgent());
         request.setAccessToken(mAccessToken.get());
         return request;
