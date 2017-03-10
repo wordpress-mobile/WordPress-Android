@@ -192,6 +192,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.selectionCountTextView.setText(Integer.toString(count));
         }
 
+        // make sure the thumbnail scale reflects its selection state
+        float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
+        if (holder.imageView.getScaleX() != scale) {
+            holder.imageView.setScaleX(scale);
+            holder.imageView.setScaleY(scale);
+        }
+
         // show upload state
         if (holder.stateTextView != null) {
             if (state != null && state.length() > 0) {
@@ -461,9 +468,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             mSelectedItems.remove(Integer.valueOf(localMediaId));
         }
+
         if (mCallback != null) {
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
+
         notifyDataSetChanged();
     }
 
