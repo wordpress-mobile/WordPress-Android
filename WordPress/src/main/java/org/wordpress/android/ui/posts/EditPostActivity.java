@@ -1093,7 +1093,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
     public static final String NEW_MEDIA_GALLERY_EXTRA_IDS = "NEW_MEDIA_GALLERY_EXTRA_IDS";
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
-    public static final String NEW_MEDIA_POST_EXTRA = "NEW_MEDIA_POST_ID";
+    public static final String NEW_MEDIA_POST_EXTRA_IDS = "NEW_MEDIA_POST_EXTRA_IDS";
     private String mMediaCapturePath = "";
     private int mMaxThumbWidth = 0;
 
@@ -1305,8 +1305,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void prepareMediaPost() {
-        long mediaId = getIntent().getLongExtra(NEW_MEDIA_POST_EXTRA, 0);
-        addExistingMediaToEditor(mediaId);
+        long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
+        ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
+        for (Long id: idsList) {
+            addExistingMediaToEditor(id);
+        }
     }
 
     // TODO: Replace with contents of the updatePostContentNewEditor() method when legacy editor is dropped
