@@ -544,7 +544,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             mIsRefreshing = true;
             updateEmptyView(EmptyViewMessageType.LOADING);
             setRefreshing(true);
-            mGridAdapter.setRefreshing(true);
 
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
@@ -569,7 +568,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 public void run() {
                     refreshSpinnerAdapter();
                     updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                    mGridAdapter.setRefreshing(false);
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
             });
@@ -600,7 +598,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 @Override
                 public void run() {
                     mIsRefreshing = false;
-                    mGridAdapter.setRefreshing(false);
                     mSwipeToRefreshHelper.setRefreshing(false);
                     if (isPermissionError) {
                         updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);

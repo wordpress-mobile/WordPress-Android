@@ -40,7 +40,6 @@ import java.util.Map;
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
     private MediaGridAdapterCallback mCallback;
     private boolean mHasRetrievedAll;
-    private boolean mIsRefreshing;
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
@@ -389,11 +388,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public void setHasRetrievedAll(boolean b) {
         mHasRetrievedAll = b;
-    }
-
-    public void setRefreshing(boolean refreshing) {
-        mIsRefreshing = refreshing;
-        //notifyDataSetChanged();
     }
 
     public void clearSelection() {
