@@ -99,6 +99,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final Pattern DOT_COM_RESERVED_NAMES =
             Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
     private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
+    private static final Pattern WPCOM_DOMAIN = Pattern.compile("[a-z0-9]+\\.wordpress\\.com");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -988,7 +989,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 return;
             }
 
-            mUsername = EditTextUtils.getText(mUsernameEditText).trim();
+            mUsername = EditTextUtils.getText(mUsernameEditText).trim().toLowerCase();
             mPassword = EditTextUtils.getText(mPasswordEditText).trim();
             mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
             if (isWPComLogin()) {
@@ -1005,10 +1006,74 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             if (isUsernameEmail()) {
                 startProgress(getActivity().getString(R.string.checking_email));
                 requestWPComEmailCheck();
+            } else if (isWPComDomain(mUsername)) {
+                // If a wpcom domain was entered, check if the subdomain matches an existing username.
+                String maybeUsername = UrlUtils.extractSubDomain(mUsername);
+                if (maybeUsername.length() > 0) {
+                    // See if the username exists.
+                    startProgress(getActivity().getString(R.string.checking_username));
+                    requestWPComUsernameCheck(maybeUsername);
+                } else {
+                    // The text that was entered was .wordpress.com or the like.
+                    // Its invalid so just show an error.
+                    showUsernameError(R.string.username_invalid);
+                }
             } else {
                 showPasswordFieldAndFocus();
             }
         }
+    }
+
+    /**
+     * Tests the specified string to see if it contains a wpcom subdomain.
+     *
+     * @param string The string to check
+     * @return True if the string contains a wpcom subdomain, else false.
+     */
+    private boolean isWPComDomain(String string) {
+        Matcher matcher = WPCOM_DOMAIN.matcher(string);
+        return matcher.find();
+    }
+
+    /**
+     * Performs an API request to see if the specified username exists.
+     * If a username does exist, the username field is updated and the password field is displayed.
+     *
+     * @param username The username to check.
+     */
+    private void requestWPComUsernameCheck(final String username) {
+        WordPress.getRestClientUtilsV0().isUsernameAvailable(UrlUtils.urlEncode(username), new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (!isAdded()) {
+                    return;
+                }
+                endProgress();
+
+                // If the error is that the username is taken we treat this as our success condition.
+                String errorReason = response.optString(REASON_ERROR);
+                if (errorReason != null && errorReason.equals(REASON_ERROR_TAKEN)) {
+                    // Update the username field and show the password field.
+                    mUsername = username;
+                    mUsernameEditText.setText(username);
+                    showPasswordFieldAndFocus();
+
+                 } else {
+                    // Just prompt for the error.
+                    showUsernameError(R.string.username_invalid);
+                }
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (!isAdded()) {
+                    return;
+                }
+                // Fail silently since we're trying to do something clever
+                // and just show the password field.
+                showPasswordFieldAndFocus();
+            }
+        });
     }
 
     private void onWPComEmailCheckError(boolean forceWordPressComDisplay) {
@@ -1029,7 +1094,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void requestWPComEmailCheck() {
-        WordPress.getRestClientUtilsV0().isAvailable(UrlUtils.urlEncode(mUsername), new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV0().isEmailAvailable(UrlUtils.urlEncode(mUsername), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (!isAdded()) {
