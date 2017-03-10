@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.app.Fragment;
@@ -55,15 +56,36 @@ public class PermissionUtils {
         return true;
     }
 
-    public static boolean checkAndRequestCameraAndStoragePermissions(Activity activity, int requestCode) {
-        return checkAndRequestPermissions(activity, requestCode, new String[]{
+    /**
+     * Check for permissions without requesting them
+     *
+     * @return true if all permissions are granted
+     */
+    public static boolean checkPermissions(Activity activity, String[] permissionList) {
+        for (String permission : permissionList) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkCameraAndStoragePermissions(Activity activity) {
+        return checkPermissions(activity,
+                new String[]{
+                        permission.WRITE_EXTERNAL_STORAGE,
+                        permission.CAMERA});
+    }
+
+    public static boolean checkAndRequestCameraAndStoragePermissions(Fragment fragment, int requestCode) {
+        return checkAndRequestPermissions(fragment, requestCode, new String[]{
                 permission.WRITE_EXTERNAL_STORAGE,
                 permission.CAMERA
         });
     }
 
-    public static boolean checkAndRequestCameraAndStoragePermissions(Fragment fragment, int requestCode) {
-        return checkAndRequestPermissions(fragment, requestCode, new String[]{
+    public static boolean checkAndRequestCameraAndStoragePermissions(Activity activity, int requestCode) {
+        return checkAndRequestPermissions(activity, requestCode, new String[]{
                 permission.WRITE_EXTERNAL_STORAGE,
                 permission.CAMERA
         });

@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -93,11 +94,14 @@ import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
+import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -105,6 +109,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
@@ -141,7 +146,7 @@ import javax.inject.Inject;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        MediaUploadService.MediaUploadListener {
+        MediaUploadService.MediaUploadListener, PhotoChooserFragment.PhotoChooserListener {
     public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -163,12 +168,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
     public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
+    public static final int PHOTO_CHOOSER_PERMISSION_REQUEST_CODE = 4;
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
     private static int PAGE_PREVIEW = 2;
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
+
+    private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -204,6 +212,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+
+    private View mPhotoChooserContainer;
+    private PhotoChooserFragment mPhotoChooserFragment;
+    private int mPhotoChooserOrientation = Configuration.ORIENTATION_UNDEFINED;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -250,6 +262,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
+        //AppPrefs.setAztecEditorAvailable(true);
+        //AppPrefs.setAztecEditorEnabled(true);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
@@ -362,8 +376,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    hidePhotoChooser();
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
+                    hidePhotoChooser();
                     savePostAsync(new AfterSavePostListener() {
                         @Override
                         public void onPostSave() {
@@ -449,6 +465,155 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (mEditorFragment != null) {
             getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // resize the photo chooser if the user rotated the device
+        int orientation = newConfig.orientation;
+        if (orientation != mPhotoChooserOrientation) {
+            resizePhotoChooser();
+        }
+    }
+
+    private boolean isPhotoChooserShowing() {
+        return mPhotoChooserContainer != null
+                && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
+    }
+
+    /*
+     * native photo chooser is only enabled for the Aztec editor
+     */
+    private boolean enablePhotoChooser() {
+        return mShowAztecEditor;
+    }
+
+    /*
+     * resizes the photo chooser based on device orientation - full height in landscape, half
+     * height in portrait
+     */
+    private void resizePhotoChooser() {
+        if (mPhotoChooserContainer == null) return;
+
+        if (DisplayUtils.isLandscape(this)) {
+            mPhotoChooserOrientation = Configuration.ORIENTATION_LANDSCAPE;
+            mPhotoChooserContainer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+        } else {
+            mPhotoChooserOrientation = Configuration.ORIENTATION_PORTRAIT;
+            int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+            int containerHeight = (int) (displayHeight * 0.5f);
+            mPhotoChooserContainer.getLayoutParams().height = containerHeight;
+        }
+
+        if (mPhotoChooserFragment != null) {
+            mPhotoChooserFragment.reload();
+        }
+    }
+
+    /*
+     * loads the photo chooser fragment, which is hidden until the user taps the media icon
+     */
+    private void initPhotoChooser() {
+        mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
+
+        // size the chooser before creating the fragment to avoid having it load media now
+        resizePhotoChooser();
+
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.photo_fragment_container, mPhotoChooserFragment, PHOTO_CHOOSER_TAG)
+                .commit();
+    }
+
+    /*
+     * user has requested to show the photo chooser
+     */
+    void showPhotoChooser() {
+        // request permissions if we don't already have them
+        if (!PermissionUtils.checkCameraAndStoragePermissions(this)) {
+            PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_CHOOSER_PERMISSION_REQUEST_CODE);
+            return;
+        }
+
+        // make sure we initialized the photo chooser
+        if (mPhotoChooserFragment == null) {
+            initPhotoChooser();
+        }
+
+        // hide soft keyboard
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
+        // slide in the photo chooser
+        if (!isPhotoChooserShowing()) {
+            AniUtils.animateBottomBar(mPhotoChooserContainer, true, AniUtils.Duration.MEDIUM);
+            mPhotoChooserFragment.refresh();
+        }
+
+        // fade in the overlay atop the editor, which effectively disables the editor
+        // until the chooser is closed
+        View overlay = findViewById(R.id.view_overlay);
+        if (overlay.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
+        }
+
+        if (mAztecEditorFragment != null) {
+            mAztecEditorFragment.enableMediaMode(true);
+        }
+    }
+
+    public void hidePhotoChooser() {
+        if (isPhotoChooserShowing()) {
+            mPhotoChooserFragment.finishActionMode();
+            AniUtils.animateBottomBar(mPhotoChooserContainer, false);
+        }
+
+        View overlay = findViewById(R.id.view_overlay);
+        if (overlay.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(overlay, AniUtils.Duration.MEDIUM);
+        }
+
+        if (mAztecEditorFragment != null) {
+            mAztecEditorFragment.enableMediaMode(false);
+        }
+    }
+
+    /*
+     * called by PhotoChooserFragment when media is selected - may be a single item or a list of items
+     */
+    @Override
+    public void onPhotoChooserMediaChosen(@NonNull List<Uri> uriList) {
+        hidePhotoChooser();
+        for (Uri uri: uriList) {
+            addMedia(uri);
+        }
+    }
+
+    /*
+     * called by PhotoChooserFragment when user clicks an icon to launch the camera, native
+     * picker, or WP media picker
+     */
+    @Override
+    public void onPhotoChooserIconClicked(@NonNull PhotoChooserIcon icon) {
+        hidePhotoChooser();
+        switch (icon) {
+            case ANDROID_CAMERA:
+                launchCamera();
+                break;
+            case ANDROID_PICKER:
+                launchPictureLibrary();
+                break;
+            case WP_MEDIA:
+                startMediaGalleryAddActivity();
+                break;
         }
     }
 
@@ -562,6 +727,28 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         super.openContextMenu(mMenuView);
                         mMenuView = null;
                     }
+                } else {
+                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
+                }
+                break;
+            case PHOTO_CHOOSER_PERMISSION_REQUEST_CODE:
+                boolean canShowPhotoChooser = true;
+                for (int i = 0; i < grantResults.length; ++i) {
+                    switch (permissions[i]) {
+                        case Manifest.permission.CAMERA:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                canShowPhotoChooser = false;
+                            }
+                            break;
+                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                                canShowPhotoChooser = false;
+                            }
+                            break;
+                    }
+                }
+                if (canShowPhotoChooser) {
+                    showPhotoChooser();
                 } else {
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
@@ -702,6 +889,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
+        // if we're using the native photo chooser, ignore the request - if we're not using
+        // the photo chooser, then this will show the "seven item menu monstrosity"
+        if (enablePhotoChooser()) {
+            return;
+        }
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
             super.openContextMenu(view);
         } else {
@@ -915,6 +1107,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onBackPressed() {
+        if (isPhotoChooserShowing()) {
+            hidePhotoChooser();
+            return;
+        }
+
         Fragment imageSettingsFragment = getFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
@@ -1492,7 +1689,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean addMedia(Uri mediaUri) {
+    public boolean addMedia(Uri mediaUri) {
         if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")
             && !mediaUri.toString().startsWith("file://") ) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
@@ -1944,7 +2141,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        // no op
+        if (enablePhotoChooser()) {
+            if (!isPhotoChooserShowing()) {
+                showPhotoChooser();
+            } else {
+                hidePhotoChooser();
+            }
+        }
     }
 
     @Override
