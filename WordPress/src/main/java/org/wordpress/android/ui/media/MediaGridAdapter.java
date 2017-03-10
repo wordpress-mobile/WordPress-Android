@@ -127,7 +127,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
         String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
-        String date = MediaUtils.getDate(mCursor.getLong(mCursor.getColumnIndex(MediaModelTable.UPLOAD_DATE)));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String mimeType = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE));
 
@@ -136,7 +135,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         boolean isImage = mimeType.contains("image");
 
         holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
-        holder.uploadDateView.setText(date);
 
         String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
         holder.fileTypeView.setText(fileExtension.toUpperCase());
@@ -246,9 +244,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     class GridViewHolder extends RecyclerView.ViewHolder {
-        private final TextView filenameView;
         private final TextView titleView;
-        private final TextView uploadDateView;
         private final FadeInNetworkImageView imageView;
         private final TextView fileTypeView;
         private final TextView selectionCountTextView;
@@ -258,9 +254,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         public GridViewHolder(View view) {
             super(view);
 
-            filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
             titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
-            uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
             imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
             fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
 
