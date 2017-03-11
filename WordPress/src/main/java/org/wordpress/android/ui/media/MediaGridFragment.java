@@ -59,6 +59,7 @@ import javax.inject.Inject;
 /**
  * The grid displaying the media items.
  */
+@SuppressWarnings("ALL")
 public class MediaGridFragment extends Fragment implements MediaGridAdapterCallback {
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
@@ -84,7 +85,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private ActionMode mActionMode;
     private String mSearchTerm;
 
-    private View mSpinnerContainer;
     private TextView mResultView;
     private AppCompatSpinner mSpinner;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -201,7 +201,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
 
-        mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
         mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
         mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
 
@@ -436,11 +435,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_menu_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
         mSpinner.setSelection(mFilter.ordinal());
-    }
-
-    private void resetSpinnerAdapter() {
-        setFiltersText(0, 0, 0);
-        updateSpinnerAdapter();
     }
 
     private void setFiltersText(int countAll, int countImages, int countUnattached) {
