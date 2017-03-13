@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.wellsql.generated.HTTPAuthModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.persistence.HTTPAuthSqlUtils;
@@ -23,13 +22,22 @@ public class HTTPAuthManager {
      */
     @Nullable
     public HTTPAuthModel getHTTPAuthModel(String url) {
-        List<HTTPAuthModel> authModels = WellSql.selectUnique(HTTPAuthModel.class).where()
-                .equals(HTTPAuthModelTable.ROOT_URL, normalizeURL(url))
-                .endWhere().getAsModel();
+        List<HTTPAuthModel> authModels = WellSql.select(HTTPAuthModel.class).getAsModel();
         if (authModels.isEmpty()) {
             return null;
         }
-        return authModels.get(0);
+        for (HTTPAuthModel authModel : authModels) {
+            if (url.startsWith(authModel.getRootUrl())) {
+                return authModel;
+            }
+
+            // Also compare against the stored URL with the ending 'xmlrpc.php' (or other name) stripped
+            String xmlrpcStripped = authModel.getRootUrl().replaceFirst("/[^/]*?.php$", "");
+            if (url.startsWith(xmlrpcStripped)) {
+                return authModel;
+            }
+        }
+        return null;
     }
 
     public void addHTTPAuthCredentials(@NonNull String username, @NonNull String password,
