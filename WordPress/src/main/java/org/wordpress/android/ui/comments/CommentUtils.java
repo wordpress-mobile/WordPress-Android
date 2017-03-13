@@ -11,8 +11,9 @@ import android.text.style.LeadingMarginSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.EmoticonsUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
@@ -21,7 +22,8 @@ public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images
      */
-    public static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
+    public static void displayHtmlComment(TextView textView, String content, int maxImageSize,
+                                          ImageLoader imageLoader) {
         if (textView == null) {
             return;
         }
@@ -52,8 +54,7 @@ public class CommentUtils {
                     R.drawable.legacy_dashicon_format_image_big_grey);
             Drawable failed = ContextCompat.getDrawable(textView.getContext(),
                     R.drawable.noticon_warning_big_grey);
-            html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, WordPress.imageLoader, loading,
-                    failed));
+            html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, imageLoader, loading, failed));
         } else {
             html = HtmlUtils.fromHtml(content);
         }

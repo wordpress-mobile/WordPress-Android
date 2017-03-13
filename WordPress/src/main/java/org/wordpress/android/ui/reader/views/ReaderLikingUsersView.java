@@ -8,13 +8,17 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 /*
  * LinearLayout which shows liking users - used by ReaderPostDetailFragment
@@ -22,12 +26,15 @@ import java.util.ArrayList;
 public class ReaderLikingUsersView extends LinearLayout {
     private final int mLikeAvatarSz;
 
+    @Inject AccountStore mAccountStore;
+
     public ReaderLikingUsersView(Context context) {
         this(context, null);
     }
 
     public ReaderLikingUsersView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
@@ -47,7 +54,10 @@ public class ReaderLikingUsersView extends LinearLayout {
                 // get avatar URLs of liking users up to the max, sized to fit
                 int maxAvatars = getMaxAvatars();
                 ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(post);
-                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, mLikeAvatarSz);
+                // TODO: Probably a bad idea to have mAccountStore.getAccount().getUserId() here,
+                // a view should not read the account state
+                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, mLikeAvatarSz,
+                        mAccountStore.getAccount().getUserId());
 
                 handler.post(new Runnable() {
                     @Override

@@ -31,7 +31,7 @@
                 android:layout_marginEnd="3dp"
                 app:srcCompat="@drawable/ic_like" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_tab_label"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_extra_small"

@@ -6,6 +6,11 @@
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
+        that in order to communicate with your site. Contact your host to solve this problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        this problem.</string>
     <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
     <string name="no_network_title">No network available</string>
@@ -86,7 +91,9 @@
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
     <string name="swipe_for_more">Swipe for more</string>
+    <string name="confirm">Confirm</string>
     <string name="no_default_app_available_to_open_link">Unable to open the link</string>
+    <string name="retry">Retry</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -96,16 +103,6 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="days_ago">%d days ago</string>
-
-    <!-- MediaPicker -->
-    <string name="add_to_post">Add to Post</string>
-    <string name="media_picker_title">Select media</string>
-    <string name="take_photo">Take a photo</string>
-    <string name="take_video">Take a video</string>
-    <string name="tab_title_device_images">Device Images</string>
-    <string name="tab_title_device_videos">Device Videos</string>
-    <string name="tab_title_site_images">Site Images</string>
-    <string name="tab_title_site_videos">Site Videos</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -121,7 +118,6 @@
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
-    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="media_gallery_settings_title">Gallery settings</string>
     <string name="media_gallery_image_order">Image order</string>
     <string name="media_gallery_image_order_random">Random</string>
@@ -143,25 +139,13 @@
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
-    <string name="loading_videos">Loading videos</string>
-    <string name="loading_images">Loading images</string>
-    <string name="loading_blog_images">Fetching images</string>
-    <string name="loading_blog_videos">Fetching videos</string>
-    <string name="no_media">No media</string>
-    <string name="no_media_sources">Couldn\'t fetch media</string>
-    <string name="error_loading_images">Error loading images</string>
-    <string name="error_loading_videos">Error loading videos</string>
-    <string name="error_loading_blog_images">Unable to fetch images</string>
-    <string name="error_loading_blog_videos">Unable to fetch videos</string>
-    <string name="no_device_images">No images</string>
-    <string name="no_device_videos">No videos</string>
-    <string name="no_blog_images">No images</string>
-    <string name="no_blog_videos">No videos</string>
     <string name="upload_queued">Queued</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
     <string name="media_uploaded_on">Uploaded on: %s</string>
     <string name="media_dimensions">Dimensions: %s</string>
+    <string name="media_upload_error">Media upload error occurred</string>
+    <string name="media_generic_error">Media error occurred</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -184,7 +168,6 @@
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="media_empty_list">No media</string>
-    <string name="media_empty_list_custom_date">No media in this time interval</string>
     <string name="delete">Delete</string>
 
     <!-- Media details -->
@@ -397,20 +380,18 @@
 
     <!-- new account view -->
     <string name="signing_in">Logging in…</string>
-    <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
-
+    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
+        address. Check the site address (URL) you entered.</string>
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
-    <string name="select_from_new_picker">Multi-select with the new picker</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
     <string name="add_new_category">Add new category</string>
     <string name="add_category">Add category</string>
     <string name="category_name">Category name</string>
-    <string name="category_slug">Category slug (optional)</string>
     <string name="category_desc">Category description (optional)</string>
     <string name="category_parent">Category parent (optional):</string>
     <string name="adding_cat_failed">Adding category failed</string>
@@ -480,10 +461,10 @@
     <string name="site_settings_language_title" translatable="false">@string/language</string>
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
-    <string name="site_settings_location_title">Enable Location</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_image_original_size">Original Size</string>
+    <string name="site_settings_optimize_images">Optimize Images</string>
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
     <string name="site_settings_upload_and_link_image_title" translatable="false">@string/upload_full_size_image</string>
     <string name="site_settings_related_posts_title" translatable="false">@string/related_posts</string>
@@ -565,11 +546,10 @@
     <string name="site_settings_language_hint">Language this blog is primarily written in</string>
     <string name="site_settings_username_hint">Current user account</string>
     <string name="site_settings_password_hint">Change your password</string>
-    <string name="site_settings_location_hint">Automatically add location data to your posts</string>
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
-    <string name="site_settings_upload_and_link_image_hint">Enable to always upload the fullsize image</string>
+    <string name="site_settings_optimize_images_hint">Enable to save bandwidth on mobile connections</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
@@ -985,7 +965,8 @@
     <string name="post_format_standard">Standard</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
-    <string-array name="post_formats_array" translatable="false">
+    <string-array name="post_format_display_names" translatable="false">
+        <item>@string/post_format_standard</item>
         <item>@string/post_format_aside</item>
         <item>@string/post_format_audio</item>
         <item>@string/post_format_chat</item>
@@ -993,7 +974,6 @@
         <item>@string/post_format_image</item>
         <item>@string/post_format_link</item>
         <item>@string/post_format_quote</item>
-        <item>@string/post_format_standard</item>
         <item>@string/post_format_status</item>
         <item>@string/post_format_video</item>
     </string-array>
@@ -1031,6 +1011,7 @@
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
+    <string name="wordpresscom_tos_url" translatable="false">https://en.wordpress.com/tos</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -1080,8 +1061,14 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
+    <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+    <string name="error_media_not_found">Media could not be found</string>
+    <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
+    <string name="error_media_parse_format">Could not parse response to %s media</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
+    <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
+    <string name="error_media_load">Unable to load media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1124,11 +1111,13 @@
       Jetpack strings
     -->
     <string name="jetpack_info">Jetpack info</string>
-    <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
-    <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
+    <string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
+    <string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
+    <string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_not_connected">Jetpack plugin not connected</string>
     <string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
+    <string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
     <string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
     <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
 
@@ -1158,6 +1147,11 @@
     <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
+
+    <!-- Default tags -->
+    <string name="reader_discover_default_tag">Discover</string>
+    <string name="reader_followed_default_tag">Followed Sites</string>
+    <string name="reader_liked_default_tag">Posts I Like</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
@@ -1336,6 +1330,7 @@
     <string name="blog_name_invalid">Invalid site address</string>
     <string name="blog_title_invalid">Invalid site title</string>
     <string name="username_invalid">Invalid username</string>
+    <string name="checking_username">Checking username</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="nux_tap_continue">Continue</string>
@@ -1367,6 +1362,12 @@
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
+    <string name="migration_message">Updating the WordPress app&#8230;</string>
+    <string name="migration_error_not_connected">Migration process failed: try launching the app when you have a
+        network connection.</string>
+    <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
+    <string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
+    <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -1377,6 +1378,7 @@
     <string name="help_center">Help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
+    <string name="tell_me_more">Tell me more</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1424,11 +1426,6 @@
     <string name="site_privacy_private_desc">I would like my site to be private, visible only to users I choose</string>
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
-
-    <!-- Static URLs -->
-    <string name="privacy_settings_url" translatable="false">https://en.support.wordpress.com/privacy-settings</string>
-    <string name="language_settings_url" translatable="false">https://en.support.wordpress.com/language-settings</string>
-    <string name="role_info_url" translatable="false">https://en.support.wordpress.com/user-roles/</string>
 
     <string name="date_range_start_date">Start Date</string>
     <string name="date_range_end_date">End Date</string>
@@ -1524,6 +1521,7 @@
     <string name="role_contributor">Contributor</string>
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
+    <string name="role_subscriber">Subscriber</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

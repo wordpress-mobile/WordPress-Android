@@ -194,7 +194,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
+        ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(mUrl,
                 new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), 0, 0, getScaleType());
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;

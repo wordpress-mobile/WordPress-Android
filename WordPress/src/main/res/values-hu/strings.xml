@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-10-17 15:47:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: hu
 -->
 <resources>
@@ -19,16 +19,9 @@ Language: hu
 	<string name="media_details_label_file_name">Fájl neve:</string>
 	<string name="media_details_label_file_type">Fájl típusa:</string>
 	<string name="language">Nyelv</string>
-	<string name="tab_title_device_images">Eszköz fotók</string>
-	<string name="tab_title_device_videos">Eszköz videók</string>
 	<string name="device">Eszköz</string>
-	<string name="add_to_post">Hozzáadás bejegyzéshez</string>
 	<string name="two_step_sms_sent">Nézzük meg a szöveges üzeneteink között az ellenőrző kódot</string>
-	<string name="take_photo">Fotó készítése</string>
-	<string name="take_video">Videó rögzítése</string>
 	<string name="error_publish_no_network">Internetkapcsolat nélkül nem lehet közzétenni. Elmentve vázlatként.</string>
-	<string name="tab_title_site_images">Honlap képek</string>
-	<string name="tab_title_site_videos">Honlap videók</string>
 	<string name="stats_view_authors">Szerzők</string>
 	<string name="publisher">Közzétevő:</string>
 	<string name="pages_fetching">Oldalak betöltése...</string>

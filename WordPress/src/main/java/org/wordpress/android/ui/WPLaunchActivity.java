@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +12,13 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
 public class WPLaunchActivity extends AppCompatActivity {
-
     /*
      * this the main (default) activity, which does nothing more than launch the
      * previously active activity on startup - note that it's defined in the
      * manifest to have no UI
      */
+
+    private ProgressDialog mMigrationProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,27 @@ public class WPLaunchActivity extends AppCompatActivity {
 
         ProfilingUtils.split("WPLaunchActivity.onCreate");
 
+        if (WordPress.sIsMigrationInProgress) {
+            mMigrationProgressDialog = new ProgressDialog(this);
+            mMigrationProgressDialog.setMessage(this.getResources().getString(R.string.migration_message));
+            mMigrationProgressDialog.setCancelable(false);
+            mMigrationProgressDialog.show();
+            WordPress.registerMigrationListener(new WordPress.MigrationListener() {
+                @Override
+                public void onCompletion() {
+                    if (mMigrationProgressDialog != null) {
+                        mMigrationProgressDialog.dismiss();
+                        mMigrationProgressDialog = null;
+                    }
+                    launchWPMainActivity();
+                }
+            });
+        } else {
+            launchWPMainActivity();
+        }
+    }
+
+    private void launchWPMainActivity() {
         if (WordPress.wpDB == null) {
             ToastUtils.showToast(this, R.string.fatal_db_error, ToastUtils.Duration.LONG);
             finish();
@@ -34,5 +57,14 @@ public class WPLaunchActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mMigrationProgressDialog != null) {
+            mMigrationProgressDialog.dismiss();
+            mMigrationProgressDialog = null;
+        }
+        super.onDestroy();
     }
 }

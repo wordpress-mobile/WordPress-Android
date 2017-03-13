@@ -1,17 +1,12 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.ImageRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.WPDelayedHurlStack;
 
 import java.io.UnsupportedEncodingException;
 
@@ -109,23 +104,5 @@ public class VolleyUtils {
             }
         };
         requestQueue.cancelAll(filter);
-    }
-
-    /*
-     * Return true if the blog is protected with HTTP Basic Auth
-     */
-    public static boolean isCustomHTTPClientStackNeeded(Blog currentBlog) {
-        if (currentBlog.hasValidHTTPAuthCredentials())
-            return true;
-
-        return false;
-    }
-
-    public static HttpStack getHTTPClientStack(final Context ctx) {
-        return getHTTPClientStack(ctx, null);
-    }
-
-    public static HttpStack getHTTPClientStack(final Context ctx, final Blog currentBlog) {
-        return new WPDelayedHurlStack(ctx, currentBlog);
     }
 }

@@ -23,7 +23,6 @@
     <dimen name="message_bar_elevation">2dp</dimen>
     <dimen name="tabs_elevation">4dp</dimen>
 
-    <dimen name="media_grid_local_image_width">160dp</dimen>
     <dimen name="media_grid_progress_height">50dp</dimen>
 
     <dimen name="theme_details_fragment_width">650dp</dimen>
@@ -208,23 +207,6 @@
     <dimen name="stats_widget_image_layout_size">12dp</dimen>
     <dimen name="stats_widget_image_layout_margin">3dp</dimen>
 
-    <!-- MediaPicker -->
-    <dimen name="media_padding_left">2dp</dimen>
-    <dimen name="media_padding_top">2dp</dimen>
-    <dimen name="media_padding_right">2dp</dimen>
-    <dimen name="media_padding_bottom">0dp</dimen>
-    <dimen name="media_spacing_vertical">2dp</dimen>
-    <dimen name="media_spacing_horizontal">2dp</dimen>
-    <dimen name="media_item_height">128dp</dimen>
-    <dimen name="media_item_frame_margin_left">0dp</dimen>
-    <dimen name="media_item_frame_margin_top">0dp</dimen>
-    <dimen name="media_item_frame_margin_right">0dp</dimen>
-    <dimen name="media_item_frame_margin_bottom">0dp</dimen>
-    <dimen name="media_item_frame_padding_left">8dp</dimen>
-    <dimen name="media_item_frame_padding_top">8dp</dimen>
-    <dimen name="media_item_frame_padding_right">8dp</dimen>
-    <dimen name="media_item_frame_padding_bottom">8dp</dimen>
-
     <!-- my site -->
     <dimen name="my_site_add_button_padding_bottom">5dp</dimen>
     <dimen name="my_site_blog_name_margin_top">11dp</dimen>
@@ -306,4 +288,10 @@
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
     <dimen name="people_list_divider_height">1dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
+
+    <!-- photo chooser (post editor) -->
+    <dimen name="photo_chooser_item_padding">2dp</dimen>
+    <dimen name="photo_chooser_selected_item_padding">4dp</dimen>
+    <dimen name="photo_chooser_icon">48dp</dimen>
+    <dimen name="photo_chooser_video_overlay">36dp</dimen>
 </resources>

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -11,10 +10,14 @@ import com.android.volley.VolleyError;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -38,6 +41,9 @@ public abstract class StatsAbstractFragment extends Fragment {
     protected abstract void showPlaceholderUI();
     protected abstract void updateUI();
     protected abstract void showErrorUI(String label);
+
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     /**
      * Wheter or not previous data is available.
@@ -73,25 +79,22 @@ public abstract class StatsAbstractFragment extends Fragment {
             sections = sectionsToUpdate();
         }
 
-        //AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > refreshStats");
-
-        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-        if (currentBlog == null) {
-            AppLog.w(AppLog.T.STATS, "Current blog is null. This should never happen here.");
+        SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
+        if (site == null) {
+            AppLog.w(AppLog.T.STATS, "Current blsiteog is null. This should never happen here.");
             return;
         }
 
-        final String blogId = currentBlog.getDotComBlogId();
+        final long siteId = site.getSiteId();
         // Make sure the blogId is available.
-        if (blogId == null) {
-            AppLog.e(AppLog.T.STATS, "remote blogID is null: " + currentBlog.getHomeURL());
+        if (siteId == 0) {
+            AppLog.e(AppLog.T.STATS, "remote siteId is 0: " + site.getUrl());
             return;
         }
 
         // Check credentials for jetpack blogs first
-        if (!currentBlog.isDotcomFlag()
-                && !currentBlog.hasValidJetpackCredentials() && !AccountHelper.isSignedInWordPressDotCom()) {
-            AppLog.w(AppLog.T.STATS, "Current blog is a Jetpack blog without valid .com credentials stored");
+        if (!SiteUtils.isAccessibleViaWPComAPI(site) && !mAccountStore.hasAccessToken()) {
+            AppLog.w(AppLog.T.STATS, "Current blog is accessible via .com API without valid .com credentials");
             return;
         }
 
@@ -108,7 +111,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         // start service to get stats
         Intent intent = new Intent(getActivity(), StatsService.class);
-        intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
+        intent.putExtra(StatsService.ARG_BLOG_ID, siteId);
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
@@ -126,7 +129,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // AppLog.d(AppLog.T.STATS, this.getClass().getCanonicalName() + " > onCreate");
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARGS_TIMEFRAME)) {
@@ -137,9 +140,6 @@ public abstract class StatsAbstractFragment extends Fragment {
             }
             restoreStatsData(savedInstanceState); // Each fragment will override this to restore fragment dependant data
         }
-
-      //  AppLog.d(AppLog.T.STATS, "mStatsTimeframe: " + mStatsTimeframe.getLabel());
-      //  AppLog.d(AppLog.T.STATS, "mDate: " + mDate);
     }
 
     @Override
@@ -206,9 +206,9 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     boolean isSameBlog(StatsEvents.SectionUpdatedAbstract event) {
-        final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-        if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
-            return event.mRequestBlogId.equals(currentBlog.getDotComBlogId());
+        SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
+        if (site != null) {
+            return event.mRequestBlogId == site.getSiteId();
         }
         return false;
     }
@@ -323,7 +323,7 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putSerializable(ARGS_VIEW_TYPE, viewType);
-        args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        args.putInt(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
@@ -350,7 +350,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     int getLocalTableBlogID() {
-        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
+        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_SITE_ID);
     }
 
     boolean isSingleView() {

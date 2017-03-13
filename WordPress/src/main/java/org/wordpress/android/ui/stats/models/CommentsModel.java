@@ -11,17 +11,17 @@ import java.util.List;
 
 public class CommentsModel extends BaseStatsModel {
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private int mMonthlyComments;
     private int mTotalComments;
     private String mMostActiveDay;
     private String mMostActiveTime;
     private SingleItemModel mMostCommentedPost;
 
-    private List<PostModel> mPosts;
+    private List<StatsPostModel> mPosts;
     private List<AuthorModel> mAuthors;
 
-    public CommentsModel(String blogID, JSONObject response) throws JSONException {
+    public CommentsModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mDate = response.getString("date");
 
@@ -40,7 +40,7 @@ public class CommentsModel extends BaseStatsModel {
                 String name = currentPostJSON.getString("name");
                 int totals = currentPostJSON.getInt("comments");
                 String link = currentPostJSON.getString("link");
-                PostModel currentPost = new PostModel(blogID, mDate, itemID, name, totals, link, StatsConstants.ITEM_TYPE_POST);
+                StatsPostModel currentPost = new StatsPostModel(blogID, mDate, itemID, name, totals, link, StatsConstants.ITEM_TYPE_POST);
                 mPosts.add(currentPost);
             }
         }
@@ -61,11 +61,11 @@ public class CommentsModel extends BaseStatsModel {
         }
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 
@@ -77,7 +77,7 @@ public class CommentsModel extends BaseStatsModel {
         this.mDate = date;
     }
 
-    public List<PostModel> getPosts() {
+    public List<StatsPostModel> getPosts() {
         return this.mPosts;
     }
 

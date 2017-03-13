@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-03 19:08:57+0000
+Translation-Revision-Date: 2017-02-05 10:30:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+	<string name="reader_photo_by">צולם על ידי %s</string>
+	<string name="reader_label_visit">ניתן לבקר בכתובת</string>
+	<string name="all_your_sites">כל האתרים שלי</string>
+	<string name="pending_draft_more">יצרת טיוטה ל-%d פוסטים, אבל מעולם לא פרסמת אותם. יש להקיש כדי לבדוק.</string>
+	<string name="no_default_app_available_to_open_link">אי אפשר לפתוח את הקישור</string>
+	<string name="notification_pending_drafts">קבלת הודעה על טיוטות בהמתנה</string>
+	<string name="invalid_verification_code_format">חייב להיות מספר בן שש ספרות</string>
+	<string name="confirm_discard_changes">האם לבטל שינויים שלא נשמרו?</string>
+	<string name="swipe_for_more">יש להחליק לקבלת מידע נוסף</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה או להשתמש בכפתור הפעולה העליון כדי לפתוח דפדפן במקום.</string>
+	<string name="reader_err_get_post_not_authorized_signin">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">אין לך הרשאה להציג פוסט זה. יש להשתמש בכפתור הפעולה העליון כדי לנסות דפדפן במקום.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">אי אפשר לסמן לייק ללא חיבור ל-WordPress.com</string>
+	<string name="reader_toast_err_already_liked">כבר סימנת לייק לתגובה הזו</string>
 	<string name="reader_toast_err_comment_not_found">תגובה לא נמצאה!</string>
+	<string name="reader_toast_err_cannot_like_post">אי אפשר לסמן לייק לפוסט זה</string>
+	<string name="reader_title_post_detail_wpcom">פוסט ב-WordPress.com</string>
 	<string name="error_notif_q_action_reply">לא ניתן להגיב לתגובה. נא לנסות שנית מאוחר יותר.</string>
+	<string name="reader_title_deeplink">WordPress Reader</string>
 	<string name="error_notif_q_action_approve">לא ניתן לאשר תגובה. נא לנסות שנית מאוחר יותר.</string>
+	<string name="error_notif_q_action_like">אי אפשר היה לסמן לייק לתגובה. יש לנסות שוב מאוחר יותר.</string>
 	<string name="notifications_label_new_notifications_subtitle">לחץ כדי להציג</string>
 	<string name="notifications_label_new_notifications">התראות חדשות</string>
 	<string name="comment_q_action_replying">מגיב...</string>
 	<string name="comment_q_action_approving">מאשר...</string>
+	<string name="comment_q_action_liking">מסמן לייק…</string>
 	<string name="comment_q_action_processing">מעבד...</string>
 	<string name="comment_q_action_done_generic">הפעולה הושלמה!</string>
 	<string name="signout">התנתק</string>
+	<string name="comment_liked">סימנת לייק לתגובה</string>
+	<string name="sign_in_wpcom">התחברות ל-WordPress.com</string>
 	<string name="reader_label_global_related_posts">מידע נוסף ב-WordPress.com</string>
+	<string name="reader_label_local_related_posts">מידע נוסף ב-%s</string>
 	<string name="preference_open_device_settings">פתיחת הגדרות מכשיר</string>
+	<string name="comment_moderated_unapproved">התגובה לא מאושרת</string>
 	<string name="invite_user_blocked_invites">%s: משתמש חסם הזמנות</string>
 	<string name="invite_invalid_email">%s: אימייל לא תקין</string>
 	<string name="invite_already_following">%s: כבר עוקב</string>
 	<string name="invite_already_a_member">%s: כבר חבר</string>
 	<string name="invite_username_not_found">%s: משתמש לא נמצא</string>
 	<string name="comment_moderated_approved">תגובה אושרה!</string>
+	<string name="like">לייק</string>
 	<string name="reader_label_image_count_one">תמונה 1</string>
 	<string name="timespan_now">עכשיו</string>
 	<string name="role_admin">מנהל המערכת</string>
@@ -265,7 +289,6 @@ Language: he_IL
 	<string name="editor_page_title_placeholder">כותרת עמוד</string>
 	<string name="editor_post_title_placeholder">כותרת הפוסט</string>
 	<string name="email_address">כתובת אימייל</string>
-	<string name="preference_editor_type">הצגת עורך ויזואלי</string>
 	<string name="preference_editor">עורך</string>
 	<string name="dlg_sure_to_delete_comments">האם למחוק תגובות אלה לצמיתות?</string>
 	<string name="dlg_sure_to_delete_comment">האם למחוק תגובה זו לצמיתות?</string>

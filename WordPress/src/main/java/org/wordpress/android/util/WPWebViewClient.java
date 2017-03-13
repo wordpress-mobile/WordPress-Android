@@ -3,44 +3,46 @@ package org.wordpress.android.util;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.text.TextUtils;
-import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import static org.wordpress.android.util.SelfSignedSSLUtils.sslCertificateToX509;
 
 /**
  * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
  * username and password of the blog configured for this activity.
  */
 public class WPWebViewClient extends URLFilteredWebViewClient {
-
     /** Timeout in milliseconds for read / connect timeouts */
     private static final int TIMEOUT_MS = 30000;
 
-    private final Blog mBlog;
+    private final SiteModel mSite;
     private String mToken;
+    protected @Inject MemorizingTrustManager mMemorizingTrustManager;
 
-    public WPWebViewClient(Blog blog) {
-        super();
-        this.mBlog = blog;
-        mToken = AccountHelper.getDefaultAccount().getAccessToken();
+    public WPWebViewClient(SiteModel site, String token) {
+        this(site, token, null);
     }
 
-    public WPWebViewClient(Blog blog, List<String> urls) {
+    public WPWebViewClient(SiteModel site, String token, List<String> urls) {
         super(urls);
-        this.mBlog = blog;
-        mToken = AccountHelper.getDefaultAccount().getAccessToken();
+        ((WordPress) WordPress.getContext()).component().inject(this);
+        mSite = site;
+        mToken = token;
     }
 
     @Override
@@ -52,36 +54,14 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
         super.onPageStarted(view, url, favicon);
     }
 
-    @Override
-    public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
-        if (mBlog != null && mBlog.hasValidHTTPAuthCredentials()) {
-            // Check that the HTTP AUth protected domain is the same of the blog. Do not send current blog's HTTP
-            // AUTH credentials to external site.
-            // NOTE: There is still a small security hole here, since the realm is not considered when getting
-            // the password. Unfortunately the real is not stored when setting up the blog, and we cannot compare it
-            // at this point.
-            String domainFromHttpAuthRequest = UrlUtils.getHost(UrlUtils.addUrlSchemeIfNeeded(host, false));
-            String currentBlogDomain = UrlUtils.getHost(mBlog.getUrl());
-            if (domainFromHttpAuthRequest.equals(currentBlogDomain)) {
-                handler.proceed(mBlog.getHttpuser(), mBlog.getHttppassword());
-                return;
-            }
-        }
-        // TODO: If there is no match show the HTTP Auth dialog here. Like a normal browser usually does...
-        super.onReceivedHttpAuthRequest(view, handler, host, realm);
-    }
+
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        try {
-            if (SelfSignedSSLCertsManager.getInstance(view.getContext()).isCertificateTrusted(error.getCertificate())) {
-                handler.proceed();
-                return;
-            }
-        } catch (GeneralSecurityException e) {
-            // Do nothing
-        } catch (IOException e) {
-            // Do nothing
+        X509Certificate certificate = sslCertificateToX509(error.getCertificate());
+        if (certificate != null && mMemorizingTrustManager.isCertificateAccepted(certificate)) {
+            handler.proceed();
+            return;
         }
 
         super.onReceivedSslError(view, handler, error);
@@ -90,7 +70,7 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String stringUrl) {
         URL imageUrl  = null;
-        if (mBlog != null && mBlog.isPrivate() && UrlUtils.isImageUrl(stringUrl)) {
+        if (mSite != null && mSite.isPrivate() && UrlUtils.isImageUrl(stringUrl)) {
             try {
                 imageUrl = new URL(UrlUtils.makeHttps(stringUrl));
             } catch (MalformedURLException e) {

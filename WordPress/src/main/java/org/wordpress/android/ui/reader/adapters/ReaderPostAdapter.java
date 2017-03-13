@@ -15,6 +15,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderCardType;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -47,6 +49,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
+
+import javax.inject.Inject;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderTag mCurrentTag;
@@ -85,6 +89,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final long ITEM_ID_HEADER     = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
+
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     /*
      * cross-post
@@ -554,9 +561,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         if (discoverData.getBlogId() != 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(
-                                    v.getContext(),
-                                    discoverData.getBlogId());
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
                         } else if (discoverData.hasBlogUrl()) {
                             ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
                         }
@@ -575,12 +580,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public ReaderPostAdapter(Context context, ReaderTypes.ReaderPostListType postListType) {
         super();
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
-        mIsLoggedOutReader = ReaderUtils.isLoggedOutReader();
+        mIsLoggedOutReader = !mAccountStore.hasAccessToken();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -803,7 +809,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean isAskingToLike = !isCurrentlyLiked;
         ReaderAnim.animateLikeButton(holder.likeCount.getImageView(), isAskingToLike);
 
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+        if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
@@ -812,7 +818,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
-            ReaderPostActions.bumpPageViewForPost(post);
+            ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
         } else {
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
         }

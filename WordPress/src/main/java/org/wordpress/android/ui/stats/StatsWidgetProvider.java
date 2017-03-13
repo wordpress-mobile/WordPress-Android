@@ -21,8 +21,8 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
@@ -30,14 +30,25 @@ import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 
 import java.util.ArrayList;
 
-public class StatsWidgetProvider extends AppWidgetProvider {
+import javax.inject.Inject;
 
-    private static void showMessage(Context context, int[] allWidgets, String message){
-        if (allWidgets.length == 0){
+public class StatsWidgetProvider extends AppWidgetProvider {
+    @Inject SiteStore mSiteStore;
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
+        super.onReceive(context, intent);
+    }
+
+    private static void showMessage(Context context, int[] allWidgets, String message, SiteStore siteStore) {
+        if (allWidgets.length == 0) {
             return;
         }
 
@@ -46,17 +57,15 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         for (int widgetId : allWidgets) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
             int remoteBlogID = getRemoteBlogIDFromWidgetID(widgetId);
-            int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
-            Blog blog = WordPress.getBlog(localId);
+            SiteModel site = siteStore.getSiteBySiteId(remoteBlogID);
             String name;
-            if (blog != null) {
+            if (site != null) {
                 name = context.getString(R.string.stats_widget_name_for_blog);
-                name = String.format(name, StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()));
+                name = String.format(name, StringEscapeUtils.unescapeHtml(SiteUtils.getSiteNameOrHomeURL(site)));
             } else {
                 name = context.getString(R.string.stats_widget_name);
             }
             remoteViews.setTextViewText(R.id.blog_title, name);
-
             remoteViews.setViewVisibility(R.id.stats_widget_error_container, View.VISIBLE);
             remoteViews.setViewVisibility(R.id.stats_widget_values_container, View.GONE);
             remoteViews.setTextViewText(R.id.stats_widget_error_text, message);
@@ -80,7 +89,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private static void showStatsData(Context context, int[] allWidgets, Blog blog, JSONObject data) {
+    private static void showStatsData(Context context, int[] allWidgets, SiteModel site, JSONObject data) {
         if (allWidgets.length == 0){
             return;
         }
@@ -88,7 +97,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
         String name = context.getString(R.string.stats_widget_name_for_blog);
-        name = String.format(name, StringEscapeUtils.unescapeHtml(blog.getNameOrHostUrl()));
+        name = String.format(name, StringEscapeUtils.unescapeHtml(SiteUtils.getSiteNameOrHomeURL(site)));
 
         for (int widgetId : allWidgets) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
@@ -110,111 +119,99 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             updateTabValue(context, remoteViews, R.id.stats_widget_likes, data.optString("likes", " 0"));
 
             Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, blog.getLocalTableBlogId());
+            intent.putExtra(WordPress.SITE, site);
             intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsActivity.StatsLaunchedFrom.STATS_WIDGET);
             intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, blog.getLocalTableBlogId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, site.getId(), intent, PendingIntent
+                    .FLAG_UPDATE_CURRENT);
 
             remoteViews.setOnClickPendingIntent(R.id.stats_widget_outer_container, pendingIntent);
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
         }
     }
 
-    private static void ShowCacheIfAvailableOrGenericError(Context context, int remoteBlogID) {
-        int[] widgetIDs = getWidgetIDsFromRemoteBlogID(remoteBlogID);
-        if (widgetIDs.length == 0){
+    private static void ShowCacheIfAvailableOrGenericError(Context context, SiteModel site, SiteStore siteStore) {
+        if (site == null) {
+            AppLog.e(T.STATS, "Invalid site.");
             return;
         }
 
-        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
-        Blog blog = WordPress.getBlog(localId);
-        if (blog == null) {
-            AppLog.e(AppLog.T.STATS, "No blog found in the db!");
+        int[] widgetIDs = getWidgetIDsFromRemoteBlogID(site.getSiteId());
+        if (widgetIDs.length == 0) {
             return;
         }
 
-        String currentDate = StatsUtils.getCurrentDateTZ(localId);
+        String currentDate = StatsUtils.getCurrentDateTZ(site);
 
         // Show cached data if available
-        JSONObject cache = getCacheDataForBlog(remoteBlogID, currentDate);
+        JSONObject cache = getCacheDataForBlog(site.getSiteId(), currentDate);
         if (cache != null) {
-            showStatsData(context, widgetIDs, blog, cache);
+            showStatsData(context, widgetIDs, site, cache);
         } else {
-            showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_generic));
+            showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_generic), siteStore);
         }
-    }
-
-    public static void updateWidgetsOnLogout(Context context) {
-        refreshAllWidgets(context);
-    }
-
-    public static void updateWidgetsOnLogin(Context context) {
-        refreshAllWidgets(context);
     }
 
     // This is called by the Stats service in case of error
-    public static void updateWidgets(Context context, int remoteBlogID, VolleyError error) {
+    public static void updateWidgets(Context context, SiteModel site, SiteStore siteStore, VolleyError error) {
         if (error == null) {
             AppLog.e(AppLog.T.STATS, "Widget received a VolleyError that is null!");
             return;
         }
 
+        if (site == null) {
+            return;
+        }
+
         // If it's an auth error, show it in the widget UI
         if (error instanceof com.android.volley.AuthFailureError) {
-            int[] widgetIDs = getWidgetIDsFromRemoteBlogID(remoteBlogID);
+            int[] widgetIDs = getWidgetIDsFromRemoteBlogID(site.getSiteId());
             if (widgetIDs.length == 0){
                 return;
             }
 
             // Check if Jetpack or .com
-            int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
-            Blog blog = WordPress.getBlog(localId);
-            if (blog == null) {
-                return;
-            }
-
-            if (blog.isDotcomFlag()) {
+            if (SiteUtils.isAccessibleViaWPComAPI(site)) {
                 // User cannot access stats for this .com blog
-                showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_no_permissions));
+                showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_no_permissions),
+                        siteStore);
             } else {
                 // Not logged into wpcom, or the main .com account of the app is not linked with this blog
-                showMessage(context, widgetIDs, context.getString(R.string.stats_sign_in_jetpack_different_com_account));
+                showMessage(context, widgetIDs, context.getString(R.string.stats_sign_in_jetpack_different_com_account),
+                        siteStore);
             }
             return;
         }
-
-        ShowCacheIfAvailableOrGenericError(context, remoteBlogID);
+        ShowCacheIfAvailableOrGenericError(context, site, siteStore);
     }
 
     // This is called by the Stats service in case of error
-    public static void updateWidgets(Context context, int remoteBlogID, StatsError error) {
+    public static void updateWidgets(Context context, SiteModel site, SiteStore siteStore, StatsError error) {
         if (error == null) {
             AppLog.e(AppLog.T.STATS, "Widget received a StatsError that is null!");
             return;
         }
 
-        ShowCacheIfAvailableOrGenericError(context, remoteBlogID);
+        ShowCacheIfAvailableOrGenericError(context, site, siteStore);
     }
 
     // This is called by the Stats service to keep widgets updated
-    public static void updateWidgets(Context context, int remoteBlogID, VisitModel data) {
-        AppLog.d(AppLog.T.STATS, "updateWidgets called for the blogID " + remoteBlogID);
-
-        int[] widgetIDs = getWidgetIDsFromRemoteBlogID(remoteBlogID);
-        if (widgetIDs.length == 0){
-            return;
-        }
-
-        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
-        Blog blog = WordPress.getBlog(localId);
-        if (blog == null) {
+    public static void updateWidgets(Context context, SiteModel site, VisitModel data) {
+        if (site == null) {
             AppLog.e(AppLog.T.STATS, "No blog found in the db!");
             return;
         }
 
+        AppLog.d(AppLog.T.STATS, "updateWidgets called for the blogID " + site.getSiteId());
+
+        int[] widgetIDs = getWidgetIDsFromRemoteBlogID(site.getSiteId());
+        if (widgetIDs.length == 0) {
+            return;
+        }
+
         try {
-            String currentDate = StatsUtils.getCurrentDateTZ(blog.getLocalTableBlogId());
+            String currentDate = StatsUtils.getCurrentDateTZ(site);
             JSONObject newData = new JSONObject();
             newData.put("blog_id", data.getBlogID());
             newData.put("date", currentDate);
@@ -237,14 +234,14 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 if (prevData == null) {
                     prevData = new JSONObject();
                 }
-                prevData.put(data.getBlogID(), newData);
+                prevData.put(String.valueOf(data.getBlogID()), newData);
                 AppPrefs.setStatsWidgetsData(prevData.toString());
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.STATS, e);
             }
 
             // Show data on the screen now!
-            showStatsData(context, widgetIDs, blog, newData);
+            showStatsData(context, widgetIDs, site, newData);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
         }
@@ -256,7 +253,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         AppLog.d(AppLog.T.STATS, "onUpdate called");
-        refreshWidgets(context, appWidgetIds);
+        refreshWidgets(context, appWidgetIds, mSiteStore);
     }
 
     /**
@@ -290,10 +287,10 @@ public class StatsWidgetProvider extends AppWidgetProvider {
      */
     @Override
     public void onDeleted(Context context, int[] widgetIDs) {
-        setRemoteBlogIDForWidgetIDs(widgetIDs, null);
+        setRemoteBlogIDForWidgetIDs(widgetIDs, 0);
     }
 
-    public static void enqueueStatsRequestForBlog(Context context, String remoteBlogID, String date) {
+    public static void enqueueStatsRequestForBlog(Context context, long remoteBlogID, String date) {
         // start service to get stats
         Intent intent = new Intent(context, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, remoteBlogID);
@@ -303,7 +300,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         context.startService(intent);
     }
 
-    private static synchronized JSONObject getCacheDataForBlog(int remoteBlogID, String date) {
+    private static synchronized JSONObject getCacheDataForBlog(long remoteBlogID, String date) {
         String prevDataAsString = AppPrefs.getStatsWidgetsData();
         if (StringUtils.isEmpty(prevDataAsString)) {
             AppLog.i(AppLog.T.STATS, "No cache found for the widgets");
@@ -332,7 +329,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public static synchronized boolean isBlogDisplayedInWidget(int remoteBlogID) {
+    public static synchronized boolean isBlogDisplayedInWidget(long remoteBlogID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
         if (StringUtils.isEmpty(prevWidgetKeysString)) {
             return false;
@@ -356,7 +353,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         return false;
     }
 
-    private static synchronized int[] getWidgetIDsFromRemoteBlogID(int remoteBlogID) {
+    private static synchronized int[] getWidgetIDsFromRemoteBlogID(long remoteBlogID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
         if (StringUtils.isEmpty(prevWidgetKeysString)) {
             return new int[0];
@@ -399,7 +396,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
 
     // Store the association between widgetIDs and the remote blog id into prefs.
-    private static void setRemoteBlogIDForWidgetIDs(int[] widgetIDs, String remoteBlogID) {
+    private static void setRemoteBlogIDForWidgetIDs(int[] widgetIDs, long remoteBlogID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
         JSONObject prevKeys = null;
         if (!StringUtils.isEmpty(prevWidgetKeysString)) {
@@ -425,58 +422,58 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     // This is called by the Widget config activity at the end if the process
-    static void setupNewWidget(Context context, int widgetID, int localBlogID) {
+    static void setupNewWidget(Context context, int widgetID, int localBlogID, SiteStore siteStore) {
         AppLog.d(AppLog.T.STATS, "setupNewWidget called");
 
-        Blog blog = WordPress.getBlog(localBlogID);
-        if (blog == null) {
+        SiteModel site = siteStore.getSiteByLocalId(localBlogID);
+        if (site == null) {
             // it's unlikely that blog is null here.
             // This method is called from config activity which has loaded the blog fine.
             showMessage(context, new int[]{widgetID},
-                    context.getString(R.string.stats_widget_error_readd_widget));
+                    context.getString(R.string.stats_widget_error_readd_widget), siteStore);
             AppLog.e(AppLog.T.STATS, "setupNewWidget: No blog found in the db!");
             return;
         }
 
         // At this point the remote ID cannot be null.
-        String remoteBlogID = blog.getDotComBlogId();
+        long remoteBlogID = site.getSiteId();
         // Add the following check just to be safe
-        if (remoteBlogID == null) {
+        if (remoteBlogID == 0) {
             showMessage(context, new int[]{widgetID},
-                    context.getString(R.string.stats_widget_error_readd_widget));
+                    context.getString(R.string.stats_widget_error_readd_widget), siteStore);
             return;
         }
 
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_ADDED, remoteBlogID);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_WIDGET_ADDED, site);
         AnalyticsTracker.flush();
 
         // Store the association between the widget ID and the remote blog id into prefs.
-        setRemoteBlogIDForWidgetIDs(new int[] {widgetID}, remoteBlogID);
+        setRemoteBlogIDForWidgetIDs(new int[] {widgetID}, site.getSiteId());
 
-        String currentDate = StatsUtils.getCurrentDateTZ(localBlogID);
+        String currentDate = StatsUtils.getCurrentDateTZ(site);
 
         // Load cached data if available and show it immediately
-        JSONObject cache = getCacheDataForBlog(Integer.parseInt(remoteBlogID), currentDate);
+        JSONObject cache = getCacheDataForBlog(remoteBlogID, currentDate);
         if (cache != null) {
-            showStatsData(context, new int[] {widgetID}, blog, cache);
+            showStatsData(context, new int[] {widgetID}, site, cache);
             return;
         }
 
         if (!NetworkUtils.isNetworkAvailable(context)) {
-            showMessage(context, new int[] {widgetID}, context.getString(R.string.no_network_title));
+            showMessage(context, new int[] {widgetID}, context.getString(R.string.no_network_title), siteStore);
         } else {
-            showMessage(context, new int[] {widgetID}, context.getString(R.string.stats_widget_loading_data));
+            showMessage(context, new int[] {widgetID}, context.getString(R.string.stats_widget_loading_data), siteStore);
             enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
         }
     }
 
-
-    private static void refreshWidgets(Context context, int[] appWidgetIds) {
-        // If not signed into WordPress inform the user
-        if (!AccountHelper.isSignedIn()) {
-            showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
-            return;
-        }
+    private static void refreshWidgets(Context context, int[] appWidgetIds, SiteStore siteStore) {
+        // TODO: FluxC: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
+        // here in the AppWidgetProvider.
+        // if (!mAccountStore.isSignedIn()) {
+        //     showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
+        //     return;
+        // }
 
         SparseArray<ArrayList<Integer>> blogsToWidgetIDs = new SparseArray<>();
         for (int widgetId : appWidgetIds) {
@@ -485,7 +482,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 // This could happen on logout when prefs are erased completely since we cannot remove
                 // widgets programmatically from the screen, or during the configuration of new widgets!!!
                 AppLog.e(AppLog.T.STATS, "No remote blog ID for widget ID " + widgetId);
-                showMessage(context, new int[] {widgetId}, context.getString(R.string.stats_widget_error_readd_widget));
+                showMessage(context, new int[] {widgetId}, context.getString(R.string
+                        .stats_widget_error_readd_widget), siteStore);
                 continue;
             }
 
@@ -500,42 +498,40 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             // get the object by the key.
             ArrayList<Integer> widgetsList = blogsToWidgetIDs.get(remoteBlogID);
             int[] currentWidgets = ArrayUtils.toPrimitive(widgetsList.toArray(new Integer[widgetsList.size()]));
-
-            int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(remoteBlogID);
-            Blog blog = WordPress.getBlog(localId);
-            if (localId == 0 || blog == null) {
-                // No blog in the app
-                showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_readd_widget));
+            SiteModel site = siteStore.getSiteBySiteId(remoteBlogID);
+            if (site == null) {
+                // No site in the app
+                showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_readd_widget), siteStore);
                 continue;
             }
-            String currentDate = StatsUtils.getCurrentDateTZ(localId);
+            String currentDate = StatsUtils.getCurrentDateTZ(site);
 
             // Load cached data if available and show it immediately
             JSONObject cache = getCacheDataForBlog(remoteBlogID, currentDate);
             if (cache != null) {
-                showStatsData(context, currentWidgets, blog, cache);
+                showStatsData(context, currentWidgets, site, cache);
             }
 
             // If network is not available check if NO cache, and show the generic error
             // If network is available always start a refresh, and show prev data or the loading in progress message.
             if (!NetworkUtils.isNetworkAvailable(context)) {
                 if (cache == null) {
-                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_generic));
+                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_generic), siteStore);
                 }
             } else {
                 if (cache == null) {
-                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_loading_data));
+                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_loading_data), siteStore);
                 }
                 // Make sure to refresh widget data now.
-                enqueueStatsRequestForBlog(context, String.valueOf(remoteBlogID), currentDate);
+                enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
             }
         }
     }
 
-    private static void refreshAllWidgets(Context context) {
+    public static void refreshAllWidgets(Context context, SiteStore siteStore) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         ComponentName thisWidget = new ComponentName(context, StatsWidgetProvider.class);
         int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        refreshWidgets(context, allWidgetIds);
+        refreshWidgets(context, allWidgetIds, siteStore);
     }
 }

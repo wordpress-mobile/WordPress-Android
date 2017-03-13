@@ -74,6 +74,8 @@ public final class AnalyticsTracker {
         EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
         EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY,
+        EDITOR_RESIZED_PHOTO,
+        EDITOR_RESIZED_PHOTO_ERROR,
         EDITOR_UPDATED_POST,
         EDITOR_SCHEDULED_POST,
         EDITOR_CLOSED,
@@ -222,7 +224,7 @@ public final class AnalyticsTracker {
         TRAIN_TRACKS_INTERACT,
         DEEP_LINKED,
         DEEP_LINKED_FALLBACK,
-        DEEP_LINK_NOT_DEFAULT_HANDER,
+        DEEP_LINK_NOT_DEFAULT_HANDLER,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

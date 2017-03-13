@@ -12,7 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.models.AuthorModel;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -137,7 +137,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             AuthorModel currentGroup = authors.get(groupPosition);
-            List<PostModel> posts = currentGroup.getPosts();
+            List<StatsPostModel> posts = currentGroup.getPosts();
             return posts.get(childPosition);
         }
 
@@ -150,7 +150,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final PostModel children = (PostModel) getChild(groupPosition, childPosition);
+            final StatsPostModel children = (StatsPostModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -183,7 +183,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         @Override
         public int getChildrenCount(int groupPosition) {
             AuthorModel currentGroup = authors.get(groupPosition);
-            List<PostModel> posts = currentGroup.getPosts();
+            List<StatsPostModel> posts = currentGroup.getPosts();
             if (posts == null) {
                 return 0;
             } else {

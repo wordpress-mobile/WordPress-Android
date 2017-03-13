@@ -107,4 +107,5 @@
     <string name="menu_redo">Redo</string>
 
     <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+    <string name="error_media_load">Unable to load media</string>
 </resources>

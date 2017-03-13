@@ -8,11 +8,12 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.util.StringUtils;
@@ -75,6 +76,9 @@ public class AppPrefs {
         // index of the last active people list filter in People Management activity
         PEOPLE_LIST_FILTER_INDEX,
 
+        // selected site in the main activity
+        SELECTED_SITE_LOCAL_ID,
+
         // wpcom ID of the last push notification received
         PUSH_NOTIFICATIONS_LAST_NOTE_ID,
 
@@ -83,6 +87,9 @@ public class AppPrefs {
 
         // local IDs of sites recently chosen in the site picker
         RECENTLY_PICKED_SITE_IDS,
+
+        // list of last time a notification has been created for a draft
+        PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
     }
 
     /**
@@ -116,6 +123,15 @@ public class AppPrefs {
 
         // Same as above but for the reader
         SWIPE_TO_NAVIGATE_READER,
+
+        // access token migrated to AccountStore, must wait for network calls to return before app access
+        ACCESS_TOKEN_MIGRATED,
+
+        // Self-hosted sites migration to FluxC
+        SELF_HOSTED_SITES_MIGRATED_TO_FLUXC,
+
+        // Draft migration to FluxC
+        DRAFTS_MIGRATED_TO_FLUXC,
 
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
@@ -156,13 +172,20 @@ public class AppPrefs {
         setString(key, Long.toString(value));
     }
 
-    private static int getInt(PrefKey key) {
+    private static int getInt(PrefKey key, int def) {
         try {
             String value = getString(key);
+            if (value.isEmpty()) {
+                return def;
+            }
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            return 0;
+            return def;
         }
+    }
+
+    private static int getInt(PrefKey key) {
+        return getInt(key, 0);
     }
 
     private static void setInt(PrefKey key, int value) {
@@ -249,18 +272,19 @@ public class AppPrefs {
         }
     }
 
-    public static CommentStatus getCommentsStatusFilter() {
+    public static CommentStatusCriteria getCommentsStatusFilter() {
         int idx = getInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX);
-        CommentStatus[] commentStatusValues = CommentStatus.values();
+        CommentStatusCriteria[] commentStatusValues = CommentStatusCriteria.values();
         if (commentStatusValues.length < idx) {
             return commentStatusValues[0];
         } else {
             return commentStatusValues[idx];
         }
     }
-    public static void setCommentsStatusFilter(CommentStatus commentstatus) {
-        if (commentstatus != null) {
-            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentstatus.ordinal());
+
+    public static void setCommentsStatusFilter(CommentStatusCriteria commentStatus) {
+        if (commentStatus != null) {
+            setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentStatus.ordinal());
         } else {
             prefs().edit()
                     .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
@@ -444,6 +468,7 @@ public class AppPrefs {
             remove(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES);
         }
     }
+
     public static String getGlobalPlansFeatures() {
         return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
     }
@@ -451,19 +476,31 @@ public class AppPrefs {
     public static boolean isInAppPurchaseRefreshRequired() {
         return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
     }
+
     public static void setInAppPurchaseRefreshRequired(boolean required) {
         setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
+    }
+
+    public static int getSelectedSite() {
+        return getInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, -1);
+    }
+
+    public static void setSelectedSite(int selectedSite) {
+        setInt(DeletablePrefKey.SELECTED_SITE_LOCAL_ID, selectedSite);
     }
 
     public static String getLastPushNotificationWpcomNoteId() {
         return getString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID);
     }
+
     public static void setLastPushNotificationWpcomNoteId(String noteID) {
         setString(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, noteID);
     }
+
     public static long getLastPushNotificationTime() {
         return getLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_TIME);
     }
+
     public static void setLastPushNotificationTime(long time) {
         setLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, time);
     }
@@ -482,6 +519,18 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
+    }
+
+    public static long getPendingDraftsLastNotificationDate(PostModel post) {
+        String key = DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES.name() + "-" + post.getId();
+        return prefs().getLong(key, 0);
+    }
+
+    public static void setPendingDraftsLastNotificationDate(PostModel post, long timestamp) {
+        String key = DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES.name() + "-" + post.getId();
+        SharedPreferences.Editor editor = prefs().edit();
+        editor.putLong(key, timestamp);
+        editor.apply();
     }
 
     /*
@@ -524,5 +573,29 @@ public class AppPrefs {
         // store in prefs
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+    }
+
+    public static boolean wasAccessTokenMigrated() {
+        return getBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, false);
+    }
+
+    public static void setAccessTokenMigrated(boolean migrated) {
+        setBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
+    }
+
+    public static boolean wereSelfHostedSitesMigratedToFluxC() {
+        return getBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, false);
+    }
+
+    public static void setSelfHostedSitesMigratedToFluxC(boolean migrated) {
+        setBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, migrated);
+    }
+
+    public static boolean wereDraftsMigratedToFluxC() {
+        return getBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, false);
+    }
+
+    public static void setDraftsMigratedToFluxC(boolean migrated) {
+        setBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, migrated);
     }
 }

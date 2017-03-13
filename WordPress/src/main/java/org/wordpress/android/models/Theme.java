@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 
 public class Theme {
     public static final String ID = "id";
@@ -31,7 +32,7 @@ public class Theme {
     private String mBlogId;
     private boolean mIsCurrent;
 
-    public static Theme fromJSONV1_1(JSONObject object) throws JSONException {
+    public static Theme fromJSONV1_1(JSONObject object, SiteModel site) throws JSONException {
         if (object == null) {
             return null;
         } else {
@@ -50,13 +51,12 @@ public class Theme {
                 price = "";
             }
 
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-
-            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, false);
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price,
+                    String.valueOf(site.getSiteId()), false);
         }
     }
 
-    public static Theme fromJSONV1_2(JSONObject object) throws JSONException {
+    public static Theme fromJSONV1_2(JSONObject object, SiteModel site) throws JSONException {
         if (object == null) {
             return null;
         } else {
@@ -74,13 +74,13 @@ public class Theme {
                 price = "";
             }
 
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-
-            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, false);
+            return new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price,
+                    String.valueOf(site.getSiteId()), false);
         }
     }
 
-    public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name, String stylesheet, String price, String blogId, boolean isCurrent) {
+    public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name,
+                 String stylesheet, String price, String blogId, boolean isCurrent) {
         setId(id);
         setAuthor(author);
         setScreenshot(screenshot);

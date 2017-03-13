@@ -32,8 +32,6 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        AnalyticsUtils.trackWithCurrentBlogDetails(
-                AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED);
         retrieveSiteDomain();
         configureAlertViewBuilder(builder);
 

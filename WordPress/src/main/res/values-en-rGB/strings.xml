@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-17 11:53:21+0000
+Translation-Revision-Date: 2017-02-15 08:28:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
+	<string name="reader_hint_search_followed_sites">Search followed sites</string>
+	<string name="visual_editor_disabled">Visual Editor disabled</string>
+	<string name="preference_editor_visual">Visual</string>
+	<string name="preference_editor_legacy">Legacy</string>
+	<string name="preference_editor_type">Set editor type</string>
+	<string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+	<string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
+	<string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+	<string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
+	<string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
 	<string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
 	<string name="jetpack_info">Jetpack info</string>
@@ -13,8 +25,6 @@ Language: en_GB
 	<string name="reader_label_visit">Visit</string>
 	<string name="all_your_sites">All My Sites</string>
 	<string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
-	<string name="pending_draft_one">You drafted \'%1$s\' %2$d days ago but never published it.</string>
-	<string name="pending_draft_one_generic">You drafted \'%s\' but never published it.</string>
 	<string name="no_default_app_available_to_open_link">Unable to open the link</string>
 	<string name="notification_pending_drafts">Notify me on pending drafts</string>
 	<string name="invalid_verification_code_format">Must be a six-digit number</string>
@@ -294,7 +304,6 @@ Language: en_GB
 	<string name="editor_page_title_placeholder">Page Title</string>
 	<string name="editor_post_title_placeholder">Post Title</string>
 	<string name="email_address">Email address</string>
-	<string name="preference_editor_type">Show visual editor</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Permanently delete these comments?</string>
 	<string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
@@ -610,22 +619,7 @@ Language: en_GB
 	<string name="hide">Hide</string>
 	<string name="show">Show</string>
 	<string name="deselect_all">Deselect all</string>
-	<string name="select_from_new_picker">Multi-select with the new picker</string>
-	<string name="no_media_sources">Couldn\'t fetch media</string>
-	<string name="loading_blog_videos">Fetching videos</string>
-	<string name="loading_blog_images">Fetching images</string>
-	<string name="error_loading_videos">Error loading videos</string>
-	<string name="error_loading_images">Error loading images</string>
-	<string name="error_loading_blog_videos">Unable to fetch videos</string>
-	<string name="error_loading_blog_images">Unable to fetch images</string>
-	<string name="no_device_images">No images</string>
-	<string name="no_blog_videos">No videos</string>
-	<string name="no_blog_images">No images</string>
-	<string name="no_device_videos">No videos</string>
 	<string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
-	<string name="no_media">No media</string>
-	<string name="loading_images">Loading images</string>
-	<string name="loading_videos">Loading videos</string>
 	<string name="auth_required">Log in again to continue.</string>
 	<string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
 	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
@@ -638,14 +632,6 @@ Language: en_GB
 	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
 	<string name="media_details_label_file_type">File type</string>
 	<string name="media_details_label_file_name">File name</string>
-	<string name="tab_title_site_videos">Site Videos</string>
-	<string name="tab_title_site_images">Site Images</string>
-	<string name="tab_title_device_videos">Device Videos</string>
-	<string name="tab_title_device_images">Device Images</string>
-	<string name="take_video">Take a video</string>
-	<string name="take_photo">Take a photo</string>
-	<string name="media_picker_title">Select media</string>
-	<string name="add_to_post">Add to Post</string>
 	<string name="language">Language</string>
 	<string name="device">Device</string>
 	<string name="media_fetching">Fetching media…</string>

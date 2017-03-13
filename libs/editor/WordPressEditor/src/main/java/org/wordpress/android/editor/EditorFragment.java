@@ -1028,8 +1028,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
+                String mediaId = String.valueOf(mediaFile.getId());
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
-                    String mediaId = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
@@ -1043,16 +1043,15 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                     mActionStartedAt = System.currentTimeMillis();
                 } else {
-                    String id = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + id + ", '" + posterUrl +
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + mediaId + ", '" + posterUrl +
                                 "');");
-                        mUploadingMedia.put(id, MediaType.VIDEO);
+                        mUploadingMedia.put(mediaId, MediaType.VIDEO);
                     } else {
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + safeMediaUrl +
-                                "');");
-                        mUploadingMedia.put(id, MediaType.IMAGE);
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + mediaId + ", '" +
+                                safeMediaUrl + "');");
+                        mUploadingMedia.put(mediaId, MediaType.IMAGE);
                     }
                 }
             }
@@ -1124,26 +1123,28 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        final MediaType mediaType = mUploadingMedia.get(localMediaId);
-        if (mediaType != null) {
-            mWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
-                    if (mediaType.equals(MediaType.IMAGE)) {
-                        String remoteMediaId = mediaFile.getMediaId();
-                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
-                                ", '" + remoteMediaId + "', '" + remoteUrl + "');");
-                    } else if (mediaType.equals(MediaType.VIDEO)) {
-                        String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
-                        String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
-                                mediaFile.getVideoPressShortCode());
-                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
-                                ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
-                    }
-                }
-            });
+        final String mimeType = mediaFile.getMimeType();
+        if (TextUtils.isEmpty(mimeType)) {
+            return;
         }
+
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+                if (mimeType.contains("image")) {
+                    String remoteMediaId = mediaFile.getMediaId();
+                    mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
+                            ", '" + remoteMediaId + "', '" + remoteUrl + "');");
+                } else if (mimeType.contains("video")) {
+                    String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
+                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                            mediaFile.getVideoPressShortCode());
+                    mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
+                            ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
+                }
+            }
+        });
     }
 
     @Override
@@ -1185,10 +1186,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onGalleryMediaUploadSucceeded(final long galleryId, String remoteMediaId, int remaining) {
+    public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
+            // TODO: media IDs are Long's; should we update to use ArrayList<Long>?
             ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
-            mediaIds.add(remoteMediaId);
+            mediaIds.add(String.valueOf(remoteMediaId));
             mUploadingMediaGallery.setIds(mediaIds);
 
             if (remaining == 0) {

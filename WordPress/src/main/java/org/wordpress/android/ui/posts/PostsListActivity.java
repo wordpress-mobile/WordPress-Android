@@ -11,20 +11,27 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
-    public static final String EXTRA_BLOG_LOCAL_ID = "EXTRA_BLOG_LOCAL_ID";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
+    private SiteModel mSite;
+
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.post_list_activity);
 
@@ -41,10 +48,20 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         FragmentManager fm = getFragmentManager();
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
 
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
+        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         showErrorDialogIfNeeded(getIntent().getExtras());
-        showWarningToastIfNeeded(getIntent().getExtras());
     }
 
     @Override
@@ -58,10 +75,6 @@ public class PostsListActivity extends AppCompatActivity {
      * upload error notification
      */
     private void showErrorDialogIfNeeded(Bundle extras) {
-        if (WordPress.getCurrentBlog() == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found);
-            finish();
-        }
         if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
             return;
         }
@@ -81,19 +94,6 @@ public class PostsListActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    /**
-     * Show a toast when the user taps a Post Upload notification referencing a post that's not from the current
-     * selected Blog
-     */
-    private void showWarningToastIfNeeded(Bundle extras) {
-        if (extras == null || !extras.containsKey(EXTRA_BLOG_LOCAL_ID) || isFinishing()) {
-            return;
-        }
-        if (extras.getInt(EXTRA_BLOG_LOCAL_ID, -1) != WordPress.getCurrentLocalTableBlogId()) {
-            ToastUtils.showToast(this, R.string.error_open_list_from_notification);
-        }
-    }
-
     public boolean isRefreshing() {
         return mPostList.isRefreshing();
     }
@@ -109,9 +109,7 @@ public class PostsListActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
         super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 }

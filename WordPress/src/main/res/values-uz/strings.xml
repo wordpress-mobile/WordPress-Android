@@ -2,12 +2,10 @@
 <!--
 Translation-Revision-Date: 2015-08-19 20:02:12+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: uz
 -->
 <resources>
-	<string name="loading_videos">Videolarni yuklash</string>
-	<string name="loading_images">Rasmlarni yuklash</string>
 	<string name="device">Qurilma</string>
 	<string name="creating_your_account">Akkauntingiz yaratilmoqda</string>
 	<string name="creating_your_site">Saytingiz yaratilmoqda</string>
