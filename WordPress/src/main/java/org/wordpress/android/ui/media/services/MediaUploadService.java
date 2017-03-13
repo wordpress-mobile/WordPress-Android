@@ -125,6 +125,7 @@ public class MediaUploadService extends Service {
             // Upload Progress
             // TODO check if we need to re-broadcast event.media, event.progress or we're just fine with
             // listening to  event.media, event.progress
+            AppLog.d(AppLog.T.MEDIA, event.media.getId() + " - progressing " + event.progress);
         }
     }
 
@@ -140,7 +141,7 @@ public class MediaUploadService extends Service {
         uploadNextInQueue();
     }
 
-    private void updatePostWithMediaUrl(MediaModel media){
+    private synchronized void updatePostWithMediaUrl(MediaModel media){
         if (media != null) {
             PostModel post = mPostStore.getPostByLocalPostId(media.getPostId());
             if (post != null) {
