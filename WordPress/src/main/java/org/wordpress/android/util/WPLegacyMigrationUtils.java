@@ -158,9 +158,10 @@ public class WPLegacyMigrationUtils {
             int numRows = c.getCount();
             c.moveToFirst();
             for (int i = 0; i < numRows; i++) {
-                // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
-                // account, so we want to skip it.
-                if (!TextUtils.isEmpty(c.getString(5))) {
+                long apiBlogId = StringUtils.stringToLong(c.getString(5));
+                if (apiBlogId > 0) {
+                    // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
+                    // account, so we want to skip it.
                     c.moveToNext();
                     continue;
                 }
