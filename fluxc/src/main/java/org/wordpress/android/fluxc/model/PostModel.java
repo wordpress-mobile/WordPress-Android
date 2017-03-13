@@ -24,7 +24,6 @@ import java.util.List;
 
 @Table
 public class PostModel extends Payload implements Cloneable, Identifiable, Serializable {
-    private static final long FEATURED_IMAGE_INIT_VALUE = -2;
     private static final long LATITUDE_REMOVED_VALUE = 8888;
     private static final long LONGITUDE_REMOVED_VALUE = 8888;
 
@@ -43,7 +42,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     @Column private String mTagNames;
     @Column private String mStatus;
     @Column private String mPassword;
-    @Column private long mFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
+    @Column private long mFeaturedImageId;
     @Column private String mPostFormat;
     @Column private String mSlug;
     @Column private double mLatitude = PostLocation.INVALID_LATITUDE;
@@ -62,7 +61,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     // XML-RPC only, needed to work around a bug with the API:
     // https://github.com/wordpress-mobile/WordPress-Android/pull/3425
     // We may be able to drop this if we switch to wp.editPost (and it doesn't have the same bug as metaWeblog.editPost)
-    @Column private long mLastKnownRemoteFeaturedImageId = FEATURED_IMAGE_INIT_VALUE;
+    @Column private long mLastKnownRemoteFeaturedImageId;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityPublishPost;
@@ -206,18 +205,10 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     }
 
     public long getFeaturedImageId() {
-        if (mFeaturedImageId == FEATURED_IMAGE_INIT_VALUE) {
-            return 0;
-        }
-
         return mFeaturedImageId;
     }
 
     public void setFeaturedImageId(long featuredImageId) {
-        if (mFeaturedImageId == FEATURED_IMAGE_INIT_VALUE) {
-            mLastKnownRemoteFeaturedImageId = mFeaturedImageId;
-        }
-
         mFeaturedImageId = featuredImageId;
     }
 
@@ -307,10 +298,12 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mIsLocallyChanged = isLocallyChanged;
     }
 
+    @Deprecated
     public long getLastKnownRemoteFeaturedImageId() {
         return mLastKnownRemoteFeaturedImageId;
     }
 
+    @Deprecated
     public void setLastKnownRemoteFeaturedImageId(long lastKnownRemoteFeaturedImageId) {
         mLastKnownRemoteFeaturedImageId = lastKnownRemoteFeaturedImageId;
     }
@@ -361,7 +354,6 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
                 && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
                 && isPage() == otherPost.isPage()
                 && isLocalDraft() == otherPost.isLocalDraft() && isLocallyChanged() == otherPost.isLocallyChanged()
-                && getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId()
                 && getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost()
                 && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
                 && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
@@ -438,11 +430,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     }
 
     public void clearFeaturedImage() {
-        setFeaturedImageId(-1);
-    }
-
-    public boolean featuredImageHasChanged() {
-        return (mLastKnownRemoteFeaturedImageId != mFeaturedImageId);
+        setFeaturedImageId(0);
     }
 
     private static List<Long> termIdStringToList(String ids) {
