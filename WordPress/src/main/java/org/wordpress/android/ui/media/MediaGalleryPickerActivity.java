@@ -176,11 +176,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             if (message != null) {
                 Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
             }
-
-            // the activity may be done by the time we get this, so check for it
-            if (!isFinishing()) {
-                mGridAdapter.setRefreshing(false);
-            }
         } else {
             mHasRetrievedAllMedia = !event.canLoadMore;
             mGridAdapter.setHasRetrievedAll(mHasRetrievedAllMedia);
@@ -191,7 +186,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
             // the activity may be gone by the time this finishes, so check for it
             if (!isFinishing()) {
-                mGridAdapter.setRefreshing(false);
                 if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
                     Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
                     mGridAdapter.setCursor(cursor);
@@ -264,7 +258,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private void refreshMediaFromServer(boolean loadMore) {
         if (!mIsFetching) {
             mIsFetching = true;
-            mGridAdapter.setRefreshing(true);
 
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
