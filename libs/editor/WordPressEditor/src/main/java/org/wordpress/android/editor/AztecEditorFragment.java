@@ -518,15 +518,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     }
 
-    private static class ImagePredicate implements AztecText.AttributePredicate {
+    public static class ImagePredicate implements AztecText.AttributePredicate {
         private final String mId;
         private final String mAttributeName;
 
-        static ImagePredicate localMediaIdPredicate(String id) {
+        public static ImagePredicate localMediaIdPredicate(String id) {
             return new ImagePredicate(id, "data-wpid");
         }
 
-        static ImagePredicate idPredicate(String id) {
+        public static ImagePredicate idPredicate(String id) {
             return new ImagePredicate(id, "id");
         }
 
