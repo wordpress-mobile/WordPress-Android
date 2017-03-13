@@ -1735,11 +1735,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             if (optimizedPath == null) {
                 AppLog.e(T.EDITOR, "Optimized picture was null!");
-                // TODO: track analytics here
-                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
             } else {
-                // TODO: track analytics here
-                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
                 Uri optimizedImageUri = Uri.parse(optimizedPath);
                 if (optimizedImageUri != null) {
                     uri = optimizedImageUri;
