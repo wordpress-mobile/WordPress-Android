@@ -332,11 +332,8 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use Merriweather font assets
-        .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
-
         .append("<style type='text/css'>")
-        .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
+        .append("  body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
 
         // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be

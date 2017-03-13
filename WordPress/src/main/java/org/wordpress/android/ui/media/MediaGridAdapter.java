@@ -22,8 +22,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.FadeInNetworkImageView;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -40,7 +40,6 @@ import java.util.Map;
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
     private MediaGridAdapterCallback mCallback;
     private boolean mHasRetrievedAll;
-    private boolean mIsRefreshing;
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
@@ -59,6 +58,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     // Must be an ArrayList (order is important for galleries)
     private ArrayList<Integer> mSelectedItems;
+
+    private static final float SCALE_NORMAL = 1.0f;
+    private static final float SCALE_SELECTED = .85f;
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
@@ -122,31 +124,22 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         final int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
 
         String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-        boolean isLocalFile = MediaUtils.isLocalFile(state);
-
-        // file name
         String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
-        if (holder.filenameView != null) {
-            holder.filenameView.setText(fileName);
-        }
-
-        // title of media
         String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
-        if (TextUtils.isEmpty(title)) {
-            title = fileName;
-        }
-        holder.titleView.setText(title);
-
-        // upload date
-        if (holder.uploadDateView != null) {
-            String date = MediaUtils.getDate(mCursor.getLong(mCursor.getColumnIndex(MediaModelTable.UPLOAD_DATE)));
-            holder.uploadDateView.setText(date);
-        }
-
-        // load image
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String mimeType = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE));
-        if (mimeType.contains("image")) {
+
+        boolean isLocalFile = MediaUtils.isLocalFile(state);
+        boolean isSelected = isItemSelected(localMediaId);
+        boolean isImage = mimeType.contains("image");
+
+        holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
+
+        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
+        holder.fileTypeView.setText(fileExtension.toUpperCase());
+
+        // load image
+        if (isImage) {
             if (isLocalFile) {
                 loadLocalImage(filePath, holder.imageView);
             } else {
@@ -157,83 +150,65 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.imageView.setImageDrawable(null);
         }
 
-        // get the file extension from the fileURL
-        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
-        fileExtension = fileExtension.toUpperCase();
-        // file type
-        if (DisplayUtils.isXLarge(mContext) && !TextUtils.isEmpty(fileExtension)) {
-            holder.fileTypeView.setText(String.format(mContext.getString(R.string.media_file_type), fileExtension));
-        } else {
-            holder.fileTypeView.setText(fileExtension);
+        // show selection count when selected
+        holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        if (isSelected) {
+            int count = mSelectedItems.indexOf(localMediaId) + 1;
+            holder.selectionCountTextView.setText(Integer.toString(count));
         }
 
-        // dimensions
-        if (holder.dimensionView != null) {
-            if (MediaUtils.isValidImage(filePath)) {
-                int width = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.WIDTH));
-                int height = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.HEIGHT));
-
-                if (width > 0 && height > 0) {
-                    String dimensions = width + "x" + height;
-                    holder.dimensionView.setText(dimensions);
-                    holder.dimensionView.setVisibility(View.VISIBLE);
-                }
-            } else {
-                holder.dimensionView.setVisibility(View.GONE);
-            }
+        // make sure the thumbnail scale reflects its selection state
+        float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
+        if (holder.imageView.getScaleX() != scale) {
+            holder.imageView.setScaleX(scale);
+            holder.imageView.setScaleY(scale);
         }
-
-        holder.frameLayout.setTag(localMediaId);
-        holder.frameLayout.setChecked(isItemSelected(localMediaId));
 
         // show upload state
-        if (holder.stateTextView != null) {
-            if (state != null && state.length() > 0) {
-                holder.stateTextView.setVisibility(View.VISIBLE);
-                holder.stateTextView.setText(state);
+        if (state != null && state.length() > 0) {
+            holder.stateTextView.setVisibility(View.VISIBLE);
+            holder.stateTextView.setText(state);
 
-                // hide the progressbar only if the state is Uploaded or failed
-                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
-                        state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                    holder.progressUpload.setVisibility(View.GONE);
-                } else {
-                    holder.progressUpload.setVisibility(View.VISIBLE);
-                }
-
-                // Hide the state text only if the it's Uploaded
-                if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
-                    holder.stateTextView.setVisibility(View.GONE);
-                }
-
-                // add onclick to retry failed uploads
-                if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                    holder.stateTextView.setVisibility(View.VISIBLE);
-                    holder.stateTextView.setText(mContext.getString(R.string.retry));
-                    holder.stateTextView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (!isInMultiSelect()) {
-                                ((TextView) v).setText(R.string.upload_queued);
-                                v.setOnClickListener(null);
-                                if (mCallback != null) {
-                                    mCallback.onAdapterRetryUpload(localMediaId);
-                                }
-                            }
-                        }
-                    });
-                }
-
-            } else {
+            // hide the progressbar only if the state is Uploaded or failed
+            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
+                    state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                 holder.progressUpload.setVisibility(View.GONE);
+            } else {
+                holder.progressUpload.setVisibility(View.VISIBLE);
+            }
+
+            // Hide the state text only if the it's Uploaded
+            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
                 holder.stateTextView.setVisibility(View.GONE);
             }
+
+            // add onclick to retry failed uploads
+            if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
+                holder.stateTextView.setVisibility(View.VISIBLE);
+                holder.stateTextView.setText(mContext.getString(R.string.retry));
+                holder.stateTextView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!isInMultiSelect()) {
+                            ((TextView) v).setText(R.string.upload_queued);
+                            v.setOnClickListener(null);
+                            if (mCallback != null) {
+                                mCallback.onAdapterRetryUpload(localMediaId);
+                            }
+                        }
+                    }
+                });
+            }
+        } else {
+            holder.progressUpload.setVisibility(View.GONE);
+            holder.stateTextView.setVisibility(View.GONE);
         }
 
         // if we are near the end, make a call to fetch more
-        if (position == getItemCount() - 1 && !mHasRetrievedAll) {
-            if (mCallback != null) {
-                mCallback.onAdapterFetchMoreData();
-            }
+        if (position == getItemCount() - 1
+                && !mHasRetrievedAll
+                && mCallback != null) {
+            mCallback.onAdapterFetchMoreData();
         }
     }
 
@@ -257,10 +232,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 container.cancelRequest();
             }
         }
-
-        if (holder.frameLayout != null) {
-            holder.frameLayout.setOnCheckedChangeListener(null);
-        }
     }
 
     public ArrayList<Integer> getSelectedItems() {
@@ -272,28 +243,21 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     class GridViewHolder extends RecyclerView.ViewHolder {
-        private final TextView filenameView;
         private final TextView titleView;
-        private final TextView uploadDateView;
         private final FadeInNetworkImageView imageView;
         private final TextView fileTypeView;
-        private final TextView dimensionView;
-        private final CheckableFrameLayout frameLayout;
-
+        private final TextView selectionCountTextView;
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
 
         public GridViewHolder(View view) {
             super(view);
 
-            filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
             titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
-            uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
             imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
             fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-            dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
-            frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
 
+            selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
             stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
 
@@ -305,7 +269,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isInMultiSelect()) {
-                        toggleItemSelected(position);
+                        toggleItemSelected(GridViewHolder.this, position);
                     } else if (mCallback != null) {
                         mCallback.onAdapterItemSelected(position);
                     }
@@ -317,10 +281,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
                     if (isInMultiSelect()) {
-                        toggleItemSelected(position);
+                        toggleItemSelected(GridViewHolder.this, position);
                     } else if (mAllowMultiselect) {
                         setInMultiSelect(true);
-                        setItemSelectedByPosition(position, true);
+                        setItemSelectedByPosition(GridViewHolder.this, position, true);
                     }
                     return true;
                 }
@@ -426,11 +390,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mHasRetrievedAll = b;
     }
 
-    public void setRefreshing(boolean refreshing) {
-        mIsRefreshing = refreshing;
-        //notifyDataSetChanged();
-    }
-
     public void clearSelection() {
         if (mSelectedItems.size() > 0) {
             mSelectedItems.clear();
@@ -442,31 +401,64 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return mSelectedItems.contains(localMediaId);
     }
 
-    private void setItemSelectedByPosition(int position, boolean selected) {
-        if (mCursor == null || !isValidPosition(position)) {
-            return;
-        }
-        mCursor.moveToPosition(position);
-        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
-        if (columnIndex != -1) {
-            int localMediaId = mCursor.getInt(columnIndex);
-            setItemSelectedByLocalId(localMediaId, selected);
+    public void removeSelectionByLocalId(int localMediaId) {
+        if (isItemSelected(localMediaId)) {
+            mSelectedItems.remove(Integer.valueOf(localMediaId));
+            if (mCallback != null) {
+                mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+            }
+            notifyDataSetChanged();
         }
     }
 
-    public void setItemSelectedByLocalId(int localMediaId, boolean selected) {
+    private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
+        if (mCursor == null || !isValidPosition(position)) {
+            return;
+        }
+
+        mCursor.moveToPosition(position);
+        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
+        if (columnIndex == -1) {
+            return;
+        }
+
+        int localMediaId = mCursor.getInt(columnIndex);
         if (selected) {
             mSelectedItems.add(localMediaId);
         } else {
             mSelectedItems.remove(Integer.valueOf(localMediaId));
         }
+
+        // show and animate the count
+        if (selected) {
+            holder.selectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(localMediaId) + 1));
+        }
+        AniUtils.startAnimation(holder.selectionCountTextView,
+                selected ? R.anim.cab_select : R.anim.cab_deselect);
+        holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
+
+        // scale the thumbnail
+        if (selected) {
+            AniUtils.scale(holder.imageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
+        } else {
+            AniUtils.scale(holder.imageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
+        }
+
+        // redraw after the scale animation completes
+        long delayMs = AniUtils.Duration.SHORT.toMillis(mContext);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        }, delayMs);
+
         if (mCallback != null) {
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
-        notifyDataSetChanged();
     }
 
-    private void toggleItemSelected(int position) {
+    private void toggleItemSelected(GridViewHolder holder, int position) {
         if (mCursor == null || !isValidPosition(position)) {
             return;
         }
@@ -475,7 +467,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (columnIndex != -1) {
             int localMediaId = mCursor.getInt(columnIndex);
             boolean isSelected = mSelectedItems.contains(localMediaId);
-            setItemSelectedByLocalId(localMediaId, !isSelected);
+            setItemSelectedByPosition(holder, position, !isSelected);
         }
     }
 

@@ -2,10 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_height="wrap_content">
 
-    <org.wordpress.android.ui.CheckableFrameLayout
+    <FrameLayout
         android:id="@+id/media_grid_frame_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,6 +15,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_selection_count"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_oval_blue"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
+            android:visibility="gone"
+            tools:text="5"
+            tools:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/media_grid_item_upload_state_container"
@@ -83,6 +95,6 @@
                 android:textColor="@color/media_gallery_grid_label"
                 android:textSize="@dimen/text_sz_small" />
         </RelativeLayout>
-    </org.wordpress.android.ui.CheckableFrameLayout>
+    </FrameLayout>
 
 </LinearLayout>

@@ -115,16 +115,21 @@ public class AniUtils {
      * used when animating a toolbar in/out
      */
     public static void animateTopBar(View view, boolean show) {
-        animateBar(view, show, true);
+        animateBar(view, show, true, Duration.SHORT);
     }
 
     public static void animateBottomBar(View view, boolean show) {
-        animateBar(view, show, false);
+        animateBar(view, show, false, Duration.SHORT);
     }
 
-    private static void animateBar(final View view,
-                                   final boolean show,
-                                   final boolean isTopBar) {
+    public static void animateBottomBar(View view, boolean show, Duration duration) {
+        animateBar(view, show, false, duration);
+    }
+
+    private static void animateBar(View view,
+                                   boolean show,
+                                   boolean isTopBar,
+                                   Duration duration) {
         int newVisibility = (show ? View.VISIBLE : View.GONE);
         if (view == null || view.getVisibility() == newVisibility) {
             return;
@@ -145,7 +150,7 @@ public class AniUtils {
                 Animation.RELATIVE_TO_SELF, fromY,
                 Animation.RELATIVE_TO_SELF, toY);
 
-        long durationMillis = Duration.SHORT.toMillis(view.getContext());
+        long durationMillis = duration.toMillis(view.getContext());
         animation.setDuration(durationMillis);
 
         if (show) {
@@ -195,6 +200,21 @@ public class AniUtils {
         if (target != null && duration != null) {
             getFadeOutAnim(target, duration).start();
         }
+    }
+
+    public static void scale(final View target, float scaleStart, float scaleEnd, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, scaleStart, scaleEnd);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, scaleStart, scaleEnd);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(duration.toMillis(target.getContext()));
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.start();
     }
 
     public static void scaleIn(final View target, Duration duration) {
