@@ -15,6 +15,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
+import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.AppLog;
 
 import java.util.HashMap;
@@ -32,10 +33,14 @@ public abstract class BaseRequest<T> extends Request<T> {
     public interface BaseErrorListener {
         void onErrorResponse(@NonNull BaseNetworkError error);
     }
+    public interface OnParseErrorListener {
+        void onParseError(OnUnexpectedError event);
+    }
 
     private static final String USER_AGENT_HEADER = "User-Agent";
 
     protected OnAuthFailedListener mOnAuthFailedListener;
+    protected OnParseErrorListener mOnParseErrorListener;
     protected final Map<String, String> mHeaders = new HashMap<>(2);
     private BaseErrorListener mErrorListener;
 
@@ -150,6 +155,10 @@ public abstract class BaseRequest<T> extends Request<T> {
         mOnAuthFailedListener = onAuthFailedListener;
     }
 
+    public void setOnParseErrorListener(OnParseErrorListener onParseErrorListener) {
+        mOnParseErrorListener = onParseErrorListener;
+    }
+
     public void setUserAgent(String userAgent) {
         mHeaders.put(USER_AGENT_HEADER, userAgent);
     }
@@ -219,6 +228,9 @@ public abstract class BaseRequest<T> extends Request<T> {
     @Override
     public final void deliverError(VolleyError volleyError) {
         AppLog.e(AppLog.T.API, "Volley error", volleyError);
+        if (volleyError instanceof ParseError) {
+            mOnParseErrorListener.onParseError(new OnUnexpectedError(volleyError, "API response parse error"));
+        }
         BaseNetworkError baseNetworkError = getBaseNetworkError(volleyError);
         BaseNetworkError modifiedBaseNetworkError = deliverBaseNetworkError(baseNetworkError);
         mErrorListener.onErrorResponse(modifiedBaseNetworkError);
