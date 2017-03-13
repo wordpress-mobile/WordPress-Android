@@ -244,19 +244,18 @@ public class WPLegacyMigrationUtils {
                     boolean dotcomFlag = siteCursor.getInt(0) == 1;
                     int blogId = siteCursor.getInt(1);
                     String xmlrpcUrl = siteCursor.getString(2);
-                    String apiBlogId = siteCursor.getString(3);
+                    long apiBlogId = StringUtils.stringToLong(siteCursor.getString(3));
 
                     int migratedSiteLocalId;
                     if (dotcomFlag) {
                         // WP.com site - identify it by WP.com site ID
                         migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(blogId);
-                    } else if (!TextUtils.isEmpty(apiBlogId)) {
+                    } else if (apiBlogId > 0) {
                         // Jetpack site - identify it by WP.com site ID
-                        migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(Long.valueOf(apiBlogId));
+                        migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(apiBlogId);
                     } else {
                         // Self-hosted site - identify it by its self-hosted site ID and XML-RPC URL
-                        migratedSiteLocalId = siteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(blogId,
-                                xmlrpcUrl);
+                        migratedSiteLocalId = siteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(blogId, xmlrpcUrl);
                     }
                     postModel.setLocalSiteId(migratedSiteLocalId);
                     siteCursor.close();
