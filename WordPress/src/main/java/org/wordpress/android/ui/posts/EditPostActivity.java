@@ -1969,13 +1969,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     private void startMediaUploadService() {
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
-            ArrayList<MediaModel> mediaList = new ArrayList<>();
+            final ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
                 if (media.getUploadState().equals(UploadState.QUEUED.name())) {
                     mediaList.add(media);
                 }
             }
-            MediaUploadService.startService(this, mSite, mediaList);
+
+            if (!mediaList.isEmpty()) {
+                // before starting the service, we need to update the posts' contents so we are sure the service
+                // can retrieve it from there on
+                hidePhotoChooser();
+                savePostAsync(new AfterSavePostListener() {
+                    @Override
+                    public void onPostSave() {
+                        MediaUploadService.startService(EditPostActivity.this, mSite, mediaList);
+                    }
+                });
+
+            }
         }
     }
 
@@ -2022,7 +2034,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         MediaModel media = buildMediaModel(uri, mimeType, startingState);
         media.setPostId(mPost.getId());
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         mPendingUploads.add(media);
+
         startMediaUploadService();
 
         return media;
