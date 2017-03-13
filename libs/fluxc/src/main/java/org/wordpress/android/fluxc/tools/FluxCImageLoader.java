@@ -71,7 +71,7 @@ public class FluxCImageLoader extends ImageLoader {
                     HTTPAuthModel httpAuthModel = mHTTPAuthManager.getHTTPAuthModel(url);
                     if (httpAuthModel != null) {
                         String creds = String.format("%s:%s", httpAuthModel.getUsername(), httpAuthModel.getPassword());
-                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                         headers.put("Authorization", auth);
                     }
                 }
