@@ -1642,16 +1642,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Analytics about new media
      *
      * @param isVideo Whether is a video or not
+     * @param isOptimized Whether the media was "optimized" device side
      * @param uri The URI of the media on the device, or null
      * @param path The path of the media on the device, or null
      */
-    private void trackAddMediaFromDeviceEvents(boolean isVideo, Uri uri, String path) {
+    private void trackAddMediaFromDeviceEvents(boolean isVideo, boolean isOptimized, Uri uri, String path) {
         if (TextUtils.isEmpty(path) && uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
             return;
         }
 
         Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
+        properties.put("optimized", isOptimized);
 
         if (isVideo) {
             AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY, properties);
@@ -1724,6 +1726,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        boolean isOptimized = false;
         if (!isVideo && SiteSettingsInterface.getInterface(this, mSite, null).init(false).getOptimizedImage() &&
                !NetworkUtils.isWiFiConnected(this)) {
             // Not on WiFi and optimize image is set to ON
@@ -1740,13 +1743,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 Uri optimizedImageUri = Uri.parse(optimizedPath);
                 if (optimizedImageUri != null) {
                     uri = optimizedImageUri;
+                    isOptimized = true;
                 }
             }
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-        trackAddMediaFromDeviceEvents(isVideo, null, path);
+        trackAddMediaFromDeviceEvents(isVideo, isOptimized, null, path);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
@@ -1755,7 +1759,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
+        trackAddMediaFromDeviceEvents(isVideo, false, mediaUri, null);
 
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
         if (isVideo) {
