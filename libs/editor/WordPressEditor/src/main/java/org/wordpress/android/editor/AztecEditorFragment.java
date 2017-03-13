@@ -503,6 +503,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+
+            // we still need to refresh the screen visually, no matter whether the service already
+            // saved the post to Db or not
             if (mediaType.equals(MediaType.IMAGE)) {
                 AttributesImpl attrs = new AttributesImpl();
                 attrs.addAttribute("", "src", "src", "string", remoteUrl);

@@ -123,7 +123,7 @@ public class MediaUploadService extends Service {
             completed();
         } else {
             // Upload Progress
-            // TODO check if we need to broadcast event.media, event.progress or we're just fine with
+            // TODO check if we need to re-broadcast event.media, event.progress or we're just fine with
             // listening to  event.media, event.progress
         }
     }
