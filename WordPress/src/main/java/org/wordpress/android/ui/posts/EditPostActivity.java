@@ -143,7 +143,7 @@ import javax.inject.Inject;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        MediaUploadService.MediaUploadListener, PhotoChooserFragment.PhotoChooserListener {
+        PhotoChooserFragment.PhotoChooserListener {
     public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";

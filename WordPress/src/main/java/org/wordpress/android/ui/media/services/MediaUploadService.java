@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.editor.EditorMediaUploadListener;
-import org.wordpress.android.editor.EditorMediaUploadReadyProcessor;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -23,6 +21,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -152,7 +151,7 @@ public class MediaUploadService extends Service {
                 if (content != null) {
 
                     // actually replace the media ID with the media uri
-                    EditorMediaUploadReadyProcessor processor = new EditorMediaUploadReadyProcessor();
+                    MediaUploadReadyProcessor processor = new MediaUploadReadyProcessor();
                     PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
                     if (modifiedPost != null) {
                         post = modifiedPost;
