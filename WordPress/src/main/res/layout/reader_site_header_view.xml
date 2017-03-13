@@ -79,7 +79,7 @@
             android:maxLines="3"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
-            app:wpFontFamily="merriweather"
+            android:fontFamily="serif"
             tools:text="text_description" />
 
         <LinearLayout

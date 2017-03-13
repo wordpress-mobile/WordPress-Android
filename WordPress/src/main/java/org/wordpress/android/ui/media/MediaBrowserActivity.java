@@ -94,7 +94,7 @@ import javax.inject.Inject;
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
         MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback {
-    public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
+    private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
@@ -253,7 +253,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                         .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // make sure the keyboard is dimissed
+                                // make sure the keyboard is dismissed
                                 WPActivityUtils.hideKeyboard(getCurrentFocus());
 
                                 // pop the edit fragment
@@ -403,7 +403,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public boolean onMenuItemActionExpand(MenuItem item) {
         // currently we don't support searching from within a filter, so hide it
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterVisibility(View.GONE);
+            mMediaGridFragment.setFilterEnabled(false);
             mMediaGridFragment.setFilter(Filter.ALL);
         }
 
@@ -420,7 +420,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterVisibility(View.VISIBLE);
+            mMediaGridFragment.setFilterEnabled(true);
             mMediaGridFragment.setFilter(Filter.ALL);
         }
 
@@ -591,7 +591,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    public void updateOnMediaChanged(int localMediaId) {
+    private void updateOnMediaChanged(int localMediaId) {
         if (localMediaId == -1) {
             return;
         }
@@ -660,7 +660,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    public void uploadList(List<Uri> uriList) {
+    private void uploadList(List<Uri> uriList) {
         for (Uri uri : uriList) {
             fetchMedia(uri, getContentResolver().getType(uri));
         }
@@ -822,7 +822,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         String filename = org.wordpress.android.fluxc.utils.MediaUtils.getFileName(path);
         String fileExtension = org.wordpress.android.fluxc.utils.MediaUtils.getExtension(path);
 
-        // Try to get mimetype if none was passed to this method
+        // Try to get mime type if none was passed to this method
         if (mimeType == null) {
             mimeType = getContentResolver().getType(uri);
             if (mimeType == null) {

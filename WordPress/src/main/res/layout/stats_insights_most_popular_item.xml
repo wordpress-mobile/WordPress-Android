@@ -21,7 +21,7 @@
             android:paddingBottom="@dimen/margin_medium"
             android:gravity="center_vertical|center_horizontal" >
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_width="0dp"
@@ -30,7 +30,7 @@
                 android:text="@string/stats_insights_most_popular_day"
                 android:textAllCaps="true" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:orientation="horizontal"
             android:gravity="center_vertical|center_horizontal">
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:id="@+id/stats_most_popular_day"
@@ -57,7 +57,7 @@
                 android:text="@string/stats_default_number_zero"
                 android:textColor="@color/grey_darken_30" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:id="@+id/stats_most_popular_hour"
@@ -75,7 +75,7 @@
             android:paddingTop="@dimen/margin_medium"
             android:gravity="center_vertical|center_horizontal" >
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
                 android:id="@+id/stats_most_popular_day_percent"
                 android:gravity="center_vertical|center_horizontal"
@@ -85,7 +85,7 @@
                 android:text="@string/stats_insights_most_popular_percent_views"
                 android:textColor="@color/grey_darken_10" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 style="@style/StatsInsightsLabel"
                 android:id="@+id/stats_most_popular_hour_percent"
                 android:gravity="center_vertical|center_horizontal"

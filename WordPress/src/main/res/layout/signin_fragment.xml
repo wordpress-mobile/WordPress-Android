@@ -126,7 +126,7 @@
                 android:background="@color/white"
                 android:clickable="true">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/nux_username"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -157,7 +157,7 @@
                 android:background="@color/white"
                 android:clickable="true">
 
-                <org.wordpress.android.widgets.WPEditText
+                <EditText
                     android:id="@+id/nux_password"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -221,7 +221,7 @@
                 android:background="@color/white"
                 android:visibility="gone">
 
-                <org.wordpress.android.widgets.WPEditText
+                <org.wordpress.persistentedittext.PersistentEditText
                     android:id="@+id/nux_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -350,7 +350,7 @@
                 android:layout_marginRight="16dp"
                 android:gravity="center"
                 android:text="@string/nux_add_selfhosted_blog" />
-
+a
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
