@@ -27,9 +27,6 @@ Language: es
 	<string name="reader_toast_err_cannot_like_post">Error al marcar como me gusta la publicación</string>
 	<string name="reader_title_post_detail_wpcom">Entrada de WordPress.com</string>
 	<string name="reader_title_deeplink">Lector de WordPress</string>
-	<string name="reader_discover_default_tag">Descubrir</string>
-	<string name="reader_followed_default_tag">Sitios que sigues</string>
-	<string name="reader_liked_default_tag">Entradas que me gustan</string>
 	<string name="error_notif_q_action_reply">No se pudo responder al comentario. Por favor inténtalo de nuevo más tarde.</string>
 	<string name="error_notif_q_action_approve">No se pudo aprobar el comentario. Por favor, inténtalo de nuevo más tarde.</string>
 	<string name="error_notif_q_action_like">No se puede marcar como me gusta el comentario. Por favor inténtalo de nuevo más tarde.</string>
