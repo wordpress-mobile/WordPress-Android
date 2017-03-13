@@ -116,10 +116,7 @@ public class MediaUploadService extends Service {
         } else if (event.completed) {
             // Upload completed
             AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
-            // TODO here we need to EDIT THE CORRESPONDING POST
-            // TODO here we need to EDIT THE CORRESPONDING POST
-            // TODO here we need to EDIT THE CORRESPONDING POST
-            // TODO here we need to EDIT THE CORRESPONDING POST
+            // here we need to edit the corresponding post
             updatePostWithMediaUrl(event.media);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
