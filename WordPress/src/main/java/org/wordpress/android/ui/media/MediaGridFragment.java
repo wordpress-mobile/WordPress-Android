@@ -59,6 +59,7 @@ import javax.inject.Inject;
 /**
  * The grid displaying the media items.
  */
+@SuppressWarnings("ALL")
 public class MediaGridFragment extends Fragment implements MediaGridAdapterCallback {
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
@@ -84,7 +85,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private ActionMode mActionMode;
     private String mSearchTerm;
 
-    private View mSpinnerContainer;
     private TextView mResultView;
     private AppCompatSpinner mSpinner;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
@@ -201,7 +201,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
 
-        mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
         mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
         mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
 
@@ -264,7 +263,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             ((AppCompatActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
         }
 
-        setFilterSpinnerVisible(count == 0);
+        setFilterEnabled(count == 0);
         updateActionButtons(count);
         updateActionModeTitle(count);
     }
@@ -306,9 +305,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridAdapter.setCursor(cursor);
     }
 
-    public void setFilterVisibility(int visibility) {
+    public void setFilterEnabled(boolean enabled) {
         if (mSpinner != null) {
-            mSpinner.setVisibility(visibility);
+            mSpinner.setEnabled(enabled);
         }
     }
 
@@ -337,22 +336,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridAdapter.clearSelection();
     }
 
-    private void setFilterSpinnerVisible(boolean visible) {
-        if (visible) {
-            mSpinner.setEnabled(true);
-            mSpinnerContainer.setEnabled(true);
-            mSpinnerContainer.setVisibility(View.VISIBLE);
-        } else {
-            mSpinner.setEnabled(false);
-            mSpinnerContainer.setEnabled(false);
-            mSpinnerContainer.setVisibility(View.GONE);
-        }
-    }
-
     public void removeFromMultiSelect(int localMediaId) {
         if (mGridAdapter.isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
-            mGridAdapter.setItemSelectedByLocalId(localMediaId, false);
-            setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
+            mGridAdapter.removeSelectionByLocalId(localMediaId);
+            setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
         }
     }
 
@@ -450,11 +437,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mSpinner.setSelection(mFilter.ordinal());
     }
 
-    private void resetSpinnerAdapter() {
-        setFiltersText(0, 0, 0);
-        updateSpinnerAdapter();
-    }
-
     private void setFiltersText(int countAll, int countImages, int countUnattached) {
         mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
         mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
@@ -527,7 +509,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
                 ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
                 mGridAdapter.setSelectedItems(selectedItems);
-                setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
+                setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
                 mSwipeToRefreshHelper.setEnabled(false);
             }
         }
@@ -556,7 +538,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             mIsRefreshing = true;
             updateEmptyView(EmptyViewMessageType.LOADING);
             setRefreshing(true);
-            mGridAdapter.setRefreshing(true);
 
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
@@ -581,7 +562,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 public void run() {
                     refreshSpinnerAdapter();
                     updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                    mGridAdapter.setRefreshing(false);
                     mSwipeToRefreshHelper.setRefreshing(false);
                 }
             });
@@ -612,7 +592,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 @Override
                 public void run() {
                     mIsRefreshing = false;
-                    mGridAdapter.setRefreshing(false);
                     mSwipeToRefreshHelper.setRefreshing(false);
                     if (isPermissionError) {
                         updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
@@ -662,7 +641,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             setSwipeToRefreshEnabled(true);
             mGridAdapter.setInMultiSelect(false);
             mActionMode = null;
-            setFilterSpinnerVisible(mGridAdapter.getSelectedItems().size() == 0);
+            setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
         }
     }
 }
