@@ -273,7 +273,7 @@ public class WPLegacyMigrationUtils {
 
                 String postId = c.getString(c.getColumnIndex("postid"));
                 if (!TextUtils.isEmpty(postId)) {
-                    postModel.setRemotePostId(Long.valueOf(postId));
+                    postModel.setRemotePostId(StringUtils.stringToLong(postId));
                 }
 
                 postModel.setTitle(StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title"))));
