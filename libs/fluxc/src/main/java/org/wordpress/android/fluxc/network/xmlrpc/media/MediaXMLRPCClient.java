@@ -175,9 +175,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         }
                         fetchMedia(site, media, true);
                     } catch (XMLRPCException fault) {
-                        AppLog.w(T.MEDIA, "media upload successful, local id=" + media.getId()
-                                          + " - " + response.message());
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
+                        AppLog.w(T.MEDIA, "media upload failed with error: " + mediaError.message);
                         notifyMediaProgress(media, 0.f, mediaError);
                     }
                 } else {
