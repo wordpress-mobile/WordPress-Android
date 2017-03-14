@@ -349,7 +349,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
                 }
             }
         } catch (OutOfMemoryError e) {
-            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.UTILS);
+            CrashlyticsUtils.logException(e, AppLog.T.UTILS);
         }
 
         if (resizedBitmap != null) {
