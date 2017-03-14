@@ -82,11 +82,11 @@ public abstract class AbstractFragment extends Fragment {
             public void onClick(View v) {
                 mPasswordVisible = !mPasswordVisible;
                 if (mPasswordVisible) {
-                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_open);
+                    passwordVisibility.setImageResource(R.drawable.ic_visible_on_black_24dp);
                     passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_open));
                     passwordEditText.setTransformationMethod(null);
                 } else {
-                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_closed);
+                    passwordVisibility.setImageResource(R.drawable.ic_visible_off_black_24dp);
                     passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_closed));
                     passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
@@ -116,7 +116,7 @@ public abstract class AbstractFragment extends Fragment {
         }
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         SignInDialogFragment nuxAlert = SignInDialogFragment.newInstance(getString(R.string.error), message,
-                R.drawable.noticon_alert_big, getString(R.string.nux_tap_continue));
+                R.drawable.ic_notice_white_64dp, getString(R.string.nux_tap_continue));
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
     }

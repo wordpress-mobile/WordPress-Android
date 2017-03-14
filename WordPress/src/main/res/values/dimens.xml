@@ -61,6 +61,7 @@
         native reader dimens
     -->
     <dimen name="margin_none">0dp</dimen>
+    <dimen name="margin_extra_extra_small">1dp</dimen>
     <dimen name="margin_extra_small">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
@@ -117,7 +118,7 @@
     <dimen name="blavatar_sz">40dp</dimen>
 
     <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_count_icon">20dp</dimen>
+    <dimen name="reader_count_icon">18dp</dimen>
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>

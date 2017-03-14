@@ -997,13 +997,13 @@ public class EditPostSettingsFragment extends Fragment
         final int drawableId;
         switch (status) {
             case FOUND:
-                drawableId = R.drawable.ic_action_location_found;
+                drawableId = R.drawable.ic_location_found_black_translucent_40_32dp;
                 break;
             case NOT_FOUND:
-                drawableId = R.drawable.ic_action_location_off;
+                drawableId = R.drawable.ic_location_off_black_translucent_40_32dp;
                 break;
             case SEARCHING:
-                drawableId = R.drawable.ic_action_location_searching;
+                drawableId = R.drawable.ic_location_searching_black_40_32dp;
                 break;
             case NONE:
                 drawableId = 0;

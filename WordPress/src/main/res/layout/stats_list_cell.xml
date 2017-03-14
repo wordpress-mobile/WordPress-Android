@@ -25,7 +25,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:visibility="gone"
-            app:srcCompat="@drawable/stats_link" />
+            app:srcCompat="@drawable/ic_external_blue_wordpress_18dp" />
 
         <ImageView
             android:id="@+id/stats_list_cell_chevron"
@@ -34,7 +34,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:visibility="gone"
-            app:srcCompat="@drawable/stats_chevron_right" />
+            app:srcCompat="@drawable/ic_chevron_right_blue_wordpress_24dp" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/stats_list_cell_image"
@@ -74,7 +74,7 @@
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
             android:contentDescription="@string/more"
-            app:srcCompat="@drawable/ic_action_more" />
+            app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" />
 
         <LinearLayout
             android:id="@+id/stats_list_cell_total_container"

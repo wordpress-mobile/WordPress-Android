@@ -51,12 +51,12 @@
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/grey_darken_10</item>
-        <item name="android:drawableLeft">@drawable/noticon_clock</item>
+        <item name="android:drawableLeft">@drawable/ic_time_grey_darken_10_16dp</item>
     </style>
     <style name="ReaderTextView.Date.Large" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/grey_darken_10</item>
-        <item name="android:drawableLeft">@drawable/noticon_clock</item>
+        <item name="android:drawableLeft">@drawable/ic_time_grey_darken_10_16dp</item>
     </style>
     <style name="ReaderTextView.Action" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>

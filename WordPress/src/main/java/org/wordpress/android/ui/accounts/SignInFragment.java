@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -848,7 +847,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             SignInDialogFragment nuxAlert;
             nuxAlert = SignInDialogFragment.newInstance(getString(R.string.no_network_title),
                     getString(R.string.no_network_message),
-                    R.drawable.noticon_alert_big,
+                    R.drawable.ic_notice_white_64dp,
                     getString(R.string.cancel));
             ft.add(nuxAlert, "alert");
             ft.commitAllowingStateLoss();
@@ -1101,7 +1100,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 getString(org.wordpress.android.R.string.username_or_password_incorrect),
-                org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
+                org.wordpress.android.R.drawable.ic_notice_white_64dp, 3, getString(
                         org.wordpress.android.R.string.cancel), getString(
                         org.wordpress.android.R.string.forgot_password), getString(
                         org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
@@ -1148,7 +1147,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             thirdButtonLabel =  getString(R.string.tell_me_more);
         }
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
-                errorMessage, R.drawable.noticon_alert_big, 3,
+                errorMessage, R.drawable.ic_notice_white_64dp, 3,
                 getString(R.string.cancel), getString(R.string.reader_title_applog), thirdButtonLabel,
                 SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                 SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
