@@ -177,6 +177,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                 holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
+                holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
                 holder.stateContainer.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -192,6 +193,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             } else {
                 holder.progressUpload.setVisibility(View.VISIBLE);
                 holder.stateContainer.setOnClickListener(null);
+                holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
             holder.stateContainer.setVisibility(View.GONE);
