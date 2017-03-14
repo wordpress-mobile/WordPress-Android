@@ -170,7 +170,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         // show upload state unless it's already uploaded
-        state = MediaUploadState.UPLOADING.toString();
         if (!TextUtils.isEmpty(state) && !state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
             holder.stateContainer.setVisibility(View.VISIBLE);
             holder.stateTextView.setText(state);
