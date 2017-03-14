@@ -42,7 +42,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -66,7 +66,10 @@ public class WellSqlConfig extends DefaultWellConfig {
         switch (oldVersion) {
             case 1:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table SiteModel add ICON_URL text;");
+                db.execSQL("alter table SiteModel add FRAME_NONCE text;");
+            case 2:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add frame_nonce text;");
         }
         db.setTransactionSuccessful();
         db.endTransaction();
