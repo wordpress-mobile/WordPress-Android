@@ -53,9 +53,10 @@ public class PhotoChooserFragment extends Fragment {
     private Parcelable mRestoreState;
     private PhotoChooserListener mListener;
 
-    public static PhotoChooserFragment newInstance() {
+    public static PhotoChooserFragment newInstance(@NonNull PhotoChooserListener listener) {
         Bundle args = new Bundle();
         PhotoChooserFragment fragment = new PhotoChooserFragment();
+        fragment.setPhotoChooserListener(listener);
         fragment.setArguments(args);
         return fragment;
     }
@@ -98,7 +99,7 @@ public class PhotoChooserFragment extends Fragment {
         return view;
     }
 
-    public void setPhotoChooserListener(PhotoChooserListener listener) {
+    private void setPhotoChooserListener(PhotoChooserListener listener) {
         mListener = listener;
     }
 
