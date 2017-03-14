@@ -348,7 +348,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     onQueryTextChange(mQuery);
                 }
 
-                menu.findItem(R.id.menu_new_media).setVisible(false);
+                menu.findItem(R.id.menu_new_media).setEnabled(false);
                 return true;
             }
 
@@ -359,19 +359,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mMediaGridFragment.setFilter(Filter.ALL);
                 }
 
-                menu.findItem(R.id.menu_new_media).setVisible(true);
+                menu.findItem(R.id.menu_new_media).setEnabled(true);
 
                 return true;
             }
         });
-
-        // open search bar if we were searching for something before
-        if (!TextUtils.isEmpty(mQuery) && mMediaGridFragment != null && mMediaGridFragment.isVisible()) {
-            String tempQuery = mQuery; //temporary hold onto query
-            MenuItemCompat.expandActionView(mSearchMenuItem); //this will reset mQuery
-            onQueryTextSubmit(tempQuery);
-            mSearchView.setQuery(mQuery, true);
-        }
 
         return super.onPrepareOptionsMenu(menu);
     }
