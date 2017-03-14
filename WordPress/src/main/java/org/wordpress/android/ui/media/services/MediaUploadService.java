@@ -80,7 +80,7 @@ public class MediaUploadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // skip this request if no site is given
         if (intent == null || !intent.hasExtra(WordPress.SITE)) {
-            completed();
+            stopServiceIfUploadsComplete();
             return START_NOT_STICKY;
         }
 
@@ -146,7 +146,7 @@ public class MediaUploadService extends Service {
         // somehow lost our reference to the site, complete this action
         if (mSite == null) {
             AppLog.i(AppLog.T.MEDIA, "Unexpected state, site is null. Skipping this request - MediaUploadService.");
-            completed();
+            stopServiceIfUploadsComplete();
             return;
         }
 
@@ -154,7 +154,7 @@ public class MediaUploadService extends Service {
 
         if (mCurrentUpload == null) {
             AppLog.v(AppLog.T.MEDIA, "No more media items to upload. Skipping this request - MediaUploadService.");
-            completed();
+            stopServiceIfUploadsComplete();
             return;
         }
 
@@ -246,7 +246,7 @@ public class MediaUploadService extends Service {
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
-    private void completed(){
+    private void stopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
         if (getUploadQueue().size() == 0) {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
