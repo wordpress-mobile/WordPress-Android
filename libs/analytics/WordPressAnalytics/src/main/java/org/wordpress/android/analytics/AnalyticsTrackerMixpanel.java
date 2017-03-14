@@ -1243,6 +1243,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Delete Site Response Error");
                 break;
+            case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Settings - Optimize Images changed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_optimize_images_changed");
+                break;
             case ABTEST_START:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("AB Test - Started");
                 break;
