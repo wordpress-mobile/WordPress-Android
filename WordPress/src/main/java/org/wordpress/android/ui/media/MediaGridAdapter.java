@@ -191,10 +191,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 });
             } else {
                 holder.progressUpload.setVisibility(View.VISIBLE);
+                holder.stateTextView.setOnClickListener(null);
             }
         } else {
             holder.progressUpload.setVisibility(View.GONE);
             holder.stateTextView.setVisibility(View.GONE);
+            holder.stateTextView.setOnClickListener(null);
         }
 
         // if we are near the end, make a call to fetch more
