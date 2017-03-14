@@ -31,7 +31,6 @@ import javax.inject.Inject;
  */
 
 public class MediaUploadService extends Service {
-    private static final String SITE_KEY = "mediaSite";
     private static final String MEDIA_LIST_KEY = "mediaList";
 
     private SiteModel mSite;
@@ -48,7 +47,7 @@ public class MediaUploadService extends Service {
             return;
         }
         Intent intent = new Intent(context, MediaUploadService.class);
-        intent.putExtra(MediaUploadService.SITE_KEY, siteModel);
+        intent.putExtra(WordPress.SITE, siteModel);
         intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaList);
         context.startService(intent);
     }
@@ -80,7 +79,7 @@ public class MediaUploadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // skip this request if no site is given
-        if (intent == null || !intent.hasExtra(SITE_KEY)) {
+        if (intent == null || !intent.hasExtra(WordPress.SITE)) {
             completed();
             return START_NOT_STICKY;
         }
@@ -190,7 +189,7 @@ public class MediaUploadService extends Service {
     }
 
     private void unpackIntent(@NonNull Intent intent) {
-        mSite = (SiteModel) intent.getSerializableExtra(SITE_KEY);
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
 
         // add local queued media from store
         List<MediaModel> localMedia = mMediaStore.getLocalSiteMedia(mSite);
