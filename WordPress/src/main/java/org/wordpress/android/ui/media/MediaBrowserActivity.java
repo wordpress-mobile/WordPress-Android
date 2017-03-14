@@ -355,6 +355,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mMediaGridFragment.setFilter(Filter.ALL);
                 }
                 menu.findItem(R.id.menu_new_media).setVisible(true);
+                invalidateOptionsMenu();
                 return true;
             }
         });
