@@ -97,7 +97,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         WordPressMediaUtils.LaunchCameraCallback {
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
-    private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
 
     @Inject Dispatcher mDispatcher;
@@ -122,7 +121,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private boolean mDeleteServiceBound;
     private boolean mUploadServiceBound;
 
-    private String mQuery;
     private String mMediaCapturePath;
 
     @Override
@@ -184,17 +182,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (mSearchMenuItem != null) {
-            String tempQuery = mQuery;
-            MenuItemCompat.collapseActionView(mSearchMenuItem);
-            mQuery = tempQuery;
-        }
-    }
-
-    @Override
     public void onPause(Fragment fragment) {
         invalidateOptionsMenu();
     }
@@ -230,7 +217,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
@@ -243,7 +229,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
-        mQuery = savedInstanceState.getString(SAVED_QUERY);
     }
 
     @Override
@@ -342,12 +327,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mMediaGridFragment.setFilterEnabled(false);
                     mMediaGridFragment.setFilter(Filter.ALL);
                 }
-
-                // load last search query
-                if (!TextUtils.isEmpty(mQuery)) {
-                    onQueryTextChange(mQuery);
-                }
-
                 menu.findItem(R.id.menu_new_media).setEnabled(false);
                 return true;
             }
@@ -383,12 +362,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case R.id.menu_search:
                 mSearchView.setOnQueryTextListener(this);
                 MenuItemCompat.expandActionView(mSearchMenuItem);
-
-                // load last saved query
-                if (!TextUtils.isEmpty(mQuery)) {
-                    onQueryTextSubmit(mQuery);
-                    mSearchView.setQuery(mQuery, true);
-                }
                 return true;
             case R.id.menu_edit_media:
                 int localMediaId = mMediaItemFragment.getLocalMediaId();
@@ -425,10 +398,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(query);
         }
-
-        mQuery = query;
         mSearchView.clearFocus();
-
         return true;
     }
 
@@ -437,9 +407,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(newText);
         }
-
-        mQuery = newText;
-
         return true;
     }
 
@@ -450,8 +417,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onMediaItemSelected(int localMediaId) {
-        final String tempQuery = mQuery;
-
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -470,8 +435,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
-
-            mQuery = tempQuery;
         }
     }
 
