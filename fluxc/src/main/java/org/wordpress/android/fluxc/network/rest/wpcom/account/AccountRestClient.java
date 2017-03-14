@@ -261,6 +261,9 @@ public class AccountRestClient extends BaseWPComRestClient {
                         // We don't expect anything but server errors here - the API itself returns errors with a
                         // 200 status code, which will appear under Listener.onResponse instead
                         IsAvailableResponsePayload payload = new IsAvailableResponsePayload();
+                        payload.value = value;
+                        payload.type = type;
+
                         payload.error = new IsAvailableError(((WPComGsonNetworkError) error).apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newCheckedIsAvailableAction(payload));
                     }
