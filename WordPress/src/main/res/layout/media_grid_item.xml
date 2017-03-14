@@ -56,7 +56,7 @@
                 android:shadowRadius="2"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"
                 tools:text="@string/upload_failed" />
         </RelativeLayout>

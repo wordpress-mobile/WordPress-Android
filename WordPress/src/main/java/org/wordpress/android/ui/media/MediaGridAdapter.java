@@ -3,6 +3,8 @@ package org.wordpress.android.ui.media;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -168,6 +170,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         // show upload state unless it's already uploaded
+        state = MediaUploadState.UPLOADING.toString();
         if (!TextUtils.isEmpty(state) && !state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
             holder.stateContainer.setVisibility(View.VISIBLE);
             holder.stateTextView.setText(state);
@@ -257,6 +260,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             stateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
             stateTextView = (TextView) stateContainer.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) stateContainer.findViewById(R.id.media_grid_item_upload_progress);
+
+            // make the progress bar white
+            progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
 
             imageView.getLayoutParams().width = mThumbWidth;
             imageView.getLayoutParams().height = mThumbHeight;
