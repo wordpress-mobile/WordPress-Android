@@ -186,11 +186,18 @@ public class WordPressDB {
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
             case 50:
-                // fix #5373 - no op, from DB version 50 to 52
-                currentVersion = 52;
+                // fix #5373 - no op
+                currentVersion++;
+            case 51:
+                SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
+                currentVersion++;
             case 52:
                 // fix #5373 for users who already upgraded to 52 but missed the first migration
-                SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
+                try {
+                    SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
+                } catch(SQLiteException e) {
+                    // ignore "duplicate column" exception
+                }
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
