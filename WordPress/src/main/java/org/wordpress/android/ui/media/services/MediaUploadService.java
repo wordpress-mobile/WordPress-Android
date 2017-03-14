@@ -148,7 +148,7 @@ public class MediaUploadService extends Service {
                 if (content != null) {
 
                     // actually replace the media ID with the media uri
-                    MediaUploadReadyProcessor processor = new MediaUploadReadyProcessor();
+                    MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
                     PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
                     if (modifiedPost != null) {
                         post = modifiedPost;
