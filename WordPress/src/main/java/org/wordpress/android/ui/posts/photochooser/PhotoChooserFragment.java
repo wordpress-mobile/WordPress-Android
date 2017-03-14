@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.photochooser;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,9 +53,10 @@ public class PhotoChooserFragment extends Fragment {
     private Parcelable mRestoreState;
     private PhotoChooserListener mListener;
 
-    public static PhotoChooserFragment newInstance() {
+    public static PhotoChooserFragment newInstance(@NonNull PhotoChooserListener listener) {
         Bundle args = new Bundle();
         PhotoChooserFragment fragment = new PhotoChooserFragment();
+        fragment.setPhotoChooserListener(listener);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,15 +99,8 @@ public class PhotoChooserFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (PhotoChooserListener) context;
-        } catch (ClassCastException e) {
-            AppLog.e(AppLog.T.POSTS, e);
-            throw new ClassCastException(context.toString() + " must implement PhotoChooserListener");
-        }
+    private void setPhotoChooserListener(PhotoChooserListener listener) {
+        mListener = listener;
     }
 
     private void showBottomBar() {

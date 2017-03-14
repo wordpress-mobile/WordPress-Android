@@ -521,7 +521,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // size the chooser before creating the fragment to avoid having it load media now
         resizePhotoChooser();
 
-        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance(this);
 
         getFragmentManager()
                 .beginTransaction()
