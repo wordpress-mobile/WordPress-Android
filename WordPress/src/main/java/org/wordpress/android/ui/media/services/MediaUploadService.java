@@ -38,7 +38,6 @@ import javax.inject.Inject;
 
 public class MediaUploadService extends Service {
     private static final String POST_ID_KEY = "mediaPostId";
-    private static final String SITE_KEY = "mediaSite";
     private static final String MEDIA_LIST_KEY = "mediaList";
 
     private List<MediaModel> mQueue;
@@ -53,7 +52,7 @@ public class MediaUploadService extends Service {
             return;
         }
         Intent intent = new Intent(context, MediaUploadService.class);
-        intent.putExtra(MediaUploadService.SITE_KEY, siteModel);
+        intent.putExtra(WordPress.SITE, siteModel);
         intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaList);
         context.startService(intent);
     }
@@ -88,8 +87,8 @@ public class MediaUploadService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // skip this request if no site is given
-        if (intent == null || !intent.hasExtra(SITE_KEY)) {
-            completed();
+        if (intent == null || !intent.hasExtra(WordPress.SITE)) {
+            stopServiceIfUploadsComplete();
             return START_NOT_STICKY;
         }
 
@@ -120,7 +119,7 @@ public class MediaUploadService extends Service {
             updatePostWithMediaUrl(event.media);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
-            completed();
+            stopServiceIfUploadsComplete();
         } else {
             // Upload Progress
             // TODO check if we need to re-broadcast event.media, event.progress or we're just fine with
@@ -178,7 +177,7 @@ public class MediaUploadService extends Service {
 
         if (next == null) {
             AppLog.v(AppLog.T.MEDIA, "No more media items to upload. Skipping this request - MediaUploadService.");
-            completed();
+            stopServiceIfUploadsComplete();
             return;
         }
 
@@ -187,8 +186,7 @@ public class MediaUploadService extends Service {
         // somehow lost our reference to the site, complete this action
         if (site == null) {
             AppLog.i(AppLog.T.MEDIA, "Unexpected state, site is null. Skipping this request - MediaUploadService.");
-            completed();
-            return;
+            stopServiceIfUploadsComplete();
         }
 
         dispatchUploadAction(next, site);
@@ -196,7 +194,7 @@ public class MediaUploadService extends Service {
 
     private void completeUploadWithId(int id) {
         getUploadQueue().remove(getMediaFromQueueById(id));
-        completed();
+        stopServiceIfUploadsComplete();
     }
 
     private MediaModel getMediaFromQueueById(int id) {
@@ -231,7 +229,8 @@ public class MediaUploadService extends Service {
     }
 
     private void unpackIntent(@NonNull Intent intent) {
-        SiteModel site = (SiteModel) intent.getSerializableExtra(SITE_KEY);
+
+        SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
         long postId = intent.getLongExtra(POST_ID_KEY, 0);
 
         // TODO right now, in the case we had pending uploads and the app/service was restarted,
@@ -297,9 +296,9 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private void completed(){
+    private void stopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
-        if (mQueue == null || mQueue.size() == 0) {
+        if (getUploadQueue().size() == 0) {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
