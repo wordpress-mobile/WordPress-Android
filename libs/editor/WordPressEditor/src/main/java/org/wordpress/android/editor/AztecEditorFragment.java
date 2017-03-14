@@ -573,6 +573,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                     attributesWithClass.removeClass("uploading");
                     attributesWithClass.addClass("failed");
 
+                    // TODO: errorMessage is not being shown as of now. It should be used by overlayFailedMedia
                     overlayFailedMedia(localMediaId, attributesWithClass.getAttributesIml());
                     content.refreshText();
                     break;
