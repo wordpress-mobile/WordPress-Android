@@ -522,6 +522,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         resizePhotoChooser();
 
         mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+        mPhotoChooserFragment.setPhotoChooserListener(this);
 
         getFragmentManager()
                 .beginTransaction()
