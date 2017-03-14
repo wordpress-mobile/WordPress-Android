@@ -89,7 +89,11 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
             // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
             if (blogNames.length == 1) {
-                startActivityAndFinish(new Intent(this, EditPostActivity.class));
+                Intent intent = new Intent(this, EditPostActivity.class);
+                // Single site, pick the first one
+                intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSiteIds[0]));
+                startActivity(intent);
+                finish();
             }
         } else {
             String[] actions = new String[]{getString(R.string.share_action_post), getString(
