@@ -40,16 +40,15 @@
 
             <ProgressBar
                 android:id="@+id/media_grid_item_upload_progress"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_width="@dimen/media_grid_progress_height"
+                android:layout_height="@dimen/media_grid_progress_height"
+                android:layout_above="@+id/media_grid_item_upload_state"
+                android:layout_centerHorizontal="true" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_upload_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/media_grid_item_upload_progress"
                 android:layout_centerInParent="true"
                 android:shadowColor="@color/grey_dark"
                 android:shadowDx="2"
@@ -57,7 +56,7 @@
                 android:shadowRadius="2"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_large"
+                android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
                 tools:text="@string/upload_failed" />
         </RelativeLayout>
