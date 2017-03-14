@@ -67,9 +67,11 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 1:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add FRAME_NONCE text;");
+                oldVersion++;
             case 2:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add frame_nonce text;");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
