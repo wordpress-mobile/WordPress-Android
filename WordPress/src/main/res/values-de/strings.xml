@@ -1,27 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-18 22:46:07+0000
+Translation-Revision-Date: 2017-03-05 19:09:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+	<string name="reader_liked_default_tag">Beiträge, die mir gefallen</string>
+	<string name="reader_followed_default_tag">Websites, denen ich folge</string>
+	<string name="reader_discover_default_tag">Entdecken</string>
+	<string name="reader_empty_followed_blogs_search_title">Keine entsprechenden Websites gefunden</string>
+	<string name="reader_hint_search_followed_sites">Abonnierte Websites durchsuchen</string>
+	<string name="visual_editor_disabled">Visueller Editor deaktiviert</string>
+	<string name="preference_editor_visual">Visuell</string>
+	<string name="preference_editor_legacy">Vorversion</string>
+	<string name="preference_editor_type">Editor-Typ festlegen</string>
+	<string name="pending_draft_one_generic">Schließ es ab! „%1$s“ wartet auf die Veröffentlichung.</string>
+	<string name="pending_draft_one_month">Schließ es ab! „%1$s“ wartet auf die Veröffentlichung.</string>
+	<string name="pending_draft_one_week_2">„%1$s“ ist noch ein Entwurf. Denke daran, ihn zu veröffentlichen!</string>
+	<string name="pending_draft_one_week_1">Dein Entwurf „%1$s“ wartet auf dich – denke daran, ihn zu veröffentlichen!</string>
+	<string name="pending_draft_one_day_2">Wusstest du, dass „%1$s“ noch ein Entwurf ist? Veröffentliche ihn doch!</string>
+	<string name="pending_draft_one_day_1">Du hast gestern „%1$s“ geschrieben. Vergiss nicht, es zu veröffentlichen!</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">Das Jetpack Plugin ist verbunden, aber das Statistik-Modul ist nicht aktiv. Bitte kontaktiere den Seiten-Administrator.</string>
 	<string name="jetpack_stats_module_disabled_message">Das Jetpack Plugin ist verbunden, aber das Statistik-Modul ist nicht aktiv. Möchtest du die Statistiken aktivieren?</string>
 	<string name="jetpack_info">Jetpack Info</string>
 	<string name="reader_photo_by">Foto von %s</string>
+	<string name="reader_label_visit">Besuche</string>
+	<string name="all_your_sites">Alle meine Websites</string>
+	<string name="pending_draft_more">Du hast %d Beiträge geschrieben, aber nie veröffentlicht. Tippe, um sie zu prüfen.</string>
 	<string name="no_default_app_available_to_open_link">Der Link konnte nicht geöffnet werden.</string>
+	<string name="notification_pending_drafts">Benachrichtige mich bei wartenden Entwürfen</string>
 	<string name="invalid_verification_code_format">Muss eine 6-stellige Zahl sein</string>
 	<string name="confirm_discard_changes">Nicht gespeicherte Änderungen verwerfen?</string>
 	<string name="swipe_for_more">Wischen für mehr</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Versuche, dich zuerst auf WordPress.com anzumelden, oder öffne stattdessen über den oberen Aktions-Button einen Browser.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Du hast nicht die erforderlichen Rechte, um diesen Beitrag anzusehen. Versuche zuerst dich auf WordPress.com anzumelden.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Öffne stattdessen über den Aktions-Button oben einen Browser.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">„Gefällt mir“ funktioniert nur, wenn du bei WordPress.com angemeldet bist.</string>
+	<string name="reader_toast_err_already_liked">Dieser Kommentar hat dir bereits gefallen.</string>
 	<string name="reader_toast_err_comment_not_found">Kommentar nicht gefunden!</string>
+	<string name="reader_toast_err_cannot_like_post">Dieser Beitrag konnte nicht mit „Gefällt mir“ gekennzeichnet werden.</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com-Beitrag</string>
+	<string name="reader_title_deeplink">WordPress Reader</string>
+	<string name="error_notif_q_action_reply">Auf den Kommentar konnte nicht geantwortet werden. Versuche es später erneut.</string>
+	<string name="error_notif_q_action_approve">Der Kommentar konnte nicht genehmigt werden. Versuche es später erneut.</string>
+	<string name="error_notif_q_action_like">Der Kommentar konnte nicht mit „Gefällt mir“ gekennzeichnet werden. Versuche es später erneut.</string>
 	<string name="notifications_label_new_notifications_subtitle">Zum Anzeigen tippen</string>
 	<string name="notifications_label_new_notifications">Neue Benachrichtigungen</string>
+	<string name="comment_q_action_replying">Antworten …</string>
 	<string name="comment_q_action_approving">Genehmigen ...</string>
+	<string name="comment_q_action_liking">Gefällt mir …</string>
+	<string name="comment_q_action_processing">Wird verarbeitet ...</string>
 	<string name="comment_q_action_done_generic">Aktion erledigt!</string>
+	<string name="comment_liked">Kommentar gefällt mir</string>
 	<string name="signout">Abmelden</string>
 	<string name="sign_in_wpcom">Bei WordPress.com anmelden</string>
 	<string name="reader_label_global_related_posts">Mehr auf WordPress.com</string>
@@ -115,6 +146,7 @@ Language: de
 	<string name="invite_people">Personen einladen</string>
 	<string name="my_site_header_external">Extern</string>
 	<string name="send_link">Link senden</string>
+	<string name="signup_succeed_signin_failed">Dein Konto wurde erstellt, aber bei deiner\n Anmeldung ist ein Fehler aufgetreten. Versuche, dich mit deinem neu erstellten Benutzernamen und Passwort anzumelden.</string>
 	<string name="label_clear_search_history">Lösche Suchverlauf</string>
 	<string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
 	<string name="reader_empty_posts_in_search_description">Keine Beiträge zu %s in deiner Sprache gefunden.</string>
@@ -386,6 +418,7 @@ Language: de
 	<string name="site_settings_paging_title">Seitennummerierung</string>
 	<string name="site_settings_threading_title">Verschachtelung</string>
 	<string name="site_settings_sort_by_title">Sortieren nach</string>
+	<string name="site_settings_account_required_title">Benutzer müssen angemeldet sein</string>
 	<string name="site_settings_identity_required_title">Name und E-Mail-Adresse erforderlich</string>
 	<string name="site_settings_receive_pingbacks_title">Pingbacks erhalten</string>
 	<string name="site_settings_send_pingbacks_title">Pingbacks senden</string>
@@ -549,6 +582,7 @@ Language: de
 	<string name="tabbar_accessibility_label_my_site">Meine Website</string>
 	<string name="editor_toast_changes_saved">Änderungen gespeichert</string>
 	<string name="passcodelock_prompt_message">Gib deine PIN ein</string>
+	<string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% der Aufrufe</string>
 	<string name="ignore">Ignorieren</string>
 	<string name="stats_insights_best_ever">Bisher bestes Aufrufergebnis</string>
@@ -994,6 +1028,7 @@ Language: de
 	<string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Icon rechts oben an um zu stöbern!</string>
 	<string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
 	<string name="select_time">Zeit auswählen</string>
+	<string name="nux_oops_not_selfhosted_blog">Bei WordPress.com anmelden</string>
 	<string name="nux_add_selfhosted_blog">Selbst-gehostete Website hinzufügen</string>
 	<string name="signing_in">Anmelden ...</string>
 	<string name="nux_welcome_create_account">Konto erstellen</string>
@@ -1093,6 +1128,7 @@ Language: de
 	<string name="follows">Folgt</string>
 	<string name="note_reply_successful">Antwort veröffentlicht</string>
 	<string name="notifications">Benachrichtigungen</string>
+	<string name="sign_in">Anmelden</string>
 	<string name="loading">Lädt...</string>
 	<string name="httppassword">HTTP-Passwort</string>
 	<string name="httpuser">HTTP-Benutzername</string>

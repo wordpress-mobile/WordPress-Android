@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-15 08:28:17+0000
+Translation-Revision-Date: 2017-03-01 16:11:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="reader_liked_default_tag">Posts I Like</string>
+	<string name="reader_followed_default_tag">Followed Sites</string>
+	<string name="reader_discover_default_tag">Discover</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
 	<string name="visual_editor_disabled">Visual Editor disabled</string>
