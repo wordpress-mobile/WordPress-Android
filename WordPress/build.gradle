@@ -131,7 +131,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~add-extra-to-unexpected-error') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~add-extra-to-unexpected-error-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 
