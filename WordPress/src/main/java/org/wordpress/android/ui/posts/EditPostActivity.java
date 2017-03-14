@@ -106,7 +106,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -1211,7 +1210,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     @Override
     public void onReflectionFailure(ReflectionException e) {
-        CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.EDITOR, "Reflection Failure on Visual Editor init");
+        CrashlyticsUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
         // Disable visual editor and show an error message
         AppPrefs.setVisualEditorEnabled(false);
         ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
@@ -2245,8 +2244,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
                     CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
-                            ExceptionType.SPECIFIC, T.EDITOR,
-                            String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
+                            T.EDITOR, String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
                 }
 
                 @Override

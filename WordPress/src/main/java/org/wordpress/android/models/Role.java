@@ -51,7 +51,7 @@ public enum Role {
                 return SUBSCRIBER;
         }
         Exception e = new IllegalArgumentException("All roles must be handled: " + role);
-        CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.PEOPLE);
+        CrashlyticsUtils.logException(e, AppLog.T.PEOPLE);
 
         // All roles should have been handled, but in case an edge case occurs,
         // using "Contributor" role is the safest option
