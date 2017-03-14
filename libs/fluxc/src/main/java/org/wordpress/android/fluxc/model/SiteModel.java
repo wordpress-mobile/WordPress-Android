@@ -34,6 +34,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private boolean mIsFeaturedImageSupported;
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
+    @Column private String mFrameNonce; // only wpcom and Jetpack sites
 
     // Self hosted specifics
     // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
@@ -391,6 +392,14 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setTimezone(String timezone) {
         mTimezone = timezone;
+    }
+
+    public String getFrameNonce() {
+        return mFrameNonce;
+    }
+
+    public void setFrameNonce(String frameNonce) {
+        mFrameNonce = frameNonce;
     }
 
     public String getPlanShortName() {
