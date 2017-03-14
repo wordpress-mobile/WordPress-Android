@@ -115,7 +115,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     @Override
-    public void onBindViewHolder(GridViewHolder holder, int position) {
+    public void onBindViewHolder(final GridViewHolder holder, int position) {
         if (!isValidPosition(position)) {
             return;
         }
@@ -170,18 +170,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // show upload state unless it's already uploaded
         boolean showState = !TextUtils.isEmpty(state) && !state.equalsIgnoreCase(MediaUploadState.UPLOADED.name());
         if (showState) {
-            holder.stateTextView.setVisibility(View.VISIBLE);
+            holder.stateContainer.setVisibility(View.VISIBLE);
             holder.stateTextView.setText(state);
 
             // hide progressbar and add onclick to retry failed uploads
             if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
                 holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
-                holder.stateTextView.setOnClickListener(new OnClickListener() {
+                holder.stateContainer.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!isInMultiSelect()) {
-                            ((TextView) v).setText(R.string.upload_queued);
+                            holder.stateTextView.setText(R.string.upload_queued);
                             v.setOnClickListener(null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(localMediaId);
@@ -191,12 +191,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 });
             } else {
                 holder.progressUpload.setVisibility(View.VISIBLE);
-                holder.stateTextView.setOnClickListener(null);
+                holder.stateContainer.setOnClickListener(null);
             }
         } else {
-            holder.progressUpload.setVisibility(View.GONE);
-            holder.stateTextView.setVisibility(View.GONE);
-            holder.stateTextView.setOnClickListener(null);
+            holder.stateContainer.setVisibility(View.GONE);
+            holder.stateContainer.setOnClickListener(null);
         }
 
         // if we are near the end, make a call to fetch more
@@ -244,6 +243,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final TextView selectionCountTextView;
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
+        private final ViewGroup stateContainer;
 
         public GridViewHolder(View view) {
             super(view);
@@ -251,10 +251,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
             imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
             fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-
             selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
-            stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
-            progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
+
+            stateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
+            stateTextView = (TextView) stateContainer.findViewById(R.id.media_grid_item_upload_state);
+            progressUpload = (ProgressBar) stateContainer.findViewById(R.id.media_grid_item_upload_progress);
 
             imageView.getLayoutParams().width = mThumbWidth;
             imageView.getLayoutParams().height = mThumbHeight;

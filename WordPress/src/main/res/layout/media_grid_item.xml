@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/media_grid_frame_layout"
@@ -34,29 +33,33 @@
         <RelativeLayout
             android:id="@+id/media_grid_item_upload_state_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/grey_lighten_10_translucent_50"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/media_grid_item_upload_progress"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small" />
+                android:layout_centerInParent="true" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_upload_state"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/media_grid_item_upload_progress"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:paddingLeft="@dimen/margin_small"
-                android:shadowColor="@color/primary_text_default_material_light"
+                android:layout_below="@+id/media_grid_item_upload_progress"
+                android:layout_centerInParent="true"
+                android:shadowColor="@color/grey_dark"
+                android:shadowDx="2"
+                android:shadowDy="2"
                 android:shadowRadius="2"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_small" />
+                android:textSize="@dimen/text_sz_large"
+                android:textStyle="bold"
+                tools:text="@string/upload_failed" />
         </RelativeLayout>
 
         <CheckBox
