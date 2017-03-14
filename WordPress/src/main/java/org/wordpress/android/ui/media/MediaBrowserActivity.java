@@ -93,7 +93,7 @@ import javax.inject.Inject;
  * The main activity in which the user can browse their media.
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, MediaEditFragmentCallback,
+        MediaItemFragmentCallback, MediaEditFragmentCallback,
         WordPressMediaUtils.LaunchCameraCallback {
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
@@ -316,7 +316,24 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (mMediaGridFragment != null) {
+                    mMediaGridFragment.search(query);
+                }
+                mSearchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (mMediaGridFragment != null) {
+                    mMediaGridFragment.search(newText);
+                }
+                return true;
+            }
+        });
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new OnActionExpandListener() {
@@ -327,7 +344,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mMediaGridFragment.setFilterEnabled(false);
                     mMediaGridFragment.setFilter(Filter.ALL);
                 }
-                menu.findItem(R.id.menu_new_media).setEnabled(false);
+                menu.findItem(R.id.menu_new_media).setVisible(false);
                 return true;
             }
 
@@ -337,9 +354,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mMediaGridFragment.setFilterEnabled(true);
                     mMediaGridFragment.setFilter(Filter.ALL);
                 }
-
-                menu.findItem(R.id.menu_new_media).setEnabled(true);
-
+                menu.findItem(R.id.menu_new_media).setVisible(true);
                 return true;
             }
         });
@@ -360,7 +375,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 return true;
             case R.id.menu_search:
-                mSearchView.setOnQueryTextListener(this);
                 MenuItemCompat.expandActionView(mSearchMenuItem);
                 return true;
             case R.id.menu_edit_media:
@@ -391,23 +405,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.search(query);
-        }
-        mSearchView.clearFocus();
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.search(newText);
-        }
-        return true;
     }
 
     @Override
