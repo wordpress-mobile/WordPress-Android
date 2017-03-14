@@ -25,7 +25,7 @@ import java.io.OutputStream;
 public class WordPressDB {
     private static final String COLUMN_NAME_ID = "_id";
 
-    private static final int DATABASE_VERSION = 52;
+    private static final int DATABASE_VERSION = 53;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -185,7 +185,11 @@ public class WordPressDB {
                 // Delete simperium DB since we're removing Simperium from the app.
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
-            case 51:
+            case 50:
+                // fix #5373 - no op, from DB version 50 to 52
+                currentVersion = 52;
+            case 52:
+                // fix #5373 for users who already upgraded to 52 but missed the first migration
                 SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
                 currentVersion++;
         }
