@@ -229,6 +229,8 @@ public abstract class BaseRequest<T> extends Request<T> {
     public final void deliverError(VolleyError volleyError) {
         AppLog.e(AppLog.T.API, "Volley error", volleyError);
         if (volleyError instanceof ParseError) {
+            OnUnexpectedError error = new OnUnexpectedError(volleyError, "API response parse error");
+            error.addExtra("url", getUrl());
             mOnParseErrorListener.onParseError(new OnUnexpectedError(volleyError, "API response parse error"));
         }
         BaseNetworkError baseNetworkError = getBaseNetworkError(volleyError);
