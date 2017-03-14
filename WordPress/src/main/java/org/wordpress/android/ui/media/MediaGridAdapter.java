@@ -167,27 +167,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.imageView.setScaleY(scale);
         }
 
-        // show upload state
-        if (state != null && state.length() > 0) {
+        // show upload state unless it's already uploaded
+        boolean showState = !TextUtils.isEmpty(state) && !state.equalsIgnoreCase(MediaUploadState.UPLOADED.name());
+        if (showState) {
             holder.stateTextView.setVisibility(View.VISIBLE);
             holder.stateTextView.setText(state);
 
-            // hide the progressbar only if the state is Uploaded or failed
-            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
-                    state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                holder.progressUpload.setVisibility(View.GONE);
-            } else {
-                holder.progressUpload.setVisibility(View.VISIBLE);
-            }
-
-            // Hide the state text only if the it's Uploaded
-            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
-                holder.stateTextView.setVisibility(View.GONE);
-            }
-
-            // add onclick to retry failed uploads
+            // hide progressbar and add onclick to retry failed uploads
             if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                holder.stateTextView.setVisibility(View.VISIBLE);
+                holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setOnClickListener(new OnClickListener() {
                     @Override
@@ -201,6 +189,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         }
                     }
                 });
+            } else {
+                holder.progressUpload.setVisibility(View.VISIBLE);
             }
         } else {
             holder.progressUpload.setVisibility(View.GONE);
