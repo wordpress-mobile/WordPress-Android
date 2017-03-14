@@ -285,20 +285,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int localSiteId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                    SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
-                    if (site == null) {
-                        showErrorAndFinish(R.string.blog_not_found);
-                        return;
-                    }
-                    if (!site.isVisible()) {
-                        showErrorAndFinish(R.string.error_blog_hidden);
-                        return;
-                    }
-                    mSite = site;
+                    mSite = mSiteStore.getSiteByLocalId(localSiteId);
                 }
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = true;
+
+                if (mSite == null) {
+                    showErrorAndFinish(R.string.blog_not_found);
+                    return;
+                }
+                if (!mSite.isVisible()) {
+                    showErrorAndFinish(R.string.error_blog_hidden);
+                    return;
+                }
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
