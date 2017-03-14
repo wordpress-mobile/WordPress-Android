@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-25 01:17:55+0000
+Translation-Revision-Date: 2017-03-07 09:14:29+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
@@ -694,7 +694,6 @@ Language: ja_JP
 	<string name="stats_view_countries">国</string>
 	<string name="stats_likes">いいね</string>
 	<string name="stats_entry_clicks_link">リンク</string>
-	<string name="stats_view_top_posts_and_pages">投稿とページ</string>
 	<string name="stats_totals_publicize">フォロワー</string>
 	<string name="stats_entry_publicize">サービス</string>
 	<string name="stats_entry_followers">フォロワー</string>
@@ -710,7 +709,6 @@ Language: ja_JP
 	<string name="stats_empty_tags_and_categories">タグ付きの投稿またはページが表示されていません</string>
 	<string name="stats_empty_followers">フォロワーなし</string>
 	<string name="stats_comments_by_authors">投稿者</string>
-	<string name="stats_comments_by_posts_and_pages">投稿とページ</string>
 	<string name="stats_followers_total_wpcom">WordPress.com フォロワーの合計数: %1$s</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_followers_email_selector">メール</string>
@@ -731,6 +729,8 @@ Language: ja_JP
 	<string name="stats_other_recent_stats_label">最近の他の統計情報</string>
 	<string name="stats_for">%s の統計情報</string>
 	<string name="themes_fetching">テーマを取得中…</string>
+	<string name="stats_view_top_posts_and_pages">投稿とページ</string>
+	<string name="stats_comments_by_posts_and_pages">投稿とページ</string>
 	<string name="ssl_certificate_details">詳細</string>
 	<string name="sure_to_remove_account">このサイトを削除しますか ?</string>
 	<string name="delete_sure_post">この投稿を削除</string>

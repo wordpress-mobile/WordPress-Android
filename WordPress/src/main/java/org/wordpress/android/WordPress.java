@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.modules.AppComponent;
 import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
@@ -66,7 +67,10 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
@@ -76,7 +80,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPLegacyMigrationUtils;
-import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -556,6 +559,14 @@ public class WordPress extends MultiDexApplication {
             AppLog.i(T.DB, "The last self-hosted site has been fetched - starting draft migration");
             migrateDrafts();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onParseError(OnUnexpectedError event) {
+        AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
+        String description = "FluxC: " + event.description;
+        CrashlyticsUtils.logException(event.exception, ExceptionType.SPECIFIC, event.type, description);
     }
 
     public void removeWpComUserRelatedData(Context context) {
