@@ -131,7 +131,10 @@ public class WPLegacyMigrationUtils {
             int numRows = c.getCount();
             c.moveToFirst();
             for (int i = 0; i < numRows; i++) {
-                if (!TextUtils.isEmpty(c.getString(5))) {
+                long apiBlogId = StringUtils.stringToLong(c.getString(5));
+                if (apiBlogId > 0) {
+                    // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
+                    // account, so we want to skip it.
                     c.moveToNext();
                     continue;
                 }
@@ -158,9 +161,10 @@ public class WPLegacyMigrationUtils {
             int numRows = c.getCount();
             c.moveToFirst();
             for (int i = 0; i < numRows; i++) {
-                // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
-                // account, so we want to skip it.
-                if (!TextUtils.isEmpty(c.getString(5))) {
+                long apiBlogId = StringUtils.stringToLong(c.getString(5));
+                if (apiBlogId > 0) {
+                    // If the api_blogid field is set, that's probably a Jetpack site that is not connected to the main
+                    // account, so we want to skip it.
                     c.moveToNext();
                     continue;
                 }
@@ -244,19 +248,18 @@ public class WPLegacyMigrationUtils {
                     boolean dotcomFlag = siteCursor.getInt(0) == 1;
                     int blogId = siteCursor.getInt(1);
                     String xmlrpcUrl = siteCursor.getString(2);
-                    String apiBlogId = siteCursor.getString(3);
+                    long apiBlogId = StringUtils.stringToLong(siteCursor.getString(3));
 
                     int migratedSiteLocalId;
                     if (dotcomFlag) {
                         // WP.com site - identify it by WP.com site ID
                         migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(blogId);
-                    } else if (!TextUtils.isEmpty(apiBlogId)) {
+                    } else if (apiBlogId > 0) {
                         // Jetpack site - identify it by WP.com site ID
-                        migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(Long.valueOf(apiBlogId));
+                        migratedSiteLocalId = siteStore.getLocalIdForRemoteSiteId(apiBlogId);
                     } else {
                         // Self-hosted site - identify it by its self-hosted site ID and XML-RPC URL
-                        migratedSiteLocalId = siteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(blogId,
-                                xmlrpcUrl);
+                        migratedSiteLocalId = siteStore.getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(blogId, xmlrpcUrl);
                     }
                     postModel.setLocalSiteId(migratedSiteLocalId);
                     siteCursor.close();
@@ -274,7 +277,7 @@ public class WPLegacyMigrationUtils {
 
                 String postId = c.getString(c.getColumnIndex("postid"));
                 if (!TextUtils.isEmpty(postId)) {
-                    postModel.setRemotePostId(Long.valueOf(postId));
+                    postModel.setRemotePostId(StringUtils.stringToLong(postId));
                 }
 
                 postModel.setTitle(StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title"))));

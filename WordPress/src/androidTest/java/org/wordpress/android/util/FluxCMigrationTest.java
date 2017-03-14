@@ -52,8 +52,11 @@ public class FluxCMigrationTest extends InstrumentationTestCase {
         List<SiteModel> sites = WPLegacyMigrationUtils.getSelfHostedSitesFromDeprecatedDB(mRenamingTargetAppContext);
         AppLog.d(AppLog.T.DB, "Found " + sites.size() + " site to migrate");
 
-        // Expect two self-hosted sites (one normal, one blank except for username, password, and XML-RPC URL)
-        assertEquals(2, sites.size());
+        // Expect three self-hosted sites:
+        // One normal
+        // One blank except for username, password, and XML-RPC URL
+        // One blank except for username, password, and XML-RPC URL, and with a 'false' api_blogid
+        assertEquals(3, sites.size());
     }
 
     public void testDraftMigration() throws DuplicateSiteException {
@@ -69,8 +72,9 @@ public class FluxCMigrationTest extends InstrumentationTestCase {
         List<PostModel> posts = WPLegacyMigrationUtils.getDraftsFromDeprecatedDB(mRenamingTargetAppContext, mSiteStore);
         AppLog.d(AppLog.T.DB, "Extracted " + posts.size() + " drafts from legacy DB");
 
-        assertEquals(2, posts.size());
+        assertEquals(3, posts.size());
         assertEquals("", posts.get(0).getTitle());
         assertEquals("This is a title", posts.get(1).getTitle());
+        assertEquals("This is a title also", posts.get(2).getTitle());
     }
 }
