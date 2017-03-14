@@ -3,10 +3,14 @@ package org.wordpress.android.fluxc.utils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ErrorUtils {
     public static class OnUnexpectedError {
         public Exception exception;
         public String description;
+        public Map<String, String> extras = new HashMap<>();
         public AppLog.T type;
 
         public OnUnexpectedError(Exception exception) {
@@ -21,6 +25,10 @@ public class ErrorUtils {
             this.exception = exception;
             this.description = description;
             this.type = type;
+        }
+
+        public void addExtra(String key, String value) {
+            extras.put(key, value);
         }
     }
 }
