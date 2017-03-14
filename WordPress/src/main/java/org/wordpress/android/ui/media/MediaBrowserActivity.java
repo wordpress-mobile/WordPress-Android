@@ -389,8 +389,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 return true;
             case R.id.menu_search:
-                mSearchMenuItem = item;
-                mSearchView = (SearchView) item.getActionView();
                 mSearchView.setOnQueryTextListener(this);
                 MenuItemCompat.expandActionView(mSearchMenuItem);
 
