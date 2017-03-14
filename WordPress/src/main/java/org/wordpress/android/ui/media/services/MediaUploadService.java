@@ -31,8 +31,8 @@ import javax.inject.Inject;
  */
 
 public class MediaUploadService extends Service {
-    public static final String SITE_KEY = "mediaSite";
-    public static final String MEDIA_LIST_KEY = "mediaList";
+    private static final String SITE_KEY = "mediaSite";
+    private static final String MEDIA_LIST_KEY = "mediaList";
 
     private SiteModel mSite;
     private MediaModel mCurrentUpload;
