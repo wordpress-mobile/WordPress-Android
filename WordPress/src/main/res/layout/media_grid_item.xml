@@ -61,7 +61,7 @@
             android:singleLine="true"
             android:textAllCaps="true"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_double_extra_large"
+            android:textSize="@dimen/text_sz_extra_large"
             tools:text="PDF" />
 
         <org.wordpress.android.widgets.WPTextView
