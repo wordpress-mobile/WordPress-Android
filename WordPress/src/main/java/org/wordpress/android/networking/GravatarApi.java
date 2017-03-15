@@ -107,8 +107,7 @@ public class GravatarApi {
                         properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName() : "null");
                         properties.put("network_exception_message", e != null ? e.getMessage() : "null");
                         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
-                        CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
-                                AppLog.T.API, "Network call failure trying to upload Gravatar!");
+                        CrashlyticsUtils.logException(e, AppLog.T.API, "Network call failure trying to upload Gravatar!");
                         AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null ?
                                 e.getMessage() : "null"));
 
