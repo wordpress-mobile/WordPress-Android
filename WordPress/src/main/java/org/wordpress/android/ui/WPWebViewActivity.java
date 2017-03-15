@@ -95,11 +95,7 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMOrJetpackUrl(context, url, null);
-    }
-
-    public static void openJetpackUrlByUsingGlobalWPCOMCredentials(Context context, String url, String frameNonce) {
-        openWPCOMOrJetpackUrl(context, url, frameNonce);
+        openWPCOMURL(context, url);
     }
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
@@ -177,8 +173,7 @@ public class WPWebViewActivity extends WebViewActivity {
         return true;
     }
 
-    // frameNonce is used for Jetpack sites
-    private static void openWPCOMOrJetpackUrl(Context context, String url, String frameNonce) {
+    private static void openWPCOMURL(Context context, String url) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -187,9 +182,6 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
-        if (!TextUtils.isEmpty(frameNonce)) {
-            intent.putExtra(WPWebViewActivity.FRAME_NONCE, frameNonce);
-        }
         context.startActivity(intent);
     }
 
@@ -252,7 +244,6 @@ public class WPWebViewActivity extends WebViewActivity {
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
-        String frameNonce = extras.getString(FRAME_NONCE);
         if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
             username = mAccountStore.getAccount().getUserName();
         }
@@ -289,31 +280,29 @@ public class WPWebViewActivity extends WebViewActivity {
                 finish();
             }
 
-            loadAuthenticatedUrl(authURL, addressToLoad, username, password, frameNonce);
+            loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         }
     }
 
     /**
      * Login to the WordPress.com and load the specified URL.
      */
-    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password,
-                                        String frameNonce) {
+    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
-                mAccountStore.getAccessToken(), frameNonce);
+                mAccountStore.getAccessToken());
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
 
     public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
-            String password, String token, String frameNonce) {
+            String password, String token) {
         if (TextUtils.isEmpty(authenticationUrl)) return "";
 
         try {
-            String postData = String.format("log=%s&pwd=%s&redirect_to=%s&frame-nonce=%s",
+            String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
                     URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
-                    URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8),
-                    URLEncoder.encode(StringUtils.notNullStr(frameNonce), ENCODING_UTF8)
+                    URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
             );
 
             // Add token authorization when signing in to WP.com
