@@ -13,37 +13,6 @@
         android:scaleType="centerCrop" />
 
     <RelativeLayout
-        android:id="@+id/media_grid_item_upload_state_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grey_dark_translucent_50"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <ProgressBar
-            android:id="@+id/media_grid_item_upload_progress"
-            android:layout_width="@dimen/media_grid_progress_height"
-            android:layout_height="@dimen/media_grid_progress_height"
-            android:layout_above="@+id/media_grid_item_upload_state"
-            android:layout_centerHorizontal="true" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_grid_item_upload_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:shadowColor="@color/grey_dark"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="2"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"
-            tools:text="@string/upload_failed" />
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/media_grid_item_file_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -91,7 +60,37 @@
                 tools:text="filename" />
         </LinearLayout>
 
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/media_grid_item_upload_state_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_dark_translucent_50"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/media_grid_item_upload_progress"
+            android:layout_width="@dimen/media_grid_progress_height"
+            android:layout_height="@dimen/media_grid_progress_height"
+            android:layout_above="@+id/media_grid_item_upload_state"
+            android:layout_centerHorizontal="true" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_grid_item_upload_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:shadowColor="@color/grey_dark"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            tools:text="@string/upload_failed" />
     </RelativeLayout>
 
     <org.wordpress.android.widgets.WPTextView
