@@ -117,7 +117,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     @Override
-    public void onBindViewHolder(final GridViewHolder holder, int position) {
+    public void onBindViewHolder(GridViewHolder holder, int position) {
         if (!isValidPosition(position)) {
             return;
         }
@@ -173,12 +173,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
-                holder.stateContainer.setOnClickListener(new OnClickListener() {
+                holder.stateTextView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!isInMultiSelect()) {
-                            holder.stateTextView.setText(R.string.upload_queued);
-                            holder.stateTextView.setCompoundDrawables(null, null, null, null);
+                            ((TextView) v).setText(R.string.upload_queued);
+                            ((TextView) v).setCompoundDrawables(null, null, null, null);
                             v.setOnClickListener(null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(localMediaId);
@@ -188,7 +188,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 });
             } else {
                 holder.progressUpload.setVisibility(View.VISIBLE);
-                holder.stateContainer.setOnClickListener(null);
+                holder.stateTextView.setOnClickListener(null);
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
