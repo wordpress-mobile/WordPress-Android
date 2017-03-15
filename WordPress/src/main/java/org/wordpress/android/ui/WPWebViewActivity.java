@@ -252,6 +252,7 @@ public class WPWebViewActivity extends WebViewActivity {
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
+        String frameNonce = extras.getString(FRAME_NONCE);
         if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
             username = mAccountStore.getAccount().getUserName();
         }
@@ -288,29 +289,31 @@ public class WPWebViewActivity extends WebViewActivity {
                 finish();
             }
 
-            loadAuthenticatedUrl(authURL, addressToLoad, username, password);
+            loadAuthenticatedUrl(authURL, addressToLoad, username, password, frameNonce);
         }
     }
 
     /**
      * Login to the WordPress.com and load the specified URL.
      */
-    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
+    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password,
+                                        String frameNonce) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
-                mAccountStore.getAccessToken());
+                mAccountStore.getAccessToken(), frameNonce);
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
 
     public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
-            String password, String token) {
+            String password, String token, String frameNonce) {
         if (TextUtils.isEmpty(authenticationUrl)) return "";
 
         try {
-            String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
+            String postData = String.format("log=%s&pwd=%s&redirect_to=%s&frame-nonce=%s",
                     URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
-                    URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
+                    URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8),
+                    URLEncoder.encode(StringUtils.notNullStr(frameNonce), ENCODING_UTF8)
             );
 
             // Add token authorization when signing in to WP.com
