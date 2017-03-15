@@ -138,13 +138,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         boolean isSelected = isItemSelected(localMediaId);
         boolean isImage = mimeType.contains("image");
 
-        holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
-
-        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
-        holder.fileTypeView.setText(fileExtension.toUpperCase());
-
-        // load image
+        // if this is an image, load the thumbnail
         if (isImage) {
+            holder.fileContainer.setVisibility(View.GONE);
             if (isLocalFile) {
                 loadLocalImage(filePath, holder.imageView);
             } else {
@@ -152,7 +148,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }
         } else {
+            // not an image, so show file name and file type
             holder.imageView.setImageDrawable(null);
+            holder.fileContainer.setVisibility(View.VISIBLE);
+            holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
+            String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
+            holder.fileTypeView.setText(fileExtension.toUpperCase());
         }
 
         // show selection count when selected
@@ -247,6 +248,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
         private final ViewGroup stateContainer;
+        private final ViewGroup fileContainer;
 
         public GridViewHolder(View view) {
             super(view);
@@ -259,6 +261,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             stateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
             stateTextView = (TextView) stateContainer.findViewById(R.id.media_grid_item_upload_state);
             progressUpload = (ProgressBar) stateContainer.findViewById(R.id.media_grid_item_upload_progress);
+
+            fileContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_file_container);
 
             // make the progress bar white
             progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);

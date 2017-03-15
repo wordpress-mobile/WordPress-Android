@@ -2,7 +2,6 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/media_grid_frame_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/margin_small">
@@ -57,32 +56,32 @@
             tools:text="@string/upload_failed" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/media_grid_item_file_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/media_gallery_grid_label_bg"
-        android:padding="@dimen/margin_medium">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_grid_item_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/media_grid_item_filetype"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@color/media_gallery_grid_label"
-            android:textSize="@dimen/text_sz_small" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filetype"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/media_gallery_grid_label"
+            android:textAllCaps="true"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_grid_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_small" />
-    </RelativeLayout>
+    </LinearLayout>
+
 </FrameLayout>
