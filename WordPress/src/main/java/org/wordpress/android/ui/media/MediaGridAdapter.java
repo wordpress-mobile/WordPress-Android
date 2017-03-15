@@ -184,6 +184,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     public void onClick(View v) {
                         if (!isInMultiSelect()) {
                             holder.stateTextView.setText(R.string.upload_queued);
+                            holder.stateTextView.setCompoundDrawables(null, null, null, null);
                             v.setOnClickListener(null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(localMediaId);
