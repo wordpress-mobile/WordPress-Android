@@ -61,16 +61,6 @@
                 tools:text="@string/upload_failed" />
         </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/media_grid_item_checkstate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/media_grid_item_checkstate_selector"
-            android:button="@android:color/transparent"
-            android:clickable="false"
-            android:duplicateParentState="true"
-            android:focusable="false" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
