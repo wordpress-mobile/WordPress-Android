@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,9 +25,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
-import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
@@ -34,6 +35,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -277,8 +279,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 if (response.isSuccessful()) {
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
                     String jsonBody = response.body().string();
-                    MultipleMediaResponse mediaResponse =
-                            new Gson().fromJson(jsonBody, MultipleMediaResponse.class);
+
+                    Gson gson = new Gson();
+                    JsonReader reader = new JsonReader(new StringReader(jsonBody));
+                    reader.setLenient(true);
+                    MultipleMediaResponse mediaResponse = gson.fromJson(reader, MultipleMediaResponse.class);
+
                     List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, siteModel.getId());
                     if (responseMedia != null && !responseMedia.isEmpty()) {
                         MediaModel uploadedMedia = responseMedia.get(0);
