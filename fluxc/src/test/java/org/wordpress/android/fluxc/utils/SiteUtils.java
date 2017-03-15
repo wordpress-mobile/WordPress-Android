@@ -8,10 +8,17 @@ import java.util.List;
 
 public class SiteUtils {
     public static SiteModel generateWPComSite() {
+        return generateWPComSite(556, "", "", true, true);
+    }
+
+    public static SiteModel generateWPComSite(long remoteId, String url, String xmlRpcUrl, boolean isWPCom,
+                                              boolean isVisible) {
         SiteModel example = new SiteModel();
-        example.setSiteId(556);
-        example.setIsWPCom(true);
-        example.setIsVisible(true);
+        example.setUrl(url);
+        example.setXmlRpcUrl(xmlRpcUrl);
+        example.setSiteId(remoteId);
+        example.setIsWPCom(isWPCom);
+        example.setIsVisible(isVisible);
         return example;
     }
 
