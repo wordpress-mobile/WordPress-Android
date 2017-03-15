@@ -81,7 +81,6 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
-    public static final String FRAME_NONCE = "frame_nonce";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
@@ -96,6 +95,16 @@ public class WPWebViewActivity extends WebViewActivity {
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
         openWPCOMURL(context, url);
+    }
+
+    public static void openJetpackBlogPostPreview(Context context, String url, String frameNonce) {
+        if (!TextUtils.isEmpty(frameNonce)) {
+            url += "&frame-nonce=" + frameNonce;
+        }
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        context.startActivity(intent);
     }
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)

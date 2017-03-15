@@ -200,7 +200,7 @@ public class ActivityLauncher {
         if (site.isWPCom()) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else if (site.isJetpackConnected()) {
-//            WPWebViewActivity.openJetpackUrlByUsingGlobalWPCOMCredentials(context, url, site.getFrameNonce());
+            WPWebViewActivity.openJetpackBlogPostPreview(context, url, site.getFrameNonce());
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
