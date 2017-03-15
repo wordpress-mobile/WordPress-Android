@@ -228,7 +228,7 @@ public class MediaUtils {
 
             String fileName = getFilenameFromURI(context, imageUri);
             if (TextUtils.isEmpty(fileName)) {
-                fileName = "wp-" + System.currentTimeMillis()
+                fileName = "wp-" + System.currentTimeMillis() + "."
                     + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
             }
 
