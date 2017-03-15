@@ -115,10 +115,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mIsFormatBarDisabled = false;
 
-    private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
-    private Set<MediaGallery> mWaitingGalleries;
-    private Map<String, MediaType> mUploadingMedia;
-    private Set<String> mFailedMediaIds;
+    private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles = new ConcurrentHashMap<>();
+    private Set<MediaGallery> mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
+    private Map<String, MediaType> mUploadingMedia = new HashMap<>();
+    private Set<String> mFailedMediaIds = new HashSet<>();
+
     private MediaGallery mUploadingMediaGallery;
 
     private String mJavaScriptResult = "";
@@ -284,11 +285,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
             mHideActionBarOnSoftKeyboardUp = true;
         }
-
-        mWaitingMediaFiles = new ConcurrentHashMap<>();
-        mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
-        mUploadingMedia = new HashMap<>();
-        mFailedMediaIds = new HashSet<>();
 
         // -- WebView configuration
 
