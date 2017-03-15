@@ -117,7 +117,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     @Override
-    public void onBindViewHolder(final GridViewHolder holder, int position) {
+    public void onBindViewHolder(GridViewHolder holder, int position) {
         if (!isValidPosition(position)) {
             return;
         }
@@ -128,20 +128,16 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
+        String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
         String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
 
         boolean isLocalFile = MediaUtils.isLocalFile(state);
         boolean isSelected = isItemSelected(localMediaId);
-        boolean isImage = mimeType.contains("image");
 
-        if (isImage) {
-            holder.fileContainer.setVisibility(View.GONE);
-            if (isLocalFile) {
-                loadLocalImage(filePath, holder.imageView);
-            } else {
-                String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
-                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
-            }
+        if (isLocalFile) {
+            loadLocalImage(filePath, holder.imageView);
+        } else if (!TextUtils.isEmpty(thumbUrl)) {
+            WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
         } else {
             // not an image, so show file name and file type
             String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
@@ -178,11 +174,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
-                holder.stateContainer.setOnClickListener(new OnClickListener() {
+                holder.stateTextView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!isInMultiSelect()) {
-                            holder.stateTextView.setText(R.string.upload_queued);
+                            ((TextView) v).setText(R.string.upload_queued);
+                            ((TextView) v).setCompoundDrawables(null, null, null, null);
                             v.setOnClickListener(null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(localMediaId);
@@ -192,7 +189,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 });
             } else {
                 holder.progressUpload.setVisibility(View.VISIBLE);
-                holder.stateContainer.setOnClickListener(null);
+                holder.stateTextView.setOnClickListener(null);
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
