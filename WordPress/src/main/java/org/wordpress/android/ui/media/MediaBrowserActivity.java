@@ -574,14 +574,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             } else {
                 showMediaToastError(R.string.media_upload_error, event.error.message);
             }
+            updateViews();
         } else if (event.completed) {
             String title = "";
             if (event.media != null) {
                 title = event.media.getTitle();
             }
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
+            updateViews();
         }
-        updateViews();
     }
 
     public void onSavedEdit(int localMediaId, boolean result) {
