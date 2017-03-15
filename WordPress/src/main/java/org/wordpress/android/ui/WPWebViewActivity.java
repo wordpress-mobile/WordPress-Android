@@ -81,6 +81,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
+    public static final String FRAME_NONCE = "frame_nonce";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
@@ -94,7 +95,11 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url);
+        openWPCOMOrJetpackUrl(context, url, null);
+    }
+
+    public static void openJetpackUrlByUsingGlobalWPCOMCredentials(Context context, String url, String frameNonce) {
+        openWPCOMOrJetpackUrl(context, url, frameNonce);
     }
 
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
@@ -172,7 +177,8 @@ public class WPWebViewActivity extends WebViewActivity {
         return true;
     }
 
-    private static void openWPCOMURL(Context context, String url) {
+    // frameNonce is used for Jetpack sites
+    private static void openWPCOMOrJetpackUrl(Context context, String url, String frameNonce) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -181,6 +187,9 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        if (!TextUtils.isEmpty(frameNonce)) {
+            intent.putExtra(WPWebViewActivity.FRAME_NONCE, frameNonce);
+        }
         context.startActivity(intent);
     }
 
