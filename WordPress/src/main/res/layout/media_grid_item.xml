@@ -49,6 +49,7 @@
         android:layout_height="match_parent"
         android:background="@color/grey_lighten_20"
         android:orientation="vertical"
+        android:padding="@dimen/margin_medium"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -57,9 +58,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:drawableTint="@color/grey_dark"
+            android:drawableTop="@drawable/media_document"
+            android:gravity="center_horizontal"
             android:textAllCaps="true"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
+            android:textSize="@dimen/text_sz_medium"
             android:textStyle="bold"
             tools:text="PDF" />
 
@@ -70,6 +74,7 @@
             android:layout_below="@+id/media_grid_item_filetype"
             android:layout_centerHorizontal="true"
             android:ellipsize="end"
+            android:gravity="center_horizontal"
             android:singleLine="true"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_small"

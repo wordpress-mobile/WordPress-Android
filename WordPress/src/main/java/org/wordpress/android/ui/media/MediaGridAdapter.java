@@ -130,9 +130,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
         String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        String mimeType = StringUtils.notNullStr(
-                mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE))
-        );
+        String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
 
         boolean isLocalFile = MediaUtils.isLocalFile(state);
         boolean isSelected = isItemSelected(localMediaId);
@@ -149,11 +147,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         } else {
             // not an image, so show file name and file type
-            holder.imageView.setImageDrawable(null);
             holder.fileContainer.setVisibility(View.VISIBLE);
             holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
             String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
             holder.fileTypeView.setText(fileExtension.toUpperCase());
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(fileName);
+            holder.fileTypeView.setCompoundDrawablesWithIntrinsicBounds(0, placeholderResId, 0, 0);
         }
 
         // show selection count when selected
