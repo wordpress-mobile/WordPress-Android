@@ -130,27 +130,21 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
         String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        String mimeType = StringUtils.notNullStr(
-                mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE))
-        );
+        String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
+        String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
 
         boolean isLocalFile = MediaUtils.isLocalFile(state);
         boolean isSelected = isItemSelected(localMediaId);
-        boolean isImage = mimeType.contains("image");
 
         holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
 
         String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
         holder.fileTypeView.setText(fileExtension.toUpperCase());
 
-        // load image
-        if (isImage) {
-            if (isLocalFile) {
-                loadLocalImage(filePath, holder.imageView);
-            } else {
-                String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
-                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
-            }
+        if (isLocalFile) {
+            loadLocalImage(filePath, holder.imageView);
+        } else if (!TextUtils.isEmpty(thumbUrl)) {
+            WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
         } else {
             holder.imageView.setImageDrawable(null);
         }
