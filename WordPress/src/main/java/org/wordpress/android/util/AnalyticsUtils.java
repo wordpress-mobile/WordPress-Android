@@ -17,10 +17,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.ReaderPost;
 
 import java.io.File;
 import java.util.HashMap;
@@ -247,10 +247,11 @@ public class AnalyticsUtils {
     }
 
     /**
-     * Track when a railcar item has been rendered
-     *
-     * @param post The JSON string of the railcar
-     */
+   * Track when a railcar item has been rendered
+   *
+   * @param railcarJson The JSON string of the railcar
+   *
+   */
     public static void trackRailcarRender(String railcarJson) {
         if (TextUtils.isEmpty(railcarJson)) {
             return;

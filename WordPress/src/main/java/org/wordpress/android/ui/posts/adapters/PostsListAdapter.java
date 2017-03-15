@@ -373,17 +373,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
-                statusIconResId = R.drawable.noticon_scheduled;
+                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocallyChanged()) {
                 statusTextResId = R.string.local_changes;
-                statusIconResId = R.drawable.noticon_scheduled;
+                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                 statusColorResId = R.color.alert_yellow;
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
                         statusTextResId = R.string.draft;
-                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case PRIVATE:
@@ -391,17 +391,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                     case PENDING:
                         statusTextResId = R.string.pending_review;
-                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case SCHEDULED:
                         statusTextResId = R.string.scheduled;
-                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case TRASHED:
                         statusTextResId = R.string.trashed;
-                        statusIconResId = R.drawable.noticon_trashed;
+                        statusIconResId = R.drawable.ic_pages_alert_red_16dp;
                         statusColorResId = R.color.alert_red;
                         break;
                 }

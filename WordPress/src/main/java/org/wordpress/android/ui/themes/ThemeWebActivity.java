@@ -14,14 +14,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Theme;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
-
-import static com.android.volley.Request.Method.HEAD;
 
 public class ThemeWebActivity extends WPWebViewActivity {
     public static final String IS_CURRENT_THEME = "is_current_theme";

@@ -7,8 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Person;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.AppLog;
@@ -20,9 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import static com.android.volley.Request.Method.HEAD;
-import static org.wordpress.android.R.id.usernames;
 
 public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues

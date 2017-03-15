@@ -28,6 +28,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -127,7 +128,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
         String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        String mimeType = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE));
+        String mimeType = StringUtils.notNullStr(
+                mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE))
+        );
 
         boolean isLocalFile = MediaUtils.isLocalFile(state);
         boolean isSelected = isItemSelected(localMediaId);

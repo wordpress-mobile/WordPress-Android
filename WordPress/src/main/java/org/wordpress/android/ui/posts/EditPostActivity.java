@@ -278,27 +278,27 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST)
-                    ||Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                    || Intent.ACTION_SEND.equals(action)
+                    || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
-                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
-                    || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)) {
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int localSiteId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                    SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
-                    if (site == null) {
-                        showErrorAndFinish(R.string.blog_not_found);
-                        return;
-                    }
-                    if (!site.isVisible()) {
-                        showErrorAndFinish(R.string.error_blog_hidden);
-                        return;
-                    }
-                    mSite = site;
+                    mSite = mSiteStore.getSiteByLocalId(localSiteId);
                 }
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = true;
+
+                if (mSite == null) {
+                    showErrorAndFinish(R.string.blog_not_found);
+                    return;
+                }
+                if (!mSite.isVisible()) {
+                    showErrorAndFinish(R.string.error_blog_hidden);
+                    return;
+                }
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
@@ -521,7 +521,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // size the chooser before creating the fragment to avoid having it load media now
         resizePhotoChooser();
 
-        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance(this);
 
         getFragmentManager()
                 .beginTransaction()
@@ -1041,10 +1041,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
             // Quick press
             normalizedSourceName = "quick-press";
-        }
-        if (intent != null && intent.getIntExtra("quick-media", -1) > -1) {
-            // Quick photo or quick video
-            normalizedSourceName = "quick-media";
         }
         properties.put("created_post_source", normalizedSourceName);
         AnalyticsUtils.trackWithSiteDetails(
@@ -1642,16 +1638,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Analytics about new media
      *
      * @param isVideo Whether is a video or not
+     * @param isOptimized Whether the media was "optimized" device side
      * @param uri The URI of the media on the device, or null
      * @param path The path of the media on the device, or null
      */
-    private void trackAddMediaFromDeviceEvents(boolean isVideo, Uri uri, String path) {
+    private void trackAddMediaFromDeviceEvents(boolean isVideo, boolean isOptimized, Uri uri, String path) {
         if (TextUtils.isEmpty(path) && uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
             return;
         }
 
         Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
+        properties.put("optimized", isOptimized);
 
         if (isVideo) {
             AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY, properties);
@@ -1724,6 +1722,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        boolean isOptimized = false;
         if (!isVideo && SiteSettingsInterface.getInterface(this, mSite, null).init(false).getOptimizedImage() &&
                !NetworkUtils.isWiFiConnected(this)) {
             // Not on WiFi and optimize image is set to ON
@@ -1732,21 +1731,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             if (optimizedPath == null) {
                 AppLog.e(T.EDITOR, "Optimized picture was null!");
-                // TODO: track analytics here
-                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
             } else {
-                // TODO: track analytics here
-                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
                 Uri optimizedImageUri = Uri.parse(optimizedPath);
                 if (optimizedImageUri != null) {
                     uri = optimizedImageUri;
+                    isOptimized = true;
                 }
             }
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-        trackAddMediaFromDeviceEvents(isVideo, null, path);
+        trackAddMediaFromDeviceEvents(isVideo, isOptimized, null, path);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
@@ -1755,7 +1751,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
+        trackAddMediaFromDeviceEvents(isVideo, false, mediaUri, null);
 
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
         if (isVideo) {
@@ -2185,8 +2181,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
+        int localMediaId = StringUtils.stringToInt(mediaId);
+        if (localMediaId == 0) {
+            return;
+        }
+
         MediaModel media = new MediaModel();
-        media.setMediaId(Long.valueOf(mediaId));
+        media.setId(localMediaId);
         MediaPayload payload = new MediaPayload(mSite, media);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }

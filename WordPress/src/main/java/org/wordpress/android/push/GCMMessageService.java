@@ -27,7 +27,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
@@ -142,7 +141,7 @@ public class GCMMessageService extends GcmListenerService {
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             AnalyticsTrackerMixpanel.showNotification(this, pendingIntent,
-                    R.drawable.notification_icon, title, mpMessage);
+                    R.drawable.ic_my_sites_white_24dp, title, mpMessage);
             return;
         }
 
@@ -560,7 +559,7 @@ public class GCMMessageService extends GcmListenerService {
 
             PendingIntent commentLikePendingIntent =  getCommentActionPendingIntentForService(context,
                     commentLikeIntent);
-            builder.addAction(R.drawable.ic_action_like, context.getText(R.string.like), commentLikePendingIntent);
+            builder.addAction(R.drawable.ic_star_32dp, context.getText(R.string.like), commentLikePendingIntent);
         }
 
         private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -579,7 +578,7 @@ public class GCMMessageService extends GcmListenerService {
 
             PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntentForService(context,
                     commentApproveIntent);
-            builder.addAction(R.drawable.ic_action_approve, context.getText(R.string.approve),
+            builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve),
                     commentApprovePendingIntent);
         }
 
@@ -649,7 +648,7 @@ public class GCMMessageService extends GcmListenerService {
         private NotificationCompat.Builder getNotificationBuilder(Context context, String title, String message){
             // Build the new notification, add group to support wearable stacking
            return new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.notification_icon)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -700,7 +699,7 @@ public class GCMMessageService extends GcmListenerService {
 
                 String subject = String.format(context.getString(R.string.new_notifications), sActiveNotificationsMap.size());
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.notification_icon)
+                        .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
                         .setGroupSummary(true)
@@ -960,7 +959,7 @@ public class GCMMessageService extends GcmListenerService {
             pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.notification_icon)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -991,16 +990,14 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-                builder.addAction(R.drawable.ic_action_approve, context.getText(R.string.approve),
-                        authApprovePendingIntent);
+                builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve), authApprovePendingIntent);
 
 
                 Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
                 authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
                 PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
                         AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
-                        authIgnorePendingIntent);
+                builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore), authIgnorePendingIntent);
             }
 
             // Call broadcast receiver when notification is dismissed

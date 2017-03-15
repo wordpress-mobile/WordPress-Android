@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:contentDescription="@string/help"
-                app:srcCompat="@drawable/dashicon_info"
+                app:srcCompat="@drawable/ic_info_black_24dp"
                 android:tint="@color/blue_dark" />
         </LinearLayout>
 
