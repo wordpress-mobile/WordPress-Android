@@ -57,11 +57,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:ellipsize="end"
-            android:singleLine="true"
             android:textAllCaps="true"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_extra_large"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
             tools:text="PDF" />
 
         <org.wordpress.android.widgets.WPTextView
