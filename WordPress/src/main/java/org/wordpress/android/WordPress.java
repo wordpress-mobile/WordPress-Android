@@ -68,7 +68,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -566,7 +565,12 @@ public class WordPress extends MultiDexApplication {
     public void onParseError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
         String description = "FluxC: " + event.description;
-        CrashlyticsUtils.logException(event.exception, ExceptionType.SPECIFIC, event.type, description);
+        if (event.extras != null) {
+            for (String key : event.extras.keySet()) {
+                CrashlyticsUtils.setString(key, event.extras.get(key));
+            }
+        }
+        CrashlyticsUtils.logException(event.exception, event.type, description);
     }
 
     public void removeWpComUserRelatedData(Context context) {
