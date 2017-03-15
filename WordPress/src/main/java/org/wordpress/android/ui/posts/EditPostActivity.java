@@ -1298,7 +1298,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (media != null) {
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            mEditorFragment.appendMediaFile(mediaFile, media.getUrl(), mImageLoader);
+            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
         }
     }
 
