@@ -805,8 +805,16 @@ public class SiteStore extends Store {
 
     private int createOrUpdateSites(SitesModel sites) throws DuplicateSiteException {
         int rowsAffected = 0;
+        DuplicateSiteException lastCaughtException = null;
         for (SiteModel site : sites.getSites()) {
-            rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
+            try {
+                rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (DuplicateSiteException caughtException) {
+                lastCaughtException = caughtException;
+            }
+        }
+        if (lastCaughtException != null) {
+            throw lastCaughtException;
         }
         return rowsAffected;
     }
