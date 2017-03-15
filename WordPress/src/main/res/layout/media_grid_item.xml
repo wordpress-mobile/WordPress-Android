@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:id="@+id/text_selection_count"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:background="@drawable/shape_oval_blue"
         android:gravity="center"
         android:textColor="@color/white"
@@ -60,28 +60,33 @@
         android:id="@+id/media_grid_item_file_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/grey"
         android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_filetype"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:gravity="center"
             android:singleLine="true"
             android:textAllCaps="true"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            tools:text="PDF" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_grid_item_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:gravity="center"
             android:singleLine="true"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_small" />
+            android:textSize="@dimen/text_sz_small"
+            tools:text="filename" />
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>
