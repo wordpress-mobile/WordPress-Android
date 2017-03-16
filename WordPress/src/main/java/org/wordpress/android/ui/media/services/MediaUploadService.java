@@ -80,11 +80,19 @@ public class MediaUploadService extends IntentService {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
+    
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null || !intent.hasExtra(WordPress.SITE)) {
+            AppLog.e(AppLog.T.MEDIA, "MediaUploadService was killed and restarted with a null intent.");
+            stopServiceIfUploadsComplete();
+            return START_NOT_STICKY;
+        }
+
         unpackIntent(intent);
         uploadNextInQueue();
+
+        return START_REDELIVER_INTENT;
     }
 
     @NonNull
