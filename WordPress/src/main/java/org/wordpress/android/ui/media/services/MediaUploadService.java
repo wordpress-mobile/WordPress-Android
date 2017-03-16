@@ -31,7 +31,7 @@ import javax.inject.Inject;
  * Started with explicit list of media to upload.
  */
 
-public class MediaUploadService extends IntentService {
+public class MediaUploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
     private SiteModel mSite;
@@ -42,10 +42,6 @@ public class MediaUploadService extends IntentService {
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
-
-    public MediaUploadService() {
-        super("MediaUploadService");
-    }
 
     public static void startService(Context context, SiteModel siteModel, ArrayList<MediaModel> mediaList) {
         if (context == null) {
@@ -80,7 +76,8 @@ public class MediaUploadService extends IntentService {
     public IBinder onBind(Intent intent) {
         return null;
     }
-    
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null || !intent.hasExtra(WordPress.SITE)) {
