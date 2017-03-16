@@ -1250,9 +1250,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 return;
             }
             if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
-                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+                if (event.rowsAffected == 0) {
+                    // If there is a duplicate site and not any site has been added, show an error and
+                    // stop the sign in process
+                    ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+                    return;
+                } else {
+                    // If there is a duplicate site, notify the user something could be wrong,
+                    // but continue the sign in process
+                    ToastUtils.showToast(getContext(), R.string.duplicate_site_detected);
+                }
+            } else {
+                return;
             }
-            return;
         }
 
         // Login Successful
