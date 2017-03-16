@@ -231,11 +231,10 @@ public class MediaUtils {
 
             String fileName = getFilenameFromURI(context, imageUri);
             if (TextUtils.isEmpty(fileName)) {
-                fileName = "wp-" + System.currentTimeMillis() + "."
-                    + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+                fileName = generateTimeStampedFileName(mimeType);
             }
 
-            File f = getUniqueCacheFileForName(fileName, cacheDir);
+            File f = getUniqueCacheFileForName(fileName, cacheDir, mimeType);
 
             OutputStream output = new FileOutputStream(f);
 
@@ -261,7 +260,7 @@ public class MediaUtils {
         return null;
     }
 
-    private static File getUniqueCacheFileForName(String fileName, File cacheDir) {
+    private static File getUniqueCacheFileForName(String fileName, File cacheDir, String mimeType) {
         File file = new File(cacheDir, fileName);
 
         while (file.exists()) {
@@ -277,10 +276,17 @@ public class MediaUtils {
                 } else {
                     fileName = baseFileName + "-" + (StringUtils.stringToInt(existingDuplicationNumber) + 1) + fileType;
                 }
+            } else {
+                // Shouldn't happen, but in case our match fails fall back to timestamped file name
+                fileName = generateTimeStampedFileName(mimeType);
             }
             file = new File(cacheDir, fileName);
         }
         return file;
+    }
+
+    private static String generateTimeStampedFileName(String mimeType) {
+        return "wp-" + System.currentTimeMillis() + "." + getExtensionForMimeType(mimeType);
     }
 
     public static String getMimeTypeOfInputStream(InputStream stream) {
