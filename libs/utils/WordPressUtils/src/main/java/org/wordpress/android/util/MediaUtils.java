@@ -30,9 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
+    private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
 
     public static boolean isValidImage(String url) {
         if (url == null) {
@@ -232,7 +235,7 @@ public class MediaUtils {
                     + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
             }
 
-            File f = new File(cacheDir, fileName);
+            File f = getUniqueCacheFileForName(fileName, cacheDir);
 
             OutputStream output = new FileOutputStream(f);
 
@@ -256,6 +259,28 @@ public class MediaUtils {
         }
 
         return null;
+    }
+
+    private static File getUniqueCacheFileForName(String fileName, File cacheDir) {
+        File file = new File(cacheDir, fileName);
+
+        while (file.exists()) {
+            Matcher matcher = FILE_EXISTS_PATTERN.matcher(fileName);
+            if (matcher.matches()) {
+                String baseFileName = matcher.group(1);
+                String existingDuplicationNumber = matcher.group(3);
+                String fileType = StringUtils.notNullStr(matcher.group(4));
+
+                if (existingDuplicationNumber == null) {
+                    // Not a copy already
+                    fileName = baseFileName + "-1" + fileType;
+                } else {
+                    fileName = baseFileName + "-" + (StringUtils.stringToInt(existingDuplicationNumber) + 1) + fileType;
+                }
+            }
+            file = new File(cacheDir, fileName);
+        }
+        return file;
     }
 
     public static String getMimeTypeOfInputStream(InputStream stream) {
