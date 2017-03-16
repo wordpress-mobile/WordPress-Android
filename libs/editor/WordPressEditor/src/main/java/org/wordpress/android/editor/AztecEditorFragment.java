@@ -215,13 +215,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
         // TODO: disable undo/redo in media mode
-        boolean canUndo = content.history.undoValid();
         boolean canRedo = content.history.redoValid();
-        menu.findItem(R.id.undo).setEnabled(canUndo);
-        menu.findItem(R.id.redo).setEnabled(canRedo);
+        boolean canUndo = content.history.undoValid();
+
+        if (menu != null && menu.findItem(R.id.redo) != null) {
+            menu.findItem(R.id.redo).setEnabled(canRedo);
+        }
+
+        if (menu != null && menu.findItem(R.id.undo) != null) {
+            menu.findItem(R.id.undo).setEnabled(canUndo);
+        }
+
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
