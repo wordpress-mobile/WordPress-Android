@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.media.services;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
