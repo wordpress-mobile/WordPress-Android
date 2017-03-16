@@ -8,11 +8,11 @@ import java.util.List;
 
 public class SiteUtils {
     public static SiteModel generateWPComSite() {
-        return generateWPComSite(556, "", "", true, true);
+        return generateTestSite(556, "", "", true, true);
     }
 
-    public static SiteModel generateWPComSite(long remoteId, String url, String xmlRpcUrl, boolean isWPCom,
-                                              boolean isVisible) {
+    public static SiteModel generateTestSite(long remoteId, String url, String xmlRpcUrl, boolean isWPCom,
+                                             boolean isVisible) {
         SiteModel example = new SiteModel();
         example.setUrl(url);
         example.setXmlRpcUrl(xmlRpcUrl);

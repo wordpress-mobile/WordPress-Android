@@ -38,6 +38,7 @@ import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOve
 import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedSiteFutureJetpack;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateTestSite;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
@@ -503,13 +504,13 @@ public class SiteStoreUnitTest {
     public void testBatchInsertSiteDuplicateWPCom()
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<SiteModel> siteList = new ArrayList<>();
-        siteList.add(generateWPComSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
-        siteList.add(generateWPComSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true, true));
-        siteList.add(generateWPComSite(3, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(3, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
         // duplicate with a different id, we should ignore it
-        siteList.add(generateWPComSite(4, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
-        siteList.add(generateWPComSite(5, "https://pony4.com", "https://pony4.com/xmlrpc.php", true, true));
-        siteList.add(generateWPComSite(6, "https://pony5.com", "https://pony5.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(4, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(5, "https://pony4.com", "https://pony4.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(6, "https://pony5.com", "https://pony5.com/xmlrpc.php", true, true));
 
         SitesModel sites = new SitesModel(siteList);
 
