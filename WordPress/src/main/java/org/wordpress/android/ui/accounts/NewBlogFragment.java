@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,20 +15,30 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
-import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.widgets.WPTextView;
+
+import javax.inject.Inject;
 
 public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private EditText mSiteUrlTextField;
@@ -36,10 +47,32 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
+
     private boolean mSignoutOnCancelMode;
     private boolean mAutoCompleteUrl;
 
-    public NewBlogFragment() {
+    private long mNewSiteRemoteId;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -74,7 +107,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     private void signoutAndFinish() {
         if (mSignoutOnCancelMode) {
-            WordPress.WordPressComSignOut(getActivity());
+            ((WordPress) getActivity().getApplication()).wordPressComSignOut();
             getActivity().setResult(Activity.RESULT_CANCELED);
             getActivity().finish();
         }
@@ -107,26 +140,28 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlTextField.setEnabled(true);
     }
 
-    private void showSiteUrlError(int messageId) {
-        mSiteUrlTextField.setError(getString(messageId));
+    private void showSiteUrlError(String message) {
+        mSiteUrlTextField.setError(message);
         mSiteUrlTextField.requestFocus();
     }
 
-    private void showSiteTitleError(int messageId) {
-        mSiteTitleTextField.setError(getString(messageId));
+    private void showSiteTitleError(String message) {
+        mSiteTitleTextField.setError(message);
         mSiteTitleTextField.requestFocus();
     }
 
-    protected boolean specificShowError(int messageId) {
-        switch (getErrorType(messageId)) {
-            case TITLE:
-                showSiteTitleError(messageId);
+    protected boolean showError(NewSiteErrorType newSiteError, String message) {
+        if (!isAdded()) {
+            return false;
+        }
+        switch (newSiteError) {
+            case SITE_TITLE_INVALID:
+                showSiteTitleError(message);
                 return true;
-            case SITE_URL:
-                showSiteUrlError(messageId);
+            default:
+                showSiteUrlError(message);
                 return true;
         }
-        return false;
     }
 
     protected boolean isUserDataValid() {
@@ -167,56 +202,15 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
 
-        startProgress(getString(R.string.validating_site_data));
+        startProgress(getString(R.string.creating_your_site));
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
-        final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
-        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity());
+        final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
+        final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
-        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
-                getRestClientUtils(), new ErrorListener(), new CreateUserAndBlog.Callback() {
-            @Override
-            public void onStepFinished(CreateUserAndBlog.Step step) {
-                if (getActivity() != null) {
-                    updateProgress(getString(R.string.create_new_blog_wpcom));
-                }
-            }
-
-            @Override
-            public void onSuccess(JSONObject createSiteResponse) {
-                if (getActivity() == null) {
-                    return;
-                }
-                endProgress();
-                try {
-                    JSONObject details = createSiteResponse.getJSONObject("blog_details");
-                    String blogName = details.getString("blogname");
-                    String xmlRpcUrl = details.getString("xmlrpc");
-                    String homeUrl = details.getString("url");
-                    String blogId = details.getString("blogid");
-                    String username = AccountHelper.getDefaultAccount().getUserName();
-                    BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, null, null, null,
-                            true, true, PlansConstants.DEFAULT_PLAN_ID_FOR_NEW_BLOG, null, null, false);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
-                    ToastUtils.showToast(getActivity(), R.string.new_blog_wpcom_created);
-                } catch (JSONException e) {
-                    AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
-                }
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
-            }
-
-            @Override
-            public void onError(int messageId) {
-                if (getActivity() == null) {
-                    return;
-                }
-                endProgress();
-                showError(getString(messageId));
-            }
-        });
-        AppLog.i(T.NUX, "User tries to create a new site, name: " + siteName + ", URL: " + siteUrl);
-        createUserAndBlog.startCreateBlogProcess();
+        NewSitePayload newSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, false);
+        mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
+        AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", URL: " + siteUrl);
     }
 
     @Override
@@ -248,8 +242,8 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-                BlogUtils.convertToLowercase(s);
+            public void afterTextChanged(Editable editable) {
+                lowerCaseEditable(editable);
             }
         });
 
@@ -323,4 +317,37 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return onDoneEvent(actionId, event);
         }
     };
+
+    // OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewSiteCreated(OnNewSiteCreated event) {
+        AppLog.i(T.NUX, event.toString());
+        if (event.isError()) {
+            endProgress();
+            showError(event.error.type, event.error.message);
+            return;
+        }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
+        mNewSiteRemoteId = event.newSiteRemoteId;
+        // Site created, update sites
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        AppLog.i(T.NUX, event.toString());
+        // Sites updated, we can finish this.
+        if (getActivity() == null) {
+            return;
+        }
+        endProgress();
+        Intent intent = new Intent();
+        SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
+    }
 }

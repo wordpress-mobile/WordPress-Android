@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -174,6 +176,21 @@ public class MediaUtils {
         }
     }
 
+    public static @Nullable String getFilenameFromURI(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        try {
+            String result = null;
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+            return result;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
@@ -209,9 +226,10 @@ public class MediaUtils {
                 input = new URL(imageUri.toString()).openStream();
             }
 
-            String fileName = "wp-" + System.currentTimeMillis();
-            if (isVideo) {
-                fileName += "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            String fileName = getFilenameFromURI(context, imageUri);
+            if (TextUtils.isEmpty(fileName)) {
+                fileName = "wp-" + System.currentTimeMillis()
+                    + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
             }
 
             File f = new File(cacheDir, fileName);

@@ -21,8 +21,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -51,6 +53,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -112,9 +116,13 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
 
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         setContentView(R.layout.reader_activity_post_pager);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -177,7 +185,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
         if (mIsRelatedPostView) {
-            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            mToolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -624,7 +632,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      */
     private void trackPost(long blogId, long postId) {
         // bump the page view
-        ReaderPostActions.bumpPageViewForPost(blogId, postId);
+        ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
 
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(

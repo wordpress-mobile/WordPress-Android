@@ -101,8 +101,8 @@
             android:id="@+id/pref_default_format"
             android:key="@string/pref_key_site_format"
             android:title="@string/site_settings_default_format_title"
-            android:entries="@array/post_formats_array"
-            android:entryValues="@array/post_formats_array"
+            android:entries="@array/post_format_display_names"
+            android:entryValues="@array/post_format_display_names"
             app:longClickHint="@string/site_settings_format_hint" />
 
         <org.wordpress.android.ui.prefs.WPPreference
@@ -258,24 +258,10 @@
         android:title="@string/site_settings_this_device_header">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_enable_location"
-            android:key="@string/pref_key_site_location"
-            android:title="@string/site_settings_location_title"
-            app:longClickHint="@string/site_settings_location_hint" />
-
-        <org.wordpress.android.ui.prefs.DetailListPreference
-            android:id="@+id/pref_default_image_width"
-            android:key="@string/pref_key_site_image_width"
-            android:title="@string/site_settings_default_image_width_title"
-            android:entries="@array/site_settings_image_width_entries"
-            android:entryValues="@array/site_settings_image_width_values"
-            app:longClickHint="@string/site_settings_image_width_hint" />
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_upload_and_link_image"
-            android:key="@string/pref_key_site_upload_and_link_image"
-            android:title="@string/site_settings_upload_and_link_image_title"
-            app:longClickHint="@string/site_settings_upload_and_link_image_hint" />
+            android:id="@+id/pref_optimize_image"
+            android:key="@string/pref_key_optimize_image"
+            android:title="@string/site_settings_optimize_images"
+            app:longClickHint="@string/site_settings_optimize_images_hint" />
 
     </PreferenceCategory>
 
@@ -297,7 +283,7 @@
                 android:summary="@string/start_over_text"
                 android:widgetLayout="@layout/start_over_preference_button"
                 android:layout="@layout/start_over_preference"
-                app:preficon="@drawable/gridicons_history"
+                app:preficon="@drawable/ic_history_black_24dp"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="@string/contact_support"
                 app:buttonTextColor="@color/grey_dark"

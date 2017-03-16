@@ -1,12 +1,11 @@
 package org.wordpress.android.networking;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashlyticsUtils;
-
 import android.os.Handler;
 import android.os.Looper;
+
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class GravatarApi {
         void onError();
     }
 
-    private static OkHttpClient createClient(final String restEndpointUrl) {
+    private static OkHttpClient createClient(final String accessToken) {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
 
         //// uncomment the following line to add logcat logging
@@ -40,15 +39,9 @@ public class GravatarApi {
             @Override
             public Response intercept(Interceptor.Chain chain) throws IOException {
                 Request original = chain.request();
-
-                String siteId = AuthenticatorRequest.extractSiteIdFromUrl(restEndpointUrl, original.url()
-                        .toString());
-                String token = OAuthAuthenticator.getAccessToken(siteId);
-
                 Request.Builder requestBuilder = original.newBuilder()
-                        .header("Authorization", "Bearer " + token)
+                        .header("Authorization", "Bearer " + accessToken)
                         .method(original.method(), original.body());
-
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -68,10 +61,11 @@ public class GravatarApi {
                 .build();
     }
 
-    public static void uploadGravatar(final File file, final GravatarUploadListener gravatarUploadListener) {
-        Request request = prepareGravatarUpload(AccountHelper.getDefaultAccount().getEmail(), file);
+    public static void uploadGravatar(final File file, final String email, final String accessToken,
+                                      final GravatarUploadListener gravatarUploadListener) {
+        Request request = prepareGravatarUpload(email, file);
 
-        createClient(API_BASE_URL).newCall(request).enqueue(
+        createClient(accessToken).newCall(request).enqueue(
                 new Callback() {
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
@@ -113,8 +107,7 @@ public class GravatarApi {
                         properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName() : "null");
                         properties.put("network_exception_message", e != null ? e.getMessage() : "null");
                         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
-                        CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC,
-                                AppLog.T.API, "Network call failure trying to upload Gravatar!");
+                        CrashlyticsUtils.logException(e, AppLog.T.API, "Network call failure trying to upload Gravatar!");
                         AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null ?
                                 e.getMessage() : "null"));
 

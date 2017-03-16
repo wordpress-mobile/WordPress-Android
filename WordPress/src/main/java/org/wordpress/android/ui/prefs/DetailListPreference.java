@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.support.annotation.NonNull;
@@ -21,7 +20,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Custom {@link ListPreference} used to display detail text per item.
@@ -129,7 +127,6 @@ public class DetailListPreference extends ListPreference
         ListView listView = mDialog.getListView();
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        Typeface typeface = WPPrefUtils.getSemiboldTypeface(getContext());
 
         if (listView != null) {
             listView.setDividerHeight(0);
@@ -140,13 +137,11 @@ public class DetailListPreference extends ListPreference
         if (positive != null) {
             //noinspection deprecation
             positive.setTextColor(res.getColor(R.color.blue_medium));
-            positive.setTypeface(typeface);
         }
 
         if (negative != null) {
             //noinspection deprecation
             negative.setTextColor(res.getColor(R.color.blue_medium));
-            negative.setTypeface(typeface);
         }
     }
 

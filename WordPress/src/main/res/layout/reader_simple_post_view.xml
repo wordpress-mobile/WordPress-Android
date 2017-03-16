@@ -42,7 +42,7 @@
             style="@style/ReaderImageView.Avatar.ExtraSmall"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_medium"
-            tools:src="@drawable/gravatar_placeholder" />
+            tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
-        app:wpFontFamily="merriweather"
+        android:fontFamily="serif"
         tools:text="text_simple_post_title" />
 
     <org.wordpress.android.widgets.WPTextView
@@ -100,7 +100,7 @@
         android:maxLines="3"
         android:textColor="@color/grey_darken_20"
         android:textSize="@dimen/text_sz_medium"
-        app:wpFontFamily="merriweather"
+        android:fontFamily="serif"
         tools:text="text_simple_post_excerpt\ntext_simple_post_excerpt\ntext_simple_post_excerpt" />
 
 </RelativeLayout>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-17 11:43:21+0000
+Translation-Revision-Date: 2017-03-01 19:54:19+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="reader_liked_default_tag">Příspěvek I To se mi líbí</string>
+	<string name="reader_discover_default_tag">Objevit</string>
+	<string name="reader_followed_default_tag">Sledované stránky</string>
 	<string name="reader_empty_followed_blogs_search_title">Neodpovídají žádné weby</string>
 	<string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
 	<string name="visual_editor_disabled">Vizuální editor zakázán</string>

@@ -18,13 +18,15 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
-import java.util.List;
-import java.util.Map;
+import javax.inject.Inject;
 
 public class StatsWidgetConfigureActivity extends AppCompatActivity
         implements StatsWidgetConfigureAdapter.OnSiteClickListener {
@@ -33,10 +35,13 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     private RecyclerView mRecycleView;
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -57,25 +62,25 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
 
         // If not signed into WordPress inform the user
-        if (!AccountHelper.isSignedIn()) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_account, ToastUtils.Duration.LONG);
             finish();
             return;
         }
 
+
         // If no visible blogs
-        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("isHidden = 0", null);
-        if (accounts.size() == 0) {
+        int visibleSites = mSiteStore.getVisibleSitesCount();
+        if (mSiteStore.getVisibleSitesCount() == 0) {
             ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_visible_blog, ToastUtils.Duration.LONG);
             finish();
             return;
         }
 
         // If one blog only, skip config
-        if (accounts.size() == 1) {
-            Map<String, Object> account = accounts.get(0);
-            Integer localID = (Integer) account.get("id");
-            addWidgetToScreenAndFinish(localID);
+        if (visibleSites == 1) {
+            SiteModel site = mSiteStore.getVisibleSites().get(0);
+            addWidgetToScreenAndFinish(site.getId());
             return;
         }
 
@@ -105,7 +110,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp);
             actionBar.setHomeButtonEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.site_picker_title);
@@ -120,9 +125,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     }
 
     private void setNewAdapter() {
-        Blog blog = WordPress.getCurrentBlog();
-        int localBlogId = (blog != null ? blog.getLocalTableBlogId() : 0);
-        mAdapter = new StatsWidgetConfigureAdapter(this, localBlogId);
+        mAdapter = new StatsWidgetConfigureAdapter(this, mAccountStore.getAccount().getPrimarySiteId());
         mAdapter.setOnSiteClickListener(this);
     }
 
@@ -132,16 +135,16 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     }
 
     private void addWidgetToScreenAndFinish(int localID) {
-        final Blog currentBlog = WordPress.getBlog(localID);
+        SiteModel site = mSiteStore.getSiteByLocalId(localID);
 
-        if (currentBlog == null) {
+        if (site == null) {
             AppLog.e(AppLog.T.STATS, "The blog with local_blog_id " + localID + " cannot be loaded from the DB.");
             Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
-        if (currentBlog.getDotComBlogId() == null) {
+        if (!SiteUtils.isAccessibleViaWPComAPI(site)) {
             // The blog could be a self-hosted blog with NO Jetpack installed on it
             // Or a Jetpack blog whose options are not yet synched in the app
             // In both of these cases show a generic message that encourages the user to refresh
@@ -152,7 +155,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
 
         final Context context = StatsWidgetConfigureActivity.this;
-        StatsWidgetProvider.setupNewWidget(context, mAppWidgetId, localID);
+        StatsWidgetProvider.setupNewWidget(context, mAppWidgetId, localID, mSiteStore);
         // Make sure we pass back the original appWidgetId
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);

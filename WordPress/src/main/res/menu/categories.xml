@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_new_category"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:icon="@drawable/ic_plus_white_24dp"
         android:title="@string/add_new_category"
         app:showAsAction="ifRoom" />
 </menu>

@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/menu_add"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:icon="@drawable/ic_plus_white_24dp"
         android:title="@string/site_picker_add_site"
         app:showAsAction="collapseActionView|ifRoom" />
 

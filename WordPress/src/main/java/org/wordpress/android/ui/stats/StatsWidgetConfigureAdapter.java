@@ -14,20 +14,20 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.BlogUtils;
-import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
-class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfigureAdapter.SiteViewHolder> {
+import javax.inject.Inject;
+
+public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfigureAdapter.SiteViewHolder> {
 
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
@@ -39,7 +39,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
     private static int mBlavatarSz;
 
     private SiteList mSites = new SiteList();
-    private final int mCurrentLocalId;
+    private final long mPrimarySiteId;
 
     private final Drawable mSelectedItemBackground;
 
@@ -49,6 +49,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
     private boolean mShowSelfHostedSites = true;
 
     private OnSiteClickListener mSiteSelectedListener;
+    @Inject SiteStore mSiteStore;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
         private final ViewGroup layoutContainer;
@@ -79,19 +80,20 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
         }
     }
 
-    public StatsWidgetConfigureAdapter(Context context, int currentLocalBlogId) {
+    public StatsWidgetConfigureAdapter(Context context, long primarySiteId) {
         super();
+        ((WordPress) context.getApplicationContext()).component().inject(this);
 
         setHasStableIds(true);
 
-        mCurrentLocalId = currentLocalBlogId;
+        mPrimarySiteId = primarySiteId;
         mInflater = LayoutInflater.from(context);
 
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz);
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
         mTextColorHidden = context.getResources().getColor(R.color.grey);
 
-        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.translucent_grey_lighten_20));
+        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
 
         loadSites();
     }
@@ -128,7 +130,7 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
         holder.txtDomain.setText(site.homeURL);
         holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
-        if (site.localId == mCurrentLocalId) {
+        if (site.localId == mPrimarySiteId) {
             holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
         } else {
             holder.layoutContainer.setBackgroundDrawable(null);
@@ -175,20 +177,16 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> blogs;
-            String[] extraFields = {"isHidden", "dotcomFlag", "homeURL"};
-
-            blogs = getBlogsForCurrentView(extraFields);
-            SiteList sites = new SiteList(blogs);
+            List<SiteModel> siteModels = getBlogsForCurrentView();
+            SiteList sites = new SiteList(siteModels);
 
             // sort by blog/host
-            final long primaryBlogId = AccountHelper.getDefaultAccount().getPrimaryBlogId();
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
-                    if (primaryBlogId > 0) {
-                        if (site1.blogId == primaryBlogId) {
+                    if (mPrimarySiteId > 0) {
+                        if (site1.blogId == mPrimarySiteId) {
                             return -1;
-                        } else if (site2.blogId == primaryBlogId) {
+                        } else if (site2.blogId == mPrimarySiteId) {
                             return 1;
                         }
                     }
@@ -209,22 +207,24 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
             mIsTaskRunning = false;
         }
 
-        private List<Map<String, Object>> getBlogsForCurrentView(String[] extraFields) {
+        private List<SiteModel> getBlogsForCurrentView() {
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted blogs and all wp.com blogs
-                    return WordPress.wpDB.getBlogsBy(null, extraFields);
+                    // all self-hosted sites and all wp.com sites
+                    return mSiteStore.getSites();
                 } else {
-                    // only wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("dotcomFlag=1", extraFields);
+                    // only wp.com and jetpack sites
+                    return mSiteStore.getWPComAndJetpackSites();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted blogs plus visible wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("dotcomFlag=0 OR (isHidden=0 AND dotcomFlag=1) ", extraFields);
+                    // all self-hosted sites plus visible wp.com and jetpack sites
+                    List<SiteModel> out = mSiteStore.getVisibleWPComAndJetpackSites();
+                    out.addAll(mSiteStore.getSelfHostedSites());
+                    return out;
                 } else {
-                    // only visible wp.com blogs
-                    return WordPress.wpDB.getBlogsBy("isHidden=0 AND dotcomFlag=1", extraFields);
+                    // only visible wp.com and jetpack sites
+                    return mSiteStore.getVisibleWPComAndJetpackSites();
                 }
             }
         }
@@ -235,23 +235,23 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
      */
      static class SiteRecord {
         final int localId;
-        final int blogId;
+        final long blogId;
         final String blogName;
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        final boolean isDotCom;
+        final boolean isDotComOrJetpack;
         final boolean isHidden;
 
-        SiteRecord(Map<String, Object> account) {
-            localId = MapUtils.getMapInt(account, "id");
-            blogId = MapUtils.getMapInt(account, "blogId");
-            blogName = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
-            homeURL = BlogUtils.getHomeURLOrHostNameFromAccountMap(account);
-            url = MapUtils.getMapStr(account, "url");
-            blavatarUrl = GravatarUtils.blavatarFromUrl(url, mBlavatarSz);
-            isDotCom = MapUtils.getMapBool(account, "dotcomFlag");
-            isHidden = MapUtils.getMapBool(account, "isHidden");
+        SiteRecord(SiteModel site) {
+            localId = site.getId();
+            blogId = site.getSiteId();
+            blogName = SiteUtils.getSiteNameOrHomeURL(site);
+            homeURL = SiteUtils.getHomeURLOrHostName(site);
+            url = site.getUrl();
+            blavatarUrl = SiteUtils.getSiteIconUrl(site, mBlavatarSz);
+            isDotComOrJetpack = SiteUtils.isAccessibleViaWPComAPI(site);
+            isHidden = !site.isVisible();
         }
 
         String getBlogNameOrHomeURL() {
@@ -264,10 +264,10 @@ class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfig
 
    static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
-        SiteList(List<Map<String, Object>> accounts) {
-            if (accounts != null) {
-                for (Map<String, Object> account : accounts) {
-                    add(new SiteRecord(account));
+        SiteList(List<SiteModel> sites) {
+            if (sites != null) {
+                for (SiteModel site : sites) {
+                    add(new SiteRecord(site));
                 }
             }
         }

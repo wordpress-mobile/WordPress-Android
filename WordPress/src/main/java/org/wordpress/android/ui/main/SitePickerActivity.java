@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -24,9 +23,21 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -34,12 +45,18 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
-import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.xmlrpc.android.ApiHelper;
+import org.wordpress.android.util.helpers.Debouncer;
 
-import de.greenrobot.event.EventBus;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
@@ -59,10 +76,16 @@ public class SitePickerActivity extends AppCompatActivity
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private boolean mDidUserSelectSite;
+    private Debouncer mDebouncer = new Debouncer();
+
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.site_picker_activity);
         restoreSavedInstanceState(savedInstanceState);
@@ -120,13 +143,13 @@ public class SitePickerActivity extends AppCompatActivity
             mMenuEdit.setVisible(false);
             mMenuAdd.setVisible(false);
         } else {
-            // don't allow editing visibility unless there are multiple wp.com blogs
-            mMenuEdit.setVisible(WordPress.wpDB.getNumDotComBlogs() > 1);
+            // don't allow editing visibility unless there are multiple wp.com and jetpack sites
+            mMenuEdit.setVisible(mSiteStore.getWPComAndJetpackSitesCount() > 1);
             mMenuAdd.setVisible(true);
         }
 
         // no point showing search if there aren't multiple blogs
-        mMenuSearch.setVisible(WordPress.wpDB.getNumBlogs() > 1);
+        mMenuSearch.setVisible(mSiteStore.getSitesCount() > 1);
     }
 
     @Override
@@ -145,7 +168,7 @@ public class SitePickerActivity extends AppCompatActivity
             showSoftKeyboard();
             return true;
         } else if (itemId == R.id.menu_add) {
-            addSite(this);
+            addSite(this, mAccountStore.hasAccessToken());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -157,9 +180,11 @@ public class SitePickerActivity extends AppCompatActivity
 
         switch (requestCode) {
             case RequestCodes.ADD_ACCOUNT:
-            case RequestCodes.CREATE_BLOG:
-                if (resultCode != RESULT_CANCELED) {
+            case RequestCodes.CREATE_SITE:
+                if (resultCode == RESULT_OK) {
                     getAdapter().loadSites();
+                    setResult(resultCode, data);
+                    finish();
                 }
                 break;
         }
@@ -167,21 +192,27 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
-        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
+        mDebouncer.shutdown();
         super.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(CoreEvents.BlogListChanged event) {
-        if (!isFinishing()) {
-            getAdapter().loadSites();
-        }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        mDebouncer.debounce(Void.class, new Runnable() {
+            @Override public void run() {
+                if (!isFinishing()) {
+                    getAdapter().loadSites();
+                }
+            }
+        }, 200, TimeUnit.MILLISECONDS);
     }
 
     private void setupRecycleView() {
@@ -210,7 +241,7 @@ public class SitePickerActivity extends AppCompatActivity
     private void setupActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.site_picker_title);
@@ -251,38 +282,71 @@ public class SitePickerActivity extends AppCompatActivity
         mAdapter.setOnSelectedCountChangedListener(this);
     }
 
-    private void saveHiddenSites() {
-        WordPress.wpDB.getDatabase().beginTransaction();
-        try {
-            // make all sites visible...
-            WordPress.wpDB.setAllDotComBlogsVisibility(true);
-
-            // ...then update ones marked hidden in the adapter, but don't hide the current site
-            boolean skippedCurrentSite = false;
-            String currentSiteName = null;
-            SiteList hiddenSites = getAdapter().getHiddenSites();
-            for (SiteRecord site : hiddenSites) {
-                if (site.localId == mCurrentLocalId) {
+    private void saveHiddenSites(Set<SiteRecord> changeSet) {
+        boolean skippedCurrentSite = false;
+        String currentSiteName = null;
+        SiteList hiddenSites = getAdapter().getHiddenSites();
+        List<SiteModel> siteList = new ArrayList<>();
+        for (SiteRecord siteRecord : changeSet) {
+            SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.localId);
+            if (hiddenSites.contains(siteRecord)) {
+                if (siteRecord.localId == mCurrentLocalId) {
                     skippedCurrentSite = true;
-                    currentSiteName = site.getBlogNameOrHomeURL();
-                } else {
-                    WordPress.wpDB.setDotComBlogsVisibility(site.localId, false);
-                    StatsTable.deleteStatsForBlog(this, site.localId); // Remove stats data for hidden sites
+                    currentSiteName = siteRecord.getBlogNameOrHomeURL();
+                    continue;
                 }
+                siteModel.setIsVisible(false);
+                // Remove stats data for hidden sites
+                StatsTable.deleteStatsForBlog(this, siteRecord.localId);
+            } else {
+                siteModel.setIsVisible(true);
             }
-
-            // let user know the current site wasn't hidden
-            if (skippedCurrentSite) {
-                String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
-                ToastUtils.showToast(this,
-                        String.format(cantHideCurrentSite, currentSiteName),
-                        ToastUtils.Duration.LONG);
-            }
-
-            WordPress.wpDB.getDatabase().setTransactionSuccessful();
-        } finally {
-            WordPress.wpDB.getDatabase().endTransaction();
+            // Save the site
+            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
+            siteList.add(siteModel);
         }
+
+        updateVisibilityOfSitesOnRemote(siteList);
+
+        // let user know the current site wasn't hidden
+        if (skippedCurrentSite) {
+            String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
+            ToastUtils.showToast(this,
+                    String.format(cantHideCurrentSite, currentSiteName),
+                    ToastUtils.Duration.LONG);
+        }
+    }
+
+    private void updateVisibilityOfSitesOnRemote(List<SiteModel> siteList) {
+        // Example json format for the request: {"sites":{"100001":{"visible":false}}}
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject sites = new JSONObject();
+            for (SiteModel siteModel : siteList) {
+                JSONObject visible = new JSONObject();
+                visible.put("visible", siteModel.isVisible());
+                sites.put(Long.toString(siteModel.getSiteId()), visible);
+            }
+            jsonObject.put("sites", sites);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.API, "Could not build me/sites json object");
+        }
+
+        if (jsonObject.length() == 0) {
+            return;
+        }
+
+        WordPress.getRestClientUtilsV1_1().post("me/sites", jsonObject, null, new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                AppLog.v(AppLog.T.API, "Site visibility successfully updated");
+            }
+        }, new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(AppLog.T.API, "An error occurred while updating site visibility: " + volleyError);
+            }
+        });
     }
 
     private void updateActionModeTitle() {
@@ -361,17 +425,12 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSiteClick(SiteRecord site) {
+    public void onSiteClick(SiteRecord siteRecord) {
         if (mActionMode == null) {
             hideSoftKeyboard();
-            WordPress.setCurrentBlogAndSetVisible(site.localId);
-            WordPress.wpDB.updateLastBlogId(site.localId);
-            AppPrefs.addRecentlyPickedSiteId(site.localId);
-            setResult(RESULT_OK);
+            AppPrefs.addRecentlyPickedSiteId(siteRecord.localId);
+            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
             mDidUserSelectSite = true;
-            new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), null).executeOnExecutor(
-                    AsyncTask.THREAD_POOL_EXECUTOR, false);
-
             finish();
         }
     }
@@ -395,11 +454,13 @@ public class SitePickerActivity extends AppCompatActivity
 
     private final class ActionModeCallback implements ActionMode.Callback {
         private boolean mHasChanges;
+        private Set<SiteRecord> mChangeSet;
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
             mHasChanges = false;
+            mChangeSet = new HashSet<>();
             updateActionModeTitle();
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
             return true;
@@ -426,11 +487,13 @@ public class SitePickerActivity extends AppCompatActivity
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             int itemId = menuItem.getItemId();
             if (itemId == R.id.menu_show) {
-                getAdapter().setVisibilityForSelectedSites(true);
+                Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
+                mChangeSet.addAll(changeSet);
                 mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_hide) {
-                getAdapter().setVisibilityForSelectedSites(false);
+                Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(false);
+                mChangeSet.addAll(changeSet);
                 mHasChanges = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_select_all) {
@@ -444,17 +507,17 @@ public class SitePickerActivity extends AppCompatActivity
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
             if (mHasChanges) {
-                saveHiddenSites();
+                saveHiddenSites(mChangeSet);
             }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;
         }
     }
 
-    public static void addSite(Activity activity) {
+    public static void addSite(Activity activity, boolean isSignedInWpCom) {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
-        if (AccountHelper.isSignedInWordPressDotCom()) {
+        if (isSignedInWpCom) {
             DialogFragment dialog = new AddSiteDialog();
             dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {

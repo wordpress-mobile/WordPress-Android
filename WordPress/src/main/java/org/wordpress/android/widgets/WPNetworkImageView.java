@@ -194,7 +194,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
+        ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(mUrl,
                 new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), 0, 0, getScaleType());
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
@@ -414,12 +414,12 @@ public class WPNetworkImageView extends AppCompatImageView {
         if (getContext() == null) return;
         new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                 getContext().getResources(),
-                R.drawable.gravatar_placeholder
+                R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
         ));
     }
 
     public void showDefaultBlavatarImage() {
-        setImageResource(R.drawable.blavatar_placeholder);
+        setImageResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
     }
 
     // --------------------------------------------------------------------------------------------------

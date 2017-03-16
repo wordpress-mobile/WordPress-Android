@@ -26,9 +26,9 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
@@ -54,13 +54,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
-import static org.wordpress.android.ui.notifications.NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA;
+import de.greenrobot.event.EventBus;
 
 public class GCMMessageService extends GcmListenerService {
     private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
-    private static final NotificationHelper sNotificationHelpers = new NotificationHelper();
+    private static NotificationHelper sNotificationHelper = new NotificationHelper();
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     public static final int PUSH_NOTIFICATION_ID = 10000;
@@ -92,10 +92,18 @@ public class GCMMessageService extends GcmListenerService {
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
     private static final String PUSH_TYPE_NOTE_DELETE = "note-delete";
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     private static final String KEY_CATEGORY_COMMENT_LIKE = "comment-like";
     private static final String KEY_CATEGORY_COMMENT_REPLY = "comment-reply";
     private static final String KEY_CATEGORY_COMMENT_MODERATE = "comment-moderate";
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
+    }
 
     // Add to the analytics properties map a subset of the push notification payload.
     private static final String[] propertiesToCopyIntoAnalytics = {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
@@ -104,7 +112,7 @@ public class GCMMessageService extends GcmListenerService {
     private void synchronizedHandleDefaultPush(@NonNull Bundle data) {
         // sActiveNotificationsMap being static, we can't just synchronize the method
         synchronized (GCMMessageService.class) {
-            sNotificationHelpers.handleDefaultPush(this, data);
+            sNotificationHelper.handleDefaultPush(this, data, mAccountStore.getAccount().getUserId());
         }
     }
 
@@ -133,35 +141,35 @@ public class GCMMessageService extends GcmListenerService {
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             AnalyticsTrackerMixpanel.showNotification(this, pendingIntent,
-                    R.drawable.notification_icon, title, mpMessage);
+                    R.drawable.ic_my_sites_white_24dp, title, mpMessage);
             return;
         }
 
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
+        if (!mAccountStore.hasAccessToken()) {
             return;
         }
 
         synchronizedHandleDefaultPush(data);
     }
 
-    public static synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context, String noteId){
+    public static synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
+                                                                                        String noteId) {
         if (sActiveNotificationsMap.size() > 0) {
             //get the corresponding bundle for this noteId
-            for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
-                Map.Entry<Integer, Bundle> row = it.next();
+            for (Map.Entry<Integer, Bundle> row : sActiveNotificationsMap.entrySet()) {
                 Bundle noteBundle = row.getValue();
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
-                    sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
+                    sNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
                     return;
                 }
             }
         }
     }
 
-    public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context){
+    public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context) {
         if (sActiveNotificationsMap.size() > 0) {
             Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
-            sNotificationHelpers.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
+            sNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
         }
     }
 
@@ -306,7 +314,7 @@ public class GCMMessageService extends GcmListenerService {
 
     private static boolean canAddActionsToNotifications(Context context) {
         if (isWPPinLockEnabled(context)) {
-            return !isDeviceLocked(context);
+            return !DeviceUtils.getInstance().isDeviceLocked(context);
         }
         return true;
     }
@@ -325,23 +333,16 @@ public class GCMMessageService extends GcmListenerService {
         return Boolean.FALSE;
     }
 
-    private static boolean isDeviceLocked(Context context) {
-        return DeviceUtils.getInstance().isDeviceLocked(context);
-    }
-
-
     private static void addAuthPushNotificationToNotificationMap(Bundle data) {
         sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }
 
     private static class NotificationHelper {
-
-        private void handleDefaultPush(Context context, @NonNull Bundle data) {
+        private void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
             // if a notification is received while the app has not yet been launched after last power on,
             // the screenlockwatchservice won't be running. Let's start it now.
             context.startService(new Intent(context, NotificationsScreenLockWatchService.class));
 
-            long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
             String pushUserId = data.getString(PUSH_ARG_USER);
             // pushUserId is always set server side, but better to double check it here.
             if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
@@ -371,9 +372,7 @@ public class GCMMessageService extends GcmListenerService {
             buildAndShowNotificationFromNoteData(context, data);
         }
 
-
         private void buildAndShowNotificationFromNoteData(Context context, Bundle data) {
-
             if (data == null) {
                 AppLog.e(T.NOTIFS, "Push notification received without a valid Bundle!");
                 return;
@@ -390,8 +389,7 @@ public class GCMMessageService extends GcmListenerService {
             NotificationsUtils.buildNoteObjectFromBundleAndSaveIt(data);
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(true));
             // Always do this, since a note can be updated on the server after a PN is sent
-            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID,
-                    null, null);
+            NotificationsActions.downloadNoteAndUpdateDB(wpcomNoteID, null, null);
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
@@ -482,7 +480,6 @@ public class GCMMessageService extends GcmListenerService {
 
             // Add some actions if this is a comment notification
             boolean areActionsSet = false;
-
             Note note = NotificationsTable.getNoteById(noteId);
             if (note != null) {
                 //if note can be replied to, we'll always add this action first
@@ -491,16 +488,14 @@ public class GCMMessageService extends GcmListenerService {
                 }
 
                 // if the comment is lacking approval, offer moderation actions
-                if (note.getCommentStatus().equals(CommentStatus.UNAPPROVED)) {
+                if (note.getCommentStatus() == CommentStatus.UNAPPROVED) {
                     if (note.canModerate()) {
                         addCommentApproveActionForCommentNotification(context, builder, noteId);
                     }
                 } else {
-                    //else offer REPLY / LIKE actions
-                    //LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                    Blog blog = WordPress.wpDB.instantiateBlogByRemoteId(note.getSiteId());
-                    boolean isJetPackSite = blog != null && blog.isJetpackPowered();
-                    if (note.canLike() && !isJetPackSite) {
+                    // else offer REPLY / LIKE actions
+                    // LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
+                    if (note.canLike()) {
                         addCommentLikeActionForCommentNotification(context, builder, noteId);
                     }
                 }
@@ -562,9 +557,9 @@ public class GCMMessageService extends GcmListenerService {
             }
             commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
-            PendingIntent commentLikePendingIntent =  getCommentActionPendingIntenForService(context, commentLikeIntent);
-            builder.addAction(R.drawable.ic_action_like, context.getText(R.string.like),
-                    commentLikePendingIntent);
+            PendingIntent commentLikePendingIntent =  getCommentActionPendingIntentForService(context,
+                    commentLikeIntent);
+            builder.addAction(R.drawable.ic_star_32dp, context.getText(R.string.like), commentLikePendingIntent);
         }
 
         private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -581,24 +576,25 @@ public class GCMMessageService extends GcmListenerService {
             }
             commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
-            PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntenForService(context, commentApproveIntent);
-            builder.addAction(R.drawable.ic_action_approve, context.getText(R.string.approve),
+            PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntentForService(context,
+                    commentApproveIntent);
+            builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve),
                     commentApprovePendingIntent);
         }
 
         private PendingIntent getCommentActionPendingIntent(Context context, Intent intent){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                return getCommentActionPendingIntenForService(context, intent);
+                return getCommentActionPendingIntentForService(context, intent);
             } else {
-                return getCommentActionPendingIntenForActivity(context, intent);
+                return getCommentActionPendingIntentForActivity(context, intent);
             }
         }
 
-        private PendingIntent getCommentActionPendingIntenForService(Context context, Intent intent){
+        private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent){
             return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
-        private PendingIntent getCommentActionPendingIntenForActivity(Context context, Intent intent){
+        private PendingIntent getCommentActionPendingIntentForActivity(Context context, Intent intent){
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
@@ -626,7 +622,7 @@ public class GCMMessageService extends GcmListenerService {
             intent.setAction("android.intent.action.MAIN");
             intent.addCategory("android.intent.category.LAUNCHER");
             intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
-            intent.putExtra(NOTE_INSTANT_REPLY_EXTRA, true);
+            intent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, true);
             return intent;
         }
 
@@ -652,7 +648,7 @@ public class GCMMessageService extends GcmListenerService {
         private NotificationCompat.Builder getNotificationBuilder(Context context, String title, String message){
             // Build the new notification, add group to support wearable stacking
            return new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.notification_icon)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -703,7 +699,7 @@ public class GCMMessageService extends GcmListenerService {
 
                 String subject = String.format(context.getString(R.string.new_notifications), sActiveNotificationsMap.size());
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.notification_icon)
+                        .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
                         .setGroup(NOTIFICATION_GROUP_KEY)
                         .setGroupSummary(true)
@@ -796,7 +792,6 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void rebuildAndUpdateNotificationsOnSystemBar(Context context, Bundle data) {
-
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
             // Check for wpcom auth push, if so we will process this push differently
@@ -843,14 +838,17 @@ public class GCMMessageService extends GcmListenerService {
 
                     // set timestamp for note: first try with the notification timestamp, then try google's sent time
                     // if not available; finally just set the system's current time if everything else fails (not likely)
-                    long timeStampToShow = DateTimeUtils.timestampFromIso8601Millis(remainingNote.getString("note_timestamp"));
-                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow : remainingNote.getLong("google.sent_time", System.currentTimeMillis());
+                    long timeStampToShow =
+                            DateTimeUtils.timestampFromIso8601Millis(remainingNote.getString("note_timestamp"));
+                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow :
+                            remainingNote.getLong("google.sent_time", System.currentTimeMillis());
                     builder.setWhen(timeStampToShow);
 
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
                     if (!sActiveNotificationsMap.isEmpty()) {
-                        showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID, sActiveNotificationsMap.keyAt(0), false);
+                        showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID,
+                                sActiveNotificationsMap.keyAt(0), false);
                     }
                 }
             }
@@ -961,7 +959,7 @@ public class GCMMessageService extends GcmListenerService {
             pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.notification_icon)
+                    .setSmallIcon(R.drawable.ic_my_sites_white_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
                     .setContentText(message)
@@ -992,16 +990,14 @@ public class GCMMessageService extends GcmListenerService {
                 PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-                builder.addAction(R.drawable.ic_action_approve, context.getText(R.string.approve),
-                        authApprovePendingIntent);
+                builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve), authApprovePendingIntent);
 
 
                 Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
                 authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
                 PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
                         AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
-                        authIgnorePendingIntent);
+                builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore), authIgnorePendingIntent);
             }
 
             // Call broadcast receiver when notification is dismissed
@@ -1034,6 +1030,5 @@ public class GCMMessageService extends GcmListenerService {
                     return false;
             }
         }
-
     }
 }

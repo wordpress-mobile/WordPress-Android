@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            app:srcCompat="@drawable/gallery_tablet_move_file" />
+            app:srcCompat="@drawable/ic_drag_handle_grey_700_24dp" />
     </FrameLayout>
 
     <com.android.volley.toolbox.NetworkImageView
@@ -27,7 +27,7 @@
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/drag_handle"
         android:inflatedId="@+id/media_grid_item_image"
-        android:scaleType="fitCenter" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"

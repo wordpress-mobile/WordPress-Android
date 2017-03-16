@@ -642,6 +642,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_delete_site_response_ok";
             case SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR:
                 return "site_settings_delete_site_response_error";
+            case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
+                return "site_settings_optimize_images_changed";
             case ABTEST_START:
                 return "abtest_start";
             case TRAIN_TRACKS_RENDER:
@@ -652,7 +654,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deep_linked";
             case DEEP_LINKED_FALLBACK:
                 return "deep_linked_fallback";
-            case DEEP_LINK_NOT_DEFAULT_HANDER:
+            case DEEP_LINK_NOT_DEFAULT_HANDLER:
                 return "deep_link_not_default_handler";
             default:
                 return null;

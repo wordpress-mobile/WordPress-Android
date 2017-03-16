@@ -65,7 +65,7 @@
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_small"
             android:visibility="gone"
-            tools:drawableLeft="@drawable/noticon_scheduled"
+            tools:drawableLeft="@drawable/noticon_scheduled_alert_yellow_16dp"
             tools:text="text_status"
             tools:visibility="visible" />
 
@@ -150,7 +150,7 @@
         android:id="@+id/disabled_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/translucent_white"
+        android:background="@color/white_translucent_65"
         android:clickable="true"
         android:focusable="true">
 

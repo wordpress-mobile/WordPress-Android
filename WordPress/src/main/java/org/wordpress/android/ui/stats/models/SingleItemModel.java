@@ -10,7 +10,7 @@ import java.io.Serializable;
 * A model to represent a SINGLE stats item
 */
 public class SingleItemModel implements Serializable {
-    private final String mBlogID;
+    private final long mBlogID;
     private final String mItemID;
     private final long mDate;
     private final String mTitle;
@@ -18,11 +18,11 @@ public class SingleItemModel implements Serializable {
     private final String mUrl;
     private final String mIcon;
 
-    public SingleItemModel(String blogId, String date, String itemID, String title, int totals, String url, String icon) {
+    public SingleItemModel(long blogId, String date, String itemID, String title, int totals, String url, String icon) {
        this(blogId, StatsUtils.toMs(date), itemID, title, totals, url, icon);
     }
 
-    SingleItemModel(String blogId, long date, String itemID, String title, int totals, String url, String icon) {
+    SingleItemModel(long blogId, long date, String itemID, String title, int totals, String url, String icon) {
         this.mBlogID = blogId;
         this.mItemID = itemID;
         this.mTitle = title;
@@ -39,7 +39,7 @@ public class SingleItemModel implements Serializable {
         this.mIcon = icon;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 

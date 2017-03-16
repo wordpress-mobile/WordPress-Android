@@ -1,18 +1,14 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,34 +21,35 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.lang.StringUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JetpackUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -77,8 +74,7 @@ public class StatsActivity extends AppCompatActivity
     private Spinner mSpinner;
     private NestedScrollViewExt mOuterScrollView;
 
-    private static final int REQUEST_JETPACK = 7000;
-    public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
+    public static final String ARG_LOCAL_TABLE_SITE_ID = "ARG_LOCAL_TABLE_SITE_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
 
@@ -87,9 +83,13 @@ public class StatsActivity extends AppCompatActivity
         NOTIFICATIONS
     }
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+
     private int mResultCode = -1;
+    private SiteModel mSite;
     private boolean mIsInFront;
-    private int mLocalBlogID = -1;
     private StatsTimeframe mCurrentTimeframe = StatsTimeframe.INSIGHTS;
     private String mRequestedDate;
     private boolean mIsUpdatingStats;
@@ -98,16 +98,28 @@ public class StatsActivity extends AppCompatActivity
     private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph = StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
-
     private boolean mThereWasAnErrorLoadingStats = false;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
         }
@@ -129,21 +141,12 @@ public class StatsActivity extends AppCompatActivity
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
 
-                        if (mIsUpdatingStats) {
-                            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
-                            return;
-                        }
-
-                        mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                        if (checkCredentials()) {
-                            updateTimeframeAndDateAndStartRefreshOfFragments(true);
-                        }
+                        refreshStatsFromCurrentDate();
                     }
                 });
 
@@ -154,12 +157,11 @@ public class StatsActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
-            mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
             mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
-            if(yScrollPosition != 0) {
+            if (yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
                         if (!isFinishing()) {
@@ -169,7 +171,6 @@ public class StatsActivity extends AppCompatActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         } else if (getIntent() != null) {
-            mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else if (getIntent().hasExtra(ARG_DESIRED_TIMEFRAME)) {
@@ -178,26 +179,22 @@ public class StatsActivity extends AppCompatActivity
                 // Read the value from app preferences here. Default to 0 - Insights
                 mCurrentTimeframe = AppPrefs.getStatsTimeframe();
             }
-            mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+            mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
 
             if (getIntent().hasExtra(ARG_LAUNCHED_FROM)) {
                 StatsLaunchedFrom from = (StatsLaunchedFrom) getIntent().getSerializableExtra(ARG_LAUNCHED_FROM);
                 if (from == StatsLaunchedFrom.STATS_WIDGET) {
-                    AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, WordPress.getBlog(mLocalBlogID));
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, mSite);
                 }
             }
-
         }
 
-        //Make sure the blog_id passed to this activity is valid and the blog is available within the app
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-
-        if (currentBlog == null) {
-            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
-            finish();
+        if (!mAccountStore.hasAccessToken()) {
+            // If the user is not connected to WordPress.com, ask him to connect first.
+            startWPComLoginActivity();
             return;
         }
+        checkIfSiteHasAccessibleStats(mSite);
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
         // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
@@ -226,7 +223,7 @@ public class StatsActivity extends AppCompatActivity
                     AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
                     mCurrentTimeframe = selectedTimeframe;
                     AppPrefs.setStatsTimeframe(mCurrentTimeframe);
-                    mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
+                    mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
                     createFragments(true); // Need to recreate fragment here, since a new timeline was selected.
                     mSpinner.postDelayed(new Runnable() {
                         @Override
@@ -276,35 +273,62 @@ public class StatsActivity extends AppCompatActivity
 
         // Track usage here
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_ACCESSED, currentBlog);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_ACCESSED, mSite);
             trackStatsAnalytics();
         }
     }
 
+    private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
+        // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
+        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+            if (!site.isJetpackInstalled()) {
+                JetpackUtils.showInstallJetpackAlert(this, site);
+                return false;
+            }
+
+            if (!site.isJetpackConnected()) {
+                JetpackUtils.showJetpackNonConnectedAlert(this, site);
+                return false;
+            }
+            // TODO: if Jetpack site, we should check the stats option is enabled
+        }
+        return true;
+    }
+
+    private void startWPComLoginActivity() {
+        mResultCode = RESULT_CANCELED;
+        Intent signInIntent = new Intent(this, SignInActivity.class);
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mSite.getId());
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
+                getString(R.string.stats_sign_in_jetpack_different_com_account)
+        );
+        startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
+    }
+
     private void trackStatsAnalytics() {
         // Track usage here
-        Blog currentBlog = WordPress.getBlog(mLocalBlogID);
         switch (mCurrentTimeframe) {
             case INSIGHTS:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED, currentBlog);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED, mSite);
                 break;
             case DAY:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED, currentBlog);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED, mSite);
                 break;
             case WEEK:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED, currentBlog);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED, mSite);
                 break;
             case MONTH:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED, currentBlog);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED, mSite);
                 break;
             case YEAR:
-                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED, currentBlog);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED, mSite);
                 break;
         }
     }
 
     @Override
     protected void onStop() {
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -313,15 +337,14 @@ public class StatsActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-        if (NetworkUtils.checkConnection(this)) {
-            checkCredentials();
-        } else {
+        if (!NetworkUtils.checkConnection(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
         ActivityId.trackLastActivity(ActivityId.STATS);
@@ -338,7 +361,7 @@ public class StatsActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
-        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+        outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         outState.putString(SAVED_STATS_REQUESTED_DATE, mRequestedDate);
         outState.putBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS, mThereWasAnErrorLoadingStats);
@@ -368,43 +391,50 @@ public class StatsActivity extends AppCompatActivity
             findViewById(R.id.stats_insights_fragments_container).setVisibility(View.GONE);
 
             if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newVisitorsAndViewsInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate,
-                        mTabToSelectOnGraph);
+                fragment = StatsAbstractFragment.newVisitorsAndViewsInstance(StatsViewType.GRAPH_AND_SUMMARY,
+                        mSite.getId(), mCurrentTimeframe, mRequestedDate, mTabToSelectOnGraph);
                 ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.CLICKS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.GEOVIEWS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsAuthorsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.AUTHORS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_top_authors_container, fragment, StatsAuthorsFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsVideoplaysFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.VIDEO_PLAYS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_video_container, fragment, StatsVideoplaysFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsSearchTermsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.SEARCH_TERMS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_search_terms_container, fragment, StatsSearchTermsFragment.TAG);
             }
 
@@ -413,42 +443,50 @@ public class StatsActivity extends AppCompatActivity
             findViewById(R.id.stats_insights_fragments_container).setVisibility(View.VISIBLE);
 
             if (fm.findFragmentByTag(StatsInsightsMostPopularFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_MOST_POPULAR, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_MOST_POPULAR, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_insights_most_popular_container, fragment, StatsInsightsMostPopularFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsInsightsAllTimeFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_ALL_TIME, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_ALL_TIME, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_insights_all_time_container, fragment, StatsInsightsAllTimeFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsInsightsTodayFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_TODAY, mLocalBlogID, StatsTimeframe.DAY, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_TODAY, mSite.getId(),
+                        StatsTimeframe.DAY, mRequestedDate);
                 ft.replace(R.id.stats_insights_today_container, fragment, StatsInsightsTodayFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsInsightsLatestPostSummaryFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_LATEST_POST_SUMMARY, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.INSIGHTS_LATEST_POST_SUMMARY, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_insights_latest_post_summary_container, fragment, StatsInsightsLatestPostSummaryFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsCommentsFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.COMMENTS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_comments_container, fragment, StatsCommentsFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsTagsAndCategoriesFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.TAGS_AND_CATEGORIES, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_tags_and_categories_container, fragment, StatsTagsAndCategoriesFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsPublicizeFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.PUBLICIZE, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_publicize_container, fragment, StatsPublicizeFragment.TAG);
             }
 
             if (fm.findFragmentByTag(StatsFollowersFragment.TAG) == null || forceRecreationOfFragments) {
-                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mLocalBlogID, mCurrentTimeframe, mRequestedDate);
+                fragment = StatsAbstractFragment.newInstance(StatsViewType.FOLLOWERS, mSite.getId(),
+                        mCurrentTimeframe, mRequestedDate);
                 ft.replace(R.id.stats_followers_container, fragment, StatsFollowersFragment.TAG);
             }
         }
@@ -510,17 +548,6 @@ public class StatsActivity extends AppCompatActivity
         return false;
     }
 
-    private void startWPComLoginActivity() {
-        mResultCode = RESULT_CANCELED;
-        Intent signInIntent = new Intent(this, SignInActivity.class);
-        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mLocalBlogID);
-        signInIntent.putExtra(
-                SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
-                getString(R.string.stats_sign_in_jetpack_different_com_account)
-        );
-        startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -528,242 +555,11 @@ public class StatsActivity extends AppCompatActivity
             if (resultCode == RESULT_CANCELED) {
                 finish();
             }
-            mResultCode = resultCode;
-            final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-            if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
-                if (currentBlog.getDotComBlogId() == null) {
-                    final Handler handler = new Handler();
-                    // Attempt to get the Jetpack blog ID
-                    XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
-                    Map<String, String> args = ApiHelper.blogOptionsXMLRPCParameters;
-                    Object[] params = {
-                            currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
-                    };
-                    xmlrpcClient.callAsync(new XMLRPCCallback() {
-                        @Override
-                        public void onSuccess(long id, Object result) {
-                            if (result != null && (result instanceof HashMap)) {
-                                Map<?, ?> blogOptions = (HashMap<?, ?>) result;
-                                ApiHelper.updateBlogOptions(currentBlog, blogOptions);
-                                AnalyticsUtils.refreshMetadata();
-                                AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, currentBlog);
-                                AnalyticsUtils.trackWithBlogDetails(
-                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN, currentBlog);
-                                if (isFinishing()) {
-                                    return;
-                                }
-                                // We have the blogID now, but we need to re-check if the network connection is available
-                                if (NetworkUtils.checkConnection(StatsActivity.this)) {
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mSwipeToRefreshHelper.setRefreshing(true);
-                                            mRequestedDate = StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                                            createFragments(true); // Recreate the fragment and start a refresh of Stats
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        @Override
-                        public void onFailure(long id, Exception error) {
-                            AppLog.e(T.STATS,
-                                    "Cannot load blog options (wp.getOptions failed) "
-                                    + "and no jetpack_client_id is then available",
-                                    error);
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mSwipeToRefreshHelper.setRefreshing(false);
-                                    ToastUtils.showToast(StatsActivity.this,
-                                            StatsActivity.this.getString(R.string.error_refresh_stats),
-                                            Duration.LONG);
-                                }
-                            });
-                        }
-                    }, Method.GET_OPTIONS, params);
-                } else {
-                    mRequestedDate =  StatsUtils.getCurrentDateTZ(mLocalBlogID);
-                    createFragments(true); // Recreate the fragment and start a refresh of Stats
-                }
-                mSwipeToRefreshHelper.setRefreshing(true);
-            }
         }
-    }
-
-    private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
-        // AsyncTasks are bound to the Activity that launched it. If the user rotate the device StatsActivity is restarted.
-        // Use the event bus to fix this issue.
-
-        @Override
-        public void onSuccess() {
-            EventBus.getDefault().post(new StatsEvents.JetpackSettingsCompleted(false));
+        if (requestCode == RequestCodes.REQUEST_JETPACK) {
+            // Refresh the site in case we're back from Jetpack install Webview
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
         }
-
-        @Override
-        public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-            EventBus.getDefault().post(new StatsEvents.JetpackSettingsCompleted(true));
-        }
-    }
-
-    private void showJetpackStatsModuleAlert() {
-        if (isFinishing()) {
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null) {
-            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        if (currentBlog.isAdmin()) {
-            builder.setMessage(getString(R.string.jetpack_stats_module_disabled_message))
-                    .setTitle(getString(R.string.jetpack_info));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    String stringToLoad = currentBlog.getAdminUrl();
-                    String jetpackConnectPageAdminPath = "admin.php?page=jetpack#/engagement";
-                    stringToLoad = stringToLoad.endsWith("/") ? stringToLoad + jetpackConnectPageAdminPath :
-                            stringToLoad + "/" + jetpackConnectPageAdminPath;
-                    String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
-                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
-                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                }
-            });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog. Hide Stats.
-                    finish();
-                }
-            });
-        } else {
-            builder.setMessage(getString(R.string.jetpack_stats_module_disabled_message_not_admin))
-                    .setTitle(getString(R.string.jetpack_info));
-            builder.setPositiveButton(R.string.yes, null);
-        }
-
-        AlertDialog dialog = builder.create();
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // User pressed the back key Hide Stats.
-                finish();
-            }
-        });
-        dialog.show();
-    }
-
-    private void showJetpackNonConnectedAlert() {
-        if (isFinishing()) {
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null) {
-            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        if (currentBlog.isAdmin()) {
-            builder.setMessage(getString(R.string.jetpack_not_connected_message))
-                    .setTitle(getString(R.string.jetpack_not_connected));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    String stringToLoad = currentBlog.getAdminUrl();
-                    String jetpackConnectPageAdminPath = "admin.php?page=jetpack";
-                    stringToLoad = stringToLoad.endsWith("/") ? stringToLoad + jetpackConnectPageAdminPath :
-                            stringToLoad + "/" + jetpackConnectPageAdminPath;
-                    String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
-                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
-                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
-                }
-            });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog. Hide Stats.
-                    finish();
-                }
-            });
-        } else {
-            builder.setMessage(getString(R.string.jetpack_message_not_admin))
-                    .setTitle(getString(R.string.jetpack_not_found));
-            builder.setPositiveButton(R.string.yes, null);
-        }
-
-        AlertDialog dialog = builder.create();
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // User pressed the back key Hide Stats.
-                finish();
-            }
-        });
-        dialog.show();
-    }
-
-    private void showJetpackMissingAlert() {
-        if (isFinishing()) {
-            return;
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null) {
-            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        if (currentBlog.isAdmin()) {
-            builder.setMessage(getString(R.string.jetpack_message))
-                    .setTitle(getString(R.string.jetpack_not_found));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    String stringToLoad = currentBlog.getAdminUrl()
-                            + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
-                            + "&plugin-search-input=Search+Plugins";
-                    String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
-                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
-                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
-                }
-            });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog. Hide Stats.
-                    finish();
-                }
-            });
-        } else {
-            builder.setMessage(getString(R.string.jetpack_message_not_admin))
-                    .setTitle(getString(R.string.jetpack_not_found));
-            builder.setPositiveButton(R.string.yes, null);
-        }
-
-        AlertDialog dialog = builder.create();
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // User pressed the back key Hide Stats.
-                finish();
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -793,9 +589,19 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
+    private void refreshStatsFromCurrentDate() {
+        if (mIsUpdatingStats) {
+            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
+            return;
+        }
+
+        mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
+        updateTimeframeAndDateAndStartRefreshOfFragments(true);
+    }
+
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
-    public void onDateChanged(String blogID, StatsTimeframe timeframe, String date) {
+    public void onDateChanged(long siteId, StatsTimeframe timeframe, String date) {
         if (isFinishing()) {
             return;
         }
@@ -812,55 +618,6 @@ public class StatsActivity extends AppCompatActivity
     @Override
     public void onOverviewItemChanged(StatsVisitorsAndViewsFragment.OverviewLabel newItem) {
         mTabToSelectOnGraph = newItem;
-    }
-
-    private boolean checkCredentials() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
-            return false;
-        }
-
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null) {
-            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            return false;
-        }
-
-        final String blogId = currentBlog.getDotComBlogId();
-
-        // blogId is always available for dotcom blogs. It could be null on Jetpack blogs...
-        if (blogId != null) {
-            // for self-hosted sites; launch the user into an activity where they can provide their credentials
-            if (!currentBlog.isDotcomFlag()
-                    && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
-                if (AccountHelper.isSignedInWordPressDotCom()) {
-                    // Let's try the global wpcom credentials them first
-                    String username = AccountHelper.getDefaultAccount().getUserName();
-                    currentBlog.setDotcom_username(username);
-                    WordPress.wpDB.saveBlog(currentBlog);
-                    createFragments(true);
-                } else {
-                    startWPComLoginActivity();
-                    return false;
-                }
-            }
-        } else {
-            // blogId is null at this point.
-            if (!currentBlog.isDotcomFlag()) {
-                // Refresh blog settings/options that includes 'jetpack_client_id' needed here
-                mSwipeToRefreshHelper.setRefreshing(true);
-                new ApiHelper.RefreshBlogContentTask(currentBlog,
-                        new VerifyJetpackSettingsCallback()).execute(false);
-                return false;
-            } else {
-                // blodID cannot be null on dotcom blogs.
-                Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
-                AppLog.e(T.STATS, "blogID is null for a wpcom blog!! " + currentBlog.getHomeURL());
-                finish();
-            }
-        }
-
-        return true;
     }
 
     private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
@@ -902,72 +659,6 @@ public class StatsActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.JetpackSettingsCompleted event) {
-        if (isFinishing() || !mIsInFront) {
-            return;
-        }
-        mSwipeToRefreshHelper.setRefreshing(false);
-
-        if (!event.isError) {
-            final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-            if (currentBlog == null) {
-                AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-                Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-            if (currentBlog.getDotComBlogId() == null) {
-                if (TextUtils.isEmpty(currentBlog.getJetpackVersion())) {
-                    // jetpack_version option is available, but not the jetpack_client_id ----> Jetpack available but not connected.
-                    showJetpackNonConnectedAlert();
-                } else {
-                    // Blog has not returned jetpack_version/jetpack_client_id.
-                    showJetpackMissingAlert();
-                }
-            } else {
-                checkCredentials();
-            }
-        } else {
-            Toast.makeText(StatsActivity.this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.JetpackNotConnectedOrDeactivatedError event) {
-        if (isFinishing() || !mIsInFront) {
-            return;
-        }
-        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-        if (currentBlog == null) {
-            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
-            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-
-        // Re-launch a blog option synching here o be sure we will have Jetpack status update next time we will start Stats again.
-        // This is because blog options could not be synched if the user has just deactivated/removed or disconnected the plugin.
-        new ApiHelper.RefreshBlogContentTask(currentBlog, null).execute(false);
-
-        if (TextUtils.isEmpty(currentBlog.getJetpackVersion())) {
-            // jetpack_version option is available, but not the jetpack_client_id ----> Jetpack available but not connected.
-            showJetpackNonConnectedAlert();
-        } else {
-            // Blog has not returned jetpack_version/jetpack_client_id.
-            showJetpackMissingAlert();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.JetpackStatsModuleNotConnectedError event) {
-        if (isFinishing() || !mIsInFront) {
-            return;
-        }
-        showJetpackStatsModuleAlert();
-    }
-
-    @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
         // There was an error loading Stats. Don't bump stats for promo widget.
         if (isFinishing() || !mIsInFront) {
@@ -976,24 +667,6 @@ public class StatsActivity extends AppCompatActivity
 
         // There was an error loading Stats. Don't bump stats for promo widget.
         mThereWasAnErrorLoadingStats = true;
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.JetpackAuthError event) {
-        if (isFinishing() || !mIsInFront) {
-            return;
-        }
-
-        // There was an error loading Stats. Don't bump stats for promo widget.
-        mThereWasAnErrorLoadingStats = true;
-
-        if (event.mLocalBlogId != mLocalBlogID) {
-            // The user has changed blog
-            return;
-        }
-
-        mSwipeToRefreshHelper.setRefreshing(false);
-        startWPComLoginActivity();
     }
 
     /*
@@ -1117,4 +790,22 @@ public class StatsActivity extends AppCompatActivity
             return true;
         }
     };
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        // "Reload" current site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        SiteModel site = mSiteStore.getSiteByLocalId(mSite.getId());
+        if (site != null) {
+            mSite = site;
+        }
+
+        // Make sure the update site is accessible
+        checkIfSiteHasAccessibleStats(mSite);
+
+        // Refresh Stats
+        refreshStatsFromCurrentDate();
+    }
 }

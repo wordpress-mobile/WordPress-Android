@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plans;
 
 import android.support.annotation.NonNull;
 
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.plans.models.Plan;
 
 import java.util.List;
@@ -13,13 +14,13 @@ class PlanEvents {
 
     public static class PlansUpdated {
         private final List<Plan> mPlans;
-        private final int mLocalBlogId;
-        public PlansUpdated(int localBlogId, @NonNull List<Plan> plans) {
-            mLocalBlogId = localBlogId;
+        private final SiteModel mSite;
+        public PlansUpdated(SiteModel site, @NonNull List<Plan> plans) {
+            mSite = site;
             mPlans = plans;
         }
-        public int getLocalBlogId() {
-            return mLocalBlogId;
+        public SiteModel getSite() {
+            return mSite;
         }
         public List<Plan> getPlans() {
             return mPlans;

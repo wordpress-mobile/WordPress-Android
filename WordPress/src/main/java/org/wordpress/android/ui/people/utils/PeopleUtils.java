@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
@@ -25,15 +26,14 @@ public class PeopleUtils {
     public static int FOLLOWER_PAGE_LIMIT = 50;
     public static int FETCH_LIMIT = 20;
 
-    public static void fetchUsers(final String blogId, final int localTableBlogId, final int offset,
-                                  final FetchUsersCallback callback) {
+    public static void fetchUsers(final SiteModel site, final int offset, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
-                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, Person.PersonType.USER);
+                        List<Person> people = peopleListFromJSON(jsonArray, site.getId(), Person.PersonType.USER);
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
@@ -61,22 +61,21 @@ public class PeopleUtils {
         params.put("offset", Integer.toString(offset));
         params.put("order_by", "display_name");
         params.put("order", "ASC");
-        String path = String.format(Locale.US, "sites/%s/users", blogId);
+        String path = String.format(Locale.US, "sites/%d/users", site.getSiteId());
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void fetchFollowers(final String blogId, final int localTableBlogId, final int page,
-                                      final FetchFollowersCallback callback) {
-        fetchFollowers(blogId, localTableBlogId, page, callback, false);
+    public static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback) {
+        fetchFollowers(site, page, callback, false);
     }
 
-    public static void fetchEmailFollowers(final String blogId, final int localTableBlogId, final int page,
+    public static void fetchEmailFollowers(final SiteModel site, final int page,
                                            final FetchFollowersCallback callback) {
-        fetchFollowers(blogId, localTableBlogId, page, callback, true);
+        fetchFollowers(site, page, callback, true);
     }
 
-    private static void fetchFollowers(final String blogId, final int localTableBlogId, final int page,
-                                       final FetchFollowersCallback callback, final boolean isEmailFollower) {
+    private static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback,
+                                       final boolean isEmailFollower) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -85,7 +84,7 @@ public class PeopleUtils {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
                         Person.PersonType personType = isEmailFollower ?
                                 Person.PersonType.EMAIL_FOLLOWER : Person.PersonType.FOLLOWER;
-                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, personType);
+                        List<Person> people = peopleListFromJSON(jsonArray, site.getId(), personType);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
@@ -114,19 +113,18 @@ public class PeopleUtils {
         params.put("max", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
         params.put("type", isEmailFollower ? "email" : "wp_com");
-        String path = String.format(Locale.US, "sites/%s/stats/followers", blogId);
+        String path = String.format(Locale.US, "sites/%d/stats/followers", site.getSiteId());
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void fetchViewers(final String blogId, final int localTableBlogId, final int offset,
-                                     final FetchViewersCallback callback) {
+    public static void fetchViewers(final SiteModel site, final int offset, final FetchViewersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("viewers");
-                        List<Person> people = peopleListFromJSON(jsonArray, localTableBlogId, Person.PersonType.VIEWER);
+                        List<Person> people = peopleListFromJSON(jsonArray, site.getId(), Person.PersonType.VIEWER);
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
@@ -154,11 +152,11 @@ public class PeopleUtils {
         Map<String, String> params = new HashMap<>();
         params.put("number", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
-        String path = String.format(Locale.US,"sites/%s/viewers", blogId);
+        String path = String.format(Locale.US, "sites/%d/viewers", site.getSiteId());
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-    public static void updateRole(final String blogId, long personID, Role newRole, final int localTableBlogId,
+    public static void updateRole(final SiteModel site, long personID, Role newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -191,12 +189,11 @@ public class PeopleUtils {
 
         Map<String, String> params = new HashMap<>();
         params.put("roles", newRole.toRESTString());
-        String path = String.format(Locale.US, "sites/%s/users/%d", blogId, personID);
+        String path = String.format(Locale.US, "sites/%d/users/%d", site.getSiteId(), personID);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
-    public static void removeUser(String blogId, final long personID, final int localTableBlogId,
-                                  final RemovePersonCallback callback) {
+    public static void removeUser(final SiteModel site, final long personID, final RemovePersonCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -204,7 +201,7 @@ public class PeopleUtils {
                     // check if the call was successful
                     boolean success = jsonObject.optBoolean("success");
                     if (success) {
-                        callback.onSuccess(personID, localTableBlogId);
+                        callback.onSuccess(personID, site.getId());
                     } else {
                         callback.onError();
                     }
@@ -222,11 +219,11 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format(Locale.US, "sites/%s/users/%d/delete", blogId, personID);
+        String path = String.format(Locale.US, "sites/%d/users/%d/delete", site.getSiteId(), personID);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    public static void removeFollower(String blogId, final long personID, final int localTableBlogId,
+    public static void removeFollower(final SiteModel site, final long personID,
                                       Person.PersonType personType, final RemovePersonCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -235,7 +232,7 @@ public class PeopleUtils {
                     // check if the call was successful
                     boolean success = jsonObject.optBoolean("deleted");
                     if (success) {
-                        callback.onSuccess(personID, localTableBlogId);
+                        callback.onSuccess(personID, site.getId());
                     } else {
                         callback.onError();
                     }
@@ -255,15 +252,14 @@ public class PeopleUtils {
 
         String path;
         if (personType == Person.PersonType.EMAIL_FOLLOWER) {
-            path = String.format(Locale.US, "sites/%s/email-followers/%d/delete", blogId, personID);
+            path = String.format(Locale.US, "sites/%d/email-followers/%d/delete", site.getSiteId(), personID);
         } else {
-            path = String.format(Locale.US, "sites/%s/followers/%d/delete", blogId, personID);
+            path = String.format(Locale.US, "sites/%d/followers/%d/delete", site.getSiteId(), personID);
         }
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    public static void removeViewer(String blogId, final long personID, final int localTableBlogId,
-                                    final RemovePersonCallback callback) {
+    public static void removeViewer(final SiteModel site, final long personID, final RemovePersonCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -271,7 +267,7 @@ public class PeopleUtils {
                     // check if the call was successful
                     boolean success = jsonObject.optBoolean("deleted");
                     if (success) {
-                        callback.onSuccess(personID, localTableBlogId);
+                        callback.onSuccess(personID, site.getId());
                     } else {
                         callback.onError();
                     }
@@ -289,7 +285,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format(Locale.US, "sites/%s/viewers/%d/delete", blogId, personID);
+        String path = String.format(Locale.US, "sites/%d/viewers/%d/delete", site.getSiteId(), personID);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
@@ -343,7 +339,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void validateUsernames(final List<String> usernames, Role role, String dotComBlogId, final
+    public static void validateUsernames(final List<String> usernames, Role role, long dotComBlogId, final
             ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -428,7 +424,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format(Locale.US, "sites/%s/invites/validate", dotComBlogId);
+        String path = String.format(Locale.US, "sites/%d/invites/validate", dotComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
@@ -452,7 +448,7 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, Role role, String message, String dotComBlogId,
+    public static void sendInvitations(final List<String> usernames, Role role, String message, long dotComBlogId,
                                        final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override

@@ -13,7 +13,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -50,11 +49,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
     }
 
-    public void setEnableBlogPreview(boolean enable) {
-        mEnableBlogPreview = enable;
-    }
-
-    public void setPost(@NonNull ReaderPost post) {
+    public void setPost(@NonNull ReaderPost post, boolean isSignedInWPCom) {
         mPost = post;
 
         TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
@@ -92,9 +87,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtSubtitle.setTextColor(color);
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
-            mFollowButton.setVisibility(View.GONE);
-        } else {
+        if (isSignedInWPCom) {
             mFollowButton.setVisibility(View.VISIBLE);
             mFollowButton.setIsFollowed(mPost.isFollowedByCurrentUser);
             mFollowButton.setOnClickListener(new OnClickListener() {
@@ -103,6 +96,8 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                     toggleFollowStatus();
                 }
             });
+        } else {
+            mFollowButton.setVisibility(View.GONE);
         }
 
         showBlavatarAndAvatar(mPost.getBlogImageUrl(), mPost.getPostAvatar());
