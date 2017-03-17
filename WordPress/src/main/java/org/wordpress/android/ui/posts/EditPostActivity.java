@@ -1197,6 +1197,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void savePostAndFinish() {
 
+        // check if the opened post had some unsaved local changes
+        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
+
         try {
             updatePostObject(false);
         } catch (IllegalEditorStateException e) {
@@ -1206,7 +1209,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean shouldSave = hasChanges && (isPublishable || !isNewPost());
+        boolean hasUnpublishedLocalChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
+                isPublishable && hasLocalChanges;
+
+        // if post was modified or has unsaved local changes and is publishable, save it
+        boolean shouldSave = (hasChanges || hasUnpublishedLocalChanges) && (isPublishable || !isNewPost());
         if (shouldSave) {
 
             mPostSavedLocally = false;
@@ -1220,7 +1227,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
 
-            if (PostStatus.fromPost(mPost) != PostStatus.PUBLISHED && mPost.getHasCapabilityPublishPost()) {
+            if (PostStatus.fromPost(mPost) != PostStatus.PUBLISHED && isPublishable) {
                 publishPost();
             }
             else {
