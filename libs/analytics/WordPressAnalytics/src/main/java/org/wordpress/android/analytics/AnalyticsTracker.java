@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -269,6 +270,13 @@ public final class AnalyticsTracker {
         }
     }
 
+    public static void track(Stat stat, String errorContext, String errorType, String errorDescription) {
+        Map<String, String> props = new HashMap<>();
+        props.put("error_context", errorContext);
+        props.put("error_type", errorType);
+        props.put("error_description", errorDescription);
+        track(stat, props);
+    }
 
     public static void flush() {
         if (mHasUserOptedOut) {
