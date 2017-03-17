@@ -97,6 +97,7 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url);
     }
 
+    // frameNonce is used to show drafts, without it "no page found" error would be thrown
     public static void openJetpackBlogPostPreview(Context context, String url, String frameNonce) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + frameNonce;
