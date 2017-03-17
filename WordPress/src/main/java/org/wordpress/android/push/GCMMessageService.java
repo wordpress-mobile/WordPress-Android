@@ -339,9 +339,6 @@ public class GCMMessageService extends GcmListenerService {
 
     private static class NotificationHelper {
         private void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
-            // if a notification is received while the app has not yet been launched after last power on,
-            // the screenlockwatchservice won't be running. Let's start it now.
-            context.startService(new Intent(context, NotificationsScreenLockWatchService.class));
 
             String pushUserId = data.getString(PUSH_ARG_USER);
             // pushUserId is always set server side, but better to double check it here.
