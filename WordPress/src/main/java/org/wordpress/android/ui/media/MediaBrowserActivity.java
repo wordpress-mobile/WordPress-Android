@@ -72,7 +72,6 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -118,10 +117,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     // Services
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
-    private MediaUploadService.MediaUploadBinder mUploadService;
-    private final ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
     private boolean mDeleteServiceBound;
-    private boolean mUploadServiceBound;
 
     private String mQuery;
     private String mMediaCapturePath;
@@ -203,7 +199,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     protected void onResume() {
         super.onResume();
-        startMediaUploadService();
         startMediaDeleteService(null);
         ActivityId.trackLastActivity(ActivityId.MEDIA);
     }
@@ -224,7 +219,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     protected void onDestroy() {
         super.onDestroy();
         doUnbindDeleteService();
-        doUnbindUploadService();
     }
 
     @Override
@@ -520,7 +514,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaChanged(OnMediaChanged event) {
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
-                                     + " - " + event.error.message);
+                    + " - " + event.error.message);
             showMediaToastError(R.string.media_generic_error, event.error.message);
             return;
         }
@@ -546,7 +540,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                         }
                     }
                 }
-            break;
+                break;
         }
         updateViews();
     }
@@ -568,7 +562,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
-                                     + " - " + event.error.message);
+                    + " - " + event.error.message);
             if (event.error.type == MediaErrorType.AUTHORIZATION_REQUIRED) {
                 showMediaToastError(R.string.media_error_no_permission, null);
             } else {
@@ -684,32 +678,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     };
 
-    private final ServiceConnection mUploadConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            AppLog.i(T.MEDIA, "MediaUploadService connected");
-            mUploadService = (MediaUploadService.MediaUploadBinder) service;
-            if (!mPendingUploads.isEmpty()) {
-                for(MediaModel media : mPendingUploads) {
-                    mUploadService.addMediaToQueue(media);
-                }
-                mPendingUploads.clear();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mUploadService = null;
-        }
-    };
-
     private void doBindDeleteService(Intent intent) {
         mDeleteServiceBound = bindService(intent, mDeleteConnection,
-                Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
-    }
-
-    private void doBindUploadService(Intent intent) {
-        mUploadServiceBound = bindService(intent, mUploadConnection,
                 Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
     }
 
@@ -717,13 +687,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (mDeleteServiceBound) {
             unbindService(mDeleteConnection);
             mDeleteServiceBound = false;
-        }
-    }
-
-    private void doUnbindUploadService() {
-        if (mUploadServiceBound) {
-            unbindService(mUploadConnection);
-            mUploadServiceBound = false;
         }
     }
 
@@ -831,12 +794,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void addMediaToUploadService(@NonNull MediaModel media) {
         // Start the upload service if it's not started and fill the media queue
-        if (mUploadService == null) {
-            startMediaUploadService();
-            mPendingUploads.add(media);
-        } else {
-            mUploadService.addMediaToQueue(media);
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
+            return;
         }
+
+        ArrayList<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(media);
+        MediaUploadService.startService(this, mSite, mediaList);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {
@@ -925,20 +890,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 intent.putExtra(MediaDeleteService.MEDIA_LIST_KEY, mediaToDelete);
                 doBindDeleteService(intent);
             }
-            startService(intent);
-        }
-    }
-
-    private void startMediaUploadService() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
-            return;
-        }
-
-        if (mUploadService == null) {
-            Intent intent = new Intent(this, MediaUploadService.class);
-            intent.putExtra(MediaUploadService.SITE_KEY, mSite);
-            doBindUploadService(intent);
             startService(intent);
         }
     }

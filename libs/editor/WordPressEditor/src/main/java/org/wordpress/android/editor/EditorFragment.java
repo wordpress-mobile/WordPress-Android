@@ -1119,6 +1119,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        if(!isAdded()) {
+            return;
+        }
+
         final String mimeType = mediaFile.getMimeType();
         if (TextUtils.isEmpty(mimeType)) {
             return;
@@ -1145,6 +1149,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadProgress(final String mediaId, final float progress) {
+        if(!isAdded()) {
+            return;
+        }
+
         final MediaType mediaType = mUploadingMedia.get(mediaId);
         if (mediaType != null) {
             mWebView.post(new Runnable() {
@@ -1160,6 +1168,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
+        if(!isAdded()) {
+            return;
+        }
         mWebView.post(new Runnable() {
             @Override
             public void run() {
@@ -1183,6 +1194,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
+        if(!isAdded()) {
+            return;
+        }
+
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
             // TODO: media IDs are Long's; should we update to use ArrayList<Long>?
             ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();

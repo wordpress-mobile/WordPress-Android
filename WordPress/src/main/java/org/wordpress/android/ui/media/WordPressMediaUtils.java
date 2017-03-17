@@ -17,7 +17,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
