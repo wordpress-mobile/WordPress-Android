@@ -30,9 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
+    private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
 
     public static boolean isValidImage(String url) {
         if (url == null) {
@@ -230,11 +233,10 @@ public class MediaUtils {
 
             String fileName = getFilenameFromURI(context, imageUri);
             if (TextUtils.isEmpty(fileName)) {
-                fileName = "wp-" + System.currentTimeMillis()
-                    + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+                fileName = generateTimeStampedFileName(mimeType);
             }
 
-            File f = new File(cacheDir, fileName);
+            File f = getUniqueCacheFileForName(fileName, cacheDir, mimeType);
 
             OutputStream output = new FileOutputStream(f);
 
@@ -258,6 +260,35 @@ public class MediaUtils {
         }
 
         return null;
+    }
+
+    private static File getUniqueCacheFileForName(String fileName, File cacheDir, String mimeType) {
+        File file = new File(cacheDir, fileName);
+
+        while (file.exists()) {
+            Matcher matcher = FILE_EXISTS_PATTERN.matcher(fileName);
+            if (matcher.matches()) {
+                String baseFileName = matcher.group(1);
+                String existingDuplicationNumber = matcher.group(3);
+                String fileType = StringUtils.notNullStr(matcher.group(4));
+
+                if (existingDuplicationNumber == null) {
+                    // Not a copy already
+                    fileName = baseFileName + "-1" + fileType;
+                } else {
+                    fileName = baseFileName + "-" + (StringUtils.stringToInt(existingDuplicationNumber) + 1) + fileType;
+                }
+            } else {
+                // Shouldn't happen, but in case our match fails fall back to timestamped file name
+                fileName = generateTimeStampedFileName(mimeType);
+            }
+            file = new File(cacheDir, fileName);
+        }
+        return file;
+    }
+
+    private static String generateTimeStampedFileName(String mimeType) {
+        return "wp-" + System.currentTimeMillis() + "." + getExtensionForMimeType(mimeType);
     }
 
     public static String getMimeTypeOfInputStream(InputStream stream) {
@@ -385,7 +416,17 @@ public class MediaUtils {
             return 0L;
         }
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(context, videoUri);
+        try {
+            retriever.setDataSource(context, videoUri);
+        } catch (IllegalArgumentException | SecurityException e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video.", e);
+            return 0L;
+        } catch (RuntimeException e) {
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5431
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video due to a Runtime Exception happened setting the datasource", e);
+            return 0L;
+        }
+
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         if (time == null) {
             return 0L;

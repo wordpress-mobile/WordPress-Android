@@ -800,10 +800,7 @@ public class ReaderPostListFragment extends Fragment
         // they can be restored if the user undoes the block
         final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         // Only pass the blogID if available. Do not track feedID
-        AnalyticsUtils.trackWithSiteId(
-                AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
-                mCurrentBlogId != 0 ? mCurrentBlogId : null
-        );
+        AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_BLOG_BLOCKED, mCurrentBlogId);
 
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
