@@ -152,7 +152,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
-    public static final String EXTRA_IS_PUBLISHABLE = "isPublishable";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -1103,7 +1102,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
 
         // update the original post object, so we'll know of new changes
-        mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(mPost.getLocalTablePostId());
+        mOriginalPost = mPost.clone();
     }
 
     @Override
@@ -1192,8 +1191,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, mPostSavedLocally);
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
-        i.putExtra(EXTRA_IS_PUBLISHABLE, mPost.isPublishable());
-        i.putExtra(EXTRA_POSTID, mPost.getLocalTablePostId());
+        i.putExtra(EXTRA_POST, mPost);
         setResult(RESULT_OK, i);
     }
 
@@ -1206,7 +1204,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        boolean shouldSave = mPost.hasChanges(mOriginalPost) && (mPost.isPublishable() || !isNewPost());
+        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+        boolean isPublishable = PostUtils.isPublishable(mPost);
+        boolean shouldSave = hasChanges && (isPublishable || !isNewPost());
         if (shouldSave) {
 
             mPostSavedLocally = false;
@@ -1214,13 +1214,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (isNewPost()) {
                 // new post - user just left the editor without publishing, they probably want
                 // to keep the post as a draft
-                mPost.setPostStatus(PostStatus.toString(PostStatus.DRAFT));
+                mPost.setStatus(PostStatus.DRAFT.toString());
                 if (mEditPostSettingsFragment != null) {
                     mEditPostSettingsFragment.updateStatusSpinner();
                 }
             }
 
-            if (mPost.getStatusEnum() != PostStatus.PUBLISHED && mPost.isPublishable()) {
+            if (PostStatus.fromPost(mPost) != PostStatus.PUBLISHED && mPost.getHasCapabilityPublishPost()) {
                 publishPost();
             }
             else {
@@ -1229,8 +1229,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         // discard post if new & empty
-        if (isNewPost() && !mPost.isPublishable()) {
-            WordPress.wpDB.deletePost(getPost());
+        if (isNewPost() && !isPublishable) {
+            mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
         }
 
         // if post saved locally, the activity will be finished async
@@ -1771,7 +1771,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                !NetworkUtils.isWiFiConnected(this)) {
             // Not on WiFi and optimize image is set to ON
             // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-            String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
+            String optimizedPath = ImageUtils.createResizedImageWithMaxWidth(this, path, 3000);
 
             if (optimizedPath == null) {
                 AppLog.e(T.EDITOR, "Optimized picture was null!");

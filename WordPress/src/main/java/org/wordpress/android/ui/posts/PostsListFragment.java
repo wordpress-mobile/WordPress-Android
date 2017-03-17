@@ -184,8 +184,8 @@ public class PostsListFragment extends Fragment
         if (resultCode == RESULT_OK && data != null && isAdded()) {
 
             boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
-            final long postId = data.getLongExtra(EditPostActivity.EXTRA_POSTID, -1);
-            boolean isPublishable = data.getBooleanExtra(EditPostActivity.EXTRA_IS_PUBLISHABLE, false) && postId != -1;
+            final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
+            boolean isPublishable = post != null && PostUtils.isPublishable(post);
             boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
 
             if (hasChanges) {
@@ -198,7 +198,6 @@ public class PostsListFragment extends Fragment
                                     .setAction(R.string.button_publish, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
                                             publishPost(post);
                                         }
                                     }).show();
@@ -207,7 +206,6 @@ public class PostsListFragment extends Fragment
                                     .setAction(R.string.button_publish, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Post post = WordPress.wpDB.getPostForLocalTablePostId(postId);
                                             publishPost(post);
                                         }
                                     }).show();

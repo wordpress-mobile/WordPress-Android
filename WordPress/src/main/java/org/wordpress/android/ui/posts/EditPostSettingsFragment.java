@@ -74,6 +74,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -391,20 +392,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         updateStatusSpinner();
-
-        if (!mPost.isPage()) {
-            if (mPost.getJSONCategories() != null) {
-                mCategories = JSONUtils.fromJSONArrayToStringList(mPost.getJSONCategories());
-            }
-        }
-        String tags = mPost.getKeywords();
-        if (!tags.equals("")) {
-            mTagsEditText.setText(tags);
-        }
-
-        if (AppPrefs.isVisualEditorEnabled()) {
-            updateFeaturedImage(mPost.getFeaturedImageId());
-        }
     }
 
     public void updateStatusSpinner() {
