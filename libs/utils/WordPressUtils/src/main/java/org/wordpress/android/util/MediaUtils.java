@@ -104,8 +104,10 @@ public class MediaUtils {
             return false;
         }
 
-        return  (state.equals("queued") || state.equals("uploading") || state.equals("retry")
-                || state.equals("failed"));
+        return state.equalsIgnoreCase("queued")
+                || state.equalsIgnoreCase("uploading")
+                || state.equalsIgnoreCase("retry")
+                || state.equalsIgnoreCase("failed");
     }
 
     public static Uri getLastRecordedVideoUri(Activity activity) {
