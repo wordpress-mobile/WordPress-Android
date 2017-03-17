@@ -202,10 +202,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithSiteId(
-                    AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED,
-                    mRemoteBlogID
-            );
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED, mRemoteBlogID);
         }
 
         // Setup the main top label that opens the post in the Reader where possible
