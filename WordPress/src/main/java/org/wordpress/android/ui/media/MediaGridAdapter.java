@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -33,9 +34,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * An adapter for the media gallery grid.
@@ -47,7 +45,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
 
-    private final Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
     private final Handler mHandler;
     private final LayoutInflater mInflater;
 
@@ -72,10 +69,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         void onAdapterSelectionCountChanged(int count);
     }
 
-    interface BitmapReadyCallback {
-        void onBitmapReady(Bitmap bitmap);
-    }
-
     private static final int INVALID_POSITION = -1;
 
     public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
@@ -86,7 +79,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mSite = site;
         mSelectedItems = new ArrayList<>();
         mInflater = LayoutInflater.from(context);
-        mFilePathToCallbackMap = new HashMap<>();
         mHandler = new Handler();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
@@ -325,7 +317,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return INVALID_POSITION;
     }
 
-    private synchronized void loadLocalImage(final String filePath, final FadeInNetworkImageView imageView) {
+    private synchronized void loadLocalImage(final String filePath, ImageView imageView) {
         imageView.setTag(filePath);
 
         Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
@@ -333,52 +325,23 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             imageView.setImageBitmap(bitmap);
         } else {
             imageView.setImageBitmap(null);
-
-            boolean shouldFetch = false;
-
-            List<BitmapReadyCallback> list;
-            if (mFilePathToCallbackMap.containsKey(filePath)) {
-                list = mFilePathToCallbackMap.get(filePath);
-            } else {
-                list = new ArrayList<>();
-                shouldFetch = true;
-                mFilePathToCallbackMap.put(filePath, list);
-            }
-            list.add(new BitmapReadyCallback() {
+            new BitmapWorkerTask(imageView, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
                 @Override
-                public void onBitmapReady(Bitmap bitmap) {
-                    if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath)) {
-                        imageView.setImageBitmap(bitmap);
-                    }
-                }
-            });
-
-            if (shouldFetch) {
-                fetchBitmap(filePath);
-            }
-        }
-    }
-
-    private void fetchBitmap(final String filePath) {
-        BitmapWorkerTask task = new BitmapWorkerTask(null, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
-            @Override
-            public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<BitmapReadyCallback> callbacks = mFilePathToCallbackMap.get(path);
-                        for (BitmapReadyCallback callback : callbacks) {
-                            callback.onBitmapReady(bitmap);
+                public void onBitmapReady(final String path, final ImageView imageView, final Bitmap bitmap) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            WordPress.getBitmapCache().put(path, bitmap);
+                            if (imageView != null
+                                    && imageView.getTag() instanceof String
+                                    && ((String)imageView.getTag()).equalsIgnoreCase(path)) {
+                                imageView.setImageBitmap(bitmap);
+                            }
                         }
-
-                        WordPress.getBitmapCache().put(path, bitmap);
-                        callbacks.clear();
-                        mFilePathToCallbackMap.remove(path);
-                    }
-                });
-            }
-        });
-        task.execute(filePath);
+                    });
+                }
+            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filePath);
+        }
     }
 
     @Override
