@@ -1229,8 +1229,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             if (PostStatus.fromPost(mPost) != PostStatus.PUBLISHED && isPublishable) {
                 publishPost();
-            }
-            else {
+            } else {
                 savePostLocally();
             }
         }
