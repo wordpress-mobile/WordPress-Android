@@ -172,8 +172,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                             AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
                             // We only get the media Id from the response
                             media.setMediaId(responseMedia.getMediaId());
+                            fetchMedia(site, media, true);
                         }
-                        fetchMedia(site, media, true);
                     } catch (XMLRPCException fault) {
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
                         AppLog.w(T.MEDIA, "media upload failed with error: " + mediaError.message);
