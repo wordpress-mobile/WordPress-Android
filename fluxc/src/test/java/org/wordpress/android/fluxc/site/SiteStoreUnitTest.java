@@ -14,13 +14,18 @@ import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.UpdateSitesResult;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -34,6 +39,7 @@ import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOve
 import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedSiteFutureJetpack;
+import static org.wordpress.android.fluxc.utils.SiteUtils.generateTestSite;
 import static org.wordpress.android.fluxc.utils.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
@@ -493,5 +499,79 @@ public class SiteStoreUnitTest {
         assertEquals(1, mSiteStore.getSitesCount());
         assertEquals(0, mSiteStore.getWPComSitesCount());
         assertEquals(1, mSiteStore.getJetpackSitesCount());
+    }
+
+    @Test
+    public void testBatchInsertSiteDuplicateWPCom()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        List<SiteModel> siteList = new ArrayList<>();
+        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(3, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
+        // duplicate with a different id, we should ignore it
+        siteList.add(generateTestSite(4, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(5, "https://pony4.com", "https://pony4.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(6, "https://pony5.com", "https://pony5.com/xmlrpc.php", true, true));
+
+        SitesModel sites = new SitesModel(siteList);
+
+        // Use reflection to call a private Store method: equivalent to mSiteStore.updateSites(sites)
+        Method createOrUpdateSites = SiteStore.class.getDeclaredMethod("createOrUpdateSites", SitesModel.class);
+        createOrUpdateSites.setAccessible(true);
+        UpdateSitesResult res = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, sites);
+
+        assertTrue(res.duplicateSiteFound);
+        assertEquals(5, res.rowsAffected);
+        assertEquals(5, mSiteStore.getSitesCount());
+    }
+
+    @Test
+    public void testBatchInsertSiteNoDuplicateWPCom()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        List<SiteModel> siteList = new ArrayList<>();
+        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(3, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(4, "https://pony4.com", "https://pony4.com/xmlrpc.php", true, true));
+        siteList.add(generateTestSite(5, "https://pony5.com", "https://pony5.com/xmlrpc.php", true, true));
+
+        SitesModel sites = new SitesModel(siteList);
+
+        // Use reflection to call a private Store method: equivalent to mSiteStore.updateSites(sites)
+        Method createOrUpdateSites = SiteStore.class.getDeclaredMethod("createOrUpdateSites", SitesModel.class);
+        createOrUpdateSites.setAccessible(true);
+        UpdateSitesResult res = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, sites);
+
+        assertFalse(res.duplicateSiteFound);
+        assertEquals(5, res.rowsAffected);
+        assertEquals(5, mSiteStore.getSitesCount());
+    }
+
+    @Test
+    public void testSingleInsertSiteDuplicateWPCom()
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        List<SiteModel> siteList = new ArrayList<>();
+        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
+        SitesModel sites = new SitesModel(siteList);
+
+        // Insert 1 site
+        Method createOrUpdateSites = SiteStore.class.getDeclaredMethod("createOrUpdateSites", SitesModel.class);
+        createOrUpdateSites.setAccessible(true);
+        UpdateSitesResult res = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, sites);
+
+        assertFalse(res.duplicateSiteFound);
+        assertEquals(1, res.rowsAffected);
+        assertEquals(1, mSiteStore.getSitesCount());
+
+        // Insert same site with different id (considered a duplicate)
+        List<SiteModel> siteList2 = new ArrayList<>();
+        siteList2.add(generateTestSite(2, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
+        SitesModel sites2 = new SitesModel(siteList2);
+        createOrUpdateSites.setAccessible(true);
+        UpdateSitesResult res2 = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, sites2);
+
+        assertTrue(res2.duplicateSiteFound);
+        assertEquals(0, res2.rowsAffected);
+        assertEquals(1, mSiteStore.getSitesCount());
     }
 }

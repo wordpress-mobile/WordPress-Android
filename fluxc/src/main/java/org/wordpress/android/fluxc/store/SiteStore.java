@@ -172,6 +172,11 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class UpdateSitesResult {
+        public int rowsAffected = 0;
+        public boolean duplicateSiteFound = false;
+    }
+
     public enum SiteErrorType {
         INVALID_SITE,
         DUPLICATE_SITE,
@@ -751,9 +756,9 @@ public class SiteStore extends Store {
             // TODO: what kind of error could we get here?
             event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
         } else {
-            try {
-                event.rowsAffected = createOrUpdateSites(sitesModel);
-            } catch (DuplicateSiteException e) {
+            UpdateSitesResult res = createOrUpdateSites(sitesModel);
+            event.rowsAffected = res.rowsAffected;
+            if (res.duplicateSiteFound) {
                 event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
             }
         }
@@ -803,12 +808,16 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private int createOrUpdateSites(SitesModel sites) throws DuplicateSiteException {
-        int rowsAffected = 0;
+    private UpdateSitesResult createOrUpdateSites(SitesModel sites) {
+        UpdateSitesResult result = new UpdateSitesResult();
         for (SiteModel site : sites.getSites()) {
-            rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
+            try {
+                result.rowsAffected += SiteSqlUtils.insertOrUpdateSite(site);
+            } catch (DuplicateSiteException caughtException) {
+                result.duplicateSiteFound = true;
+            }
         }
-        return rowsAffected;
+        return result;
     }
 
     private int removeSites(List<SiteModel> sites) {
