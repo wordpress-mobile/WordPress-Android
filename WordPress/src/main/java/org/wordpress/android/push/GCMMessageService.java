@@ -312,27 +312,6 @@ public class GCMMessageService extends GcmListenerService {
         }
     }
 
-    private static boolean canAddActionsToNotifications(Context context) {
-        if (isWPPinLockEnabled(context)) {
-            return !DeviceUtils.getInstance().isDeviceLocked(context);
-        }
-        return true;
-    }
-
-    public static boolean isWPPinLockEnabled(Context context) {
-        AppLockManager appLockManager = AppLockManager.getInstance();
-        // Make sure PasscodeLock isn't already in place
-        if (!appLockManager.isAppLockFeatureEnabled()) {
-            appLockManager.enableDefaultAppLockIfAvailable((WordPress)context.getApplicationContext());
-        }
-
-        // Make sure the locker was correctly enabled, and it's active
-        if (appLockManager.isAppLockFeatureEnabled() && appLockManager.getAppLock().isPasswordLocked()) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-    }
-
     private static void addAuthPushNotificationToNotificationMap(Bundle data) {
         sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }
@@ -471,10 +450,6 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
-            if (!canAddActionsToNotifications(context)) {
-                return;
-            }
-
             // Add some actions if this is a comment notification
             boolean areActionsSet = false;
             Note note = NotificationsTable.getNoteById(noteId);
@@ -507,10 +482,6 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addCommentReplyActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
-            if (!canAddActionsToNotifications(context)) {
-                return;
-            }
-
             // adding comment reply action
             Intent commentReplyIntent = getCommentActionReplyIntent(context, noteId);
             commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
@@ -541,10 +512,6 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addCommentLikeActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
-            if (!canAddActionsToNotifications(context)) {
-                return;
-            }
-
             // adding comment like action
             Intent commentLikeIntent = getCommentActionIntent(context);
             commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
@@ -560,10 +527,6 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
-            if (!canAddActionsToNotifications(context)) {
-                return;
-            }
-
             // adding comment approve action
             Intent commentApproveIntent = getCommentActionIntent(context);
             commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
@@ -969,33 +932,32 @@ public class GCMMessageService extends GcmListenerService {
             builder.setContentIntent(pendingIntent);
 
 
-            if (canAddActionsToNotifications(context)) {
-                // adding ignore / approve quick actions
-                Intent authApproveIntent = new Intent(context, WPMainActivity.class);
-                authApproveIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-                authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
-                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
-                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
-                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
-                authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
+            // adding ignore / approve quick actions
+            Intent authApproveIntent = new Intent(context, WPMainActivity.class);
+            authApproveIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
+            authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
+            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
+            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
+            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
 
-                authApproveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                authApproveIntent.setAction("android.intent.action.MAIN");
-                authApproveIntent.addCategory("android.intent.category.LAUNCHER");
+            authApproveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            authApproveIntent.setAction("android.intent.action.MAIN");
+            authApproveIntent.addCategory("android.intent.category.LAUNCHER");
 
-                PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-                builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve), authApprovePendingIntent);
+            builder.addAction(R.drawable.ic_checkmark_32dp, context.getText(R.string.approve), authApprovePendingIntent);
 
 
-                Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
-                authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
-                PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
-                        AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore), authIgnorePendingIntent);
-            }
+            Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
+            authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
+            PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
+                    AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore), authIgnorePendingIntent);
+
 
             // Call broadcast receiver when notification is dismissed
             Intent notificationDeletedIntent = new Intent(context, NotificationDismissBroadcastReceiver.class);
