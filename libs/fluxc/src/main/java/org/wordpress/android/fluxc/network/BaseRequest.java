@@ -25,6 +25,7 @@ import javax.net.ssl.SSLHandshakeException;
 
 public abstract class BaseRequest<T> extends Request<T> {
     public static final int DEFAULT_REQUEST_TIMEOUT = 30000;
+    public static final int DEFAULT_READ_REQUEST_TIMEOUT = 60000;
     public Uri mUri;
 
     public interface OnAuthFailedListener {
