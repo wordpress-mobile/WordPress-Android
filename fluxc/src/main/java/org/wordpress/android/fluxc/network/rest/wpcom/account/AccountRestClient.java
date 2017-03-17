@@ -299,6 +299,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setPrimarySiteId(from.primary_blog);
         account.setAvatarUrl(from.avatar_URL);
         account.setProfileUrl(from.profile_URL);
+        account.setEmailVerified(from.email_verified);
         account.setDate(from.date);
         account.setSiteCount(from.site_count);
         account.setVisibleSiteCount(from.visible_site_count);
