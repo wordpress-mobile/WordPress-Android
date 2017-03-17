@@ -29,7 +29,9 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.+'
+    releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
+    debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
+
     compile 'com.automattic:rest:1.0.7'
 }
 
