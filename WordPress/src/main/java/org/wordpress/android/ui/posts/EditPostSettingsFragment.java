@@ -657,6 +657,8 @@ public class EditPostSettingsFragment extends Fragment
         String tags = "", postFormat = "";
         if (!post.isPage()) {
             tags = EditTextUtils.getText(mTagsEditText);
+            // since mTagsEditText is a `textMultiLine` field, we should replace "\n" with space
+            tags = tags.replace("\n", " ");
 
             // post format
             if (mPostFormatKeys != null && mPostFormatSpinner != null &&

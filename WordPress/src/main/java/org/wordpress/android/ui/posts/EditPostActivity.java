@@ -106,7 +106,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -1207,7 +1206,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     @Override
     public void onReflectionFailure(ReflectionException e) {
-        CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.EDITOR, "Reflection Failure on Visual Editor init");
+        CrashlyticsUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
         // Disable visual editor and show an error message
         AppPrefs.setVisualEditorEnabled(false);
         ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
@@ -1723,19 +1722,26 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         boolean isOptimized = false;
-        if (!isVideo && SiteSettingsInterface.getInterface(this, mSite, null).init(false).getOptimizedImage() &&
-               !NetworkUtils.isWiFiConnected(this)) {
-            // Not on WiFi and optimize image is set to ON
-            // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-            String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
+        if (!NetworkUtils.isWiFiConnected(this) && !isVideo) {
+            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mSite, null);
+            // Site Settings are implemented on .com/Jetpack sites only
+            if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
+                // Not on WiFi and optimize image is set to ON
+                // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
+                String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
 
-            if (optimizedPath == null) {
-                AppLog.e(T.EDITOR, "Optimized picture was null!");
-            } else {
-                Uri optimizedImageUri = Uri.parse(optimizedPath);
-                if (optimizedImageUri != null) {
-                    uri = optimizedImageUri;
-                    isOptimized = true;
+                if (optimizedPath == null) {
+                    AppLog.e(T.EDITOR, "Optimized picture was null!");
+                    // TODO: track analytics here
+                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
+                } else {
+                    // TODO: track analytics here
+                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
+                    Uri optimizedImageUri = Uri.parse(optimizedPath);
+                    if (optimizedImageUri != null) {
+                        uri = optimizedImageUri;
+                        isOptimized = true;
+                    }
                 }
             }
         }
@@ -2246,8 +2252,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
                     CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
-                            ExceptionType.SPECIFIC, T.EDITOR,
-                            String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
+                            T.EDITOR, String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
                 }
 
                 @Override
