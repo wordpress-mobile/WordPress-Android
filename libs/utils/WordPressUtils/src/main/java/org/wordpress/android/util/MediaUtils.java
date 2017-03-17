@@ -414,7 +414,17 @@ public class MediaUtils {
             return 0L;
         }
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(context, videoUri);
+        try {
+            retriever.setDataSource(context, videoUri);
+        } catch (IllegalArgumentException | SecurityException e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video.", e);
+            return 0L;
+        } catch (RuntimeException e) {
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5431
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video due to a Runtime Exception happened setting the datasource", e);
+            return 0L;
+        }
+
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         if (time == null) {
             return 0L;
