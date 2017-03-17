@@ -6,12 +6,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -23,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -145,7 +142,7 @@ import javax.inject.Inject;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        MediaUploadService.MediaUploadListener, PhotoChooserFragment.PhotoChooserListener {
+        PhotoChooserFragment.PhotoChooserListener {
     public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -226,10 +223,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
 
-    // Upload service
-    private MediaUploadService.MediaUploadBinder mMediaUploadService;
-    private boolean mMediaUploadServiceBound;
-
     private SiteModel mSite;
 
     // for keeping the media uri while asking for permissions
@@ -277,27 +270,27 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST)
-                    || Intent.ACTION_SEND.equals(action)
-                    || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                    ||Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
-                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)) {
+                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
+                    || (extras != null && extras.getInt("quick-media", -1) > -1)) {
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int localSiteId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                    mSite = mSiteStore.getSiteByLocalId(localSiteId);
+                    SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
+                    if (site == null) {
+                        showErrorAndFinish(R.string.blog_not_found);
+                        return;
+                    }
+                    if (!site.isVisible()) {
+                        showErrorAndFinish(R.string.error_blog_hidden);
+                        return;
+                    }
+                    mSite = site;
                 }
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 mIsNewPost = true;
-
-                if (mSite == null) {
-                    showErrorAndFinish(R.string.blog_not_found);
-                    return;
-                }
-                if (!mSite.isVisible()) {
-                    showErrorAndFinish(R.string.error_blog_hidden);
-                    return;
-                }
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
@@ -446,7 +439,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onDestroy() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
-        doUnbindUploadService();
         super.onDestroy();
     }
 
@@ -941,12 +933,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    @Override
-    public void onUploadBegin(MediaModel media) {
-    }
-
-    @Override
-    public void onUploadSuccess(MediaModel media) {
+    private void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                     FluxCUtils.mediaFileFromMediaModel(media));
@@ -954,13 +941,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         removeMediaFromPendingList(media);
     }
 
-    @Override
-    public void onUploadCanceled(MediaModel media) {
+    private void onUploadCanceled(MediaModel media) {
         removeMediaFromPendingList(media);
     }
 
-    @Override
-    public void onUploadError(MediaModel media, MediaStore.MediaError error) {
+    private void onUploadError(MediaModel media, MediaStore.MediaError error) {
         String localMediaId = String.valueOf(media.getId());
 
         Map<String, Object> properties = null;
@@ -986,8 +971,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         removeMediaFromPendingList(media);
     }
 
-    @Override
-    public void onUploadProgress(MediaModel media, float progress) {
+    private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
         mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
     }
@@ -1040,6 +1024,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
             // Quick press
             normalizedSourceName = "quick-press";
+        }
+        if (intent != null && intent.getIntExtra("quick-media", -1) > -1) {
+            // Quick photo or quick video
+            normalizedSourceName = "quick-media";
         }
         properties.put("created_post_source", normalizedSourceName);
         AnalyticsUtils.trackWithSiteDetails(
@@ -1298,7 +1286,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (media != null) {
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            mEditorFragment.appendMediaFile(mediaFile, media.getUrl(), mImageLoader);
+            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
         }
     }
 
@@ -1678,7 +1667,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     public boolean addMedia(Uri mediaUri) {
         if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")
-            && !mediaUri.toString().startsWith("file://") ) {
+                && !mediaUri.toString().startsWith("file://") ) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
         }
 
@@ -1982,54 +1971,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private ServiceConnection mMediaUploadConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMediaUploadService = (MediaUploadService.MediaUploadBinder) service;
-            mMediaUploadService.setListener(EditPostActivity.this);
-            if (!mPendingUploads.isEmpty()) {
-                for (MediaModel media : mPendingUploads) {
-                    if (media.getUploadState().equals(UploadState.QUEUED.name())) {
-                        mMediaUploadService.addMediaToQueue(media);
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mMediaUploadService = null;
-        }
-    };
-
-
-    private void doBindUploadService(Intent intent) {
-        mMediaUploadServiceBound = bindService(intent, mMediaUploadConnection,
-                Context.BIND_AUTO_CREATE | Context.BIND_ABOVE_CLIENT);
-    }
-
-    private void doUnbindUploadService() {
-        if (mMediaUploadServiceBound) {
-            unbindService(mMediaUploadConnection);
-            mMediaUploadServiceBound = false;
-        }
-    }
-
     /**
      * Starts the upload service to upload selected media.
      */
     private void startMediaUploadService() {
-        if (mMediaUploadService == null) {
-            Intent intent = new Intent(this, MediaUploadService.class);
-            intent.putExtra(MediaUploadService.SITE_KEY, mSite);
-            doBindUploadService(intent);
-            startService(intent);
-        } else if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
+        if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
+            ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
                 if (media.getUploadState().equals(UploadState.QUEUED.name())) {
-                    mMediaUploadService.addMediaToQueue(media);
+                    mediaList.add(media);
                 }
             }
+            MediaUploadService.startService(this, mSite, mediaList);
         }
     }
 
@@ -2187,13 +2140,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
-        int localMediaId = StringUtils.stringToInt(mediaId);
-        if (localMediaId == 0) {
-            return;
-        }
-
         MediaModel media = new MediaModel();
-        media.setId(localMediaId);
+        media.setMediaId(Long.valueOf(mediaId));
         MediaPayload payload = new MediaPayload(mSite, media);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
@@ -2252,7 +2200,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
                     CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
-                            T.EDITOR, String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
+                            T.EDITOR,
+                            String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
                 }
 
                 @Override
@@ -2311,4 +2260,32 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
         }
     }
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+        // event for unknown media, ignoring
+        if (event.media == null) {
+            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);
+            return;
+        }
+
+        if (event.isError()) {
+            onUploadError(event.media, event.error);
+        }
+        else
+        if (event.canceled) {
+            onUploadCanceled(event.media);
+        }
+        else
+        if (event.completed) {
+            onUploadSuccess(event.media);
+        }
+        else {
+            onUploadProgress(event.media, event.progress);
+        }
+    }
+
 }

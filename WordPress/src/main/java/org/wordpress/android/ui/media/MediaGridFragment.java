@@ -95,8 +95,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private boolean mSpinnerHasLaunched;
 
-    private MenuItem mNewPostButton;
-
     private SiteModel mSite;
 
     public interface MediaGridListener {
@@ -264,7 +262,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         setFilterEnabled(count == 0);
-        updateActionButtons(count);
         updateActionModeTitle(count);
     }
 
@@ -443,29 +440,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
     }
 
-    private void updateActionButtons(int selectCount) {
-        mNewPostButton.setVisible(selectCount > 0);
-    }
-
     private void updateActionModeTitle(int selectCount) {
         if (mActionMode != null) {
             mActionMode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
         }
-    }
-
-    private void handleNewPost() {
-        if (!isAdded()) {
-            return;
-        }
-        ArrayList<Integer> localIds = mGridAdapter.getSelectedItems();
-        ArrayList<Long> mediaIds = new ArrayList<>();
-        for (Integer localId : localIds) {
-            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(localId);
-            if (mediaModel != null) {
-                mediaIds.add(mediaModel.getMediaId());
-            }
-        }
-        ActivityLauncher.newMediaPost(getActivity(), mSite, mediaIds);
     }
 
     private void handleMultiSelectDelete() {
@@ -610,10 +588,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             int selectCount = mGridAdapter.getSelectedItemCount();
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.media_multiselect, menu);
-            mNewPostButton = menu.findItem(R.id.media_multiselect_actionbar_post);
             setSwipeToRefreshEnabled(false);
             mGridAdapter.setInMultiSelect(true);
-            updateActionButtons(selectCount);
             updateActionModeTitle(selectCount);
             return true;
         }
@@ -626,10 +602,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             int i = item.getItemId();
-            if (i == R.id.media_multiselect_actionbar_post) {
-                handleNewPost();
-                return true;
-            } else if (i == R.id.media_multiselect_actionbar_trash) {
+            if (i == R.id.media_multiselect_actionbar_trash) {
                 handleMultiSelectDelete();
                 return true;
             }
