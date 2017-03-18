@@ -124,7 +124,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
         boolean isSelected = isItemSelected(localMediaId);
 
-        holder.imageView.setImageDrawable(null);
         if (mimeType.contains("image/")) {
             holder.fileContainer.setVisibility(View.GONE);
             if (MediaUtils.isLocalFile(state)) {

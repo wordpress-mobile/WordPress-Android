@@ -246,8 +246,8 @@ public class WordPressMediaUtils {
             int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
             imageView.setErrorImageResId(placeholderResId);
 
-            // no default image while downloading
-            imageView.setDefaultImageResId(0);
+            // default image while downloading
+            imageView.setDefaultImageResId(R.drawable.media_item_background);
 
             if (MediaUtils.isValidImage(filepath)) {
                 imageView.setTag(imageUrl);
