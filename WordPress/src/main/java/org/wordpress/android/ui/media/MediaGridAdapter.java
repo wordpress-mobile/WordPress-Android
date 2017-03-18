@@ -122,14 +122,16 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
         String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
-
-        boolean isLocalFile = MediaUtils.isLocalFile(state);
         boolean isSelected = isItemSelected(localMediaId);
 
-        if (isLocalFile) {
-            loadLocalImage(filePath, holder.imageView);
-        } else if (!TextUtils.isEmpty(thumbUrl)) {
-            WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+        holder.imageView.setImageDrawable(null);
+        if (mimeType.contains("image/")) {
+            holder.fileContainer.setVisibility(View.GONE);
+            if (MediaUtils.isLocalFile(state)) {
+                loadLocalImage(filePath, holder.imageView);
+            } else if (!TextUtils.isEmpty(thumbUrl)) {
+                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+            }
         } else {
             // not an image, so show file name and file type
             String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
