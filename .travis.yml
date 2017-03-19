@@ -17,7 +17,7 @@ android:
     - extra-android-support
     - platform-tools
     - tools
-    - build-tools-25.0.1
+    - build-tools-25.0.2
     - android-25
 
 env:
@@ -36,4 +36,4 @@ install:
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
 script:
-  - ./gradlew -PdisablePreDex assembleVanillaRelease lint || (grep -A20 -B2 'severity="Error"' WordPress/build/outputs/lint-results-vanillaDebug.xml; exit 1)
+  - ./gradlew -PdisablePreDex assembleVanillaRelease lint || (grep -A20 -B2 'severity="Error"' WordPress/build/**/*.xml; exit 1)

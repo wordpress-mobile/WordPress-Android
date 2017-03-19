@@ -20,7 +20,7 @@ import com.jjoe64.graphview.GraphViewSeries;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -29,6 +29,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.text.ParseException;
@@ -74,7 +75,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
-        void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
+        void onDateChanged(long siteId, StatsTimeframe timeframe, String newDate);
     }
 
     // Container Activity must implement this interface
@@ -170,14 +171,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         private Drawable getTabIcon() {
             switch (labelItem) {
                 case VISITORS:
-                    return getResources().getDrawable(R.drawable.stats_icon_visitors);
+                    return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
                 case COMMENTS:
-                    return getResources().getDrawable(R.drawable.stats_icon_comments);
+                    return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
                 case LIKES:
-                    return getResources().getDrawable(R.drawable.stats_icon_likes);
+                    return getResources().getDrawable(R.drawable.ic_star_grey_dark_12dp);
                 default:
                     // Views and when no prev match
-                    return getResources().getDrawable(R.drawable.stats_icon_views);
+                    return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
             }
         }
 
@@ -439,7 +440,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
         mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
-        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.translucent_grey_lighten_30);
+        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.grey_lighten_30_translucent_50);
         mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
         mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
@@ -807,16 +808,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Update the data below the graph
         if (mListener!= null) {
             // Should never be null
-            final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-            if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
-                mListener.onDateChanged(currentBlog.getDotComBlogId(), getTimeframe(), calculatedDate);
+            SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
+            if (site != null && SiteUtils.isAccessibleViaWPComAPI(site)) {
+                mListener.onDateChanged(site.getSiteId(), getTimeframe(), calculatedDate);
             }
         }
 
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
-                WordPress.getBlog(getLocalTableBlogID())
-        );
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
+                mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
     }
 
     public enum OverviewLabel {

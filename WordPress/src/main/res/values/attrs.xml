@@ -39,11 +39,6 @@
         WPTextView attributes
     -->
     <declare-styleable name="WPTextView">
-        <attr name="wpFontFamily" format="enum">
-            <enum name="defaultNormal" value="0" />
-            <enum name="defaultLight" value="1" />
-            <enum name="merriweather" value="2" />
-        </attr>
         <attr name="fixWidowWords" format="boolean"/>
     </declare-styleable>
 

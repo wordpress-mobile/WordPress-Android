@@ -6,13 +6,14 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
@@ -28,13 +29,11 @@ import java.util.EnumSet;
  */
 public class ReaderThumbnailStrip extends LinearLayout {
 
-    private static final int MIN_IMAGE_COUNT = 2;
+    public static final int IMAGE_COUNT = 4;
 
-    private View mView;
-    private LinearLayout mContainer;
-    private int mThumbnailSize;
-    private int mMaxImageCount;
-    private String mCountStr;
+    private ViewGroup mView;
+    private int mThumbnailHeight;
+    private int mThumbnailWidth;
 
     public ReaderThumbnailStrip(Context context) {
         super(context);
@@ -58,78 +57,63 @@ public class ReaderThumbnailStrip extends LinearLayout {
     }
 
     private void initView(Context context) {
-        mView = inflate(context, R.layout.reader_thumbnail_strip, this);
-        mContainer = (LinearLayout) mView.findViewById(R.id.thumbnail_strip_container);
-        mThumbnailSize = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_size);
-        mCountStr = context.getResources().getString(R.string.reader_label_image_count_multi);
+        mView = (ViewGroup) inflate(context, R.layout.reader_thumbnail_strip, this);
+        mThumbnailHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_thumbnail_strip_image_height);
 
-        // base max image count on display width
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        if (displayWidth <= 800) {
-            mMaxImageCount = 2;
-        } else if (displayWidth <= 1024) {
-            mMaxImageCount = 3;
-        } else if (displayWidth <= 1440) {
-            mMaxImageCount = 4;
-        } else {
-            mMaxImageCount = 5;
-        }
+        int margins = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding) * 2;
+        mThumbnailWidth = (displayWidth - margins) / IMAGE_COUNT;
     }
 
-    public void loadThumbnails(long blogId, long postId, final boolean isPrivate) {
+    public void loadThumbnails(long blogId, long postId, boolean isPrivate) {
         // get rid of any views already added
-        mContainer.removeAllViews();
+        mView.removeAllViews();
 
         // get this post's content and scan it for images suitable in a gallery
         final String content = ReaderPostTable.getPostText(blogId, postId);
         final ReaderImageList imageList =
-                new ReaderImageScanner(content, isPrivate).getGalleryImageList();
-        if (imageList.size() < MIN_IMAGE_COUNT) {
+                new ReaderImageScanner(content, isPrivate).getImageList(IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH);
+        if (imageList.size() < IMAGE_COUNT) {
             mView.setVisibility(View.GONE);
             return;
+        }
+
+        final EnumSet<PhotoViewerOption> photoViewerOptions = EnumSet.of(PhotoViewerOption.IS_GALLERY_IMAGE);
+        if (isPrivate) {
+            photoViewerOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
         }
 
         // add a separate imageView for each image up to the max
         int numAdded = 0;
         LayoutInflater inflater = LayoutInflater.from(getContext());
         for (final String imageUrl: imageList) {
-            View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mContainer, false);
+            View view = inflater.inflate(R.layout.reader_thumbnail_strip_image, mView, false);
             WPNetworkImageView imageView = (WPNetworkImageView) view.findViewById(R.id.thumbnail_strip_image);
-            mContainer.addView(view);
+            mView.addView(view);
 
-            String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailSize, mThumbnailSize);
+            String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailWidth, mThumbnailHeight);
             imageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
+            // tapping a thumbnail opens the photo viewer
+            imageView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReaderActivityLauncher.showReaderPhotoViewer(
+                            view.getContext(),
+                            imageUrl,
+                            content,
+                            view,
+                            photoViewerOptions,
+                            0,
+                            0);
+                }
+            });
+
             numAdded++;
-            if (numAdded >= mMaxImageCount) {
+            if (numAdded >= IMAGE_COUNT) {
                 break;
             }
         }
-
-        // add the labels which include the image count
-        View labelView = inflater.inflate(R.layout.reader_thumbnail_strip_labels, mContainer, false);
-        TextView txtCount = (TextView) labelView.findViewById(R.id.text_gallery_count);
-        txtCount.setText(String.format(mCountStr, imageList.size()));
-        mContainer.addView(labelView);
-
-        // tapping anywhere opens the first image
-        mView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EnumSet<PhotoViewerOption> options = EnumSet.of(PhotoViewerOption.IS_GALLERY_IMAGE);
-                if (isPrivate) {
-                    options.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
-                }
-                ReaderActivityLauncher.showReaderPhotoViewer(
-                        view.getContext(),
-                        imageList.get(0),
-                        content,
-                        view,
-                        options,
-                        0,
-                        0);
-            }
-        });
 
         if (mView.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(mView, AniUtils.Duration.SHORT);

@@ -31,7 +31,6 @@ import java.util.concurrent.TimeoutException;
 
 public class RestClientUtils {
     public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
-    private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
     private static String sUserAgent = "WordPress Networking Android";
 
     private RestClient mRestClient;
@@ -62,11 +61,14 @@ public class RestClientUtils {
         sUserAgent = userAgent;
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
+                           RestRequest.OnAuthFailedListener onAuthFailedListener) {
         this(context, queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS version) {
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
+                           RestRequest.OnAuthFailedListener onAuthFailedListener,
+                           RestClient.REST_CLIENT_VERSIONS version) {
         // load an existing access token from prefs if we have one
         mContext = context;
         mAuthenticator = authenticator;
@@ -85,43 +87,9 @@ public class RestClientUtils {
         return mRestClient;
     }
 
-    public void getCategories(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/categories", siteId);
+    public void getCategories(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/categories", siteId);
         get(path, null, null, listener, errorListener);
-    }
-
-    /**
-     * get a list of recent comments
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
-     */
-    public void getComments(String siteId, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/comments", siteId);
-        get(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Reply to a comment
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
-     */
-    public void replyToComment(String reply, String path, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(COMMENT_REPLY_CONTENT_FIELD, reply);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Reply to a comment.
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
-     */
-    public void replyToComment(long siteId, long commentId, String content, Listener listener,
-                               ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(COMMENT_REPLY_CONTENT_FIELD, content);
-        String path = String.format(Locale.US, "sites/%d/comments/%d/replies/new", siteId, commentId);
-        post(path, params, null, listener, errorListener);
     }
 
     /**
@@ -129,8 +97,8 @@ public class RestClientUtils {
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/follows/new/
      */
-    public void followSite(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/follows/new", siteId);
+    public void followSite(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/follows/new", siteId);
         post(path, listener, errorListener);
     }
 
@@ -139,8 +107,8 @@ public class RestClientUtils {
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/follows/mine/delete/
      */
-    public void unfollowSite(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/follows/mine/delete", siteId);
+    public void unfollowSite(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/follows/mine/delete", siteId);
         post(path, listener, errorListener);
     }
 
@@ -213,118 +181,79 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    /**
-     * Moderate a comment.
-     * <p/>
-     * http://developer.wordpress.com/docs/api/1/sites/%24site/comments/%24comment_ID/
-     */
-    public void moderateComment(String siteId, String commentId, String status, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("status", status);
-        String path = String.format(Locale.US, "sites/%s/comments/%s/", siteId, commentId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Edit the content of a comment
-     */
-    public void editCommentContent(long siteId, long commentId, String content, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("content", content);
-        String path = String.format(Locale.US, "sites/%d/comments/%d/", siteId, commentId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Like or unlike a comment.
-     */
-    public void likeComment(String siteId, String commentId, boolean isLiked, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        String path = String.format(Locale.US, "sites/%s/comments/%s/likes/", siteId, commentId);
-
-        if (!isLiked) {
-            path += "mine/delete";
-        } else {
-            path += "new";
-        }
-
-        post(path, params, null, listener, errorListener);
-    }
-
-    public void getFreeSearchThemes(String siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
+    public void getFreeSearchThemes(long siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
         getSearchThemes("free", siteId, limit, offset, searchTerm, listener, errorListener);
     }
 
-    public void getSearchThemes(String tier, String siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/themes?tier=" + tier + "&number=%d&offset=%d&search=%s", siteId, limit, offset, searchTerm);
+    public void getSearchThemes(String tier, long siteId, int limit, int offset, String searchTerm, Listener listener,
+                                ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/themes?tier=" + tier + "&number=%d&offset=%d&search=%s",
+                siteId, limit, offset, searchTerm);
         get(path, listener, errorListener);
     }
 
-    public void getFreeThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
+    public void getFreeThemes(long siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
         getThemes("free", siteId, limit, offset, listener, errorListener);
     }
 
-    public void getPurchasedThemes(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/themes/purchased", siteId);
+    public void getPurchasedThemes(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/themes/purchased", siteId);
         get(path, listener, errorListener);
     }
 
     /**
      * Get all a site's themes
      */
-    public void getThemes(String tier, String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/themes/?tier=" + tier + "&number=%d&offset=%d", siteId, limit, offset);
+    public void getThemes(String tier, long siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/themes/?tier=" + tier + "&number=%d&offset=%d", siteId, limit, offset);
         get(path, listener, errorListener);
     }
 
     /**
      * Set a site's theme
      */
-    public void setTheme(String siteId, String themeId, Listener listener, ErrorListener errorListener) {
+    public void setTheme(long siteId, String themeId, Listener listener, ErrorListener errorListener) {
         Map<String, String> params = new HashMap<>();
         params.put("theme", themeId);
-        String path = String.format(Locale.US, "sites/%s/themes/mine", siteId);
+        String path = String.format(Locale.US, "sites/%d/themes/mine", siteId);
         post(path, params, null, listener, errorListener);
     }
 
     /**
      * Get a site's current theme
      */
-    public void getCurrentTheme(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/themes/mine", siteId);
+    public void getCurrentTheme(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/themes/mine", siteId);
         get(path, listener, errorListener);
     }
 
-    public void getGeneralSettings(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/settings", siteId);
+    public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/settings", siteId);
         Map<String, String> params = new HashMap<String, String>();
         get(path, params, null, listener, errorListener);
     }
 
-    public void setGeneralSiteSettings(String siteId, Listener listener, ErrorListener errorListener,
+    public void setGeneralSiteSettings(long siteId, Listener listener, ErrorListener errorListener,
                                        Map<String, String> params) {
-        String path = String.format(Locale.US, "sites/%s/settings", siteId);
+        String path = String.format(Locale.US, "sites/%d/settings", siteId);
         post(path, params, null, listener, errorListener);
     }
 
     /**
      * Delete a site
      */
-    public void deleteSite(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/delete", siteId);
+    public void deleteSite(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/delete", siteId);
         post(path, listener, errorListener);
     }
 
-    public void getSitePurchases(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/purchases", siteId);
+    public void getSitePurchases(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/purchases", siteId);
         get(path, listener, errorListener);
     }
 
-    public void exportContentAll(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%s/exports/start", siteId);
+    public void exportContentAll(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/exports/start", siteId);
         post(path, listener, errorListener);
     }
 

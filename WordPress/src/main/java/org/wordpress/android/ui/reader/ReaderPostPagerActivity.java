@@ -21,8 +21,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -44,12 +46,15 @@ import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -68,7 +73,6 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderPostPagerActivity extends AppCompatActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
-    private static final String KEY_TRACKED_POST = "tracked_post";
 
     /**
      * Type of URL intercepted
@@ -111,11 +115,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private boolean mBackFromLogin;
 
     private final HashSet<Integer> mTrackedPositions = new HashSet<>();
-    private boolean mTrackedPost;
+
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         setContentView(R.layout.reader_activity_post_pager);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -146,8 +153,13 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
-            mTrackedPost = savedInstanceState.getBoolean(KEY_TRACKED_POST);
             mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
+            if (savedInstanceState.containsKey(ReaderConstants.KEY_TRACKED_POSITIONS)) {
+                Serializable positions = savedInstanceState.getSerializable(ReaderConstants.KEY_TRACKED_POSITIONS);
+                if (positions instanceof HashSet) {
+                    mTrackedPositions.addAll((HashSet<Integer>) positions);
+                }
+            }
         } else {
             mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -170,13 +182,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        setTitle(mIsRelatedPostView ? R.string.reader_title_related_post_detail : (isDeepLinking() ? R.string
-                .reader_title_post_detail_wpcom : R.string.reader_title_post_detail));
-
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
         if (mIsRelatedPostView) {
-            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            mToolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -211,11 +220,46 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 }
 
                 mLastSelectedPosition = position;
+                updateTitle(position);
             }
         });
 
         mViewPager.setPageTransformer(false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+    }
+
+    /*
+     * set the activity title based on the post at the passed position
+     */
+    private void updateTitle(int position) {
+        // for related posts, always show "Related Post" as the title
+        if (mIsRelatedPostView) {
+            setTitle(R.string.reader_title_related_post_detail);
+            return;
+        }
+
+        // otherwise set the title to the title of the post
+        ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
+        if (ids != null) {
+            String title = ReaderPostTable.getPostTitle(ids.getBlogId(), ids.getPostId());
+            if (!title.isEmpty()) {
+                setTitle(title);
+                return;
+            }
+        }
+
+        // default when post hasn't been retrieved yet
+        setTitle(isDeepLinking() ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
+    }
+
+    /*
+     * used by the detail fragment when a post was requested due to not existing locally
+     */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(ReaderEvents.SinglePostDownloaded event) {
+        if (!isFinishing()) {
+            updateTitle(mViewPager.getCurrentItem());
+        }
     }
 
     private boolean isDeepLinking() {
@@ -346,7 +390,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                                         EventBus.getDefault().post(slugsResolved);
 
                                         // post wasn't available locally earlier so, track it now
-                                        trackPost(post.blogId, post.postId);
+                                        if (post != null) {
+                                            trackPost(post.blogId, post.postId);
+                                        }
                                     }
 
                                     @Override
@@ -527,9 +573,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
         }
 
-        outState.putBoolean(KEY_TRACKED_POST, mTrackedPost);
-
         outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
+
+        if (mTrackedPositions.size() > 0) {
+            outState.putSerializable(ReaderConstants.KEY_TRACKED_POSITIONS, mTrackedPositions);
+        }
 
         super.onSaveInstanceState(outState);
     }
@@ -584,7 +632,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      */
     private void trackPost(long blogId, long postId) {
         // bump the page view
-        ReaderPostActions.bumpPageViewForPost(blogId, postId);
+        ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
 
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(
@@ -633,9 +681,11 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
                             trackPostAtPositionIfNeeded(newPosition);
+                            updateTitle(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
+                            updateTitle(currentPosition);
                         }
 
                         // let the user know they can swipe between posts

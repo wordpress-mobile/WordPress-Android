@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 
@@ -19,7 +19,7 @@ android {
     publishNonDefault true
 
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 14
@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.11.0'
+    compile 'org.wordpress:utils:1.+'
     compile 'com.automattic:rest:1.0.7'
 }
 

@@ -332,23 +332,20 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use Merriweather font assets
-        .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
-
         .append("<style type='text/css'>")
-        .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
+        .append("  body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
 
-        // set line-height, font-size but not for gallery divs when rendering as tiled gallery as those will be
+        // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
         // handled with the .tiled-gallery rules bellow.
         .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
                 ", li { line-height: 1.6em; font-size: 100%; }")
 
         .append("  h1, h2 { line-height: 1.2em; }")
 
-        // counteract pre-defined height/width styles, except for the tiled-gallery divs when rendering as tiled gallery
+        // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as tiled gallery
         // as those will be handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
+        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
                 ", dl, table { width: auto !important; height: auto !important; }")
 
         // make sure long strings don't force the user to scroll horizontally
@@ -538,7 +535,7 @@ class ReaderPostRenderer {
 
     private ImageSize getImageSizeFromAttachments(final String imageUrl) {
         if (mAttachmentSizes == null) {
-            mAttachmentSizes = new ImageSizeMap(mPost.getAttachmentsJson());
+            mAttachmentSizes = new ImageSizeMap(mPost.getText(), mPost.getAttachmentsJson());
         }
         return mAttachmentSizes.getImageSize(imageUrl);
     }

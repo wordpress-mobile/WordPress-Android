@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.services;
 
 import org.wordpress.android.util.StringUtils;
-import org.xmlrpc.android.ApiHelper;
 
 public class PostEvents {
 
@@ -9,16 +8,6 @@ public class PostEvents {
         public final int mLocalBlogId;
 
         PostUploadStarted(int localBlogId) {
-            mLocalBlogId = localBlogId;
-        }
-    }
-
-    public static class PostUploadEnded {
-        public final int mLocalBlogId;
-        public final boolean mSucceeded;
-
-        PostUploadEnded(boolean succeeded, int localBlogId) {
-            mSucceeded = succeeded;
             mLocalBlogId = localBlogId;
         }
     }
@@ -38,41 +27,4 @@ public class PostEvents {
             return StringUtils.notNullStr(mMediaUrl);
         }
     }
-
-    public static class RequestPosts {
-        private final int mBlogId;
-        private final boolean mIsPage;
-        private boolean mCanLoadMore;
-        private boolean mFailed;
-        private ApiHelper.ErrorType mErrorType = null;
-
-        RequestPosts(int blogId, boolean isPage) {
-            mBlogId = blogId;
-            mIsPage = isPage;
-            mFailed = false;
-        }
-        public int getBlogId() {
-            return mBlogId;
-        }
-        public boolean isPage() {
-            return mIsPage;
-        }
-        public boolean canLoadMore() {
-            return mCanLoadMore;
-        }
-        public void setCanLoadMore(boolean canLoadMore) {
-            mCanLoadMore = canLoadMore;
-        }
-        public boolean getFailed() {
-            return mFailed;
-        }
-        public ApiHelper.ErrorType getErrorType() {
-            return mErrorType;
-        }
-        public void setErrorType(ApiHelper.ErrorType errorType) {
-            mErrorType = errorType;
-            mFailed = true;
-        }
-    }
-
 }

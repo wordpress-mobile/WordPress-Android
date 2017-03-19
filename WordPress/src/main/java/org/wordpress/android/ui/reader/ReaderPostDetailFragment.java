@@ -26,7 +26,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -38,13 +39,14 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderRelatedPostsView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView;
+import org.wordpress.android.ui.reader.views.ReaderSimplePostView;
 import org.wordpress.android.ui.reader.views.ReaderTagStrip;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
@@ -64,8 +66,11 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPTextView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -96,8 +101,8 @@ public class ReaderPostDetailFragment extends Fragment
     private View mLikingUsersLabel;
     private WPTextView mSignInButton;
 
-    private ReaderRelatedPostsView mGlobalRelatedPostsView;
-    private ReaderRelatedPostsView mLocalRelatedPostsView;
+    private ReaderSimplePostContainerView mGlobalRelatedPostsView;
+    private ReaderSimplePostContainerView mLocalRelatedPostsView;
 
     private boolean mPostSlugsResolutionUnderway;
     private boolean mHasAlreadyUpdatedPost;
@@ -116,6 +121,9 @@ public class ReaderPostDetailFragment extends Fragment
 
     // min scroll distance before toggling toolbar
     private static final float MIN_SCROLL_DISTANCE_Y = 10;
+
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(false, blogId, postId, null, 0, false, null, null, false);
@@ -154,6 +162,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         if (savedInstanceState != null) {
             mPostHistory.restoreInstance(savedInstanceState);
         }
@@ -228,8 +237,8 @@ public class ReaderPostDetailFragment extends Fragment
         mScrollView.setVisibility(View.INVISIBLE);
 
         View relatedPostsContainer = view.findViewById(R.id.container_related_posts);
-        mGlobalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
-        mLocalRelatedPostsView = (ReaderRelatedPostsView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
+        mGlobalRelatedPostsView = (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_global);
+        mLocalRelatedPostsView = (ReaderSimplePostContainerView) relatedPostsContainer.findViewById(R.id.related_posts_view_local);
 
         mSignInButton = (WPTextView) view.findViewById(R.id.nux_sign_in_button);
         mSignInButton.setOnClickListener(mSignInClickListener);
@@ -413,7 +422,8 @@ public class ReaderPostDetailFragment extends Fragment
             likeCount.setSelected(isAskingToLike);
             ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
-            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike);
+            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike,
+                    mAccountStore.getAccount().getUserId());
             if (!success) {
                 likeCount.setSelected(!isAskingToLike);
                 return;
@@ -539,18 +549,18 @@ public class ReaderPostDetailFragment extends Fragment
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private void showRelatedPosts(@NonNull ReaderRelatedPostList relatedPosts, final boolean isGlobal) {
-        // different container views for global/local related posts
-        ReaderRelatedPostsView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
-        relatedPostsView.showRelatedPosts(relatedPosts, mPost.getBlogName(), isGlobal);
-
-        // tapping a related posts should open the related post detail
-        relatedPostsView.setOnRelatedPostClickListener(new ReaderRelatedPostsView.OnRelatedPostClickListener() {
+    private void showRelatedPosts(@NonNull ReaderSimplePostList relatedPosts, final boolean isGlobal) {
+        // tapping a related post should open the related post detail
+        ReaderSimplePostView.OnSimplePostClickListener listener = new ReaderSimplePostView.OnSimplePostClickListener() {
             @Override
-            public void onRelatedPostClick(View v, long siteId, long postId) {
+            public void onSimplePostClick(View v, long siteId, long postId) {
                 showRelatedPostDetail(siteId, postId, isGlobal);
             }
-        });
+        };
+
+        // different container views for global/local related posts
+        ReaderSimplePostContainerView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
+        relatedPostsView.showPosts(relatedPosts, mPost.getBlogName(), isGlobal, listener);
 
         // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
@@ -696,7 +706,7 @@ public class ReaderPostDetailFragment extends Fragment
             countLikes.setCount(mPost.numLikes);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
-            if (ReaderUtils.isLoggedOutReader()) {
+            if (!mAccountStore.hasAccessToken()) {
                 countLikes.setEnabled(false);
             } else if (mPost.canLikePost()) {
                 countLikes.setOnClickListener(new View.OnClickListener() {
@@ -724,7 +734,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             Snackbar.make(getView(), R.string.reader_snackbar_err_cannot_like_post_logged_out, Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.sign_in, mSignInClickListener).show();
             return;
@@ -808,14 +818,17 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.OnRequestListener listener = new ReaderActions.OnRequestListener() {
             @Override
             public void onSuccess() {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     showPost();
+                    EventBus.getDefault().post(new ReaderEvents.SinglePostDownloaded());
                 }
             }
 
             @Override
             public void onFailure(int statusCode) {
+                mHasAlreadyRequestedPost = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     onRequestFailure(statusCode);
@@ -858,7 +871,7 @@ public class ReaderPostDetailFragment extends Fragment
                 case 401:
                 case 403:
                     final boolean offerSignIn = WPUrlUtils.isWordPressCom(mInterceptedUri)
-                            && !AccountHelper.isSignedInWordPressDotCom();
+                            && !mAccountStore.hasAccessToken();
 
                     if (!offerSignIn) {
                         errMsgResId = (mInterceptedUri == null)
@@ -973,7 +986,6 @@ public class ReaderPostDetailFragment extends Fragment
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
                 // the server if it hasn't already been requested
                 if (!mHasAlreadyRequestedPost) {
-                    mHasAlreadyRequestedPost = true;
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
                 } else if (!TextUtils.isEmpty(mErrorMessage)) {
@@ -988,6 +1000,12 @@ public class ReaderPostDetailFragment extends Fragment
                     case COMMENT_JUMP:
                     case COMMENT_REPLY:
                     case COMMENT_LIKE:
+                        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+                            // passcode screen was launched already (when ReaderPostPagerActivity got resumed) so reset
+                            // the timeout to let the passcode screen come up for the ReaderCommentListActivity.
+                            // See https://github.com/wordpress-mobile/WordPress-Android/issues/4887
+                            AppLockManager.getInstance().getAppLock().forcePasswordLock();
+                        }
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
                                 mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();
@@ -1032,8 +1050,7 @@ public class ReaderPostDetailFragment extends Fragment
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
 
-
-            headerView.setPost(mPost);
+            headerView.setPost(mPost, mAccountStore.hasAccessToken());
             tagStrip.setPost(mPost);
 
             if (canShowFooter() && mLayoutFooter.getVisibility() != View.VISIBLE) {
@@ -1132,9 +1149,9 @@ public class ReaderPostDetailFragment extends Fragment
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
         if (ReaderUtils.isBlogPreviewUrl(url)) {
-            long blogId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
-            if (blogId != 0) {
-                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blogId);
+            long siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
+            if (siteId != 0) {
+                ReaderActivityLauncher.showReaderBlogPreview(getActivity(), siteId);
             }
             return true;
         }
@@ -1256,7 +1273,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             return mPost.numReplies > 0;
         }
         return mPost.isWP()
@@ -1269,7 +1286,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (mPost == null) {
             return false;
         }
-        if (ReaderUtils.isLoggedOutReader()) {
+        if (!mAccountStore.hasAccessToken()) {
             return mPost.numLikes > 0;
         }
         return mPost.canLikePost() || mPost.numLikes > 0;

@@ -41,8 +41,9 @@ public class StatsTable {
     }
 
 
-    public static String getStats(final Context ctx, final int blogId, final StatsTimeframe timeframe, final String date,
-                                  final StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested, final int pageRequested) {
+    public static String getStats(final Context ctx, final long blogId, final StatsTimeframe timeframe,
+                                  final String date, final StatsEndpointsEnum sectionToUpdate, final int
+                                          maxResultsRequested, final int pageRequested) {
         if (ctx == null) {
             AppLog.e(AppLog.T.STATS, "Cannot insert a null stats since the passed context is null. Context is required " +
                     "to access the DB.");
@@ -59,7 +60,7 @@ public class StatsTable {
                 + " LIMIT 1";
 
         String[] args = {
-                Integer.toString(blogId),
+                Long.toString(blogId),
                 Integer.toString(sectionToUpdate.ordinal()),
                 Integer.toString(timeframe.ordinal()),
                 date,
@@ -98,13 +99,14 @@ public class StatsTable {
         return null;
     }
 
-    public static void insertStats(final Context ctx, final int blogId, final StatsTimeframe timeframe, final String date,
-                                   final StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested, final int pageRequested,
-                                   final String jsonResponse, final long responseTimestamp) {
-
+    public static void insertStats(final Context ctx, final long blogId, final StatsTimeframe timeframe,
+                                   final String date,
+                                   final StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
+                                   final int pageRequested, final String jsonResponse, final long responseTimestamp) {
         if (ctx == null) {
-            AppLog.e(AppLog.T.STATS, "Cannot insert a null stats since the passed context is null. Context is required " +
-                    "to access the DB.");
+            AppLog.e(AppLog.T.STATS,
+                    "Cannot insert a null stats since the passed context is null. Context is required " +
+                            "to access the DB.");
             return;
         }
 
@@ -186,7 +188,8 @@ public class StatsTable {
         }
     }
 
-    public static boolean deleteStatsForBlog(final Context ctx, final int blogId, final StatsEndpointsEnum sectionToUpdate ) {
+    public static boolean deleteStatsForBlog(final Context ctx, final long blogId, final StatsEndpointsEnum
+            sectionToUpdate ) {
         if (ctx == null) {
             AppLog.e(AppLog.T.STATS, "Cannot delete stats since the passed context is null. Context is required " +
                     "to access the DB.");
@@ -197,7 +200,7 @@ public class StatsTable {
         try {
             db.beginTransaction();
             int rowDeleted = db.delete(TABLE_NAME, "blogID=? AND type=?",
-                    new String[] {Integer.toString(blogId), Integer.toString(sectionToUpdate.ordinal())}
+                    new String[] {Long.toString(blogId), Integer.toString(sectionToUpdate.ordinal())}
             );
             db.setTransactionSuccessful();
             AppLog.d(AppLog.T.STATS, "Stats deleted for localBlogID " + blogId + " and type " + sectionToUpdate.getRestEndpointPath());

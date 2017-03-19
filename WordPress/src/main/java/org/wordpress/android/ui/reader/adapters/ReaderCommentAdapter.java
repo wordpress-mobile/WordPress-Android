@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,6 +17,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -28,7 +30,6 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -40,6 +41,8 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import javax.inject.Inject;
 
 public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ReaderPost mPost;
@@ -67,6 +70,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private static final int NUM_HEADERS = 1;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+    @Inject FluxCImageLoader mImageLoader;
+
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
     }
@@ -86,9 +93,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final View spacerIndent;
         private final ProgressBar progress;
 
-        private final TextView txtReply;
-        private final ImageView imgReply;
-
+        private final ViewGroup replyView;
         private final ReaderIconCountView countLikes;
 
         public CommentHolder(View view) {
@@ -100,13 +105,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
 
-            txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
-            imgReply = (ImageView) view.findViewById(R.id.image_comment_reply);
-
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
 
+            replyView = (ViewGroup) view.findViewById(R.id.reply_container);
             countLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
 
             txtText.setLinksClickable(true);
@@ -124,6 +127,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public ReaderCommentAdapter(Context context, ReaderPost post) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mPost = post;
         mIsPrivatePost = (post != null && post.isPrivate);
 
@@ -233,10 +237,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogPreview(
-                            view.getContext(),
-                            comment.authorBlogId
-                    );
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
                 }
             };
             commentHolder.imgAvatar.setOnClickListener(authorListener);
@@ -266,7 +267,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
-        CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth);
+        CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth, mImageLoader);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
@@ -277,21 +278,18 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.progress.setVisibility(View.GONE);
         }
 
-        if (ReaderUtils.isLoggedOutReader()) {
-            commentHolder.txtReply.setVisibility(View.GONE);
-            commentHolder.imgReply.setVisibility(View.GONE);
+        if (!mAccountStore.hasAccessToken()) {
+            commentHolder.replyView.setVisibility(View.GONE);
         } else {
-            if (mReplyListener != null) {
-                // tapping reply icon tells activity to show reply box
-                View.OnClickListener replyClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            // tapping reply tells activity to show reply box
+            commentHolder.replyView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mReplyListener != null) {
                         mReplyListener.onRequestReply(comment.commentId);
                     }
-                };
-                commentHolder.txtReply.setOnClickListener(replyClickListener);
-                commentHolder.imgReply.setOnClickListener(replyClickListener);
-            }
+                }
+            });
 
             if (mAnimateLikeCommentId != 0 && mAnimateLikeCommentId == comment.commentId) {
                 // simulate tapping on the "Like" button. Add a delay to help the user notice it.
@@ -342,7 +340,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.countLikes.setSelected(comment.isLikedByCurrentUser);
             holder.countLikes.setCount(comment.numLikes);
 
-            if (ReaderUtils.isLoggedOutReader()) {
+            if (!mAccountStore.hasAccessToken()) {
                 holder.countLikes.setEnabled(false);
             } else {
                 holder.countLikes.setEnabled(true);
@@ -374,7 +372,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
         ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
 
-        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
+        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }

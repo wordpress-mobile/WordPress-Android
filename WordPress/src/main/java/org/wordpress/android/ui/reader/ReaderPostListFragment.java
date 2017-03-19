@@ -27,12 +27,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderSearchTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
@@ -76,11 +78,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
-                   ReaderInterfaces.OnTagSelectedListener,
                    ReaderInterfaces.OnPostPopupListener,
                    WPMainActivity.OnActivityBackPressedListener,
                    WPMainActivity.OnScrollToTopListener {
@@ -118,6 +121,8 @@ public class ReaderPostListFragment extends Fragment
     private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
+
+    @Inject AccountStore mAccountStore;
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
@@ -221,6 +226,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
@@ -504,14 +510,14 @@ public class ReaderPostListFragment extends Fragment
         // the following will change the look and feel of the toolbar to match the current design
         mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.blue_medium));
         mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, R.color.white));
-        mRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_medium) + spacingHorizontal,
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
 
         // add a menu to the filtered recycler's toolbar
-        if (!ReaderUtils.isLoggedOutReader()
-                && (getPostListType() == ReaderPostListType.TAG_FOLLOWED || getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
+        if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED ||
+                getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
             setupRecyclerToolbar();
         }
 
@@ -794,10 +800,7 @@ public class ReaderPostListFragment extends Fragment
         // they can be restored if the user undoes the block
         final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         // Only pass the blogID if available. Do not track feedID
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.READER_BLOG_BLOCKED,
-                mCurrentBlogId != 0 ? mCurrentBlogId : null
-        );
+        AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_BLOG_BLOCKED, mCurrentBlogId);
 
         // remove posts in this blog from the adapter
         getPostAdapter().removePostsInBlog(post.blogId);
@@ -1004,7 +1007,6 @@ public class ReaderPostListFragment extends Fragment
             Context context = WPActivityUtils.getThemedContext(getActivity());
             mPostAdapter = new ReaderPostAdapter(context, getPostListType());
             mPostAdapter.setOnPostSelectedListener(this);
-            mPostAdapter.setOnTagSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
@@ -1447,23 +1449,6 @@ public class ReaderPostListFragment extends Fragment
                 AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_SEARCH_RESULT_TAPPED, post);
                 ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.blogId, post.postId);
                 break;
-        }
-    }
-
-    /*
-     * called from adapter when user taps a tag on a post to display tag preview
-     */
-    @Override
-    public void onTagSelected(String tagName) {
-        if (!isAdded()) return;
-
-        ReaderTag tag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
-        if (getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
-            // user is already previewing a tag, so change current tag in existing preview
-            setCurrentTag(tag);
-        } else {
-            // user isn't previewing a tag, so open in tag preview
-            ReaderActivityLauncher.showReaderTagPreview(getActivity(), tag);
         }
     }
 

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -83,8 +83,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
      */
-    DotComSiteSettings(Activity host, Blog blog, SiteSettingsListener listener) {
-        super(host, blog, listener);
+    DotComSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
+        super(host, site, listener);
     }
 
     @Override
@@ -95,7 +95,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (params == null || params.isEmpty()) return;
 
         WordPress.getRestClientUtils().setGeneralSiteSettings(
-                String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
+                mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Site Settings saved remotely");
@@ -114,8 +114,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                     properties.put(SAVED_ITEM_PREFIX + currentKey, currentValue);
                                 }
                             }
-                            AnalyticsUtils.trackWithCurrentBlogDetails(
-                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, properties);
+                            AnalyticsUtils.trackWithSiteDetails(
+                                    AnalyticsTracker.Stat.SITE_SETTINGS_SAVED_REMOTELY, mSite, properties);
                         }
                     }
                 }, new RestRequest.ErrorListener() {
@@ -134,21 +134,27 @@ class DotComSiteSettings extends SiteSettingsInterface {
     protected void fetchRemoteData() {
         fetchCategories();
         WordPress.getRestClientUtils().getGeneralSettings(
-                String.valueOf(mBlog.getRemoteBlogId()), new RestRequest.Listener() {
+                mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         AppLog.d(AppLog.T.API, "Received response to Settings REST request.");
                         credentialsVerified(true);
 
-                        mRemoteSettings.localTableId = mBlog.getRemoteBlogId();
-                        deserializeDotComRestResponse(mBlog, response);
+                        mRemoteSettings.localTableId = mSite.getId();
+                        deserializeDotComRestResponse(mSite, response);
                         if (!mRemoteSettings.equals(mSettings)) {
                             // postFormats setting is not returned by this api call so copy it over
                             final Map<String, String> currentPostFormats = mSettings.postFormats;
 
+                            // Local settings
+                            boolean location = mSettings.location;
+                            boolean optimizedImage = mSettings.optimizedImage;
+
                             mSettings.copyFrom(mRemoteSettings);
 
                             mSettings.postFormats = currentPostFormats;
+                            mSettings.location = location;
+                            mSettings.optimizedImage = optimizedImage;
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
@@ -166,12 +172,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Sets values from a .com REST response object.
      */
-    public void deserializeDotComRestResponse(Blog blog, JSONObject response) {
-        if (blog == null || response == null) return;
+    public void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
+        if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject(SETTINGS_KEY);
 
-        mRemoteSettings.username = blog.getUsername();
-        mRemoteSettings.password = blog.getPassword();
+        mRemoteSettings.username = site.getUsername();
+        mRemoteSettings.password = site.getPassword();
         mRemoteSettings.address = response.optString(URL_KEY, "");
         mRemoteSettings.title = response.optString(GET_TITLE_KEY, "");
         mRemoteSettings.tagline = response.optString(GET_DESC_KEY, "");
@@ -361,7 +367,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Request a list of post categories for a site via the WordPress REST API.
      */
     private void fetchCategories() {
-        WordPress.getRestClientUtilsV1_1().getCategories(String.valueOf(mBlog.getRemoteBlogId()),
+        // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
+        WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {

@@ -7,13 +7,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -22,6 +22,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
@@ -31,6 +33,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class AppSettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
@@ -38,9 +42,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private DetailListPreference mLanguagePreference;
     private SharedPreferences mSettings;
 
+    @Inject SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.app_settings);
@@ -59,7 +67,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        updateVisualEditorSettings();
+        updateEditorSettings();
     }
 
     @Override
@@ -104,7 +112,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         return super.onOptionsItemSelected(item);
     }
 
-    private void updateVisualEditorSettings() {
+    private void updateEditorSettings() {
         if (!AppPrefs.isVisualEditorAvailable()) {
             PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
                     .getString(R.string.pref_key_account_settings_root));
@@ -114,18 +122,60 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final SwitchPreference visualEditorSwitch = (SwitchPreference) findPreference(getActivity()
-                    .getString(R.string.pref_key_visual_editor_enabled));
-            visualEditorSwitch.setChecked(AppPrefs.isVisualEditorEnabled());
-            visualEditorSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            final ListPreference editorTypePreference = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+
+            // If user has Aztec preference from previous installation and it's not available anymore, don't use it
+            if (!AppPrefs.isAztecEditorAvailable() && "2".equals(editorTypePreference.getValue())) {
+                if (AppPrefs.isVisualEditorEnabled()) {
+                    editorTypePreference.setValue("1");
+                } else {
+                    editorTypePreference.setValue("0");
+                }
+            }
+
+            // if Aztec unavailable, only show the old list old of editors
+            if (!AppPrefs.isAztecEditorAvailable()) {
+                editorTypePreference.setEntries(R.array.editor_entries_without_aztec);
+                editorTypePreference.setEntryValues(R.array.editor_values_without_aztec);
+            }
+
+            editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
-                public boolean onPreferenceChange(final Preference preference, final Object newValue) {
-                    if (newValue == null) return false;
-                    visualEditorSwitch.setChecked((Boolean) newValue);
-                    AppPrefs.setVisualEditorEnabled((Boolean) newValue);
-                    return true;
+                public boolean onPreferenceChange(final Preference preference, final Object value) {
+                    if (value != null) {
+                        int index = Integer.parseInt(value.toString());
+                        CharSequence[] entries = editorTypePreference.getEntries();
+                        editorTypePreference.setSummary(entries[index]);
+
+                        switch (index) {
+                            case 1:
+                                AppPrefs.setAztecEditorEnabled(false);
+                                AppPrefs.setVisualEditorEnabled(true);
+                                break;
+                            case 2:
+                                AppPrefs.setAztecEditorEnabled(true);
+                                AppPrefs.setVisualEditorEnabled(false);
+                                break;
+                            default:
+                                AppPrefs.setAztecEditorEnabled(false);
+                                AppPrefs.setVisualEditorEnabled(false);
+                                break;
+                        }
+
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             });
+
+            String editorTypeKey = getString(R.string.pref_key_editor_type);
+            String editorTypeSetting = mSettings.getString(editorTypeKey, "");
+
+            if (!editorTypeSetting.equalsIgnoreCase("")) {
+                CharSequence[] entries = editorTypePreference.getEntries();
+                editorTypePreference.setSummary(entries[Integer.parseInt(editorTypeSetting)]);
+            }
         }
     }
 
@@ -134,23 +184,25 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         Resources res = getResources();
         Configuration conf = res.getConfiguration();
-        Locale currentLocale = conf.locale != null ? conf.locale : LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
-
-        if (currentLocale.toString().equals(languageCode)) return;
-
-        updateLanguagePreference(languageCode);
-
-        // update configuration
+        // will return conf.locale if conf is non-null, or Locale.getDefault()
+        Locale currentLocale = LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
         Locale newLocale = WPPrefUtils.languageLocale(languageCode);
-        conf.locale = newLocale;
-        res.updateConfiguration(conf, res.getDisplayMetrics());
 
-        if (LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext()).equals(newLocale)) {
+        if (currentLocale.toString().equals(newLocale.getDisplayLanguage())) {
+            return;
+        }
+
+        if (Locale.getDefault().toString().equals(newLocale.toString())) {
             // remove custom locale key when original device locale is selected
             mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
         } else {
             mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
         }
+        updateLanguagePreference(languageCode);
+
+        // update configuration
+        conf.locale = newLocale;
+        res.updateConfiguration(conf, res.getDisplayMetrics());
 
         // Track language change on Mixpanel because we have both the device language and app selected language
         // data in Tracks metadata.
@@ -159,7 +211,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them
-        AnalyticsUtils.refreshMetadata();
+        AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
         // Refresh the app
         Intent refresh = new Intent(getActivity(), getActivity().getClass());

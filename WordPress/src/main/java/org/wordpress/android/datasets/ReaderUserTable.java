@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SqlUtils;
 
@@ -80,7 +79,7 @@ public class ReaderUserTable {
     /*
      * returns avatar urls for the passed user ids - used by post detail to show avatars for liking users
      */
-    public static ArrayList<String> getAvatarUrls(ReaderUserIdList userIds, int max, int avatarSz) {
+    public static ArrayList<String> getAvatarUrls(ReaderUserIdList userIds, int max, int avatarSz, long wpComUserId) {
         ArrayList<String> avatars = new ArrayList<String>();
         if (userIds==null || userIds.size()==0)
             return avatars;
@@ -90,17 +89,17 @@ public class ReaderUserTable {
         // make sure current user's avatar is returned if the passed list contains them - this is
         // important since it may not otherwise be returned when a "max" is passed, and we want
         // the current user to appear first in post detail when they like a post
-        long currentUserId = AccountHelper.getDefaultAccount().getUserId();
-        boolean containsCurrentUser = userIds.contains(currentUserId);
+        boolean containsCurrentUser = userIds.contains(wpComUserId);
         if (containsCurrentUser)
-            sb.append(currentUserId);
+            sb.append(wpComUserId);
 
         int numAdded = (containsCurrentUser ? 1 : 0);
         for (Long id: userIds) {
             // skip current user since we added them already
-            if (id!=currentUserId) {
-                if (numAdded > 0)
+            if (id != wpComUserId) {
+                if (numAdded > 0) {
                     sb.append(",");
+                }
                 sb.append(id);
                 numAdded++;
                 if (max > 0 && numAdded >= max)
@@ -116,7 +115,7 @@ public class ReaderUserTable {
                     long userId = c.getLong(0);
                     String url = GravatarUtils.fixGravatarUrl(c.getString(1), avatarSz);
                     // add current user to the top
-                    if (userId==currentUserId) {
+                    if (userId == wpComUserId) {
                         avatars.add(0, url);
                     } else {
                         avatars.add(url);
@@ -129,8 +128,8 @@ public class ReaderUserTable {
         }
     }
 
-    public static ReaderUser getCurrentUser() {
-        return getUser(AccountHelper.getDefaultAccount().getUserId());
+    public static ReaderUser getCurrentUser(final long wpComUserId) {
+        return getUser(wpComUserId);
     }
 
     private static ReaderUser getUser(long userId) {

@@ -23,7 +23,7 @@
             android:id="@+id/text_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/noticon_clock"
+            android:drawableLeft="@drawable/ic_time_grey_darken_10_16dp"
             android:drawablePadding="@dimen/margin_small"
             android:padding="@dimen/margin_medium"
             android:textColor="@color/grey_darken_10"
@@ -65,7 +65,7 @@
                     android:maxLines="3"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_large"
-                    app:wpFontFamily="merriweather"
+                    android:fontFamily="serif"
                     tools:text="text_title" />
 
                 <org.wordpress.android.widgets.WPTextView
@@ -76,7 +76,7 @@
                     android:textColor="@color/grey_darken_10"
                     android:textSize="@dimen/text_sz_small"
                     android:visibility="gone"
-                    tools:drawableLeft="@drawable/noticon_scheduled"
+                    tools:drawableLeft="@drawable/noticon_scheduled_alert_yellow_16dp"
                     tools:text="text_status"
                     tools:visibility="visible" />
 
@@ -92,14 +92,14 @@
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/margin_medium"
                 android:contentDescription="@string/more"
-                app:srcCompat="@drawable/ic_action_more" />
+                app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/disabled_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/translucent_white"
+            android:background="@color/white_translucent_65"
             android:clickable="true"
             android:focusable="true">
 

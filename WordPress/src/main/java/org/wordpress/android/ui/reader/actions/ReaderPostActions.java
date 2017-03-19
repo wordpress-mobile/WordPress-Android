@@ -17,6 +17,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
@@ -24,8 +26,8 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPost;
-import org.wordpress.android.ui.reader.models.ReaderRelatedPostList;
+import org.wordpress.android.ui.reader.models.ReaderSimplePost;
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
@@ -53,7 +55,8 @@ public class ReaderPostActions {
      * like/unlike the passed post
      */
     public static boolean performLikeAction(final ReaderPost post,
-                                            final boolean isAskingToLike) {
+                                            final boolean isAskingToLike,
+                                            final long wpComUserId) {
         // do nothing if post's like state is same as passed
         boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
         if (isCurrentlyLiked == isAskingToLike) {
@@ -68,7 +71,7 @@ public class ReaderPostActions {
             newNumLikes = 0;
         }
         ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
-        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
+        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike, wpComUserId);
 
         final String actionName = isAskingToLike ? "like" : "unlike";
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
@@ -96,7 +99,7 @@ public class ReaderPostActions {
                 }
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
-                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser);
+                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser, wpComUserId);
             }
         };
 
@@ -299,18 +302,20 @@ public class ReaderPostActions {
                 + "&t="    + mRandom.nextInt();
     }
 
-    public static void bumpPageViewForPost(long blogId, long postId) {
-        bumpPageViewForPost(ReaderPostTable.getBlogPost(blogId, postId, true));
+    public static void bumpPageViewForPost(SiteStore siteStore, long blogId, long postId) {
+        bumpPageViewForPost(siteStore, ReaderPostTable.getBlogPost(blogId, postId, true));
     }
 
-    public static void bumpPageViewForPost(ReaderPost post) {
+    public static void bumpPageViewForPost(SiteStore siteStore, ReaderPost post) {
         if (post == null) {
             return;
         }
 
-        // don't bump stats for posts in blogs the current user is an admin of, unless
-        // this is a private post since we count views for private posts from admins
-        if (!post.isPrivate && WordPress.wpDB.isCurrentUserAdminOfRemoteBlogId(post.blogId)) {
+        // don't bump stats for posts in sites the current user is an admin of, unless
+        // this is a private post since we count views for private posts from owner or member
+        SiteModel site = siteStore.getSiteBySiteId(post.blogId);
+        // site will be null here if the user is not the owner or a member of the site
+        if (site != null && !post.isPrivate) {
             AppLog.d(T.READER, "skipped bump page view - user is admin");
             return;
         }
@@ -343,7 +348,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.requestQueue.add(request);
+        WordPress.sRequestQueue.add(request);
     }
 
     /*
@@ -373,7 +378,7 @@ public class ReaderPostActions {
                 + "/related"
                 + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
                 + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
-                + "&fields=" + ReaderRelatedPost.RELATED_POST_FIELDS;
+                + "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
@@ -386,11 +391,11 @@ public class ReaderPostActions {
             public void run() {
                 JSONArray jsonPosts = jsonObject.optJSONArray("posts");
                 if (jsonPosts != null) {
-                    ReaderRelatedPostList allRelatedPosts = ReaderRelatedPostList.fromJsonPosts(jsonPosts);
+                    ReaderSimplePostList allRelatedPosts = ReaderSimplePostList.fromJsonPosts(jsonPosts);
                     // split into posts from the passed site (local) and from across wp.com (global)
-                    ReaderRelatedPostList localRelatedPosts = new ReaderRelatedPostList();
-                    ReaderRelatedPostList globalRelatedPosts = new ReaderRelatedPostList();
-                    for (ReaderRelatedPost relatedPost : allRelatedPosts) {
+                    ReaderSimplePostList localRelatedPosts = new ReaderSimplePostList();
+                    ReaderSimplePostList globalRelatedPosts = new ReaderSimplePostList();
+                    for (ReaderSimplePost relatedPost : allRelatedPosts) {
                         if (relatedPost.getSiteId() == sourcePost.blogId) {
                             localRelatedPosts.add(relatedPost);
                         } else {

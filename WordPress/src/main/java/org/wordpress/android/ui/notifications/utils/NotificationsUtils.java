@@ -8,13 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -36,21 +34,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
-import org.wordpress.android.ui.comments.CommentActionResult;
-import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationFailed;
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteModerationStatusChanged;
-import org.wordpress.android.ui.notifications.NotificationEvents.NoteVisibilityChanged;
-import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -62,9 +49,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import de.greenrobot.event.EventBus;
 
 public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
@@ -84,19 +70,13 @@ public class NotificationsUtils {
 
     private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
 
-    private static boolean mSnackbarDidUndo;
-
     public interface TwoFactorAuthCallback {
         void onTokenValid(String token, String title, String message);
         void onTokenInvalid();
     }
 
-
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
-            return;
-        }
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
         String settingsEndpoint = WPCOM_SETTINGS_ENDPOINT;
@@ -271,13 +251,13 @@ public class NotificationsUtils {
 
         Drawable loading = context.getResources().getDrawable(
             org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey);
-        Drawable failed = context.getResources().getDrawable(R.drawable.noticon_warning_big_grey);
+        Drawable failed = context.getResources().getDrawable(R.drawable.ic_notice_grey_500_48dp);
         // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
         // otherwise it would load blank white
         WPImageGetter imageGetter = new WPImageGetter(
                 textView,
                 context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
-                WordPress.imageLoader,
+                WordPress.sImageLoader,
                 loading,
                 failed
         );
@@ -345,60 +325,6 @@ public class NotificationsUtils {
 
                 indexAdjustment += imagePlaceholder.length();
             }
-        }
-    }
-
-    public static void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
-        switch (clickedSpan.getRangeType()) {
-            case SITE:
-                // Show blog preview
-                activity.showBlogPreviewActivity(clickedSpan.getId());
-                break;
-            case USER:
-                // Show blog preview
-                activity.showBlogPreviewActivity(clickedSpan.getSiteId());
-                break;
-            case POST:
-                // Show post detail
-                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
-                break;
-            case COMMENT:
-                // Load the comment in the reader list if it exists, otherwise show a webview
-                if (ReaderUtils.postAndCommentExists(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId())) {
-                    activity.showReaderCommentsList(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId());
-                } else {
-                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                }
-                break;
-            case STAT:
-            case FOLLOW:
-                // We can open native stats if the site is a wpcom or Jetpack + stored in the app locally.
-                // Note that for Jetpack sites we need the options already synced. That happens when the user
-                // selects the site in the sites picker. So adding it to the app doesn't always populate options.
-
-               // Do not load Jetpack shadow sites here. They've empty options and Stats can't be loaded for them.
-                Blog blog = WordPress.wpDB.getBlogForDotComBlogId(
-                        String.valueOf(clickedSpan.getSiteId())
-                );
-                // Make sure blog is not null, and it's either JP or dotcom. Better safe than sorry.
-                if (blog == null ||  blog.getLocalTableBlogId() <= 0 || (!blog.isDotcomFlag() && !blog.isJetpackPowered())) {
-                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                    break;
-                }
-                activity.showStatsActivityForSite(blog.getLocalTableBlogId(), clickedSpan.getRangeType());
-                break;
-            case LIKE:
-                if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {
-                    activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
-                } else {
-                    activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
-                }
-                break;
-            default:
-                // We don't know what type of id this is, let's see if it has a URL and push a webview
-                if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
-                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                }
         }
     }
 
@@ -473,77 +399,6 @@ public class NotificationsUtils {
         AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
     }
 
-    private static void showUndoBarForNote(final Note note,
-                                           final CommentStatus status,
-                                           final View parentView) {
-        Resources resources = parentView.getContext().getResources();
-        String message = (status == CommentStatus.TRASH ? resources.getString(R.string.comment_trashed) : resources.getString(R.string.comment_spammed));
-        View.OnClickListener undoListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSnackbarDidUndo = true;
-                EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
-            }
-        };
-
-        mSnackbarDidUndo = false;
-        Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener);
-
-
-
-        snackbar.setCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                super.onDismissed(snackbar, event);
-                if (mSnackbarDidUndo) {
-                    return;
-                }
-                // Delete the notifications from the local DB as soon as the undo bar fades away.
-                NotificationsTable.deleteNoteById(note.getId());
-                CommentActions.moderateCommentForNote(note, status,
-                        new CommentActions.CommentActionListener() {
-                            @Override
-                            public void onActionResult(CommentActionResult result) {
-                                if (!result.isSuccess()) {
-                                    EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), false));
-                                    EventBus.getDefault().postSticky(new NoteModerationFailed());
-                                }
-                            }
-                        });
-            }
-        });
-
-        snackbar.show();
-    }
-
-    /**
-     * Moderate a comment from a WPCOM notification.
-     * Broadcast EventBus events on update/success/failure and show an undo bar if new status is Trash or Spam
-     */
-    public static void moderateCommentForNote(final Note note, final CommentStatus newStatus, final View parentView) {
-        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
-            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), true));
-            CommentActions.moderateCommentForNote(note, newStatus,
-                    new CommentActions.CommentActionListener() {
-                        @Override
-                        public void onActionResult(CommentActionResult result) {
-                            EventBus.getDefault().postSticky(new NoteModerationStatusChanged(note.getId(), false));
-                            if (!result.isSuccess()) {
-                                note.setLocalStatus(null);
-                                EventBus.getDefault().postSticky(new NoteModerationFailed());
-                            }
-                        }
-                    });
-        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
-            // Post as sticky, so that NotificationsListFragment can pick it up after it's created
-            EventBus.getDefault().postSticky(new NoteVisibilityChanged(note.getId(), true));
-            // Show undo bar for trash or spam actions
-            showUndoBarForNote(note, newStatus, parentView);
-        }
-    }
-
     // Checks if global notifications toggle is enabled in the Android app settings
     // See: https://code.google.com/p/android/issues/detail?id=38482#c15
     @SuppressWarnings("unchecked")
@@ -603,4 +458,16 @@ public class NotificationsUtils {
 
         return note;
     }
+
+    public static int findNoteInNoteArray(List<Note> notes, String noteIdToSearchFor) {
+        if (notes == null || TextUtils.isEmpty(noteIdToSearchFor)) return -1;
+
+        for (int i = 0; i < notes.size(); i++) {
+            Note note = notes.get(i);
+            if (noteIdToSearchFor.equals(note.getId()))
+                return i;
+        }
+        return -1;
+    }
+
 }

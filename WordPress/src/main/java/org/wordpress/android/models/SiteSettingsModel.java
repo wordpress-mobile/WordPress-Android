@@ -29,6 +29,7 @@ public class SiteSettingsModel {
     public static final String LANGUAGE_COLUMN_NAME = "language";
     public static final String PRIVACY_COLUMN_NAME = "privacy";
     public static final String LOCATION_COLUMN_NAME = "location";
+    public static final String OPTIMIZED_IMAGE_COLUMN_NAME = "optimizedImage";
     public static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
     public static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
     public static final String CATEGORIES_COLUMN_NAME = "categories";
@@ -59,6 +60,8 @@ public class SiteSettingsModel {
     public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
+    public static final String ADD_OPTIMIZED_IMAGE = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + OPTIMIZED_IMAGE_COLUMN_NAME + " BOOLEAN;";
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
                     SETTINGS_TABLE_NAME +
@@ -114,6 +117,7 @@ public class SiteSettingsModel {
     public int languageId;
     public int privacy;
     public boolean location;
+    public boolean optimizedImage;
     public int defaultCategory;
     public CategoryModel[] categories;
     public String defaultPostFormat;
@@ -151,15 +155,16 @@ public class SiteSettingsModel {
         SiteSettingsModel otherModel = (SiteSettingsModel) other;
 
         return localTableId == otherModel.localTableId &&
-                address.equals(otherModel.address) &&
-                username.equals(otherModel.username) &&
-                password.equals(otherModel.password) &&
-                title.equals(otherModel.title) &&
-                tagline.equals(otherModel.tagline) &&
+                equals(address, otherModel.address) &&
+                equals(username, otherModel.username) &&
+                equals(password, otherModel.password) &&
+                equals(title, otherModel.title) &&
+                equals(tagline, otherModel.tagline) &&
+                equals(defaultPostFormat, otherModel.defaultPostFormat) &&
                 languageId == otherModel.languageId &&
                 privacy == otherModel.privacy &&
                 location == otherModel.location &&
-                defaultPostFormat.equals(otherModel.defaultPostFormat) &&
+                optimizedImage == otherModel.optimizedImage &&
                 defaultCategory == otherModel.defaultCategory &&
                 showRelatedPosts == otherModel.showRelatedPosts &&
                 showRelatedPostHeader == otherModel.showRelatedPostHeader &&
@@ -176,7 +181,9 @@ public class SiteSettingsModel {
                 commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
                 maxLinks == otherModel.maxLinks &&
-                holdForModeration != null && holdForModeration.equals(otherModel.holdForModeration) &&
+                equals(defaultPostFormat, otherModel.defaultPostFormat) &&
+                holdForModeration != null
+                    && holdForModeration.equals(otherModel.holdForModeration) &&
                 blacklist != null && blacklist.equals(otherModel.blacklist) &&
                 sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel) &&
                 sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle) &&
@@ -204,6 +211,7 @@ public class SiteSettingsModel {
         languageId = other.languageId;
         privacy = other.privacy;
         location = other.location;
+        optimizedImage = other.optimizedImage;
         defaultCategory = other.defaultCategory;
         categories = other.categories;
         defaultPostFormat = other.defaultPostFormat;
@@ -263,6 +271,7 @@ public class SiteSettingsModel {
         defaultCategory = getIntFromCursor(cursor, DEF_CATEGORY_COLUMN_NAME);
         defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
         location = getBooleanFromCursor(cursor, LOCATION_COLUMN_NAME);
+        optimizedImage = getBooleanFromCursor(cursor, OPTIMIZED_IMAGE_COLUMN_NAME);
         hasVerifiedCredentials = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
         allowComments = getBooleanFromCursor(cursor, ALLOW_COMMENTS_COLUMN_NAME);
         sendPingbacks = getBooleanFromCursor(cursor, SEND_PINGBACKS_COLUMN_NAME);
@@ -340,6 +349,7 @@ public class SiteSettingsModel {
         values.put(PRIVACY_COLUMN_NAME, privacy);
         values.put(LANGUAGE_COLUMN_NAME, languageId);
         values.put(LOCATION_COLUMN_NAME, location);
+        values.put(OPTIMIZED_IMAGE_COLUMN_NAME, optimizedImage);
         values.put(DEF_CATEGORY_COLUMN_NAME, defaultCategory);
         values.put(CATEGORIES_COLUMN_NAME, categoryIdList(categories));
         values.put(DEF_POST_FORMAT_COLUMN_NAME, defaultPostFormat);
@@ -463,5 +473,13 @@ public class SiteSettingsModel {
     private boolean getBooleanFromCursor(Cursor cursor, String columnName) {
         int columnIndex = cursor.getColumnIndex(columnName);
         return columnIndex != -1 && cursor.getInt(columnIndex) != 0;
+    }
+
+    /**
+     * Helper method to check if two String are equals or not
+     */
+    private boolean equals(String first, String second) {
+        return (first == null && second == null) ||
+                (first != null  && first.equals(second));
     }
 }

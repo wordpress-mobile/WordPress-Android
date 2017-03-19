@@ -8,19 +8,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.AccountModel;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
 public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
     private final String DIALOG_TAG = "DIALOG";
@@ -30,8 +35,17 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+
     public static MyProfileFragment newInstance() {
         return new MyProfileFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     @Override
@@ -40,19 +54,19 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
 
         refreshDetails();
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            AccountHelper.getDefaultAccount().fetchAccountSettings();
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
@@ -96,7 +110,7 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     private void refreshDetails() {
         if (!isAdded()) return;
 
-        Account account = AccountHelper.getDefaultAccount();
+        AccountModel account = mAccountStore.getAccount();
         updateLabel(mFirstName, account != null ? StringUtils.unescapeHTML(account.getFirstName()) : null);
         updateLabel(mLastName, account != null ? StringUtils.unescapeHTML(account.getLastName()) : null);
         updateLabel(mDisplayName, account != null ? StringUtils.unescapeHTML(account.getDisplayName()) : null);
@@ -107,8 +121,7 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         textView.setText(text);
         if (TextUtils.isEmpty(text)) {
             if (textView == mDisplayName) {
-                Account account = AccountHelper.getDefaultAccount();
-                mDisplayName.setText(account.getUserName());
+                mDisplayName.setText(mAccountStore.getAccount().getUserName());
             } else {
                 textView.setVisibility(View.GONE);
             }
@@ -134,6 +147,27 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         };
     }
 
+    // helper method to get the rest parameter for a text view
+    private String restParamForTextView(TextView textView) {
+        if (textView == mFirstName) {
+            return "first_name";
+        } else if (textView == mLastName) {
+            return "last_name";
+        } else if (textView == mDisplayName) {
+            return "display_name";
+        } else if (textView == mAboutMe) {
+            return "description";
+        }
+        return null;
+    }
+
+    private void updateMyProfileForLabel(TextView textView) {
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put(restParamForTextView(textView), textView.getText().toString());
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+    }
+
     @Override
     public void onSuccessfulInput(String input, int callbackId) {
         View rootView = getView();
@@ -149,27 +183,9 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         updateMyProfileForLabel(textView);
     }
 
-    private void updateMyProfileForLabel(TextView textView) {
-        Map<String, String> params = new HashMap<>();
-        params.put(restParamForTextView(textView), textView.getText().toString());
-        AccountHelper.getDefaultAccount().postAccountSettings(params);
-    }
-
-    // helper method to get the rest parameter for a text view
-    private String restParamForTextView(TextView textView) {
-        if (textView == mFirstName) {
-            return AccountModel.RestParam.FIRST_NAME.getDescription();
-        } else if (textView == mLastName) {
-            return AccountModel.RestParam.LAST_NAME.getDescription();
-        } else if (textView == mDisplayName) {
-            return AccountModel.RestParam.DISPLAY_NAME.getDescription();
-        } else if (textView == mAboutMe) {
-            return AccountModel.RestParam.ABOUT_ME.getDescription();
-        }
-        return null;
-    }
-
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
         refreshDetails();
     }
 }

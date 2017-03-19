@@ -8,16 +8,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.MediaGallery;
 
 import java.util.ArrayList;
 
@@ -41,15 +44,22 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
 
     private SlidingUpPanelLayout mSlidingPanelLayout;
     private boolean mIsPanelCollapsed = true;
-
     private MediaGallery mMediaGallery;
+
+    private SiteModel mSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (WordPress.wpDB == null) {
-            Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
         }
@@ -135,27 +145,34 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MediaGalleryPickerActivity.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+                ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+                if (ids == null || ids.isEmpty()) {
+                    finish();
+                    return;
+                }
                 mMediaGalleryEditFragment.setMediaIds(ids);
             }
+        } else {
+            finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
+
     private void handleAddMedia() {
         // need to make MediaGalleryAdd into an activity rather than a fragment because I can't add this fragment
-        // on top of the slidingpanel layout (since it needs to be the root layout)
-
-        ArrayList<String> mediaIds = mMediaGalleryEditFragment.getMediaIds();
-
-        Intent intent = new Intent(this, MediaGalleryPickerActivity.class);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+        // on top of the sliding panel layout (since it needs to be the root layout)
+        ActivityLauncher.viewMediaGalleryPickerForSiteAndMediaIds(this, mSite, mMediaGalleryEditFragment.getMediaIds());
     }
 
     private void handleSaveMedia() {
         Intent intent = new Intent();
-        ArrayList<String> ids = mMediaGalleryEditFragment.getMediaIds();
+        ArrayList<Long> ids = mMediaGalleryEditFragment.getMediaIds();
         boolean isRandom = mMediaGallerySettingsFragment.isRandom();
         int numColumns = mMediaGallerySettingsFragment.getNumColumns();
         String type = mMediaGallerySettingsFragment.getType();

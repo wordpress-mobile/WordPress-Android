@@ -120,10 +120,8 @@ class ReferrerSpamHelper {
                 boolean success = response.optBoolean("success");
                 if (success) {
                     mReferrerGroup.isMarkedAsSpam = isMarkingAsSpamInProgress;
-                    int localBlogID = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
-                            Integer.parseInt(mReferrerGroup.getBlogId())
-                    );
-                    StatsTable.deleteStatsForBlog(mActivityRef.get(), localBlogID, StatsService.StatsEndpointsEnum.REFERRERS);
+                    StatsTable.deleteStatsForBlog(mActivityRef.get(), mReferrerGroup.getBlogId(),
+                            StatsService.StatsEndpointsEnum.REFERRERS);
                 } else {
                     // It's not a success. Something went wrong on the server
                     String errorMessage = null;

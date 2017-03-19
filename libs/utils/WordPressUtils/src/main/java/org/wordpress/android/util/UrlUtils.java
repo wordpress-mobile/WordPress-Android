@@ -54,11 +54,11 @@ public class UrlUtils {
     public static String convertUrlToPunycodeIfNeeded(String url) {
         if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
             if (url.toLowerCase().startsWith("http://")) {
-                url = "http://" + IDN.toASCII(url.substring(7));
+                url = "http://" + IDN.toASCII(url.substring(7), IDN.ALLOW_UNASSIGNED);
             } else if (url.toLowerCase().startsWith("https://")) {
-                url = "https://" + IDN.toASCII(url.substring(8));
+                url = "https://" + IDN.toASCII(url.substring(8), IDN.ALLOW_UNASSIGNED);
             } else {
-                url = IDN.toASCII(url);
+                url = IDN.toASCII(url, IDN.ALLOW_UNASSIGNED);
             }
         }
         return url;
@@ -253,5 +253,22 @@ public class UrlUtils {
             uriBuilder.appendQueryParameter(parameter.getKey(), parameter.getValue());
         }
         return uriBuilder.build().toString();
+    }
+
+    /**
+     * Extracts the subdomain from a domain string.
+     * @param domain A domain is expected. Protocol is optional
+     * @return The subdomain or an empty string.
+     */
+    public static String extractSubDomain(String domain) {
+        String str = UrlUtils.addUrlSchemeIfNeeded(domain, false);
+        String host = UrlUtils.getHost(str);
+        if (host.length() > 0) {
+            String[] parts = host.split("\\.");
+            if (parts.length > 1) { // There should be at least 2 dots for there to be a subdomain.
+                return parts[0];
+            }
+        }
+        return "";
     }
 }

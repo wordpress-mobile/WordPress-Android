@@ -25,7 +25,9 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -39,16 +41,19 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
-public class NotificationsListFragment extends Fragment
-        implements WPMainActivity.OnScrollToTopListener, RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
+import static android.app.Activity.RESULT_OK;
+
+public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
+        RadioGroup.OnCheckedChangeListener, NotesAdapter.DataLoadedListener {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
     public static final String NOTE_MODERATE_ID_EXTRA = "moderateNoteId";
     public static final String NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus";
-    public static final String NOTE_ALLOW_NAVIGATE_LIST_EXTRA = "allowNavigateList";
     public static final String NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter";
 
     private static final String KEY_LIST_SCROLL_POSITION = "scrollPosition";
@@ -66,6 +71,8 @@ public class NotificationsListFragment extends Fragment
     private long mRestoredScrollNoteID;
     private boolean mIsAnimatingOutNewNotificationsBar;
 
+    @Inject AccountStore mAccountStore;
+
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
     }
@@ -75,6 +82,12 @@ public class NotificationsListFragment extends Fragment
      */
     public interface OnNoteClickListener {
         void onClickNote(String noteId);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
     }
 
     @Override
@@ -165,6 +178,25 @@ public class NotificationsListFragment extends Fragment
         }
     }
 
+    private void updateNote(String noteId, CommentStatus status) {
+        Note note = NotificationsTable.getNoteById(noteId);
+        if (note == null) return;
+        note.setLocalStatus(status.toString());
+        NotificationsTable.saveNote(note);
+        EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String noteId = data.getStringExtra(NOTE_MODERATE_ID_EXTRA);
+            String newStatus = data.getStringExtra(NOTE_MODERATE_STATUS_EXTRA);
+            if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
+                updateNote(noteId, CommentStatus.fromString(newStatus));
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -176,13 +208,13 @@ public class NotificationsListFragment extends Fragment
                 false
         ));
 
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
+        if (!mAccountStore.hasAccessToken()) {
             // let user know that notifications require a wp.com account and enable sign-in
             showEmptyView(R.string.notifications_account_required, 0, R.string.sign_in);
             mFilterRadioGroup.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.GONE);
         } else {
-            mNotesAdapter.reloadNotesFromDBAsync();
+            getNotesAdapter().reloadNotesFromDBAsync();
         }
     }
 
@@ -207,30 +239,6 @@ public class NotificationsListFragment extends Fragment
         return mNotesAdapter;
     }
 
-    // TODO: Maybe reintroduce infinite scrolling later.
-    /*
-    private final NotesAdapter.OnLoadMoreListener mOnLoadMoreListener = new NotesAdapter.OnLoadMoreListener() {
-        @Override
-        public void onLoadMore(long noteTimestamp) {
-            Map<String, String> params = new HashMap<>();
-            AppLog.d(AppLog.T.NOTIFS, String.format("Requesting more notes before %s", noteTimestamp));
-            params.put("before", String.valueOf(noteTimestamp));
-            NotesResponseHandler notesHandler = new NotesResponseHandler() {
-                @Override
-                public void onNotes(List<Note> notes) {
-                    // API returns 'on or before' timestamp, so remove first item
-                    if (notes.size() >= 1) {
-                        notes.remove(0);
-                    }
-                    //mNotesAdapter.setAllNotesLoaded(notes.size() == 0);
-                    mNotesAdapter.addAll(notes, false);
-                }
-            };
-            WordPress.getRestClientUtilsV1_1().getNotifications(params, notesHandler, notesHandler);
-
-        }
-    };
-*/
     private final OnNoteClickListener mOnNoteClickListener = new OnNoteClickListener() {
         @Override
         public void onClickNote(String noteId) {
@@ -243,7 +251,7 @@ public class NotificationsListFragment extends Fragment
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false, null, true, mNotesAdapter.getCurrentFilter());
+            openNoteForReply(getActivity(), noteId, false, null, mNotesAdapter.getCurrentFilter());
         }
     };
 
@@ -261,7 +269,6 @@ public class NotificationsListFragment extends Fragment
                                         String noteId,
                                         boolean shouldShowKeyboard,
                                         String replyText,
-                                        boolean allowNavigateList,
                                         NotesAdapter.FILTERS filter) {
         if (noteId == null || activity == null) {
             return;
@@ -276,10 +283,7 @@ public class NotificationsListFragment extends Fragment
         if (!TextUtils.isEmpty(replyText)) {
             detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
         }
-        if (allowNavigateList) {
-            detailIntent.putExtra(NOTE_ALLOW_NAVIGATE_LIST_EXTRA, true);
-            detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
-        }
+        detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
 
         openNoteForReplyWithParams(detailIntent, activity);
     }
@@ -390,7 +394,7 @@ public class NotificationsListFragment extends Fragment
 
     // Show different empty list message and action button based on the active filter
     private void showEmptyViewForCurrentFilter() {
-        if (!AccountHelper.isSignedInWordPressDotCom()) return;
+        if (!mAccountStore.hasAccessToken()) return;
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_all) {
@@ -400,7 +404,7 @@ public class NotificationsListFragment extends Fragment
                     R.string.notifications_empty_view_reader
             );
         } else if (i == R.id.notifications_filter_unread) {// User might not have a blog, if so just show the title
-            if (WordPress.getCurrentBlog() == null) {
+            if (getSelectedSite() == null) {
                 showEmptyView(R.string.notifications_empty_unread);
             } else {
                 showEmptyView(
@@ -435,14 +439,14 @@ public class NotificationsListFragment extends Fragment
     private void performActionForActiveFilter() {
         if (mFilterRadioGroup == null || !isAdded()) return;
 
-        if (!AccountHelper.isSignedInWordPressDotCom()) {
+        if (!mAccountStore.hasAccessToken()) {
             ActivityLauncher.showSignInForResult(getActivity());
             return;
         }
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
-        if (i == R.id.notifications_filter_unread) {// Create a new post
-            ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), WordPress.getCurrentBlog(), false);
+        if (i == R.id.notifications_filter_unread) { // Create a new post
+            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false);
         } else {// Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderTabActive();
@@ -607,6 +611,14 @@ public class NotificationsListFragment extends Fragment
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationFailed.class);
     }
 
+    public SiteModel getSelectedSite() {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        }
+        return null;
+    }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
         if (!isAdded()) {
@@ -676,6 +688,7 @@ public class NotificationsListFragment extends Fragment
         AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_in);
         mNewNotificationsBar.setVisibility(View.VISIBLE);
     }
+
     private void hideNewNotificationsBar() {
         if (!isAdded() || !isNewNotificationsBarShowing() || mIsAnimatingOutNewNotificationsBar) {
             return;

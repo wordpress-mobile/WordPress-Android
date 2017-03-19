@@ -30,12 +30,12 @@ public class StatsEvents {
     }
 
     public abstract static class SectionUpdatedAbstract {
-        public final String mRequestBlogId; // This is the remote blog ID
+        public final long mRequestBlogId; // This is the remote blog ID
         public final StatsTimeframe mTimeframe;
         public final String mDate;
         public final int mMaxResultsRequested, mPageRequested;
 
-        public SectionUpdatedAbstract(String blogId, StatsTimeframe timeframe, String date,
+        public SectionUpdatedAbstract(long blogId, StatsTimeframe timeframe, String date,
                                       final int maxResultsRequested, final int pageRequested) {
             mRequestBlogId = blogId;
             mDate = date;
@@ -50,7 +50,7 @@ public class StatsEvents {
         public final VolleyError mError;
         public final StatsEndpointsEnum mEndPointName;
 
-        public SectionUpdateError(StatsEndpointsEnum endPointName, String blogId, StatsTimeframe timeframe, String date,
+        public SectionUpdateError(StatsEndpointsEnum endPointName, long blogId, StatsTimeframe timeframe, String date,
                                       final int maxResultsRequested, final int pageRequested, VolleyError error) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mEndPointName = endPointName;
@@ -62,7 +62,7 @@ public class StatsEvents {
 
         public final VisitsModel mVisitsAndViews;
 
-        public VisitorsAndViewsUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public VisitorsAndViewsUpdated(long blogId, StatsTimeframe timeframe, String date,
                                        final int maxResultsRequested, final int pageRequested, VisitsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mVisitsAndViews = responseObjectModel;
@@ -73,7 +73,7 @@ public class StatsEvents {
 
         public final TopPostsAndPagesModel mTopPostsAndPagesModel;
 
-        public TopPostsUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public TopPostsUpdated(long blogId, StatsTimeframe timeframe, String date,
                                final int maxResultsRequested, final int pageRequested, TopPostsAndPagesModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mTopPostsAndPagesModel = responseObjectModel;
@@ -84,7 +84,7 @@ public class StatsEvents {
 
         public final ReferrersModel mReferrers;
 
-        public ReferrersUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public ReferrersUpdated(long blogId, StatsTimeframe timeframe, String date,
                                 final int maxResultsRequested, final int pageRequested, ReferrersModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mReferrers = responseObjectModel;
@@ -95,7 +95,7 @@ public class StatsEvents {
 
         public final ClicksModel mClicks;
 
-        public ClicksUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public ClicksUpdated(long blogId, StatsTimeframe timeframe, String date,
                              final int maxResultsRequested, final int pageRequested, ClicksModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mClicks = responseObjectModel;
@@ -107,7 +107,7 @@ public class StatsEvents {
 
         public final AuthorsModel mAuthors;
 
-        public AuthorsUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public AuthorsUpdated(long blogId, StatsTimeframe timeframe, String date,
                               final int maxResultsRequested, final int pageRequested, AuthorsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mAuthors = responseObjectModel;
@@ -118,7 +118,7 @@ public class StatsEvents {
 
         public final GeoviewsModel mCountries;
 
-        public CountriesUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public CountriesUpdated(long blogId, StatsTimeframe timeframe, String date,
                                 final int maxResultsRequested, final int pageRequested, GeoviewsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mCountries = responseObjectModel;
@@ -129,7 +129,7 @@ public class StatsEvents {
 
         public final VideoPlaysModel mVideos;
 
-        public VideoPlaysUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public VideoPlaysUpdated(long blogId, StatsTimeframe timeframe, String date,
                                  final int maxResultsRequested, final int pageRequested, VideoPlaysModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mVideos = responseObjectModel;
@@ -140,7 +140,7 @@ public class StatsEvents {
 
         public final SearchTermsModel mSearchTerms;
 
-        public SearchTermsUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public SearchTermsUpdated(long blogId, StatsTimeframe timeframe, String date,
                                   final int maxResultsRequested, final int pageRequested, SearchTermsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mSearchTerms = responseObjectModel;
@@ -151,7 +151,7 @@ public class StatsEvents {
 
         public final CommentsModel mComments;
 
-        public CommentsUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public CommentsUpdated(long blogId, StatsTimeframe timeframe, String date,
                                final int maxResultsRequested, final int pageRequested, CommentsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mComments = responseObjectModel;
@@ -162,7 +162,7 @@ public class StatsEvents {
 
         public final CommentFollowersModel mCommentFollowers;
 
-        public CommentFollowersUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public CommentFollowersUpdated(long blogId, StatsTimeframe timeframe, String date,
                                        final int maxResultsRequested, final int pageRequested, CommentFollowersModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mCommentFollowers = responseObjectModel;
@@ -173,7 +173,7 @@ public class StatsEvents {
 
         public final TagsContainerModel mTagsContainer;
 
-        public TagsUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public TagsUpdated(long blogId, StatsTimeframe timeframe, String date,
                                               final int maxResultsRequested, final int pageRequested, TagsContainerModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mTagsContainer = responseObjectModel;
@@ -184,7 +184,7 @@ public class StatsEvents {
 
         public final PublicizeModel mPublicizeModel;
 
-        public PublicizeUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public PublicizeUpdated(long blogId, StatsTimeframe timeframe, String date,
                            final int maxResultsRequested, final int pageRequested, PublicizeModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mPublicizeModel = responseObjectModel;
@@ -195,7 +195,7 @@ public class StatsEvents {
 
         public final FollowersModel mFollowers;
 
-        public FollowersWPCOMUdated(String blogId, StatsTimeframe timeframe, String date,
+        public FollowersWPCOMUdated(long blogId, StatsTimeframe timeframe, String date,
                                 final int maxResultsRequested, final int pageRequested, FollowersModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mFollowers = responseObjectModel;
@@ -206,7 +206,7 @@ public class StatsEvents {
 
         public final FollowersModel mFollowers;
 
-        public FollowersEmailUdated(String blogId, StatsTimeframe timeframe, String date,
+        public FollowersEmailUdated(long blogId, StatsTimeframe timeframe, String date,
                                     final int maxResultsRequested, final int pageRequested, FollowersModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mFollowers = responseObjectModel;
@@ -217,7 +217,7 @@ public class StatsEvents {
 
         public final InsightsAllTimeModel mInsightsAllTimeModel;
 
-        public InsightsAllTimeUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public InsightsAllTimeUpdated(long blogId, StatsTimeframe timeframe, String date,
                                       final int maxResultsRequested, final int pageRequested, InsightsAllTimeModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mInsightsAllTimeModel = responseObjectModel;
@@ -228,7 +228,7 @@ public class StatsEvents {
 
         public final InsightsPopularModel mInsightsPopularModel;
 
-        public InsightsPopularUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public InsightsPopularUpdated(long blogId, StatsTimeframe timeframe, String date,
                                       final int maxResultsRequested, final int pageRequested, InsightsPopularModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
             mInsightsPopularModel = responseObjectModel;
@@ -239,7 +239,7 @@ public class StatsEvents {
 
         public final InsightsLatestPostModel mInsightsLatestPostModel;
 
-        public InsightsLatestPostSummaryUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public InsightsLatestPostSummaryUpdated(long blogId, StatsTimeframe timeframe, String date,
                                       final int maxResultsRequested, final int pageRequested,
                                                 InsightsLatestPostModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
@@ -251,7 +251,7 @@ public class StatsEvents {
 
         public final InsightsLatestPostDetailsModel mInsightsLatestPostDetailsModel;
 
-        public InsightsLatestPostDetailsUpdated(String blogId, StatsTimeframe timeframe, String date,
+        public InsightsLatestPostDetailsUpdated(long blogId, StatsTimeframe timeframe, String date,
                                                 final int maxResultsRequested, final int pageRequested,
                                                 InsightsLatestPostDetailsModel responseObjectModel) {
             super(blogId, timeframe, date, maxResultsRequested, pageRequested);
@@ -273,4 +273,21 @@ public class StatsEvents {
             mLocalBlogId = blogId;
         }
     }
+
+    public static class JetpackNotConnectedOrDeactivatedError {
+        public final int mLocalBlogId; // This is the local blogID
+
+        public JetpackNotConnectedOrDeactivatedError(int blogId) {
+            mLocalBlogId = blogId;
+        }
+    }
+
+    public static class JetpackStatsModuleNotConnectedError {
+        public final int mLocalBlogId; // This is the local blogID
+
+        public JetpackStatsModuleNotConnectedError(int blogId) {
+            mLocalBlogId = blogId;
+        }
+    }
+
 }

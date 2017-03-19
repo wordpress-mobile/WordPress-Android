@@ -1,29 +1,22 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.view.View;
 
-import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -96,14 +89,11 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts in a specific blog
      */
-    public static void showReaderBlogPreview(Context context, long blogId) {
-        if (blogId == 0) {
-            return;
-        }
-
-        AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED, blogId);
+    public static void showReaderBlogPreview(Context context, long siteId) {
+        if (siteId == 0) return;
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
@@ -202,6 +192,18 @@ public class ReaderActivityLauncher {
     }
 
     /*
+     * play an external video
+     */
+    public static void showReaderVideoViewer(Context context, String videoUrl) {
+        if (context == null || TextUtils.isEmpty(videoUrl)) {
+            return;
+        }
+        Intent intent = new Intent(context, ReaderVideoViewerActivity.class);
+        intent.putExtra(ReaderConstants.ARG_VIDEO_URL, videoUrl);
+        context.startActivity(intent);
+    }
+
+    /*
      * show the passed imageUrl in the fullscreen photo activity - optional content is the
      * content of the post the image is in, used by the activity to show all images in
      * the post
@@ -248,16 +250,18 @@ public class ReaderActivityLauncher {
     }
 
     public enum OpenUrlType { INTERNAL, EXTERNAL }
+
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
+
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
         if (context == null || TextUtils.isEmpty(url)) return;
 
         if (openUrlType == OpenUrlType.INTERNAL) {
             openUrlInternal(context, url);
         } else {
-            openUrlExternal(context, url);
+            ActivityLauncher.openUrlExternal(context, url);
         }
     }
 
@@ -267,31 +271,9 @@ public class ReaderActivityLauncher {
     private static void openUrlInternal(Context context, @NonNull String url) {
         // That won't work on wpcom sites with custom urls
         if (WPUrlUtils.isWordPressCom(url)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(context, url,
-                    AccountHelper.getDefaultAccount().getUserName());
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
-        }
-    }
-
-    /*
-     * open the passed url in the device's external browser
-     */
-    private static void openUrlExternal(Context context, @NonNull String url) {
-        try {
-            // disable deeplinking activity so to not catch WP URLs
-            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
-
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            context.startActivity(intent);
-            AppLockManager.getInstance().setExtendedTimeout();
-
-        } catch (ActivityNotFoundException e) {
-            String readerToastErrorUrlIntent = context.getString(R.string.reader_toast_err_url_intent);
-            ToastUtils.showToast(context, String.format(readerToastErrorUrlIntent, url), ToastUtils.Duration.LONG);
-        } finally {
-            // re-enable deeplinking
-            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 }

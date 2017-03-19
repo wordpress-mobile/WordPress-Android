@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -14,10 +15,13 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.NotificationsTable;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -27,11 +31,11 @@ import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
@@ -46,6 +50,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
@@ -58,8 +64,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     private String mNoteId;
-    private boolean mAllowHorizontalNavigation;
 
     private WPViewPager mViewPager;
     private NotificationDetailFragmentAdapter mAdapter;
@@ -67,6 +75,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
 
         setContentView(R.layout.notifications_detail_activity);
@@ -77,14 +86,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (savedInstanceState == null) {
-            mAllowHorizontalNavigation = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, false);
             mNoteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
         } else {
             if (savedInstanceState.containsKey(ARG_TITLE) && getSupportActionBar() != null) {
                 getSupportActionBar().setTitle(StringUtils.notNullStr(savedInstanceState.getString(ARG_TITLE)));
             }
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
-            mAllowHorizontalNavigation = savedInstanceState.getBoolean(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA);
         }
 
         if (mNoteId == null) {
@@ -114,7 +121,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
             filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
         }
-        mAdapter = buildNoteListAdapterAndSetPosition(mAllowHorizontalNavigation, note, filter);
+        mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
 
         //set title
         setActionBarTitleForNote(note);
@@ -156,7 +163,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (getSupportActionBar() != null && getSupportActionBar().getTitle() != null) {
             outState.putString(ARG_TITLE, getSupportActionBar().getTitle().toString());
         }
-        outState.putBoolean(NotificationsListFragment.NOTE_ALLOW_NAVIGATE_LIST_EXTRA, mAllowHorizontalNavigation);
         outState.putString(NotificationsListFragment.NOTE_ID_EXTRA, mNoteId);
         super.onSaveInstanceState(outState);
     }
@@ -166,7 +172,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         super.onStart();
         //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
-        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAllowHorizontalNavigation && (mAdapter.getCount() > 1)) {
+        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && (mAdapter.getCount() > 1)) {
             WPSwipeSnackbar.show(mViewPager);
         }
     }
@@ -218,43 +224,21 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
     }
 
-    private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(boolean allowNavigateList,
-                                                                                 Note note,
+    private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(Note note,
                                                                                  NotesAdapter.FILTERS filter) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
         ArrayList<Note> filteredNotes = new ArrayList<>();
-        if (allowNavigateList) {
-            //apply filter to the list so we show the same items that the list show vertically, but horizontally
-            NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
-            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
-        } else {
-            ArrayList<Note> oneNoteList = new ArrayList<>();
-            oneNoteList.add(note);
-            adapter = new NotificationDetailFragmentAdapter(getFragmentManager(),
-                    oneNoteList);
-        }
+
+        //apply filter to the list so we show the same items that the list show vertically, but horizontally
+        NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
+        adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
 
         mViewPager.setAdapter(adapter);
-
-        if (allowNavigateList) {
-            mViewPager.setCurrentItem(findNoteInNoteArray(filteredNotes, note));
-        }
+        mViewPager.setCurrentItem(NotificationsUtils.findNoteInNoteArray(filteredNotes, note.getId()));
 
         return adapter;
     }
-
-    private int findNoteInNoteArray(ArrayList<Note> notes, Note noteToSearchFor) {
-        if (notes == null || noteToSearchFor == null || noteToSearchFor.getId() == null) return -1;
-
-        for (int i = 0; i < notes.size(); i++) {
-            Note note = notes.get(i);
-            if (noteToSearchFor.getId().equals(note.getId()))
-                return i;
-        }
-        return -1;
-    }
-
 
     /**
      * Tries to pick the correct fragment detail type for a given note
@@ -267,16 +251,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-            fragment = CommentDetailFragment.newInstance(note.getId(), getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA), idForFragmentContainer);
+            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
+                    false);
+            fragment = CommentDetailFragment.newInstance(note.getId(),
+                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA),
+                    idForFragmentContainer);
 
-            // fragment is never null at this point, and always of CommentDetailFragment type. Just add this check for safety :)
-            if ( fragment != null && fragment instanceof  CommentDetailFragment) {
-                if (isInstantReply) {
-                    ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
-                }
+            if (isInstantReply) {
+                ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
             }
-
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
@@ -307,7 +290,18 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
-    public void showStatsActivityForSite(int localTableSiteId, NoteBlockRangeType rangeType) {
+    public void showStatsActivityForSite(long siteId, NoteBlockRangeType rangeType) {
+        SiteModel site = mSiteStore.getSiteBySiteId(siteId);
+        if (site == null) {
+            // One way the site can be null: new site created, receive a notification from this site,
+            // but the site list is not yet updated in the app.
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            return;
+        }
+        showStatsActivityForSite(site, rangeType);
+    }
+
+    public void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
         if (isFinishing()) return;
 
         if (rangeType == NoteBlockRangeType.FOLLOW) {
@@ -315,11 +309,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
             intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
+            intent.putExtra(WordPress.SITE, site);
             intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, getString(R.string.stats_view_followers));
             startActivity(intent);
         } else {
-            ActivityLauncher.viewBlogStats(this, localTableSiteId);
+            ActivityLauncher.viewBlogStats(this, site);
         }
     }
 
@@ -327,7 +321,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (isFinishing() || url == null) return;
 
         if (url.contains(DOMAIN_WPCOM)) {
-            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, url, AccountHelper.getDefaultAccount().getUserName());
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(this, url);
         } else {
             WPWebViewActivity.openURL(this, url);
         }
@@ -349,7 +343,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     public void onModerateCommentForNote(Note note, CommentStatus newStatus) {
         Intent resultIntent = new Intent();
         resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA, note.getId());
-        resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA, CommentStatus.toRESTString(newStatus));
+        resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA, newStatus.toString());
 
         setResult(RESULT_OK, resultIntent);
         finish();

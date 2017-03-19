@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
@@ -12,7 +11,8 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -136,65 +138,69 @@ public class StatsService extends Service {
             }
         }
 
-        public StatsEvents.SectionUpdatedAbstract getEndpointUpdateEvent(final String blogId, final StatsTimeframe timeframe, final String date,
-                               final int maxResultsRequested, final int pageRequested, final BaseStatsModel data) {
+        public StatsEvents.SectionUpdatedAbstract getEndpointUpdateEvent(final long siteId,
+                                                                         final StatsTimeframe timeframe,
+                                                                         final String date,
+                                                                         final int maxResultsRequested,
+                                                                         final int pageRequested,
+                                                                         final BaseStatsModel data) {
             switch (this) {
                 case VISITS:
-                    return new StatsEvents.VisitorsAndViewsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.VisitorsAndViewsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (VisitsModel)data);
                 case TOP_POSTS:
-                    return new StatsEvents.TopPostsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.TopPostsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (TopPostsAndPagesModel)data);
                 case REFERRERS:
-                    return new StatsEvents.ReferrersUpdated(blogId, timeframe, date,
+                    return new StatsEvents.ReferrersUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (ReferrersModel)data);
                 case CLICKS:
-                    return new StatsEvents.ClicksUpdated(blogId, timeframe, date,
+                    return new StatsEvents.ClicksUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (ClicksModel)data);
                 case AUTHORS:
-                    return new StatsEvents.AuthorsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.AuthorsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (AuthorsModel)data);
                 case GEO_VIEWS:
-                    return new StatsEvents.CountriesUpdated(blogId, timeframe, date,
+                    return new StatsEvents.CountriesUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (GeoviewsModel)data);
                 case VIDEO_PLAYS:
-                    return new StatsEvents.VideoPlaysUpdated(blogId, timeframe, date,
+                    return new StatsEvents.VideoPlaysUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (VideoPlaysModel)data);
                 case SEARCH_TERMS:
-                    return new StatsEvents.SearchTermsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.SearchTermsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (SearchTermsModel)data);
                 case COMMENTS:
-                    return new StatsEvents.CommentsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.CommentsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (CommentsModel)data);
                 case COMMENT_FOLLOWERS:
-                    return new StatsEvents.CommentFollowersUpdated(blogId, timeframe, date,
+                    return new StatsEvents.CommentFollowersUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (CommentFollowersModel)data);
                 case TAGS_AND_CATEGORIES:
-                    return new StatsEvents.TagsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.TagsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (TagsContainerModel)data);
                 case PUBLICIZE:
-                    return new StatsEvents.PublicizeUpdated(blogId, timeframe, date,
+                    return new StatsEvents.PublicizeUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (PublicizeModel)data);
                 case FOLLOWERS_WPCOM:
-                    return new StatsEvents.FollowersWPCOMUdated(blogId, timeframe, date,
+                    return new StatsEvents.FollowersWPCOMUdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (FollowersModel)data);
                 case FOLLOWERS_EMAIL:
-                    return new StatsEvents.FollowersEmailUdated(blogId, timeframe, date,
+                    return new StatsEvents.FollowersEmailUdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (FollowersModel)data);
                 case INSIGHTS_POPULAR:
-                    return new StatsEvents.InsightsPopularUpdated(blogId, timeframe, date,
+                    return new StatsEvents.InsightsPopularUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (InsightsPopularModel)data);
                 case INSIGHTS_ALL_TIME:
-                    return new StatsEvents.InsightsAllTimeUpdated(blogId, timeframe, date,
+                    return new StatsEvents.InsightsAllTimeUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (InsightsAllTimeModel)data);
                 case INSIGHTS_TODAY:
-                    return new StatsEvents.VisitorsAndViewsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.VisitorsAndViewsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (VisitsModel)data);
                 case INSIGHTS_LATEST_POST_SUMMARY:
-                    return new StatsEvents.InsightsLatestPostSummaryUpdated(blogId, timeframe, date,
+                    return new StatsEvents.InsightsLatestPostSummaryUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (InsightsLatestPostModel)data);
                 case INSIGHTS_LATEST_POST_VIEWS:
-                    return new StatsEvents.InsightsLatestPostDetailsUpdated(blogId, timeframe, date,
+                    return new StatsEvents.InsightsLatestPostDetailsUpdated(siteId, timeframe, date,
                             maxResultsRequested, pageRequested, (InsightsLatestPostDetailsModel)data);
                 default:
                     AppLog.e(T.STATS, "Can't find an Update Event that match the current endpoint: " + this.name());
@@ -208,10 +214,13 @@ public class StatsService extends Service {
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
     private final ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate() {
         super.onCreate();
         AppLog.i(T.STATS, "service created");
+        ((WordPress) getApplication()).component().inject(this);
     }
 
     @Override
@@ -239,9 +248,9 @@ public class StatsService extends Service {
             return START_NOT_STICKY;
         }
 
-        final String blogId = intent.getStringExtra(ARG_BLOG_ID);
-        if (TextUtils.isEmpty(blogId)) {
-            AppLog.e(T.STATS, "StatsService was started with a blank blog_id");
+        final long siteId = intent.getLongExtra(ARG_BLOG_ID, 0);
+        if (siteId == 0) {
+            AppLog.e(T.STATS, "StatsService was started with siteid == 0");
             return START_NOT_STICKY;
         }
 
@@ -262,10 +271,9 @@ public class StatsService extends Service {
         final String requestedDate;
         if (intent.getStringExtra(ARG_DATE) == null) {
             AppLog.w(T.STATS, "StatsService is started with a NULL date on this blogID - "
-                    + blogId + ". Using current date!!!");
-            int parsedBlogID = Integer.parseInt(blogId);
-            int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-            requestedDate = StatsUtils.getCurrentDateTZ(localTableBlogId);
+                    + siteId + ". Using current date.");
+            SiteModel site = mSiteStore.getSiteBySiteId(siteId);
+            requestedDate = StatsUtils.getCurrentDateTZ(site);
         } else {
             requestedDate = intent.getStringExtra(ARG_DATE);
         }
@@ -279,7 +287,7 @@ public class StatsService extends Service {
             singleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
-                    startTasks(blogId, period, requestedDate, currentSectionsToUpdate, maxResultsRequested, pageRequested);
+                    startTasks(siteId, period, requestedDate, currentSectionsToUpdate, maxResultsRequested, pageRequested);
                 }
             });
         }
@@ -306,20 +314,18 @@ public class StatsService extends Service {
     }
 
     // Check if we already have Stats
-    private String getCachedStats(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
-                                  final int maxResultsRequested, final int pageRequested) {
+    private String getCachedStats(final long siteId, final StatsTimeframe timeframe, final String date,
+                                  final StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
+                                  final int pageRequested) {
         if (!isCacheEnabled()) {
             return null;
         }
-
-        int parsedBlogID = Integer.parseInt(blogId);
-        int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-        return StatsTable.getStats(this, localTableBlogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
+        return StatsTable.getStats(this, siteId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
     }
 
-    private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date, final StatsEndpointsEnum sectionToUpdate,
-                            final int maxResultsRequested, final int pageRequested) {
-
+    private void startTasks(final long blogId, final StatsTimeframe timeframe, final String date,
+                            final StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
+                            final int pageRequested) {
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(true));
 
         String cachedStats = getCachedStats(blogId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
@@ -345,10 +351,6 @@ public class StatsService extends Service {
         final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
 
         String period = timeframe.getLabelForRestCall();
-        /*AppLog.i(T.STATS, "A new Stats network request is required for blogID: " + blogId + " - period: " + period
-                + " - date: " + date + " - StatsType: " + sectionToUpdate.name());
-*/
-
 
         RestListener vListener = new RestListener(sectionToUpdate, blogId, timeframe, date, maxResultsRequested, pageRequested);
 
@@ -453,7 +455,7 @@ public class StatsService extends Service {
         while (it.hasNext()) {
             Request<JSONObject> req = it.next();
             if (!req.hasHadResponseDelivered() && !req.isCanceled() &&
-                    absoluteRequestPath.equals(req.getOriginUrl())) {
+                    absoluteRequestPath.equals(req.getUrl())) {
                 return false;
             }
         }
@@ -463,7 +465,7 @@ public class StatsService extends Service {
 
     // Call an updates on the installed widgets if the blog is the primary, the endpoint is Visits
     // the timeframe is DAY or INSIGHTS, and the date = TODAY
-    private void updateWidgetsUI(String blogId, final StatsEndpointsEnum endpointName,
+    private void updateWidgetsUI(long siteId, final StatsEndpointsEnum endpointName,
                                  StatsTimeframe timeframe, String date, int pageRequested,
                                  Serializable responseObjectModel) {
         if (pageRequested != -1) {
@@ -476,10 +478,9 @@ public class StatsService extends Service {
             return;
         }
 
-        int parsedBlogID = Integer.parseInt(blogId);
-        int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
+        SiteModel site = mSiteStore.getSiteBySiteId(siteId);
         // make sure the data is for the current date
-        if (!date.equals(StatsUtils.getCurrentDateTZ(localTableBlogId))) {
+        if (!date.equals(StatsUtils.getCurrentDateTZ(site))) {
             return;
         }
 
@@ -488,8 +489,9 @@ public class StatsService extends Service {
             return;
         }
 
-        if (!StatsWidgetProvider.isBlogDisplayedInWidget(parsedBlogID)) {
-            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + parsedBlogID + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
+        if (!StatsWidgetProvider.isBlogDisplayedInWidget(siteId)) {
+            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + siteId
+                    + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
             return;
         }
 
@@ -500,25 +502,25 @@ public class StatsService extends Service {
             }
             List<VisitModel> visits = visitsModel.getVisits();
             VisitModel data = visits.get(visits.size() - 1);
-            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, data);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), site, data);
         } else if (responseObjectModel instanceof VolleyError) {
             VolleyError error = (VolleyError) responseObjectModel;
-            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, error);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), site, mSiteStore, error);
         } else if (responseObjectModel instanceof StatsError) {
             StatsError statsError = (StatsError) responseObjectModel;
-            StatsWidgetProvider.updateWidgets(getApplicationContext(), parsedBlogID, statsError);
+            StatsWidgetProvider.updateWidgets(getApplicationContext(), site, mSiteStore, statsError);
         }
     }
 
     private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
-        final String mRequestBlogId;
+        final long mRequestBlogId;
         private final StatsTimeframe mTimeframe;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
         private Request<JSONObject> currentRequest;
         private final int mMaxResultsRequested, mPageRequested;
 
-        public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe, String date,
+        public RestListener(StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe, String date,
                             final int maxResultsRequested, final int pageRequested) {
             mRequestBlogId = blogId;
             mTimeframe = timeframe;
@@ -537,12 +539,9 @@ public class StatsService extends Service {
                     BaseStatsModel mResponseObjectModel = null;
                     if (response != null) {
                         try {
-                            //AppLog.d(T.STATS, response.toString());
                             mResponseObjectModel = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
                             if (isCacheEnabled()) {
-                                int parsedBlogID = Integer.parseInt(mRequestBlogId);
-                                int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(parsedBlogID);
-                                StatsTable.insertStats(StatsService.this, localTableBlogId, mTimeframe, mDate, mEndpointName,
+                                StatsTable.insertStats(StatsService.this, mRequestBlogId, mTimeframe, mDate, mEndpointName,
                                         mMaxResultsRequested, mPageRequested,
                                         response.toString(), System.currentTimeMillis());
                             }
@@ -570,26 +569,8 @@ public class StatsService extends Service {
                     AppLog.e(T.STATS, "Error while loading Stats!");
                     StatsUtils.logVolleyErrorDetails(volleyError);
                     BaseStatsModel mResponseObjectModel = null;
-                    // Check here if this is an authentication error
-                    // .com authentication errors are handled automatically by the app
-                    if (volleyError instanceof com.android.volley.AuthFailureError) {
-                        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackOrWpComRemoteSiteId(
-                                Integer.parseInt(mRequestBlogId)
-                        );
-                        Blog blog = WordPress.wpDB.instantiateBlogByLocalId(localId);
-                        if (blog != null && blog.isJetpackPowered()) {
-                            // It's a kind of edge case, but the Jetpack site could have REST Disabled
-                            // In that case (only used in insights for now) shows the error in the module that use the REST API
-                            if (!StatsUtils.isRESTDisabledError(volleyError)) {
-                                EventBus.getDefault().post(new StatsEvents.JetpackAuthError(localId));
-                            }
-                        }
-                    }
-
-
                     EventBus.getDefault().post(new StatsEvents.SectionUpdateError(mEndpointName, mRequestBlogId, mTimeframe, mDate,
                             mMaxResultsRequested, mPageRequested, volleyError));
-
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested, mResponseObjectModel);
                     checkAllRequestsFinished(currentRequest);
                 }
@@ -605,8 +586,10 @@ public class StatsService extends Service {
         }*/
         EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(false));
         stopSelf(mServiceStartId);
+        synchronized (mStatsNetworkRequests) {
+            mStatsNetworkRequests.clear();
+        }
     }
-
 
     private void checkAllRequestsFinished(Request<JSONObject> req) {
         synchronized (mStatsNetworkRequests) {

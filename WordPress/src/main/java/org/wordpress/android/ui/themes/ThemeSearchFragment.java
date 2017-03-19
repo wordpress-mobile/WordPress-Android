@@ -12,7 +12,9 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 
 /**
  * A fragment for display the results of a theme search
@@ -23,13 +25,19 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
     public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
-    public static ThemeSearchFragment newInstance() {
-        return new ThemeSearchFragment();
-    }
-
     private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
+
+    private SiteModel mSite;
+
+    public static ThemeSearchFragment newInstance(SiteModel site) {
+        ThemeSearchFragment fragment = new ThemeSearchFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(WordPress.SITE, site);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,16 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         setHasOptionsMenu(true);
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
+        }
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
         }
     }
 
@@ -48,11 +66,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        saveState(outState);
-    }
-
-    private void saveState(Bundle outState) {
         outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -138,12 +153,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     protected Cursor fetchThemes(int position) {
-        if (WordPress.getCurrentBlog() == null) {
-            return null;
-        }
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-
+        String blogId = String.valueOf(mSite.getSiteId());
         return WordPress.wpDB.getThemes(blogId, mLastSearch);
     }
 

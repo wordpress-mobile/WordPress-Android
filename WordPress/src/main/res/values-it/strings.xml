@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-12 11:30:44+0000
+Translation-Revision-Date: 2017-02-18 11:30:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+	<string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
+	<string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
+	<string name="visual_editor_disabled">Editor visuale disabilitato</string>
+	<string name="preference_editor_visual">Visuale</string>
+	<string name="preference_editor_legacy">Attuale</string>
+	<string name="preference_editor_type">Imposta il tipo di editor</string>
+	<string name="pending_draft_one_generic">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
+	<string name="pending_draft_one_month">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' rimane una bozza. Ricordati di pubblicarlo!</string>
+	<string name="pending_draft_one_week_1">La tua bozza di \'%1$s\' ti sta aspettando - assicurati di pubblicarla!</string>
+	<string name="pending_draft_one_day_2">Lo sapevi che \'%1$s\' è ancora una bozza? Pubblicalo!</string>
+	<string name="pending_draft_one_day_1">Ieri hai messo in bozza \'%1$s\'. Non dimenticarti di pubblicarlo!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Il plugin Jetpack plugin è connesso ma il modulo Statistiche non è attivo. Contattare l\'amministratore del sito.</string>
+	<string name="jetpack_stats_module_disabled_message">Il plugin Jetpack plugin è connesso ma il modulo Statistiche non è attivo. Vuoi attivare le Statistiche?</string>
+	<string name="jetpack_info">Informazioni su Jetpack</string>
+	<string name="reader_photo_by">Foto di %s</string>
+	<string name="reader_label_visit">Visita</string>
+	<string name="all_your_sites">Tutti i miei siti</string>
+	<string name="pending_draft_more">Hai abbozzato %d articoli ma non li hai mai pubblicati. Clicca per verificare.</string>
+	<string name="no_default_app_available_to_open_link">Impossibile aprire il link</string>
+	<string name="notification_pending_drafts">Avvisami su gli articoli abbozzati</string>
+	<string name="invalid_verification_code_format">Deve essere un numero a sei cifre</string>
+	<string name="confirm_discard_changes">Scartare le modifiche non salvate?</string>
+	<string name="swipe_for_more">Scorri per altre info</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Non sei autorizzato a vedere questo articolo. Prova a registrarti prima su WordPress.com o a fare clic sul pulsante di azione qua sopra per aprire un browser.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Non sei autorizzato a visualizzare questo articolo. Prova a registrarti prima su WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Non sei autorizzato a visualizzare questo articolo. Utilizza il pulsante si azione qua sopra per provare ad utilizzare un browser.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Non puoi mettere un like quando non sei connesso a WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Hai già messo un like su questo commento</string>
+	<string name="reader_toast_err_comment_not_found">Commento non trovato!</string>
+	<string name="reader_toast_err_cannot_like_post">Errore nel mettere like su questo</string>
+	<string name="reader_title_post_detail_wpcom">Articolo WordPress.com </string>
+	<string name="reader_title_deeplink">Reader WordPress</string>
+	<string name="error_notif_q_action_reply">Impossibile replicare al commento. Riprova più tardi.</string>
+	<string name="error_notif_q_action_approve">Impossibile approvare il commento. Riprova più tardi.</string>
+	<string name="error_notif_q_action_like">Impossibile mettere un like al commento. Riprova più tardi.</string>
+	<string name="notifications_label_new_notifications_subtitle">Clicca per mostrarli</string>
+	<string name="notifications_label_new_notifications">Nuove notifiche</string>
+	<string name="comment_q_action_replying">Rispondendo...</string>
+	<string name="comment_q_action_approving">Approvando...</string>
+	<string name="comment_q_action_liking">Effettuando il link...</string>
+	<string name="comment_q_action_processing">Processo in corso...</string>
+	<string name="comment_q_action_done_generic">Azione compiuta!</string>
+	<string name="comment_liked">Like assegnato al commento</string>
+	<string name="signout">Uscire</string>
+	<string name="sign_in_wpcom">Accedere a WordPress.com</string>
 	<string name="reader_label_global_related_posts">saperne di più su WordPress.com</string>
 	<string name="reader_label_local_related_posts">Per saperne di più %s</string>
 	<string name="preference_open_device_settings">Accedere alle impostazioni del device</string>
@@ -97,7 +143,7 @@ Language: it
 	<string name="invite_people">Invita delle persone</string>
 	<string name="my_site_header_external">Esterno</string>
 	<string name="send_link">Invia link</string>
-	<string name="signup_succeed_signin_failed">Il tuo account è stato creato ma si è verificato un errore quando abbiamo provato ad autenticarti.\n       Provata ad entrare col i tuo nome utente e la password appena creati.</string>
+	<string name="signup_succeed_signin_failed">Il tuo account è stato creato ma si è verificato un errore quando abbiamo provato ad autenticarti. Prova ad entrare con il nome utente e la password appena creati.</string>
 	<string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
 	<string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
 	<string name="reader_empty_posts_in_search_description">Nessun articolo trovato riguardo %s per la tua lingua</string>
@@ -258,7 +304,6 @@ Language: it
 	<string name="editor_page_title_placeholder">Titolo della pagina</string>
 	<string name="editor_post_title_placeholder">Titolo dell\'articolo</string>
 	<string name="email_address">Indirizzo e-mail</string>
-	<string name="preference_show_visual_editor">Mostra editor visuale</string>
 	<string name="preference_editor">Editor</string>
 	<string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>
 	<string name="dlg_sure_to_delete_comment">Eliminare in modo permanente questo commento?</string>
@@ -303,7 +348,7 @@ Language: it
 	<string name="error_post_remote_site_settings">Impossibile salvare le informazioni del sito</string>
 	<string name="error_fetch_remote_site_settings">Impossibile recuperare le informazioni del sito</string>
 	<string name="error_media_upload_connection">Si è verificato un errore di connessione durante il caricamento dei contenuti multimediali</string>
-	<string name="site_settings_disconnected_toast">Disconnesso. Modifica disabilitata.</string>
+	<string name="site_settings_disconnected_toast">Non sei connesso,  la possibilità di modifica è disabilitata.</string>
 	<string name="site_settings_unsupported_version_error">Versione di WordPress non supportata</string>
 	<string name="site_settings_multiple_links_dialog_description">Richiedi l\'approvazione per i commenti che includono un numero di link superiore a quello specificato.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Chiudi automaticamente</string>
@@ -568,9 +613,8 @@ Language: it
 	<string name="my_site_header_configuration">Configurazione</string>
 	<string name="notifications_account_required">Collegati a WordPress.com per le notifiche</string>
 	<string name="stats_unknown_author">Autore sconosciuto</string>
-	<string name="signout">Disconnettiti</string>
 	<string name="image_added">Immagine aggiunta</string>
-	<string name="sign_out_wpcom_confirm">Disconnettendo il tuo account tutti i dati @%s WordPress.com da questa periferica, comprese le bozze locali e le modifiche locali.</string>
+	<string name="sign_out_wpcom_confirm">Disconnettendo il tuo account rimuoverai tutti i dati @%s WordPress.com da questa periferica, comprese le bozze locali e le modifiche locali.</string>
 	<string name="select_all">Seleziona tutto</string>
 	<string name="hide">Nascondi</string>
 	<string name="show">Mostra</string>
@@ -591,8 +635,8 @@ Language: it
 	<string name="no_media">Nessun elemento media</string>
 	<string name="loading_images">Caricamento immagini</string>
 	<string name="loading_videos">Caricamento video</string>
-	<string name="auth_required">Autentificati nuovamente per continuare.</string>
-	<string name="sign_in_jetpack">Autentificati al tuo account WordPress.com  per connetterti a Jetpack.</string>
+	<string name="auth_required">Accedi di nuovo per continuare.</string>
+	<string name="sign_in_jetpack">Accedi al tuo account WordPress.com  per connetterti a Jetpack.</string>
 	<string name="two_step_sms_sent">Verifica i messaggi di testo per il codice di verifica.</string>
 	<string name="two_step_footer_button">Invia codice come messaggio di testo</string>
 	<string name="two_step_footer_label">Inserisci il codice dalla tua app di autenticazione.</string>
@@ -708,7 +752,7 @@ Language: it
 	<string name="delete_sure_page">Cancella questa pagina</string>
 	<string name="delete_sure">Cancella questa bozza</string>
 	<string name="delete_sure_post">Cancella questo articolo</string>
-	<string name="signing_out">Scollegamento...</string>
+	<string name="signing_out">Disconnessione in corso...</string>
 	<string name="posting_post">Pubblicazione di "%s"</string>
 	<string name="media_empty_list_custom_date">Nessun elemento media in questo intervallo di tempo</string>
 	<string name="pages_empty_list">Ancora nessuna pagina. Perché non crearne una?</string>
@@ -983,7 +1027,7 @@ Language: it
 	<string name="select_time">Seleziona orario</string>
 	<string name="nux_oops_not_selfhosted_blog">Accedi a WordPress.com</string>
 	<string name="nux_add_selfhosted_blog">Aggiungi sito self-hosted</string>
-	<string name="signing_in">Collegamento...</string>
+	<string name="signing_in">Connessione in corso...</string>
 	<string name="nux_welcome_create_account">Crea account</string>
 	<string name="nux_tap_continue">Continua</string>
 	<string name="password_invalid">Devi impostare una password più sicura. Usa 7 o più caratteri sia minuscoli che maiuscoli, numeri o caratteri speciali.</string>

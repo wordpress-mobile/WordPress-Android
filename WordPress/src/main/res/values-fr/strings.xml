@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-10-26 15:48:12+0000
+Translation-Revision-Date: 2017-03-01 22:45:24+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/2.3.0-alpha
+Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="reader_liked_default_tag">Articles que j’aime</string>
+	<string name="reader_followed_default_tag">Sites suivis</string>
+	<string name="reader_discover_default_tag">Découvrir</string>
+	<string name="reader_empty_followed_blogs_search_title">Aucun site ne correspond</string>
+	<string name="reader_hint_search_followed_sites">Rechercher parmi les sites suivis</string>
+	<string name="visual_editor_disabled">Éditeur visuel désactivé</string>
+	<string name="preference_editor_visual">Visuel</string>
+	<string name="preference_editor_legacy">Classique</string>
+	<string name="preference_editor_type">Régler le type d\'éditeur</string>
+	<string name="pending_draft_one_generic">Ne le laissez pas sur la touche&amp;nbsp;! «&amp;nbsp;%1$s&amp;nbsp;» attendre d’être publié.</string>
+	<string name="pending_draft_one_month">Ne le laissez pas sur la touche&amp;nbsp;! «&amp;nbsp;%1$s&amp;nbsp;» attendre d’être publié.</string>
+	<string name="pending_draft_one_week_2">«&amp;nbsp;%1$s&amp;nbsp;» est toujours un brouillon. N\'oubliez pas de le publier&amp;nbsp;!</string>
+	<string name="pending_draft_one_week_1">Votre brouillon «&amp;nbsp;%1$s&amp;nbsp;» vous attend -- faites en sorte de le publier&amp;nbsp;!</string>
+	<string name="pending_draft_one_day_2">Saviez-vous que «&amp;nbsp;%1$s&amp;nbsp;» est toujours un brouillon&amp;nbsp;? Publiez-le&amp;nbsp;!</string>
+	<string name="pending_draft_one_day_1">Vous avez commencé «&amp;nbsp;%1$s&amp;nbsp;» hier. N\'oubliez pas de le publier&amp;nbsp;!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">L’extension Jetpack est connectée mais le module de Stats n’est pas actif. Contactez l’administrateur du site.</string>
+	<string name="jetpack_stats_module_disabled_message">L’extension Jetpack est connectée mais le module de Stats n’est pas actif. Voulez vous l’activer ?</string>
+	<string name="jetpack_info">Info jetpack</string>
+	<string name="reader_photo_by">Photo par %s</string>
+	<string name="reader_label_visit">Visitez</string>
+	<string name="all_your_sites">Tous Mes Sites</string>
+	<string name="pending_draft_more">Vous avez rédigé %d articles, mais vous ne les avez jamais publiés. Appuyez pour les vérifier.</string>
+	<string name="no_default_app_available_to_open_link">Impossible d’ouvrir le lien</string>
+	<string name="notification_pending_drafts">Me notifier quand des brouillons sont en attente</string>
+	<string name="invalid_verification_code_format">Doit être un nombre à six chiffres</string>
+	<string name="confirm_discard_changes">Annuler les modifications non sauvegardées ?</string>
+	<string name="swipe_for_more">Glissez pour plus</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">Vous n’êtes pas autorisé à voir cet article. Essayez de vous connecter à WordPress.com ou utilisez le bouton en haut pour l’ouvrir dans le navigateur à la place.</string>
+	<string name="reader_err_get_post_not_authorized_signin">Vous n\'êtes pas autorisé à voir ce poste. Essayez de vous connecter à WordPress.com d\'abord.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">Vous n\'êtes pas autorisé à voir cet article. Utilisez le bouton d\'action pour essayer dans un navigateur à la place.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Vous ne pouvez pas aimer tant que vous êtes déconnecté de WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Vous avez déjà aimé ce commentaire</string>
+	<string name="reader_toast_err_comment_not_found">Commentaire introuvable !</string>
+	<string name="reader_toast_err_cannot_like_post">La tentative pour aimer cet article a échoué</string>
+	<string name="reader_title_post_detail_wpcom">Article WordPress.com</string>
+	<string name="reader_title_deeplink">Lecteur WordPress</string>
+	<string name="error_notif_q_action_reply">Vous ne pouvez pas répondre pour commenter. Veuillez réessayer plus tard.</string>
+	<string name="error_notif_q_action_approve">Impossible d\'approuver ce commentaire. Veuillez réessayer plus tard.</string>
+	<string name="error_notif_q_action_like">Impossible d\'aimer ce commentaire. Veuillez réessayer plus tard.</string>
+	<string name="notifications_label_new_notifications_subtitle">Tapez pour les montrer</string>
+	<string name="notifications_label_new_notifications">Nouvelles notifications</string>
+	<string name="comment_q_action_replying">Réponse en cours...</string>
+	<string name="comment_q_action_approving">Approbation en cours...</string>
+	<string name="comment_q_action_liking">Aimer...</string>
+	<string name="comment_q_action_processing">Traitement en cours...</string>
+	<string name="comment_q_action_done_generic">Terminé !</string>
+	<string name="comment_liked">Commentaire aimé</string>
+	<string name="signout">Se déconnecter</string>
+	<string name="sign_in_wpcom">Se connecter à WordPress.com</string>
 	<string name="reader_label_global_related_posts">Articles connexes sur WordPress.com</string>
 	<string name="reader_label_local_related_posts">Articles connexes dans %s</string>
 	<string name="preference_open_device_settings">Réglages des appareils ouverts</string>
@@ -97,7 +146,7 @@ Language: fr
 	<string name="invite_people">Inviter des personnes</string>
 	<string name="my_site_header_external">Externe</string>
 	<string name="send_link">Envoyer le lien</string>
-	<string name="signup_succeed_signin_failed">Votre compte a été créé mais une erreur est survenue lors de votre connexion. Essayez de vous connecter avec votre nouvel identifiant et son mot de passe.</string>
+	<string name="signup_succeed_signin_failed">Votre compte a été créé mais une erreur est survenue lors de votre connexion. \nEssayez de vous connecter avec votre nouvel identifiant et son mot de passe.</string>
 	<string name="label_clear_search_history">Supprimer l\'historique de recherche</string>
 	<string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
 	<string name="reader_empty_posts_in_search_description">Aucune article trouvé pour %s dans votre langue</string>
@@ -258,7 +307,6 @@ Language: fr
 	<string name="editor_page_title_placeholder">Titre de la page</string>
 	<string name="editor_post_title_placeholder">Titre de l\'article</string>
 	<string name="email_address">Adresse de messagerie</string>
-	<string name="preference_show_visual_editor">Afficher l\'éditeur visuel</string>
 	<string name="preference_editor">Éditeur</string>
 	<string name="dlg_sure_to_delete_comments">Supprimer définitivement ces commentaires ?</string>
 	<string name="dlg_sure_to_delete_comment">Supprimer définitivement ce commentaire ? </string>
@@ -534,7 +582,7 @@ Language: fr
 	<string name="tabbar_accessibility_label_my_site">Mon site</string>
 	<string name="editor_toast_changes_saved">Modifications enregistrées</string>
 	<string name="passcodelock_prompt_message">Entrer votre PIN</string>
-	<string name="push_auth_expired">La requête a expiré. Inscrivez-vous sur WordPress.com et réessayez.</string>
+	<string name="push_auth_expired">La requête a expiré. Connectez-vous à WordPress.com et réessayez.</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% de vues</string>
 	<string name="ignore">Ignorer</string>
 	<string name="stats_insights_best_ever">Record de vues absolu</string>
@@ -544,7 +592,7 @@ Language: fr
 	<string name="stats_insights_popular">Jour et heure les plus prisés</string>
 	<string name="stats_insights_all_time">Articles, vues et visiteurs depuis la création</string>
 	<string name="stats_insights">Tendances</string>
-	<string name="stats_sign_in_jetpack_different_com_account">Pour afficher vos statistiques, connectez-vous au compte WordPress.com que vous avez utilisé pour vous connecter à Jetpack.</string>
+	<string name="stats_sign_in_jetpack_different_com_account">Pour afficher vos statistiques, connectez-vous au compte WordPress.com que vous avez utilisé pour vous connecter Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Vous recherchez vos autres statistiques récentes ? Elles se trouvent désormais sur la page Tendances.</string>
 	<string name="me_disconnect_from_wordpress_com">Se déconnecter de WordPress.com</string>
 	<string name="me_btn_login_logout">Se Connecter/Déconnecter</string>
@@ -568,9 +616,8 @@ Language: fr
 	<string name="my_site_header_configuration">Configuration</string>
 	<string name="notifications_account_required">Se connecter à WordPress.com pour voir vos notifications</string>
 	<string name="stats_unknown_author">Auteur inconnu</string>
-	<string name="signout">Se déconnecter</string>
 	<string name="image_added">Image ajoutée</string>
-	<string name="sign_out_wpcom_confirm">Se déconnecter de votre compte supprimera toutes les données liées à votre compte WordPress.com @%s’s sur cet appareil. Cela inclu les changements locaux et les brouillons.</string>
+	<string name="sign_out_wpcom_confirm">Se déconnecter de votre compte supprimera toutes les données liées au compte @%s de WordPress.com sur cet appareil. Cela inclus les changements locaux et les brouillons.</string>
 	<string name="select_all">Tout selectionner</string>
 	<string name="hide">Cacher</string>
 	<string name="show">Montrer</string>

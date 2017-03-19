@@ -1,16 +1,21 @@
 package org.wordpress.android.models;
 
-import android.util.SparseArray;
-import org.wordpress.android.WordPress;
+import android.util.LongSparseArray;
 
-import java.util.*;
+import org.wordpress.android.fluxc.model.TermModel;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class CategoryNode {
-    private int categoryId;
+    private long categoryId;
     private String name;
-    private int parentId;
+    private long parentId;
     private int level;
-    SortedMap<String, CategoryNode> children = new TreeMap<String, CategoryNode>(new Comparator<String>() {
+    private SortedMap<String, CategoryNode> children = new TreeMap<>(new Comparator<String>() {
         @Override
         public int compare(String s, String s2) {
             return s.compareToIgnoreCase(s2);
@@ -25,13 +30,13 @@ public class CategoryNode {
         this.children = children;
     }
 
-    public CategoryNode(int categoryId, int parentId, String name) {
+    public CategoryNode(long categoryId, long parentId, String name) {
         this.categoryId = categoryId;
         this.parentId = parentId;
         this.name = name;
     }
 
-    public int getCategoryId() {
+    public long getCategoryId() {
         return categoryId;
     }
 
@@ -47,7 +52,7 @@ public class CategoryNode {
         this.name = name;
     }
 
-    public int getParentId() {
+    public long getParentId() {
         return parentId;
     }
 
@@ -59,20 +64,16 @@ public class CategoryNode {
         return level;
     }
 
-    public static CategoryNode createCategoryTreeFromDB(int blogId) {
+    public static CategoryNode createCategoryTreeFromList(List<TermModel> categories) {
         CategoryNode rootCategory = new CategoryNode(-1, -1, "");
-        if (WordPress.wpDB == null) {
-            return rootCategory;
-        }
-        List<String> stringCategories = WordPress.wpDB.loadCategories(blogId);
 
         // First pass instantiate CategoryNode objects
-        SparseArray<CategoryNode> categoryMap = new SparseArray<CategoryNode>();
+        LongSparseArray<CategoryNode> categoryMap = new LongSparseArray<>();
         CategoryNode currentRootNode;
-        for (String name : stringCategories) {
-            int categoryId = WordPress.wpDB.getCategoryId(blogId, name);
-            int parentId = WordPress.wpDB.getCategoryParentId(blogId, name);
-            CategoryNode node = new CategoryNode(categoryId, parentId, name);
+        for (TermModel category : categories) {
+            long categoryId = category.getRemoteTermId();
+            long parentId = category.getParentRemoteId();
+            CategoryNode node = new CategoryNode(categoryId, parentId, category.getName());
             categoryMap.put(categoryId, node);
         }
 
@@ -103,7 +104,7 @@ public class CategoryNode {
     }
 
     public static ArrayList<CategoryNode> getSortedListOfCategoriesFromRoot(CategoryNode node) {
-        ArrayList<CategoryNode> sortedCategories = new ArrayList<CategoryNode>();
+        ArrayList<CategoryNode> sortedCategories = new ArrayList<>();
         preOrderTreeTraversal(node, 0, sortedCategories);
         return sortedCategories;
     }

@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- GCM all build types configuration -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
@@ -53,6 +54,9 @@
     <uses-feature
         android:name="android.hardware.screen.portrait"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.landscape"
+        android:required="false" />
 
     <application
         android:name=".WordPress"
@@ -62,15 +66,18 @@
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@style/NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <!-- Samsung multiwindow support -->
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -154,6 +161,9 @@
             android:label="@string/add_new_category"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
+            android:name=".ui.posts.photochooser.PhotoChooserPreviewActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/Theme.AppCompat.Light.Dialog"
@@ -221,10 +231,6 @@
             android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Media Activities -->
-        <activity
-            android:name=".ui.media.MediaPickerActivity"
-            android:theme="@style/CalypsoTheme"
-            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.media.MediaBrowserActivity"
             android:theme="@style/Calypso.NoActionBar" />
@@ -347,7 +353,11 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@style/ReaderPhotoViewerTheme" />
+            android:theme="@style/ReaderMediaViewerTheme" />
+        <activity
+            android:name=".ui.reader.ReaderVideoViewerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/ReaderMediaViewerTheme" />
 
         <!-- Other activities -->
         <activity
@@ -357,6 +367,7 @@
 
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
+            android:excludeFromRecents="true"
             android:theme="@style/Calypso.FloatingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -394,6 +405,7 @@
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/CalypsoTheme"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
@@ -425,6 +437,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.AztecEditorOptionsReceiver">
+            <intent-filter>
+                <data android:host="aztec"
+                    android:scheme="wordpress" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+            </intent-filter>
+        </activity>
+
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
@@ -434,14 +459,6 @@
         <service
             android:name=".ui.posts.services.PostUploadService"
             android:label="Post Upload Service" />
-        <service
-            android:name=".ui.posts.services.PostMediaService"
-            android:exported="false"
-            android:label="Post Media Service" />
-        <service
-            android:name=".ui.posts.services.PostUpdateService"
-            android:exported="false"
-            android:label="Post Update Service" />
         <service
             android:name=".ui.media.services.MediaUploadService"
             android:label="Media Upload Service" />
@@ -494,14 +511,21 @@
             android:exported="false"
             android:label="Notifications Screen Lock watch Service" />
 
-
+        <!-- Samsung multiwindow support -->
         <uses-library
             android:name="com.sec.android.app.multiwindow"
             android:required="false" />
-
+        <!-- Samsung multiwindow support -->
         <meta-data
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
+
+        <receiver android:name=".ui.notifications.receivers.NotificationsPendingDraftsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+        </receiver>
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
