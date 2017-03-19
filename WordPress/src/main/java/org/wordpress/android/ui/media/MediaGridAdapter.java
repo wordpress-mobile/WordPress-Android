@@ -118,6 +118,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         mCursor.moveToPosition(position);
+        holder.imageView.setTag(null);
 
         final int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
 
@@ -133,6 +134,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             } else {
                 String imageUrl = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.URL));
                 String thumbUrl;
+                // if this isn't a private site use Photon to request the image at the exact size,
+                // otherwise append the standard wp query params to request the desired size
                 if (SiteUtils.isPhotonCapable(mSite)) {
                     thumbUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbWidth, mThumbHeight);
                 } else {
