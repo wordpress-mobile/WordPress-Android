@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.wellsql.generated.MediaModelTable;
 
@@ -207,28 +206,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 && !mHasRetrievedAll
                 && mCallback != null) {
             mCallback.onAdapterFetchMoreData();
-        }
-    }
-
-    @Override
-    public void onViewRecycled(GridViewHolder holder) {
-        super.onViewRecycled(holder);
-
-        // cancel image fetch requests if the view has been moved to recycler.
-        if (holder.imageView != null) {
-            String tag = (String) holder.imageView.getTag();
-            if (tag != null && tag.startsWith("http")) {
-                // need a listener to cancel request, even if the listener does nothing
-                ImageLoader.ImageContainer container = mImageLoader.get(tag, new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) { }
-
-                    @Override
-                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) { }
-
-                });
-                container.cancelRequest();
-            }
         }
     }
 
