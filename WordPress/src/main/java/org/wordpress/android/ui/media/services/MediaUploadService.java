@@ -144,25 +144,21 @@ public class MediaUploadService extends Service {
         if (media != null) {
             PostModel post = mPostStore.getPostByLocalPostId(media.getPostId());
             if (post != null) {
-                String content = post.getContent();
-                if (content != null) {
-
-                    // actually replace the media ID with the media uri
-                    MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-                    PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
-                    if (modifiedPost != null) {
-                        post = modifiedPost;
-                    }
-
-                    // we changed the post, so let’s mark this down
-                    if (!post.isLocalDraft()) {
-                        post.setIsLocallyChanged(true);
-                    }
-                    post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-
-                    // finally save the post
-                    savePostToDb(post);
+                // actually replace the media ID with the media uri
+                MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+                PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
+                if (modifiedPost != null) {
+                    post = modifiedPost;
                 }
+
+                // we changed the post, so let’s mark this down
+                if (!post.isLocalDraft()) {
+                    post.setIsLocallyChanged(true);
+                }
+                post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+
+                // finally save the post
+                savePostToDb(post);
             }
         }
     }
