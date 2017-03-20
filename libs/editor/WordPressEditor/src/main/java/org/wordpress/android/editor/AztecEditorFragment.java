@@ -437,6 +437,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return content.toHtml(false);
     }
 
+    @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
         final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
 
