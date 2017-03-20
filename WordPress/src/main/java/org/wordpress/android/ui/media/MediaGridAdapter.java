@@ -144,6 +144,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         } else {
             // not an image, so show file name and file type
+            holder.imageView.setImageDrawable(null);
             String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
             String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
             String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
