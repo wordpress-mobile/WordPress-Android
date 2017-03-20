@@ -46,12 +46,11 @@ public class MediaUploadService extends Service {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
 
-    public static void startService(Context context, SiteModel siteModel, ArrayList<MediaModel> mediaList) {
+    public static void startService(Context context, ArrayList<MediaModel> mediaList) {
         if (context == null) {
             return;
         }
         Intent intent = new Intent(context, MediaUploadService.class);
-        intent.putExtra(WordPress.SITE, siteModel);
         intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaList);
         context.startService(intent);
     }
@@ -84,8 +83,8 @@ public class MediaUploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // skip this request if no site is given
-        if (intent == null || !intent.hasExtra(WordPress.SITE)) {
+        // skip this request if no media to upload given
+        if (intent == null || !intent.hasExtra(MEDIA_LIST_KEY)) {
             stopServiceIfUploadsComplete();
             return START_NOT_STICKY;
         }
@@ -222,8 +221,6 @@ public class MediaUploadService extends Service {
     }
 
     private void unpackIntent(@NonNull Intent intent) {
-
-        SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
 
         // TODO right now, in the case we had pending uploads and the app/service was restarted,
         // we don't really have a way to tell which media was supposed to be added to which post,
