@@ -280,7 +280,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mSite = mSiteStore.getSiteByLocalId(localSiteId);
                 }
 
-                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                if (extras != null) {
+                    mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                }
                 mIsNewPost = true;
 
                 if (mSite == null) {
