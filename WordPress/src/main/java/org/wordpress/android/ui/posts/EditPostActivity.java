@@ -968,14 +968,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             default:
                 errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
-        mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+        }
 
         removeMediaFromPendingList(media);
     }
 
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
-        mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
+        }
     }
 
     private void removeMediaFromPendingList(MediaModel mediaToClear) {
@@ -2260,6 +2264,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+        if (isFinishing()) return;
         // event for unknown media, ignoring
         if (event.media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);
