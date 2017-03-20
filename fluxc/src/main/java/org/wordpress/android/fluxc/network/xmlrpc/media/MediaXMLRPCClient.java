@@ -124,7 +124,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
         if (!MediaUtils.canReadFile(media.getFilePath())) {
             MediaStore.MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
-            notifyMediaProgress(media, 0.f, error);
+            notifyMediaUploaded(media, error);
             return;
         }
 
@@ -180,12 +180,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     } catch (XMLRPCException fault) {
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
                         AppLog.w(T.MEDIA, "media upload failed with error: " + mediaError.message);
-                        notifyMediaProgress(media, 0.f, mediaError);
+                        notifyMediaUploaded(media, mediaError);
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
                     MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
-                    notifyMediaProgress(media, 0.f, error);
+                    notifyMediaUploaded(media, error);
                 }
                 mCurrentUploadCall = null;
             }
@@ -195,7 +195,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 error.message = e.getLocalizedMessage();
-                notifyMediaProgress(media, 0.f, error);
+                notifyMediaUploaded(media, error);
                 mCurrentUploadCall = null;
             }
         });
