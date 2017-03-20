@@ -802,7 +802,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        MediaUploadService.startService(this, mSite, mediaList);
+        MediaUploadService.startService(this, mediaList);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {

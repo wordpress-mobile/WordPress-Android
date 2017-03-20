@@ -1993,7 +1993,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 savePostAsync(new AfterSavePostListener() {
                     @Override
                     public void onPostSave() {
-                        MediaUploadService.startService(EditPostActivity.this, mSite, mediaList);
+                        MediaUploadService.startService(EditPostActivity.this, mediaList);
                     }
                 });
 
