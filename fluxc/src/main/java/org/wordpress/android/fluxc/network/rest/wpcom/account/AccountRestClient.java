@@ -136,6 +136,26 @@ public class AccountRestClient extends BaseWPComRestClient {
         ));
     }
 
+    public void resendVerificationEmail() {
+        String url = WPCOMREST.me.send_verification_email.getUrlV1_1();
+        add(WPComGsonRequest.buildPostRequest(url, null, NewAccountResponse.class,
+                new Listener<NewAccountResponse>() {
+                    @Override
+                    public void onResponse(NewAccountResponse response) {
+                        NewAccountResponsePayload payload = new NewAccountResponsePayload();
+                        mDispatcher.dispatch(AccountActionBuilder.newSentEmailVerificationAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        NewAccountResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
+                        mDispatcher.dispatch(AccountActionBuilder.newSentEmailVerificationAction(payload));
+                    }
+                }
+        ));
+    }
+
     /**
      * Performs an HTTP POST call to the v1.1 /me/settings/ endpoint. Upon receiving
      * a response (success or error) a {@link AccountAction#PUSHED_SETTINGS} action is dispatched
