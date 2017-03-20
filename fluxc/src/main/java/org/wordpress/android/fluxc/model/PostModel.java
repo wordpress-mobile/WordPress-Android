@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.yarolegovich.wellsql.core.Identifiable;
@@ -381,7 +382,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
                 && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
     }
 
-    public JSONArray getJSONCustomFields() {
+    public @Nullable JSONArray getJSONCustomFields() {
         if (mCustomFields == null) {
             return null;
         }
@@ -394,7 +395,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return jArray;
     }
 
-    public JSONObject getCustomField(String key) {
+    public @Nullable JSONObject getCustomField(String key) {
         JSONArray customFieldsJson = getJSONCustomFields();
         if (customFieldsJson == null) {
             return null;
