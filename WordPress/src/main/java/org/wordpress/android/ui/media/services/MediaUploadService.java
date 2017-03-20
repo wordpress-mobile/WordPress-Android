@@ -69,10 +69,9 @@ public class MediaUploadService extends Service {
 
     @Override
     public void onDestroy() {
-        if (mQueue != null && mQueue.size() > 0) {
-            for (MediaModel oneUpload : mQueue) {
-                cancelUpload(oneUpload);
-            }
+        List<MediaModel> queue = getUploadQueue();
+        for (MediaModel oneUpload : queue) {
+            cancelUpload(oneUpload);
         }
         mDispatcher.unregister(this);
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > destroyed");
