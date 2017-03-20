@@ -253,7 +253,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mLatitude = latitude;
     }
 
-    public PostLocation getLocation() {
+    public @NonNull PostLocation getLocation() {
         return new PostLocation(mLatitude, mLongitude);
     }
 
@@ -420,7 +420,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     }
 
     public boolean hasLocation() {
-        return getLocation() != null && getLocation().isValid();
+        return getLocation().isValid();
     }
 
     public boolean shouldDeleteLatitude() {
