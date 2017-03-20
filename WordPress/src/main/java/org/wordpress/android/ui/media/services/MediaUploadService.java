@@ -37,7 +37,6 @@ import javax.inject.Inject;
  */
 
 public class MediaUploadService extends Service {
-    private static final String POST_ID_KEY = "mediaPostId";
     private static final String MEDIA_LIST_KEY = "mediaList";
 
     private List<MediaModel> mQueue;
@@ -225,7 +224,6 @@ public class MediaUploadService extends Service {
     private void unpackIntent(@NonNull Intent intent) {
 
         SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
-        long postId = intent.getLongExtra(POST_ID_KEY, 0);
 
         // TODO right now, in the case we had pending uploads and the app/service was restarted,
         // we don't really have a way to tell which media was supposed to be added to which post,
