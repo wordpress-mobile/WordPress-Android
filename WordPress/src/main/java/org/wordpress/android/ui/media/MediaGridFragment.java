@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
