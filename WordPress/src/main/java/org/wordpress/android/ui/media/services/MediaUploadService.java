@@ -263,7 +263,13 @@ public class MediaUploadService extends Service {
 
     private void cancelUpload(MediaModel oneUpload) {
         if (oneUpload != null) {
-            dispatchCancelAction(oneUpload, mSiteStore.getSiteByLocalId(oneUpload.getLocalSiteId()));
+            SiteModel site = mSiteStore.getSiteByLocalId(oneUpload.getLocalSiteId());
+            if (site != null) {
+                dispatchCancelAction(oneUpload, mSiteStore.getSiteByLocalId(oneUpload.getLocalSiteId()));
+            } else {
+                AppLog.i(AppLog.T.MEDIA, "Unexpected state, site is null. Skipping cancellation of " +
+                        "this request - MediaUploadService.");
+            }
         }
     }
 
