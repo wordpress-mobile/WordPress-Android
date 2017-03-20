@@ -19,6 +19,8 @@ public enum AccountAction implements IAction {
     FETCH_ACCOUNT,          // request fetch of Account information
     @Action
     FETCH_SETTINGS,         // request fetch of Account Settings
+    @Action
+    SEND_VERIFICATION_EMAIL, // request verification email for unverified accounts
     @Action(payloadType = PushAccountSettingsPayload.class)
     PUSH_SETTINGS,          // request saving Account Settings remotely
     @Action(payloadType = NewAccountPayload.class)
@@ -37,6 +39,8 @@ public enum AccountAction implements IAction {
     FETCHED_ACCOUNT,        // response received from Account fetch request
     @Action(payloadType = AccountRestPayload.class)
     FETCHED_SETTINGS,       // response received from Account Settings fetch
+    @Action(payloadType = NewAccountResponsePayload.class)
+    SENT_VERIFICATION_EMAIL,
     @Action(payloadType = AccountPushSettingsResponsePayload.class)
     PUSHED_SETTINGS,        // response received from Account Settings post
     @Action(payloadType = NewAccountResponsePayload.class)
