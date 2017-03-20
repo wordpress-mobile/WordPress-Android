@@ -545,7 +545,7 @@ public class WordPress extends MultiDexApplication {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!sIsMigrationInProgress || sMigrationListener == null) {
+        if (!sIsMigrationInProgress) {
             return;
         }
 
