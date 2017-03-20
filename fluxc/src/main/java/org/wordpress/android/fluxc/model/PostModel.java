@@ -80,7 +80,6 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return mId;
     }
 
-
     public int getLocalSiteId() {
         return mLocalSiteId;
     }
@@ -355,31 +354,31 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         PostModel otherPost = (PostModel) other;
 
         return getId() == otherPost.getId() && getLocalSiteId() == otherPost.getLocalSiteId()
-               && getRemoteSiteId() == otherPost.getRemoteSiteId() && getRemotePostId() == otherPost.getRemotePostId()
-               && getFeaturedImageId() == otherPost.getFeaturedImageId()
-               && Double.compare(otherPost.getLatitude(), getLatitude()) == 0
-               && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
-               && isPage() == otherPost.isPage()
-               && isLocalDraft() == otherPost.isLocalDraft() && isLocallyChanged() == otherPost.isLocallyChanged()
-               && getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId()
-               && getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost()
-               && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
-               && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
-               && getParentId() == otherPost.getParentId()
-               && StringUtils.equals(getTitle(), otherPost.getTitle())
-               && StringUtils.equals(getContent(), otherPost.getContent())
-               && StringUtils.equals(getDateCreated(), otherPost.getDateCreated())
-               && StringUtils.equals(getCategoryIds(), otherPost.getCategoryIds())
-               && StringUtils.equals(getCustomFields(), otherPost.getCustomFields())
-               && StringUtils.equals(getLink(), otherPost.getLink())
-               && StringUtils.equals(getExcerpt(), otherPost.getExcerpt())
-               && StringUtils.equals(getTagNames(), otherPost.getTagNames())
-               && StringUtils.equals(getStatus(), otherPost.getStatus())
-               && StringUtils.equals(getPassword(), otherPost.getPassword())
-               && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
-               && StringUtils.equals(getSlug(), otherPost.getSlug())
-               && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
-               && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
+                && getRemoteSiteId() == otherPost.getRemoteSiteId() && getRemotePostId() == otherPost.getRemotePostId()
+                && getFeaturedImageId() == otherPost.getFeaturedImageId()
+                && Double.compare(otherPost.getLatitude(), getLatitude()) == 0
+                && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
+                && isPage() == otherPost.isPage()
+                && isLocalDraft() == otherPost.isLocalDraft() && isLocallyChanged() == otherPost.isLocallyChanged()
+                && getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId()
+                && getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost()
+                && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
+                && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
+                && getParentId() == otherPost.getParentId()
+                && StringUtils.equals(getTitle(), otherPost.getTitle())
+                && StringUtils.equals(getContent(), otherPost.getContent())
+                && StringUtils.equals(getDateCreated(), otherPost.getDateCreated())
+                && StringUtils.equals(getCategoryIds(), otherPost.getCategoryIds())
+                && StringUtils.equals(getCustomFields(), otherPost.getCustomFields())
+                && StringUtils.equals(getLink(), otherPost.getLink())
+                && StringUtils.equals(getExcerpt(), otherPost.getExcerpt())
+                && StringUtils.equals(getTagNames(), otherPost.getTagNames())
+                && StringUtils.equals(getStatus(), otherPost.getStatus())
+                && StringUtils.equals(getPassword(), otherPost.getPassword())
+                && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
+                && StringUtils.equals(getSlug(), otherPost.getSlug())
+                && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
+                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
     }
 
     public JSONArray getJSONCustomFields() {
