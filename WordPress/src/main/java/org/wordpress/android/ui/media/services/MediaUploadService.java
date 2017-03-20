@@ -182,6 +182,7 @@ public class MediaUploadService extends Service {
         if (site == null) {
             AppLog.i(AppLog.T.MEDIA, "Unexpected state, site is null. Skipping this request - MediaUploadService.");
             stopServiceIfUploadsComplete();
+            return;
         }
 
         dispatchUploadAction(next, site);
