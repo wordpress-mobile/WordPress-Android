@@ -105,7 +105,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mRemotePostId = postId;
     }
 
-    public String getTitle() {
+    public @NonNull String getTitle() {
         return StringUtils.notNullStr(mTitle);
     }
 
@@ -113,7 +113,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mTitle = title;
     }
 
-    public String getContent() {
+    public @NonNull String getContent() {
         return StringUtils.notNullStr(mContent);
     }
 
@@ -121,7 +121,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mContent = content;
     }
 
-    public String getDateCreated() {
+    public @NonNull String getDateCreated() {
         return StringUtils.notNullStr(mDateCreated);
     }
 
@@ -129,7 +129,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mDateCreated = dateCreated;
     }
 
-    public String getCategoryIds() {
+    public @NonNull String getCategoryIds() {
         return StringUtils.notNullStr(mCategoryIds);
     }
 
@@ -137,8 +137,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mCategoryIds = categoryIds;
     }
 
-    @NonNull
-    public List<Long> getCategoryIdList() {
+    public @NonNull List<Long> getCategoryIdList() {
         return termIdStringToList(mCategoryIds);
     }
 
@@ -146,7 +145,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mCategoryIds = termIdListToString(categories);
     }
 
-    public String getCustomFields() {
+    public @NonNull String getCustomFields() {
         return StringUtils.notNullStr(mCustomFields);
     }
 
@@ -154,7 +153,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mCustomFields = customFields;
     }
 
-    public String getLink() {
+    public @NonNull String getLink() {
         return StringUtils.notNullStr(mLink);
     }
 
@@ -162,7 +161,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mLink = link;
     }
 
-    public String getExcerpt() {
+    public @NonNull String getExcerpt() {
         return StringUtils.notNullStr(mExcerpt);
     }
 
@@ -170,7 +169,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mExcerpt = excerpt;
     }
 
-    public String getTagNames() {
+    public @NonNull String getTagNames() {
         return StringUtils.notNullStr(mTagNames);
     }
 
@@ -178,8 +177,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mTagNames = tags;
     }
 
-    @NonNull
-    public List<String> getTagNameList() {
+    public @NonNull List<String> getTagNameList() {
         return termNameStringToList(mTagNames);
     }
 
@@ -187,7 +185,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mTagNames = termNameListToString(tags);
     }
 
-    public String getStatus() {
+    public @NonNull String getStatus() {
         return StringUtils.notNullStr(mStatus);
     }
 
@@ -195,7 +193,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mStatus = status;
     }
 
-    public String getPassword() {
+    public @NonNull String getPassword() {
         return StringUtils.notNullStr(mPassword);
     }
 
@@ -223,7 +221,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mFeaturedImageId = featuredImageId;
     }
 
-    public String getPostFormat() {
+    public @NonNull String getPostFormat() {
         return StringUtils.notNullStr(mPostFormat);
     }
 
@@ -231,7 +229,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mPostFormat = postFormat;
     }
 
-    public String getSlug() {
+    public @NonNull String getSlug() {
         return StringUtils.notNullStr(mSlug);
     }
 
@@ -285,7 +283,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mParentId = parentId;
     }
 
-    public String getParentTitle() {
+    public @NonNull String getParentTitle() {
         return StringUtils.notNullStr(mParentTitle);
     }
 
@@ -341,7 +339,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mHasCapabilityDeletePost = hasCapabilityDeletePost;
     }
 
-    public String getDateLocallyChanged() {
+    public @NonNull String getDateLocallyChanged() {
         return StringUtils.notNullStr(mDateLocallyChanged);
     }
 
