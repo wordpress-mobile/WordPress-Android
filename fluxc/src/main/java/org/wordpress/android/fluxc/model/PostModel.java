@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.yarolegovich.wellsql.core.Identifiable;
@@ -80,7 +81,6 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return mId;
     }
 
-
     public int getLocalSiteId() {
         return mLocalSiteId;
     }
@@ -105,7 +105,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mRemotePostId = postId;
     }
 
-    public String getTitle() {
+    public @NonNull String getTitle() {
         return StringUtils.notNullStr(mTitle);
     }
 
@@ -113,7 +113,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mTitle = title;
     }
 
-    public String getContent() {
+    public @NonNull String getContent() {
         return StringUtils.notNullStr(mContent);
     }
 
@@ -121,15 +121,15 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mContent = content;
     }
 
-    public String getDateCreated() {
-        return mDateCreated;
+    public @NonNull String getDateCreated() {
+        return StringUtils.notNullStr(mDateCreated);
     }
 
     public void setDateCreated(String dateCreated) {
         mDateCreated = dateCreated;
     }
 
-    public String getCategoryIds() {
+    public @NonNull String getCategoryIds() {
         return StringUtils.notNullStr(mCategoryIds);
     }
 
@@ -137,8 +137,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mCategoryIds = categoryIds;
     }
 
-    @NonNull
-    public List<Long> getCategoryIdList() {
+    public @NonNull List<Long> getCategoryIdList() {
         return termIdStringToList(mCategoryIds);
     }
 
@@ -146,7 +145,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mCategoryIds = termIdListToString(categories);
     }
 
-    public String getCustomFields() {
+    public @NonNull String getCustomFields() {
         return StringUtils.notNullStr(mCustomFields);
     }
 
@@ -154,7 +153,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mCustomFields = customFields;
     }
 
-    public String getLink() {
+    public @NonNull String getLink() {
         return StringUtils.notNullStr(mLink);
     }
 
@@ -162,7 +161,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mLink = link;
     }
 
-    public String getExcerpt() {
+    public @NonNull String getExcerpt() {
         return StringUtils.notNullStr(mExcerpt);
     }
 
@@ -170,7 +169,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mExcerpt = excerpt;
     }
 
-    public String getTagNames() {
+    public @NonNull String getTagNames() {
         return StringUtils.notNullStr(mTagNames);
     }
 
@@ -178,8 +177,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mTagNames = tags;
     }
 
-    @NonNull
-    public List<String> getTagNameList() {
+    public @NonNull List<String> getTagNameList() {
         return termNameStringToList(mTagNames);
     }
 
@@ -187,7 +185,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mTagNames = termNameListToString(tags);
     }
 
-    public String getStatus() {
+    public @NonNull String getStatus() {
         return StringUtils.notNullStr(mStatus);
     }
 
@@ -195,7 +193,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mStatus = status;
     }
 
-    public String getPassword() {
+    public @NonNull String getPassword() {
         return StringUtils.notNullStr(mPassword);
     }
 
@@ -223,7 +221,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mFeaturedImageId = featuredImageId;
     }
 
-    public String getPostFormat() {
+    public @NonNull String getPostFormat() {
         return StringUtils.notNullStr(mPostFormat);
     }
 
@@ -231,7 +229,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mPostFormat = postFormat;
     }
 
-    public String getSlug() {
+    public @NonNull String getSlug() {
         return StringUtils.notNullStr(mSlug);
     }
 
@@ -255,7 +253,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mLatitude = latitude;
     }
 
-    public PostLocation getLocation() {
+    public @NonNull PostLocation getLocation() {
         return new PostLocation(mLatitude, mLongitude);
     }
 
@@ -285,7 +283,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mParentId = parentId;
     }
 
-    public String getParentTitle() {
+    public @NonNull String getParentTitle() {
         return StringUtils.notNullStr(mParentTitle);
     }
 
@@ -341,8 +339,8 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         mHasCapabilityDeletePost = hasCapabilityDeletePost;
     }
 
-    public String getDateLocallyChanged() {
-        return mDateLocallyChanged;
+    public @NonNull String getDateLocallyChanged() {
+        return StringUtils.notNullStr(mDateLocallyChanged);
     }
 
     public void setDateLocallyChanged(String dateLocallyChanged) {
@@ -357,33 +355,34 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         PostModel otherPost = (PostModel) other;
 
         return getId() == otherPost.getId() && getLocalSiteId() == otherPost.getLocalSiteId()
-               && getRemoteSiteId() == otherPost.getRemoteSiteId() && getRemotePostId() == otherPost.getRemotePostId()
-               && getFeaturedImageId() == otherPost.getFeaturedImageId()
-               && Double.compare(otherPost.getLatitude(), getLatitude()) == 0
-               && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
-               && isPage() == otherPost.isPage()
-               && isLocalDraft() == otherPost.isLocalDraft() && isLocallyChanged() == otherPost.isLocallyChanged()
-               && getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId()
-               && getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost()
-               && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
-               && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
-               && getParentId() == otherPost.getParentId()
-               && StringUtils.equals(getTitle(), otherPost.getTitle())
-               && StringUtils.equals(getContent(), otherPost.getContent())
-               && StringUtils.equals(getDateCreated(), otherPost.getDateCreated())
-               && StringUtils.equals(getCategoryIds(), otherPost.getCategoryIds())
-               && StringUtils.equals(getCustomFields(), otherPost.getCustomFields())
-               && StringUtils.equals(getLink(), otherPost.getLink())
-               && StringUtils.equals(getExcerpt(), otherPost.getExcerpt())
-               && StringUtils.equals(getTagNames(), otherPost.getTagNames())
-               && StringUtils.equals(getStatus(), otherPost.getStatus())
-               && StringUtils.equals(getPassword(), otherPost.getPassword())
-               && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
-               && StringUtils.equals(getSlug(), otherPost.getSlug())
-               && StringUtils.equals(getParentTitle(), otherPost.getParentTitle());
+                && getRemoteSiteId() == otherPost.getRemoteSiteId() && getRemotePostId() == otherPost.getRemotePostId()
+                && getFeaturedImageId() == otherPost.getFeaturedImageId()
+                && Double.compare(otherPost.getLatitude(), getLatitude()) == 0
+                && Double.compare(otherPost.getLongitude(), getLongitude()) == 0
+                && isPage() == otherPost.isPage()
+                && isLocalDraft() == otherPost.isLocalDraft() && isLocallyChanged() == otherPost.isLocallyChanged()
+                && getLastKnownRemoteFeaturedImageId() == otherPost.getLastKnownRemoteFeaturedImageId()
+                && getHasCapabilityPublishPost() == otherPost.getHasCapabilityPublishPost()
+                && getHasCapabilityEditPost() == otherPost.getHasCapabilityEditPost()
+                && getHasCapabilityDeletePost() == otherPost.getHasCapabilityDeletePost()
+                && getParentId() == otherPost.getParentId()
+                && StringUtils.equals(getTitle(), otherPost.getTitle())
+                && StringUtils.equals(getContent(), otherPost.getContent())
+                && StringUtils.equals(getDateCreated(), otherPost.getDateCreated())
+                && StringUtils.equals(getCategoryIds(), otherPost.getCategoryIds())
+                && StringUtils.equals(getCustomFields(), otherPost.getCustomFields())
+                && StringUtils.equals(getLink(), otherPost.getLink())
+                && StringUtils.equals(getExcerpt(), otherPost.getExcerpt())
+                && StringUtils.equals(getTagNames(), otherPost.getTagNames())
+                && StringUtils.equals(getStatus(), otherPost.getStatus())
+                && StringUtils.equals(getPassword(), otherPost.getPassword())
+                && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
+                && StringUtils.equals(getSlug(), otherPost.getSlug())
+                && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
+                && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
     }
 
-    public JSONArray getJSONCustomFields() {
+    public @Nullable JSONArray getJSONCustomFields() {
         if (mCustomFields == null) {
             return null;
         }
@@ -396,7 +395,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         return jArray;
     }
 
-    public JSONObject getCustomField(String key) {
+    public @Nullable JSONObject getCustomField(String key) {
         JSONArray customFieldsJson = getJSONCustomFields();
         if (customFieldsJson == null) {
             return null;
@@ -422,7 +421,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     }
 
     public boolean hasLocation() {
-        return getLocation() != null && getLocation().isValid();
+        return getLocation().isValid();
     }
 
     public boolean shouldDeleteLatitude() {
