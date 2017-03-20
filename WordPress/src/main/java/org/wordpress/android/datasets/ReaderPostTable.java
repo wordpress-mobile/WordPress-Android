@@ -946,7 +946,7 @@ public class ReaderPostTable {
                 } while (cursor.moveToNext());
             }
         } catch (IllegalStateException e) {
-            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC);
+            CrashlyticsUtils.logException(e);
             AppLog.e(AppLog.T.READER, e);
         }
         return posts;

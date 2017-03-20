@@ -68,7 +68,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -76,7 +75,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPLegacyMigrationUtils;
@@ -136,10 +134,12 @@ public class WordPress extends MultiDexApplication {
 
     // FluxC migration - drop the migration code after wpandroid 7.8
     public static boolean sIsMigrationInProgress;
+    public static boolean sIsMigrationError;
     private static MigrationListener sMigrationListener;
     private int mRemainingSelfHostedSitesToFetch;
 
     public interface MigrationListener {
+        void onError();
         void onCompletion();
     }
 
@@ -296,8 +296,7 @@ public class WordPress extends MultiDexApplication {
             // No connection? Then exit and ask the user to come back.
             if (!NetworkUtils.isNetworkAvailable(this)) {
                 AppLog.i(T.DB, "No connection - aborting migration");
-                ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
-                        ToastUtils.Duration.LONG);
+                sIsMigrationError = true;
                 new Handler().postDelayed(sShutdown, 3500);
                 return;
             }
@@ -373,6 +372,9 @@ public class WordPress extends MultiDexApplication {
 
     public static void registerMigrationListener(MigrationListener listener) {
         sMigrationListener = listener;
+        if (sIsMigrationError) {
+            sMigrationListener.onError();
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -566,7 +568,12 @@ public class WordPress extends MultiDexApplication {
     public void onParseError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
         String description = "FluxC: " + event.description;
-        CrashlyticsUtils.logException(event.exception, ExceptionType.SPECIFIC, event.type, description);
+        if (event.extras != null) {
+            for (String key : event.extras.keySet()) {
+                CrashlyticsUtils.setString(key, event.extras.get(key));
+            }
+        }
+        CrashlyticsUtils.logException(event.exception, event.type, description);
     }
 
     public void removeWpComUserRelatedData(Context context) {

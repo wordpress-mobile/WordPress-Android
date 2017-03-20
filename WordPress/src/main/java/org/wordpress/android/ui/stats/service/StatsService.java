@@ -11,9 +11,9 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
@@ -53,8 +53,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-
-import static com.android.volley.Request.Method.HEAD;
 
 /**
  * Background service to retrieve Stats.

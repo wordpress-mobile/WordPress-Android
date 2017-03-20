@@ -103,7 +103,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -271,27 +270,29 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST)
-                    ||Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                    || Intent.ACTION_SEND.equals(action)
+                    || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
-                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
-                    || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)) {
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int localSiteId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                    SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
-                    if (site == null) {
-                        showErrorAndFinish(R.string.blog_not_found);
-                        return;
-                    }
-                    if (!site.isVisible()) {
-                        showErrorAndFinish(R.string.error_blog_hidden);
-                        return;
-                    }
-                    mSite = site;
+                    mSite = mSiteStore.getSiteByLocalId(localSiteId);
                 }
 
-                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                if (extras != null) {
+                    mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                }
                 mIsNewPost = true;
+
+                if (mSite == null) {
+                    showErrorAndFinish(R.string.blog_not_found);
+                    return;
+                }
+                if (!mSite.isVisible()) {
+                    showErrorAndFinish(R.string.error_blog_hidden);
+                    return;
+                }
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
@@ -513,7 +514,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // size the chooser before creating the fragment to avoid having it load media now
         resizePhotoChooser();
 
-        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance(this);
 
         getFragmentManager()
                 .beginTransaction()
@@ -1031,10 +1032,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Quick press
             normalizedSourceName = "quick-press";
         }
-        if (intent != null && intent.getIntExtra("quick-media", -1) > -1) {
-            // Quick photo or quick video
-            normalizedSourceName = "quick-media";
-        }
         properties.put("created_post_source", normalizedSourceName);
         AnalyticsUtils.trackWithSiteDetails(
                 AnalyticsTracker.Stat.EDITOR_CREATED_POST,
@@ -1200,7 +1197,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     @Override
     public void onReflectionFailure(ReflectionException e) {
-        CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.EDITOR, "Reflection Failure on Visual Editor init");
+        CrashlyticsUtils.logException(e, T.EDITOR, "Reflection Failure on Visual Editor init");
         // Disable visual editor and show an error message
         AppPrefs.setVisualEditorEnabled(false);
         ToastUtils.showToast(this, R.string.new_editor_reflection_error, Duration.LONG);
@@ -1292,7 +1289,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (media != null) {
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
             trackAddMediaFromWPLibraryEvents(mediaFile.isVideo(), media.getMediaId());
-            mEditorFragment.appendMediaFile(mediaFile, media.getUrl(), mImageLoader);
+            String urlToUse = TextUtils.isEmpty(media.getUrl()) ? media.getFilePath() : media.getUrl();
+            mEditorFragment.appendMediaFile(mediaFile, urlToUse, mImageLoader);
         }
     }
 
@@ -1631,16 +1629,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Analytics about new media
      *
      * @param isVideo Whether is a video or not
+     * @param isOptimized Whether the media was "optimized" device side
      * @param uri The URI of the media on the device, or null
      * @param path The path of the media on the device, or null
      */
-    private void trackAddMediaFromDeviceEvents(boolean isVideo, Uri uri, String path) {
+    private void trackAddMediaFromDeviceEvents(boolean isVideo, boolean isOptimized, Uri uri, String path) {
         if (TextUtils.isEmpty(path) && uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
             return;
         }
 
         Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
+        properties.put("optimized", isOptimized);
 
         if (isVideo) {
             AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY, properties);
@@ -1670,7 +1670,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     public boolean addMedia(Uri mediaUri) {
         if (mediaUri != null && !MediaUtils.isInMediaStore(mediaUri) && !mediaUri.toString().startsWith("/")
-            && !mediaUri.toString().startsWith("file://") ) {
+                && !mediaUri.toString().startsWith("file://") ) {
             mediaUri = MediaUtils.downloadExternalMedia(this, mediaUri);
         }
 
@@ -1713,29 +1713,34 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        if (!isVideo && SiteSettingsInterface.getInterface(this, mSite, null).init(false).getOptimizedImage() &&
-               !NetworkUtils.isWiFiConnected(this)) {
-            // Not on WiFi and optimize image is set to ON
-            // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-            String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
+        boolean isOptimized = false;
+        if (!NetworkUtils.isWiFiConnected(this) && !isVideo) {
+            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mSite, null);
+            // Site Settings are implemented on .com/Jetpack sites only
+            if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
+                // Not on WiFi and optimize image is set to ON
+                // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
+                String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
 
-            if (optimizedPath == null) {
-                AppLog.e(T.EDITOR, "Optimized picture was null!");
-                // TODO: track analytics here
-                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
-            } else {
-                // TODO: track analytics here
-                // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
-                Uri optimizedImageUri = Uri.parse(optimizedPath);
-                if (optimizedImageUri != null) {
-                    uri = optimizedImageUri;
+                if (optimizedPath == null) {
+                    AppLog.e(T.EDITOR, "Optimized picture was null!");
+                    // TODO: track analytics here
+                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
+                } else {
+                    // TODO: track analytics here
+                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
+                    Uri optimizedImageUri = Uri.parse(optimizedPath);
+                    if (optimizedImageUri != null) {
+                        uri = optimizedImageUri;
+                        isOptimized = true;
+                    }
                 }
             }
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-        trackAddMediaFromDeviceEvents(isVideo, null, path);
+        trackAddMediaFromDeviceEvents(isVideo, isOptimized, null, path);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
@@ -1744,7 +1749,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
+        trackAddMediaFromDeviceEvents(isVideo, false, mediaUri, null);
 
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
         if (isVideo) {
@@ -2215,7 +2220,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 @Override
                 public void onJavaScriptError(String sourceFile, int lineNumber, String message) {
                     CrashlyticsUtils.logException(new JavaScriptException(sourceFile, lineNumber, message),
-                            ExceptionType.SPECIFIC, T.EDITOR,
+                            T.EDITOR,
                             String.format(Locale.US, "%s:%d: %s", sourceFile, lineNumber, message));
                 }
 
@@ -2281,6 +2286,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+        if (isFinishing()) return;
+
         // event for unknown media, ignoring
         if (event.media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);

@@ -505,7 +505,6 @@ public class ImageUtils {
         final Bitmap bmpRotated;
         try {
             bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix, true);
-
         } catch (OutOfMemoryError e) {
             AppLog.e(AppLog.T.UTILS, "OutOfMemoryError while creating the resized bitmap", e);
             throw e;
@@ -522,8 +521,7 @@ public class ImageUtils {
             throw new IOException("bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.");
         }
 
-        boolean result = bmpRotated.compress(fmt, quality, outStream);
-        return result;
+        return bmpRotated.compress(fmt, quality, outStream);
     }
 
     /**

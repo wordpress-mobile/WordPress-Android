@@ -16,6 +16,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.io.OutputStream;
 public class WordPressDB {
     private static final String COLUMN_NAME_ID = "_id";
 
-    private static final int DATABASE_VERSION = 52;
+    private static final int DATABASE_VERSION = 54;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -185,8 +186,23 @@ public class WordPressDB {
                 // Delete simperium DB since we're removing Simperium from the app.
                 ctx.deleteDatabase("simperium-store");
                 currentVersion++;
+            case 50:
+                // fix #5373 - no op
+                currentVersion++;
             case 51:
                 SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
+                currentVersion++;
+            case 52:
+                // fix #5373 for users who already upgraded to 52 but missed the first migration
+                try {
+                    SiteSettingsTable.addOptimizedImageToSiteSettingsTable(db);
+                } catch(SQLiteException e) {
+                    // ignore "duplicate column" exception
+                }
+                currentVersion++;
+            case 53:
+                // Clean up empty cache files caused by #5417
+                clearEmptyCacheFiles(ctx);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -353,6 +369,32 @@ public class WordPressDB {
             input.close();
         } catch (IOException e) {
             AppLog.e(T.DB, "failed to copy database", e);
+        }
+    }
+
+    private void clearEmptyCacheFiles(Context context) {
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+            File imageCacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/images");
+            File videoCacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/video");
+
+            deleteEmptyFilesInDirectory(imageCacheDir);
+            deleteEmptyFilesInDirectory(videoCacheDir);
+        } else {
+            File cacheDir = context.getApplicationContext().getCacheDir();
+            deleteEmptyFilesInDirectory(cacheDir);
+        }
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void deleteEmptyFilesInDirectory(File directory) {
+        if (directory == null || !directory.exists() || directory.listFiles() == null) {
+            return;
+        }
+
+        for (File file : directory.listFiles()) {
+            if (file != null && file.length() == 0) {
+                file.delete();
+            }
         }
     }
 }

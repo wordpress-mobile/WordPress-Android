@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -35,7 +36,7 @@
                 android:id="@+id/image_avatar_or_blavatar"
                 style="@style/ReaderImageView.Avatar"
                 android:layout_marginRight="@dimen/margin_large"
-                tools:src="@drawable/blavatar_placeholder" />
+                app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
                 android:id="@+id/follow_button"
@@ -152,7 +153,7 @@
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_marginRight="@dimen/margin_large"
                 android:background="?android:selectableItemBackground"
-                tools:src="@drawable/gravatar_placeholder" />
+                app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_discover"
@@ -223,7 +224,9 @@
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/more"
-                app:srcCompat="@drawable/ic_action_more_grey" />
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium"
+                app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
 
         </RelativeLayout>
 
