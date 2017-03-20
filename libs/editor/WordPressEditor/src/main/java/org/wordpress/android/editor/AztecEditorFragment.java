@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -558,15 +559,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    public static class ImagePredicate implements AztecText.AttributePredicate {
+    private static class ImagePredicate implements AztecText.AttributePredicate {
         private final String mId;
         private final String mAttributeName;
 
-        public static ImagePredicate localMediaIdPredicate(String id) {
+        private static ImagePredicate localMediaIdPredicate(String id) {
             return new ImagePredicate(id, "data-wpid");
         }
 
-        public static ImagePredicate idPredicate(String id) {
+        private static ImagePredicate idPredicate(String id) {
             return new ImagePredicate(id, "id");
         }
 
@@ -1133,5 +1134,28 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         } else if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
             // TODO: handle media settings
         }
+    }
+
+    public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent, String localMediaId, MediaFile mediaFile) {
+        if (mediaFile != null) {
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            if (!mediaFile.isVideo()) {
+                AttributesImpl attrs = new AttributesImpl();
+                attrs.addAttribute("", "src", "src", "string", remoteUrl);
+
+                // clear overlay
+                AztecText content = new AztecText(context);
+                content.fromHtml(postContent);
+                content.clearOverlays(AztecEditorFragment.ImagePredicate.localMediaIdPredicate(localMediaId), attrs);
+                content.refreshText();
+
+                // re-set the post content
+                postContent = content.toHtml(false);
+
+            } else {
+                // TODO: update video element
+            }
+        }
+        return postContent;
     }
 }
