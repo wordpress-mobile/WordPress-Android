@@ -122,7 +122,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     }
 
     public String getDateCreated() {
-        return mDateCreated;
+        return StringUtils.notNullStr(mDateCreated);
     }
 
     public void setDateCreated(String dateCreated) {
@@ -342,7 +342,7 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
     }
 
     public String getDateLocallyChanged() {
-        return mDateLocallyChanged;
+        return StringUtils.notNullStr(mDateLocallyChanged);
     }
 
     public void setDateLocallyChanged(String dateLocallyChanged) {
