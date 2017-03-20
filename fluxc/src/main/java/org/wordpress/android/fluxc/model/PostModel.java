@@ -378,7 +378,8 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
                && StringUtils.equals(getPassword(), otherPost.getPassword())
                && StringUtils.equals(getPostFormat(), otherPost.getPostFormat())
                && StringUtils.equals(getSlug(), otherPost.getSlug())
-               && StringUtils.equals(getParentTitle(), otherPost.getParentTitle());
+               && StringUtils.equals(getParentTitle(), otherPost.getParentTitle())
+               && StringUtils.equals(getDateLocallyChanged(), otherPost.getDateLocallyChanged());
     }
 
     public JSONArray getJSONCustomFields() {
