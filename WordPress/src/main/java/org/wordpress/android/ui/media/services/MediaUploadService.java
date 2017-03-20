@@ -198,11 +198,10 @@ public class MediaUploadService extends Service {
     }
 
     private MediaModel getMediaFromQueueById(int id) {
-        if (mQueue != null && mQueue.size() > 0) {
-            for (MediaModel media : mQueue) {
-                if (media.getId() == id)
-                    return media;
-            }
+        List<MediaModel> queue = getUploadQueue();
+        for (MediaModel media : queue) {
+            if (media.getId() == id)
+                return media;
         }
         return null;
     }
