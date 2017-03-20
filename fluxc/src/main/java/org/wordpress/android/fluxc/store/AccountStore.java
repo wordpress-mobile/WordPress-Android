@@ -331,6 +331,9 @@ public class AccountStore extends Store {
             case FETCH_SETTINGS:
                 mAccountRestClient.fetchAccountSettings();
                 break;
+            case SEND_VERIFICATION_EMAIL:
+                mAccountRestClient.resendVerificationEmail();
+                break;
             case PUSH_SETTINGS:
                 mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);
                 break;
@@ -357,6 +360,9 @@ public class AccountStore extends Store {
                 break;
             case FETCHED_ACCOUNT:
                 handleFetchAccountCompleted((AccountRestPayload) payload);
+                break;
+            case SENT_VERIFICATION_EMAIL:
+                handleSentVerificationEmail((NewAccountResponsePayload) payload);
                 break;
             case IS_AVAILABLE_BLOG:
                 mAccountRestClient.isAvailable((String) payload, IsAvailable.BLOG);
@@ -440,6 +446,13 @@ public class AccountStore extends Store {
         } else {
             emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
         }
+    }
+
+    private void handleSentVerificationEmail(NewAccountResponsePayload payload) {
+        OnAccountChanged accountChanged = new OnAccountChanged();
+        accountChanged.causeOfChange = AccountAction.SEND_VERIFICATION_EMAIL;
+        accountChanged.accountInfosChanged = !payload.isError();
+        emitChange(accountChanged);
     }
 
     private void handlePushSettingsCompleted(AccountPushSettingsResponsePayload payload) {
