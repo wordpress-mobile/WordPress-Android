@@ -303,8 +303,11 @@ public class WPLegacyMigrationUtils {
                     postModel.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(dateLocallyChanged / 1000));
                 }
 
+                int featuredImageIndex = c.getColumnIndex("wp_post_thumbnail");
+                long featuredImageId = featuredImageIndex > 0 ? c.getLong(featuredImageIndex) : 0;
+                postModel.setFeaturedImageId(featuredImageId);
+
                 postModel.setExcerpt(c.getString(c.getColumnIndex("mt_excerpt")));
-                postModel.setFeaturedImageId(c.getLong(c.getColumnIndex("wp_post_thumbnail")));
                 postModel.setLink(c.getString(c.getColumnIndex("link")));
                 postModel.setTagNames(c.getString(c.getColumnIndex("mt_keywords")));
                 postModel.setStatus(c.getString(c.getColumnIndex("post_status")));
