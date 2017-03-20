@@ -276,24 +276,20 @@ public class MediaUploadService extends Service {
     }
 
     private void dispatchUploadAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
-        if (media != null && site != null) {
-            AppLog.i(AppLog.T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
-                    " and path: " + media.getFilePath());
-            media.setUploadState(UploadState.UPLOADING.name());
-            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+        AppLog.i(AppLog.T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
+                " and path: " + media.getFilePath());
+        media.setUploadState(UploadState.UPLOADING.name());
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
-            MediaPayload payload = new MediaPayload(site, media);
-            mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
-        }
+        MediaPayload payload = new MediaPayload(site, media);
+        mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
     }
 
     private void dispatchCancelAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
-        if (media != null && site != null) {
-            AppLog.i(AppLog.T.MEDIA, "Dispatching cancel upload action for media with local id: " + media.getId() +
-                    " and path: " + media.getFilePath());
-            MediaPayload payload = new MediaPayload(site, media);
-            mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
-        }
+        AppLog.i(AppLog.T.MEDIA, "Dispatching cancel upload action for media with local id: " + media.getId() +
+                " and path: " + media.getFilePath());
+        MediaPayload payload = new MediaPayload(site, media);
+        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
     private void stopServiceIfUploadsComplete(){
