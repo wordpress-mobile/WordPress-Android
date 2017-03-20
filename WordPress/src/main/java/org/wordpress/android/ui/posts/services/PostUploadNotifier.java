@@ -202,8 +202,7 @@ public class PostUploadNotifier {
         try {
             mNotificationManager.notify((int) id, notification);
         } catch (RuntimeException runtimeException) {
-            CrashlyticsUtils.logException(runtimeException, CrashlyticsUtils.ExceptionType.SPECIFIC,
-                    AppLog.T.UTILS, "See issue #2858 / #3966");
+            CrashlyticsUtils.logException(runtimeException, AppLog.T.UTILS, "See issue #2858 / #3966");
             AppLog.d(AppLog.T.POSTS, "See issue #2858 / #3966; notify failed with:" + runtimeException);
         }
     }

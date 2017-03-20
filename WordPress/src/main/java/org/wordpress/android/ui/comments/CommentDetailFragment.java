@@ -514,7 +514,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @SuppressWarnings("unused")
     public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         // check if the updated suggestions are for the current blog and update the suggestions
-        if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mSite.getSiteId() && mSuggestionAdapter != null) {
+        if (event.mRemoteBlogId != 0 && mSite != null
+            && event.mRemoteBlogId == mSite.getSiteId() && mSuggestionAdapter != null) {
             List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
             mSuggestionAdapter.setSuggestionList(suggestions);
         }
@@ -956,7 +957,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (canTrash()) {
             mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
-                mBtnModerateIcon.setImageResource(R.drawable.ic_action_restore);
+                mBtnModerateIcon.setImageResource(R.drawable.ic_undo_grey_24dp);
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
                 mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
             } else {
@@ -991,11 +992,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private void setModerateButtonForStatus(CommentStatus status) {
         if (status == CommentStatus.APPROVED) {
-            mBtnModerateIcon.setImageResource(R.drawable.ic_action_approve_active);
+            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_orange_jazzy_24dp);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
             mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark));
         } else {
-            mBtnModerateIcon.setImageResource(R.drawable.ic_action_approve);
+            mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_grey_24dp);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
             mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
         }
@@ -1127,12 +1128,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (isLiked) {
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_jazzy));
-            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_like_active));
+            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_orange_jazzy_24dp));
             mBtnLikeComment.setActivated(true);
         } else {
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.grey));
-            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_action_like));
+            mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_outline_grey_24dp));
             mBtnLikeComment.setActivated(false);
         }
     }

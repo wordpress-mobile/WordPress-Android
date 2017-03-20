@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_edit_media"
-        android:icon="@drawable/ic_create_white_24dp"
+        android:icon="@drawable/ic_pencil_white_24dp"
         android:title="@string/edit_media"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_copy_media_url"
-        android:icon="@drawable/ic_content_copy_white_24dp"
+        android:icon="@drawable/ic_copy_white_24dp"
         android:title="@string/media_details_copy_url"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_delete"
-        android:icon="@drawable/ic_delete_white_24dp"
+        android:icon="@drawable/ic_trash_white_24dp"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
 </menu>

@@ -514,7 +514,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaChanged(OnMediaChanged event) {
         if (event.isError()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
-                                     + " - " + event.error.message);
+                    + " - " + event.error.message);
             showMediaToastError(R.string.media_generic_error, event.error.message);
             return;
         }
@@ -540,7 +540,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                         }
                     }
                 }
-            break;
+                break;
         }
         updateViews();
     }
@@ -562,20 +562,21 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onMediaUploaded(OnMediaUploaded event) {
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
-                                     + " - " + event.error.message);
+                    + " - " + event.error.message);
             if (event.error.type == MediaErrorType.AUTHORIZATION_REQUIRED) {
                 showMediaToastError(R.string.media_error_no_permission, null);
             } else {
                 showMediaToastError(R.string.media_upload_error, event.error.message);
             }
+            updateViews();
         } else if (event.completed) {
             String title = "";
             if (event.media != null) {
                 title = event.media.getTitle();
             }
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
+            updateViews();
         }
-        updateViews();
     }
 
     public void onSavedEdit(int localMediaId, boolean result) {
@@ -898,7 +899,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         fm.popBackStack();
 
         // reset the button to "back" as it may have been altered by a fragment
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
     }
 
     private String getRealPathFromURI(Uri uri) {

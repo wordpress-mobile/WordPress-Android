@@ -18,8 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.wordpress.android.R;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.util.AnalyticsUtils;
 
 public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
     public static final String SITE_DOMAIN_KEY = "site-domain";

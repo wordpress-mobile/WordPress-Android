@@ -53,7 +53,7 @@ public class CommentUtils {
             Drawable loading = ContextCompat.getDrawable(textView.getContext(),
                     R.drawable.legacy_dashicon_format_image_big_grey);
             Drawable failed = ContextCompat.getDrawable(textView.getContext(),
-                    R.drawable.noticon_warning_big_grey);
+                    R.drawable.ic_notice_grey_500_48dp);
             html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, imageLoader, loading, failed));
         } else {
             html = HtmlUtils.fromHtml(content);

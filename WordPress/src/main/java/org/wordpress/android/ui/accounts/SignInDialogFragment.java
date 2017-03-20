@@ -24,8 +24,6 @@ import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
 
-import static com.android.volley.Request.Method.HEAD;
-
 public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";

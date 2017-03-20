@@ -15,6 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -50,6 +51,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecText.OnMediaTappedListener;
+import org.wordpress.aztec.HistoryListener;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
@@ -65,8 +67,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class AztecEditorFragment extends EditorFragmentAbstract implements OnImeBackListener, EditorMediaUploadListener,
-        OnMediaTappedListener, AztecToolbarClickListener {
+public class AztecEditorFragment extends EditorFragmentAbstract implements
+        OnImeBackListener,
+        EditorMediaUploadListener,
+        OnMediaTappedListener,
+        AztecToolbarClickListener,
+        HistoryListener {
 
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
@@ -89,6 +95,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter imageLoader;
+
+    private Handler invalidateOptionsHandler;
+    private Runnable invalidateOptionsRunnable;
 
     private Map<String, MediaType> mUploadingMedia;
     private Set<String> mFailedMediaIds;
@@ -142,6 +151,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         source.setHistory(content.getHistory());
         content.setImageGetter(imageLoader);
 
+        content.getHistory().setHistoryListener(this);
+
         content.setOnMediaTappedListener(this);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
@@ -152,6 +163,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         setHasOptionsMenu(true);
 
         registerForContextMenu(formattingToolbar);
+
+        invalidateOptionsHandler = new Handler();
+        invalidateOptionsRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getActivity().invalidateOptionsMenu();
+            }
+        };
 
         return view;
     }
@@ -215,13 +234,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
         // TODO: disable undo/redo in media mode
-        boolean canUndo = content.history.undoValid();
         boolean canRedo = content.history.redoValid();
-        menu.findItem(R.id.undo).setEnabled(canUndo);
-        menu.findItem(R.id.redo).setEnabled(canRedo);
+        boolean canUndo = content.history.undoValid();
+
+        if (menu != null && menu.findItem(R.id.redo) != null) {
+            menu.findItem(R.id.redo).setEnabled(canRedo);
+        }
+
+        if (menu != null && menu.findItem(R.id.undo) != null) {
+            menu.findItem(R.id.undo).setEnabled(canUndo);
+        }
+
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -244,6 +269,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
 
         return false;
+    }
+
+    @Override
+    public void onRedoEnabled() {
+        invalidateOptionsHandler.removeCallbacks(invalidateOptionsRunnable);
+        invalidateOptionsHandler.postDelayed(invalidateOptionsRunnable, getResources().getInteger(android.R.integer.config_mediumAnimTime) );
+    }
+
+    @Override
+    public void onUndoEnabled() {
+        invalidateOptionsHandler.removeCallbacks(invalidateOptionsRunnable);
+        invalidateOptionsHandler.postDelayed(invalidateOptionsRunnable, getResources().getInteger(android.R.integer.config_mediumAnimTime) );
     }
 
     private ActionBar getActionBar() {

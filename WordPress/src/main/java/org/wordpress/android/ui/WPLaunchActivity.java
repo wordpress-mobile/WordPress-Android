@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -39,6 +41,15 @@ public class WPLaunchActivity extends AppCompatActivity {
                         mMigrationProgressDialog = null;
                     }
                     launchWPMainActivity();
+                }
+
+                @Override
+                public void onError() {
+                    AppLog.d(T.DB, "Show a Migration Error toast.");
+                    mMigrationProgressDialog.dismiss();
+                    mMigrationProgressDialog = null;
+                    ToastUtils.showToast(WPLaunchActivity.this, getString(R.string.migration_error_not_connected),
+                            ToastUtils.Duration.LONG);
                 }
             });
         } else {

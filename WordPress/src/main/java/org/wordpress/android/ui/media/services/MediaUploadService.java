@@ -76,10 +76,12 @@ public class MediaUploadService extends Service {
         return null;
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // skip this request if no site is given
         if (intent == null || !intent.hasExtra(WordPress.SITE)) {
+            AppLog.e(AppLog.T.MEDIA, "MediaUploadService was killed and restarted with a null intent.");
             stopServiceIfUploadsComplete();
             return START_NOT_STICKY;
         }
