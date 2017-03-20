@@ -84,7 +84,7 @@ public class AccountModel extends Payload implements Identifiable {
         mAvatarUrl = "";
         mPrimarySiteId = 0;
         mSiteCount = 0;
-        mEmailVerified = false;
+        mEmailVerified = true;
         mVisibleSiteCount = 0;
         mEmail = "";
         mFirstName = "";
