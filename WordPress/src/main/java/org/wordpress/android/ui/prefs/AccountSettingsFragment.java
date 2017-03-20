@@ -14,22 +14,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Account;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.AccountModel;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
 @SuppressWarnings("deprecation")
 public class AccountSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
@@ -39,9 +45,14 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     private EditTextPreferenceWithValidation mWebAddressPreference;
     private Snackbar mEmailSnackbar;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.account_settings);
@@ -85,20 +96,19 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onResume() {
         super.onResume();
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            AccountHelper.getDefaultAccount().fetchAccountSettings();
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
@@ -112,7 +122,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             mEmailPreference.setEnabled(false);
             return false;
         } else if (preference == mPrimarySitePreference) {
-            changePrimaryBlogPreference(newValue.toString());
+            changePrimaryBlogPreference(Long.parseLong(newValue.toString()));
             updatePrimaryBlog(newValue.toString());
             return false;
         } else if (preference == mWebAddressPreference) {
@@ -133,19 +143,16 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     }
 
     private void refreshAccountDetails() {
-        Account account = AccountHelper.getDefaultAccount();
+        AccountModel account = mAccountStore.getAccount();
         mUsernamePreference.setSummary(account.getUserName());
         mEmailPreference.setSummary(account.getEmail());
         mWebAddressPreference.setSummary(account.getWebAddress());
-
-        String blogId = String.valueOf(account.getPrimaryBlogId());
-        changePrimaryBlogPreference(blogId);
-
+        changePrimaryBlogPreference(account.getPrimarySiteId());
         checkIfEmailChangeIsPending();
     }
 
     private void checkIfEmailChangeIsPending() {
-        final Account account = AccountHelper.getDefaultAccount();
+        AccountModel account = mAccountStore.getAccount();
         if (account.getPendingEmailChange()) {
             showPendingEmailChangeSnackbar(account.getNewEmail());
         } else if (mEmailSnackbar != null && mEmailSnackbar.isShown()){
@@ -179,70 +186,89 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         }
     }
 
+    private void changePrimaryBlogPreference(long siteRemoteId) {
+        mPrimarySitePreference.setValue(String.valueOf(siteRemoteId));
+        SiteModel site = mSiteStore.getSiteBySiteId(siteRemoteId);
+        if (site != null) {
+            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
+            mPrimarySitePreference.refreshAdapter();
+        }
+    }
+
     private void cancelPendingEmailChange() {
-        Map<String, String> params = new HashMap<>();
-        params.put(AccountModel.RestParam.EMAIL_CHANGE_PENDING.getDescription(), "false");
-        AccountHelper.getDefaultAccount().postAccountSettings(params);
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("user_email_change_pending", "false");
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
             mEmailSnackbar.dismiss();
         }
     }
 
-    private void changePrimaryBlogPreference(String blogId) {
-        mPrimarySitePreference.setValue(blogId);
-        Blog primaryBlog = WordPress.wpDB.getBlogForDotComBlogId(blogId);
-        if (primaryBlog != null) {
-            mPrimarySitePreference.setSummary(StringUtils.unescapeHTML(primaryBlog.getNameOrHostUrl()));
-            mPrimarySitePreference.refreshAdapter();
-        }
-    }
-
     private void updateEmail(String newEmail) {
-        Account account = AccountHelper.getDefaultAccount();
-        Map<String, String> params = new HashMap<>();
-        params.put(AccountModel.RestParam.EMAIL.getDescription(), newEmail);
-        account.postAccountSettings(params);
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("user_email", newEmail);
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
     private void updatePrimaryBlog(String blogId) {
-        Account account = AccountHelper.getDefaultAccount();
-        Map<String, String> params = new HashMap<>();
-        params.put(AccountModel.RestParam.PRIMARY_BLOG.getDescription(), blogId);
-        account.postAccountSettings(params);
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("primary_site_ID", blogId);
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
     public void updateWebAddress(String newWebAddress) {
-        Account account = AccountHelper.getDefaultAccount();
-        Map<String, String> params = new HashMap<>();
-        params.put(AccountModel.RestParam.WEB_ADDRESS.getDescription(), newWebAddress);
-        account.postAccountSettings(params);
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("user_URL", newWebAddress);
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchSuccess event) {
-        if (isAdded()) {
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (!isAdded()) return;
+
+        if (event.isError()) {
+            switch (event.error.type) {
+                case SETTINGS_FETCH_ERROR:
+                    ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+                    break;
+                case SETTINGS_POST_ERROR:
+                    ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
+                    // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
+                    checkIfEmailChangeIsPending();
+                    break;
+            }
+        } else {
             refreshAccountDetails();
         }
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsPostSuccess event) {
-        if (isAdded()) {
-            refreshAccountDetails();
+    public static String[] getSiteNamesFromSites(List<SiteModel> sites) {
+        List<String> blogNames = new ArrayList<>();
+        for (SiteModel site : sites) {
+            blogNames.add(SiteUtils.getSiteNameOrHomeURL(site));
         }
+        return blogNames.toArray(new String[blogNames.size()]);
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsFetchError event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+    public static String[] getHomeURLOrHostNamesFromSites(List<SiteModel> sites) {
+        List<String> urls = new ArrayList<>();
+        for (SiteModel site : sites) {
+            urls.add(SiteUtils.getHomeURLOrHostName(site));
         }
+        return urls.toArray(new String[urls.size()]);
     }
 
-    public void onEventMainThread(PrefsEvents.AccountSettingsPostError event) {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
-
-            // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
-            checkIfEmailChangeIsPending();
+    public static String[] getSiteIdsFromSites(List<SiteModel> sites) {
+        List<String> ids = new ArrayList<>();
+        for (SiteModel site : sites) {
+            ids.add(String.valueOf(site.getSiteId()));
         }
+        return ids.toArray(new String[ids.size()]);
     }
 
     /*
@@ -261,11 +287,10 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<Map<String, Object>> blogList = WordPress.wpDB.getBlogsBy("dotcomFlag=1", new String[]{"homeURL"});
-            mPrimarySitePreference.setEntries(BlogUtils.getBlogNamesFromAccountMapList(blogList));
-            mPrimarySitePreference.setEntryValues(BlogUtils.getBlogIdsFromAccountMapList(blogList));
-            mPrimarySitePreference.setDetails(BlogUtils.getHomeURLOrHostNamesFromAccountMapList(blogList));
-
+            List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
+            mPrimarySitePreference.setEntries(getSiteNamesFromSites(sites));
+            mPrimarySitePreference.setEntryValues(getSiteIdsFromSites(sites));
+            mPrimarySitePreference.setDetails(getHomeURLOrHostNamesFromSites(sites));
             return null;
         }
 

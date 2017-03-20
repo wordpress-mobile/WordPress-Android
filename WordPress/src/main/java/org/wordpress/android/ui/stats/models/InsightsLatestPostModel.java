@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 
 public class InsightsLatestPostModel extends BaseStatsModel {
-    private String mBlogID;
+    private long mBlogID;
     private String mPostTitle;
     private String mPostURL;
     private String mPostDate;
@@ -16,7 +16,7 @@ public class InsightsLatestPostModel extends BaseStatsModel {
     private int mPostLikeCount;
     private int mPostsFound; // if 0 there are no posts on the blog.
 
-    public InsightsLatestPostModel(String blogID, JSONObject response) throws JSONException {
+    public InsightsLatestPostModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
 
         mPostsFound = response.optInt("found", 0);
@@ -49,7 +49,7 @@ public class InsightsLatestPostModel extends BaseStatsModel {
         return mPostsFound > 0;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 

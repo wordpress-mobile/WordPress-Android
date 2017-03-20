@@ -17,18 +17,21 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * An activity to handle share intents, since there are multiple actions possible.
@@ -44,32 +47,38 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public static final int ADD_TO_MEDIA_LIBRARY = 1;
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
-    private int mAccountIDs[];
+    private String mSiteNames[];
+    private int mSiteIds[];
+    private int mSelectedSiteLocalId;
     private TextView mBlogSpinnerTitle;
     private int mActionIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.share_intent_receiver_dialog);
 
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        String[] blogNames = getBlogNames();
-        if (blogNames == null) {
+        initSiteLists();
+
+        if (mSiteNames == null) {
             finishIfNoVisibleBlogs();
             return;
         }
 
-        if (blogNames.length == 1) {
+        if (mSiteNames.length == 1) {
             mBlogSpinner.setVisibility(View.GONE);
             mBlogSpinnerTitle.setVisibility(View.GONE);
         } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    R.layout.spinner_menu_dropdown_item, blogNames);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_menu_dropdown_item, mSiteNames);
             mBlogSpinner.setAdapter(adapter);
             mBlogSpinner.setOnItemSelectedListener(this);
         }
@@ -80,7 +89,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             mActionSpinner.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
             // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
-            if (blogNames.length == 1) {
+            if (mSiteNames.length == 1) {
+                // Single site, startActivityAndFinish will pick the first one by default
                 startActivityAndFinish(new Intent(this, EditPostActivity.class));
             }
         } else {
@@ -108,7 +118,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not logged in, then ask to log in, else inform the user to set at least one blog
         // visible
-        if (!AccountHelper.isSignedIn()) {
+        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();
@@ -118,9 +128,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         }
     }
 
-    private int gepPositionByLocalBlogId(long localBlogId) {
-        for (int i = 0; i < mAccountIDs.length; i++) {
-            if (mAccountIDs[i] == localBlogId) {
+    private int getPositionBySiteId(long localBlogId) {
+        for (int i = 0; i < mSiteIds.length; i++) {
+            if (mSiteIds[i] == localBlogId) {
                 return i;
             }
         }
@@ -132,7 +142,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         int localBlogId = settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
         int actionPosition = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, -1);
         if (localBlogId != -1) {
-            int position = gepPositionByLocalBlogId(localBlogId);
+            int position = getPositionBySiteId(localBlogId);
             if (position != -1) {
                 mBlogSpinner.setSelection(position);
             }
@@ -146,47 +156,29 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         return "text/plain".equals(getIntent().getType());
     }
 
-    private String[] getBlogNames() {
-        String[] extraFields = {"homeURL"};
-        List<Map<String, Object>> accounts = WordPress.wpDB.getBlogsBy("isHidden = 0", extraFields);
-        if (accounts.size() > 0) {
-            final String blogNames[] = new String[accounts.size()];
-            mAccountIDs = new int[accounts.size()];
-            Blog blog;
-            for (int i = 0; i < accounts.size(); i++) {
-                Map<String, Object> account = accounts.get(i);
-                blogNames[i] = BlogUtils.getBlogNameOrHomeURLFromAccountMap(account);
-                mAccountIDs[i] = (Integer) account.get("id");
-                blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
-                if (blog == null) {
-                    ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-                    return null;
-                }
+    private void initSiteLists() {
+        List<SiteModel> sites = mSiteStore.getVisibleSites();
+        if (sites.size() > 0) {
+            mSiteNames = new String[sites.size()];
+            mSiteIds = new int[sites.size()];
+            int i = 0;
+            for (SiteModel site : sites) {
+                mSiteNames[i] = SiteUtils.getSiteNameOrHomeURL(site);
+                mSiteIds[i] = site.getId();
+                i += 1;
             }
-            return blogNames;
+            // default selected site to the first one
+            mSelectedSiteLocalId = mSiteIds[0];
         }
-        return null;
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.blog_spinner) {
-            if (!selectBlog(mAccountIDs[position])) {
-                ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-                finish();
-            }
+            mSelectedSiteLocalId = mSiteIds[position];
         } else if (parent.getId() == R.id.action_spinner) {
             mActionIndex = position;
         }
-    }
-
-    private boolean selectBlog(int blogId) {
-        WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-        if (WordPress.currentBlog == null || WordPress.currentBlog.isHidden()) {
-            return false;
-        }
-        WordPress.wpDB.updateLastBlogId(WordPress.currentBlog.getLocalTableBlogId());
-        return true;
     }
 
     private void startActivityAndFinish(Intent intent) {
@@ -196,6 +188,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             intent.setType(getIntent().getType());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSelectedSiteLocalId));
 
             intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
@@ -243,15 +237,12 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
     private void savePreferences() {
         // If current blog is not set don't save preferences
-        if (WordPress.currentBlog == null) {
-            return ;
-        }
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
 
         // Save last used settings
-        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
+        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId);
         editor.putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

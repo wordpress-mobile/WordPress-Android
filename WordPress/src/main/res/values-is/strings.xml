@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-15 11:05:13+0000
+Translation-Revision-Date: 2017-03-01 18:35:07+0000
 Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
 Generator: GlotPress/2.4.0-alpha
 Language: is
 -->
 <resources>
+	<string name="reader_liked_default_tag">Færslur sem mér líkar við</string>
+	<string name="reader_discover_default_tag">Uppgötva</string>
+	<string name="reader_followed_default_tag">Vefir sem ég fylgi</string>
 	<string name="reader_empty_followed_blogs_search_title">Engir vefir fundust</string>
 	<string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
 	<string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
-	<string name="preference_editor_type">Skilgreina tegund ritils</string>
 	<string name="preference_editor_visual">Ritþór</string>
 	<string name="preference_editor_legacy">Eldri</string>
+	<string name="preference_editor_type">Skilgreina tegund ritils</string>
 	<string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
 	<string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
 	<string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>

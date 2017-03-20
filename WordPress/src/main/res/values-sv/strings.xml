@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-15 11:23:12+0000
+Translation-Revision-Date: 2017-03-01 15:52:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="reader_liked_default_tag">Inlägg jag har gillat</string>
+	<string name="reader_followed_default_tag">Webbplatser jag prenumererar på</string>
+	<string name="reader_discover_default_tag">Upptäck</string>
 	<string name="reader_empty_followed_blogs_search_title">Inga matchande webbplatser</string>
 	<string name="reader_hint_search_followed_sites">Sök följda webbplatser</string>
 	<string name="preference_editor_legacy">Klassisk</string>

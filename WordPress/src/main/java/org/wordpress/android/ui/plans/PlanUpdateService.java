@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -27,15 +28,13 @@ import de.greenrobot.event.EventBus;
  */
 
 public class PlanUpdateService extends Service {
-
-    private static final String ARG_LOCAL_BLOG_ID = "local_blog_id";
     private int mNumActiveRequests;
-    private int mLocalBlogId;
+    private SiteModel mSite;
     private final List<Plan> mSitePlans = new ArrayList<>();
 
-    public static void startService(Context context, int localTableBlogId) {
+    public static void startService(Context context, SiteModel site) {
         Intent intent = new Intent(context, PlanUpdateService.class);
-        intent.putExtra(ARG_LOCAL_BLOG_ID, localTableBlogId);
+        intent.putExtra(WordPress.SITE, site);
         context.startService(intent);
     }
 
@@ -65,7 +64,7 @@ public class PlanUpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mLocalBlogId = intent.getIntExtra(ARG_LOCAL_BLOG_ID, 0);
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
 
         mNumActiveRequests = 2;
         downloadPlanFeatures();
@@ -81,7 +80,7 @@ public class PlanUpdateService extends Service {
         // send event once all requests have successfully completed
         mNumActiveRequests--;
         if (mNumActiveRequests == 0) {
-            EventBus.getDefault().post(new PlanEvents.PlansUpdated(mLocalBlogId, mSitePlans));
+            EventBus.getDefault().post(new PlanEvents.PlansUpdated(mSite, mSitePlans));
         }
     }
 
@@ -122,8 +121,10 @@ public class PlanUpdateService extends Service {
      * download plans for the specific site
      */
     private void downloadAvailablePlansForSite() {
-        int remoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
-        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans", RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
+        // This should live in a PlanStore (FluxC side)
+        long remoteBlogId = mSite.getSiteId();
+        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans",
+                RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {

@@ -9,17 +9,17 @@ import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.StatsViewHolder;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
 
-public class PostsAndPagesAdapter extends ArrayAdapter<PostModel> {
+public class PostsAndPagesAdapter extends ArrayAdapter<StatsPostModel> {
 
-    private final List<PostModel> list;
+    private final List<StatsPostModel> list;
     private final LayoutInflater inflater;
 
-    public PostsAndPagesAdapter(Context context, List<PostModel> list) {
+    public PostsAndPagesAdapter(Context context, List<StatsPostModel> list) {
         super(context, R.layout.stats_list_cell, list);
         this.list = list;
         inflater = LayoutInflater.from(context);
@@ -36,7 +36,7 @@ public class PostsAndPagesAdapter extends ArrayAdapter<PostModel> {
             rowView.setTag(viewHolder);
         }
 
-        final PostModel currentRowData = list.get(position);
+        final StatsPostModel currentRowData = list.get(position);
         StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
         // Entry

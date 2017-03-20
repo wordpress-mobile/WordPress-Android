@@ -16,12 +16,20 @@ import android.widget.AdapterView;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 import com.mobeta.android.dslv.DragSortListView.RemoveListener;
+import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.util.ListUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import javax.inject.Inject;
 
 /**
  * Fragment where containing a drag-sort listview where the user can drag items
@@ -30,19 +38,29 @@ import java.util.Collections;
 public class MediaGalleryEditFragment extends Fragment implements DropListener, RemoveListener {
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
     private MediaGalleryAdapter mGridAdapter;
-    private ArrayList<String> mIds;
+    private ArrayList<Long> mIds;
+    private SiteModel mSite;
+
+    @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+        updateSiteOrFinishActivity(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mIds = new ArrayList<String>();
+        mIds = new ArrayList<>();
         if (savedInstanceState != null) {
-            mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
+            mIds = ListUtils.fromLongArray(savedInstanceState.getLongArray(SAVED_MEDIA_IDS));
         }
 
-        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true,
-                MediaImageLoader.getInstance());
+        mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true, mImageLoader);
 
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
 
@@ -59,20 +77,35 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putStringArrayList(SAVED_MEDIA_IDS, mIds);
+        if (mIds != null && !mIds.isEmpty()) {
+            outState.putLongArray(SAVED_MEDIA_IDS, ListUtils.toLongArray(mIds));
+        }
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            if (getArguments() != null) {
+                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            } else {
+                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            }
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
     }
 
     private void refreshGridView() {
-        if (WordPress.getCurrentBlog() == null) {
-            return;
-        }
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
-        if (cursor == null) {
+        if (mIds == null || mIds.isEmpty()) {
             mGridAdapter.changeCursor(null);
             return;
         }
+        Cursor cursor = mMediaStore.getSiteMediaWithIdsAsCursor(mSite, mIds);
         SparseIntArray positions = mapIdsToCursorPositions(cursor);
         mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
     }
@@ -82,8 +115,8 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         int size = mIds.size();
         for (int i = 0; i < size; i++) {
             while (cursor.moveToNext()) {
-                String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
-                if (mediaId.equals(mIds.get(i))) {
+                long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
+                if (mediaId == mIds.get(i)) {
                     positions.put(i, cursor.getPosition());
                     cursor.moveToPosition(-1);
                     break;
@@ -93,12 +126,12 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
         return positions;
     }
 
-    public void setMediaIds(ArrayList<String> ids) {
+    public void setMediaIds(ArrayList<Long> ids) {
         mIds = ids;
         refreshGridView();
     }
 
-    public ArrayList<String> getMediaIds() {
+    public ArrayList<Long> getMediaIds() {
         return mIds;
     }
 
@@ -164,7 +197,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
             return;
         }
         cursor.moveToPosition(info.position);
-        String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
+        long mediaId = cursor.getLong(cursor.getColumnIndex(MediaModelTable.MEDIA_ID));
 
         menu.add(ContextMenu.NONE, mIds.indexOf(mediaId), ContextMenu.NONE, R.string.delete);
     }
@@ -179,7 +212,7 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void drop(int from, int to) {
-        String id = mIds.get(from);
+        long id = mIds.get(from);
         mIds.remove(id);
         mIds.add(to, id);
         refreshGridView();

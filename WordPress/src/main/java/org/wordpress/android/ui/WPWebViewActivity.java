@@ -12,14 +12,12 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Post;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -31,49 +29,51 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 /**
  * Activity for opening external WordPress links in a webview.
- *
+ * <p/>
  * Try to use one of the methods below to open the webview:
  * - openURL
  * - openUrlByUsingMainWPCOMCredentials
  * - openUrlByUsingWPCOMCredentials
- * - openPostOrPage
- *
- * If you need to start the activity with delay, start activity with result, or none of the methods above are enough for your needs,
+ * - openUrlByUsingBlogCredentials (for self hosted sites)
+ * <p/>
+ * If you need to start the activity with delay, start activity with result, or none of the methods above are enough
+ * for your needs,
  * you can start the activity by passing the required parameters, depending on what you need to do.
- *
+ * <p/>
  * 1. Load a simple URL (without any kind of authentication)
  * - Start the activity with the parameter URL_TO_LOAD set to the URL to load.
- *
+ * <p/>
  * 2. Load a WordPress.com URL
  * Start the activity with the following parameters:
  * - URL_TO_LOAD: target URL to load in the webview.
  * - AUTHENTICATION_URL: The address of the WordPress.com authentication endpoint. Please use WPCOM_LOGIN_URL.
  * - AUTHENTICATION_USER: username.
  * - AUTHENTICATION_PASSWD: password.
- *
+ * <p/>
  * 3. Load a WordPress.org URL with authentication
  * - URL_TO_LOAD: target URL to load in the webview.
- * - AUTHENTICATION_URL: The address of the authentication endpoint. Please use the value of getBlogLoginUrl()
+ * - AUTHENTICATION_URL: The address of the authentication endpoint. Please use the value of getSiteLoginUrl()
  * to retrieve the correct address of the authentication endpoint.
  * - AUTHENTICATION_USER: username.
  * - AUTHENTICATION_PASSWD: password.
  * - LOCAL_BLOG_ID: local id of the blog in the app database. This is required since some blogs could have HTTP Auth,
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
- *
  */
 public class WPWebViewActivity extends WebViewActivity {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
+    public static final String USE_GLOBAL_WPCOM_USER = "USE_GLOBAL_WPCOM_USER";
     public static final String URL_TO_LOAD = "url_to_load";
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
@@ -81,23 +81,43 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
-    public static final String USE_GLOBAL_WPCOM_USER = "USE_GLOBAL_WPCOM_USER";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url) {
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        ((WordPress) getApplication()).component().inject(this);
+        super.onCreate(savedInstanceState);
+    }
+
+    public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
         openWPCOMURL(context, url);
     }
 
-    // Note: The webview has links disabled!!
-    public static void openPostOrPage(Context context, Blog blog, Post post, String url, String[] listOfAllowedURLs) {
+    // frameNonce is used to show drafts, without it "no page found" error would be thrown
+    public static void openJetpackBlogPostPreview(Context context, String url, String frameNonce) {
+        if (!TextUtils.isEmpty(frameNonce)) {
+            url += "&frame-nonce=" + frameNonce;
+        }
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        context.startActivity(intent);
+    }
+
+    // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
+    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
+                                                     String[] listOfAllowedURLs) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
         }
 
-        if (blog == null) {
-            AppLog.e(AppLog.T.UTILS, "Blog obj is null");
+        if (site == null) {
+            AppLog.e(AppLog.T.UTILS, "Site is null");
             return;
         }
 
@@ -108,21 +128,17 @@ public class WPWebViewActivity extends WebViewActivity {
             return;
         }
 
-        String authURL = WPWebViewActivity.getBlogLoginUrl(blog);
+        String authURL = WPWebViewActivity.getSiteLoginUrl(site);
         Intent intent = new Intent(context, WPWebViewActivity.class);
-        if (blog.isDotcomFlag()) {
-            intent.putExtra(USE_GLOBAL_WPCOM_USER, true);
-        } else {
-            intent.putExtra(AUTHENTICATION_USER, blog.getUsername());
-            intent.putExtra(AUTHENTICATION_PASSWD, blog.getPassword());
-        }
-        intent.putExtra(URL_TO_LOAD, url);
-        intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
-        intent.putExtra(AUTHENTICATION_URL, authURL);
-        intent.putExtra(LOCAL_BLOG_ID, blog.getLocalTableBlogId());
-        intent.putExtra(DISABLE_LINKS_ON_PAGE, true);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
+            intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
-            intent.putExtra(SHARABLE_URL, WPMeShortlinks.getPostShortlink(blog, post));
+            intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(site, post));
         }
         context.startActivity(intent);
     }
@@ -130,6 +146,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static void openURL(Context context, String url) {
         openURL(context, url, null);
     }
+
     public static void openURL(Context context, String url, String referrer) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
@@ -151,16 +168,23 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static void openWPCOMURL(Context context, String url) {
+    private static boolean checkContextAndUrl(Context context, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
-            return;
+            return false;
         }
 
         if (TextUtils.isEmpty(url)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials");
             Toast.makeText(context, context.getResources().getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private static void openWPCOMURL(Context context, String url) {
+        if (!checkContextAndUrl(context, url)) {
             return;
         }
 
@@ -170,7 +194,6 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         context.startActivity(intent);
     }
-
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -203,12 +226,12 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
-            Blog blog = WordPress.getBlog(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
-            if (blog == null) {
+            SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
+            if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(blog, allowedURL);
+            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
@@ -232,7 +255,7 @@ public class WPWebViewActivity extends WebViewActivity {
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
         if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
-            username = AccountHelper.getDefaultAccount().getUserName();
+            username = mAccountStore.getAccount().getUserName();
         }
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
@@ -273,16 +296,16 @@ public class WPWebViewActivity extends WebViewActivity {
 
     /**
      * Login to the WordPress.com and load the specified URL.
-     *
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
-                AccountHelper.getDefaultAccount().getAccessToken());
+                mAccountStore.getAccessToken());
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
 
-    public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username, String password, String token) {
+    public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
+            String password, String token) {
         if (TextUtils.isEmpty(authenticationUrl)) return "";
 
         try {
@@ -311,24 +334,15 @@ public class WPWebViewActivity extends WebViewActivity {
      *
      * @return URL of the login page.
      */
-    public static String getBlogLoginUrl(Blog blog) {
-        String loginURL = null;
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {}.getType();
-        Map<?, ?> blogOptions = gson.fromJson(blog.getBlogOptions(), type);
-        if (blogOptions != null) {
-            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("login_url");
-            if (homeURLMap != null) {
-                loginURL = homeURLMap.get("value").toString();
-            }
-        }
+    public static String getSiteLoginUrl(SiteModel site) {
+        String loginURL = site.getLoginUrl();
+
         // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
         if (loginURL == null) {
-            if (blog.getUrl().lastIndexOf("/") != -1) {
-                return blog.getUrl().substring(0, blog.getUrl().lastIndexOf("/"))
-                        + "/wp-login.php";
+            if (site.getUrl() != null) {
+                return site.getUrl() + "/wp-login.php";
             } else {
-                return blog.getUrl().replace("xmlrpc.php", "wp-login.php");
+                return site.getXmlRpcUrl().replace("xmlrpc.php", "wp-login.php");
             }
         }
 

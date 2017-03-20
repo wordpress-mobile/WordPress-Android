@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-15 08:28:17+0000
+Translation-Revision-Date: 2017-03-01 16:11:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="reader_liked_default_tag">Posts I Like</string>
+	<string name="reader_followed_default_tag">Followed Sites</string>
+	<string name="reader_discover_default_tag">Discover</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
 	<string name="visual_editor_disabled">Visual Editor disabled</string>
@@ -619,22 +622,7 @@ Language: en_GB
 	<string name="hide">Hide</string>
 	<string name="show">Show</string>
 	<string name="deselect_all">Deselect all</string>
-	<string name="select_from_new_picker">Multi-select with the new picker</string>
-	<string name="no_media_sources">Couldn\'t fetch media</string>
-	<string name="loading_blog_videos">Fetching videos</string>
-	<string name="loading_blog_images">Fetching images</string>
-	<string name="error_loading_videos">Error loading videos</string>
-	<string name="error_loading_images">Error loading images</string>
-	<string name="error_loading_blog_videos">Unable to fetch videos</string>
-	<string name="error_loading_blog_images">Unable to fetch images</string>
-	<string name="no_device_images">No images</string>
-	<string name="no_blog_videos">No videos</string>
-	<string name="no_blog_images">No images</string>
-	<string name="no_device_videos">No videos</string>
 	<string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
-	<string name="no_media">No media</string>
-	<string name="loading_images">Loading images</string>
-	<string name="loading_videos">Loading videos</string>
 	<string name="auth_required">Log in again to continue.</string>
 	<string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
 	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
@@ -647,14 +635,6 @@ Language: en_GB
 	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
 	<string name="media_details_label_file_type">File type</string>
 	<string name="media_details_label_file_name">File name</string>
-	<string name="tab_title_site_videos">Site Videos</string>
-	<string name="tab_title_site_images">Site Images</string>
-	<string name="tab_title_device_videos">Device Videos</string>
-	<string name="tab_title_device_images">Device Images</string>
-	<string name="take_video">Take a video</string>
-	<string name="take_photo">Take a photo</string>
-	<string name="media_picker_title">Select media</string>
-	<string name="add_to_post">Add to Post</string>
 	<string name="language">Language</string>
 	<string name="device">Device</string>
 	<string name="media_fetching">Fetching media…</string>

@@ -13,11 +13,11 @@ import java.util.List;
 public class AuthorsModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private int mOtherViews;
     private List<AuthorModel> mAuthors;
 
-    public AuthorsModel(String blogID, JSONObject response) throws JSONException {
+    public AuthorsModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPeriod = response.getString("period");
         this.mDate = response.getString("date");
@@ -50,12 +50,12 @@ public class AuthorsModel extends BaseStatsModel {
         }
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
-        this.mBlogID = blogID;
+    public void setBlogID(long blogID) {
+        mBlogID = blogID;
     }
 
     public String getDate() {

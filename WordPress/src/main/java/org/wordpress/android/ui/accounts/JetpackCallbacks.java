@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.accounts;
 
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 
 public interface JetpackCallbacks {
     boolean isJetpackAuth();
-    Blog getJetpackBlog();
+    SiteModel getJetpackSite();
 }

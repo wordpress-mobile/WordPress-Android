@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import java.text.DateFormat;
@@ -201,18 +202,23 @@ public class DateTimeUtils {
      * Given an ISO 8601-formatted date as a String, returns the corresponding UNIX timestamp.
      */
     public static long timestampFromIso8601(final String strDate) {
-        return (timestampFromIso8601Millis(strDate) / 1000);
+        return timestampFromIso8601Millis(strDate) / 1000;
     }
 
     /**
      * Given an ISO 8601-formatted date as a String, returns the corresponding timestamp in milliseconds.
+     *
+     * @return 0 if the parameter is null, empty or not a date.
      */
     public static long timestampFromIso8601Millis(final String strDate) {
+        if (TextUtils.isEmpty(strDate)) {
+            return 0;
+        }
         Date date = dateFromIso8601(strDate);
         if (date == null) {
             return 0;
         }
-        return (date.getTime());
+        return date.getTime();
     }
 
     /**

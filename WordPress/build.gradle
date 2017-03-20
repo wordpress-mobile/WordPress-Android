@@ -5,8 +5,9 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 
@@ -20,6 +21,7 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     useLibrary 'org.apache.http.legacy'
@@ -35,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "6.9-rc-1"
-        versionCode 354
+        versionName "7.0-rc-2"
+        versionCode 361
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -82,9 +84,6 @@ dependencies {
     }
 
     // Provided by maven central
-    compile ('org.wordpress:mediapicker:1.2.4') {
-        exclude group:'com.android.support'
-    }
     compile 'com.google.code.gson:gson:2.6.+'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
@@ -98,6 +97,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.1.1'
     compile 'com.android.support:design:25.1.1'
     compile 'com.android.support:percent:25.1.1'
+    compile 'com.android.support:preference-v7:25.1.1'
 
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.google.android.gms:play-services-auth:9.0.2'
@@ -108,13 +108,16 @@ dependencies {
     compile 'org.wordpress:graphview:3.4.0'
     compile 'org.wordpress:persistentedittext:1.0.2'
     compile 'org.wordpress:emailchecker2:1.1.0'
+    compile 'com.squareup.okio:okio:1.9.0'
 
-    compile 'com.yalantis:ucrop:2.2.0'
+    compile ('com.yalantis:ucrop:2.2.0') {
+        exclude group: 'com.squareup.okhttp3'
+    }
     compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
-    androidTestCompile 'org.mockito:mockito-core:+'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestCompile 'com.squareup.okio:okio:1.9.0' // explicitly compile okio to match the version needed by ucrop
 
@@ -122,6 +125,15 @@ dependencies {
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:passcodelock:1.5.1'
+
+    // Dagger
+    compile 'com.google.dagger:dagger:2.0.2'
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:7f4e5df683249ce261e7c56ab115b197ae55624b') {
+        exclude group: "com.android.volley";
+    }
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')

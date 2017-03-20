@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -41,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.StringUtils;
@@ -139,7 +139,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         );
 
         // initialize the text & HTML
-        source.history = content.history;
+        source.setHistory(content.getHistory());
         content.setImageGetter(imageLoader);
 
         content.setOnMediaTappedListener(this);
@@ -211,6 +211,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_aztec, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // TODO: disable undo/redo in media mode
+        boolean canUndo = content.history.undoValid();
+        boolean canRedo = content.history.redoValid();
+        menu.findItem(R.id.undo).setEnabled(canUndo);
+        menu.findItem(R.id.redo).setEnabled(canRedo);
     }
 
     @Override
@@ -330,6 +341,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         }
     }
 
+    public void enableMediaMode(boolean enable) {
+        // TODO: this won't be available until the next Aztec release
+        //formattingToolbar.enableMediaMode(enable);
+        getActivity().invalidateOptionsMenu();
+    }
+
     @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
@@ -396,21 +413,30 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
             }
             mActionStartedAt = System.currentTimeMillis();
         } else {
-            String id = mediaFile.getMediaId();
+            String localMediaId = String.valueOf(mediaFile.getId());
             if (mediaFile.isVideo()) {
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
                 AttributesImpl attrs = new AttributesImpl();
-                attrs.addAttribute("", "data-wpid", "data-wpid", "string", id);
+                attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
                 attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
 
-                Bitmap bitmap = BitmapFactory.decodeFile(safeMediaUrl);
-
-                content.insertMedia(new BitmapDrawable(getResources(), bitmap), attrs);
+                // load a scaled version of the image to prevent OOM exception
+                int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+                Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
+               if (bitmapToShow != null) {
+                    content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                } else {
+                    // Use a placeholder
+                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                    Drawable d = getResources().getDrawable(R.drawable.ic_gridicons_image);
+                    d.setBounds(0, 0, maxWidth, maxWidth);
+                    content.insertMedia(d, attrs);
+                }
 
                 // set intermediate shade overlay
-                content.setOverlay(ImagePredicate.localMediaIdPredicate(id), 0,
+                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
                         new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
                         Gravity.FILL, attrs);
 
@@ -418,12 +444,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                 progressDrawable.setBounds(0, 0, 0, 4);
 
-                content.setOverlay(ImagePredicate.localMediaIdPredicate(id), 1, progressDrawable,
+                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, progressDrawable,
                         Gravity.FILL_HORIZONTAL | Gravity.TOP, attrs);
 
                 content.refreshText();
 
-                mUploadingMedia.put(id, MediaType.IMAGE);
+                mUploadingMedia.put(localMediaId, MediaType.IMAGE);
             }
         }
     }
@@ -472,6 +498,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+        if(!isAdded()) {
+            return;
+        }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
@@ -514,13 +543,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     @Override
-    public void onMediaUploadProgress(final String mediaId, final float progress) {
-        final MediaType mediaType = mUploadingMedia.get(mediaId);
+    public void onMediaUploadProgress(final String localMediaId, final float progress) {
+        if(!isAdded()) {
+            return;
+        }
+        final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(mediaId)));
+                    content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
             attributesWithClass.addClass("uploading");
-            content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(mediaId), 1, (int)(progress * 10000),
+            content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(localMediaId), 1, (int)(progress * 10000),
                     attributesWithClass.getAttributesIml());
             content.refreshText();
         }
@@ -528,6 +560,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
+        if(!isAdded()) {
+            return;
+        }
         MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             switch (mediaType) {
@@ -602,7 +637,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
     }
 
     @Override
-    public void onGalleryMediaUploadSucceeded(final long galleryId, String remoteMediaId, int remaining) {
+    public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
     }
 
     /**
@@ -923,7 +958,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
 
-    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
+    public void onMediaTapped(final String localMediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
         if (mediaType == null || !isAdded()) {
             return;
         }
@@ -935,16 +970,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(R.string.stop_upload_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+                        mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
 
                         switch (mediaType) {
                             case IMAGE:
-                                content.removeMedia(ImagePredicate.idPredicate(mediaId));
+                                content.removeMedia(ImagePredicate.idPredicate(localMediaId));
                                 break;
                             case VIDEO:
                                 // TODO: remove video
                         }
-                        mUploadingMedia.remove(mediaId);
+                        mUploadingMedia.remove(localMediaId);
                         dialog.dismiss();
                     }
                 });
@@ -960,16 +995,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                 break;
             case "failed":
                 // Retry media upload
-                mEditorFragmentListener.onMediaRetryClicked(mediaId);
+                mEditorFragmentListener.onMediaRetryClicked(localMediaId);
 
                 switch (mediaType) {
                     case IMAGE:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(mediaId)));
+                                content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
                         attributesWithClass.removeClass("failed");
 
                         // set intermediate shade overlay
-                        content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), 0,
+                        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
                                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
                                 Gravity.FILL, attributesWithClass.getAttributesIml());
 
@@ -977,15 +1012,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements OnIme
                         // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                         progressDrawable.setBounds(0, 0, 0, 4);
 
-                        content.setOverlay(ImagePredicate.localMediaIdPredicate(mediaId), 1, progressDrawable,
+                        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, progressDrawable,
                                 Gravity.FILL_HORIZONTAL | Gravity.TOP, attributesWithClass.getAttributesIml());
                         content.refreshText();
                         break;
                     case VIDEO:
                         // TODO: unmark video failed
                 }
-                mFailedMediaIds.remove(mediaId);
-                mUploadingMedia.put(mediaId, mediaType);
+                mFailedMediaIds.remove(localMediaId);
+                mUploadingMedia.put(localMediaId, mediaType);
                 break;
             default:
                 if (!mediaType.equals(MediaType.IMAGE)) {

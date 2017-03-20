@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/photo_chooser_item_padding">
+
+    <ImageView
+        android:id="@+id/image_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/gravatar_placeholder" />
+
+    <ImageView
+        android:id="@+id/image_video_overlay"
+        android:layout_width="@dimen/photo_chooser_video_overlay"
+        android:layout_height="@dimen/photo_chooser_video_overlay"
+        android:layout_centerInParent="true"
+        android:src="@drawable/reader_video_overlay"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_selection_count"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape_oval_blue"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_large"
+        android:visibility="gone"
+        tools:text="5"
+        tools:visibility="visible" />
+
+</RelativeLayout>

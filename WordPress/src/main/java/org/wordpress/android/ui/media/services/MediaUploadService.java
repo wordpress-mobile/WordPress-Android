@@ -3,245 +3,273 @@ package org.wordpress.android.ui.media.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
-import org.wordpress.android.R;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.media.services.MediaEvents.MediaChanged;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
-import org.wordpress.android.util.helpers.MediaFile;
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.ErrorType;
-import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
+import javax.inject.Inject;
 
 /**
- * A service for uploading media files from the media browser.
- * Only one file is uploaded at a time.
+ * Started with explicit list of media to upload.
  */
+
 public class MediaUploadService extends Service {
-    // time to wait before trying to upload the next file
-    private static final int UPLOAD_WAIT_TIME = 1000;
+    private static final String MEDIA_LIST_KEY = "mediaList";
 
-    private static MediaUploadService mInstance;
+    private SiteModel mSite;
+    private MediaModel mCurrentUpload;
 
-    private Context mContext;
-    private Handler mHandler = new Handler();
+    private List<MediaModel> mQueue;
+    private List<MediaModel> mCompletedItems;
 
-    private boolean mUploadInProgress;
-    private ApiHelper.UploadMediaTask mCurrentUploadMediaTask;
-    private String mCurrentUploadMediaId;
+    @Inject Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+
+    public static void startService(Context context, SiteModel siteModel, ArrayList<MediaModel> mediaList) {
+        if (context == null) {
+            return;
+        }
+        Intent intent = new Intent(context, MediaUploadService.class);
+        intent.putExtra(WordPress.SITE, siteModel);
+        intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaList);
+        context.startService(intent);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((WordPress) getApplication()).component().inject(this);
+        AppLog.i(AppLog.T.MEDIA, "Media Upload Service > created");
+        mDispatcher.register(this);
+        mCurrentUpload = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mCurrentUpload != null) {
+            cancelUpload();
+        }
+        mDispatcher.unregister(this);
+        AppLog.i(AppLog.T.MEDIA, "Media Upload Service > destroyed");
+        super.onDestroy();
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        mInstance = this;
-
-        mContext = this.getApplicationContext();
-        mUploadInProgress = false;
-
-        cancelOldUploads();
-    }
 
     @Override
-    public void onStart(Intent intent, int startId) {
-        mHandler.post(mFetchQueueTask);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null || !intent.hasExtra(WordPress.SITE)) {
+            AppLog.e(AppLog.T.MEDIA, "MediaUploadService was killed and restarted with a null intent.");
+            stopServiceIfUploadsComplete();
+            return START_NOT_STICKY;
+        }
+
+        unpackIntent(intent);
+        uploadNextInQueue();
+
+        return START_REDELIVER_INTENT;
     }
 
-    public static MediaUploadService getInstance() {
-        return mInstance;
+    @NonNull
+    private List<MediaModel> getUploadQueue() {
+        if (mQueue == null) {
+            mQueue = new ArrayList<>();
+        }
+        return mQueue;
     }
 
-    public void processQueue() {
-        mHandler.post(mFetchQueueTask);
+    @NonNull
+    private List<MediaModel> getCompletedItems() {
+        if (mCompletedItems == null) {
+            mCompletedItems = new ArrayList<>();
+        }
+        return mCompletedItems;
     }
 
-    /**
-     * Returns whether the service has any media uploads in progress or queued.
-     */
-    public boolean hasUploads() {
-        if (mUploadInProgress) {
-            return true;
+    private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
+        if (event.canceled) {
+            // Upload canceled
+            AppLog.i(AppLog.T.MEDIA, "Upload successfully canceled.");
+            completeCurrentUpload();
+            uploadNextInQueue();
+        } else if (event.completed) {
+            // Upload completed
+            AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
+            mCurrentUpload.setMediaId(event.media.getMediaId());
+            completeCurrentUpload();
+            uploadNextInQueue();
         } else {
-            Cursor queueCursor = getQueue();
-            return (queueCursor == null || queueCursor.getCount() > 0);
+            // Upload Progress
+            // TODO check if we need to broadcast event.media, event.progress or we're just fine with
+            // listening to  event.media, event.progress
         }
     }
 
-    /**
-     * Cancel the upload with the given id, whether it's currently uploading or queued.
-     * @param mediaId the id of the media item
-     * @param delete whether to delete the item from the queue or mark it as failed so it can be retried later
-     */
-    public void cancelUpload(String mediaId, boolean delete) {
-        if (mediaId.equals(mCurrentUploadMediaId)) {
-            // The media item is currently uploading - abort the upload process
-            mCurrentUploadMediaTask.cancel(true);
-            mUploadInProgress = false;
-        } else {
-            // Remove the media item from the upload queue
-            if (WordPress.getCurrentBlog() != null) {
-                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-                if (delete) {
-                    WordPress.wpDB.deleteMediaFile(blogId, mediaId);
-                } else {
-                    WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.FAILED);
-                }
-            }
-        }
+    private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
+        AppLog.w(AppLog.T.MEDIA, "Error uploading media: " + event.error.message);
+        // TODO: Don't update the state here, it needs to be done in FluxC
+        mCurrentUpload.setUploadState(UploadState.FAILED.name());
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentUpload));
+        completeCurrentUpload();
+        // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
+        // event.media, event.error
+        uploadNextInQueue();
     }
 
-    private Runnable mFetchQueueTask = new Runnable() {
-        @Override
-        public void run() {
-            Cursor cursor = getQueue();
-            try {
-                if ((cursor == null || cursor.getCount() == 0 || mContext == null) && !mUploadInProgress) {
-                    MediaUploadService.this.stopSelf();
-                    return;
-                } else {
-                    if (mUploadInProgress) {
-                        mHandler.postDelayed(this, UPLOAD_WAIT_TIME);
-                    } else {
-                        uploadMediaFile(cursor);
-                    }
-                }
-            } finally {
-                if (cursor != null)
-                    cursor.close();
-            }
-
-        }
-    };
-
-    private void cancelOldUploads() {
-        // There should be no media files with an upload state of 'uploading' at the start of this service.
-        // Since we won't be able to receive notifications for these, set them to 'failed'.
-
-        if (WordPress.getCurrentBlog() != null) {
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-            WordPress.wpDB.setMediaUploadingToFailed(blogId);
-        }
-    }
-
-    private Cursor getQueue() {
-        if (WordPress.getCurrentBlog() == null)
-            return null;
-
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        return WordPress.wpDB.getMediaUploadQueue(blogId);
-    }
-
-    private void uploadMediaFile(Cursor cursor) {
-        if (!cursor.moveToFirst())
+    private void uploadNextInQueue() {
+        // waiting for response to current upload request
+        if (mCurrentUpload != null) {
+            AppLog.i(AppLog.T.MEDIA, "Ignoring request to uploadNextInQueue, only one media item can be uploaded at a time.");
             return;
+        }
 
-        mUploadInProgress = true;
+        // somehow lost our reference to the site, complete this action
+        if (mSite == null) {
+            AppLog.i(AppLog.T.MEDIA, "Unexpected state, site is null. Skipping this request - MediaUploadService.");
+            stopServiceIfUploadsComplete();
+            return;
+        }
 
-        final String blogIdStr = cursor.getString((cursor.getColumnIndex(WordPressDB.COLUMN_NAME_BLOG_ID)));
-        final String mediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
-        String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
-        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
+        mCurrentUpload = getNextMediaToUpload();
 
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setBlogId(blogIdStr);
-        mediaFile.setFileName(fileName);
-        mediaFile.setFilePath(filePath);
-        mediaFile.setMimeType(mimeType);
+        if (mCurrentUpload == null) {
+            AppLog.v(AppLog.T.MEDIA, "No more media items to upload. Skipping this request - MediaUploadService.");
+            stopServiceIfUploadsComplete();
+            return;
+        }
 
-        mCurrentUploadMediaId = mediaId;
-
-        mCurrentUploadMediaTask = new ApiHelper.UploadMediaTask(mContext, mediaFile,
-                new ApiHelper.UploadMediaTask.Callback() {
-            @Override
-            public void onSuccess(String remoteId, String remoteUrl, String secondaryId) {
-                // once the file has been uploaded, update the local database entry (swap the id with the remote id)
-                // and download the new one
-                WordPress.wpDB.updateMediaLocalToRemoteId(blogIdStr, mediaId, remoteId);
-                EventBus.getDefault().post(new MediaEvents.MediaUploadSucceeded(blogIdStr, mediaId,
-                        remoteId, remoteUrl, secondaryId));
-                fetchMediaFile(remoteId);
-            }
-
-            @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, MediaUploadState.FAILED);
-                mUploadInProgress = false;
-                mCurrentUploadMediaId = "";
-
-                MediaEvents.MediaUploadFailed event;
-                if (errorMessage == null) {
-                    event = new MediaEvents.MediaUploadFailed(mediaId, getString(R.string.upload_failed), true);
-                } else {
-                    event = new MediaEvents.MediaUploadFailed(mediaId, errorMessage);
-                }
-
-                EventBus.getDefault().post(event);
-                mHandler.post(mFetchQueueTask);
-
-                // Only log the error if it's not caused by the network (internal inconsistency)
-                if (errorType != ErrorType.NETWORK_XMLRPC) {
-                    CrashlyticsUtils.logException(throwable, ExceptionType.SPECIFIC, T.MEDIA, errorMessage);
-                }
-            }
-
-            @Override
-            public void onProgressUpdate(float progress) {
-                EventBus.getDefault().post(new MediaEvents.MediaUploadProgress(mediaId, progress));
-            }
-        });
-
-        WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, MediaUploadState.UPLOADING);
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        mCurrentUploadMediaTask.execute(apiArgs);
-        mHandler.post(mFetchQueueTask);
+        dispatchUploadAction(mCurrentUpload);
     }
 
-    private void fetchMediaFile(final String id) {
-        List<Object> apiArgs = new ArrayList<Object>();
-        apiArgs.add(WordPress.getCurrentBlog());
-        GetMediaItemTask task = new GetMediaItemTask(Integer.valueOf(id),
-                new ApiHelper.GetMediaItemTask.Callback() {
-            @Override
-            public void onSuccess(MediaFile mediaFile) {
-                String blogId = mediaFile.getBlogId();
-                String mediaId = mediaFile.getMediaId();
-                WordPress.wpDB.updateMediaUploadState(blogId, mediaId, MediaUploadState.UPLOADED);
-                mUploadInProgress = false;
-                mCurrentUploadMediaId = "";
-                mHandler.post(mFetchQueueTask);
-                EventBus.getDefault().post(new MediaChanged(blogId, mediaId));
-            }
+    private void completeCurrentUpload() {
+        if (mCurrentUpload != null) {
+            getCompletedItems().add(mCurrentUpload);
+            getUploadQueue().remove(mCurrentUpload);
+            mCurrentUpload = null;
+        }
+    }
 
-            @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                mUploadInProgress = false;
-                mCurrentUploadMediaId = "";
-                mHandler.post(mFetchQueueTask);
-                // Only log the error if it's not caused by the network (internal inconsistency)
-                if (errorType != ErrorType.NETWORK_XMLRPC) {
-                    CrashlyticsUtils.logException(throwable, ExceptionType.SPECIFIC, T.MEDIA, errorMessage);
+    private MediaModel getNextMediaToUpload() {
+        if (!getUploadQueue().isEmpty()) {
+            return getUploadQueue().get(0);
+        }
+        return null;
+    }
+
+    private void addUniqueMediaToQueue(MediaModel media) {
+        for (MediaModel queuedMedia : getUploadQueue()) {
+            if (queuedMedia.getLocalSiteId() == media.getLocalSiteId() &&
+                    StringUtils.equals(queuedMedia.getFilePath(), media.getFilePath())) {
+                return;
+            }
+        }
+
+        // no match found in queue
+        getUploadQueue().add(media);
+    }
+
+    private void unpackIntent(@NonNull Intent intent) {
+        mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+
+        // add local queued media from store
+        List<MediaModel> localMedia = mMediaStore.getLocalSiteMedia(mSite);
+        if (localMedia != null && !localMedia.isEmpty()) {
+            // uploading is updated to queued, queued media added to the queue, failed media added to completed list
+            for (MediaModel mediaItem : localMedia) {
+                if (MediaUploadState.UPLOADING.name().equals(mediaItem.getUploadState())) {
+                    mediaItem.setUploadState(MediaUploadState.QUEUED.name());
+                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaItem));
+                }
+
+                if (MediaUploadState.QUEUED.name().equals(mediaItem.getUploadState())) {
+                    addUniqueMediaToQueue(mediaItem);
+                } else if (MediaUploadState.FAILED.name().equals(mediaItem.getUploadState())) {
+                    getCompletedItems().add(mediaItem);
                 }
             }
-        });
-        task.execute(apiArgs);
+        }
+
+        // add new media
+        @SuppressWarnings("unchecked")
+        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+        if (mediaList != null) {
+            for (MediaModel media : mediaList) {
+                addUniqueMediaToQueue(media);
+            }
+        }
+    }
+
+    private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
+        return mCurrentUpload != null && media.getLocalSiteId() == mCurrentUpload.getLocalSiteId();
+    }
+
+    private void cancelUpload() {
+        if (mCurrentUpload != null) {
+            dispatchCancelAction(mCurrentUpload);
+        }
+    }
+
+    private void dispatchUploadAction(@NonNull final MediaModel media) {
+        AppLog.i(AppLog.T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
+                " and path: " + media.getFilePath());
+        media.setUploadState(UploadState.UPLOADING.name());
+        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+
+        MediaPayload payload = new MediaPayload(mSite, media);
+        mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
+    }
+
+    private void dispatchCancelAction(@NonNull final MediaModel media) {
+        AppLog.i(AppLog.T.MEDIA, "Dispatching cancel upload action for media with local id: " + media.getId() +
+                " and path: " + media.getFilePath());
+        MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
+        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+    }
+
+    private void stopServiceIfUploadsComplete(){
+        AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
+        if (getUploadQueue().size() == 0) {
+            AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
+            stopSelf();
+        }
+    }
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        // event for unknown media, ignoring
+        if (event.media == null || !matchesInProgressMedia(event.media)) {
+            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);
+            return;
+        }
+
+        if (event.isError()) {
+            handleOnMediaUploadedError(event);
+        } else {
+            handleOnMediaUploadedSuccess(event);
+        }
     }
 }

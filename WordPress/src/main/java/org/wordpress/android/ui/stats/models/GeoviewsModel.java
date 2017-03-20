@@ -12,12 +12,12 @@ import java.util.List;
 
 public class GeoviewsModel extends BaseStatsModel {
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private int otherViews;
     private int totalViews;
     private List<GeoviewModel> countries;
 
-    public GeoviewsModel(String blogID, JSONObject response) throws JSONException {
+    public GeoviewsModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mDate = response.getString("date");
 
@@ -66,11 +66,11 @@ public class GeoviewsModel extends BaseStatsModel {
         }
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
@@ -242,7 +242,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
                 return;
             }
 
-            PostModel postModel = new PostModel(
+            StatsPostModel postModel = new StatsPostModel(
                     mInsightsLatestPostModel.getBlogID(),
                     String.valueOf(mInsightsLatestPostModel.getPostID()),
                     mInsightsLatestPostModel.getPostTitle(),

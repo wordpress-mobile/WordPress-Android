@@ -102,10 +102,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         mFeaturedImageSupported = featuredImageSupported;
     }
 
-    public void setBlogSettingMaxImageWidth(String blogSettingMaxImageWidth) {
-        mBlogSettingMaxImageWidth = blogSettingMaxImageWidth;
-    }
-
     public void setFeaturedImageId(long featuredImageId) {
         mFeaturedImageId = featuredImageId;
     }
