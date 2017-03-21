@@ -2,7 +2,7 @@ package org.wordpress.android.util;
 
 import android.support.annotation.Nullable;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -160,7 +160,7 @@ public class StatsUtils {
                 || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
         } else {
-            String[] timezoneSplitted = org.apache.commons.lang.StringUtils.split(blogTimeZoneOption, ".");
+            String[] timezoneSplitted = org.apache.commons.lang3.StringUtils.split(blogTimeZoneOption, ".");
             timezoneNormalized = timezoneSplitted[0];
             if(timezoneSplitted.length > 1 && timezoneSplitted[1].equals("5")){
                 timezoneNormalized += ":30";

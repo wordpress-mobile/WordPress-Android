@@ -1226,7 +1226,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError()) {
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-            AnalyticsTracker.track(Stat.LOGIN_FAILED);
+            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.type.toString(), event.error.message);
+
             showAuthError(event.error.type, event.error.message);
             endProgress();
             return;
@@ -1249,9 +1250,19 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 return;
             }
             if (event.error.type == SiteErrorType.DUPLICATE_SITE) {
-                ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+                if (event.rowsAffected == 0) {
+                    // If there is a duplicate site and not any site has been added, show an error and
+                    // stop the sign in process
+                    ToastUtils.showToast(getContext(), R.string.cannot_add_duplicate_site);
+                    return;
+                } else {
+                    // If there is a duplicate site, notify the user something could be wrong,
+                    // but continue the sign in process
+                    ToastUtils.showToast(getContext(), R.string.duplicate_site_detected);
+                }
+            } else {
+                return;
             }
-            return;
         }
 
         // Login Successful
@@ -1259,7 +1270,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSitesFetched = true;
 
         // Finish activity if account settings have been fetched or if it's a wporg site
-        if (((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) && !event.isError()) {
+        if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
             finishCurrentActivity();
         }
     }
@@ -1270,6 +1281,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
             handleDiscoveryError(event.error, event.failedEndpoint);
+            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.name(), event.error.toString());
             return;
         }
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);

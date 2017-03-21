@@ -3,6 +3,8 @@ package org.wordpress.android.ui.media;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -125,32 +127,31 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         final int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
 
         String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-        String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
-        String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        String mimeType = StringUtils.notNullStr(
-                mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE))
-        );
+        String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
+        String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
 
         boolean isLocalFile = MediaUtils.isLocalFile(state);
         boolean isSelected = isItemSelected(localMediaId);
-        boolean isImage = mimeType.contains("image");
+        boolean isImage = mimeType.startsWith("image/");
 
-        holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
-
-        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
-        holder.fileTypeView.setText(fileExtension.toUpperCase());
-
-        // load image
         if (isImage) {
             if (isLocalFile) {
                 loadLocalImage(filePath, holder.imageView);
             } else {
-                String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(mCursor, mSite, mThumbWidth);
                 WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }
         } else {
+            // not an image, so show file name and file type
             holder.imageView.setImageDrawable(null);
+            String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
+            String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
+            String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
+            holder.fileContainer.setVisibility(View.VISIBLE);
+            holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
+            holder.fileTypeView.setText(fileExtension.toUpperCase());
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(fileName);
+            holder.fileTypeImageView.setImageResource(placeholderResId);
         }
 
         // show selection count when selected
@@ -167,33 +168,22 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.imageView.setScaleY(scale);
         }
 
-        // show upload state
-        if (state != null && state.length() > 0) {
-            holder.stateTextView.setVisibility(View.VISIBLE);
+        // show upload state unless it's already uploaded
+        if (!TextUtils.isEmpty(state) && !state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
+            holder.stateContainer.setVisibility(View.VISIBLE);
             holder.stateTextView.setText(state);
 
-            // hide the progressbar only if the state is Uploaded or failed
-            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name()) ||
-                    state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                holder.progressUpload.setVisibility(View.GONE);
-            } else {
-                holder.progressUpload.setVisibility(View.VISIBLE);
-            }
-
-            // Hide the state text only if the it's Uploaded
-            if (state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
-                holder.stateTextView.setVisibility(View.GONE);
-            }
-
-            // add onclick to retry failed uploads
+            // hide progressbar and add onclick to retry failed uploads
             if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                holder.stateTextView.setVisibility(View.VISIBLE);
+                holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
+                holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
                 holder.stateTextView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!isInMultiSelect()) {
                             ((TextView) v).setText(R.string.upload_queued);
+                            ((TextView) v).setCompoundDrawables(null, null, null, null);
                             v.setOnClickListener(null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(localMediaId);
@@ -201,10 +191,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         }
                     }
                 });
+            } else {
+                holder.progressUpload.setVisibility(View.VISIBLE);
+                holder.stateTextView.setOnClickListener(null);
+                holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
-            holder.progressUpload.setVisibility(View.GONE);
-            holder.stateTextView.setVisibility(View.GONE);
+            holder.stateContainer.setVisibility(View.GONE);
+            holder.stateContainer.setOnClickListener(null);
         }
 
         // if we are near the end, make a call to fetch more
@@ -249,23 +243,38 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final TextView titleView;
         private final FadeInNetworkImageView imageView;
         private final TextView fileTypeView;
+        private final ImageView fileTypeImageView;
         private final TextView selectionCountTextView;
         private final TextView stateTextView;
         private final ProgressBar progressUpload;
+        private final ViewGroup stateContainer;
+        private final ViewGroup fileContainer;
 
         public GridViewHolder(View view) {
             super(view);
 
-            titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
             imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
-            fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-
             selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
-            stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
-            progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
 
+            stateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
+            stateTextView = (TextView) stateContainer.findViewById(R.id.media_grid_item_upload_state);
+            progressUpload = (ProgressBar) stateContainer.findViewById(R.id.media_grid_item_upload_progress);
+
+            fileContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_file_container);
+            titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
+            fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
+            fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            // make the progress bar white
+            progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+
+            // set size of image and container views
             imageView.getLayoutParams().width = mThumbWidth;
             imageView.getLayoutParams().height = mThumbHeight;
+            stateContainer.getLayoutParams().width = mThumbWidth;
+            stateContainer.getLayoutParams().height = mThumbHeight;
+            fileContainer.getLayoutParams().width = mThumbWidth;
+            fileContainer.getLayoutParams().height = mThumbHeight;
 
             itemView.setOnClickListener(new OnClickListener() {
                 @Override

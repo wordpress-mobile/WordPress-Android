@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
@@ -142,7 +142,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
                 mInsightsLatestPostModel.getPostDate()
         ).toLowerCase();
 
-        String postTitle = StringEscapeUtils.unescapeHtml(mInsightsLatestPostModel.getPostTitle());
+        String postTitle = StringEscapeUtils.unescapeHtml4(mInsightsLatestPostModel.getPostTitle());
         if (TextUtils.isEmpty(postTitle)) {
             postTitle = getString(R.string.stats_insights_latest_post_no_title);
         }

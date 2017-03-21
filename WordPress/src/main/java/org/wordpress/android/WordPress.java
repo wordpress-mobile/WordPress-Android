@@ -75,7 +75,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPLegacyMigrationUtils;
@@ -135,10 +134,12 @@ public class WordPress extends MultiDexApplication {
 
     // FluxC migration - drop the migration code after wpandroid 7.8
     public static boolean sIsMigrationInProgress;
+    public static boolean sIsMigrationError;
     private static MigrationListener sMigrationListener;
     private int mRemainingSelfHostedSitesToFetch;
 
     public interface MigrationListener {
+        void onError();
         void onCompletion();
     }
 
@@ -295,8 +296,7 @@ public class WordPress extends MultiDexApplication {
             // No connection? Then exit and ask the user to come back.
             if (!NetworkUtils.isNetworkAvailable(this)) {
                 AppLog.i(T.DB, "No connection - aborting migration");
-                ToastUtils.showToast(this, getResources().getString(R.string.migration_error_not_connected),
-                        ToastUtils.Duration.LONG);
+                sIsMigrationError = true;
                 new Handler().postDelayed(sShutdown, 3500);
                 return;
             }
@@ -372,6 +372,9 @@ public class WordPress extends MultiDexApplication {
 
     public static void registerMigrationListener(MigrationListener listener) {
         sMigrationListener = listener;
+        if (sIsMigrationError) {
+            sMigrationListener.onError();
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -542,7 +545,7 @@ public class WordPress extends MultiDexApplication {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!sIsMigrationInProgress || sMigrationListener == null) {
+        if (!sIsMigrationInProgress) {
             return;
         }
 

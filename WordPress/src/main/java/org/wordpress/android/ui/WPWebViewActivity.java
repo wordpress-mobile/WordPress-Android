@@ -97,6 +97,17 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url);
     }
 
+    // frameNonce is used to show drafts, without it "no page found" error would be thrown
+    public static void openJetpackBlogPostPreview(Context context, String url, String frameNonce) {
+        if (!TextUtils.isEmpty(frameNonce)) {
+            url += "&frame-nonce=" + frameNonce;
+        }
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        context.startActivity(intent);
+    }
+
     // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
     public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
                                                      String[] listOfAllowedURLs) {

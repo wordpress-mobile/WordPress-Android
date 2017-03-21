@@ -40,7 +40,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -657,6 +657,8 @@ public class EditPostSettingsFragment extends Fragment
         String tags = "", postFormat = "";
         if (!post.isPage()) {
             tags = EditTextUtils.getText(mTagsEditText);
+            // since mTagsEditText is a `textMultiLine` field, we should replace "\n" with space
+            tags = tags.replace("\n", " ");
 
             // post format
             if (mPostFormatKeys != null && mPostFormatSpinner != null &&
