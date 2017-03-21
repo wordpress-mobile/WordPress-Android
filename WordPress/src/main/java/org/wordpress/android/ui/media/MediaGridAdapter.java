@@ -133,13 +133,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         boolean isLocalFile = MediaUtils.isLocalFile(state);
         boolean isSelected = isItemSelected(localMediaId);
+        boolean isImage = mimeType.startsWith("image/");
 
-        if (isLocalFile) {
-            loadLocalImage(filePath, holder.imageView);
-        } else if (!TextUtils.isEmpty(thumbUrl)) {
-            WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+        if (isImage) {
+            if (isLocalFile) {
+                loadLocalImage(filePath, holder.imageView);
+            } else {
+                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+            }
         } else {
             // not an image, so show file name and file type
+            holder.imageView.setImageDrawable(null);
             String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
             String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
             String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
