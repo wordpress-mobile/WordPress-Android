@@ -59,6 +59,8 @@ public class WPComEndpointTest {
 
         // Magic link email sender
         assertEquals("/auth/send-login-email/", WPCOMREST.auth.send_login_email.getEndpoint());
+
+        assertEquals("/read/feed/56/", WPCOMREST.read.feed.feed_url_or_id(56).getEndpoint());
     }
 
     @Test
