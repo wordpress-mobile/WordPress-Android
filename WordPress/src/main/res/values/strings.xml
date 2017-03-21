@@ -1636,6 +1636,10 @@
     <string name="image_thumbnail">Image thumbnail</string>
 
     <!-- Editor: Errors -->
+    <string name="editor_confirm_email_prompt_title">Please confirm your email address</string>
+    <string name="editor_confirm_email_prompt_message">We sent you an email when you first signed up. Please open the message and click the blue button.</string>
+    <string name="editor_confirm_email_prompt_positive" translatable="false">@string/ok</string>
+    <string name="editor_confirm_email_prompt_negative">Resend Email</string>
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
