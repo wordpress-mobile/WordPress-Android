@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -541,6 +542,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+
+            // we still need to refresh the screen visually, no matter whether the service already
+            // saved the post to Db or not
             if (mediaType.equals(MediaType.IMAGE)) {
                 AttributesImpl attrs = new AttributesImpl();
                 attrs.addAttribute("", "src", "src", "string", remoteUrl);
@@ -1131,5 +1135,29 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         } else if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
             // TODO: handle media settings
         }
+    }
+
+    public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
+                                                 String localMediaId, MediaFile mediaFile) {
+        if (mediaFile != null) {
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            if (!mediaFile.isVideo()) {
+                AttributesImpl attrs = new AttributesImpl();
+                attrs.addAttribute("", "src", "src", "string", remoteUrl);
+
+                // clear overlay
+                AztecText content = new AztecText(context);
+                content.fromHtml(postContent);
+                content.clearOverlays(ImagePredicate.localMediaIdPredicate(localMediaId), attrs);
+                content.refreshText();
+
+                // re-set the post content
+                postContent = content.toHtml(false);
+
+            } else {
+                // TODO: update video element
+            }
+        }
+        return postContent;
     }
 }

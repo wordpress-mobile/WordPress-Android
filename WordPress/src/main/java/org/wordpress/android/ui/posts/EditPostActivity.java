@@ -968,6 +968,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             default:
                 errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
+
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
         }
@@ -1978,13 +1979,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     private void startMediaUploadService() {
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
-            ArrayList<MediaModel> mediaList = new ArrayList<>();
+            final ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
                 if (media.getUploadState().equals(UploadState.QUEUED.name())) {
                     mediaList.add(media);
                 }
             }
-            MediaUploadService.startService(this, mSite, mediaList);
+
+            if (!mediaList.isEmpty()) {
+                // before starting the service, we need to update the posts' contents so we are sure the service
+                // can retrieve it from there on
+                hidePhotoChooser();
+                savePostAsync(new AfterSavePostListener() {
+                    @Override
+                    public void onPostSave() {
+                        MediaUploadService.startService(EditPostActivity.this, mediaList);
+                    }
+                });
+
+            }
         }
     }
 
@@ -2029,9 +2042,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
+        // we need to update media with the post Id
         MediaModel media = buildMediaModel(uri, mimeType, startingState);
+        media.setPostId(mPost.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+
+        // add this item to the queue - we keep it for visual aid atm
         mPendingUploads.add(media);
+
         startMediaUploadService();
 
         return media;
