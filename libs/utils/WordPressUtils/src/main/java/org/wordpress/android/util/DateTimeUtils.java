@@ -24,17 +24,12 @@ public class DateTimeUtils {
         }
     };
 
-    /**
-     * Converts a date to a relative time span ("8h", "3d", etc.) - similar to
-     * DateUtils.getRelativeTimeSpanString but returns shorter result
-     */
-    public static String javaDateToTimeSpan(final Date date, Context context) {
+    public static String javaDateToTimeSpan(final Date date, Context context, long currentTime) {
         if (date == null) {
             return "";
         }
 
         long passedTime = date.getTime();
-        long currentTime = System.currentTimeMillis();
 
         // return "now" if less than a minute has elapsed
         long secondsSince = (currentTime - passedTime) / 1000;
@@ -42,32 +37,24 @@ public class DateTimeUtils {
             return context.getString(R.string.timespan_now);
         }
 
-        // less than an hour (ex: 12m)
-        long minutesSince = secondsSince / 60;
-        if (minutesSince < 60) {
-            return Long.toString(minutesSince) + "m " + context.getString(R.string.timespan_ago);
-        }
+        long daysSince = secondsSince / (60 * 60 * 24);
 
-        // less than a day (ex: 17h)
-        long hoursSince = minutesSince / 60;
-        if (hoursSince < 24) {
-            return Long.toString(hoursSince) + "h " + context.getString(R.string.timespan_ago);
-        }
-
-        // less than a week (ex: 5d)
-        long daysSince = hoursSince / 24;
-        if (daysSince < 7) {
-            return Long.toString(daysSince) + "d " + context.getString(R.string.timespan_ago);
-        }
-
-        // less than a year old, so return day/month without year (ex: Jan 30)
+        // less than a year old, let `DateUtils.getRelativeTimeSpanString` do the job
         if (daysSince < 365) {
-            return DateUtils.formatDateTime(context, passedTime, DateUtils.FORMAT_NO_YEAR |
-                    DateUtils.FORMAT_ABBREV_ALL);
+            return DateUtils.getRelativeTimeSpanString(passedTime, currentTime,
+                    DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL).toString();
         }
 
         // date is older, so include year (ex: Jan 30, 2013)
         return DateUtils.formatDateTime(context, passedTime, DateUtils.FORMAT_ABBREV_ALL);
+    }
+
+    /**
+     * Converts a date to a relative time span ("8 hr. ago", "3 d", etc.) - similar to
+     * DateUtils.getRelativeTimeSpanString but returns shorter result
+     */
+    public static String javaDateToTimeSpan(final Date date, Context context) {
+        return javaDateToTimeSpan(date, context, System.currentTimeMillis());
     }
 
     /**
