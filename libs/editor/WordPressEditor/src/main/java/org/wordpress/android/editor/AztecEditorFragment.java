@@ -564,11 +564,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         private final String mId;
         private final String mAttributeName;
 
-        private static ImagePredicate localMediaIdPredicate(String id) {
+        static ImagePredicate localMediaIdPredicate(String id) {
             return new ImagePredicate(id, "data-wpid");
         }
 
-        private static ImagePredicate idPredicate(String id) {
+        static ImagePredicate idPredicate(String id) {
             return new ImagePredicate(id, "id");
         }
 
