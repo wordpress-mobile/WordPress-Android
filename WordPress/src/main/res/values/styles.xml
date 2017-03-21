@@ -217,7 +217,7 @@
         <item name="android:textColor">#444444</item>
         <item name="android:textColorHint">#AAAAAA</item>
         <item name="android:padding">12dp</item>
-        <item name="android:layout_marginLeft">40dp</item>
+        <item name="android:layout_marginStart">40dp</item>
     </style>
 
     <style name="WordPress.NUXTitle">

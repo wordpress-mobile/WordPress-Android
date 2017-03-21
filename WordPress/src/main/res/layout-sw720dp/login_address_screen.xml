@@ -37,7 +37,7 @@
     <EditText
         android:id="@+id/login_email"
         style="@style/WordPress.NUXEditText"
-        android:layout_marginRight="40dp"
+        android:layout_marginEnd="40dp"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
 
