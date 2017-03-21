@@ -62,6 +62,6 @@
         android:layout_height="@dimen/nux_main_button_height"
         android:id="@+id/login_email_username_password"
         android:layout_width="wrap_content"
-        android:text="@string/don_t_know_your_address"/>
+        android:text="@string/dont_know_your_address"/>
 
 </LinearLayout>
