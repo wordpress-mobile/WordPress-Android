@@ -2,6 +2,8 @@
 /me/settings/
 /me/sites/
 
+/read/feed/$feed_url_or_id
+
 /sites/
 /sites/new/
 /sites/$site/post-formats/
