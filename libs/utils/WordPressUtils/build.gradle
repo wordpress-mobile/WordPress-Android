@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile('commons-lang:commons-lang:2.6') {
+    compile('org.apache.commons:commons-lang3:3.5') {
         exclude group: 'commons-logging'
     }
     compile 'com.mcxiaoke.volley:library:1.0.18'

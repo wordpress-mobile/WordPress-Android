@@ -23,7 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -1167,7 +1167,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (event.isError()) {
             if (isAdded()) {
-                String strUnEscapeHTML = StringEscapeUtils.unescapeHtml(event.error.message);
+                String strUnEscapeHTML = StringEscapeUtils.unescapeHtml4(event.error.message);
                 ToastUtils.showToast(getActivity(), strUnEscapeHTML, ToastUtils.Duration.LONG);
                 // refocus editor on failure and show soft keyboard
                 EditTextUtils.showSoftInput(mEditReply);

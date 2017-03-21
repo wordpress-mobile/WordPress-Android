@@ -7,7 +7,7 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
