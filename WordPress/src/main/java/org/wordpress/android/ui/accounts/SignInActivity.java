@@ -1,17 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
-
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -24,11 +12,23 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
+import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 
 import javax.inject.Inject;
 
@@ -77,7 +77,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
 
         if (savedInstanceState == null) {
-            addSignInFragment();
+            addLoginFragment();
         }
 
         mSmartLockHelper = new SmartLockHelper(this);
@@ -203,10 +203,10 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         getSupportFragmentManager().popBackStack();
     }
 
-    protected void addSignInFragment() {
-        SignInFragment signInFragment = new SignInFragment();
+    protected void addLoginFragment() {
+        LoginEmailFragment loginEmailFragment = new LoginEmailFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, signInFragment, SignInFragment.TAG);
+        fragmentTransaction.replace(R.id.fragment_container, loginEmailFragment, SignInFragment.TAG);
         fragmentTransaction.commit();
     }
 
@@ -232,23 +232,23 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     @Override
     public void onConnected(Bundle bundle) {
-        AppLog.d(T.NUX, "Google API client connected");
-        SignInFragment signInFragment =
-                (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
-        // Autofill only if signInFragment is there and if it can be autofilled (ie. username and password fields are
-        // empty).
-        if (signInFragment != null && signInFragment.canAutofillUsernameAndPassword()) {
-            mSmartLockHelper.smartLockAutoFill(new Callback() {
-                @Override
-                public void onCredentialRetrieved(Credential credential) {
-                    SignInFragment signInFragment =
-                            (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
-                    if (signInFragment != null) {
-                        signInFragment.onCredentialRetrieved(credential);
-                    }
-                }
-            });
-        }
+//        AppLog.d(T.NUX, "Google API client connected");
+//        SignInFragment signInFragment =
+//                (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+//        // Autofill only if signInFragment is there and if it can be autofilled (ie. username and password fields are
+//        // empty).
+//        if (signInFragment != null && signInFragment.canAutofillUsernameAndPassword()) {
+//            mSmartLockHelper.smartLockAutoFill(new Callback() {
+//                @Override
+//                public void onCredentialRetrieved(Credential credential) {
+//                    SignInFragment signInFragment =
+//                            (SignInFragment) getSupportFragmentManager().findFragmentByTag(SignInFragment.TAG);
+//                    if (signInFragment != null) {
+//                        signInFragment.onCredentialRetrieved(credential);
+//                    }
+//                }
+//            });
+//        }
     }
 
     @Override
