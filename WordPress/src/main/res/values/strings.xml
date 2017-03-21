@@ -1650,5 +1650,7 @@
     <string name="enter_email_wordpress_com">Enter the email address associated with your WordPress.com account</string>
     <string name="next">Next</string>
     <string name="enter_username_password_instead">Enter a username and password instead</string>
+    <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
+    <string name="don_t_know_your_address">Don\'t know your address?</string>
 
 </resources>

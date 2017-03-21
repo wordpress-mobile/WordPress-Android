@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/nux_background"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_height="72dp"
+        android:layout_width="wrap_content"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/img_wordpress_com_white_144dp" >
+    </ImageView>
+    
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <TextView
+        style="@style/WordPress.NUXFlatButton"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textAlignment="center"
+        android:text="@string/enter_the_address_of_your_wordpress_site"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <EditText
+        android:id="@+id/login_email"
+        style="@style/WordPress.NUXEditText"
+        android:layout_marginRight="40dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <Button
+        style="@style/WordPress.NUXPrimaryButton"
+        android:id="@+id/login_email_next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/next"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+    <TextView
+        style="@style/WordPress.NUXFlatButton"
+        android:textSize="16sp"
+        android:layout_height="@dimen/nux_main_button_height"
+        android:id="@+id/login_email_username_password"
+        android:layout_width="wrap_content"
+        android:text="@string/don_t_know_your_address"/>
+
+</LinearLayout>
