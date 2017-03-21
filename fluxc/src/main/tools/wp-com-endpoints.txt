@@ -1,3 +1,10 @@
+/auth/send-login-email/
+
+/is-available/blog/
+/is-available/domain/
+/is-available/email/
+/is-available/username/
+
 /me/
 /me/settings/
 /me/sites/
@@ -5,10 +12,22 @@
 /read/feed/$feed_url_or_id#long,String
 
 /sites/
-/sites/new/
-/sites/$site/post-formats/
 /sites/$site/delete
 /sites/$site/exports/start
+/sites/$site/post-formats/
+/sites/new/
+
+/sites/$site/comments/
+/sites/$site/comments/$comment_ID
+/sites/$site/comments/$comment_ID/delete
+/sites/$site/comments/$comment_ID/likes/new
+/sites/$site/comments/$comment_ID/likes/mine/delete
+/sites/$site/comments/$comment_ID/replies/new
+
+/sites/$site/media/
+/sites/$site/media/$media_ID/
+/sites/$site/media/$media_ID/delete/
+/sites/$site/media/new/
 
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
@@ -17,27 +36,8 @@
 /sites/$site/posts/new/
 /sites/$site/posts/slug:$post_slug#String/
 
-/sites/$site/media/
-/sites/$site/media/$media_ID/
-/sites/$site/media/$media_ID/delete/
-/sites/$site/media/new/
-
-/sites/$site/comments/
-/sites/$site/comments/$comment_ID
-/sites/$site/comments/$comment_ID/delete
-/sites/$site/comments/$comment_ID/replies/new
-/sites/$site/comments/$comment_ID/likes/new
-/sites/$site/comments/$comment_ID/likes/mine/delete
-
 /sites/$site/taxonomies/$taxonomy#String/terms/
 /sites/$site/taxonomies/$taxonomy#String/terms/new/
 /sites/$site/taxonomies/$taxonomy#String/terms/slug:$slug#String/
 
 /users/new/
-
-/is-available/email/
-/is-available/username/
-/is-available/blog/
-/is-available/domain/
-
-/auth/send-login-email/
