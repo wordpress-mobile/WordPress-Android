@@ -214,7 +214,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (StringUtils.isNotEmpty(cleanPostExcerpt)) {
                 postHolder.txtExcerpt.setVisibility(View.VISIBLE);
-                postHolder.txtExcerpt.setText(PostUtils.collapseShortcodes(cleanPostExcerpt));
+                // Unescape HTML
+                cleanPostExcerpt = StringEscapeUtils.unescapeHtml4(cleanPostExcerpt);
+                // Collapse shortcodes: [gallery ids="1206,1205,1191"] -> [gallery]
+                cleanPostExcerpt = PostUtils.collapseShortcodes(cleanPostExcerpt);
+                postHolder.txtExcerpt.setText(cleanPostExcerpt);
             } else {
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
