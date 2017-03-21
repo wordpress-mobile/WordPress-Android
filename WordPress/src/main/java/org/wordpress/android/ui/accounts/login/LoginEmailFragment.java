@@ -14,12 +14,14 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
+import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.emailchecker2.EmailChecker;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
@@ -55,6 +57,8 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
+
+    private SignInFragment.OnMagicLinkRequestInteraction mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,16 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SignInFragment.OnMagicLinkRequestInteraction) {
+            mListener = (SignInFragment.OnMagicLinkRequestInteraction) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestInteraction");
+        }
     }
 
     @Override
@@ -278,6 +292,10 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     private void handleEmailAvailabilityEvent(OnAvailabilityChecked event) {
         if (!event.isAvailable) {
             // TODO: Email address exists in WordPress.com so, goto magic link offer screen
+            // Email address exists in WordPress.com
+            if (mListener != null) {
+                mListener.onMagicLinkRequestSuccess(mEmail);
+            }
         } else {
             // TODO: Let the user know that the email is not a wordpress.com one and retry
         }
