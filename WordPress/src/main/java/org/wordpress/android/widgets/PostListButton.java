@@ -29,6 +29,7 @@ public class PostListButton extends LinearLayout {
     public static final int BUTTON_PUBLISH  = 7;
     public static final int BUTTON_MORE     = 8;
     public static final int BUTTON_BACK     = 9;
+    public static final int BUTTON_SUBMIT   = 10;
 
     public PostListButton(Context context){
         super(context);
@@ -102,6 +103,8 @@ public class PostListButton extends LinearLayout {
                 return R.string.button_more;
             case BUTTON_BACK:
                 return R.string.button_back;
+            case BUTTON_SUBMIT:
+                return R.string.submit_for_review;
             default:
                 return 0;
         }
