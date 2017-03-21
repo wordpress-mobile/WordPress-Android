@@ -21,7 +21,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -213,7 +214,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (StringUtils.isNotEmpty(cleanPostExcerpt)) {
                 postHolder.txtExcerpt.setVisibility(View.VISIBLE);
-                postHolder.txtExcerpt.setText(PostUtils.collapseShortcodes(cleanPostExcerpt));
+                // Unescape HTML
+                cleanPostExcerpt = StringEscapeUtils.unescapeHtml4(cleanPostExcerpt);
+                // Collapse shortcodes: [gallery ids="1206,1205,1191"] -> [gallery]
+                cleanPostExcerpt = PostUtils.collapseShortcodes(cleanPostExcerpt);
+                postHolder.txtExcerpt.setText(cleanPostExcerpt);
             } else {
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
