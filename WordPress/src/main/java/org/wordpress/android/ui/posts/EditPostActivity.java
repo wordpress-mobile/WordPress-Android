@@ -471,6 +471,30 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private String getSaveButtonText() {
+        if (!mSite.getHasCapabilityPublishPosts()) {
+            return getString(R.string.submit_for_review);
+        }
+
+        switch (PostStatus.fromPost(mPost)) {
+            case SCHEDULED:
+                return getString(R.string.schedule_verb);
+            case PUBLISHED:
+            case UNKNOWN:
+                if (mPost.isLocalDraft()) {
+                    return getString(R.string.publish_post);
+                } else {
+                    return getString(R.string.update_verb);
+                }
+            default:
+                if (mPost.isLocalDraft()) {
+                    return getString(R.string.save);
+                } else {
+                    return getString(R.string.update_verb);
+                }
+        }
+    }
+
     private boolean isPhotoChooserShowing() {
         return mPhotoChooserContainer != null
                 && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
@@ -644,25 +668,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             if (saveMenuItem != null) {
-                switch (PostStatus.fromPost(mPost)) {
-                    case SCHEDULED:
-                        saveMenuItem.setTitle(getString(R.string.schedule_verb));
-                        break;
-                    case PUBLISHED:
-                    case UNKNOWN:
-                        if (mPost.isLocalDraft()) {
-                            saveMenuItem.setTitle(R.string.publish_post);
-                        } else {
-                            saveMenuItem.setTitle(R.string.update_verb);
-                        }
-                        break;
-                    default:
-                        if (mPost.isLocalDraft()) {
-                            saveMenuItem.setTitle(R.string.save);
-                        } else {
-                            saveMenuItem.setTitle(R.string.update_verb);
-                        }
-                }
+                saveMenuItem.setTitle(getSaveButtonText());
             }
         }
 
