@@ -1137,7 +1137,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent, String localMediaId, MediaFile mediaFile) {
+    public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
+                                                 String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             if (!mediaFile.isVideo()) {
