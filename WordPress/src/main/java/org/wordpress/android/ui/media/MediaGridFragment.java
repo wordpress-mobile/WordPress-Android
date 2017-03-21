@@ -281,10 +281,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void refreshMediaFromDB() {
+        if (!isAdded()) return;
+
         setFilter(mFilter);
         updateFilterText();
         updateSpinnerAdapter();
-        if (isAdded() && mGridAdapter.getItemCount() == 0) {
+        if (mGridAdapter.getItemCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
                     fetchMediaList(false);
