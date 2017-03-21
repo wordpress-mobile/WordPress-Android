@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -107,7 +107,7 @@ public class StatsViewHolder {
             return;
         }
 
-        String name =  StringEscapeUtils.unescapeHtml(currentItem.getTitle());
+        String name =  StringEscapeUtils.unescapeHtml4(currentItem.getTitle());
         entryTextView.setText(name);
         rowContent.setOnClickListener(
                 new View.OnClickListener() {

@@ -19,7 +19,7 @@ import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -393,11 +393,11 @@ public class GCMMessageService extends GcmListenerService {
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
-            String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+            String title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_TITLE));
             if (title == null) {
                 title = context.getString(R.string.app_name);
             }
-            String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -681,11 +681,11 @@ public class GCMMessageService extends GcmListenerService {
                     }
 
                     if (pushBundle.getString(PUSH_ARG_TYPE, "").equals(PUSH_TYPE_COMMENT)) {
-                        String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_TITLE)));
-                        String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
+                        String pnTitle = StringEscapeUtils.unescapeHtml4((pushBundle.getString(PUSH_ARG_TITLE)));
+                        String pnMessage = StringEscapeUtils.unescapeHtml4((pushBundle.getString(PUSH_ARG_MSG)));
                         inboxStyle.addLine(pnTitle + ": " + pnMessage);
                     } else {
-                        String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
+                        String pnMessage = StringEscapeUtils.unescapeHtml4((pushBundle.getString(PUSH_ARG_MSG)));
                         inboxStyle.addLine(pnMessage);
                     }
 
@@ -814,7 +814,7 @@ public class GCMMessageService extends GcmListenerService {
             Bitmap largeIconBitmap = null;
             // here notify the existing group notification by eliminating the line that is now gone
             String title = getNotificationTitleOrAppNameFromBundle(context, data);
-            String message = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_MSG));
+            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
 
             NotificationCompat.Builder builder = null;
             String wpcomNoteID = null;
@@ -823,11 +823,11 @@ public class GCMMessageService extends GcmListenerService {
                 //only one notification remains, so get the proper message for it and re-instate in the system dashboard
                 Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
                 if (remainingNote != null) {
-                    String remainingNoteTitle = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_TITLE));
+                    String remainingNoteTitle = StringEscapeUtils.unescapeHtml4(remainingNote.getString(PUSH_ARG_TITLE));
                     if (!TextUtils.isEmpty(remainingNoteTitle)) {
                         title = remainingNoteTitle;
                     }
-                    String remainingNoteMessage = StringEscapeUtils.unescapeHtml(remainingNote.getString(PUSH_ARG_MSG));
+                    String remainingNoteMessage = StringEscapeUtils.unescapeHtml4(remainingNote.getString(PUSH_ARG_MSG));
                     if (!TextUtils.isEmpty(remainingNoteMessage)) {
                         message = remainingNoteMessage;
                     }
@@ -878,7 +878,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private String getNotificationTitleOrAppNameFromBundle(Context context, Bundle data){
-            String title = StringEscapeUtils.unescapeHtml(data.getString(PUSH_ARG_TITLE));
+            String title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_TITLE));
             if (title == null) {
                 title = context.getString(R.string.app_name);
             }
