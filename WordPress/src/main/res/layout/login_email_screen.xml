@@ -26,31 +26,11 @@
         android:textAlignment="center"
         android:text="Enter the email address associated with your WordPress.com account"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/login_email"
+        style="@style/WordPress.NUXEditText"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp">
-
-        <EditText
-            android:id="@+id/login_email_email_input"
-            style="@style/WordPress.NUXEditText"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_alignParentLeft="true"
-            android:layout_alignTop="@id/login_email_saved_password_button"
-            android:layout_toLeftOf="@id/login_email_saved_password_button"/>
-        <Button
-            android:id="@+id/login_email_saved_password_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_alignParentRight="true"
-            android:text="&#x1f511;"/>
-    </RelativeLayout>
+        android:layout_width="match_parent" />
 
     <Button
         android:id="@+id/login_email_next_button"
