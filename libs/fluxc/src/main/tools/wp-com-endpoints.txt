@@ -2,7 +2,7 @@
 /me/settings/
 /me/sites/
 
-/read/feed/$feed_url_or_id
+/read/feed/$feed_url_or_id#long,String
 
 /sites/
 /sites/new/
