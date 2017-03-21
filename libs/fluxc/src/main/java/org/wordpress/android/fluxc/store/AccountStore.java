@@ -332,7 +332,7 @@ public class AccountStore extends Store {
                 mAccountRestClient.fetchAccountSettings();
                 break;
             case SEND_VERIFICATION_EMAIL:
-                mAccountRestClient.resendVerificationEmail();
+                mAccountRestClient.sendVerificationEmail();
                 break;
             case PUSH_SETTINGS:
                 mAccountRestClient.pushAccountSettings(((PushAccountSettingsPayload) payload).params);

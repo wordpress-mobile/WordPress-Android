@@ -136,7 +136,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         ));
     }
 
-    public void resendVerificationEmail() {
+    public void sendVerificationEmail() {
         String url = WPCOMREST.me.send_verification_email.getUrlV1_1();
         add(WPComGsonRequest.buildPostRequest(url, null, NewAccountResponse.class,
                 new Listener<NewAccountResponse>() {
