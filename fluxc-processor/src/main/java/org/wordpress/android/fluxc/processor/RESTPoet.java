@@ -151,7 +151,7 @@ public class RESTPoet {
             // Add a constructor for each type this endpoint accepts (usually long)
             for (Class endpointType : getVariableEndpointTypes(endpointNode)) {
                 String variableName = endpointName;
-                if (endpointType.equals(long.class) && !endpointName.equals("id")) {
+                if (endpointType.equals(long.class) && !endpointName.toLowerCase(Locale.US).endsWith("id")) {
                     variableName = endpointName + "Id";
                 }
 
@@ -200,7 +200,7 @@ public class RESTPoet {
             }
 
             String variableName = endpointName;
-            if (endpointType.equals(long.class) && !endpointName.equals("id")) {
+            if (endpointType.equals(long.class) && !endpointName.toLowerCase(Locale.US).endsWith("id")) {
                 variableName = endpointName + "Id";
             }
 
