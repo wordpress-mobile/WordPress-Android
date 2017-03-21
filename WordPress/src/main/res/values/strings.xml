@@ -1644,5 +1644,6 @@
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+    <string name="magic_links_make_passwords_unnecessary">Magic links make passwords unnecessary!</string>
 
 </resources>

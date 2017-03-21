@@ -1,0 +1,71 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/nux_background"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/WordPress.NUXFlatButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/get_a_link_sent_to_your_email_to_sign_in_instantly"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/magic_button"
+            style="@style/WordPress.NUXPrimaryButton"
+            android:layout_width="wrap_content"
+            android:clickable="true"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="@string/send_link" />
+
+        <RelativeLayout
+            android:id="@+id/magic_link_progress_bar"
+            style="@style/WordPress.NUXPrimaryButton"
+            android:layout_width="match_parent"
+            android:enabled="false"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <TextView
+        style="@style/WordPress.NUXFlatButton"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/magic_links_make_passwords_unnecessary"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/enter_password"
+        style="@style/WordPress.NUXFlatButton"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/nux_main_button_height"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:text="@string/enter_your_password_instead" />
+
+</LinearLayout>
