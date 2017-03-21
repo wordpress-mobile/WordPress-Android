@@ -1652,5 +1652,7 @@
     <string name="enter_username_password_instead">Enter a username and password instead</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="dont_know_your_address">Don\'t know your address?</string>
+    <string name="site_address_explanation">Your site address is also known as a \"URL\". It\'s the text that follows http:// in your browsers address bar when you visit your site.</string>
+    <string name="need_more_help">Need more help?</string>
 
 </resources>

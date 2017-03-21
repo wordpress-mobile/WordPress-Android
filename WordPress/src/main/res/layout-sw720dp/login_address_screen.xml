@@ -56,12 +56,56 @@
         android:layout_width="match_parent"
         android:layout_height="100dp" />
 
+    <LinearLayout
+        android:id="@+id/url_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/WordPress.NUXFlatButton"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textAlignment="center"
+            android:text="@string/site_address_explanation"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <!-- This is a placeholder image. -->
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:layout_height="72dp"
+            android:layout_width="wrap_content"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/img_wordpress_com_white_144dp" >
+        </ImageView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:id="@+id/login_more_help"
+            style="@style/WordPress.NUXFlatButton"
+            android:textSize="16sp"
+            android:layout_height="@dimen/nux_main_button_height"
+            android:layout_width="wrap_content"
+            android:text="@string/need_more_help" />
+    </LinearLayout>
+
     <TextView
+        android:id="@+id/login_forgot_address"
         style="@style/WordPress.NUXFlatButton"
         android:textSize="16sp"
         android:layout_height="@dimen/nux_main_button_height"
-        android:id="@+id/login_email_username_password"
         android:layout_width="wrap_content"
-        android:text="@string/dont_know_your_address"/>
+        android:text="@string/dont_know_your_address" />
 
 </LinearLayout>
