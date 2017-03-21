@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_height="72dp"
+        android:layout_width="wrap_content"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/img_wordpress_com_white_144dp" >
+    </ImageView>
+    
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textAlignment="center"
+        android:text="Enter the email address associated with your WordPress.com account"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp">
+
+        <EditText
+            android:id="@+id/login_email_email_input"
+            style="@style/WordPress.NUXEditText"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@id/login_email_saved_password_button"
+            android:layout_toLeftOf="@id/login_email_saved_password_button"/>
+        <Button
+            android:id="@+id/login_email_saved_password_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:text="&#x1f511;"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/login_email_next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+    <TextView
+        android:id="@+id/login_email_username_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter a username and password instead"/>
+
+</LinearLayout>
