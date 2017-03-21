@@ -143,14 +143,14 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(NewAccountResponse response) {
                         NewAccountResponsePayload payload = new NewAccountResponsePayload();
-                        mDispatcher.dispatch(AccountActionBuilder.newSentEmailVerificationAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newSentVerificationEmailAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         NewAccountResponsePayload payload = volleyErrorToAccountResponsePayload(error.volleyError);
-                        mDispatcher.dispatch(AccountActionBuilder.newSentEmailVerificationAction(payload));
+                        mDispatcher.dispatch(AccountActionBuilder.newSentVerificationEmailAction(payload));
                     }
                 }
         ));
