@@ -319,6 +319,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
         if (response.code() == 403) {
             mediaError.type = MediaErrorType.AUTHORIZATION_REQUIRED;
+        } else if (response.code() == 413) {
+            mediaError.type = MediaErrorType.REQUEST_TOO_LARGE;
+            mediaError.message = response.message();
+            return mediaError;
         }
         try {
             JSONObject body = new JSONObject(response.body().string());
