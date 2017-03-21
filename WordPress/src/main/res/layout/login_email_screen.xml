@@ -24,11 +24,12 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textAlignment="center"
-        android:text="Enter the email address associated with your WordPress.com account"/>
+        android:text="@string/enter_email_wordpress_com"/>
 
     <EditText
         android:id="@+id/login_email"
         style="@style/WordPress.NUXEditText"
+        android:layout_marginRight="40dp"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
 
@@ -36,7 +37,7 @@
         android:id="@+id/login_email_next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"/>
+        android:text="@string/next"/>
 
     <Space
         android:layout_width="match_parent"
@@ -46,6 +47,6 @@
         android:id="@+id/login_email_username_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter a username and password instead"/>
+        android:text="@string/enter_username_password_instead"/>
 
 </LinearLayout>

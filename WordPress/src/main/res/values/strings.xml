@@ -1644,6 +1644,11 @@
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
+
+    <!-- Login -->
     <string name="magic_links_make_passwords_unnecessary">Magic links make passwords unnecessary!</string>
+    <string name="enter_email_wordpress_com">Enter the email address associated with your WordPress.com account</string>
+    <string name="next">Next</string>
+    <string name="enter_username_password_instead">Enter a username and password instead</string>
 
 </resources>
