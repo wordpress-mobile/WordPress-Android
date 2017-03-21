@@ -20,6 +20,7 @@ public class AccountModel extends Payload implements Identifiable {
     @Column private String mProfileUrl; // profile_URL
     @Column private String mAvatarUrl; // avatar_URL
     @Column private long mPrimarySiteId;
+    @Column private boolean mEmailVerified;
     @Column private int mSiteCount;
     @Column private int mVisibleSiteCount;
     @Column private String mEmail;
@@ -63,6 +64,7 @@ public class AccountModel extends Payload implements Identifiable {
                && StringUtils.equals(getAvatarUrl(), otherAccount.getAvatarUrl())
                && getPrimarySiteId() == otherAccount.getPrimarySiteId()
                && getSiteCount() == otherAccount.getSiteCount()
+               && getEmailVerified() == otherAccount.getEmailVerified()
                && getVisibleSiteCount() == otherAccount.getVisibleSiteCount()
                && StringUtils.equals(getFirstName(), otherAccount.getFirstName())
                && StringUtils.equals(getLastName(), otherAccount.getLastName())
@@ -82,6 +84,7 @@ public class AccountModel extends Payload implements Identifiable {
         mAvatarUrl = "";
         mPrimarySiteId = 0;
         mSiteCount = 0;
+        mEmailVerified = true;
         mVisibleSiteCount = 0;
         mEmail = "";
         mFirstName = "";
@@ -108,6 +111,7 @@ public class AccountModel extends Payload implements Identifiable {
         setVisibleSiteCount(other.getVisibleSiteCount());
         setEmail(other.getEmail());
         setHasUnseenNotes(other.getHasUnseenNotes());
+        setEmailVerified(other.getEmailVerified());
     }
 
     /**
@@ -173,6 +177,14 @@ public class AccountModel extends Payload implements Identifiable {
 
     public void setAvatarUrl(String avatarUrl) {
         mAvatarUrl = avatarUrl;
+    }
+
+    public boolean getEmailVerified() {
+        return mEmailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        mEmailVerified = emailVerified;
     }
 
     public int getSiteCount() {

@@ -16,6 +16,7 @@ public class AccountResponse implements Response {
     public long primary_blog;
     public String avatar_URL;
     public String profile_URL;
+    public boolean email_verified;
     public String date;
     public int site_count;
     public int visible_site_count;
