@@ -69,6 +69,7 @@ import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -815,6 +816,28 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (!NetworkUtils.isNetworkAvailable(this)) {
             ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
             return false;
+        }
+
+        // prompt user to verify e-mail before publishing
+        if (!mAccountStore.getAccount().getEmailVerified()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.editor_confirm_email_prompt_title)
+                    .setMessage(R.string.editor_confirm_email_prompt_message)
+                    .setPositiveButton(R.string.editor_confirm_email_prompt_positive,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    ToastUtils.showToast(EditPostActivity.this, "Saving post as draft");
+                                    saveAndFinish();
+                                }
+                            })
+                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mDispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction());
+                                }
+                            });
+            builder.create().show();
+            return true;
         }
 
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
