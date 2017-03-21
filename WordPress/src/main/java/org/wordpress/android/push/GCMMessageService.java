@@ -444,7 +444,7 @@ public class GCMMessageService extends GcmListenerService {
 
             // Also add a group summary notification, which is required for non-wearable devices
             // Do not need to play the sound again. We've already played it in the individual builder.
-            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message, false);
+            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
         }
 
         private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
@@ -617,7 +617,7 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         private void showGroupNotificationForBuilder(Context context, NotificationCompat.Builder builder,
-                                                     String wpcomNoteID, String message, boolean notifyUser) {
+                                                     String wpcomNoteID, String message) {
 
             if (builder == null || context == null) {
                 return;
@@ -667,12 +667,12 @@ public class GCMMessageService extends GcmListenerService {
                         .setContentText(subject)
                         .setStyle(inboxStyle);
 
-                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, notifyUser);
+                showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
 
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true);
-                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, notifyUser);
+                showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             }
             //reinsert 2fa bundle if it was present
             if (authPNBundle != null) {
@@ -827,7 +827,7 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message, false);
+            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message);
 
             //reinsert 2fa bundle if it was present
             if (authPNBundle != null) {
