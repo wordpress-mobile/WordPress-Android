@@ -470,8 +470,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                 if (mActionMode != null) {
                                     mActionMode.finish();
                                 }
-                                refreshMediaFromDB();
-                                refreshSpinnerAdapter();
                             }
                         }).setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
