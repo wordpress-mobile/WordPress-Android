@@ -1148,7 +1148,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // clear overlay
                 AztecText content = new AztecText(context);
                 content.fromHtml(postContent);
-                content.clearOverlays(AztecEditorFragment.ImagePredicate.localMediaIdPredicate(localMediaId), attrs);
+                content.clearOverlays(ImagePredicate.localMediaIdPredicate(localMediaId), attrs);
                 content.refreshText();
 
                 // re-set the post content
