@@ -311,7 +311,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return INVALID_POSITION;
     }
 
-    private synchronized void loadLocalImage(final String filePath, ImageView imageView) {
+    private void loadLocalImage(final String filePath, ImageView imageView) {
         imageView.setTag(filePath);
 
         Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
