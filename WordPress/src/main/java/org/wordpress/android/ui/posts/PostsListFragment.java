@@ -426,6 +426,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_EDIT:
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
+            case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_PUBLISH:
                 publishPost(post);
                 break;
