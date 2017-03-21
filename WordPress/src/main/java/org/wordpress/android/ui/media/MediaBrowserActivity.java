@@ -401,10 +401,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        // currently we don't support searching from within a filter, so hide it
         if (mMediaGridFragment != null) {
             mMediaGridFragment.setFilterEnabled(false);
-            mMediaGridFragment.setFilter(Filter.ALL);
         }
 
         // load last search query
@@ -421,7 +419,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public boolean onMenuItemActionCollapse(MenuItem item) {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.setFilterEnabled(true);
-            mMediaGridFragment.setFilter(Filter.ALL);
         }
 
         mMenu.findItem(R.id.menu_new_media).setVisible(true);

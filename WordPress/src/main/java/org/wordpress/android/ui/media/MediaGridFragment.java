@@ -278,7 +278,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void refreshSpinnerAdapter() {
         updateFilterText();
         updateSpinnerAdapter();
-        setFilter(mFilter);
     }
 
     public void refreshMediaFromDB() {
