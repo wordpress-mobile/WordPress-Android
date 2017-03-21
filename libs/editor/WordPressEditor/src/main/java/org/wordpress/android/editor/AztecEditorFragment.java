@@ -34,7 +34,7 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.ccil.cowan.tagsoup.AttributesImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
