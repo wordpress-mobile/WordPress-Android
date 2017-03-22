@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.wordpress.android.R;
+import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
@@ -25,6 +27,7 @@ public class AppSettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.me_btn_app_settings);
         }
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -59,6 +62,10 @@ public class AppSettingsActivity extends AppCompatActivity {
             mPasscodePreferenceFragment.setPreferences(togglePref, changePref);
             ((SwitchPreference) togglePref).setChecked(
                     AppLockManager.getInstance().getAppLock().isPasswordLocked());
+
+            //here they've changed the PIN lock settings, so let's rebuild notifications if they have
+            //quick actions
+            GCMMessageService.rebuildAndUpdateNotifsOnSystemBarForRemainingNote(this);
         }
     }
 

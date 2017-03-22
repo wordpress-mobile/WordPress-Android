@@ -28,9 +28,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -49,6 +49,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     public List<String> accountNames = new ArrayList<>();
 
     @Inject SiteStore mSiteStore;
+    @Inject FluxCImageLoader mImageLoader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                 accountUsers[i] = site.getUsername();
                 siteIds[i] = site.getId();
                 if (site.getUrl() != null) {
-                    blavatars[i] = GravatarUtils.blavatarFromUrl(site.getUrl(), 60);
+                    blavatars[i] = SiteUtils.getSiteIconUrl(site, 60);
                 } else {
                     blavatars[i] = "";
                 }
@@ -210,8 +211,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     StringUtils.unescapeHTML(blogNames[position]));
             blogUsername.setText(
                     StringUtils.unescapeHTML(username));
-            blavatar.setErrorImageResId(R.drawable.blavatar_placeholder);
-            blavatar.setImageUrl(blavatars[position], WordPress.imageLoader);
+            blavatar.setErrorImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
+            blavatar.setImageUrl(blavatars[position], mImageLoader);
 
             return view;
 

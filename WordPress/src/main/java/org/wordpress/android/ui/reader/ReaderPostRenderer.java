@@ -21,6 +21,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -330,11 +332,8 @@ class ReaderPostRenderer {
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
-        // use Merriweather font assets
-        .append("<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>")
-
         .append("<style type='text/css'>")
-        .append("  body { font-family: Merriweather, serif; font-weight: 400; margin: 0px; padding: 0px;}")
+        .append("  body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;}")
         .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
 
         // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
@@ -494,9 +493,27 @@ class ReaderPostRenderer {
         .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
         .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
 
-        .append("</style>")
-        .append("</head><body>")
-        .append(content)
+        // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
+        // https://github.com/Automattic/wp-calypso/blob/f51293caa87edcd4f0c117aaea8cf65d26e33520/client/lib/post-normalizer/rule-content-sanitize.js
+        .append("   form, input, select, button textarea { display: none; }")
+        .append("   div.feedflare { display: none; }")
+        .append("   .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, .OUTBRAIN, .adsbygoogle { display: none; }")
+
+        .append("</style>");
+
+        // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
+        final List<String> classAmendRegexes = Arrays.asList(
+                "(tiled-gallery)([\\s\"\'])",
+                "(gallery-row)([\\s\"'])",
+                "(gallery-group)([\\s\"'])",
+                "(tiled-gallery-item)([\\s\"'])");
+        String contentCustomised = content;
+        for (String classToAmend : classAmendRegexes) {
+            contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
+        }
+
+        sbHtml.append("</head><body>")
+        .append(contentCustomised)
         .append("</body></html>");
 
         return sbHtml.toString();
@@ -518,7 +535,7 @@ class ReaderPostRenderer {
 
     private ImageSize getImageSizeFromAttachments(final String imageUrl) {
         if (mAttachmentSizes == null) {
-            mAttachmentSizes = new ImageSizeMap(mPost.getAttachmentsJson());
+            mAttachmentSizes = new ImageSizeMap(mPost.getText(), mPost.getAttachmentsJson());
         }
         return mAttachmentSizes.getImageSize(imageUrl);
     }

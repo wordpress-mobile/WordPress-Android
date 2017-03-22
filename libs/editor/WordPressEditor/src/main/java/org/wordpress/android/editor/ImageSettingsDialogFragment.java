@@ -304,7 +304,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             }
             metaData.put("linkUrl", mLinkTo.getText().toString());
 
-            int newWidth = getEditTextIntegerClamped(mWidthText, 10, mMaxImageWidth);
+            int newWidth = getEditTextIntegerClamped(mWidthText, 1, Integer.MAX_VALUE);
             metaData.put("width", newWidth);
             metaData.put("height", getRelativeHeightFromWidth(newWidth));
         } catch (JSONException e) {

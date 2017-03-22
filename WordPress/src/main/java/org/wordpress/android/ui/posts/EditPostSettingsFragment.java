@@ -5,10 +5,8 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.location.Address;
 import android.location.Location;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,23 +40,31 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -68,21 +74,25 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
+    private static final String KEY_POST = "KEY_POST";
+    private static final String POST_FORMAT_STANDARD_KEY = "standard";
+
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
 
@@ -104,8 +114,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private long mFeaturedImageId;
 
-    // TODO: Should be List<TaxonomyModel>
-    private ArrayList<String> mCategories;
+    private List<TermModel> mCategories;
 
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
@@ -114,19 +123,22 @@ public class EditPostSettingsFragment extends Fragment
     private String mCustomPubDate = "";
     private boolean mIsCustomPubDate;
 
-    private String[] mPostFormats;
-    private String[] mPostFormatTitles;
+    private ArrayList<String> mPostFormatKeys;
+    private ArrayList<String> mPostFormatNames;
 
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Inject SiteStore mSiteStore;
+    @Inject MediaStore mMediaStore;
+    @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
+    @Inject FluxCImageLoader mImageLoader;
 
     public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
+        bundle.putSerializable(KEY_POST, post);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -135,6 +147,8 @@ public class EditPostSettingsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
+        mDispatcher.register(this);
+
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
@@ -145,14 +159,14 @@ public class EditPostSettingsFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
+                mPost = (PostModel) getArguments().getSerializable(KEY_POST);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
+                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(KEY_POST);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
+            mPost = (PostModel) savedInstanceState.getSerializable(KEY_POST);
         }
 
         if (mSite == null) {
@@ -160,14 +174,18 @@ public class EditPostSettingsFragment extends Fragment
             getActivity().finish();
         }
 
-        // Update post formats, in case anything changed.
+        // Update post formats and categories, in case anything changed.
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
+        if (!mPost.isPage()) {
+            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(KEY_POST, mPost);
     }
 
     @Override
@@ -175,6 +193,7 @@ public class EditPostSettingsFragment extends Fragment
         if (mSuggestionServiceConnectionManager != null) {
             mSuggestionServiceConnectionManager.unbindFromService();
         }
+        mDispatcher.unregister(this);
         super.onDestroy();
     }
 
@@ -193,8 +212,6 @@ public class EditPostSettingsFragment extends Fragment
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
-        // TODO: TaxonomyStore
-        //mCategories = new ArrayList<String>();
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
@@ -218,7 +235,7 @@ public class EditPostSettingsFragment extends Fragment
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
         mFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -247,46 +264,32 @@ public class EditPostSettingsFragment extends Fragment
             rootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
             // Default values
-            mPostFormatTitles = getResources().getStringArray(R.array.post_formats_array);
-            mPostFormats = new String[]{"aside", "audio", "chat", "gallery", "image", "link", "quote", "standard",
-                    "status", "video"};
+            mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
+            mPostFormatNames = new ArrayList<>(
+                    Arrays.asList(getResources().getStringArray(R.array.post_format_display_names)));
             // If we have specific values for this site, use them
             List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
-            if (postFormatModels.size() > 0) {
-                int maxElements = postFormatModels.size();
-                if (mSite.isWPCom()) {
-                    maxElements += 1;
-                }
-                mPostFormats = new String[maxElements];
-                mPostFormatTitles = new String[maxElements];
-                int i = 0;
-                // Inject the "Standard" post format here since .com response doesn't include it
-                if (mSite.isWPCom()) {
-                    mPostFormats[i] = "standard";
-                    mPostFormatTitles[i] = getResources().getString(R.string.post_format_standard);
-                    i += 1;
-                }
-                for (PostFormatModel postFormatModel : postFormatModels) {
-                    mPostFormats[i] = postFormatModel.getSlug();
-                    mPostFormatTitles[i] = postFormatModel.getDisplayName();
-                    i += 1;
+            for (PostFormatModel postFormatModel : postFormatModels) {
+                if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
+                    mPostFormatKeys.add(postFormatModel.getSlug());
+                    mPostFormatNames.add(postFormatModel.getDisplayName());
                 }
             }
 
             // Set up the Post Format spinner
             mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
-                    mPostFormatTitles);
+                    mPostFormatNames);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mPostFormatSpinner.setAdapter(pfAdapter);
-            String activePostFormat = "standard";
+            String activePostFormat = POST_FORMAT_STANDARD_KEY;
 
             if (!TextUtils.isEmpty(mPost.getPostFormat())) {
                 activePostFormat = mPost.getPostFormat();
             }
 
-            for (int i = 0; i < mPostFormats.length; i++) {
-                if (mPostFormats[i].equals(activePostFormat))
+            for (int i = 0; i < mPostFormatKeys.size(); i++) {
+                if (mPostFormatKeys.get(i).equals(activePostFormat))
                     mPostFormatSpinner.setSelection(i);
             }
 
@@ -404,16 +407,12 @@ public class EditPostSettingsFragment extends Fragment
                 break;
         }
 
-        // TODO: Re-implement when we can have access to category names from IDs via TaxonomyStore
-//        if (!mPost.isPage()) {
-//            mCategories = mPost.getCategoryIdList();
-//        }
-//        String tags = mPost.getKeywords();
-//        if (!tags.equals("")) {
-//            mTagsEditText.setText(tags);
-//        }
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        if (!tags.equals("")) {
+            mTagsEditText.setText(tags);
+        }
 
-        if (AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
         }
     }
@@ -426,24 +425,22 @@ public class EditPostSettingsFragment extends Fragment
         if (mFeaturedImageId != id) {
             mFeaturedImageId = id;
             if (mFeaturedImageId > 0) {
-                Cursor cursor = WordPress.wpDB.getMediaFile(String.valueOf(mSite.getId()),
-                        String.valueOf(mFeaturedImageId));
-                if (cursor != null && cursor.moveToFirst()) {
-                    mFeaturedImageView.setVisibility(View.VISIBLE);
-                    mFeaturedImageButton.setVisibility(View.GONE);
+                MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mFeaturedImageId);
 
-                    // Get max width for photon thumbnail
-                    int maxWidth = getResources().getDisplayMetrics().widthPixels;
-                    int padding = DisplayUtils.dpToPx(getActivity(), 16);
-                    int imageWidth = (maxWidth - padding);
-
-                    String thumbUrl = WordPressMediaUtils.getNetworkThumbnailUrl(cursor, mSite, imageWidth);
-                    WordPressMediaUtils.loadNetworkImage(thumbUrl, mFeaturedImageView);
+                if (media == null) {
+                    return;
                 }
 
-                if (cursor != null) {
-                    cursor.close();
-                }
+                mFeaturedImageView.setVisibility(View.VISIBLE);
+                mFeaturedImageButton.setVisibility(View.GONE);
+
+                // Get max width for photon thumbnail
+                int maxWidth = getResources().getDisplayMetrics().widthPixels;
+                int padding = DisplayUtils.dpToPx(getActivity(), 16);
+                int imageWidth = (maxWidth - padding);
+
+                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl() + "?w=" + imageWidth, mFeaturedImageView,
+                        mImageLoader);
             } else {
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageButton.setVisibility(View.VISIBLE);
@@ -452,7 +449,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void launchMediaGalleryActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(getActivity(), mSite);
+        Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
+        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     private PostStatus getPostStatusForSpinnerPosition(int position) {
@@ -482,18 +482,21 @@ public class EditPostSettingsFragment extends Fragment
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
                     if (extras != null && extras.containsKey("selectedCategories")) {
-                        mCategories = (ArrayList<String>) extras.getSerializable("selectedCategories");
+                        @SuppressWarnings("unchecked")
+                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable("selectedCategories");
+                        mCategories = categoryList;
                         populateSelectedCategories();
                     }
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
                     if (resultCode == Activity.RESULT_OK) {
-                        ArrayList<String> ids = data.getStringArrayListExtra(MediaGalleryPickerActivity.RESULT_IDS);
+                        ArrayList<Long> ids = ListUtils.
+                                fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
                         if (ids == null || ids.size() == 0) {
                             return;
                         }
 
-                        updateFeaturedImage(Long.parseLong(ids.get(0)));
+                        updateFeaturedImage(ids.get(0));
                     }
             }
         }
@@ -505,13 +508,13 @@ public class EditPostSettingsFragment extends Fragment
         if (id == R.id.pubDate) {
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id", mSite.getId());
-            if (mCategories != null && mCategories.size() > 0) {
-                bundle.putSerializable("categories", new HashSet<>(mCategories));
-            }
             Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-            categoriesIntent.putExtras(bundle);
+            categoriesIntent.putExtra(WordPress.SITE, mSite);
+
+            // Make sure the PostModel is up to date with current category selections
+            updatePostSettings(mPost);
+            categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
+
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
@@ -627,10 +630,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     /**
-     * Updates post object with content of this fragment
+     * Updates given post object with current status of settings fields
      */
-    public void updatePostSettings() {
-        if (!isAdded() || mPost == null) {
+    public void updatePostSettings(PostModel post) {
+        if (!isAdded() || post == null) {
             return;
         }
 
@@ -639,26 +642,28 @@ public class EditPostSettingsFragment extends Fragment
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
-        if (mIsCustomPubDate && publishImmediately && !mPost.isLocalDraft()) {
+        if (mIsCustomPubDate && publishImmediately && !post.isLocalDraft()) {
             publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
         } else if (!publishImmediately) {
             if (mIsCustomPubDate) {
                 publicationDateIso8601 = mCustomPubDate;
-            } else if (StringUtils.isNotEmpty(mPost.getDateCreated())) {
-                publicationDateIso8601 = mPost.getDateCreated();
+            } else if (StringUtils.isNotEmpty(post.getDateCreated())) {
+                publicationDateIso8601 = post.getDateCreated();
             }
         }
 
-        mPost.setDateCreated(publicationDateIso8601);
+        post.setDateCreated(publicationDateIso8601);
 
         String tags = "", postFormat = "";
-        if (!mPost.isPage()) {
+        if (!post.isPage()) {
             tags = EditTextUtils.getText(mTagsEditText);
+            // since mTagsEditText is a `textMultiLine` field, we should replace "\n" with space
+            tags = tags.replace("\n", " ");
 
             // post format
-            if (mPostFormats != null && mPostFormatSpinner != null &&
-                    mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
-                postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
+            if (mPostFormatKeys != null && mPostFormatSpinner != null &&
+                mPostFormatSpinner.getSelectedItemPosition() < mPostFormatKeys.size()) {
+                postFormat = mPostFormatKeys.get(mPostFormatSpinner.getSelectedItemPosition());
             }
         }
 
@@ -666,32 +671,34 @@ public class EditPostSettingsFragment extends Fragment
         if (mStatusSpinner != null) {
             status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition()).toString();
         } else {
-            status = mPost.getStatus();
+            status = post.getStatus();
         }
 
-        if (mPost.supportsLocation()) {
+        if (post.supportsLocation()) {
             if (mPostLocation == null) {
-                mPost.clearLocation();
+                post.clearLocation();
             } else {
-                mPost.setLocation(mPostLocation);
+                post.setLocation(mPostLocation);
             }
         }
 
-        // TODO: Implement when we have TaxonomyStore
-//        if (mCategories != null) {
-//            mPost.setJSONCategories(new JSONArray(mCategories));
-//        }
-
-        if (AppPrefs.isVisualEditorEnabled()) {
-            mPost.setFeaturedImageId(mFeaturedImageId);
+        if (mCategories != null) {
+            List<Long> categoryIds = new ArrayList<>();
+            for (TermModel category : mCategories) {
+                categoryIds.add(category.getRemoteTermId());
+            }
+            post.setCategoryIdList(categoryIds);
         }
 
-        mPost.setExcerpt(excerpt);
-        // TODO: Implement when we have TaxonomyStore
-        //mPost.setKeywords(tags);
-        mPost.setStatus(status);
-        mPost.setPassword(password);
-        mPost.setPostFormat(postFormat);
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+            post.setFeaturedImageId(mFeaturedImageId);
+        }
+
+        post.setExcerpt(excerpt);
+        post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+        post.setStatus(status);
+        post.setPassword(password);
+        post.setPostFormat(postFormat);
     }
 
     /*
@@ -699,7 +706,7 @@ public class EditPostSettingsFragment extends Fragment
      */
     private void updatePostSettingsAndSaveButton() {
         if (isAdded()) {
-            updatePostSettings();
+            updatePostSettings(mPost);
             getActivity().invalidateOptionsMenu();
         }
     }
@@ -850,22 +857,13 @@ public class EditPostSettingsFragment extends Fragment
         updateLocation.setOnClickListener(this);
         removeLocation.setOnClickListener(this);
 
-        // this is where we ask for location permission when EditPostActivity is oppened
-        if (SiteSettingsInterface.getGeotagging(getActivity()) && !checkForLocationPermission()) return;
-
         // if this post has location attached to it, look up the location address
         if (mPost.hasLocation()) {
             showLocationView();
             PostLocation location = mPost.getLocation();
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            // Search for current location to geotag post if preferences allow
-            EditPostActivity activity = (EditPostActivity) getActivity();
-            if (SiteSettingsInterface.getGeotagging(activity) && activity.isNewPost()) {
-                searchLocation();
-            } else {
-                showLocationAdd();
-            }
+            showLocationAdd();
         }
     }
 
@@ -959,8 +957,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void viewLocation() {
         if (mPostLocation != null && mPostLocation.isValid()) {
-            String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
-            startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+            String locationString = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
+            ActivityLauncher.openUrlExternal(getActivity(), locationString);
         } else {
             showLocationNotAvailableError();
             showLocationAdd();
@@ -1001,13 +999,13 @@ public class EditPostSettingsFragment extends Fragment
         final int drawableId;
         switch (status) {
             case FOUND:
-                drawableId = R.drawable.ic_action_location_found;
+                drawableId = R.drawable.ic_location_found_black_translucent_40_32dp;
                 break;
             case NOT_FOUND:
-                drawableId = R.drawable.ic_action_location_off;
+                drawableId = R.drawable.ic_location_off_black_translucent_40_32dp;
                 break;
             case SEARCHING:
-                drawableId = R.drawable.ic_action_location_searching;
+                drawableId = R.drawable.ic_location_searching_black_40_32dp;
                 break;
             case NONE:
                 drawableId = 0;
@@ -1036,7 +1034,7 @@ public class EditPostSettingsFragment extends Fragment
 
         // Remove clicked category from list
         for (int i = 0; i < mCategories.size(); i++) {
-            if (mCategories.get(i).equals(categoryName)) {
+            if (mCategories.get(i).getName().equals(categoryName)) {
                 mCategories.remove(i);
                 listChanged = true;
                 break;
@@ -1051,7 +1049,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void populateSelectedCategories() {
         // Remove previous category buttons if any + select category button
-        List<View> viewsToRemove = new ArrayList<View>();
+        List<View> viewsToRemove = new ArrayList<>();
         for (int i = 0; i < mSectionCategories.getChildCount(); i++) {
             View v = mSectionCategories.getChildAt(i);
             if (v == null)
@@ -1071,23 +1069,34 @@ public class EditPostSettingsFragment extends Fragment
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 
         if (mCategories != null) {
-            for (String categoryName : mCategories) {
+            for (TermModel category : mCategories) {
                 AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button,
                         null);
-                if (categoryName != null && buttonCategory != null) {
-                    buttonCategory.setText(Html.fromHtml(categoryName));
-                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + categoryName);
+                if (category != null && category.getName() != null && buttonCategory != null) {
+                    buttonCategory.setText(Html.fromHtml(category.getName()));
+                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + category.getName());
                     buttonCategory.setOnClickListener(this);
                     mSectionCategories.addView(buttonCategory);
                 }
             }
         }
 
-        // Add select category button
+        // Add select category button once the category list has been initialized
         Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        if (selectCategory != null) {
+        if (selectCategory != null && mCategories != null) {
             selectCategory.setOnClickListener(this);
             mSectionCategories.addView(selectCategory);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
+        switch (event.causeOfChange) {
+            case FETCH_CATEGORIES:
+                mCategories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
+                populateSelectedCategories();
+                break;
         }
     }
 }

@@ -188,7 +188,7 @@ public class PostUploadNotifier {
 
         // Simple way to show progress of entire post upload
         // Would be better if we could get total bytes for all media items.
-        double currentChunkProgress = (notificationData.itemProgressSize * progress) / 100;
+        double currentChunkProgress = (notificationData.itemProgressSize * progress);
 
         if (notificationData.currentMediaItem > 1) {
             currentChunkProgress += notificationData.itemProgressSize * (notificationData.currentMediaItem - 1);
@@ -202,8 +202,7 @@ public class PostUploadNotifier {
         try {
             mNotificationManager.notify((int) id, notification);
         } catch (RuntimeException runtimeException) {
-            CrashlyticsUtils.logException(runtimeException, CrashlyticsUtils.ExceptionType.SPECIFIC,
-                    AppLog.T.UTILS, "See issue #2858 / #3966");
+            CrashlyticsUtils.logException(runtimeException, AppLog.T.UTILS, "See issue #2858 / #3966");
             AppLog.d(AppLog.T.POSTS, "See issue #2858 / #3966; notify failed with:" + runtimeException);
         }
     }

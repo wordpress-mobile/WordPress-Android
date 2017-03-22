@@ -72,7 +72,7 @@ public class WPStartOverPreference extends WPPreference {
 
         if (view.findViewById(R.id.domain) != null) {
             TextView textView = (TextView) view.findViewById(R.id.domain);
-            // TODO: STORES: We might want to get the selected site here and update the view
+            // TODO: FluxC: We might want to get the selected site here and update the view
             // textView.setText(UrlUtils.getHost(blog.getHomeURL()));
         }
     }

@@ -34,9 +34,9 @@
                     android:layout_height="12dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    app:srcCompat="@drawable/my_site_icon_posts" />
+                    app:srcCompat="@drawable/ic_posts_grey_dark_24dp" />
 
-                <org.wordpress.android.widgets.WPAutoResizeTextView
+                <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                     android:text="@string/posts" />
             </LinearLayout>
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_posts"
                 style="@style/StatsInsightsValues"
                 android:textColor="@color/grey_darken_30"
@@ -79,9 +79,9 @@
                     android:layout_height="12dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    app:srcCompat="@drawable/stats_icon_views" />
+                    app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" />
 
-                <org.wordpress.android.widgets.WPAutoResizeTextView
+                <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:text="@string/stats_views" />
             </LinearLayout>
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_views"
                 style="@style/StatsInsightsValues"
                 android:textColor="@color/grey_darken_30"
@@ -131,9 +131,9 @@
                     android:layout_height="12dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    app:srcCompat="@drawable/stats_icon_visitors" />
+                    app:srcCompat="@drawable/ic_user_grey_dark_12dp" />
 
-                <org.wordpress.android.widgets.WPAutoResizeTextView
+                <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                     android:text="@string/stats_visitors" />
             </LinearLayout>
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_visitors"
                 style="@style/StatsInsightsValues"
                 android:textColor="@color/grey_darken_30"
@@ -176,9 +176,9 @@
                     android:layout_height="12dp"
                     android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
-                    app:srcCompat="@drawable/stats_icon_trophy" />
+                    app:srcCompat="@drawable/ic_trophy_alert_yellow_32dp" />
 
-                <org.wordpress.android.widgets.WPAutoResizeTextView
+                <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"
                     android:textColor="@color/alert_yellow"
                     android:layout_width="wrap_content"
@@ -190,7 +190,7 @@
                     android:text="@string/stats_insights_best_ever" />
             </LinearLayout>
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_bestever"
                 style="@style/StatsInsightsValues"
                 android:textColor="@color/grey_darken_30"
@@ -199,7 +199,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/stats_default_number_zero" />
 
-            <org.wordpress.android.widgets.WPAutoResizeTextView
+            <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_bestever_date"
                 style="@style/StatsInsightsLabel"
                 android:textColor="@color/grey_darken_10"

@@ -242,7 +242,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             if (peopleInviteFragment == null) {
                 peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
             }
-            if (!peopleInviteFragment.isAdded()) {
+            if (peopleInviteFragment != null && !peopleInviteFragment.isAdded()) {
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
                 fragmentTransaction.addToBackStack(null);

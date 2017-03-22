@@ -1,5 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2017-03-03 12:26:28+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.4.0-alpha
+Language: sq_AL
+-->
 <resources>
+	<string name="reader_liked_default_tag">Postime Që Pëlqej</string>
+	<string name="reader_discover_default_tag">Zbuloni</string>
+	<string name="reader_followed_default_tag">Sajte të Ndjekur</string>
+	<string name="reader_empty_followed_blogs_search_title">S’ka sajte me përputhje</string>
+	<string name="reader_hint_search_followed_sites">Kërkoni te sajtet vijues</string>
+	<string name="preference_editor_type">Caktoni lloj përpunuesi</string>
+	<string name="preference_editor_legacy">I dikurshëm</string>
+	<string name="preference_editor_visual">Pamor</string>
+	<string name="visual_editor_disabled">Përpunuesi Pamor i çaktivizuar</string>
+	<string name="pending_draft_one_generic">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
+	<string name="pending_draft_one_month">Mos e lini varur! \'%1$s\' është në pritje të botimit.</string>
+	<string name="pending_draft_one_week_2">\'%1$s\' mbetet skicë. Mos harroni ta botoni!</string>
+	<string name="pending_draft_one_week_1">Skica juaj \'%1$s\' po ju pret - garantoni botimin e saj!</string>
+	<string name="pending_draft_one_day_2">E dinit se \'%1$s\' është ende skicë? Botojeni de!</string>
+	<string name="pending_draft_one_day_1">Dje hartuat \'%1$s\'. Mos harroni ta botoni!</string>
+	<string name="jetpack_stats_module_disabled_message_not_admin">Shtojca Jetpack është e lidhur, por moduli Statistika s’është aktiv. Lidhuni me përgjegjësin e sajtit.</string>
+	<string name="jetpack_stats_module_disabled_message">Shtojca Jetpack është e lidhur, por moduli Statistika s’është aktiv. Doni të aktivizohet Statistika?</string>
+	<string name="jetpack_info">Të dhëna mbi Jetpack-un</string>
+	<string name="reader_photo_by">Foto nga %s</string>
+	<string name="all_your_sites">Krejt Sajtet e Mi</string>
+	<string name="pending_draft_more">Keni skicuar %d postime, por s&amp;#8217;i botuat kurrë. Prekeni që të kontrolloni.</string>
+	<string name="reader_label_visit">Vizitë</string>
+	<string name="no_default_app_available_to_open_link">S’arrihet të hapet lidhja</string>
+	<string name="notification_pending_drafts">Njoftomë për skica në pritje të botimit</string>
+	<string name="invalid_verification_code_format">Duhet të jetë një numër me gjashtë shifra</string>
+	<string name="confirm_discard_changes">Të hidhen tej ndryshimet e paruajtura?</string>
+	<string name="swipe_for_more">Për më tepër, fërkojeni</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com, ose përdorni butonin e sipërm të veprimeve që të hapni një shfletues.</string>
+	<string name="reader_err_get_post_not_authorized_signin">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com.</string>
+	<string name="reader_err_get_post_not_authorized_fallback">S&amp;#8217;jeni i autorizuar ta shihni këtë postim. Përdorni butonin e sipërm të veprimeve që të hapni një shfletues.</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">S&amp;#8217;mund të bëhen pëlqime pa qenë i futur në WordPress.com</string>
+	<string name="reader_toast_err_already_liked">E keni pëlqyer një herë atë koment</string>
+	<string name="reader_toast_err_comment_not_found">Komenti nuk u gjet!</string>
+	<string name="reader_toast_err_cannot_like_post">Dështoi pëlqimi i këtij postimi</string>
+	<string name="reader_title_post_detail_wpcom">Postim WordPress.com</string>
+	<string name="reader_title_deeplink">Lexues WordPress</string>
+	<string name="error_notif_q_action_reply">S&amp;#8217;u bë dot përgjigja ndaj komentit. Ju lutemi, riprovoni më vonë.</string>
+	<string name="error_notif_q_action_approve">S&amp;#8217;mund të miratohet komenti. Ju lutemi, riprovoni më vonë.</string>
+	<string name="error_notif_q_action_like">S&amp;#8217;mund të pëlqehet komenti. Ju lutemi, riprovoni më vonë.</string>
+	<string name="notifications_label_new_notifications_subtitle">Prekini që të shfaqen</string>
+	<string name="notifications_label_new_notifications">Njoftime të reja</string>
+	<string name="comment_q_action_replying">Po bëhet përgjigja…</string>
+	<string name="comment_q_action_approving">Po miratohet…	</string>
+	<string name="comment_q_action_liking">Po pëlqehet…</string>
+	<string name="comment_q_action_processing">Po përpunohet…</string>
+	<string name="comment_q_action_done_generic">Veprimi u krye!</string>
+	<string name="comment_liked">Komenti u pëlqye</string>
+	<string name="signout">Dilni</string>
+	<string name="sign_in_wpcom">Hyni te WordPress.com</string>
+	<string name="reader_label_global_related_posts">Më tepër mbi WordPress.com</string>
+	<string name="reader_label_local_related_posts">Më tepër ten %s</string>
+	<string name="preference_open_device_settings">Hap rregullime pajisjeje</string>
+	<string name="comment_moderated_unapproved">Komentit iu hoq miratimi</string>
 	<string name="invite_invalid_email">%s: Email i pavlefshëm</string>
 	<string name="invite_user_blocked_invites">%s: Ftesa të bllokuara nga përdoruesi</string>
 	<string name="invite_already_following">%s: E ndiqni tashmë</string>
@@ -87,12 +146,11 @@
 	<string name="send_link">Dërgo lidhje</string>
 	<string name="my_site_header_external">I jashtëm</string>
 	<string name="invite_people">Ftoni Njerëz</string>
-	<string name="signup_succeed_signin_failed">Llogaria juaj u krijua, por ndodhi një gabim teksa po bënin hyrjen tuaj.\nProvoni të hyni me emrin e përdoruesit dhe fjalëkalimin tuaj të ri të sapokrijuar.</string>
+	<string name="signup_succeed_signin_failed">Llogaria juaj u krijua, por ndodhi një gabim teksa po bënim hyrjen tuaj.\nProvoni të hyni me emrin e përdoruesit dhe fjalëkalimin tuaj të ri të sapokrijuar.</string>
 	<string name="label_clear_search_history">Spastro historikun e kërkimeve</string>
 	<string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
 	<string name="reader_empty_posts_in_search_description">S&amp;#8217;u gjetën postime në gjuhën tuaj për %s</string>
 	<string name="reader_label_post_search_running">Po kërkohet…</string>
-	<string name="reader_label_related_posts">Lexime të Afërta</string>
 	<string name="reader_empty_posts_in_search_title">S&amp;#8217;u gjetën postime</string>
 	<string name="reader_label_post_search_explainer">Kërkoni në krejt blogjet publike WordPress.com</string>
 	<string name="reader_hint_post_search">Kërkoni te WordPress.com</string>
@@ -122,8 +180,8 @@
 	<string name="not_on_wordpress_com">Jo në WordPress.com?</string>
 	<string name="magic_link_unavailable_error_message">Jo e mundshme këtë çast. Ju lutemi, jepni fjalëkalimin tuaj</string>
 	<string name="check_your_email">Kontrolloni email-in tuaj</string>
-	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Merrni një lidhje dërguar te email-i juaj, që të regjistroheni në çast</string>
 	<string name="logging_in">Po hyhet</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Merrni një lidhje dërguar te email-i juaj, që të hyni në çast</string>
 	<string name="enter_your_password_instead">Në vend të kësaj, jepni fjalëkalimin tuaj</string>
 	<string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
 	<string name="jetpack_not_connected_message">Shtojca Jetpack është e instaluar, por jo e lidhur me WordPress.com-in. Doni të lidhet Jetpack-u?</string>
@@ -137,7 +195,7 @@
 	<string name="plans_post_purchase_title_themes">Gjeni një temë të përsosur, nga ato me Pagesë</string>
 	<string name="plans_post_purchase_button_video">Nisni një postim të ri</string>
 	<string name="plans_post_purchase_text_video">Video në sajtin tuaj mund të ngarkoni dhe strehoni përmes VideoPress-it dhe depos tuaj të zgjeruar për media.</string>
-	<string name="plans_post_purchase_title_video">Jepuni jetë postimeve, përmes vidoesh</string>
+	<string name="plans_post_purchase_title_video">Jepuni jetë postimeve, përmes videosh</string>
 	<string name="plans_post_purchase_button_customize">Përshtatje e Sajtit tim</string>
 	<string name="plans_post_purchase_text_customize">Tani mund të përdorni shkronja vetjake, ngjyra vetjake, dhe aftësi përpunimi për CSS vetjake.</string>
 	<string name="plans_post_purchase_title_customize">Përshtatni Shkronja &amp; Ngjyra</string>
@@ -249,7 +307,6 @@
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>
 	<string name="editor_post_title_placeholder">Titull Postimi</string>
 	<string name="email_address">Adresë email</string>
-	<string name="preference_show_visual_editor">Shfaq përpunuesin pamor</string>
 	<string name="dlg_sure_to_delete_comments">Të fshihen përgjithmonë këto komente?</string>
 	<string name="preference_editor">Përpunues</string>
 	<string name="dlg_sure_to_delete_comment">Të fshihet përgjithmonë ky koment?</string>
@@ -294,7 +351,7 @@
 	<string name="error_post_remote_site_settings">S&amp;#8217;u ruajtën dot të dhëna sajti</string>
 	<string name="error_fetch_remote_site_settings">S&amp;#8217;u morën dot të dhëna sajti</string>
 	<string name="error_media_upload_connection">Ndodhi një gabim ndërlidhjeje gjatë ngarkimit të medias</string>
-	<string name="site_settings_disconnected_toast">I shkëputur, përpunimet janë të çaktivizuara.</string>
+	<string name="site_settings_disconnected_toast">I dalë, përpunimet janë të çaktivizuara.</string>
 	<string name="site_settings_unsupported_version_error">Version WordPress i pambuluar</string>
 	<string name="site_settings_multiple_links_dialog_description">Kërko miratim për komente që përmbajnë më tepër lidhje se sa kaq.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Mbylli vetvetiu</string>
@@ -310,7 +367,7 @@
 	<string name="site_settings_rp_preview3_site">te "Përmirësojeni"</string>
 	<string name="site_settings_rp_preview3_title">Përmirësoni Focus-in: VideoPress Për Dasma</string>
 	<string name="site_settings_rp_preview2_site">te "Aplikacione"</string>
-	<string name="site_settings_rp_preview2_title">Aplikacioni WordPress për Android i Ndërron Pamjen Goxha</string>
+	<string name="site_settings_rp_preview2_title">Aplikacioni WordPress për Android Ndërron Pamjen Goxha</string>
 	<string name="site_settings_rp_preview1_site">në "Celular"</string>
 	<string name="site_settings_rp_preview1_title">Gati Tani një Përditësim i Madh për iPhone/iPad</string>
 	<string name="site_settings_rp_show_images_title">Shfaqni Figura</string>
@@ -537,9 +594,9 @@
 	<string name="stats_insights">Tendenca</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Që të shihni statistikat tuaja, bëni hyrjen te llogaria WordPress.com që përdorët për t&amp;#8217;ia përshoqëruar Jetpack-ut.</string>
 	<string name="stats_other_recent_stats_moved_label">Po kërkoni për të Tjera Statistika tuajat Së Fundi? I kemi kaluar te faqja Tendeca.</string>
-	<string name="me_disconnect_from_wordpress_com">Shkëputu nga WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Dil nga WordPress.com</string>
 	<string name="me_btn_login_logout">Hyrje/Dalje</string>
-	<string name="me_connect_to_wordpress_com">Lidhu te WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Hyni te WordPress.com</string>
 	<string name="account_settings">Rregullime Llogarie</string>
 	<string name="me_btn_support">Ndihmë &amp; Asistencë</string>
 	<string name="site_picker_cant_hide_current_site">"%s" s&amp;#8217;u fsheh ngaqë është sajti i tanishëm</string>
@@ -560,12 +617,11 @@
 	<string name="notifications_account_required">Për njoftime, bëni hyrjen te WordPress.com</string>
 	<string name="stats_unknown_author">Autor i Panjohur</string>
 	<string name="image_added">Figura u shtua</string>
-	<string name="signout">Shkëputu</string>
 	<string name="show">Shfaqe</string>
 	<string name="hide">Fshihe</string>
 	<string name="select_all">Përzgjidhe krejt</string>
-	<string name="sign_out_wpcom_confirm">Shkëputja e llogarisë suaj do të heqë prej kësaj pajisje krejt të dhënat WordPress.com për @%s, përfshi skica dhe ndryshime vendore.</string>
 	<string name="deselect_all">Përzgjidhe/Shpërzgjidhe krejt</string>
+	<string name="sign_out_wpcom_confirm">Dalja nga llogaria juaj do të heqë prej kësaj pajisje krejt të dhënat WordPress.com për @%s, përfshi skica dhe ndryshime vendore.</string>
 	<string name="select_from_new_picker">Përzgjidhni shumëfish me marrësin e ri</string>
 	<string name="error_loading_images">Gabim në ngarkim figurash</string>
 	<string name="error_loading_videos">Gabim në ngarkim videosh</string>
@@ -599,11 +655,11 @@
 	<string name="two_step_footer_label">Jepni kodin prej aplikacionit tuaj mirëfilltësues.</string>
 	<string name="two_step_footer_button">Dërgoje kodin përmes mesazhi tekst</string>
 	<string name="two_step_sms_sent">Kontrolloni mesazhet tuaj tekst për kodin e verifikimit.</string>
-	<string name="sign_in_jetpack">Që të lidheni me Jetpack-n, bëni hyrjen te llogaria juaj WordPress.com.</string>
-	<string name="auth_required">Që të vazhdoni, duhet të hyni.</string>
 	<string name="media_details_label_file_name">Emër kartele</string>
 	<string name="media_details_label_file_type">Lloj kartele</string>
 	<string name="error_publish_no_network">S&amp;#8217;mund të ketë botim, kur s&amp;#8217;ka lidhje. U ruajt si skicë.</string>
+	<string name="sign_in_jetpack">Që të lidheni me Jetpack-un, bëni hyrjen te llogaria juaj WordPress.com.</string>
+	<string name="auth_required">Hyni sërish që të vazhdohet.</string>
 	<string name="publisher">Botues:</string>
 	<string name="stats_followers_total_email_paged">Po shfaqen %1$d - %2$d nga %3$s Ndjekës Me Email</string>
 	<string name="stats_search_terms_unknown_search_terms">Terma të Panjohur Kërkimesh</string>
@@ -977,7 +1033,7 @@
 	<string name="signing_in">Po hyhet…</string>
 	<string name="nux_add_selfhosted_blog">Shtoni sajt të vetëstrehuar</string>
 	<string name="password_invalid">Ju duhet një fjalëkalim më i sigurt. Sigurohuni se përdorni 7 shenja e sipër, shkronja të mëdha dhe të vogla, numra ose shenja speciale.</string>
-	<string name="nux_oops_not_selfhosted_blog">Futuni te WordPress.com</string>
+	<string name="nux_oops_not_selfhosted_blog">Hyni te WordPress.com</string>
 	<string name="media_add_popup_title">Shtojeni te mediateka</string>
 	<string name="media_add_new_media_gallery">Krijo galeri</string>
 	<string name="empty_list_default">Kjo listë është e zbrazët</string>
@@ -996,8 +1052,6 @@
 	<string name="connecting_wpcom">Po lidhet te WordPress.com</string>
 	<string name="username_invalid">Emër përdoruesi i pavlefshëm</string>
 	<string name="nux_tutorial_get_started_title">Nisjani!</string>
-	<string name="jetpack_message">Për statistika lypset shtojca Jetpack? Doni të instalohet Jetpack-u?</string>
-	<string name="limit_reached">U mbërrit në kufi. Mund të riprovoni pas 1 minute. Riprovimi para kësaj vetëm sa do të shtojë kohën që ju duhet të prisni para se të hiqet përzënia. Nëse mendoni se ky është një gabim, lidhuni me asistencën.</string>
 	<string name="button_next">Pasuesi</string>
 	<string name="jetpack_not_found">S&amp;#8217;u gjet shtojcë Jetpack</string>
 	<string name="reader_btn_unfollow">Ndjekur prej jush</string>
@@ -1007,6 +1061,8 @@
 	<string name="reader_toast_err_view_image">S&amp;#8217;arrin të shihet figura</string>
 	<string name="reader_toast_err_url_intent">S&amp;#8217;arrin të hapë %s</string>
 	<string name="reader_empty_followed_tags">S&amp;#8217;ndiqni ndonjë etiketë</string>
+	<string name="jetpack_message">Për statistika lypset shtojca Jetpack. Doni të instalohet Jetpack-u?</string>
+	<string name="limit_reached">U mbërrit në kufi. Mund të riprovoni pas 1 minute. Riprovimi para kësaj vetëm sa do të shtojë kohën që ju duhet të prisni para se të hiqet përzënia. Nëse mendoni se bëhet fjalë për një gabim, lidhuni me asistencën.</string>
 	<string name="themes">Tema</string>
 	<string name="all">Krejt</string>
 	<string name="images">Figura</string>

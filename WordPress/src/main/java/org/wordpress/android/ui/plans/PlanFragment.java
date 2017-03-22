@@ -84,7 +84,7 @@ public class PlanFragment extends Fragment {
         NetworkImageView imgPlan = (NetworkImageView) getView().findViewById(R.id.image_plan_icon);
         String iconUrl = PlansUtils.getIconUrlForPlan(mPlanDetails, iconSize);
         if (!TextUtils.isEmpty(iconUrl)) {
-            imgPlan.setImageUrl(iconUrl, WordPress.imageLoader);
+            imgPlan.setImageUrl(iconUrl, WordPress.sImageLoader);
             imgPlan.setVisibility(View.VISIBLE);
         } else {
             imgPlan.setVisibility(View.GONE);
@@ -156,9 +156,9 @@ public class PlanFragment extends Fragment {
         NetworkImageView imgIcon = (NetworkImageView) view.findViewById(R.id.image_icon);
         String iconUrl = feature.getIconForPlan(mPlanDetails.getProductID());
         if (!TextUtils.isEmpty(iconUrl)) {
-            imgIcon.setImageUrl(iconUrl, WordPress.imageLoader);
+            imgIcon.setImageUrl(iconUrl, WordPress.sImageLoader);
         } else {
-            imgIcon.setDefaultImageResId(R.drawable.noticon_publish);
+            imgIcon.setDefaultImageResId(R.drawable.ic_reader_blue_wordpress_18dp);
         }
 
         mPlanContainerView.addView(view);

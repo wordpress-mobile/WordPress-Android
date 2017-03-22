@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-17 15:47:12+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.4.0-alpha
+Language: hu
+-->
 <resources>
 	<string name="reader_label_image_count_one">1 kép</string>
 	<string name="timespan_now">most</string>
@@ -7,24 +13,15 @@
 	<string name="role_author">Szerző</string>
 	<string name="role_contributor">Közreműködő</string>
 	<string name="role_follower">Követő</string>
-	<string name="sign_in_jetpack">Lépjünk be a WordPress.com felhasználói fiókunkba és csatlakozzunk a Jetpack-hez.</string>
-	<string name="auth_required">A folytatáshoz lépjünk be újra.</string>
 	<string name="two_step_footer_button">Kód küldése szöveges üzenetben</string>
 	<string name="verify">Ellenőrzés</string>
 	<string name="editor_toast_invalid_path">Érvénytelen fájl elérési útvonal</string>
 	<string name="media_details_label_file_name">Fájl neve:</string>
 	<string name="media_details_label_file_type">Fájl típusa:</string>
 	<string name="language">Nyelv</string>
-	<string name="tab_title_device_images">Eszköz fotók</string>
-	<string name="tab_title_device_videos">Eszköz videók</string>
 	<string name="device">Eszköz</string>
-	<string name="add_to_post">Hozzáadás bejegyzéshez</string>
 	<string name="two_step_sms_sent">Nézzük meg a szöveges üzeneteink között az ellenőrző kódot</string>
-	<string name="take_photo">Fotó készítése</string>
-	<string name="take_video">Videó rögzítése</string>
 	<string name="error_publish_no_network">Internetkapcsolat nélkül nem lehet közzétenni. Elmentve vázlatként.</string>
-	<string name="tab_title_site_images">Honlap képek</string>
-	<string name="tab_title_site_videos">Honlap videók</string>
 	<string name="stats_view_authors">Szerzők</string>
 	<string name="publisher">Közzétevő:</string>
 	<string name="pages_fetching">Oldalak betöltése...</string>
@@ -207,7 +204,6 @@
 	<string name="passcode_preference_title">Azonosítókód lezárás</string>
 	<string name="upload">Feltöltés</string>
 	<string name="discard">Elvetés</string>
-	<string name="sign_in">Bejelentkezés</string>
 	<string name="notifications">Értesítések</string>
 	<string name="note_reply_successful">Válasz elküldve</string>
 	<string name="new_notifications">%d új értesítés</string>

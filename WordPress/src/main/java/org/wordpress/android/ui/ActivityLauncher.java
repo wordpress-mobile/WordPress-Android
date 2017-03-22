@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +21,6 @@ import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -37,14 +37,18 @@ import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.ListUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -65,7 +69,6 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
-        if (site == null) return;
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
@@ -126,7 +129,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        activity.startActivityForResult(intent, RequestCodes.BLOG_SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.SITE_SETTINGS);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
@@ -136,15 +139,8 @@ public class ActivityLauncher {
             return;
         }
 
-        String siteUrl = site.getUrl();
-        Uri uri = Uri.parse(siteUrl);
-
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE, site);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        context.startActivity(intent);
-        AppLockManager.getInstance().setExtendedTimeout();
+        openUrlExternal(context, site.getUrl());
     }
 
     public static void viewBlogAdmin(Context context, SiteModel site) {
@@ -152,16 +148,8 @@ public class ActivityLauncher {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String adminUrl = site.getAdminUrl();
-        Uri uri = Uri.parse(adminUrl);
-
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_ADMIN, site);
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        context.startActivity(intent);
-        AppLockManager.getInstance().setExtendedTimeout();
+        openUrlExternal(context, site.getAdminUrl());
     }
 
     public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post, boolean isPage) {
@@ -173,23 +161,13 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void newGalleryPost(Activity context, SiteModel site, ArrayList<String> mediaIds) {
-        if (site == null) return;
-        // Create a new post object and assign default settings
-        Intent intent = new Intent(context, EditPostActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_GALLERY_EXTRA_IDS, mediaIds);
-        intent.setAction(EditPostActivity.NEW_MEDIA_GALLERY);
-        context.startActivity(intent);
-    }
-
-    public static void newMediaPost(Activity context, SiteModel site, String mediaId) {
-        if (site == null) return;
+    public static void newMediaPost(Activity context, SiteModel site, ArrayList<Long> mediaIds) {
+        if (site == null || mediaIds == null) return;
         // Create a new post object and assign default settings
         Intent intent = new Intent(context, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.setAction(EditPostActivity.NEW_MEDIA_POST);
-        intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA, mediaId);
+        intent.putExtra(EditPostActivity.NEW_MEDIA_POST_EXTRA_IDS, ListUtils.toLongArray(mediaIds));
         context.startActivity(intent);
     }
 
@@ -221,8 +199,15 @@ public class ActivityLauncher {
         String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
         if (site.isWPCom()) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
+        } else if (site.isJetpackConnected()) {
+            WPWebViewActivity.openJetpackBlogPostPreview(context, url, site.getFrameNonce());
         } else {
-            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url);
+            // Add the original post URL to the list of allowed URLs.
+            // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
+            // from the passed URL, and internally redirects to it. EX:Published posts on a site with Plain
+            // permalink structure settings.
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4873
+            WPWebViewActivity.openUrlByUsingBlogCredentials(context, site, post, url, new String[]{post.getLink()});
         }
     }
 
@@ -268,17 +253,12 @@ public class ActivityLauncher {
     public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity, NewBlogActivity.class);
         intent.putExtra(NewBlogActivity.KEY_START_MODE, NewBlogActivity.CREATE_BLOG);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_BLOG);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
     public static void showSignInForResult(Activity activity) {
-        if (shouldShowMagicLinksLogin(activity)) {
-            Intent intent = new Intent(activity, MagicLinkSignInActivity.class);
-            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-        } else {
-            Intent intent = new Intent(activity, SignInActivity.class);
-            activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
-        }
+        Intent intent = new Intent(activity, SignInActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
@@ -306,15 +286,17 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
-                                                     @NonNull ArrayList<String> mediaIds) {
+                                                     @NonNull ArrayList<Long> mediaIds) {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, mediaIds);
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+        if (mediaIds != null && !mediaIds.isEmpty()) {
+            intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
+        }
+        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
     public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,
@@ -334,9 +316,32 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static boolean shouldShowMagicLinksLogin(Activity activity) {
-        boolean isMagicLinksEnabled = false;
+    public static void loginWithoutMagicLink(Activity activity) {
+        Intent signInIntent = new Intent(activity, SignInActivity.class);
+        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
+        activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+    }
 
-        return isMagicLinksEnabled && WPActivityUtils.isEmailClientAvailable(activity);
+    /*
+     * open the passed url in the device's external browser
+     */
+    public static void openUrlExternal(Context context, @NonNull String url) {
+        try {
+            // disable deeplinking activity so to not catch WP URLs
+            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
+
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(intent);
+            AppLockManager.getInstance().setExtendedTimeout();
+
+        } catch (ActivityNotFoundException e) {
+            ToastUtils.showToast(context, context.getString(R.string.no_default_app_available_to_open_link), ToastUtils.Duration.LONG);
+            AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);
+        } finally {
+            // re-enable deeplinking
+            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
+        }
     }
 }

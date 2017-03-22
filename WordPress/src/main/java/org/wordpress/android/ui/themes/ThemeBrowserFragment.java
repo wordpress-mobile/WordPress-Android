@@ -25,8 +25,8 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Theme;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.Theme;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -370,7 +370,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
             String requestUrl = (String) niv.getTag();
             if (requestUrl != null) {
                 // need a listener to cancel request, even if the listener does nothing
-                ImageContainer container = WordPress.imageLoader.get(requestUrl, new ImageListener() {
+                ImageContainer container = WordPress.sImageLoader.get(requestUrl, new ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }

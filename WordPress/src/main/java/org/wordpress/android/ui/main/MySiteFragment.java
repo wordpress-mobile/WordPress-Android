@@ -25,9 +25,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
-import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -36,7 +36,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -66,6 +65,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private RelativeLayout mPeopleView;
+    private RelativeLayout mPageView;
     private RelativeLayout mPlanContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
@@ -83,13 +83,6 @@ public class MySiteFragment extends Fragment
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
-    }
-
-    public void setSelectedSite(int locaSiteId) {
-        if (getActivity() instanceof WPMainActivity) {
-            WPMainActivity mainActivity = (WPMainActivity) getActivity();
-            mainActivity.setSelectedSite(locaSiteId);
-        }
     }
 
     public @Nullable SiteModel getSelectedSite() {
@@ -153,6 +146,7 @@ public class MySiteFragment extends Fragment
         mNoSiteDrakeImageView = (ImageView) rootView.findViewById(R.id.my_site_no_site_view_drake);
         mFabView = rootView.findViewById(R.id.fab_button);
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
+        mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
 
         // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {
@@ -272,31 +266,19 @@ public class MySiteFragment extends Fragment
 
         switch (requestCode) {
             case RequestCodes.SITE_PICKER:
-                // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
                     //reset comments status filter
-                    AppPrefs.setCommentsStatusFilter(CommentStatus.UNKNOWN);
-                    int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                    setSelectedSite(selectedSite);
+                    AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
                 }
                 break;
-
             case RequestCodes.EDIT_POST:
                 // if user returned from adding a post via the FAB and it was saved as a local
                 // draft, briefly animate the background of the "Blog posts" view to give the
                 // user a cue as to where to go to return to that post
-                if (resultCode == Activity.RESULT_OK
-                        && getView() != null
-                        && data != null
+                if (resultCode == Activity.RESULT_OK && getView() != null && data != null
                         && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
                     showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
-                break;
-
-            case RequestCodes.CREATE_BLOG:
-                // user created a new blog so, use and show that new one
-                // TODO: STORES: create a blog
-                // TODO: STORES: setSelectedSite(newly created site);
                 break;
         }
     }
@@ -359,7 +341,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !site.isWPCom();
+        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessibleViaWPComAPI(site);
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
 
@@ -367,7 +349,7 @@ public class MySiteFragment extends Fragment
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(site.getUrl(), mBlavatarSz), WPNetworkImageView
+        mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView
                 .ImageType.BLAVATAR);
         String homeUrl = SiteUtils.getHomeURLOrHostName(site);
         String blogTitle = SiteUtils.getSiteNameOrHomeURL(site);
@@ -377,12 +359,21 @@ public class MySiteFragment extends Fragment
 
         // Hide the Plan item if the Plans feature is not available for this blog
         String planShortName = site.getPlanShortName();
-        if (!TextUtils.isEmpty(planShortName)) {
-            mCurrentPlanNameTextView.setText(planShortName);
-            mPlanContainer.setVisibility(View.VISIBLE);
+        if (!TextUtils.isEmpty(planShortName) && site.getHasCapabilityManageOptions()) {
+            if (site.isWPCom() || site.isAutomatedTransfer()) {
+                mCurrentPlanNameTextView.setText(planShortName);
+                mPlanContainer.setVisibility(View.VISIBLE);
+            } else {
+                // TODO: Support Jetpack plans
+                mPlanContainer.setVisibility(View.GONE);
+            }
         } else {
             mPlanContainer.setVisibility(View.GONE);
         }
+
+        // Do not show pages menu item to Collaborators.
+        int pageVisibility = site.isSelfHostedAdmin() || site.getHasCapabilityEditPages() ? View.VISIBLE : View.GONE;
+        mPageView.setVisibility(pageVisibility);
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,8 +19,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
@@ -27,6 +30,7 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -43,8 +47,11 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
+
     private boolean mSignoutOnCancelMode;
     private boolean mAutoCompleteUrl;
+
+    private long mNewSiteRemoteId;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -195,15 +202,15 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
 
+        startProgress(getString(R.string.creating_your_site));
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
-        final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
+        final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
         final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
 
-        NewSitePayload newSitePayload = new NewSitePayload(siteName, siteUrl, language, SiteVisibility.PUBLIC, false);
+        NewSitePayload newSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, false);
         mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
-        updateProgress(getString(R.string.create_new_blog_wpcom));
-        AppLog.i(T.NUX, "User tries to create a new site, name: " + siteName + ", URL: " + siteUrl);
+        AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", URL: " + siteUrl);
     }
 
     @Override
@@ -313,6 +320,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
     // OnChanged events
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
@@ -321,10 +329,13 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             showError(event.error.type, event.error.message);
             return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
+        mNewSiteRemoteId = event.newSiteRemoteId;
         // Site created, update sites
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, event.toString());
@@ -333,7 +344,10 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         endProgress();
-        getActivity().setResult(Activity.RESULT_OK);
+        Intent intent = new Intent();
+        SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
     }
 }

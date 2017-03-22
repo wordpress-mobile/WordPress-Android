@@ -23,10 +23,10 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStoreUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +52,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
     private Spinner mBlogSpinner;
     private Spinner mActionSpinner;
+    private String mSiteNames[];
     private int mSiteIds[];
     private int mSelectedSiteLocalId;
     private TextView mBlogSpinnerTitle;
@@ -66,18 +67,18 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
-        String[] blogNames = getBlogNames();
-        if (blogNames == null) {
+        initSiteLists();
+
+        if (mSiteNames == null) {
             finishIfNoVisibleBlogs();
             return;
         }
 
-        if (blogNames.length == 1) {
+        if (mSiteNames.length == 1) {
             mBlogSpinner.setVisibility(View.GONE);
             mBlogSpinnerTitle.setVisibility(View.GONE);
         } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    R.layout.spinner_menu_dropdown_item, blogNames);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_menu_dropdown_item, mSiteNames);
             mBlogSpinner.setAdapter(adapter);
             mBlogSpinner.setOnItemSelectedListener(this);
         }
@@ -88,7 +89,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             mActionSpinner.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
             // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
-            if (blogNames.length == 1) {
+            if (mSiteNames.length == 1) {
+                // Single site, startActivityAndFinish will pick the first one by default
                 startActivityAndFinish(new Intent(this, EditPostActivity.class));
             }
         } else {
@@ -114,9 +116,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     private void finishIfNoVisibleBlogs() {
-        // If not signed in, then ask to sign in, else inform the user to set at least one blog
+        // If not logged in, then ask to log in, else inform the user to set at least one blog
         // visible
-        if (WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();
@@ -154,20 +156,20 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         return "text/plain".equals(getIntent().getType());
     }
 
-    private String[] getBlogNames() {
+    private void initSiteLists() {
         List<SiteModel> sites = mSiteStore.getVisibleSites();
         if (sites.size() > 0) {
-            final String siteNames[] = new String[sites.size()];
+            mSiteNames = new String[sites.size()];
             mSiteIds = new int[sites.size()];
             int i = 0;
             for (SiteModel site : sites) {
-                siteNames[i] = SiteUtils.getSiteNameOrHomeURL(site);
+                mSiteNames[i] = SiteUtils.getSiteNameOrHomeURL(site);
                 mSiteIds[i] = site.getId();
                 i += 1;
             }
-            return siteNames;
+            // default selected site to the first one
+            mSelectedSiteLocalId = mSiteIds[0];
         }
-        return null;
     }
 
     @Override

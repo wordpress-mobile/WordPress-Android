@@ -12,7 +12,7 @@ import android.os.IBinder;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.TextUtils;
-import android.webkit.MimeTypeMap;
+import android.util.SparseArray;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -20,10 +20,16 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -34,21 +40,21 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,8 +73,11 @@ public class PostUploadService extends Service {
     private Context mContext;
     private PostUploadNotifier mPostUploadNotifier;
 
+    private SparseArray<CountDownLatch> mMediaLatchMap = new SparseArray<>();
+
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
+    @Inject MediaStore mMediaStore;
 
     /**
      * Adds a post to the queue.
@@ -186,10 +195,20 @@ public class PostUploadService extends Service {
 
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
-        private int featuredImageID = -1;
+        private long featuredImageID = -1;
 
         // Used for analytics
         private boolean mHasImage, mHasVideo, mHasCategory;
+
+        @Override
+        protected void onPostExecute(Boolean pushActionWasDispatched) {
+            if (!pushActionWasDispatched) {
+                // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
+                // will be handled in OnPostChanged instead of here
+                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage, mIsMediaError);
+                finishUpload();
+            }
+        }
 
         @Override
         protected Boolean doInBackground(PostModel... posts) {
@@ -214,11 +233,24 @@ public class PostUploadService extends Service {
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             }
 
-            mPost.setContent(processPostMedia(mPost.getContent()));
+            String content = mPost.getContent();
+            // Get rid of ZERO WIDTH SPACE character that the Visual editor can insert
+            // at the beginning of the content.
+            // http://www.fileformat.info/info/unicode/char/200b/index.htm
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/5009
+            if (content.length() > 0 && content.charAt(0) == '\u200B') {
+                content = content.substring(1, content.length());
+            }
+            content = processPostMedia(content);
+            mPost.setContent(content);
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
                 return false;
+            }
+
+            if (mPost.getCategoryIdList().size() > 0) {
+                mHasCategory = true;
             }
 
             // Support for legacy editor - images are identified as featured as they're being uploaded with the post
@@ -262,7 +294,7 @@ public class PostUploadService extends Service {
             if (mHasCategory) {
                 properties.put("with_categories", true);
             }
-            if (!mPost.getTagIdList().isEmpty()) {
+            if (!mPost.getTagNameList().isEmpty()) {
                 properties.put("with_tags", true);
             }
             properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
@@ -278,7 +310,7 @@ public class PostUploadService extends Service {
             Matcher matcher = pattern.matcher(postContent);
 
             int totalMediaItems = 0;
-            List<String> imageTags = new ArrayList<String>();
+            List<String> imageTags = new ArrayList<>();
             while (matcher.find()) {
                 imageTags.add(matcher.group());
                 totalMediaItems++;
@@ -293,9 +325,12 @@ public class PostUploadService extends Service {
                 if (m.find()) {
                     String imageUri = m.group(1);
                     if (!imageUri.equals("")) {
-                        // TODO: MediaStore
-                        // MediaFile mediaFile = WordPress.wpDB.getMediaFile(imageUri, mPost);
-                        MediaFile mediaFile = new MediaFile();
+                        MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost.getId(), imageUri);
+                        if (mediaModel == null) {
+                            mIsMediaError = true;
+                            continue;
+                        }
+                        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
                         if (mediaFile != null) {
                             // Get image thumbnail for notification icon
                             Bitmap imageIcon = ImageUtils.getWPImageSpanThumbnailFromFilePath(
@@ -346,7 +381,6 @@ public class PostUploadService extends Service {
 
             Uri imageUri = Uri.parse(mediaFile.getFilePath());
             File imageFile = null;
-            String mimeType = "", path = "";
 
             if (imageUri.toString().contains("content:")) {
                 String[] projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE};
@@ -354,17 +388,14 @@ public class PostUploadService extends Service {
                 Cursor cur = mContext.getContentResolver().query(imageUri, projection, null, null, null);
                 if (cur != null && cur.moveToFirst()) {
                     int dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                    int mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
 
                     String thumbData = cur.getString(dataColumn);
-                    mimeType = cur.getString(mimeTypeColumn);
                     imageFile = new File(thumbData);
-                    path = thumbData;
                     mediaFile.setFilePath(imageFile.getPath());
                 }
                 SqlUtils.closeCursor(cur);
             } else { // file is not in media library
-                path = imageUri.toString().replace("file://", "");
+                String path = imageUri.toString().replace("file://", "");
                 imageFile = new File(path);
                 mediaFile.setFilePath(path);
             }
@@ -375,20 +406,7 @@ public class PostUploadService extends Service {
                 return null;
             }
 
-            if (TextUtils.isEmpty(mimeType)) {
-                mimeType = MediaUtils.getMediaFileMimeType(imageFile);
-            }
-            String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
-
-            // Upload the full size picture if "Original Size" is selected in settings
-
-            Map<String, Object> parameters = new HashMap<String, Object>();
-            parameters.put("name", fileName);
-            parameters.put("type", mimeType);
-            parameters.put("bits", mediaFile);
-            parameters.put("overwrite", true);
-
-            String fullSizeUrl = uploadImageFile(parameters, mediaFile, mSite);
+            String fullSizeUrl = uploadImageFile(mediaFile, mSite);
             if (fullSizeUrl == null) {
                 mErrorMessage = mContext.getString(R.string.error_media_upload);
                 return null;
@@ -461,101 +479,66 @@ public class PostUploadService extends Service {
             if (TextUtils.isEmpty(mimeType)) {
                 mimeType = MediaUtils.getMediaFileMimeType(videoFile);
             }
-            String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
 
-            // try to upload the video
-            Map<String, Object> m = new HashMap<String, Object>();
-            m.put("name", videoName);
-            m.put("type", mimeType);
-            m.put("bits", mediaFile);
-            m.put("overwrite", true);
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            MediaPayload payload = new MediaPayload(mSite, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
-            Object[] params = {1, mSite.getUsername(), mSite.getPassword(), m};
-
-            File tempFile;
             try {
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                tempFile = createTempUploadFile(fileExtension);
-            } catch (IOException e) {
-                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
+                mIsMediaError = true;
+            }
+
+            MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
+
+            if (finishedMedia == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
+                mIsMediaError = true;
                 return null;
             }
 
-            // TODO: MediaStore
-            Object result = null;
-            // Object result = uploadFileHelper(params, tempFile);
-            Map<?, ?> resultMap = (HashMap<?, ?>) result;
-            if (resultMap != null && resultMap.containsKey("url")) {
-                String resultURL = resultMap.get("url").toString();
-                if (resultMap.containsKey(MediaFile.VIDEOPRESS_SHORTCODE_ID)) {
-                    resultURL = resultMap.get(MediaFile.VIDEOPRESS_SHORTCODE_ID).toString() + "\n";
-                } else {
-                    resultURL = String.format(
-                            "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                            xRes, yRes, resultURL, mimeType, resultURL);
-                }
-
-                return resultURL;
+            if (!TextUtils.isEmpty(finishedMedia.getVideoPressGuid())) {
+                return "[wpvideo " + finishedMedia.getVideoPressGuid() + "]\n";
             } else {
-                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
-                return null;
+                return String.format(
+                        "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                        xRes, yRes, finishedMedia.getUrl(), mimeType, finishedMedia.getUrl());
             }
         }
 
+        private String uploadImageFile(MediaFile mediaFile, SiteModel site) {
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            MediaPayload payload = new MediaPayload(site, FluxCUtils.mediaModelFromMediaFile(mediaFile));
+            mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
 
-        private void setUploadPostErrorMessage(Exception e) {
-            mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(),
-                    mPost.isPage() ? mContext.getResources().getText(R.string.page).toString() :
-                            mContext.getResources().getText(R.string.post).toString()) + " " + e.getMessage();
-            mIsMediaError = false;
-            AppLog.e(T.EDITOR, mErrorMessage, e);
-        }
-
-        private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, SiteModel site) {
-            // create temporary upload file
-            File tempFile;
             try {
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(mf.getFileName());
-                tempFile = createTempUploadFile(fileExtension);
-            } catch (IOException e) {
+                mMediaLatchMap.put(mediaFile.getId(), countDownLatch);
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
-                mErrorMessage = mContext.getString(R.string.file_not_found);
-                return null;
             }
 
-            Object[] params = {1,
-                    StringUtils.notNullStr(mSite.getUsername()),
-                    StringUtils.notNullStr(mSite.getPassword()),
-                    pictureParams};
-            // Object result = uploadFileHelper(params, tempFile);
-            // TODO: MediaStore
-            Object result = null;
-            if (result == null) {
+            MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
+
+            if (finishedMedia == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
                 mIsMediaError = true;
                 return null;
             }
 
-            Map<?, ?> contentHash = (HashMap<?, ?>) result;
-            String pictureURL = contentHash.get("url").toString();
+            String pictureURL = finishedMedia.getUrl();
 
-            if (mf.isFeatured()) {
-                try {
-                    if (contentHash.get("id") != null) {
-                        featuredImageID = Integer.parseInt(contentHash.get("id").toString());
-                        if (!mf.isFeaturedInPost())
-                            return "";
-                    }
-                } catch (NumberFormatException e) {
-                    AppLog.e(T.POSTS, e);
+            if (mediaFile.isFeatured()) {
+                featuredImageID = finishedMedia.getMediaId();
+                if (!mediaFile.isFeaturedInPost()) {
+                    return "";
                 }
             }
 
             return pictureURL;
         }
-    }
-
-    private File createTempUploadFile(String fileExtension) throws IOException {
-        return File.createTempFile("wp-", fileExtension, mContext.getCacheDir());
     }
 
     /**
@@ -564,10 +547,8 @@ public class PostUploadService extends Service {
     private String buildErrorMessage(PostModel post, PostError error) {
         // TODO: We should interpret event.error.type and pass our own string rather than use event.error.message
         String postType = mContext.getResources().getText(post.isPage() ? R.string.page : R.string.post).toString().toLowerCase();
-
         String errorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(), postType);
         errorMessage += ": " + error.message;
-
         return errorMessage;
     }
 
@@ -582,13 +563,48 @@ public class PostUploadService extends Service {
                     false);
             mFirstPublishPosts.remove(event.post.getId());
         } else {
-            // TODO: MediaStore?
-            // WordPress.wpDB.deleteMediaFilesForPost(mPost);
             mPostUploadNotifier.cancelNotification(event.post);
             boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
         }
 
         finishUpload();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        // Event for unknown media, ignoring
+        if (event.media == null || mCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
+            AppLog.w(T.POSTS, "Media event not recognized: " + event.media);
+            return;
+        }
+
+        if (event.isError()) {
+            SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
+
+            // TODO: We should interpret event.error.type and pass our own string rather than use error.message
+            String message = TextUtils.isEmpty(event.error.message) ? event.error.type.toString() : event.error.message;
+            mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, message, true);
+
+            mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
+            finishUpload();
+            return;
+        }
+
+        if (event.canceled) {
+            // Not implemented
+            return;
+        }
+
+        if (event.completed) {
+            AppLog.i(T.POSTS, "Media upload completed for post. Media id: " + event.media.getId()
+                    + ", post id: " + mCurrentUploadingPost.getId());
+            mMediaLatchMap.get(event.media.getId()).countDown();
+            mMediaLatchMap.remove(event.media.getId());
+        } else {
+            // Progress update
+            mPostUploadNotifier.updateNotificationProgress(mCurrentUploadingPost, event.progress);
+        }
     }
 }

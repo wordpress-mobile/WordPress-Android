@@ -9,8 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -29,6 +27,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
+    private boolean mEnableBlogPreview = true;
 
     public ReaderPostDetailHeaderView(Context context) {
         super(context);
@@ -79,9 +78,14 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtSubtitle.setVisibility(View.GONE);
         }
 
-        // show blog preview when these views are tapped
-        txtTitle.setOnClickListener(mClickListener);
-        txtSubtitle.setOnClickListener(mClickListener);
+        if (mEnableBlogPreview) {
+            txtTitle.setOnClickListener(mClickListener);
+            txtSubtitle.setOnClickListener(mClickListener);
+        } else {
+            int color = getContext().getResources().getColor(R.color.grey_dark);
+            txtTitle.setTextColor(color);
+            txtSubtitle.setTextColor(color);
+        }
 
         if (isSignedInWPCom) {
             mFollowButton.setVisibility(View.VISIBLE);
@@ -96,41 +100,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             mFollowButton.setVisibility(View.GONE);
         }
 
-        // get local blog info so we can set the follower count and blavatar
-        ReaderBlog blogInfo = mPost.isExternal ? ReaderBlogTable.getFeedInfo(mPost.feedId) : ReaderBlogTable.getBlogInfo(mPost.blogId);
-        if (blogInfo != null) {
-            showBlogInfo(blogInfo);
-        }
-
-        // update blog info if it's time or it doesn't exist
-        if (blogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(blogInfo)) {
-            updateBlogInfo();
-        }
-    }
-
-    /*
-     * get the latest info about this post's blog so we have an accurate follower count
-     */
-    private void updateBlogInfo() {
-        if (!NetworkUtils.isNetworkAvailable(getContext())) return;
-
-        ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlog blogInfo) {
-                showBlogInfo(blogInfo);
-            }
-        };
-        if (mPost.isExternal) {
-            ReaderBlogActions.updateFeedInfo(mPost.feedId, null, listener);
-        } else {
-            ReaderBlogActions.updateBlogInfo(mPost.blogId, null, listener);
-        }
-    }
-
-    private void showBlogInfo(ReaderBlog blogInfo) {
-        String blavatarUrl = blogInfo != null ? blogInfo.getImageUrl() : null;
-        String avatarUrl = mPost != null ? mPost.getPostAvatar() : null;
-        showBlavatarAndAvatar(blavatarUrl, avatarUrl);
+        showBlavatarAndAvatar(mPost.getBlogImageUrl(), mPost.getPostAvatar());
     }
 
     private void showBlavatarAndAvatar(String blavatarUrl, String avatarUrl) {
@@ -193,8 +163,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         // hide the frame if there's neither a blavatar nor an avatar
         avatarFrame.setVisibility(hasAvatar || hasBlavatar ? View.VISIBLE : View.GONE);
 
-        imgBlavatar.setOnClickListener(mClickListener);
-        imgAvatar.setOnClickListener(mClickListener);
+        if (mEnableBlogPreview) {
+            imgBlavatar.setOnClickListener(mClickListener);
+            imgAvatar.setOnClickListener(mClickListener);
+        }
     }
 
     /*
@@ -227,7 +199,6 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
                 }
-                updateBlogInfo();
             }
         };
 

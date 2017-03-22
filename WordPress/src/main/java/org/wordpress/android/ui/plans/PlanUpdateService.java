@@ -12,8 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.plans.models.Plan;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -121,9 +121,10 @@ public class PlanUpdateService extends Service {
      * download plans for the specific site
      */
     private void downloadAvailablePlansForSite() {
-        // TODO: STORES: This must be moved to a store
+        // This should live in a PlanStore (FluxC side)
         long remoteBlogId = mSite.getSiteId();
-        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans", RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans",
+                RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 if (response == null) {

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-10-27 17:48:23+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.4.0-alpha
+Language: nb_NO
+-->
 <resources>
 	<string name="reader_short_comment_count_multi">%s kommentarer</string>
 	<string name="reader_short_comment_count_one">1 kommentar</string>
@@ -33,13 +39,10 @@
 	<string name="stats_insights_most_popular_day">Mest populære dag</string>
 	<string name="stats_insights_popular">Mest populære dag og time</string>
 	<string name="stats_insights_today">Dagens statistikk</string>
-	<string name="me_disconnect_from_wordpress_com">Koble fra WordPress.com</string>
 	<string name="me_btn_login_logout">Logg inn/Logg ut</string>
-	<string name="me_connect_to_wordpress_com">Koble til WordPress.com</string>
 	<string name="my_site_btn_view_site">Vis nettsted</string>
 	<string name="my_site_header_publish">Publiser</string>
 	<string name="my_site_btn_site_settings">Innstillinger</string>
-	<string name="notifications_account_required">Logg inn på WordPress.com for varsler</string>
 	<string name="image_added">Bilde lagt til</string>
 	<string name="show">Vis</string>
 	<string name="hide">Skjul</string>
@@ -63,8 +66,6 @@
 	<string name="two_step_footer_label">Skriv inn koden fra din autentiseringsapp.</string>
 	<string name="two_step_footer_button">Send kode via tekstmelding.</string>
 	<string name="two_step_sms_sent">Sjekk dine tekstmeldinger for verifikasjonskoden.</string>
-	<string name="sign_in_jetpack">Logg deg inn på din WordPress.com konto for å koble til Jetpack.</string>
-	<string name="auth_required">Logg på igjen for å fortsette.</string>
 	<string name="editor_toast_invalid_path">Ugyldig filsti</string>
 	<string name="verification_code">Verifikasjonskode</string>
 	<string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
@@ -136,7 +137,6 @@
 	<string name="reader_empty_posts_liked">Du har ikke likt noen innlegg</string>
 	<string name="reader_label_like">Liker</string>
 	<string name="mnu_comment_liked">Likt</string>
-	<string name="signing_out">Logger ut …</string>
 	<string name="older_month">Eldre enn en måned</string>
 	<string name="older_two_days">Eldre enn 2 dager</string>
 	<string name="older_last_week">Eldre enn en uke</string>
@@ -236,8 +236,6 @@
 	<string name="pick_video">Velg video</string>
 	<string name="nux_tap_continue">Fortsett</string>
 	<string name="nux_welcome_create_account">Opprett konto</string>
-	<string name="nux_oops_not_selfhosted_blog">Logg inn på WordPress.com</string>
-	<string name="signing_in">Logger inn …</string>
 	<string name="reader_btn_share">Del</string>
 	<string name="reader_btn_follow">Følg</string>
 	<string name="jetpack_not_found">Fant ikke utvidelsen Jetpack</string>
@@ -246,7 +244,6 @@
 	<string name="username_invalid">Ugyldig brukernavn</string>
 	<string name="create_account_wpcom">Opprett en konto på WordPress.com</string>
 	<string name="media_add_new_media_gallery">Lag nytt galleri</string>
-	<string name="connecting_wpcom">Kobler til WordPress.com</string>
 	<string name="reader_btn_unfollow">Følger</string>
 	<string name="jetpack_message">Jetpack er påkrevd for statistikk. Vil du installere Jetpack?</string>
 	<string name="reader_likes_only_you">Du liker dette</string>
@@ -316,7 +313,6 @@
 	<string name="passcode_turn_on">Slå PIN-lås på</string>
 	<string name="upload">Last opp</string>
 	<string name="discard">Forkast</string>
-	<string name="sign_in">Logg inn</string>
 	<string name="notifications">Varsler</string>
 	<string name="note_reply_successful">Kommentar publisert</string>
 	<string name="follows">Følg</string>

@@ -68,6 +68,11 @@ import java.util.concurrent.TimeUnit;
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
         EditorMediaUploadListener {
+
+    public class IllegalEditorStateException extends Exception {
+
+    }
+
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -110,10 +115,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mIsFormatBarDisabled = false;
 
-    private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles;
-    private Set<MediaGallery> mWaitingGalleries;
-    private Map<String, MediaType> mUploadingMedia;
-    private Set<String> mFailedMediaIds;
+    private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles = new ConcurrentHashMap<>();
+    private Set<MediaGallery> mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
+    private Map<String, MediaType> mUploadingMedia = new HashMap<>();
+    private Set<String> mFailedMediaIds = new HashSet<>();
+
     private MediaGallery mUploadingMediaGallery;
 
     private String mJavaScriptResult = "";
@@ -280,11 +286,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mHideActionBarOnSoftKeyboardUp = true;
         }
 
-        mWaitingMediaFiles = new ConcurrentHashMap<>();
-        mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
-        mUploadingMedia = new HashMap<>();
-        mFailedMediaIds = new HashSet<>();
-
         // -- WebView configuration
 
         mWebView = (EditorWebViewAbstract) view.findViewById(R.id.webview);
@@ -423,8 +424,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putCharSequence(KEY_TITLE, getTitle());
-        outState.putCharSequence(KEY_CONTENT, getContent());
+        try {
+            outState.putCharSequence(KEY_TITLE, getTitle());
+            outState.putCharSequence(KEY_CONTENT, getContent());
+        } catch (IllegalEditorStateException e) {
+            AppLog.e(T.EDITOR, "onSaveInstanceState: unable to get title or content");
+        }
     }
 
     private ActionBar getActionBar() {
@@ -636,9 +641,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
 
                     // Update mTitle and mContentHtml with the latest state from the ZSSEditor
-                    getTitle();
-                    getContent();
-
+                    try {
+                        getTitle();
+                        getContent();
+                    } catch (IllegalEditorStateException e) {
+                        AppLog.e(T.EDITOR, "toggleHtmlMode: unable to get title or content");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                toggleButton.setChecked(false);
+                            }
+                        });
+                        return;
+                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -922,9 +937,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getTitle() {
+    public CharSequence getTitle() throws IllegalEditorStateException {
         if (!isAdded()) {
-            return "";
+            throw new IllegalEditorStateException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -961,9 +976,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getContent() {
+    public CharSequence getContent() throws IllegalEditorStateException {
         if (!isAdded()) {
-            return "";
+            throw new IllegalEditorStateException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -1009,8 +1024,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
+                String mediaId = String.valueOf(mediaFile.getId());
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
-                    String mediaId = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
@@ -1024,16 +1039,15 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                     mActionStartedAt = System.currentTimeMillis();
                 } else {
-                    String id = mediaFile.getMediaId();
                     if (mediaFile.isVideo()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + id + ", '" + posterUrl +
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + mediaId + ", '" + posterUrl +
                                 "');");
-                        mUploadingMedia.put(id, MediaType.VIDEO);
+                        mUploadingMedia.put(mediaId, MediaType.VIDEO);
                     } else {
-                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + id + ", '" + safeMediaUrl +
-                                "');");
-                        mUploadingMedia.put(id, MediaType.IMAGE);
+                        mWebView.execJavaScriptFromString("ZSSEditor.insertLocalImage(" + mediaId + ", '" +
+                                safeMediaUrl + "');");
+                        mUploadingMedia.put(mediaId, MediaType.IMAGE);
                     }
                 }
             }
@@ -1105,30 +1119,40 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        final MediaType mediaType = mUploadingMedia.get(localMediaId);
-        if (mediaType != null) {
-            mWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
-                    if (mediaType.equals(MediaType.IMAGE)) {
-                        String remoteMediaId = mediaFile.getMediaId();
-                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
-                                ", '" + remoteMediaId + "', '" + remoteUrl + "');");
-                    } else if (mediaType.equals(MediaType.VIDEO)) {
-                        String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
-                        String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
-                                mediaFile.getVideoPressShortCode());
-                        mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
-                                ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
-                    }
-                }
-            });
+        if(!isAdded()) {
+            return;
         }
+
+        final String mimeType = mediaFile.getMimeType();
+        if (TextUtils.isEmpty(mimeType)) {
+            return;
+        }
+
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+                if (mimeType.contains("image")) {
+                    String remoteMediaId = mediaFile.getMediaId();
+                    mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
+                            ", '" + remoteMediaId + "', '" + remoteUrl + "');");
+                } else if (mimeType.contains("video")) {
+                    String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
+                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
+                            mediaFile.getVideoPressShortCode());
+                    mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalVideoWithRemoteVideo(" + localMediaId +
+                            ", '" + remoteUrl + "', '" + posterUrl + "', '" + videoPressId + "');");
+                }
+            }
+        });
     }
 
     @Override
     public void onMediaUploadProgress(final String mediaId, final float progress) {
+        if(!isAdded()) {
+            return;
+        }
+
         final MediaType mediaType = mUploadingMedia.get(mediaId);
         if (mediaType != null) {
             mWebView.post(new Runnable() {
@@ -1144,6 +1168,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
+        if(!isAdded()) {
+            return;
+        }
         mWebView.post(new Runnable() {
             @Override
             public void run() {
@@ -1166,10 +1193,15 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onGalleryMediaUploadSucceeded(final long galleryId, String remoteMediaId, int remaining) {
+    public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
+        if(!isAdded()) {
+            return;
+        }
+
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
+            // TODO: media IDs are Long's; should we update to use ArrayList<Long>?
             ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
-            mediaIds.add(remoteMediaId);
+            mediaIds.add(String.valueOf(remoteMediaId));
             mUploadingMediaGallery.setIds(mediaIds);
 
             if (remaining == 0) {

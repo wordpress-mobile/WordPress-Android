@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,8 +34,10 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.posts.services.PostEvents;
@@ -76,6 +79,8 @@ public class PostsListFragment extends Fragment
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
+    private boolean mShouldCancelPendingDraftNotification = false;
+    private int mPostIdForPostToBeDeleted = 0;
 
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
@@ -98,9 +103,10 @@ public class PostsListFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        updateSiteOrFinishActivity(savedInstanceState);
+        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
 
-        setRetainInstance(true);
+        updateSiteOrFinishActivity(savedInstanceState);
 
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
@@ -108,6 +114,14 @@ public class PostsListFragment extends Fragment
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
+
+        super.onDestroy();
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
@@ -142,7 +156,7 @@ public class PostsListFragment extends Fragment
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
+        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
@@ -184,7 +198,7 @@ public class PostsListFragment extends Fragment
                 });
     }
 
-    public PostsListAdapter getPostListAdapter() {
+    private @Nullable PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
             mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);
@@ -201,7 +215,9 @@ public class PostsListFragment extends Fragment
     }
 
     private void loadPosts(LoadMode mode) {
-        getPostListAdapter().loadPosts(mode);
+        if (getPostListAdapter() != null) {
+            getPostListAdapter().loadPosts(mode);
+        }
     }
 
     @Override
@@ -225,7 +241,7 @@ public class PostsListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        if (mRecyclerView.getAdapter() == null) {
+        if (getPostListAdapter() != null && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
@@ -264,6 +280,10 @@ public class PostsListFragment extends Fragment
             return;
         }
 
+        if (getPostListAdapter() != null && getPostListAdapter().getItemCount() == 0) {
+            updateEmptyView(EmptyViewMessageType.LOADING);
+        }
+
         mIsFetchingPosts = true;
         if (loadMore) {
             showLoadMoreProgress();
@@ -296,7 +316,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        if (isAdded()) {
+        if (isAdded() && getPostListAdapter() != null) {
             getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
@@ -347,17 +367,14 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        mDispatcher.unregister(this);
-        super.onStop();
+    public void onDetach() {
+        if (mShouldCancelPendingDraftNotification) {
+            // delete the pending draft notification if available
+            int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(mPostIdForPostToBeDeleted);
+            NativeNotificationsUtils.dismissNotification(pushId, getActivity());
+            mShouldCancelPendingDraftNotification = false;
+        }
+        super.onDetach();
     }
 
     /*
@@ -395,7 +412,7 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostSelected(PostModel post) {
-        onPostButtonClicked(PostListButton.BUTTON_PREVIEW, post);
+        onPostButtonClicked(PostListButton.BUTTON_EDIT, post);
     }
 
     /*
@@ -409,6 +426,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_EDIT:
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
+            case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_PUBLISH:
                 publishPost(post);
                 break;
@@ -445,7 +463,7 @@ public class PostsListFragment extends Fragment
 
         post.setStatus(PostStatus.PUBLISHED.toString());
 
-        PostUploadService.addPostToUploadAndTrackAnalytics(post);
+        PostUploadService.addPostToUpload(post);
         getActivity().startService(new Intent(getActivity(), PostUploadService.class));
 
         PostUtils.trackSavePostAnalytics(post, mSite);
@@ -457,7 +475,8 @@ public class PostsListFragment extends Fragment
     private void trashPost(final PostModel post) {
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
-        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))) {
+        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
+            || getPostListAdapter() == null) {
             return;
         }
 
@@ -510,14 +529,26 @@ public class PostsListFragment extends Fragment
 
                 if (post.isLocalDraft()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
+
+                    // delete the pending draft notification if available
+                    mShouldCancelPendingDraftNotification = false;
+                    int pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.getId());
+                    NativeNotificationsUtils.dismissNotification(pushId, getActivity());
                 } else {
-                    RemotePostPayload payload = new RemotePostPayload(post, mSite);
-                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload));
+                    mDispatcher.dispatch(PostActionBuilder.newDeletePostAction(new RemotePostPayload(post, mSite)));
                 }
             }
         });
 
+        mPostIdForPostToBeDeleted = post.getId();
+        mShouldCancelPendingDraftNotification = true;
         snackbar.show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @SuppressWarnings("unused")

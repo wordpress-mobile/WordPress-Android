@@ -36,7 +36,7 @@
                 android:background="@color/white"
                 android:id="@+id/relativeLayout">
 
-                <org.wordpress.android.widgets.WPEditText
+                <org.wordpress.persistentedittext.PersistentEditText
                     android:id="@+id/site_title"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/dashicon_edit"
+                    app:srcCompat="@drawable/ic_pencil_white_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>
@@ -65,7 +65,7 @@
                 android:background="@color/white"
                 android:layout_marginBottom="16dp">
 
-                <org.wordpress.android.widgets.WPEditText
+                <org.wordpress.persistentedittext.PersistentEditText
                     android:id="@+id/site_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -106,7 +106,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentStart="false"
-                    app:srcCompat="@drawable/dashicon_admin_site"
+                    app:srcCompat="@drawable/ic_globe_black_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>

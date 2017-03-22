@@ -30,8 +30,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class RestClientUtils {
-    private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
-    private static final String COMMENT_REPLY_CONTENT_FIELD = "content";
+    public static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
     private static String sUserAgent = "WordPress Networking Android";
 
     private RestClient mRestClient;
@@ -62,11 +61,14 @@ public class RestClientUtils {
         sUserAgent = userAgent;
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener) {
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
+                           RestRequest.OnAuthFailedListener onAuthFailedListener) {
         this(context, queue, authenticator, onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS.V1);
     }
 
-    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator, RestRequest.OnAuthFailedListener onAuthFailedListener, RestClient.REST_CLIENT_VERSIONS version) {
+    public RestClientUtils(Context context, RequestQueue queue, Authenticator authenticator,
+                           RestRequest.OnAuthFailedListener onAuthFailedListener,
+                           RestClient.REST_CLIENT_VERSIONS version) {
         // load an existing access token from prefs if we have one
         mContext = context;
         mAuthenticator = authenticator;
@@ -88,40 +90,6 @@ public class RestClientUtils {
     public void getCategories(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/categories", siteId);
         get(path, null, null, listener, errorListener);
-    }
-
-    /**
-     * get a list of recent comments
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1.1/get/sites/%24site/comments/
-     */
-    public void getComments(long siteId, Map<String, String> params, final Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/comments", siteId);
-        get(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Reply to a comment
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
-     */
-    public void replyToComment(String reply, String path, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(COMMENT_REPLY_CONTENT_FIELD, reply);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Reply to a comment.
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
-     */
-    public void replyToComment(long siteId, long commentId, String content, Listener listener,
-                               ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(COMMENT_REPLY_CONTENT_FIELD, content);
-        String path = String.format("sites/%d/comments/%d/replies/new", siteId, commentId);
-        post(path, params, null, listener, errorListener);
     }
 
     /**
@@ -150,9 +118,6 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
     public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener) {
-        params.put("number", "40");
-        params.put("num_note_items", "20");
-        params.put("fields", NOTIFICATION_FIELDS);
         get("notifications", params, null, listener, errorListener);
     }
 
@@ -162,7 +127,7 @@ public class RestClientUtils {
      */
     public void getNotification(Map<String, String> params, String noteId, Listener listener, ErrorListener errorListener) {
         params.put("fields", NOTIFICATION_FIELDS);
-        String path = String.format("notifications/%s/", noteId);
+        String path = String.format(Locale.US, "notifications/%s/", noteId);
         get(path, params, null, listener, errorListener);
     }
 
@@ -172,7 +137,23 @@ public class RestClientUtils {
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
     public void getNotifications(Listener listener, ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<>();
+        params.put("number", "40");
+        params.put("num_note_items", "20");
+        params.put("fields", NOTIFICATION_FIELDS);
         getNotifications(new HashMap<String, String>(), listener, errorListener);
+    }
+
+    /**
+     * Get the notification identified by ID with default params.
+     * <p/>
+     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     */
+    public void getNotification(String note_id, Listener listener, ErrorListener errorListener) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("fields", NOTIFICATION_FIELDS);
+        String path = String.format("notifications/%s", note_id);
+        get(path, params, null, listener, errorListener);
     }
 
     /**
@@ -187,43 +168,16 @@ public class RestClientUtils {
     }
 
     /**
-     * Moderate a comment.
+     * Mark a notification as read
+     * Decrement the unread count for a notification. Key=note_ID, Value=decrement amount.
+     *
      * <p/>
-     * http://developer.wordpress.com/docs/api/1/sites/%24site/comments/%24comment_ID/
+     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
      */
-    public void moderateComment(long siteId, String commentId, String status, Listener listener,
-                                ErrorListener errorListener) {
+    public void decrementUnreadCount(String noteId, String decrementAmount, Listener listener, ErrorListener errorListener) {
+        String path = "notifications/read";
         Map<String, String> params = new HashMap<String, String>();
-        params.put("status", status);
-        String path = String.format(Locale.US, "sites/%d/comments/%s/", siteId, commentId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Edit the content of a comment
-     */
-    public void editCommentContent(long siteId, long commentId, String content, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("content", content);
-        String path = String.format(Locale.US, "sites/%d/comments/%d/", siteId, commentId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Like or unlike a comment.
-     */
-    public void likeComment(long siteId, String commentId, boolean isLiked, Listener listener,
-                                ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        String path = String.format(Locale.US, "sites/%d/comments/%s/likes/", siteId, commentId);
-
-        if (!isLiked) {
-            path += "mine/delete";
-        } else {
-            path += "new";
-        }
-
+        params.put(String.format("counts[%s]", noteId), decrementAmount);
         post(path, params, null, listener, errorListener);
     }
 
@@ -231,8 +185,10 @@ public class RestClientUtils {
         getSearchThemes("free", siteId, limit, offset, searchTerm, listener, errorListener);
     }
 
-    public void getSearchThemes(String tier, long siteId, int limit, int offset, String searchTerm, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/themes?tier=" + tier + "&number=%d&offset=%d&search=%s", siteId, limit, offset, searchTerm);
+    public void getSearchThemes(String tier, long siteId, int limit, int offset, String searchTerm, Listener listener,
+                                ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/themes?tier=" + tier + "&number=%d&offset=%d&search=%s",
+                siteId, limit, offset, searchTerm);
         get(path, listener, errorListener);
     }
 
@@ -306,7 +262,7 @@ public class RestClientUtils {
     }
 
     public void isAvailable(String email, Listener listener, ErrorListener errorListener) {
-        String path = String.format("is-available/email?q=%s", email);
+        String path = String.format(Locale.US, "is-available/email?q=%s", email);
         get(path, listener, errorListener);
     }
 
@@ -456,6 +412,11 @@ public class RestClientUtils {
         HashMap<String, String> queryParams = new HashMap<>();
 
         Uri uri = Uri.parse(unsanitizedPath);
+
+        if (uri.getHost() == null) {
+            uri = Uri.parse("://" + unsanitizedPath); // path may contain a ":" leading to Uri.parse to misinterpret
+                    // it as opaque so, try it with a empty scheme in front
+        }
 
         if (uri.getQueryParameterNames() != null ) {
             Iterator iter = uri.getQueryParameterNames().iterator();

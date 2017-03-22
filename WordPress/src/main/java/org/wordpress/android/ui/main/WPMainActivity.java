@@ -4,7 +4,9 @@ import android.animation.ObjectAnimator;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,53 +19,56 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObjectMissingException;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
-import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.models.Note;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.login.MagicLinkSignInActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
+import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStoreUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.List;
@@ -72,12 +77,10 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.push.GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY;
-
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends AppCompatActivity implements Bucket.Listener<Note> {
+public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     private WPViewPager mViewPager;
@@ -90,8 +93,8 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
-    @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -183,7 +186,10 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     break;
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
-                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        Fragment fragment = mTabAdapter.getFragment(position);
+                        if (fragment instanceof OnScrollToTopListener) {
+                            ((OnScrollToTopListener) fragment).onScrollToTop();
+                        }
                         break;
                 }
 
@@ -205,16 +211,21 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             }
         });
 
+
         if (savedInstanceState == null) {
-            if (!AppPrefs.wasAccessTokenMigrated()
-                && WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
                         false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    launchWithNoteId();
+                    if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
+                        launchWithPostId(getIntent().getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
+                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
+                    } else {
+                        launchWithNoteId();
+                    }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
@@ -226,6 +237,12 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 ActivityLauncher.showSignInForResult(this);
             }
         }
+
+        // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
+        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+
+        // monitor whether we're not the default app
+        trackDefaultApp();
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -268,23 +285,36 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     private void launchWithNoteId() {
         if (isFinishing() || getIntent() == null) return;
 
-        // Check for push authorization request
         if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
-            Bundle extras = getIntent().getExtras();
-            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
-            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
-            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
-            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+            GCMMessageService.remove2FANotification(this);
 
-            long now = System.currentTimeMillis() / 1000;
-            if (expires > 0 && now > expires) {
-                // Show a toast if the user took too long to open the notification
-                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-            } else {
-                NotificationsUtils.showPushAuthAlert(this, token, title, message);
-            }
+            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(getIntent(),
+                    new NotificationsUtils.TwoFactorAuthCallback() {
+                @Override
+                public void onTokenValid(String token, String title, String message) {
+
+                    //we do this here instead of using the service in the background so we make sure
+                    //the user opens the app by using an activity (and thus unlocks the screen if locked, for security).
+                    String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+                    if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                        // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                        NotificationsUtils.sendTwoFactorAuthToken(token);
+                    } else {
+                        NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                    }
+                }
+
+                @Override
+                public void onTokenInvalid() {
+                    // Show a toast if the user took too long to open the notification
+                    ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                }
+            });
         }
+
+        // Then hit the server
+        NotificationsActions.updateNotesSeenTimestamp();
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
@@ -299,7 +329,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 String voiceReply = null;
                 Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
                 if (remoteInput != null) {
-                    CharSequence replyText = remoteInput.getCharSequence(EXTRA_VOICE_OR_INLINE_REPLY);
+                    CharSequence replyText = remoteInput.getCharSequence(GCMMessageService.EXTRA_VOICE_OR_INLINE_REPLY);
                     if (replyText != null) {
                         voiceReply = replyText.toString();
                     }
@@ -308,15 +338,17 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 if (voiceReply != null) {
                     NotificationsProcessingService.startServiceForReply(this, noteId, voiceReply);
                     finish();
-                    return; //we don't want this notification to be dismissed as we still have to make sure
+                    // we don't want this notification to be dismissed as we still have to make sure
                     // we processed the voice reply, so we exit this function immediately
+                    return;
                 } else {
                     boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, voiceReply);
+                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL);
                 }
 
             } else {
-                SimperiumUtils.trackBucketObjectMissingWarning("No note id found in PN", "");
+                AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");
+                return;
             }
         } else {
           // mark all tapped here
@@ -326,13 +358,28 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         GCMMessageService.removeAllNotifications(this);
     }
 
-    @Override
-    protected void onPause() {
-        if (SimperiumUtils.getNotesBucket() != null) {
-            SimperiumUtils.getNotesBucket().removeListener(this);
-        }
+    /**
+     * called from an internal pending draft notification, so the user can land in the local draft and take action
+     * such as finish editing and publish, or delete the post, etc.
+     */
+    private void launchWithPostId(int postId, boolean isPage) {
+        if (isFinishing() || getIntent() == null) return;
 
-        super.onPause();
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
+        NativeNotificationsUtils.dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
+
+        // if no specific post id passed, show the list
+        if (postId == 0 ) {
+            // show list
+            if (isPage) {
+                ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
+            } else {
+                ActivityLauncher.viewCurrentBlogPosts(this, getSelectedSite());
+            }
+        } else {
+            PostModel post = mPostStore.getPostByLocalPostId(postId);
+            ActivityLauncher.editPostOrPageForResult(this, getSelectedSite(), post);
+        }
     }
 
     @Override
@@ -356,11 +403,9 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         // Load selected site
         initSelectedSite();
 
-        // Start listening to Simperium Note bucket
-        if (SimperiumUtils.getNotesBucket() != null) {
-            SimperiumUtils.getNotesBucket().addListener(this);
-        }
-        mTabLayout.checkNoteBadge();
+        // ensure the deep linking activity is enabled. We might be returning from the external-browser
+        // viewing of a post
+        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
@@ -374,6 +419,11 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         }
 
         checkConnection();
+
+        // Update account to update the notification unseen status
+        if (mAccountStore.hasAccessToken()) {
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+        }
 
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
@@ -399,7 +449,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
     private void checkMagicLinkSignIn() {
         if (getIntent() !=  null) {
-            if (getIntent().getBooleanExtra(MagicLinkSignInActivity.MAGIC_LOGIN, false)) {
+            if (getIntent().getBooleanExtra(SignInActivity.MAGIC_LOGIN, false)) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
                 startWithNewAccount();
             }
@@ -441,6 +491,16 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         }
     }
 
+    private void trackDefaultApp() {
+        Intent wpcomIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.wordpresscom_sample_post)));
+        ResolveInfo resolveInfo = getPackageManager().resolveActivity(wpcomIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (resolveInfo != null && !getPackageName().equals(resolveInfo.activityInfo.name)) {
+            // not set as default handler so, track this to evaluate. Note, a resolver/chooser might be the default.
+            AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDLER,
+                    resolveInfo.activityInfo.name);
+        }
+    }
+
     public void setReaderTabActive() {
         if (isFinishing() || mTabLayout == null) return;
 
@@ -469,40 +529,22 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         }
     }
 
-    private void moderateCommentOnActivityResult(Intent data) {
-        String noteId = StringUtils.notNullStr(data.getStringExtra
-                (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA));
-        try {
-            if (SimperiumUtils.getNotesBucket() != null) {
-                Note note = SimperiumUtils.getNotesBucket().get(noteId);
-                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
-                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-                NotificationsUtils.moderateCommentForNote(note, status, findViewById(R.id.root_view_main));
-            }
-        } catch (BucketObjectMissingException e) {
-            AppLog.e(T.NOTIFS, e);
-            SimperiumUtils.trackBucketObjectMissingWarning(e.getMessage(), noteId);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
-            case RequestCodes.CREATE_BLOG:
-                if (resultCode == RESULT_OK) {
-                    MySiteFragment mySiteFragment = getMySiteFragment();
-                    if (mySiteFragment != null) {
-                        mySiteFragment.onActivityResult(requestCode, resultCode, data);
-                    }
+            case RequestCodes.CREATE_SITE:
+                MySiteFragment mySiteFragment = getMySiteFragment();
+                if (mySiteFragment != null) {
+                    mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
-                } else if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+                } else if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
@@ -515,17 +557,16 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     startService(new Intent(this, GCMRegistrationIntentService.class));
                 }
                 break;
-            case RequestCodes.NOTE_DETAIL:
-                if (resultCode == RESULT_OK && data != null) {
-                    moderateCommentOnActivityResult(data);
-                }
-                break;
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
+                    if (data != null) {
+                        int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+                        setSelectedSite(selectedSite);
+                    }
                 }
                 break;
-            case RequestCodes.BLOG_SETTINGS:
+            case RequestCodes.SITE_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
                     handleBlogRemoved();
                 }
@@ -535,6 +576,10 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                     resetFragments();
                 }
                 break;
+            case RequestCodes.NOTE_DETAIL:
+                if (getNotificationsListFragment() != null) {
+                    getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
+                }
         }
     }
 
@@ -554,21 +599,15 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
         return null;
     }
 
-    // Updates `last_seen` notifications flag in Simperium and removes tab indicator
-    private class UpdateLastSeenTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            return SimperiumUtils.updateLastSeenTime();
+    /*
+     * returns the my site fragment from the sites tab
+     */
+    private NotificationsListFragment getNotificationsListFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_NOTIFS);
+        if (fragment instanceof NotificationsListFragment) {
+            return (NotificationsListFragment) fragment;
         }
-
-        @Override
-        protected void onPostExecute(Boolean lastSeenTimeUpdated) {
-            if (isFinishing()) return;
-
-            if (lastSeenTimeUpdated) {
-                mTabLayout.showNoteBadge(false);
-            }
-        }
+        return null;
     }
 
     // Events
@@ -576,7 +615,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError()) {
+        if (event.isError() && mSelectedSite != null) {
             AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
         }
     }
@@ -584,16 +623,22 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             // User signed out
             resetFragments();
             ActivityLauncher.showSignInForResult(this);
         }
+        mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        mTabLayout.checkNoteBadge();
+        mTabLayout.showNoteBadge(event.hasUnseenNotes);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
+        mTabLayout.showNoteBadge(event.hasUnseenNotes);
     }
 
     @SuppressWarnings("unused")
@@ -614,7 +659,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
     }
 
     private void handleBlogRemoved() {
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
             SiteModel site = getSelectedSite();
@@ -622,46 +667,6 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
                 ActivityLauncher.showSitePickerForResult(this, site);
             }
         }
-    }
-
-    /*
-     * Simperium Note bucket listeners
-     */
-    @Override
-    public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
-        if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isFinishing()) return;
-
-                    if (isViewingNotificationsTab()) {
-                        new UpdateLastSeenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    } else {
-                        mTabLayout.checkNoteBadge();
-                    }
-                }
-            });
-        }
-    }
-
-    private boolean isViewingNotificationsTab() {
-        return mViewPager.getCurrentItem() == WPMainTabAdapter.TAB_NOTIFS;
-    }
-
-    @Override
-    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
-        // noop
-    }
-
-    @Override
-    public void onDeleteObject(Bucket<Note> noteBucket, Note note) {
-        // noop
-    }
-
-    @Override
-    public void onSaveObject(Bucket<Note> noteBucket, Note note) {
-        // noop
     }
 
     /**
@@ -681,6 +686,7 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
             AppPrefs.setSelectedSite(-1);
             return;
         }
+
         // When we select a site, we want to update its informations or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
 
@@ -744,7 +750,31 @@ public class WPMainActivity extends AppCompatActivity implements Bucket.Listener
 
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
+            if (site.isJetpackConnected() && !TextUtils.isEmpty(site.getPassword())) {
+                // The user added a Jetpack-connected site as a self-hosted site - this isn't supported
+                if (!mAccountStore.hasAccessToken()) {
+                    // Ask user to sign in to WordPress.com to access their Jetpack site
+                    Intent signInIntent = new Intent(this, SignInActivity.class);
+                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, site.getId());
+                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
+                            getString(R.string.jetpack_use_com_account)
+                    );
+                    startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
+                    finish();
+                } else {
+                    // Remove the site and send the user back to the site list
+                    ToastUtils.showToast(this, R.string.jetpack_different_com_account, ToastUtils.Duration.LONG);
+                    mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
+                }
+                return;
+            }
             mSelectedSite = site;
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteRemoved(OnSiteRemoved event) {
+        handleBlogRemoved();
     }
 }

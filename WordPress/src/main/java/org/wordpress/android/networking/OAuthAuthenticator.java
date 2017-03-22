@@ -1,13 +1,18 @@
 package org.wordpress.android.networking;
 
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.util.StringUtils;
 
-// TODO: STORES: kill this when we don't need any other rest client
+// TODO: kill this when we don't need any other rest client than the one in FluxC
 public class OAuthAuthenticator implements Authenticator {
-    public static String sAccessToken;
+    private AccessToken mAccessToken;
+
+    public OAuthAuthenticator(AccessToken accessToken) {
+        mAccessToken = accessToken;
+    }
 
     @Override
     public void authenticate(final AuthenticatorRequest request) {
-        request.sendWithAccessToken(StringUtils.notNullStr(sAccessToken));
+        request.sendWithAccessToken(StringUtils.notNullStr(mAccessToken.get()));
     }
 }

@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -27,9 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
+    private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
 
     public static boolean isValidImage(String url) {
         if (url == null) {
@@ -101,8 +107,10 @@ public class MediaUtils {
             return false;
         }
 
-        return  (state.equals("queued") || state.equals("uploading") || state.equals("retry")
-                || state.equals("failed"));
+        return state.equalsIgnoreCase("queued")
+                || state.equalsIgnoreCase("uploading")
+                || state.equalsIgnoreCase("retry")
+                || state.equalsIgnoreCase("failed");
     }
 
     public static Uri getLastRecordedVideoUri(Activity activity) {
@@ -173,6 +181,21 @@ public class MediaUtils {
         }
     }
 
+    public static @Nullable String getFilenameFromURI(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        try {
+            String result = null;
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+            return result;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
@@ -208,12 +231,12 @@ public class MediaUtils {
                 input = new URL(imageUri.toString()).openStream();
             }
 
-            String fileName = "wp-" + System.currentTimeMillis();
-            if (isVideo) {
-                fileName += "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            String fileName = getFilenameFromURI(context, imageUri);
+            if (TextUtils.isEmpty(fileName)) {
+                fileName = generateTimeStampedFileName(mimeType);
             }
 
-            File f = new File(cacheDir, fileName);
+            File f = getUniqueCacheFileForName(fileName, cacheDir, mimeType);
 
             OutputStream output = new FileOutputStream(f);
 
@@ -237,6 +260,35 @@ public class MediaUtils {
         }
 
         return null;
+    }
+
+    private static File getUniqueCacheFileForName(String fileName, File cacheDir, String mimeType) {
+        File file = new File(cacheDir, fileName);
+
+        while (file.exists()) {
+            Matcher matcher = FILE_EXISTS_PATTERN.matcher(fileName);
+            if (matcher.matches()) {
+                String baseFileName = matcher.group(1);
+                String existingDuplicationNumber = matcher.group(3);
+                String fileType = StringUtils.notNullStr(matcher.group(4));
+
+                if (existingDuplicationNumber == null) {
+                    // Not a copy already
+                    fileName = baseFileName + "-1" + fileType;
+                } else {
+                    fileName = baseFileName + "-" + (StringUtils.stringToInt(existingDuplicationNumber) + 1) + fileType;
+                }
+            } else {
+                // Shouldn't happen, but in case our match fails fall back to timestamped file name
+                fileName = generateTimeStampedFileName(mimeType);
+            }
+            file = new File(cacheDir, fileName);
+        }
+        return file;
+    }
+
+    private static String generateTimeStampedFileName(String mimeType) {
+        return "wp-" + System.currentTimeMillis() + "." + getExtensionForMimeType(mimeType);
     }
 
     public static String getMimeTypeOfInputStream(InputStream stream) {
@@ -266,10 +318,10 @@ public class MediaUtils {
                     mimeType = guessedContentType;
                 }
             } catch (MalformedURLException e) {
-                AppLog.e(AppLog.T.API, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
+                AppLog.e(AppLog.T.MEDIA, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
             }
             catch (IOException e) {
-                AppLog.e(AppLog.T.API, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
+                AppLog.e(AppLog.T.MEDIA, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
             }
         }
 
@@ -283,9 +335,9 @@ public class MediaUtils {
                 }
                 inputStream.close();
             } catch (FileNotFoundException e) {
-                AppLog.e(AppLog.T.API, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+                AppLog.e(AppLog.T.MEDIA, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
             } catch (IOException e) {
-                AppLog.e(AppLog.T.API, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+                AppLog.e(AppLog.T.MEDIA, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
             }
         }
 
@@ -332,5 +384,53 @@ public class MediaUtils {
         }
 
         return fileExtensionFromMimeType.toLowerCase();
+    }
+
+    public static String getPathFromContentUri(Context context, Uri imageUri) {
+        if(context == null || imageUri == null) {
+            return null;
+        }
+
+        String path = null;
+        String[] projection = new String[]{MediaStore.Images.Media.DATA};
+        Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
+        if (cur != null && cur.moveToFirst()) {
+            int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
+            path = cur.getString(dataColumn);
+        }
+        SqlUtils.closeCursor(cur);
+        return path;
+    }
+
+    public static long getVideoDurationMS(Context context, File file) {
+        if(context == null || file == null) {
+            AppLog.e(AppLog.T.MEDIA, "context and file can't be null.");
+            return 0L;
+        }
+        return getVideoDurationMS(context, Uri.fromFile(file));
+    }
+
+    public static long getVideoDurationMS(Context context, Uri videoUri) {
+        if(context == null || videoUri == null) {
+            AppLog.e(AppLog.T.MEDIA, "context and videoUri can't be null.");
+            return 0L;
+        }
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(context, videoUri);
+        } catch (IllegalArgumentException | SecurityException e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video.", e);
+            return 0L;
+        } catch (RuntimeException e) {
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5431
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video due to a Runtime Exception happened setting the datasource", e);
+            return 0L;
+        }
+
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        if (time == null) {
+            return 0L;
+        }
+        return Long.parseLong(time);
     }
 }

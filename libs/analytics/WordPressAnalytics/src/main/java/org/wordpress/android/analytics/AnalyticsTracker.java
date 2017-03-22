@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +24,13 @@ public final class AnalyticsTracker {
         APPLICATION_UPGRADED,
         READER_ACCESSED,
         READER_ARTICLE_COMMENTED_ON,
+        READER_ARTICLE_COMMENTS_OPENED,
+        READER_ARTICLE_COMMENT_LIKED,
+        READER_ARTICLE_COMMENT_UNLIKED,
         READER_ARTICLE_LIKED,
         READER_ARTICLE_OPENED,
         READER_ARTICLE_UNLIKED,
+        READER_ARTICLE_RENDERED,
         READER_BLOG_BLOCKED,
         READER_BLOG_FOLLOWED,
         READER_BLOG_PREVIEWED,
@@ -43,10 +48,15 @@ public final class AnalyticsTracker {
         READER_SEARCH_LOADED,
         READER_SEARCH_PERFORMED,
         READER_SEARCH_RESULT_TAPPED,
-        READER_RELATED_POST_CLICKED,
+        READER_GLOBAL_RELATED_POST_CLICKED,
+        READER_LOCAL_RELATED_POST_CLICKED,
         READER_VIEWPOST_INTERCEPTED,
         READER_BLOG_POST_INTERCEPTED,
         READER_FEED_POST_INTERCEPTED,
+        READER_WPCOM_BLOG_POST_INTERCEPTED,
+        READER_SIGN_IN_INITIATED,
+        READER_WPCOM_SIGN_IN_NEEDED,
+        READER_USER_UNAUTHORIZED,
         STATS_ACCESSED,
         STATS_INSIGHTS_ACCESSED,
         STATS_PERIOD_DAYS_ACCESSED,
@@ -65,6 +75,8 @@ public final class AnalyticsTracker {
         EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
         EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY,
+        EDITOR_RESIZED_PHOTO,
+        EDITOR_RESIZED_PHOTO_ERROR,
         EDITOR_UPDATED_POST,
         EDITOR_SCHEDULED_POST,
         EDITOR_CLOSED,
@@ -89,6 +101,9 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_ORDERED_LIST, // Visual editor only
         EDITOR_TAPPED_UNLINK, // Visual editor only
         EDITOR_TAPPED_UNORDERED_LIST, // Visual editor only
+        EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
+        EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
+        EDITOR_AZTEC_ENABLED, // Aztec editor only
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
         ME_GRAVATAR_TOOLTIP_TAPPED,
@@ -106,12 +121,21 @@ public final class AnalyticsTracker {
         NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS,
         NOTIFICATIONS_MISSING_SYNC_WARNING,
         NOTIFICATION_REPLIED_TO,
+        NOTIFICATION_QUICK_ACTIONS_REPLIED_TO,
         NOTIFICATION_APPROVED,
+        NOTIFICATION_QUICK_ACTIONS_APPROVED,
         NOTIFICATION_UNAPPROVED,
         NOTIFICATION_LIKED,
+        NOTIFICATION_QUICK_ACTIONS_LIKED,
         NOTIFICATION_UNLIKED,
         NOTIFICATION_TRASHED,
         NOTIFICATION_FLAGGED_AS_SPAM,
+        NOTIFICATION_SWIPE_PAGE_CHANGED,
+        NOTIFICATION_PENDING_DRAFTS_TAPPED,
+        NOTIFICATION_PENDING_DRAFTS_IGNORED,
+        NOTIFICATION_PENDING_DRAFTS_DISMISSED,
+        NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED,
+        NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED,
         OPENED_POSTS,
         OPENED_PAGES,
         OPENED_COMMENTS,
@@ -124,6 +148,10 @@ public final class AnalyticsTracker {
         OPENED_MY_PROFILE,
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
+        CREATE_ACCOUNT_INITIATED,
+        CREATE_ACCOUNT_EMAIL_EXISTS,
+        CREATE_ACCOUNT_USERNAME_EXISTS,
+        CREATE_ACCOUNT_FAILED,
         CREATED_ACCOUNT,
         CREATED_SITE,
         ACCOUNT_LOGOUT,
@@ -137,7 +165,12 @@ public final class AnalyticsTracker {
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
         SUPPORT_OPENED_HELPSHIFT_SCREEN,
-        SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE,
+        SUPPORT_USER_ACCEPTED_THE_SOLUTION,
+        SUPPORT_USER_REJECTED_THE_SOLUTION,
+        SUPPORT_USER_SENT_SCREENSHOT,
+        SUPPORT_USER_REVIEWED_THE_APP,
+        SUPPORT_USER_REPLIED_TO_HELPSHIFT,
+        LOGIN_ACCESSED,
         LOGIN_MAGIC_LINK_EXITED,
         LOGIN_MAGIC_LINK_FAILED,
         LOGIN_MAGIC_LINK_OPENED,
@@ -187,10 +220,13 @@ public final class AnalyticsTracker {
         SITE_SETTINGS_DELETE_SITE_REQUESTED,
         SITE_SETTINGS_DELETE_SITE_RESPONSE_OK,
         SITE_SETTINGS_DELETE_SITE_RESPONSE_ERROR,
+        SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED,
         ABTEST_START,
         TRAIN_TRACKS_RENDER,
         TRAIN_TRACKS_INTERACT,
         DEEP_LINKED,
+        DEEP_LINKED_FALLBACK,
+        DEEP_LINK_NOT_DEFAULT_HANDLER,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -234,6 +270,20 @@ public final class AnalyticsTracker {
         }
     }
 
+    /**
+     * A convenience method for logging an error event with some additional meta data.
+     * @param stat The stat to track.
+     * @param errorContext A string providing additional context (if any) about the error.
+     * @param errorType The type of error.
+     * @param errorDescription The error text or other description.
+     */
+    public static void track(Stat stat, String errorContext, String errorType, String errorDescription) {
+        Map<String, String> props = new HashMap<>();
+        props.put("error_context", errorContext);
+        props.put("error_type", errorType);
+        props.put("error_description", errorDescription);
+        track(stat, props);
+    }
 
     public static void flush() {
         if (mHasUserOptedOut) {

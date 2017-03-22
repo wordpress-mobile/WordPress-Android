@@ -12,9 +12,9 @@ import android.widget.RemoteViews;
 
 import com.android.volley.VolleyError;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,8 +43,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
         ((WordPress) context.getApplicationContext()).component().inject(this);
+        super.onReceive(context, intent);
     }
 
     private static void showMessage(Context context, int[] allWidgets, String message, SiteStore siteStore) {
@@ -61,7 +61,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             String name;
             if (site != null) {
                 name = context.getString(R.string.stats_widget_name_for_blog);
-                name = String.format(name, StringEscapeUtils.unescapeHtml(SiteUtils.getSiteNameOrHomeURL(site)));
+                name = String.format(name, StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(site)));
             } else {
                 name = context.getString(R.string.stats_widget_name);
             }
@@ -97,7 +97,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
         String name = context.getString(R.string.stats_widget_name_for_blog);
-        name = String.format(name, StringEscapeUtils.unescapeHtml(SiteUtils.getSiteNameOrHomeURL(site)));
+        name = String.format(name, StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(site)));
 
         for (int widgetId : allWidgets) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.stats_widget_layout);
@@ -119,7 +119,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             updateTabValue(context, remoteViews, R.id.stats_widget_likes, data.optString("likes", " 0"));
 
             Intent intent = new Intent(context, StatsActivity.class);
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+            intent.putExtra(WordPress.SITE, site);
             intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsActivity.StatsLaunchedFrom.STATS_WIDGET);
             intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -172,7 +172,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             }
 
             // Check if Jetpack or .com
-            if (site.isWPCom()) {
+            if (SiteUtils.isAccessibleViaWPComAPI(site)) {
                 // User cannot access stats for this .com blog
                 showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_no_permissions),
                         siteStore);
@@ -468,7 +468,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     private static void refreshWidgets(Context context, int[] appWidgetIds, SiteStore siteStore) {
-        // TODO: STORES: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
+        // TODO: FluxC: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
         // here in the AppWidgetProvider.
         // if (!mAccountStore.isSignedIn()) {
         //     showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));

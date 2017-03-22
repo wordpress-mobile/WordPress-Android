@@ -1,7 +1,9 @@
 package org.wordpress.android.util;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +23,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -39,11 +40,18 @@ public class WPActivityUtils {
         }
 
         Toolbar toolbar;
-        if (dialog.findViewById(android.R.id.list) == null) {
+        if (dialog.findViewById(android.R.id.list) == null &&
+                dialog.findViewById(android.R.id.list_container) == null) {
             return;
         }
 
-        ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
+        @SuppressLint("InlinedApi") View child = dialog.findViewById(android.R.id.list_container);
+        if (child == null) {
+            child = dialog.findViewById(android.R.id.list);
+            if (child == null) return;
+        }
+
+        ViewGroup root = (ViewGroup) child.getParent();
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
                 .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);
@@ -55,7 +63,7 @@ public class WPActivityUtils {
         titleView.setText(title);
 
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_left_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +114,7 @@ public class WPActivityUtils {
             String locale = sharedPreferences.getString(AppSettingsFragment.LANGUAGE_PREF_KEY, "");
 
             if (!TextUtils.isEmpty(contextCountry)) {
-                contextLanguage += "-" + contextCountry;
+                contextLanguage += "_" + contextCountry;
             }
 
             if (!locale.equals(contextLanguage)) {
@@ -139,5 +147,17 @@ public class WPActivityUtils {
         List<ResolveInfo> emailApps = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
         return !emailApps.isEmpty();
+    }
+
+    public static void disableComponent(Context context, Class<?> klass) {
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    public static void enableComponent(Context context, Class<?> klass) {
+        PackageManager pm = context.getPackageManager();
+        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

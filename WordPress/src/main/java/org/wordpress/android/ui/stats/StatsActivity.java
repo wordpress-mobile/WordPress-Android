@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -22,23 +20,31 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JetpackUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -68,7 +74,6 @@ public class StatsActivity extends AppCompatActivity
     private Spinner mSpinner;
     private NestedScrollViewExt mOuterScrollView;
 
-    private static final int REQUEST_JETPACK = 7000;
     public static final String ARG_LOCAL_TABLE_SITE_ID = "ARG_LOCAL_TABLE_SITE_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
@@ -80,6 +85,7 @@ public class StatsActivity extends AppCompatActivity
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
 
     private int mResultCode = -1;
     private SiteModel mSite;
@@ -106,6 +112,18 @@ public class StatsActivity extends AppCompatActivity
             return;
         }
 
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
         setContentView(R.layout.stats_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -123,21 +141,12 @@ public class StatsActivity extends AppCompatActivity
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
 
-                        if (mIsUpdatingStats) {
-                            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
-                            return;
-                        }
-
-                        mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
-                        if (checkCredentials()) {
-                            updateTimeframeAndDateAndStartRefreshOfFragments(true);
-                        }
+                        refreshStatsFromCurrentDate();
                     }
                 });
 
@@ -148,12 +157,11 @@ public class StatsActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
             mRequestedDate = savedInstanceState.getString(SAVED_STATS_REQUESTED_DATE);
             mThereWasAnErrorLoadingStats = savedInstanceState.getBoolean(SAVED_THERE_WAS_AN_ERROR_LOADING_STATS);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
-            if(yScrollPosition != 0) {
+            if (yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
                         if (!isFinishing()) {
@@ -163,8 +171,6 @@ public class StatsActivity extends AppCompatActivity
                 }, StatsConstants.STATS_SCROLL_TO_DELAY);
             }
         } else if (getIntent() != null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else if (getIntent().hasExtra(ARG_DESIRED_TIMEFRAME)) {
@@ -183,6 +189,12 @@ public class StatsActivity extends AppCompatActivity
             }
         }
 
+        if (!mAccountStore.hasAccessToken()) {
+            // If the user is not connected to WordPress.com, ask him to connect first.
+            startWPComLoginActivity();
+            return;
+        }
+        checkIfSiteHasAccessibleStats(mSite);
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
         // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
@@ -266,6 +278,33 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
+    private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
+        // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
+        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+            if (!site.isJetpackInstalled()) {
+                JetpackUtils.showInstallJetpackAlert(this, site);
+                return false;
+            }
+
+            if (!site.isJetpackConnected()) {
+                JetpackUtils.showJetpackNonConnectedAlert(this, site);
+                return false;
+            }
+            // TODO: if Jetpack site, we should check the stats option is enabled
+        }
+        return true;
+    }
+
+    private void startWPComLoginActivity() {
+        mResultCode = RESULT_CANCELED;
+        Intent signInIntent = new Intent(this, SignInActivity.class);
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mSite.getId());
+        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
+                getString(R.string.stats_sign_in_jetpack_different_com_account)
+        );
+        startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
+    }
+
     private void trackStatsAnalytics() {
         // Track usage here
         switch (mCurrentTimeframe) {
@@ -289,6 +328,7 @@ public class StatsActivity extends AppCompatActivity
 
     @Override
     protected void onStop() {
+        mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
@@ -297,15 +337,14 @@ public class StatsActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mIsInFront = true;
-        if (NetworkUtils.checkConnection(this)) {
-            checkCredentials();
-        } else {
+        if (!NetworkUtils.checkConnection(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
         ActivityId.trackLastActivity(ActivityId.STATS);
@@ -517,52 +556,10 @@ public class StatsActivity extends AppCompatActivity
                 finish();
             }
         }
-    }
-
-    private void showJetpackMissingAlert() {
-        if (isFinishing()) {
-            return;
+        if (requestCode == RequestCodes.REQUEST_JETPACK) {
+            // Refresh the site in case we're back from Jetpack install Webview
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (mSite.isAdmin()) {
-            builder.setMessage(getString(R.string.jetpack_message))
-                    .setTitle(getString(R.string.jetpack_not_found));
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    String stringToLoad = mSite.getAdminUrl()
-                            + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
-                            + "&plugin-search-input=Search+Plugins";
-                    String authURL = WPWebViewActivity.getSiteLoginUrl(mSite);
-                    Intent jetpackIntent = new Intent(StatsActivity.this, WPWebViewActivity.class);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, mSite.getUsername());
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, mSite.getPassword());
-                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
-                }
-            });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User cancelled the dialog. Hide Stats.
-                    finish();
-                }
-            });
-        } else {
-            builder.setMessage(getString(R.string.jetpack_message_not_admin))
-                    .setTitle(getString(R.string.jetpack_not_found));
-            builder.setPositiveButton(R.string.yes, null);
-        }
-
-        AlertDialog dialog = builder.create();
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                // User pressed the back key Hide Stats.
-                finish();
-            }
-        });
-        dialog.show();
     }
 
     @Override
@@ -592,6 +589,16 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
+    private void refreshStatsFromCurrentDate() {
+        if (mIsUpdatingStats) {
+            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
+            return;
+        }
+
+        mRequestedDate = StatsUtils.getCurrentDateTZ(mSite);
+        updateTimeframeAndDateAndStartRefreshOfFragments(true);
+    }
+
     // StatsVisitorsAndViewsFragment calls this when the user taps on a bar in the graph
     @Override
     public void onDateChanged(long siteId, StatsTimeframe timeframe, String date) {
@@ -611,25 +618,6 @@ public class StatsActivity extends AppCompatActivity
     @Override
     public void onOverviewItemChanged(StatsVisitorsAndViewsFragment.OverviewLabel newItem) {
         mTabToSelectOnGraph = newItem;
-    }
-
-    private boolean checkCredentials() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            AppLog.w(AppLog.T.STATS, "StatsActivity > cannot check credentials since no internet connection available");
-            return false;
-        }
-
-        long siteId = mSite.getSiteId();
-
-        // siteId is always available for dotcom blogs. It could be 0 on some self hosted sites.
-        if (siteId == 0) {
-            // TODO: STORES: we could log the user in wpcom if he uses a self hosted site and has jetpack installed
-            Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
-            AppLog.e(T.STATS, "Invalid site id for: " + mSite.getUrl());
-            finish();
-        }
-
-        return true;
     }
 
     private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
@@ -802,4 +790,22 @@ public class StatsActivity extends AppCompatActivity
             return true;
         }
     };
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        // "Reload" current site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        SiteModel site = mSiteStore.getSiteByLocalId(mSite.getId());
+        if (site != null) {
+            mSite = site;
+        }
+
+        // Make sure the update site is accessible
+        checkIfSiteHasAccessibleStats(mSite);
+
+        // Refresh Stats
+        refreshStatsFromCurrentDate();
+    }
 }

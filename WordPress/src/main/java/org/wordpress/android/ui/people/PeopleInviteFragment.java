@@ -2,8 +2,6 @@ package org.wordpress.android.ui.people;
 
 
 import android.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +24,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.Role;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
 import org.wordpress.android.util.EditTextUtils;
@@ -33,7 +32,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.MultiUsernameEditText;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +44,7 @@ import java.util.Map;
 
 public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
+    private static final String URL_USER_ROLES_DOCUMENTATION = "https://en.support.wordpress.com/user-roles/";
     private static final String FLAG_SUCCESS = "SUCCESS";
     private static final int MAX_NUMBER_OF_INVITEES = 10;
     private static final String[] USERNAME_DELIMITERS = {" ", ","};
@@ -209,25 +208,27 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             populateUsernameButtons(usernames);
         }
 
-
-        view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite.isPrivate());
-            }
-        });
-
         mRoleTextView = (TextView) view.findViewById(R.id.role);
         setRole(role);
         ImageView imgRoleInfo = (ImageView) view.findViewById(R.id.imgRoleInfo);
         imgRoleInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(getString(R.string.role_info_url));
-                AppLockManager.getInstance().setExtendedTimeout();
-                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                ActivityLauncher.openUrlExternal(v.getContext(), URL_USER_ROLES_DOCUMENTATION);
             }
         });
+
+        if (Role.inviteRoles(mSite).length > 1) {
+            view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite);
+                }
+            });
+        } else {
+            // Don't show drop-down arrow or role selector if there's only one role available
+            mRoleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
 
         final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
@@ -288,7 +289,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     private Role getDefaultRole() {
-        Role[] inviteRoles = Role.inviteRoles(mSite.isPrivate());
+        Role[] inviteRoles = Role.inviteRoles(mSite);
         return inviteRoles[0];
     }
 

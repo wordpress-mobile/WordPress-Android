@@ -6,11 +6,16 @@
     <!-- account setup -->
     <string name="xmlrpc_error">Couldn\'t connect. Enter the full path to xmlrpc.php on your site and try again.</string>
     <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
+        that in order to communicate with your site. Contact your host to solve this problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        this problem.</string>
     <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="sign_out_wpcom_confirm">Disconnecting your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
+    <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 
     <!-- form labels -->
@@ -48,6 +53,7 @@
     <string name="deselect_all">Deselect all</string>
     <string name="notification_sound">Notification sound</string>
     <string name="notification_vibrate">Vibrate</string>
+    <string name="notification_pending_drafts">Notify me on pending drafts</string>
     <string name="notification_blink">Blink notification light</string>
     <string name="sure_to_remove_account">Remove this site?</string>
     <string name="yes">Yes</string>
@@ -69,20 +75,25 @@
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
-    <string name="sign_in">Sign in</string>
-    <string name="signing_out">Signing out…</string>
+    <string name="sign_in">Log in</string>
+    <string name="signing_out">Logging out…</string>
+    <string name="sign_in_wpcom">Log in to WordPress.com</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
     <string name="interface_language">Interface Language</string>
-    <string name="signout">Disconnect</string>
+    <string name="signout">Log out</string>
     <string name="undo">Undo</string>
     <string name="never">Never</string>
     <string name="unknown">Unknown</string>
     <string name="off">Off</string>
     <string name="could_not_load_page">Could not load page</string>
     <string name="send">Send</string>
+    <string name="swipe_for_more">Swipe for more</string>
+    <string name="confirm">Confirm</string>
+    <string name="no_default_app_available_to_open_link">Unable to open the link</string>
+    <string name="retry">Retry</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -92,16 +103,6 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="days_ago">%d days ago</string>
-
-    <!-- MediaPicker -->
-    <string name="add_to_post">Add to Post</string>
-    <string name="media_picker_title">Select media</string>
-    <string name="take_photo">Take a photo</string>
-    <string name="take_video">Take a video</string>
-    <string name="tab_title_device_images">Device Images</string>
-    <string name="tab_title_device_videos">Device Videos</string>
-    <string name="tab_title_site_images">Site Images</string>
-    <string name="tab_title_site_videos">Site Videos</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -117,7 +118,6 @@
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
-    <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="media_gallery_settings_title">Gallery settings</string>
     <string name="media_gallery_image_order">Image order</string>
     <string name="media_gallery_image_order_random">Random</string>
@@ -139,25 +139,13 @@
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
-    <string name="loading_videos">Loading videos</string>
-    <string name="loading_images">Loading images</string>
-    <string name="loading_blog_images">Fetching images</string>
-    <string name="loading_blog_videos">Fetching videos</string>
-    <string name="no_media">No media</string>
-    <string name="no_media_sources">Couldn\'t fetch media</string>
-    <string name="error_loading_images">Error loading images</string>
-    <string name="error_loading_videos">Error loading videos</string>
-    <string name="error_loading_blog_images">Unable to fetch images</string>
-    <string name="error_loading_blog_videos">Unable to fetch videos</string>
-    <string name="no_device_images">No images</string>
-    <string name="no_device_videos">No videos</string>
-    <string name="no_blog_images">No images</string>
-    <string name="no_blog_videos">No videos</string>
     <string name="upload_queued">Queued</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
     <string name="media_uploaded_on">Uploaded on: %s</string>
     <string name="media_dimensions">Dimensions: %s</string>
+    <string name="media_upload_error">Media upload error occurred</string>
+    <string name="media_generic_error">Media error occurred</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -172,6 +160,7 @@
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
+    <string name="confirm_discard_changes">Discard unsaved changes?</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Delete selected item?</string>
@@ -179,7 +168,6 @@
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="media_empty_list">No media</string>
-    <string name="media_empty_list_custom_date">No media in this time interval</string>
     <string name="delete">Delete</string>
 
     <!-- Media details -->
@@ -330,7 +318,20 @@
     <string name="comment_moderated_unapproved">Comment unapproved</string>
     <string name="comment_liked">Comment liked</string>
     <string name="comment_q_action_done_generic">Action done!</string>
-    <string name="comment_q_action_updating">Updating…</string>
+    <string name="comment_q_action_processing">Processing…</string>
+    <string name="comment_q_action_liking">Liking…</string>
+    <string name="comment_q_action_approving">Approving…</string>
+    <string name="comment_q_action_replying">Replying…</string>
+
+    <!-- pending draft local notifications -->
+    <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
+    <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
+    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+    <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
+    <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+    <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
+
+    <string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
 
     <!-- edit comment view -->
     <string name="author_name">Author name</string>
@@ -378,21 +379,19 @@
     <string name="uploading_total">Uploading %1$d of %2$d</string>
 
     <!-- new account view -->
-    <string name="signing_in">Signing in…</string>
-    <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
-
+    <string name="signing_in">Logging in…</string>
+    <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
+        address. Check the site address (URL) you entered.</string>
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
-    <string name="select_from_new_picker">Multi-select with the new picker</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
     <string name="add_new_category">Add new category</string>
     <string name="add_category">Add category</string>
     <string name="category_name">Category name</string>
-    <string name="category_slug">Category slug (optional)</string>
     <string name="category_desc">Category description (optional)</string>
     <string name="category_parent">Category parent (optional):</string>
     <string name="adding_cat_failed">Adding category failed</string>
@@ -462,10 +461,10 @@
     <string name="site_settings_language_title" translatable="false">@string/language</string>
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
-    <string name="site_settings_location_title">Enable Location</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_image_original_size">Original Size</string>
+    <string name="site_settings_optimize_images">Optimize Images</string>
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
     <string name="site_settings_upload_and_link_image_title" translatable="false">@string/upload_full_size_image</string>
     <string name="site_settings_related_posts_title" translatable="false">@string/related_posts</string>
@@ -474,7 +473,7 @@
     <string name="site_settings_send_pingbacks_title">Send Pingbacks</string>
     <string name="site_settings_receive_pingbacks_title">Receive Pingbacks</string>
     <string name="site_settings_identity_required_title">Must include name and email</string>
-    <string name="site_settings_account_required_title">Users must be signed in</string>
+    <string name="site_settings_account_required_title">Users must be logged in</string>
     <string name="site_settings_close_after_title" translatable="false">@string/close_after</string>
     <string name="site_settings_sort_by_title">Sort by</string>
     <string name="site_settings_threading_title">Threading</string>
@@ -547,11 +546,10 @@
     <string name="site_settings_language_hint">Language this blog is primarily written in</string>
     <string name="site_settings_username_hint">Current user account</string>
     <string name="site_settings_password_hint">Change your password</string>
-    <string name="site_settings_location_hint">Automatically add location data to your posts</string>
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
-    <string name="site_settings_upload_and_link_image_hint">Enable to always upload the fullsize image</string>
+    <string name="site_settings_optimize_images_hint">Enable to save bandwidth on mobile connections</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
@@ -613,7 +611,7 @@
     <!-- Errors -->
     <string name="site_settings_unsupported_version_error">Unsupported WordPress version</string>
     <string name="site_settings_unknown_language_code_error">Language code not recognized</string>
-    <string name="site_settings_disconnected_toast">Disconnected, editing disabled.</string>
+    <string name="site_settings_disconnected_toast">Logged out, editing disabled.</string>
 
     <!--               -->
     <!-- Site Settings -->
@@ -625,7 +623,23 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
-    <string name="preference_show_visual_editor">Show visual editor</string>
+    <string name="preference_editor_type">Set editor type</string>
+
+    <string name="preference_editor_legacy">Legacy</string>
+    <string name="preference_editor_visual">Visual</string>
+    <string name="preference_editor_aztec" translatable="false">Aztec</string>
+
+    <string-array name="editor_entries" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+        <item>@string/preference_editor_aztec</item>
+    </string-array>
+
+    <string-array name="editor_entries_without_aztec" translatable="false">
+        <item>@string/preference_editor_legacy</item>
+        <item>@string/preference_editor_visual</item>
+    </string-array>
+
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -641,7 +655,7 @@
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
-    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, sign in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="stats_enable_rest_api_in_jetpack">To view your stats, enable the JSON API module in Jetpack.</string>
 
     <!-- stats: Widget labels -->
@@ -815,6 +829,7 @@
     <string name="http_authorization_required">Authorization required</string>
 
     <!-- post scheduling and password -->
+    <string name="submit_for_review">Submit</string>
     <string name="publish_date">Publish</string>
     <string name="post_format">Post format</string>
     <string name="schedule_verb">Schedule</string>
@@ -839,21 +854,24 @@
     <string name="notifications_empty_action_unread">Reignite the conversation: write a new post.</string>
     <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
-    <string name="notifications_account_required">Sign in to WordPress.com for notifications</string>
+    <string name="notifications_account_required">Log in to WordPress.com for notifications</string>
     <string name="notifications_empty_view_reader">View Reader</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
-    <string name="push_auth_expired">The request has expired. Sign in to WordPress.com to try again.</string>
+    <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="unread">Unread</string>
     <string name="follows">Follows</string>
+    <string name="notifications_label_new_notifications">New notifications</string>
+    <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
     <string name="notifications_sights_and_sounds">Sights and Sounds</string>
     <string name="your_sites">Your Sites</string>
+    <string name="all_your_sites">All My Sites</string>
     <string name="notifications_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notifications_account_emails">Email from WordPress.com</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
@@ -921,6 +939,10 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
+    <string name="visual_editor_disabled">Visual Editor disabled</string>
+    <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
+    <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
+    <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
     <string name="new_editor_promo_button_label">Great, thanks!</string>
     <string name="new_editor_promo_title">Brand new editor</string>
     <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
@@ -944,7 +966,8 @@
     <string name="post_format_standard">Standard</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
-    <string-array name="post_formats_array" translatable="false">
+    <string-array name="post_format_display_names" translatable="false">
+        <item>@string/post_format_standard</item>
         <item>@string/post_format_aside</item>
         <item>@string/post_format_audio</item>
         <item>@string/post_format_chat</item>
@@ -952,7 +975,6 @@
         <item>@string/post_format_image</item>
         <item>@string/post_format_link</item>
         <item>@string/post_format_quote</item>
-        <item>@string/post_format_standard</item>
         <item>@string/post_format_status</item>
         <item>@string/post_format_video</item>
     </string-array>
@@ -1013,6 +1035,7 @@
     <string name="blogusername">blogusername</string>
     <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
+    <string name="wordpress_dot_com_capitalized" translatable="false">WordPress.com</string>
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
@@ -1039,8 +1062,14 @@
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
+    <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
+    <string name="error_media_not_found">Media could not be found</string>
+    <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
+    <string name="error_media_parse_format">Could not parse response to %s media</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
+    <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
+    <string name="error_media_load">Unable to load media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1082,11 +1111,16 @@
     <!--
       Jetpack strings
     -->
-    <string name="jetpack_message">The Jetpack plugin is required for stats. Do you want to install Jetpack?</string>
-    <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
+    <string name="jetpack_info">Jetpack info</string>
+    <string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
+    <string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
+    <string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_not_connected">Jetpack plugin not connected</string>
     <string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
+    <string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
+    <string name="jetpack_stats_module_disabled_message">The Jetpack plugin is connected, but the Stats module is not active. Do you want to activate Stats?</string>
+    <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
 
     <!--
       reader strings
@@ -1098,10 +1132,12 @@
     <string name="reader_untitled_post">(Untitled)</string>
 
     <!-- activity titles -->
+    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Blog</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
@@ -1112,6 +1148,11 @@
     <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
+
+    <!-- Default tags -->
+    <string name="reader_discover_default_tag">Discover</string>
+    <string name="reader_followed_default_tag">Followed Sites</string>
+    <string name="reader_liked_default_tag">Posts I Like</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
@@ -1133,6 +1174,7 @@
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress.com</string>
+    <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">New posts</string>
@@ -1157,6 +1199,8 @@
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count_one">1 image</string>
     <string name="reader_label_image_count_multi">%d images</string>
+    <string name="reader_label_visit">Visit</string>
+    <string name="reader_photo_by">Photo by %s</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1182,7 +1226,6 @@
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
-    <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
@@ -1193,10 +1236,20 @@
     <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
     <string name="reader_toast_err_block_blog">Unable to block this blog</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
+    <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
+    <string name="reader_toast_err_comment_not_found">Comment not found!</string>
+    <string name="reader_toast_err_already_liked">You have already liked that comment</string>
+    <string name="reader_toast_err_url_intent">Unable to open %s</string>
+
+    <!-- snackbar messages -->
+    <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
 
     <!-- failure messages when retrieving a single reader post -->
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
+    <string name="reader_err_get_post_not_authorized_fallback">You\'re not authorized to view this post. Use the top action button to try a browser instead.</string>
+    <string name="reader_err_get_post_not_authorized_signin">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
+    <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
 
     <!-- empty list/grid text -->
@@ -1208,6 +1261,7 @@
     <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any sites yet</string>
+    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
@@ -1247,7 +1301,7 @@
     <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
     <string name="username_email">Email or username</string>
     <string name="site_address">Your self-hosted address (URL)</string>
-    <string name="connecting_wpcom">Connecting to WordPress.com</string>
+    <string name="connecting_wpcom">Logging in to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
     <string name="username_required">Enter a username</string>
     <string name="username_not_allowed">Username not allowed</string>
@@ -1277,6 +1331,7 @@
     <string name="blog_name_invalid">Invalid site address</string>
     <string name="blog_title_invalid">Invalid site title</string>
     <string name="username_invalid">Invalid username</string>
+    <string name="checking_username">Checking username</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="nux_tap_continue">Continue</string>
@@ -1284,30 +1339,37 @@
     <string name="nux_tutorial_get_started_title">Get started!</string>
     <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
-    <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
+    <string name="nux_oops_not_selfhosted_blog">Log in to WordPress.com</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
     <string name="verification_code">Verification code</string>
     <string name="invalid_verification_code">Invalid verification code</string>
+    <string name="invalid_verification_code_format">Must be six-digit number</string>
     <string name="verify">Verify</string>
     <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
     <string name="two_step_footer_button">Send code via text message</string>
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
-    <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
-    <string name="auth_required">Sign in again to continue.</string>
-    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we signed you
-        in. Try to sign in with your newly created username and password.</string>
+    <string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
+    <string name="auth_required">Log in again to continue.</string>
+    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we loggged you
+        in. Try to log in with your newly created username and password.</string>
     <string name="send_link">Send link</string>
-    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to sign in instantly</string>
+    <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
     <string name="logging_in">Logging in</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="check_your_email">Check your email</string>
     <string name="launch_your_email_app">Launch your email app</string>
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
-    <string name="access_token_migration_message">Updating…</string>
+    <string name="migration_message">Updating the WordPress app&#8230;</string>
+    <string name="migration_error_not_connected">Migration process failed: try launching the app when you have a
+        network connection.</string>
+    <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
+    <string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
+    <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
+    <string name="duplicate_site_detected">A duplicate site has been detected.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>
@@ -1318,6 +1380,7 @@
     <string name="help_center">Help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
+    <string name="tell_me_more">Tell me more</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1356,8 +1419,8 @@
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
-    <string name="me_connect_to_wordpress_com">Connect to WordPress.com</string>
-    <string name="me_disconnect_from_wordpress_com">Disconnect from WordPress.com</string>
+    <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
+    <string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
@@ -1365,11 +1428,6 @@
     <string name="site_privacy_private_desc">I would like my site to be private, visible only to users I choose</string>
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
-
-    <!-- Static URLs -->
-    <string name="privacy_settings_url" translatable="false">https://en.support.wordpress.com/privacy-settings</string>
-    <string name="language_settings_url" translatable="false">https://en.support.wordpress.com/language-settings</string>
-    <string name="role_info_url" translatable="false">https://en.support.wordpress.com/user-roles/</string>
 
     <string name="date_range_start_date">Start Date</string>
     <string name="date_range_end_date">End Date</string>
@@ -1465,6 +1523,7 @@
     <string name="role_contributor">Contributor</string>
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
+    <string name="role_subscriber">Subscriber</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

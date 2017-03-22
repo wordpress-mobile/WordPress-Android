@@ -14,9 +14,9 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
-import org.wordpress.android.models.Person;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.models.Person;
 import org.wordpress.android.models.Role;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
@@ -189,7 +189,7 @@ public class PersonDetailFragment extends Fragment {
         }
 
         RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
-                person.getLocalTableBlogId(), person.getRole());
+                mSiteStore.getSiteByLocalId(mLocalTableBlogId), person.getRole());
         dialog.show(getFragmentManager(), null);
     }
 

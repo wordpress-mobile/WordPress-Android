@@ -11,8 +11,8 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 
@@ -139,9 +139,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             // postFormats setting is not returned by this api call so copy it over
                             final Map<String, String> currentPostFormats = mSettings.postFormats;
 
+                            // Local settings
+                            boolean location = mSettings.location;
+                            boolean optimizedImage = mSettings.optimizedImage;
+
                             mSettings.copyFrom(mRemoteSettings);
 
                             mSettings.postFormats = currentPostFormats;
+                            mSettings.location = location;
+                            mSettings.optimizedImage = optimizedImage;
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);
@@ -324,6 +330,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Request a list of post categories for a site via the WordPress REST API.
      */
     private void fetchCategories() {
+        // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
         WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
                 new RestRequest.Listener() {
                     @Override

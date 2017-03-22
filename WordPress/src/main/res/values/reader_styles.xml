@@ -4,7 +4,7 @@
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
 -->
 <resources>
-    <style name="ReaderPhotoViewerTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="ReaderMediaViewerTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorAccent">@color/accent_material_dark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -31,7 +31,7 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
-        <item name="wpFontFamily">merriweather</item>
+        <item name="android:fontFamily">serif</item>
     </style>
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
@@ -45,18 +45,18 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
-        <item name="wpFontFamily">merriweather</item>
+        <item name="android:fontFamily">serif</item>
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/grey_darken_10</item>
-        <item name="android:drawableLeft">@drawable/noticon_clock</item>
+        <item name="android:drawableLeft">@drawable/ic_time_grey_darken_10_16dp</item>
     </style>
     <style name="ReaderTextView.Date.Large" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textColor">@color/grey_darken_10</item>
-        <item name="android:drawableLeft">@drawable/noticon_clock</item>
+        <item name="android:drawableLeft">@drawable/ic_time_grey_darken_10_16dp</item>
     </style>
     <style name="ReaderTextView.Action" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
@@ -93,6 +93,11 @@
     <style name="ReaderImageView.Featured" parent="ReaderImageView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/reader_featured_image_height</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+    <style name="ReaderImageView.Featured.CardView" parent="ReaderImageView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/reader_featured_image_height_cardview</item>
         <item name="android:scaleType">centerCrop</item>
     </style>
     <style name="ReaderImageView.Avatar" parent="ReaderImageView">

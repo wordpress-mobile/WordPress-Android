@@ -23,6 +23,7 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.ToastUtils;
 
 public class LearnMorePreference extends Preference
@@ -76,7 +77,7 @@ public class LearnMorePreference extends Preference
     @Override
     public void onClick(View v) {
         if (mDialog != null) return;
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_CLICKED);
+        AnalyticsTracker.track(Stat.SITE_SETTINGS_LEARN_MORE_CLICKED);
         showDialog();
     }
 
@@ -161,7 +162,7 @@ public class LearnMorePreference extends Preference
         public void onPageFinished(WebView webView, String url) {
             super.onPageFinished(webView, url);
             if (mDialog != null) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_LEARN_MORE_CLICKED);
+                AnalyticsTracker.track(Stat.SITE_SETTINGS_LEARN_MORE_LOADED);
                 webView.loadUrl(SUPPORT_CONTENT_JS);
                 mDialog.setContentView(webView);
                 webView.scrollTo(0, 0);

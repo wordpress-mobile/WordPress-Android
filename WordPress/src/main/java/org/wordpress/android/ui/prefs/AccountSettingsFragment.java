@@ -73,7 +73,6 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mWebAddressPreference.setOnPreferenceChangeListener(this);
 
         // load site list asynchronously
-        // TODO: STORES: call the site store here
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -288,7 +287,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<SiteModel> sites = mSiteStore.getWPComSites();
+            List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
             mPrimarySitePreference.setEntries(getSiteNamesFromSites(sites));
             mPrimarySitePreference.setEntryValues(getSiteIdsFromSites(sites));
             mPrimarySitePreference.setDetails(getHomeURLOrHostNamesFromSites(sites));

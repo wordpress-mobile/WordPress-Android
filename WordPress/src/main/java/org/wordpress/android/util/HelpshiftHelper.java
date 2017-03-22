@@ -13,7 +13,7 @@ import com.helpshift.exceptions.InstallException;
 import com.helpshift.support.Support;
 import com.helpshift.support.Support.Delegate;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -52,8 +52,10 @@ public class HelpshiftHelper {
 
     public enum Tag {
         ORIGIN_UNKNOWN("origin:unknown"),
-        ORIGIN_LOGIN_SCREEN_HELP("origin:login-screen-help"),
-        ORIGIN_LOGIN_SCREEN_ERROR("origin:login-screen-error"),
+        ORIGIN_LOGIN_SCREEN_WPCOM("origin:wpcom-login-screen"),
+        ORIGIN_LOGIN_SCREEN_SELFHOSTED("origin:wporg-login-screen"),
+        ORIGIN_LOGIN_SCREEN_JETPACK("origin:jetpack-login-screen"),
+        ORIGIN_SIGNUP_SCREEN("origin:signup-screen"),
         ORIGIN_ME_SCREEN_HELP("origin:me-screen-help"),
         ORIGIN_START_OVER("origin:start-over"),
         ORIGIN_DELETE_SITE("origin:delete-site");
@@ -93,6 +95,7 @@ public class HelpshiftHelper {
     public static void init(Application application) {
         InstallConfig installConfig = new InstallConfig.Builder()
                 .setEnableInAppNotification(true)
+                .setEnableDefaultFallbackLanguage(true)
                 .build();
         Core.init(Support.getInstance());
         try {
@@ -111,12 +114,28 @@ public class HelpshiftHelper {
             }
 
             @Override
-            public void newConversationStarted(String s) {
+            public void newConversationStarted(String newMessage) {
             }
 
             @Override
-            public void userRepliedToConversation(String s) {
-                AnalyticsTracker.track(Stat.SUPPORT_SENT_REPLY_TO_SUPPORT_MESSAGE);
+            public void userRepliedToConversation(String newMessage) {
+                switch (newMessage) {
+                    case Support.UserAcceptedTheSolution:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_ACCEPTED_THE_SOLUTION);
+                        break;
+                    case Support.UserRejectedTheSolution:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_REJECTED_THE_SOLUTION);
+                        break;
+                    case Support.UserSentScreenShot:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_SENT_SCREENSHOT);
+                        break;
+                    case Support.UserReviewedTheApp:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_REVIEWED_THE_APP);
+                        break;
+                    default:
+                        AnalyticsTracker.track(Stat.SUPPORT_USER_REPLIED_TO_HELPSHIFT);
+                        break;
+                }
             }
 
             @Override
@@ -254,6 +273,9 @@ public class HelpshiftHelper {
             mMetadata.put("blog-name-" + counter, site.getName());
             mMetadata.put("blog-url-" + counter, site.getUrl());
             mMetadata.put("blog-plan-" + counter, site.getPlanId());
+            if (site.isAutomatedTransfer()) {
+                mMetadata.put("is-automated-transfer-" + counter, "true");
+            }
             counter += 1;
         }
 
@@ -279,5 +301,14 @@ public class HelpshiftHelper {
         config.put(Support.CustomMetadataKey, mMetadata);
         config.put("showSearchOnNewConversation", true);
         return config;
+    }
+
+    public static Tag chooseHelpshiftLoginTag(boolean isJetpackAuth, boolean isWPComMode) {
+        // Tag assignment:
+        //  ORIGIN_LOGIN_SCREEN_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
+        //  ORIGIN_LOGIN_SCREEN_WPCOM for when trying to log into a WPCOM site and UI not in forced self-hosted mode
+        //  ORIGIN_LOGIN_SCREEN_SELFHOSTED when logging in a selfhosted site
+        return isJetpackAuth ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK :
+                (isWPComMode ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED);
     }
 }

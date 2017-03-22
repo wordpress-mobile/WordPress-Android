@@ -20,15 +20,13 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStoreUtils;
 
 import javax.inject.Inject;
 
@@ -70,11 +68,12 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             return;
         }
 
-        if (mSite.isWPCom()) {
+        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setHomeButtonEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
             }
 
             FragmentManager fragmentManager = getFragmentManager();
@@ -99,21 +98,13 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             mUsernameET = (EditText) findViewById(R.id.username);
             mPasswordET = (EditText) findViewById(R.id.password);
             Button removeBlogButton = (Button) findViewById(R.id.remove_account);
-
-            // remove blog & credentials apply only to dot org
-            if (mSite.isWPCom()) {
-                View credentialsRL = findViewById(R.id.sectionContent);
-                credentialsRL.setVisibility(View.GONE);
-                removeBlogButton.setVisibility(View.GONE);
-            } else {
-                removeBlogButton.setVisibility(View.VISIBLE);
-                removeBlogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        removeBlogWithConfirmation();
-                    }
-                });
-            }
+            removeBlogButton.setVisibility(View.VISIBLE);
+            removeBlogButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    removeBlogWithConfirmation();
+                }
+            });
 
             loadSettingsForBlog();
         }
@@ -123,7 +114,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (mSite.isWPCom() || mBlogDeleted) {
+        if (SiteUtils.isAccessibleViaWPComAPI(mSite) || mBlogDeleted) {
             return;
         }
 
@@ -180,6 +171,25 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     public void onSiteRemoved(OnSiteRemoved event) {
         setResult(RESULT_BLOG_REMOVED);
         finish();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteDeleted(OnSiteDeleted event) {
+        FragmentManager fragmentManager = getFragmentManager();
+        SiteSettingsFragment siteSettingsFragment =
+                (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
+
+        if (siteSettingsFragment != null) {
+            if (event.isError()) {
+                siteSettingsFragment.handleDeleteSiteError(event.error);
+                return;
+            }
+
+            siteSettingsFragment.handleSiteDeleted();
+            setResult(RESULT_BLOG_REMOVED);
+            finish();
+        }
     }
 
     private void loadSettingsForBlog() {

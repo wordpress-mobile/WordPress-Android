@@ -27,10 +27,10 @@ import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
-import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
@@ -160,7 +160,7 @@ public class StatsUtils {
                 || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
         } else {
-            String[] timezoneSplitted = org.apache.commons.lang.StringUtils.split(blogTimeZoneOption, ".");
+            String[] timezoneSplitted = org.apache.commons.lang3.StringUtils.split(blogTimeZoneOption, ".");
             timezoneNormalized = timezoneSplitted[0];
             if(timezoneSplitted.length > 1 && timezoneSplitted[1].equals("5")){
                 timezoneNormalized += ":30";
@@ -304,8 +304,7 @@ public class StatsUtils {
     }
 
     public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, long siteId,
-                                                            JSONObject response)
-            throws JSONException {
+                                                            JSONObject response) throws JSONException {
         BaseStatsModel model = null;
         switch (endpointName) {
             case VISITS:

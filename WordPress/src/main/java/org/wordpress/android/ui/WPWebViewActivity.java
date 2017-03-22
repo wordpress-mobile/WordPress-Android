@@ -80,6 +80,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String SHARABLE_URL = "sharable_url";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
+    public static final String ALLOWED_URLS = "allowed_urls";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
@@ -92,16 +93,24 @@ public class WPWebViewActivity extends WebViewActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user) {
-        openWPCOMURL(context, url, user);
-    }
-
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
         openWPCOMURL(context, url);
     }
 
-    // Note: The webview has links disabled
-    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url) {
+    // frameNonce is used to show drafts, without it "no page found" error would be thrown
+    public static void openJetpackBlogPostPreview(Context context, String url, String frameNonce) {
+        if (!TextUtils.isEmpty(frameNonce)) {
+            url += "&frame-nonce=" + frameNonce;
+        }
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        context.startActivity(intent);
+    }
+
+    // Note: The webview has links disabled (excepted for urls in the whitelist: listOfAllowedURLs)
+    public static void openUrlByUsingBlogCredentials(Context context, SiteModel site, PostModel post, String url,
+                                                     String[] listOfAllowedURLs) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -127,6 +136,7 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
+            intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(site, post));
         }
@@ -185,24 +195,6 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static void openWPCOMURL(Context context, String url, String user) {
-        if (!checkContextAndUrl(context, url)) {
-            return;
-        }
-
-        if (TextUtils.isEmpty(user)) {
-            AppLog.e(AppLog.T.UTILS, "Username empty/null");
-            return;
-        }
-
-        Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, user);
-        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
-        context.startActivity(intent);
-    }
-
-
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void configureWebView() {
@@ -223,6 +215,13 @@ public class WPWebViewActivity extends WebViewActivity {
             }
             if (!TextUtils.isEmpty(authURL)) {
                 allowedURL.add(authURL);
+            }
+
+            if(extras.getStringArray(ALLOWED_URLS) != null) {
+                String[] urls = extras.getStringArray(ALLOWED_URLS);
+                for (String currentURL: urls) {
+                    allowedURL.add(currentURL);
+                }
             }
         }
 
@@ -381,8 +380,7 @@ public class WPWebViewActivity extends WebViewActivity {
             startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             return true;
         } else if (itemID == R.id.menu_browser) {
-            ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL,
-                    mAccountStore.getAccount().getUserName());
+            ReaderActivityLauncher.openUrl(this, mWebView.getUrl(), ReaderActivityLauncher.OpenUrlType.EXTERNAL);
             return true;
         }
 

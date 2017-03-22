@@ -6,7 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.R;
 
 public class AccountSettingsActivity extends AppCompatActivity {
     private static final String KEY_ACCOUNT_SETTINGS_FRAGMENT = "account-settings-fragment";
@@ -18,6 +18,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.account_settings);
         }
 
         FragmentManager fragmentManager = getFragmentManager();

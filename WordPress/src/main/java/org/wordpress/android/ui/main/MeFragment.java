@@ -39,7 +39,6 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -52,19 +51,21 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStoreUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -90,6 +91,7 @@ public class MeFragment extends Fragment {
 
     private static final int CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
+    private ViewGroup mAvatarContainer;
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
     private ToolTipView mGravatarToolTipView;
@@ -185,6 +187,7 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
+        mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
         mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mAvatarTooltipAnchor = rootView.findViewById(R.id.avatar_tooltip_anchor);
@@ -199,7 +202,7 @@ public class MeFragment extends Fragment {
 
         addDropShadowToAvatar();
 
-        rootView.findViewById(R.id.avatar_container).setOnClickListener(new View.OnClickListener() {
+        mAvatarContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED);
@@ -214,6 +217,8 @@ public class MeFragment extends Fragment {
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
                     askForCameraOrGallery();
+                } else {
+                    AppLockManager.getInstance().setExtendedTimeout();
                 }
             }
         });
@@ -339,18 +344,19 @@ public class MeFragment extends Fragment {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void addDropShadowToAvatar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarImageView.setOutlineProvider(new ViewOutlineProvider() {
+            mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                    int padding = (mAvatarContainer.getWidth() - mAvatarImageView.getWidth()) / 2;
+                    outline.setOval(padding, padding, view.getWidth() - padding, view.getHeight() - padding);
                 }
             });
-            mAvatarImageView.setElevation(mAvatarImageView.getResources().getDimensionPixelSize(R.dimen.card_elevation));
+            mAvatarContainer.setElevation(mAvatarContainer.getResources().getDimensionPixelSize(R.dimen.card_elevation));
         }
     }
 
     private void refreshAccountDetails() {
-        if (!WPStoreUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             return;
         }
         // we only want to show user details for WordPress.com users
@@ -413,8 +419,9 @@ public class MeFragment extends Fragment {
                 EventBus.getDefault().post(new GravatarLoadFinished(false));
             }
 
-            // invalidate the WPNetworkImageView
-            mAvatarImageView.invalidateImage();
+            // reset the WPNetworkImageView
+            mAvatarImageView.resetImage();
+            mAvatarImageView.removeCurrentUrlFromSkiplist();
         }
 
         mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, new WPNetworkImageView
@@ -687,11 +694,10 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarLoadFinished event) {
-        showGravatarProgressBar(false);
-
-        if (!event.success) {
+        if (!event.success && mIsUpdatingGravatar) {
             Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast.LENGTH_SHORT).show();
         }
+        showGravatarProgressBar(false);
     }
 
     // injects a fabricated cache entry to the request cache
@@ -734,14 +740,14 @@ public class MeFragment extends Fragment {
         entry.responseHeaders.put("X-Android-Selected-Protocol", "http/1.1");
         entry.responseHeaders.put("X-Android-Sent-Millis", String.valueOf(currentTimeMs));
 
-        WordPress.requestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
+        WordPress.sRequestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
     }
 
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
         WeakReference<Context> mWeakContext;
 
         public SignOutWordPressComAsync(Context context) {
-            mWeakContext = new WeakReference<Context>(context);
+            mWeakContext = new WeakReference<>(context);
         }
 
         @Override
@@ -772,6 +778,7 @@ public class MeFragment extends Fragment {
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         refreshAccountDetails();

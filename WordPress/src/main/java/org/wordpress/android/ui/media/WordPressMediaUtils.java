@@ -6,38 +6,25 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.widget.ImageView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-
-import static org.wordpress.mediapicker.MediaUtils.fadeInImage;
 
 public class WordPressMediaUtils {
     public interface LaunchCameraCallback {
@@ -218,89 +205,9 @@ public class WordPressMediaUtils {
         }
     }
 
-    public static boolean canDeleteMedia(String blogId, String mediaID) {
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
-        if (!cursor.moveToFirst()) {
-            cursor.close();
-            return false;
-        }
-        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
-        cursor.close();
-        return state == null || !state.equals("uploading");
-    }
-
-    public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
-        WeakReference<ImageView> mReference;
-
-        public BackgroundDownloadWebImage(ImageView resultStore) {
-            mReference = new WeakReference<>(resultStore);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Uri... params) {
-            try {
-                String uri = params[0].toString();
-                Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
-
-                if (bitmap == null) {
-                    URL url = new URL(uri);
-                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    WordPress.getBitmapCache().put(uri, bitmap);
-                }
-
-                return bitmap;
-            }
-            catch(IOException notFoundException) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            ImageView imageView = mReference.get();
-
-            if (imageView != null) {
-                if (imageView.getTag() == this) {
-                    imageView.setImageBitmap(result);
-                    fadeInImage(imageView, result);
-                }
-            }
-        }
-    }
-
-    public static Cursor getWordPressMediaImages(String blogId) {
-        return WordPress.wpDB.getMediaImagesForBlog(blogId);
-    }
-
-    public static Cursor getWordPressMediaVideos(String blogId) {
-        return WordPress.wpDB.getMediaFilesForBlog(blogId);
-    }
-
-    /**
-     * Given a media file cursor, returns the thumbnail network URL. Will use photon if available, using the specified
-     * width.
-     * @param cursor the media file cursor
-     * @param width width to use for photon request (if applicable)
-     */
-    public static String getNetworkThumbnailUrl(Cursor cursor, SiteModel site, int width) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
-
-        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if (SiteUtils.isPhotonCapable(site)) {
-            String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-            if (imageURL != null) {
-                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, width, 0);
-            }
-        }
-
-        return thumbnailURL;
-    }
-
-    /**
-     * Loads the given network image URL into the {@link NetworkImageView}, using the default {@link ImageLoader}.
-     */
-    public static void loadNetworkImage(String imageUrl, NetworkImageView imageView) {
-        loadNetworkImage(imageUrl, imageView, WordPress.imageLoader);
+    public static boolean canDeleteMedia(MediaModel mediaModel) {
+        String state = mediaModel.getUploadState();
+        return state == null || (!state.equalsIgnoreCase("uploading") && !state.equalsIgnoreCase("deleted"));
     }
 
     /**
@@ -314,8 +221,8 @@ public class WordPressMediaUtils {
             int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
             imageView.setErrorImageResId(placeholderResId);
 
-            // no default image while downloading
-            imageView.setDefaultImageResId(0);
+            // default image while downloading
+            imageView.setDefaultImageResId(R.drawable.media_item_background);
 
             if (MediaUtils.isValidImage(filepath)) {
                 imageView.setTag(imageUrl);

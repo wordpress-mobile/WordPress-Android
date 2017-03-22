@@ -49,16 +49,19 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class NotificationsSettingsFragment extends PreferenceFragment {
+public class NotificationsSettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final int SITE_SEARCH_VISIBILITY_COUNT = 15;
     // The number of notification types we support (e.g. timeline, email, mobile)
     private static final int TYPE_COUNT = 3;
+    private static final int NO_MAXIMUM = -1;
+    private static final int MAX_SITES_TO_SHOW_ON_FIRST_SCREEN = 3;
 
     private NotificationsSettings mNotificationsSettings;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
+    private boolean mSearchMenuItemCollapsed = true;
 
     private String mDeviceId;
     private String mRestoredQuery;
@@ -66,6 +69,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     private int mSiteCount;
 
     private final List<PreferenceCategory> mTypePreferenceCategories = new ArrayList<>();
+    private PreferenceCategory mBlogsCategory;
+
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -104,10 +109,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         mNotificationsEnabled = NotificationsUtils.isNotificationsEnabled(getActivity());
-
         refreshSettings();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -117,17 +129,38 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         mSearchMenuItem = menu.findItem(R.id.menu_notifications_settings_search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         mSearchView.setQueryHint(getString(R.string.search_sites));
+        mBlogsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_blogs));
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                configureBlogsSettings();
+                configureBlogsSettings(mBlogsCategory, true);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                configureBlogsSettings();
+                // we need to perform this check because when the search menu item is collapsed
+                // a new queryTExtChange event is triggered with an empty value "", and we only
+                // would want to take care of it when the user actively opened/cleared the search term
+                configureBlogsSettings(mBlogsCategory, !mSearchMenuItemCollapsed);
+                return true;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                mSearchMenuItemCollapsed = false;
+                configureBlogsSettings(mBlogsCategory, true);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mSearchMenuItemCollapsed = true;
+                configureBlogsSettings(mBlogsCategory, false);
                 return true;
             }
         });
@@ -214,7 +247,12 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         }
 
         if (shouldUpdateUI) {
-            configureBlogsSettings();
+            if (mBlogsCategory == null) {
+                mBlogsCategory = (PreferenceCategory) findPreference(
+                        getString(R.string.pref_notification_blogs));
+            }
+
+            configureBlogsSettings(mBlogsCategory, false);
             configureOtherSettings();
             configureDotcomSettings();
         }
@@ -262,28 +300,30 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
 
     }
 
-    private void configureBlogsSettings() {
-        if (!isAdded())
-            return;
+    private void configureBlogsSettings(PreferenceCategory blogsCategory, boolean showAll) {
+        if (!isAdded()) return;
 
         List<SiteModel> sites;
         String trimmedQuery = "";
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             trimmedQuery = mSearchView.getQuery().toString().trim();
-            sites = mSiteStore.getWPComSiteByNameOrUrlMatching(trimmedQuery);
+            sites = mSiteStore.getWPComAndJetpackSitesByNameOrUrlMatching(trimmedQuery);
         } else {
-            sites = mSiteStore.getWPComSites();
+            sites = mSiteStore.getWPComAndJetpackSites();
         }
         mSiteCount = sites.size();
 
         Context context = getActivity();
 
-        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
-                getString(R.string.pref_notification_blogs));
         blogsCategory.removeAll();
 
+        int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
+        int count = 0;
         for (SiteModel site : sites) {
             if (context == null) return;
+
+            count++;
+            if (maxSitesToShow != NO_MAXIMUM && count > maxSitesToShow) break;
 
             PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
             prefScreen.setTitle(SiteUtils.getSiteNameOrHomeURL(site));
@@ -299,7 +339,24 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             blogsCategory.addPreference(searchResultsPref);
         }
 
+        if (mSiteCount > maxSitesToShow && !showAll) {
+            //append a "view all" option
+            appendViewAllSitesOption(context);
+        }
+
         updateSearchMenuVisibility();
+    }
+
+    private void appendViewAllSitesOption(Context context) {
+
+        PreferenceCategory blogsCategory = (PreferenceCategory) findPreference(
+                getString(R.string.pref_notification_blogs));
+
+        PreferenceScreen prefScreen = getPreferenceManager().createPreferenceScreen(context);
+        prefScreen.setTitle(R.string.all_your_sites);
+        addSitesForViewAllSitesScreen(prefScreen);
+        blogsCategory.addPreference(prefScreen);
+
     }
 
     private void updateSearchMenuVisibility() {
@@ -338,7 +395,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference timelinePreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.TIMELINE, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
-        timelinePreference.setIcon(R.drawable.ic_bell_grey);
+        timelinePreference.setIcon(R.drawable.ic_bell_grey_24dp);
         timelinePreference.setTitle(R.string.notifications_tab);
         timelinePreference.setDialogTitle(R.string.notifications_tab);
         timelinePreference.setSummary(R.string.notifications_tab_summary);
@@ -347,7 +404,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         NotificationsSettingsDialogPreference emailPreference = new NotificationsSettingsDialogPreference(
                 context, null, channel, NotificationsSettings.Type.EMAIL, blogId, mNotificationsSettings, mOnSettingsChangedListener
         );
-        emailPreference.setIcon(R.drawable.ic_email_grey);
+        emailPreference.setIcon(R.drawable.ic_mail_grey_24dp);
         emailPreference.setTitle(R.string.email);
         emailPreference.setDialogTitle(R.string.email);
         emailPreference.setSummary(R.string.notifications_email_summary);
@@ -359,7 +416,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
             NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
                     context, null, channel, NotificationsSettings.Type.DEVICE, blogId, mNotificationsSettings, mOnSettingsChangedListener
             );
-            devicePreference.setIcon(R.drawable.ic_phone_grey);
+            devicePreference.setIcon(R.drawable.ic_phone_grey_24dp);
             devicePreference.setTitle(R.string.app_notifications);
             devicePreference.setDialogTitle(R.string.app_notifications);
             devicePreference.setSummary(R.string.notifications_push_summary);
@@ -368,6 +425,17 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         }
 
         mTypePreferenceCategories.add(rootCategory);
+    }
+
+    private void addSitesForViewAllSitesScreen(PreferenceScreen preferenceScreen) {
+        Context context = getActivity();
+        if (context == null) return;
+
+        PreferenceCategory rootCategory = new PreferenceCategory(context);
+        rootCategory.setTitle(R.string.your_sites);
+        preferenceScreen.addPreference(rootCategory);
+
+        configureBlogsSettings(rootCategory, true);
     }
 
     private final NotificationsSettingsDialogPreference.OnNotificationsSettingsChangedListener mOnSettingsChangedListener =
@@ -450,5 +518,20 @@ public class NotificationsSettingsFragment extends PreferenceFragment {
         }
 
         return false;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_key_notification_pending_drafts))) {
+            if (getActivity() != null) {
+                SharedPreferences prefs = android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+                boolean shouldNotifyOfPendingDrafts = prefs.getBoolean("wp_pref_notification_pending_drafts", true);
+                if (shouldNotifyOfPendingDrafts) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED);
+                }
+            }
+        }
     }
 }
