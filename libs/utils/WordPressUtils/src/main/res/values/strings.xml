@@ -2,5 +2,4 @@
 <resources>
     <string name="no_network_message">There is no network available</string>
     <string name="timespan_now">Now</string>
-    <string name="timespan_ago">ago</string>
 </resources>
