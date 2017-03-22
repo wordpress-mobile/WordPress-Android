@@ -1657,5 +1657,6 @@
     <string name="lost_password">Lost your password?</string>
     <string name="login">Login</string>
     <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
 
 </resources>
