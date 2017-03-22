@@ -301,7 +301,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
                 mListener.onMagicLinkRequestSuccess(mEmail);
             }
         } else {
-            // TODO: Let the user know that the email is not a wordpress.com one and retry
+            showEmailError(R.string.email_not_found);
         }
     }
 }
