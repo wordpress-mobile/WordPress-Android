@@ -59,7 +59,11 @@ public abstract class EditorWebViewAbstract extends WebView {
 
         this.setWebViewClient(new WebViewClient() {
             @Override
+            @SuppressWarnings("deprecation")
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // Only used on API16, because of security issues with addJavascriptInterface below API 17.
+                // Instead of a JS interface, we use an iframe in the editor JavaScript to make callbacks as URL
+                // requests, which are intercepted here.
                 if (url != null && url.startsWith("callback") && mJsCallbackReceiver != null) {
                     String data = URLDecoder.decode(url);
                     String[] split = data.split(":", 2);
