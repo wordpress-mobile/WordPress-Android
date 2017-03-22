@@ -3784,21 +3784,21 @@ ZSSField.prototype.getHTML = function() {
 ZSSField.prototype.getHTMLForCallback = function() {
     var functionArgument = "function=getHTMLForCallback";
     var idArgument = "id=" + this.getNodeId();
-    var contentsArgument;
 
+    var contents;
     if (this.hasNoStyle) {
-        contentsArgument = "contents=" + this.strippedHTML();
+        contents = this.strippedHTML();
     } else {
-        var html;
-        if (nativeState.androidApiLevel < 17) {
-            // URI Encode HTML on API < 17 because of the use of WebViewClient.shouldOverrideUrlLoading. Data must
-            // be decoded in shouldOverrideUrlLoading.
-            html = encodeURIComponent(this.getHTML());
-        } else {
-            html = this.getHTML();
-        }
-        contentsArgument = "contents=" + html;
+        contents = this.getHTML();
     }
+
+    if (nativeState.androidApiLevel < 17) {
+        // URI Encode HTML on API < 17 because of the use of WebViewClient.shouldOverrideUrlLoading. Data must
+        // be decoded in shouldOverrideUrlLoading.
+        contents = encodeURIComponent(contents);
+    }
+
+    var contentsArgument = "contents=" + contents;
     var joinedArguments = functionArgument + defaultCallbackSeparator + idArgument + defaultCallbackSeparator +
         contentsArgument;
     ZSSEditor.callback('callback-response-string', joinedArguments);
