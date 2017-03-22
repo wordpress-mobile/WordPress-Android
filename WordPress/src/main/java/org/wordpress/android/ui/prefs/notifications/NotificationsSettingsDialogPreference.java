@@ -19,7 +19,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.NotificationsSettings;
 import org.wordpress.android.models.NotificationsSettings.Channel;
 import org.wordpress.android.models.NotificationsSettings.Type;
-import org.wordpress.android.ui.stats.ScrollViewExt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
