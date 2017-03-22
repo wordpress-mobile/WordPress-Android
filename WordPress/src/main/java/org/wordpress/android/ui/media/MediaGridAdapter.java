@@ -125,7 +125,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
 
-        boolean isLocalFile = MediaUtils.isLocalFile(state);
+        boolean isLocalFile = MediaUtils.isLocalFile(state) && !TextUtils.isEmpty(filePath);
         boolean isSelected = isItemSelected(localMediaId);
         boolean isImage = mimeType.startsWith("image/");
 
