@@ -1,18 +1,5 @@
 package org.wordpress.android.ui.accounts.login;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -26,10 +13,25 @@ import org.wordpress.android.ui.accounts.JetpackCallbacks;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.widgets.WPTextView;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class MagicLinkRequestFragment extends Fragment {
+    public static final String TAG = "magic_link_request_fragment_tag";
+
     public static final String EMAIL_KEY = "email";
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String CLIENT_SECRET_KEY = "client_secret";

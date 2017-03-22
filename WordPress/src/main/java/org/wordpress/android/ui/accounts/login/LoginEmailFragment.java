@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 public class LoginEmailFragment extends AbstractFragment implements TextWatcher {
-    public static final String TAG = "sign_in_fragment_tag";
+    public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
     protected EditText mEmailEditText;

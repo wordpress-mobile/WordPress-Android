@@ -15,6 +15,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -35,6 +36,8 @@ import javax.inject.Inject;
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, JetpackCallbacks,
         SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
+    public static final boolean USE_NEW_LOGIN_FLOWS = true;
+
     public static final int SIGN_IN_REQUEST = 1;
     public static final int REQUEST_CODE = 5000;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
@@ -134,15 +137,25 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     private void attemptLoginWithToken(Uri uri) {
-        getSignInFragment().setToken(uri.getQueryParameter(TOKEN_PARAMETER));
-        SignInFragment signInFragment = getSignInFragment();
-        slideInFragment(signInFragment, false);
+        if (!USE_NEW_LOGIN_FLOWS) {
+            getSignInFragment().setToken(uri.getQueryParameter(TOKEN_PARAMETER));
+            SignInFragment signInFragment = getSignInFragment();
+            slideInFragment(signInFragment, false, SignInFragment.TAG);
+        } else {
+            MagicLinkSentFragment magicLinkSentFragment = getMagicLinkSentFragment();
+            magicLinkSentFragment.setToken(uri.getQueryParameter(TOKEN_PARAMETER));
+            slideInFragment(magicLinkSentFragment, false, MagicLinkSentFragment.TAG);
+        }
 
         mProgressDialog = ProgressDialog
                 .show(this, "", getString(R.string.logging_in), true, true, new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        getSignInFragment().setToken("");
+                        if (!USE_NEW_LOGIN_FLOWS) {
+                            getSignInFragment().setToken("");
+                        } else {
+                            getMagicLinkSentFragment().setToken("");
+                        }
                     }
                 });
         mProgressDialog.show();
@@ -190,6 +203,16 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
     }
 
+    public MagicLinkSentFragment getMagicLinkSentFragment() {
+        MagicLinkSentFragment magicLinkSentFragment =
+                (MagicLinkSentFragment) getSupportFragmentManager().findFragmentByTag(MagicLinkSentFragment.TAG);
+        if (magicLinkSentFragment == null) {
+            return new MagicLinkSentFragment();
+        } else {
+            return magicLinkSentFragment;
+        }
+    }
+
     public SmartLockHelper getSmartLockHelper() {
         return mSmartLockHelper;
     }
@@ -204,21 +227,28 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     protected void addLoginFragment() {
-        LoginEmailFragment loginEmailFragment = new LoginEmailFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, loginEmailFragment, SignInFragment.TAG);
-        fragmentTransaction.commit();
+        if (!USE_NEW_LOGIN_FLOWS) {
+            SignInFragment signInFragment = new SignInFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, signInFragment, SignInFragment.TAG);
+            fragmentTransaction.commit();
+        } else {
+            LoginEmailFragment loginEmailFragment = new LoginEmailFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, loginEmailFragment, LoginEmailFragment.TAG);
+            fragmentTransaction.commit();
+        }
     }
 
-    private void slideInFragment(Fragment fragment) {
-        slideInFragment(fragment, true);
+    private void slideInFragment(Fragment fragment, String tag) {
+        slideInFragment(fragment, true, tag);
     }
 
-    private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack) {
+    private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                 R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         if (shouldAddToBackStack) {
             fragmentTransaction.addToBackStack(null);
         }
@@ -258,8 +288,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
 
     @Override
     public void onMagicLinkSent() {
-        MagicLinkSentFragment magicLinkSentFragment = new MagicLinkSentFragment();
-        slideInFragment(magicLinkSentFragment);
+        slideInFragment(getMagicLinkSentFragment(), MagicLinkSentFragment.TAG);
     }
 
     @Override
@@ -271,9 +300,17 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     @Override
+    public void onMagicLinkFlowSucceeded() {
+        Intent intent = new Intent(this, WPMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(SignInActivity.MAGIC_LOGIN, true);
+        startActivity(intent);
+    }
+
+    @Override
     public void onMagicLinkRequestSuccess(String email) {
         MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
-        slideInFragment(magicLinkRequestFragment);
+        slideInFragment(magicLinkRequestFragment, MagicLinkRequestFragment.TAG);
     }
 
     @Override
