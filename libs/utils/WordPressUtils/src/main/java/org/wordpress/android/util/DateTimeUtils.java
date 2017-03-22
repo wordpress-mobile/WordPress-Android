@@ -50,8 +50,8 @@ public class DateTimeUtils {
     }
 
     /**
-     * Converts a date to a relative time span ("8 hr. ago", "3 d", etc.) - similar to
-     * DateUtils.getRelativeTimeSpanString but returns shorter result
+     * Converts a date to a localized relative time span ("Now", "8 hr. ago", "Yesterday", "3 days ago", "Jul 10, 1940")
+     * We're using a call to `DateUtils.getRelativeTimeSpanString` in most cases.
      */
     public static String javaDateToTimeSpan(final Date date, Context context) {
         return javaDateToTimeSpan(date, context, System.currentTimeMillis());
