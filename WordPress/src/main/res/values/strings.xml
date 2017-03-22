@@ -940,7 +940,7 @@
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
     <string name="editor_post_saved_locally">The post was saved on your device</string>
-    <string name="editor_post_saved_locally_not_published">The post saved locally only. Consider publishing it.</string>
+    <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
     <string name="editor_post_saved_online">The post was saved online</string>
     <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
