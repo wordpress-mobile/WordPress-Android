@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -63,7 +65,9 @@ import okhttp3.OkHttpClient;
  */
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
-    private Call mCurrentUploadCall;
+    // this will hold which media is being uploaded by which call, in order to be able
+    // to monitor multiple uploads
+    private ConcurrentHashMap<UUID, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
@@ -245,10 +249,15 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
 
         // cancel in-progress upload if necessary
-        if (mCurrentUploadCall != null && mCurrentUploadCall.isExecuted() && !mCurrentUploadCall.isCanceled()) {
+        Call correspondingCall = mCurrentUploadCalls.get(media.getUploadUUID());
+        if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
-            mCurrentUploadCall.cancel();
-            mCurrentUploadCall = null;
+            correspondingCall.cancel();
+            // set the upload Cancelled flag on the media model so in case a failure is raised for this upload
+            // after cancellation (or as a product of it) we don't need to notify about the error
+            media.setUploadCancelled(true);
+            // clean from the current uploads map
+            mCurrentUploadCalls.remove(media.getUploadUUID());
         }
         // always report without error
         notifyMediaUploadCanceled(media);
@@ -272,8 +281,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 .post(body)
                 .build();
 
-        mCurrentUploadCall = mOkHttpClient.newCall(request);
-        mCurrentUploadCall.enqueue(new Callback() {
+        Call call = mOkHttpClient.newCall(request);
+        media.generateUploadUUID();
+        mCurrentUploadCalls.put(media.getUploadUUID(), call);
+
+        call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.isSuccessful()) {
@@ -294,19 +306,25 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaStore.MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
                         notifyMediaUploaded(media, error);
                     }
-                    mCurrentUploadCall = null;
+                    // clean from the current uploads map
+                    mCurrentUploadCalls.remove(media.getUploadUUID());
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaUploaded(media, parseUploadError(response));
-                    mCurrentUploadCall = null;
+                    // clean from the current uploads map
+                    mCurrentUploadCalls.remove(media.getUploadUUID());
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
-                MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                notifyMediaUploaded(media, error);
+                if (!media.isUploadCancelled()) {
+                    MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                    notifyMediaUploaded(media, error);
+                }
+                // clean from the current uploads map
+                mCurrentUploadCalls.remove(media.getUploadUUID());
             }
         });
     }
