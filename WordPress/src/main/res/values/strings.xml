@@ -1065,7 +1065,7 @@
     <string name="error_generic">An error occurred</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
-    <string name="error_publish_empty_post">Can\'t publish an empty post.</string>
+    <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
     <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
