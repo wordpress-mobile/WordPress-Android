@@ -58,6 +58,10 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
 
+    public String getEmail() {
+        return mEmail;
+    }
+
     private SignInFragment.OnMagicLinkRequestInteraction mListener;
 
     @Override

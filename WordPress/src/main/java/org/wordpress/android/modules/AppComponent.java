@@ -15,6 +15,7 @@ import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.NewUserFragment;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -106,6 +107,7 @@ public interface AppComponent {
     void inject(SignInActivity object);
     void inject(SignInFragment object);
     void inject(LoginEmailFragment object);
+    void inject(LoginEmailPasswordFragment object);
     void inject(MagicLinkSentFragment object);
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);

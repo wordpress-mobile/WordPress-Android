@@ -26,7 +26,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -35,7 +34,8 @@ import javax.inject.Inject;
 
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, JetpackCallbacks,
-        SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction {
+        SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction,
+        LoginEmailPasswordFragment.OnEmailPasswordLoginInteraction {
     public static final boolean USE_NEW_LOGIN_FLOWS = true;
 
     public static final int SIGN_IN_REQUEST = 1;
@@ -203,6 +203,16 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
     }
 
+    public LoginEmailFragment getLoginEmailFragment() {
+        LoginEmailFragment loginEmailFragment =
+                (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
+        if (loginEmailFragment == null) {
+            return new LoginEmailFragment();
+        } else {
+            return loginEmailFragment;
+        }
+    }
+
     public MagicLinkSentFragment getMagicLinkSentFragment() {
         MagicLinkSentFragment magicLinkSentFragment =
                 (MagicLinkSentFragment) getSupportFragmentManager().findFragmentByTag(MagicLinkSentFragment.TAG);
@@ -213,17 +223,18 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         }
     }
 
-    public SmartLockHelper getSmartLockHelper() {
-        return mSmartLockHelper;
+    public LoginEmailPasswordFragment getLoginEmailPasswordFragment(String email) {
+        LoginEmailPasswordFragment loginEmailPasswordFragment =
+                (LoginEmailPasswordFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailPasswordFragment.TAG);
+        if (loginEmailPasswordFragment == null) {
+            return LoginEmailPasswordFragment.newInstance(email);
+        } else {
+            return loginEmailPasswordFragment;
+        }
     }
 
-    private void popBackStackToSignInFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStackImmediate();
-        }
-
-        getSupportFragmentManager().popBackStack();
+    public SmartLockHelper getSmartLockHelper() {
+        return mSmartLockHelper;
     }
 
     protected void addLoginFragment() {
@@ -294,9 +305,14 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     @Override
     public void onEnterPasswordRequested() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
-        getSignInFragment().setIsMagicLinkEnabled(false);
 
-        popBackStackToSignInFragment();
+        String email = null;
+        if (!USE_NEW_LOGIN_FLOWS) {
+            email = getSignInFragment().mUsername;
+        } else {
+            email = getLoginEmailFragment().getEmail();
+        }
+        slideInFragment(getLoginEmailPasswordFragment(email), LoginEmailPasswordFragment.TAG);
     }
 
     @Override
@@ -311,6 +327,14 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     public void onMagicLinkRequestSuccess(String email) {
         MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
         slideInFragment(magicLinkRequestFragment, MagicLinkRequestFragment.TAG);
+    }
+
+    @Override
+    public void onEmailPasswordLoginSuccess() {
+        // move on the the main activity
+        Intent intent = new Intent(this, WPMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
