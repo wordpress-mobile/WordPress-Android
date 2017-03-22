@@ -92,11 +92,10 @@ import javax.inject.Inject;
  * The main activity in which the user can browse their media.
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback {
+        MediaItemFragmentCallback, MediaEditFragmentCallback,
+        WordPressMediaUtils.LaunchCameraCallback {
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
-    private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
 
     @Inject Dispatcher mDispatcher;
@@ -113,13 +112,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private Toolbar mToolbar;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-    private Menu mMenu;
 
     // Services
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private boolean mDeleteServiceBound;
 
-    private String mQuery;
     private String mMediaCapturePath;
 
     @Override
@@ -181,17 +178,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (mSearchMenuItem != null) {
-            String tempQuery = mQuery;
-            MenuItemCompat.collapseActionView(mSearchMenuItem);
-            mQuery = tempQuery;
-        }
-    }
-
-    @Override
     public void onPause(Fragment fragment) {
         invalidateOptionsMenu();
     }
@@ -225,7 +211,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
@@ -238,7 +223,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
-        mQuery = savedInstanceState.getString(SAVED_QUERY);
     }
 
     @Override
@@ -319,26 +303,56 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        mMenu = menu;
         getMenuInflater().inflate(R.menu.media_browser, menu);
         return true;
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(final Menu menu) {
         mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (mMediaGridFragment != null) {
+                    mMediaGridFragment.search(query);
+                }
+                mSearchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (mMediaGridFragment != null) {
+                    mMediaGridFragment.search(newText);
+                }
+                return true;
+            }
+        });
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
-        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, new OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // currently we don't support searching from within a filter, so hide it
+                if (mMediaGridFragment != null) {
+                    mMediaGridFragment.setFilterEnabled(false);
+                    mMediaGridFragment.setFilter(Filter.ALL);
+                }
+                menu.findItem(R.id.menu_new_media).setVisible(false);
+                return true;
+            }
 
-        // open search bar if we were searching for something before
-        if (!TextUtils.isEmpty(mQuery) && mMediaGridFragment != null && mMediaGridFragment.isVisible()) {
-            String tempQuery = mQuery; //temporary hold onto query
-            MenuItemCompat.expandActionView(mSearchMenuItem); //this will reset mQuery
-            onQueryTextSubmit(tempQuery);
-            mSearchView.setQuery(mQuery, true);
-        }
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                if (mMediaGridFragment != null) {
+                    mMediaGridFragment.setFilterEnabled(true);
+                    mMediaGridFragment.setFilter(Filter.ALL);
+                }
+                menu.findItem(R.id.menu_new_media).setVisible(true);
+                invalidateOptionsMenu();
+                return true;
+            }
+        });
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -356,18 +370,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 return true;
             case R.id.menu_search:
-                mSearchMenuItem = item;
-                MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
                 MenuItemCompat.expandActionView(mSearchMenuItem);
-
-                mSearchView = (SearchView) item.getActionView();
-                mSearchView.setOnQueryTextListener(this);
-
-                // load last saved query
-                if (!TextUtils.isEmpty(mQuery)) {
-                    onQueryTextSubmit(mQuery);
-                    mSearchView.setQuery(mQuery, true);
-                }
                 return true;
             case R.id.menu_edit_media:
                 int localMediaId = mMediaItemFragment.getLocalMediaId();
@@ -400,67 +403,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
-        // currently we don't support searching from within a filter, so hide it
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterEnabled(false);
-            mMediaGridFragment.setFilter(Filter.ALL);
-        }
-
-        // load last search query
-        if (!TextUtils.isEmpty(mQuery)) {
-            onQueryTextChange(mQuery);
-        }
-
-        mMenu.findItem(R.id.menu_new_media).setVisible(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterEnabled(true);
-            mMediaGridFragment.setFilter(Filter.ALL);
-        }
-
-        mMenu.findItem(R.id.menu_new_media).setVisible(true);
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.search(query);
-        }
-
-        mQuery = query;
-        mSearchView.clearFocus();
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.search(newText);
-        }
-
-        mQuery = newText;
-
-        return true;
-    }
-
-    @Override
     public void setLookClosable() {
         mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
     }
 
     @Override
     public void onMediaItemSelected(int localMediaId) {
-        final String tempQuery = mQuery;
-
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -479,8 +427,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
             ft.addToBackStack(null);
             ft.commitAllowingStateLoss();
-
-            mQuery = tempQuery;
         }
     }
 
