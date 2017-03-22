@@ -124,7 +124,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
-
+state = MediaUploadState.FAILED.name();
         boolean isLocalFile = MediaUtils.isLocalFile(state) && !TextUtils.isEmpty(filePath);
         boolean isSelected = isItemSelected(localMediaId);
         boolean isImage = mimeType.startsWith("image/");
@@ -270,7 +270,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
@@ -282,7 +282,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     }
                     return true;
                 }
-            });
+            };
+
+            itemView.setOnLongClickListener(longClickListener);
+            stateTextView.setOnLongClickListener(longClickListener);
         }
     }
 
