@@ -448,6 +448,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnTrash.setVisibility(View.VISIBLE);
             holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
             holder.btnPublish.setVisibility(canShowPublishButton ? View.VISIBLE : View.GONE);
+            if (!mSite.getHasCapabilityPublishPosts()) {
+                // Users with roles that lack permission to publish show Submit
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
+            }
         } else {
             holder.btnMore.setVisibility(View.VISIBLE);
             holder.btnBack.setVisibility(View.GONE);
