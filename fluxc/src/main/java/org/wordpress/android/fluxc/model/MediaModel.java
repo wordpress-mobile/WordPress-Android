@@ -10,9 +10,11 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Table
 public class MediaModel extends Payload implements Identifiable, Serializable {
+
     public enum UploadState {
         QUEUED, UPLOADING, DELETE, DELETED, FAILED, CANCELED, UPLOADED
     }
@@ -70,6 +72,14 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     // Set to true on a successful response to delete via WP.com REST API, not stored locally
     private boolean mDeleted;
+
+    // only used when uploading a file, to differentiate media items being uploaded (upload calls)
+    // not stored locally
+    private UUID mUploadUUID;
+
+    // only used to prevent throwing an error if upload ends in failure when a cancel action
+    // was requested - not stored locally
+    private boolean mUploadCancelled;
 
     @Override
     public boolean equals(Object other) {
@@ -336,4 +346,25 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     public boolean getDeleted() {
         return mDeleted;
     }
+
+    public UUID getUploadUUID() {
+        return mUploadUUID;
+    }
+
+    public void setUploadUUID(UUID uploadUUID) {
+        this.mUploadUUID = uploadUUID;
+    }
+
+    public void generateUploadUUID() {
+        this.mUploadUUID = UUID.randomUUID();
+    }
+
+    public boolean isUploadCancelled() {
+        return mUploadCancelled;
+    }
+
+    public void setUploadCancelled(boolean uploadCancelled) {
+        this.mUploadCancelled = uploadCancelled;
+    }
+
 }
