@@ -1,67 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sign_in_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/nux_background"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:fillViewport="true"
+    android:gravity="center">
 
-    <ImageView
-        android:layout_gravity="center_horizontal"
-        android:layout_height="72dp"
-        android:layout_width="wrap_content"
-        android:scaleType="fitCenter"
-        app:srcCompat="@drawable/img_wordpress_com_white_144dp" >
-    </ImageView>
-
-    <Space
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="match_parent">
 
-    <TextView
-        style="@style/WordPress.NUXFlatButton"
-        android:textSize="20sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:textAlignment="center"
-        android:text="@string/enter_email_wordpress_com"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:background="@color/nux_background"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/img_wordpress_com_white_144dp"></ImageView>
 
-    <EditText
-        android:id="@+id/login_email"
-        style="@style/WordPress.NUXEditText"
-        android:layout_marginEnd="40dp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
+            <TextView
+                style="@style/WordPress.NUXFlatButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="@string/enter_email_wordpress_com" />
 
-    <Button
-        style="@style/WordPress.NUXPrimaryButton"
-        android:id="@+id/login_email_next_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
+            <EditText
+                android:id="@+id/login_email"
+                style="@style/WordPress.NUXEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp" />
 
-    <TextView
-        style="@style/WordPress.NUXFlatButton"
-        android:textSize="16sp"
-        android:layout_height="@dimen/nux_main_button_height"
-        android:id="@+id/login_email_username_password"
-        android:layout_width="wrap_content"
-        android:text="@string/enter_username_password_instead"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
-</LinearLayout>
+            <Button
+                android:id="@+id/login_email_next_button"
+                style="@style/WordPress.NUXPrimaryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/next" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:id="@+id/login_email_username_password"
+                style="@style/WordPress.NUXFlatButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/nux_main_button_height"
+                android:text="@string/enter_username_password_instead"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>
