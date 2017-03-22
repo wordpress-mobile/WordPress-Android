@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -269,6 +270,20 @@ public final class AnalyticsTracker {
         }
     }
 
+    /**
+     * A convenience method for logging an error event with some additional meta data.
+     * @param stat The stat to track.
+     * @param errorContext A string providing additional context (if any) about the error.
+     * @param errorType The type of error.
+     * @param errorDescription The error text or other description.
+     */
+    public static void track(Stat stat, String errorContext, String errorType, String errorDescription) {
+        Map<String, String> props = new HashMap<>();
+        props.put("error_context", errorContext);
+        props.put("error_type", errorType);
+        props.put("error_description", errorDescription);
+        track(stat, props);
+    }
 
     public static void flush() {
         if (mHasUserOptedOut) {

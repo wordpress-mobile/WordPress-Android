@@ -272,27 +272,29 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST)
-                    ||Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                    || Intent.ACTION_SEND.equals(action)
+                    || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
-                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
-                    || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)) {
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int localSiteId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                    SiteModel site = mSiteStore.getSiteByLocalId(localSiteId);
-                    if (site == null) {
-                        showErrorAndFinish(R.string.blog_not_found);
-                        return;
-                    }
-                    if (!site.isVisible()) {
-                        showErrorAndFinish(R.string.error_blog_hidden);
-                        return;
-                    }
-                    mSite = site;
+                    mSite = mSiteStore.getSiteByLocalId(localSiteId);
                 }
 
-                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                if (extras != null) {
+                    mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                }
                 mIsNewPost = true;
+
+                if (mSite == null) {
+                    showErrorAndFinish(R.string.blog_not_found);
+                    return;
+                }
+                if (!mSite.isVisible()) {
+                    showErrorAndFinish(R.string.error_blog_hidden);
+                    return;
+                }
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
@@ -471,6 +473,30 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private String getSaveButtonText() {
+        if (!mSite.getHasCapabilityPublishPosts()) {
+            return getString(R.string.submit_for_review);
+        }
+
+        switch (PostStatus.fromPost(mPost)) {
+            case SCHEDULED:
+                return getString(R.string.schedule_verb);
+            case PUBLISHED:
+            case UNKNOWN:
+                if (mPost.isLocalDraft()) {
+                    return getString(R.string.publish_post);
+                } else {
+                    return getString(R.string.update_verb);
+                }
+            default:
+                if (mPost.isLocalDraft()) {
+                    return getString(R.string.save);
+                } else {
+                    return getString(R.string.update_verb);
+                }
+        }
+    }
+
     private boolean isPhotoChooserShowing() {
         return mPhotoChooserContainer != null
                 && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
@@ -643,25 +669,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             if (saveMenuItem != null) {
-                switch (PostStatus.fromPost(mPost)) {
-                    case SCHEDULED:
-                        saveMenuItem.setTitle(getString(R.string.schedule_verb));
-                        break;
-                    case PUBLISHED:
-                    case UNKNOWN:
-                        if (mPost.isLocalDraft()) {
-                            saveMenuItem.setTitle(R.string.publish_post);
-                        } else {
-                            saveMenuItem.setTitle(R.string.update_verb);
-                        }
-                        break;
-                    default:
-                        if (mPost.isLocalDraft()) {
-                            saveMenuItem.setTitle(R.string.save);
-                        } else {
-                            saveMenuItem.setTitle(R.string.update_verb);
-                        }
-                }
+                saveMenuItem.setTitle(getSaveButtonText());
             }
         }
 
@@ -969,14 +977,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             default:
                 errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
         }
-        mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+        }
 
         removeMediaFromPendingList(media);
     }
 
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
-        mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
+        if (mEditorMediaUploadListener != null) {
+            mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
+        }
     }
 
     private void removeMediaFromPendingList(MediaModel mediaToClear) {
@@ -1027,10 +1039,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
             // Quick press
             normalizedSourceName = "quick-press";
-        }
-        if (intent != null && intent.getIntExtra("quick-media", -1) > -1) {
-            // Quick photo or quick video
-            normalizedSourceName = "quick-media";
         }
         properties.put("created_post_source", normalizedSourceName);
         AnalyticsUtils.trackWithSiteDetails(
@@ -2317,6 +2325,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(MediaStore.OnMediaUploaded event) {
+        if (isFinishing()) return;
         // event for unknown media, ignoring
         if (event.media == null) {
             AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);

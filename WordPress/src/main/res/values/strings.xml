@@ -831,6 +831,7 @@
     <string name="http_authorization_required">Authorization required</string>
 
     <!-- post scheduling and password -->
+    <string name="submit_for_review">Submit</string>
     <string name="publish_date">Publish</string>
     <string name="post_format">Post format</string>
     <string name="schedule_verb">Schedule</string>

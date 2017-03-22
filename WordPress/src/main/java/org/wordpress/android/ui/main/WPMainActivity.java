@@ -41,7 +41,6 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -238,19 +237,12 @@ public class WPMainActivity extends AppCompatActivity {
                 ActivityLauncher.showSignInForResult(this);
             }
         }
-        startService(new Intent(this, NotificationsScreenLockWatchService.class));
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
         WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
 
         // monitor whether we're not the default app
         trackDefaultApp();
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(new Intent(this, NotificationsScreenLockWatchService.class));
-        super.onDestroy();
     }
 
     private void setTabLayoutElevation(float newElevation){
