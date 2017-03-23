@@ -401,10 +401,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        // currently we don't support searching from within a filter, so hide it
         if (mMediaGridFragment != null) {
             mMediaGridFragment.setFilterEnabled(false);
-            mMediaGridFragment.setFilter(Filter.ALL);
         }
 
         // load last search query
@@ -421,7 +419,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public boolean onMenuItemActionCollapse(MenuItem item) {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.setFilterEnabled(true);
-            mMediaGridFragment.setFilter(Filter.ALL);
         }
 
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
@@ -563,10 +560,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (event.isError()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
-            if (event.error.type == MediaErrorType.AUTHORIZATION_REQUIRED) {
-                showMediaToastError(R.string.media_error_no_permission, null);
-            } else {
-                showMediaToastError(R.string.media_upload_error, event.error.message);
+            switch (event.error.type) {
+                case AUTHORIZATION_REQUIRED:
+                    showMediaToastError(R.string.media_error_no_permission, null);
+                    break;
+                case REQUEST_TOO_LARGE:
+                    showMediaToastError(R.string.media_error_too_large_upload, null);
+                    break;
+                default:
+                    showMediaToastError(R.string.media_upload_error, event.error.message);
             }
             updateViews();
         } else if (event.completed) {
@@ -630,14 +632,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
                 if (MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
-                    updateViews();
                     sanitizedIds.add(String.valueOf(currentId));
                     continue;
                 }
                 mediaToDelete.add(mediaModel);
                 mediaModel.setUploadState(MediaUploadState.DELETE.name());
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
-                updateViews();
                 sanitizedIds.add(String.valueOf(currentId));
             }
         }
@@ -657,7 +657,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
         if (mMediaGridFragment != null) {
             mMediaGridFragment.clearSelectedItems();
-            updateViews();
         }
     }
 

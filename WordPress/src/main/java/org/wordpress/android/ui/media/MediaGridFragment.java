@@ -277,14 +277,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void refreshSpinnerAdapter() {
         updateFilterText();
         updateSpinnerAdapter();
-        setFilter(mFilter);
     }
 
     public void refreshMediaFromDB() {
+        if (!isAdded()) return;
+
         setFilter(mFilter);
         updateFilterText();
         updateSpinnerAdapter();
-        if (isAdded() && mGridAdapter.getItemCount() == 0) {
+        if (mGridAdapter.getItemCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
                     fetchMediaList(false);
@@ -468,8 +469,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                 if (mActionMode != null) {
                                     mActionMode.finish();
                                 }
-                                refreshMediaFromDB();
-                                refreshSpinnerAdapter();
                             }
                         }).setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();

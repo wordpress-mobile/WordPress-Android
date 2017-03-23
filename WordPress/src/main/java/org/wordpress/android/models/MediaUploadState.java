@@ -7,4 +7,15 @@ public enum MediaUploadState {
     DELETED,
     FAILED,
     UPLOADED;
+
+    public static MediaUploadState fromString(String strState) {
+        if (strState != null) {
+            for (MediaUploadState state: MediaUploadState.values()) {
+                if (strState.equalsIgnoreCase(state.name())) {
+                    return state;
+                }
+            }
+        }
+        return UPLOADED;
+    }
 }
