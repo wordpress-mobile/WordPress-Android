@@ -863,12 +863,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 // If the post is empty, don't publish
                 if (!PostUtils.isPublishable(mPost)) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
-                        }
-                    });
+                    if (mHandler != null) {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                            }
+                        });
+                    }
                     return;
                 }
 
