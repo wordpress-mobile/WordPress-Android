@@ -344,7 +344,7 @@ public class PostStore extends Store {
     private void fetchPosts(FetchPostsPayload payload, boolean pages) {
         int offset = 0;
         if (payload.loadMore) {
-            offset = getUploadedPostsCountForSite(payload.site);
+            offset = PostSqlUtils.getUploadedPostsForSite(payload.site, pages).size();
         }
 
         if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
