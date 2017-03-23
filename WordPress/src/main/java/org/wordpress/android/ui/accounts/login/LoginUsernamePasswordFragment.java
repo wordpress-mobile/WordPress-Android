@@ -46,7 +46,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
@@ -59,7 +58,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,8 +70,6 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -83,15 +79,10 @@ public class LoginUsernamePasswordFragment extends AbstractFragment implements T
     private static final String ARG_SITE_ADDRESS = "arg_site_address";
     private static final String ARG_IS_SELF_HOSTED = "arg_is_self_hosted";
 
-    public static final int MAX_EMAIL_LENGTH = 100;
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
-    private static final Pattern DOT_COM_RESERVED_NAMES =
-            Pattern.compile("^(?:admin|administrator|invite|main|root|web|www|[^@]*wordpress[^@]*)$");
-    private static final Pattern TWO_STEP_AUTH_CODE = Pattern.compile("^[0-9]{6}");
-    private static final Pattern WPCOM_DOMAIN = Pattern.compile("[a-z0-9]+\\.wordpress\\.com");
 
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
@@ -127,9 +118,6 @@ public class LoginUsernamePasswordFragment extends AbstractFragment implements T
     protected boolean mSitesFetched = false;
     protected boolean mAccountSettingsFetched = false;
     protected boolean mAccountFetched = false;
-
-    private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
-    private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
 
     private OnLoginUsernamePasswordInteraction mListener;
 
@@ -355,23 +343,6 @@ public class LoginUsernamePasswordFragment extends AbstractFragment implements T
         return true;
     }
 
-    private boolean checkIfUserIsAlreadyLoggedIn() {
-        if (mAccountStore.hasAccessToken()) {
-            String currentUsername = mAccountStore.getAccount().getUserName();
-            AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername
-                            + " - but tries to sign in again: " + mUsername);
-            if (getActivity() != null) {
-                if (currentUsername.equals(mUsername)) {
-                    ToastUtils.showToast(getActivity(), R.string.already_logged_in_wpcom_same_username, Duration.LONG);
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.already_logged_in_wpcom, Duration.LONG);
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     protected void login() {
         if (!isUserDataValid()) {
             return;
@@ -391,25 +362,6 @@ public class LoginUsernamePasswordFragment extends AbstractFragment implements T
         } else {
             signInAndFetchBlogListWPCom();
         }
-    }
-
-    /**
-     * Tests the specified string to see if it contains a wpcom subdomain.
-     *
-     * @param string The string to check
-     * @return True if the string contains a wpcom subdomain, else false.
-     */
-    private boolean isWPComDomain(String string) {
-        Matcher matcher = WPCOM_DOMAIN.matcher(string);
-        return matcher.find();
-    }
-
-    private boolean isUsernameEmail() {
-        mUsername = EditTextUtils.getText(mUsernameEditText).trim();
-        Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
-        Matcher matcher = emailRegExPattern.matcher(mUsername);
-
-        return matcher.find() && mUsername.length() <= MAX_EMAIL_LENGTH;
     }
 
     private final OnClickListener mSignInClickListener = new OnClickListener() {
