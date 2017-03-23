@@ -840,7 +840,10 @@ public class WordPress extends MultiDexApplication {
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
+            Map<String, Boolean> properties = new HashMap<>(1);
+            properties.put("pin_lock_enabled", AppLockManager.getInstance().getAppLock() != null
+                    && AppLockManager.getInstance().getAppLock().isPasswordLocked());
+            AnalyticsTracker.track(Stat.APPLICATION_OPENED, properties);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {
