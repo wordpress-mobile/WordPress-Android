@@ -73,7 +73,7 @@ public class LoginSiteAddressFragment extends AbstractFragment implements TextWa
     private OnSiteAddressRequestInteraction mListener;
 
     public interface OnSiteAddressRequestInteraction {
-        void onSiteAddressRequestSuccess(String siteAddress);
+        void onSiteAddressRequestSuccess(String siteAddress, boolean isSelfHosted);
     }
 
     @Override
@@ -295,7 +295,7 @@ public class LoginSiteAddressFragment extends AbstractFragment implements TextWa
 //        selfhostedPayload.url = event.xmlRpcEndpoint;
 //        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfhostedPayload));
 
-        mListener.onSiteAddressRequestSuccess(mSiteAddress);
+        mListener.onSiteAddressRequestSuccess(mSiteAddress, true);
     }
 
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
@@ -324,7 +324,7 @@ public class LoginSiteAddressFragment extends AbstractFragment implements TextWa
 //                askForHttpAuthCredentials(failedEndpoint);
                 break;
             case WORDPRESS_COM_SITE:
-                mListener.onSiteAddressRequestSuccess(mSiteAddress);
+                mListener.onSiteAddressRequestSuccess(mSiteAddress, false);
                 break;
             case NO_SITE_ERROR:
                 showGenericErrorDialog(getResources().getString(R.string.no_site_error),

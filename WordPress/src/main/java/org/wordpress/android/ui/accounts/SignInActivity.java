@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
+import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -38,7 +39,8 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         LoginEmailFragment.OnMagicLinkEmailInteraction,
         SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction,
         LoginEmailPasswordFragment.OnEmailPasswordLoginInteraction,
-        LoginSiteAddressFragment.OnSiteAddressRequestInteraction {
+        LoginSiteAddressFragment.OnSiteAddressRequestInteraction,
+        LoginUsernamePasswordFragment.OnLoginUsernamePasswordInteraction {
     public static final boolean USE_NEW_LOGIN_FLOWS = true;
 
     public static final int SIGN_IN_REQUEST = 1;
@@ -352,8 +354,18 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     @Override
-    public void onSiteAddressRequestSuccess(String siteAddress) {
-        // TODO: go to username+password screen
+    public void onSiteAddressRequestSuccess(String siteAddress, boolean isSelfHosted) {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
+                LoginUsernamePasswordFragment.newInstance(siteAddress, isSelfHosted);
+        slideInFragment(loginUsernamePasswordFragment, LoginUsernamePasswordFragment.TAG);
+    }
+
+    @Override
+    public void onUsernamePasswordLoginSuccess() {
+        // move on the the main activity
+        Intent intent = new Intent(this, WPMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
