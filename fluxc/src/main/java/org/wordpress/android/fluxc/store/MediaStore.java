@@ -192,6 +192,7 @@ public class MediaStore extends Store {
         AUTHORIZATION_REQUIRED,
         PARSE_ERROR,
         NOT_AUTHENTICATED,
+        REQUEST_TOO_LARGE,
 
         // unknown/unspecified
         GENERIC_ERROR;
@@ -217,6 +218,8 @@ public class MediaStore extends Store {
                     return MediaErrorType.NOT_FOUND;
                 case 403:
                     return MediaErrorType.NOT_AUTHENTICATED;
+                case 413:
+                    return MediaErrorType.REQUEST_TOO_LARGE;
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
@@ -560,7 +563,7 @@ public class MediaStore extends Store {
 
     private void performCancelUpload(@NonNull MediaPayload payload) {
         if (payload.media != null) {
-            if (payload.site.isWPCom()) {
+            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
                 mMediaRestClient.cancelUpload(payload.media);
             } else {
                 mMediaXmlrpcClient.cancelUpload(payload.media);
