@@ -152,6 +152,9 @@ public class LoginUsernamePasswordFragment extends AbstractFragment implements T
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_site_username_password_screen, container, false);
 
+        TextView siteAddressTextView = (TextView) rootView.findViewById(R.id.site_address);
+        siteAddressTextView.setText(mSiteAddress);
+
         mUsernameEditText = (EditText) rootView.findViewById(R.id.username);
         mUsernameEditText.addTextChangedListener(this);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.password);
