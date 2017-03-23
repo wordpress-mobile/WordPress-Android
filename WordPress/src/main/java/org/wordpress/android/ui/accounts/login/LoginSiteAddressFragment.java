@@ -74,6 +74,7 @@ public class LoginSiteAddressFragment extends AbstractFragment implements TextWa
 
     public interface OnSiteAddressRequestInteraction {
         void onSiteAddressRequestSuccess(String siteAddress, boolean isSelfHosted);
+        void onSiteAddressMoreHelp();
     }
 
     @Override
@@ -95,6 +96,12 @@ public class LoginSiteAddressFragment extends AbstractFragment implements TextWa
 
         mUrlExplanation = rootView.findViewById(R.id.url_explanation);
         mMoreHelp = rootView.findViewById(R.id.more_help);
+        mMoreHelp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onSiteAddressMoreHelp();
+            }
+        });
 
         mSiteAddressEditText.setOnEditorActionListener(mEditorAction);
 

@@ -20,6 +20,7 @@ import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.HelpshiftHelper;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -358,6 +359,13 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         LoginUsernamePasswordFragment loginUsernamePasswordFragment =
                 LoginUsernamePasswordFragment.newInstance(siteAddress, isSelfHosted);
         slideInFragment(loginUsernamePasswordFragment, LoginUsernamePasswordFragment.TAG);
+    }
+
+    @Override
+    public void onSiteAddressMoreHelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
+        intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag(false, true));
+        startActivity(intent);
     }
 
     @Override
