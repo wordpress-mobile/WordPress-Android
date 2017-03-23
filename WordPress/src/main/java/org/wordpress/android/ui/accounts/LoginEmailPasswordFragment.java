@@ -447,7 +447,7 @@ public class LoginEmailPasswordFragment extends AbstractFragment implements Text
         switch (error) {
             case INCORRECT_USERNAME_OR_PASSWORD:
             case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
-                handleInvalidUsernameOrPassword(R.string.username_or_password_incorrect);
+                handleInvalidUsernameOrPassword(R.string.password_incorrect);
                 break;
             case INVALID_OTP:
 //                showTwoStepCodeError(R.string.invalid_verification_code);
