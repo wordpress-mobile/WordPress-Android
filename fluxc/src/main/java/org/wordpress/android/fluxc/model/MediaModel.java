@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @Table
 public class MediaModel extends Payload implements Identifiable, Serializable {
-
     public enum UploadState {
         QUEUED, UPLOADING, DELETE, DELETED, FAILED, CANCELED, UPLOADED
     }
@@ -366,5 +365,4 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     public void setUploadCancelled(boolean uploadCancelled) {
         mUploadCancelled = uploadCancelled;
     }
-
 }
