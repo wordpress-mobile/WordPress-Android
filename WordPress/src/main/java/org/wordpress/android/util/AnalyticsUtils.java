@@ -321,7 +321,7 @@ public class AnalyticsUtils {
 
         if(mediaURI != null) {
             if (mediaURI.toString().contains("content:")) {
-                path = MediaUtils.getPathFromContentUri(context, mediaURI);
+                path = MediaUtils.getPath(context, mediaURI);
             } else {
                 // File is not in media library
                 path = mediaURI.toString().replace("file://", "");

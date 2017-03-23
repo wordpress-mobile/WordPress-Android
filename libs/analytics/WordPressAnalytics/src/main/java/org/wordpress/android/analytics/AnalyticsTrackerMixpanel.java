@@ -1266,6 +1266,14 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Deep link not default handler");
                 break;
+            case MEDIA_LIBRARY_ADDED_PHOTO:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Library - Added Photo");
+                break;
+            case MEDIA_LIBRARY_ADDED_VIDEO:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Library - Added Video");
+                break;
             default:
                 instructions = null;
                 break;
