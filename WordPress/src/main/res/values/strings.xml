@@ -1668,5 +1668,7 @@
     <string name="create_new_password">We\'ll send you a link to create a new password.</string>
     <string name="enter_username_or_email">Please enter your username or email address. We\'ll send you a link to create a new password via email.</string>
     <string name="username_or_email">Username or email</string>
+    <string name="log_in">Log In</string>
+    <string name="create_wordpress_site">Create WordPress site</string>
 
 </resources>
