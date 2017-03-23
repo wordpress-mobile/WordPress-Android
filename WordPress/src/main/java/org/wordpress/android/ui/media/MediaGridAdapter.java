@@ -285,8 +285,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     } else {
                         // retry uploading this media item if it previously failed
                         mCursor.moveToPosition(position);
-                        String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-                        if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
+                        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+                        MediaUploadState state = MediaUploadState.fromString(strState);
+                        if (state == MediaUploadState.FAILED) {
                             stateTextView.setText(R.string.upload_queued);
                             stateTextView.setCompoundDrawables(null, null, null, null);
                             if (mCallback != null) {
