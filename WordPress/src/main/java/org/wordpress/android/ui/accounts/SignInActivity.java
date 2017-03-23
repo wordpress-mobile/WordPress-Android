@@ -1,5 +1,17 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.widget.Toast;
+
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -12,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
@@ -22,17 +35,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
-
 import javax.inject.Inject;
 
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
@@ -41,7 +43,8 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction,
         LoginEmailPasswordFragment.OnEmailPasswordLoginInteraction,
         LoginSiteAddressFragment.OnSiteAddressRequestInteraction,
-        LoginUsernamePasswordFragment.OnLoginUsernamePasswordInteraction {
+        LoginUsernamePasswordFragment.OnLoginUsernamePasswordInteraction,
+        LogInOrSignUpFragment.OnLogInOrSignUpFragmentInteraction {
     public static final boolean USE_NEW_LOGIN_FLOWS = true;
 
     public static final int SIGN_IN_REQUEST = 1;
@@ -250,9 +253,9 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
             fragmentTransaction.replace(R.id.fragment_container, signInFragment, SignInFragment.TAG);
             fragmentTransaction.commit();
         } else {
-            LoginEmailFragment loginEmailFragment = new LoginEmailFragment();
+            LogInOrSignUpFragment loginSignupFragment = new LogInOrSignUpFragment();
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, loginEmailFragment, LoginEmailFragment.TAG);
+            fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LogInOrSignUpFragment.TAG);
             fragmentTransaction.commit();
         }
     }
@@ -384,5 +387,16 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     @Override
     public SiteModel getJetpackSite() {
         return mJetpackSite;
+    }
+
+    @Override
+    public void onLoginTapped() {
+        LoginEmailFragment loginEmailFragment = new LoginEmailFragment();
+        slideInFragment(loginEmailFragment, LoginEmailFragment.TAG);
+    }
+
+    @Override
+    public void onCreateSiteTapped() {
+        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
     }
 }
