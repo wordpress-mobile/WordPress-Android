@@ -253,7 +253,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isInMultiSelect()) {
-                        toggleItemSelected(GridViewHolder.this, position);
+                        if (canSelectPosition(position)) {
+                            toggleItemSelected(GridViewHolder.this, position);
+                        }
                     } else if (mCallback != null) {
                         mCallback.onAdapterItemSelected(position);
                     }
@@ -264,11 +266,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
-                    if (isInMultiSelect()) {
-                        toggleItemSelected(GridViewHolder.this, position);
-                    } else if (mAllowMultiselect) {
-                        setInMultiSelect(true);
-                        setItemSelectedByPosition(GridViewHolder.this, position, true);
+                    if (canSelectPosition(position)) {
+                        if (isInMultiSelect()) {
+                            toggleItemSelected(GridViewHolder.this, position);
+                        } else if (mAllowMultiselect) {
+                            setInMultiSelect(true);
+                            setItemSelectedByPosition(GridViewHolder.this, position, true);
+                        }
                     }
                     return true;
                 }
@@ -281,7 +285,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isInMultiSelect()) {
-                        toggleItemSelected(GridViewHolder.this, position);
+                        if (canSelectPosition(position)) {
+                            toggleItemSelected(GridViewHolder.this, position);
+                        }
                     } else {
                         // retry uploading this media item if it previously failed
                         mCursor.moveToPosition(position);
@@ -314,15 +320,29 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             clearSelection();
         }
     }
+
     private boolean isValidPosition(int position) {
         return position >= 0 && position < getItemCount();
     }
+
     public int getLocalMediaIdAtPosition(int position) {
         if (isValidPosition(position)) {
             mCursor.moveToPosition(position);
             return mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
         }
         return INVALID_POSITION;
+    }
+
+    private boolean canSelectPosition(int position) {
+        if (!mAllowMultiselect || !isValidPosition(position)) {
+            return false;
+        }
+        mCursor.moveToPosition(position);
+        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+        MediaUploadState state = MediaUploadState.fromString(strState);
+        return state == MediaUploadState.UPLOADED
+                || state == MediaUploadState.QUEUED
+                || state == MediaUploadState.FAILED;
     }
 
     private void loadLocalImage(final String filePath, ImageView imageView) {
