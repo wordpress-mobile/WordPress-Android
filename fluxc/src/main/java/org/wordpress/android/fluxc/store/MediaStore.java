@@ -563,7 +563,7 @@ public class MediaStore extends Store {
 
     private void performCancelUpload(@NonNull MediaPayload payload) {
         if (payload.media != null) {
-            if (payload.site.isWPCom()) {
+            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
                 mMediaRestClient.cancelUpload(payload.media);
             } else {
                 mMediaXmlrpcClient.cancelUpload(payload.media);
