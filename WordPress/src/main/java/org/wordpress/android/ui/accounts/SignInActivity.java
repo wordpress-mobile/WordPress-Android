@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
+import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.MagicLinkSentFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -34,8 +35,10 @@ import javax.inject.Inject;
 
 public class SignInActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         MagicLinkRequestFragment.OnMagicLinkFragmentInteraction, JetpackCallbacks,
+        LoginEmailFragment.OnMagicLinkEmailInteraction,
         SignInFragment.OnMagicLinkRequestInteraction, MagicLinkSentFragment.OnMagicLinkSentInteraction,
-        LoginEmailPasswordFragment.OnEmailPasswordLoginInteraction {
+        LoginEmailPasswordFragment.OnEmailPasswordLoginInteraction,
+        LoginSiteAddressFragment.OnSiteAddressRequestInteraction {
     public static final boolean USE_NEW_LOGIN_FLOWS = true;
 
     public static final int SIGN_IN_REQUEST = 1;
@@ -316,6 +319,17 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     @Override
+    public void onMagicLinkEmailCheckSuccess(String email) {
+        MagicLinkRequestFragment magicLinkRequestFragment = MagicLinkRequestFragment.newInstance(email);
+        slideInFragment(magicLinkRequestFragment, MagicLinkRequestFragment.TAG);
+    }
+
+    @Override
+    public void onLoginViaUsernamePassword() {
+        slideInFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
+    }
+
+    @Override
     public void onMagicLinkFlowSucceeded() {
         Intent intent = new Intent(this, WPMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -335,6 +349,11 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         Intent intent = new Intent(this, WPMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSiteAddressRequestSuccess(String siteAddress) {
+        // TODO: go to username+password screen
     }
 
     @Override

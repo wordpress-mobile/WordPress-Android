@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
-import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -58,11 +57,15 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
 
+    public interface OnMagicLinkEmailInteraction {
+        void onMagicLinkEmailCheckSuccess(String email);
+        void onLoginViaUsernamePassword();
+    }
+    private OnMagicLinkEmailInteraction mListener;
+
     public String getEmail() {
         return mEmail;
     }
-
-    private SignInFragment.OnMagicLinkRequestInteraction mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         mUsernamePasswordButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mListener.onLoginViaUsernamePassword();
             }
         });
 
@@ -117,10 +120,10 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof SignInFragment.OnMagicLinkRequestInteraction) {
-            mListener = (SignInFragment.OnMagicLinkRequestInteraction) context;
+        if (context instanceof OnMagicLinkEmailInteraction) {
+            mListener = (OnMagicLinkEmailInteraction) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnMagicLinkRequestInteraction");
+            throw new RuntimeException(context.toString() + " must implement OnMagicLinkEmailInteraction");
         }
     }
 
@@ -298,7 +301,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
             // TODO: Email address exists in WordPress.com so, goto magic link offer screen
             // Email address exists in WordPress.com
             if (mListener != null) {
-                mListener.onMagicLinkRequestSuccess(mEmail);
+                mListener.onMagicLinkEmailCheckSuccess(mEmail);
             }
         } else {
             showEmailError(R.string.email_not_found);
