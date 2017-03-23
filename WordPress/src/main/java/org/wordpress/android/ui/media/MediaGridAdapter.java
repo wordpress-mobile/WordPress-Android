@@ -299,6 +299,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                                 int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
                                 mCallback.onAdapterRetryUpload(localMediaId);
                             }
+                        } else if (mCallback != null) {
+                            mCallback.onAdapterItemSelected(position);
                         }
                     }
                 }
@@ -333,6 +335,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return INVALID_POSITION;
     }
 
+    /*
+     * determines whether the media item at the passed position can be selected - not allowed
+     * for deleted items since the whole purpose of multiselect is to delete multiple items
+     */
     private boolean canSelectPosition(int position) {
         if (!mAllowMultiselect || !isValidPosition(position)) {
             return false;
@@ -340,9 +346,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mCursor.moveToPosition(position);
         String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         MediaUploadState state = MediaUploadState.fromString(strState);
-        return state == MediaUploadState.UPLOADED
-                || state == MediaUploadState.QUEUED
-                || state == MediaUploadState.FAILED;
+        return state != MediaUploadState.DELETE && state != MediaUploadState.DELETED;
     }
 
     private void loadLocalImage(final String filePath, ImageView imageView) {
