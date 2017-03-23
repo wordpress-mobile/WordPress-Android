@@ -121,11 +121,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
 
-        String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
 
-        boolean isLocalFile = MediaUtils.isLocalFile(state) && !TextUtils.isEmpty(filePath);
+        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+        MediaUploadState state = MediaUploadState.fromString(strState);
+
+        boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(filePath);
         boolean isSelected = isItemSelected(localMediaId);
         boolean isImage = mimeType.startsWith("image/");
 
@@ -173,17 +175,19 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         // show upload state unless it's already uploaded
-        if (!TextUtils.isEmpty(state) && !state.equalsIgnoreCase(MediaUploadState.UPLOADED.name())) {
+        if (state != MediaUploadState.UPLOADED) {
             holder.stateContainer.setVisibility(View.VISIBLE);
-            holder.stateTextView.setText(state);
 
-            // hide progressbar and add onclick to retry failed uploads
-            if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
-                holder.progressUpload.setVisibility(View.GONE);
+            // only show progress for items currently being uploaded or deleted
+            boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETE;
+            holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+
+            // failed uploads can be retried
+            if (state == MediaUploadState.FAILED) {
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
             } else {
-                holder.progressUpload.setVisibility(View.VISIBLE);
+                holder.stateTextView.setText(strState);
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
@@ -281,8 +285,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     } else {
                         // retry uploading this media item if it previously failed
                         mCursor.moveToPosition(position);
-                        String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-                        if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
+                        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+                        MediaUploadState state = MediaUploadState.fromString(strState);
+                        if (state == MediaUploadState.FAILED) {
                             stateTextView.setText(R.string.upload_queued);
                             stateTextView.setCompoundDrawables(null, null, null, null);
                             if (mCallback != null) {
