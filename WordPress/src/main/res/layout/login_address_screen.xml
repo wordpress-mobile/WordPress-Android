@@ -35,7 +35,7 @@
         android:layout_height="10dp" />
 
     <EditText
-        android:id="@+id/login_email"
+        android:id="@+id/login_site_address"
         style="@style/WordPress.NUXEditText"
         android:layout_marginEnd="40dp"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
 
     <Button
         style="@style/WordPress.NUXPrimaryButton"
-        android:id="@+id/login_email_next_button"
+        android:id="@+id/login_site_address_next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next"/>
