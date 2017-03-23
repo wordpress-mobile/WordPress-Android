@@ -1162,16 +1162,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mShowNewEditor || mShowAztecEditor) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
-                    savePostToDb();
-                } else {
-                    try {
-                        updatePostObject(false);
-                    } catch (IllegalEditorStateException e) {
-                        AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                        return false;
-                    }
-                    savePostToDb();
                 }
+
+                savePostToDb();
 
                 // now set the pending notification alarm to be triggered in the next day, week, and month
                 PendingDraftsNotificationsUtils.scheduleNextNotifications(EditPostActivity.this, mPost);
