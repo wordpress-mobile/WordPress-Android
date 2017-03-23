@@ -13,7 +13,7 @@
         android:layout_height="72dp"
         android:layout_width="wrap_content"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/img_wordpress_com_white_144dp" >
+        app:srcCompat="@drawable/img_wordpress_org_blue_wordpress_50dp" >
     </ImageView>
 
     <Space

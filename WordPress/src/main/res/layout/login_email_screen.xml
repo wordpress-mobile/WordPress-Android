@@ -21,12 +21,12 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <!-- TODO need email image -->
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="72dp"
                 android:layout_gravity="center_horizontal"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/img_wordpress_com_white_144dp"></ImageView>
+                android:scaleType="fitCenter" />
 
             <Space
                 android:layout_width="match_parent"
