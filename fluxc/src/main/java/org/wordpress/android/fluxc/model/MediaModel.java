@@ -352,11 +352,11 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     }
 
     public void setUploadUUID(UUID uploadUUID) {
-        this.mUploadUUID = uploadUUID;
+        mUploadUUID = uploadUUID;
     }
 
     public void generateUploadUUID() {
-        this.mUploadUUID = UUID.randomUUID();
+        mUploadUUID = UUID.randomUUID();
     }
 
     public boolean isUploadCancelled() {
@@ -364,7 +364,7 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     }
 
     public void setUploadCancelled(boolean uploadCancelled) {
-        this.mUploadCancelled = uploadCancelled;
+        mUploadCancelled = uploadCancelled;
     }
 
 }
