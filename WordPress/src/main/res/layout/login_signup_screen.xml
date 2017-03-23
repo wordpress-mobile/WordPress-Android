@@ -15,10 +15,10 @@
         style="@style/WordPress.NUXPrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/create_site"
+        android:layout_above="@+id/create_site_button"
         android:text="@string/log_in"/>
     <Button
-        android:id="@+id/create_site"
+        android:id="@+id/create_site_button"
         style="@style/WordPress.NUXPrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
