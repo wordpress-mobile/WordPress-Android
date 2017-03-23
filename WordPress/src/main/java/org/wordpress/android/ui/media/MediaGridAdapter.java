@@ -177,15 +177,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // show upload state unless it's already uploaded
         if (state != MediaUploadState.UPLOADED) {
             holder.stateContainer.setVisibility(View.VISIBLE);
-            holder.stateTextView.setText(strState);
 
+            // only show progress for items currently being uploaded or deleted
             boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETE;
             holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
 
+            // failed uploads can be retried
             if (state == MediaUploadState.FAILED) {
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
             } else {
+                holder.stateTextView.setText(strState);
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
