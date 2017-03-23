@@ -119,13 +119,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mCursor.moveToPosition(position);
         holder.imageView.setTag(null);
 
-        final int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
+        int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
 
         String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
         String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
         String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
 
-        boolean isLocalFile = MediaUtils.isLocalFile(state);
+        boolean isLocalFile = MediaUtils.isLocalFile(state) && !TextUtils.isEmpty(filePath);
         boolean isSelected = isItemSelected(localMediaId);
         boolean isImage = mimeType.startsWith("image/");
 
@@ -182,22 +182,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
-                holder.stateTextView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!isInMultiSelect()) {
-                            ((TextView) v).setText(R.string.upload_queued);
-                            ((TextView) v).setCompoundDrawables(null, null, null, null);
-                            v.setOnClickListener(null);
-                            if (mCallback != null) {
-                                mCallback.onAdapterRetryUpload(localMediaId);
-                            }
-                        }
-                    }
-                });
             } else {
                 holder.progressUpload.setVisibility(View.VISIBLE);
-                holder.stateTextView.setOnClickListener(null);
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
@@ -270,7 +256,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
@@ -281,6 +267,30 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         setItemSelectedByPosition(GridViewHolder.this, position, true);
                     }
                     return true;
+                }
+            };
+            itemView.setOnLongClickListener(longClickListener);
+            stateTextView.setOnLongClickListener(longClickListener);
+
+            stateTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (isInMultiSelect()) {
+                        toggleItemSelected(GridViewHolder.this, position);
+                    } else {
+                        // retry uploading this media item if it previously failed
+                        mCursor.moveToPosition(position);
+                        String state = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+                        if (state.equalsIgnoreCase(MediaUploadState.FAILED.name())) {
+                            stateTextView.setText(R.string.upload_queued);
+                            stateTextView.setCompoundDrawables(null, null, null, null);
+                            if (mCallback != null) {
+                                int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
+                                mCallback.onAdapterRetryUpload(localMediaId);
+                            }
+                        }
+                    }
                 }
             });
         }
