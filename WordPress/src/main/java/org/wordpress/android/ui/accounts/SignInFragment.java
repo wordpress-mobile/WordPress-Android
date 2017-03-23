@@ -97,7 +97,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public static final int MAX_EMAIL_LENGTH = 100;
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
-    private static final String XMLRPC_SUPPORT_URL = "https://codex.wordpress.org/XML-RPC_Support";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String KEY_IS_SELF_HOSTED = "IS_SELF_HOSTED";
     private static final Pattern DOT_COM_RESERVED_NAMES =
@@ -631,6 +630,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSignInButton.setText(getString(R.string.button_next));
     }
 
+    private boolean isJetpackAuth() {
+        return mJetpackSite != null;
+    }
+
     // Set blog for Jetpack auth
     public void setBlogAndCustomMessageForJetpackAuth(SiteModel site, String customAuthMessage) {
         mJetpackSite = site;
@@ -1043,7 +1046,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected void startProgress(String message) {
         mProgressBarSignIn.setVisibility(View.VISIBLE);
         mProgressTextSignIn.setVisibility(View.VISIBLE);
-        mSignInButton.setVisibility(View.INVISIBLE);
+        mSignInButton.setVisibility(View.GONE);
         mProgressBarSignIn.setEnabled(false);
         mProgressTextSignIn.setText(message);
         mUsernameEditText.setEnabled(false);
@@ -1056,8 +1059,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void endProgress() {
-        mProgressBarSignIn.setVisibility(View.INVISIBLE);
-        mProgressTextSignIn.setVisibility(View.INVISIBLE);
+        mProgressBarSignIn.setVisibility(View.GONE);
+        mProgressTextSignIn.setVisibility(View.GONE);
         mSignInButton.setVisibility(View.VISIBLE);
         mUsernameEditText.setEnabled(true);
         mPasswordEditText.setEnabled(true);
@@ -1262,10 +1265,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             }
         }
 
-        if (event.isError()) {
-            return;
-        }
-
         // Login Successful
         trackAnalyticsSignIn();
         mSitesFetched = true;
@@ -1360,10 +1359,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
         AppLog.e(T.API, "Discover error: " + error);
+        endProgress();
         if (!isAdded()) {
             return;
         }
-        endProgress();
         switch (error) {
             case ERRONEOUS_SSL_CERTIFICATE:
                 SelfSignedSSLUtils.showSSLWarningDialog(getActivity(), mMemorizingTrustManager,
