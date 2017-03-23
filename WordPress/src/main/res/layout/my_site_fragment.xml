@@ -322,8 +322,7 @@
             <!--View Site-->
             <RelativeLayout
                 android:id="@+id/row_view_site"
-                style="@style/MySiteListRowLayout"
-                android:layout_marginTop="@dimen/my_site_margin_general">
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
                     android:id="@+id/my_site_view_site_icon"
