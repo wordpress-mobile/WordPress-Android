@@ -179,13 +179,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.stateContainer.setVisibility(View.VISIBLE);
             holder.stateTextView.setText(strState);
 
-            // hide progressbar and add onclick to retry failed uploads
+            boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETE;
+            holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+
             if (state == MediaUploadState.FAILED) {
-                holder.progressUpload.setVisibility(View.GONE);
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
             } else {
-                holder.progressUpload.setVisibility(View.VISIBLE);
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
