@@ -66,7 +66,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private OkHttpClient mOkHttpClient;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
-    private ConcurrentHashMap<Long, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                            OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
@@ -248,7 +248,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
 
         // cancel in-progress upload if necessary
-        int mediaId = media.getMediaId();
+        int mediaModelId = media.getId();
         // make sure we know which call/media to look for
         Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
