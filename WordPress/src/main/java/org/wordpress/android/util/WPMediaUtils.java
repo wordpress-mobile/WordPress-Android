@@ -9,7 +9,6 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
 public class WPMediaUtils {
     public static Uri getOptimizedMedia(Activity activity, SiteModel siteModel, String path, boolean isVideo) {
-        boolean isOptimized = false;
         if (!NetworkUtils.isWiFiConnected(activity) && !isVideo) {
             SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
             // Site Settings are implemented on .com/Jetpack sites only
