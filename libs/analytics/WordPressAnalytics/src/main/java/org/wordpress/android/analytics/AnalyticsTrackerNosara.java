@@ -355,10 +355,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_video_added";
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_video_added";
-            case EDITOR_RESIZED_PHOTO:
-                return "editor_resized_photo";
-            case EDITOR_RESIZED_PHOTO_ERROR:
-                return "editor_resized_photo_error";
+            case MEDIA_PHOTO_OPTIMIZED:
+                return "media_photo_optimized";
+            case MEDIA_PHOTO_OPTIMIZE_ERROR:
+                return "media_photo_optimize_error";
             case EDITOR_PUBLISHED_POST:
                 return "editor_post_published";
             case EDITOR_UPDATED_POST:

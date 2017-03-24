@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.app.Activity;
 import android.net.Uri;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
@@ -19,11 +20,9 @@ public class WPMediaUtils {
 
                 if (optimizedPath == null) {
                     AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
-                    // TODO: track analytics here
-                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
                 } else {
-                    // TODO: track analytics here
-                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
                     return Uri.parse(optimizedPath);
                 }
             }
