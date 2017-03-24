@@ -249,18 +249,29 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
 
         // cancel in-progress upload if necessary
-        Call correspondingCall = mCurrentUploadCalls.get(media.getUploadUUID());
-        if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
-            AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
-            correspondingCall.cancel();
-            // set the upload Cancelled flag on the media model so in case a failure is raised for this upload
-            // after cancellation (or as a product of it) we don't need to notify about the error
-            media.setUploadCancelled(true);
-            // clean from the current uploads map
-            mCurrentUploadCalls.remove(media.getUploadUUID());
+        UUID uuid = media.getUploadUUID();
+        // make sure we know which call/media to look for
+        if (uuid != null) {
+            Call correspondingCall = mCurrentUploadCalls.get(uuid);
+            if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
+                AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
+                correspondingCall.cancel();
+                // set the upload Cancelled flag on the media model so in case a failure is raised for this upload
+                // after cancellation (or as a product of it) we don't need to notify about the error
+                media.setUploadCancelled(true);
+                // clean from the current uploads map
+                mCurrentUploadCalls.remove(uuid);
+
+                // report the upload was successfully cancelled
+                notifyMediaUploadCanceled(media);
+            }
+        } else {
+            // if we can't identify the call for which upload they are trying to cancel,
+            // throw a NOT_FOUND error
+            // TODO check if we can add a specific error for this case
+            MediaStore.MediaError error = new MediaError(MediaErrorType.NOT_FOUND);
+            notifyMediaUploaded(media, error);
         }
-        // always report without error
-        notifyMediaUploadCanceled(media);
     }
 
     private void performUpload(final MediaModel media, final SiteModel siteModel) {
