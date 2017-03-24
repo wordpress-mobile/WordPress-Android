@@ -579,7 +579,7 @@ public class PostUploadService extends Service {
 
     private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
         String postType = getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
-        return String.format(mContext.getResources().getText(R.string.error_upload).toString(), postType,
+        return String.format(mContext.getResources().getText(R.string.error_upload_params).toString(), postType,
                 specificMessage);
     }
 
