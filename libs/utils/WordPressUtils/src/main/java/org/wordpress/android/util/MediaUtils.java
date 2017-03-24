@@ -400,7 +400,7 @@ public class MediaUtils {
     public static String getPath(final Context context, final Uri uri) {
         String path = getDocumentProviderPathKitkatOrHigher(context, uri);
 
-        if (path!= null) {
+        if (path != null) {
             return path;
         }
 
