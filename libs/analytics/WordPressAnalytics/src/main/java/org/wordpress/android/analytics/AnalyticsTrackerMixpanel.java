@@ -564,17 +564,17 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_added_video_via_wp_media_library");
                 instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_wp_media_library_to_post");
                 break;
-            case EDITOR_RESIZED_PHOTO:
+            case MEDIA_PHOTO_OPTIMIZED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Photo Resized");
+                        mixpanelInstructionsForEventName("Media - Photo Optimized");
                 instructions.
-                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_resized");
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_optimized");
                 break;
-            case EDITOR_RESIZED_PHOTO_ERROR:
+            case MEDIA_PHOTO_OPTIMIZE_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Photo Resized Error");
+                        mixpanelInstructionsForEventName("Media - Photo Optimize Error");
                 instructions.
-                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_resized_error");
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_optimize_error");
                 break;
             case EDITOR_PUBLISHED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
