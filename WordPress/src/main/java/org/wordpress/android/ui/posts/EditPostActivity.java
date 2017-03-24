@@ -1940,7 +1940,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     errorMessage = getString(R.string.error_media_unauthorized);
                     break;
                 case PARSE_ERROR:
-                    errorMessage = getString(R.string.error_media_parse_format);
+                    errorMessage = getString(R.string.error_media_parse_error);
                     break;
                 case MALFORMED_MEDIA_ARG:
                 case NULL_MEDIA_ARG:

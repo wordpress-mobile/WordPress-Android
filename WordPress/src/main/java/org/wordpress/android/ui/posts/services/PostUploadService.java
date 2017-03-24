@@ -569,7 +569,7 @@ public class PostUploadService extends Service {
             case AUTHORIZATION_REQUIRED:
                 return getString(R.string.error_media_unauthorized);
              case PARSE_ERROR:
-                 return getString(R.string.error_media_parse_format);
+                 return getString(R.string.error_media_parse_error);
             case REQUEST_TOO_LARGE:
                 return getString(R.string.error_media_request_too_large);
         }
