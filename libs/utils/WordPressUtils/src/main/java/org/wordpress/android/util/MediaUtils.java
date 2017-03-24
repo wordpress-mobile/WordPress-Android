@@ -450,26 +450,22 @@ public class MediaUtils {
                 final String type = split[0];
 
                 Uri contentUri = null;
-                final String selection;
+
                 if ("image".equals(type)) {
                     contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                    selection = MediaStore.Images.Media._ID;
                 } else if ("video".equals(type)) {
                     contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                    selection = MediaStore.Video.Media._ID;
                 } else if ("audio".equals(type)) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                    selection = MediaStore.Audio.Media._ID;
-                } else {
-                    selection = "_id";
                 }
 
+                final String selection = MediaStore.MediaColumns._ID + "=?";
 
                 final String[] selectionArgs = new String[] {
                         split[1]
                 };
 
-                return getDataColumn(context, contentUri, selection + "=?", selectionArgs);
+                return getDataColumn(context, contentUri, selection, selectionArgs);
             }
         }
 
