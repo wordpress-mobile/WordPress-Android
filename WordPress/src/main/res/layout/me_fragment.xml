@@ -189,7 +189,7 @@
             <ImageView
                 android:id="@+id/me_wpcom_connect_icon"
                 style="@style/MeListRowIcon"
-                app:srcCompat="@drawable/ic_sign_out_grey_24dp"
+                app:srcCompat="@drawable/ic_globe_grey_24dp"
                 android:contentDescription="@string/me_btn_login_logout"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
