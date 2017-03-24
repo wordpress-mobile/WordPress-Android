@@ -44,8 +44,6 @@ public class MediaUploadService extends Service {
     private List<MediaModel> mQueue;
     private List<MediaModel> mCompletedItems;
 
-    private Set<AnalyticsTracker.Stat> availableAnalitycs;
-
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
 
@@ -66,12 +64,6 @@ public class MediaUploadService extends Service {
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > created");
         mDispatcher.register(this);
         mCurrentUpload = null;
-
-        availableAnalitycs = EnumSet.noneOf(AnalyticsTracker.Stat.class);
-        availableAnalitycs.add(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED);
-        availableAnalitycs.add(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR);
-        availableAnalitycs.add(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS);
-        availableAnalitycs.add(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED);
     }
 
     @Override
@@ -301,12 +293,7 @@ public class MediaUploadService extends Service {
             return;
         }
 
-        if (availableAnalitycs != null && availableAnalitycs.contains(stat)) {
-            Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
-            AnalyticsTracker.track(stat, properties);
-        } else {
-            AppLog.w(AppLog.T.MEDIA, "Tried to track the following analytic: " + stat.name() + " but either the allowable analytics are null, " +
-                    "or the current is not included in the set");
-        }
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
+        AnalyticsTracker.track(stat, properties);
     }
 }
