@@ -1736,22 +1736,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private String getPathFromContentUri(Uri imageUri) {
-        String path = null;
-        String[] projection = new String[]{android.provider.MediaStore.Images.Media.DATA};
-        Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
-        if (cur != null && cur.moveToFirst()) {
-            int dataColumn = cur.getColumnIndex(android.provider.MediaStore.Images.Media.DATA);
-            path = cur.getString(dataColumn);
-        }
-        SqlUtils.closeCursor(cur);
-        return path;
-    }
-
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
         String path;
         if (uri.toString().contains("content:")) {
-            path = getPathFromContentUri(uri);
+            path = MediaUtils.getPath(this, uri);
         } else {
             // File is not in media library
             path = uri.toString().replace("file://", "");

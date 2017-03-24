@@ -52,6 +52,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -71,6 +72,7 @@ import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallbac
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -84,6 +86,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -281,6 +284,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     Uri imageUri = data.getData();
                     String mimeType = getContentResolver().getType(imageUri);
                     fetchMedia(imageUri, mimeType);
+                    trackAddMediaFromDeviceEvents(
+                            false,
+                            requestCode == RequestCodes.VIDEO_LIBRARY,
+                            imageUri
+                    );
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
@@ -288,14 +296,39 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     Uri uri = Uri.parse(mMediaCapturePath);
                     mMediaCapturePath = null;
                     queueFileForUpload(uri, getContentResolver().getType(uri));
+                    trackAddMediaFromDeviceEvents(true, false, uri);
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri uri = MediaUtils.getLastRecordedVideoUri(this);
                     queueFileForUpload(uri, getContentResolver().getType(uri));
+                    trackAddMediaFromDeviceEvents(true, true, uri);
                 }
                 break;
+        }
+    }
+
+    /**
+     * Analytics about new media
+     *
+     * @param isNewMedia Whether is a fresh (just taken) photo/video or not
+     * @param isVideo Whether is a video or not
+     * @param uri The URI of the media on the device, or null
+     */
+    private void trackAddMediaFromDeviceEvents(boolean isNewMedia, boolean isVideo, Uri uri) {
+        if (uri == null) {
+            AppLog.e(AppLog.T.MEDIA, "Cannot track new media event if mediaURI is null!!");
+            return;
+        }
+
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
+        properties.put("via", isNewMedia ? "device_camera" : "device_library");
+
+        if (isVideo) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_VIDEO, properties);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, properties);
         }
     }
 
@@ -904,40 +937,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private String getRealPathFromURI(Uri uri) {
         String path;
         if ("content".equals(uri.getScheme())) {
-            path = getRealPathFromContentURI(uri);
+            path = MediaUtils.getPath(this, uri);
         } else if ("file".equals(uri.getScheme())) {
             path = uri.getPath();
         } else {
             path = uri.toString();
         }
-        return path;
-    }
-
-    private String getRealPathFromContentURI(Uri contentUri) {
-        if (contentUri == null)
-            return null;
-
-        String[] proj = { android.provider.MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-
-        if (cursor == null)
-            return null;
-
-        int column_index = cursor.getColumnIndex(proj[0]);
-        if (column_index == -1) {
-            cursor.close();
-            return null;
-        }
-
-        String path;
-        if (cursor.moveToFirst()) {
-            path = cursor.getString(column_index);
-        } else {
-            path = null;
-        }
-
-        cursor.close();
         return path;
     }
 
