@@ -816,7 +816,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return false;
     }
 
-    private void savePostOnlineAsyncAndFinish(boolean isFirstTimePublish) {
+    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish) {
         new SavePostOnlineAndFinishTask(isFirstTimePublish).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -1172,10 +1172,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (isPublishable) {
             if (NetworkUtils.isNetworkAvailable(this)) {
                 if (!hasFailedMedia()) {
-                    savePostOnlineAsyncAndFinish(isFirstTimePublish);
+                    savePostOnlineAndFinishAsync(isFirstTimePublish);
                 }
             } else {
-                savePostLocallyAsyncFinish();
+                savePostLocallyAndFinishAsync();
             }
         } else {
             ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
@@ -1208,10 +1208,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
             if (PostStatus.fromPost(mPost) != PostStatus.PUBLISHED && isPublishable && NetworkUtils.isNetworkAvailable(this)) {
                 if (!hasFailedMedia()) {
-                    savePostOnlineAsyncAndFinish(isFirstTimePublish);
+                    savePostOnlineAndFinishAsync(isFirstTimePublish);
                 }
             } else {
-                savePostLocallyAsyncFinish();
+                savePostLocallyAndFinishAsync();
             }
         } else {
             // discard post if new & empty
@@ -1235,7 +1235,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return isFirstTimePublish;
     }
 
-    private void savePostLocallyAsyncFinish() {
+    private void savePostLocallyAndFinishAsync() {
         new SavePostLocallyAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
