@@ -276,7 +276,7 @@ public class MeFragment extends Fragment {
                         mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
                     }
                 }
-                signOutWordPressCom();
+                signOutWordPressComWithConfirmation();
             }
         });
 
