@@ -44,14 +44,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -260,11 +258,7 @@ public class MeFragment extends Fragment {
         mWPComConnectRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAccountStore.hasAccessToken()) {
-                    signOutWordPressComWithConfirmation();
-                } else {
-                    ActivityLauncher.showSignInForResult(getActivity());
-                }
+                ActivityLauncher.showSignInForResult(getActivity());
             }
         });
 
