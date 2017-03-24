@@ -271,12 +271,7 @@ public class MeFragment extends Fragment {
         rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSiteStore.hasSelfHostedSite()) {
-                    for (SiteModel site : mSiteStore.getSelfHostedSites()) {
-                        mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
-                    }
-                }
-                signOutWordPressComWithConfirmation();
+                logoutWithConfirmation();
             }
         });
 
@@ -438,7 +433,7 @@ public class MeFragment extends Fragment {
         });
     }
 
-    private void signOutWordPressComWithConfirmation() {
+    private void logoutWithConfirmation() {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
                 mAccountStore.getAccount().getUserName());
 
@@ -447,6 +442,7 @@ public class MeFragment extends Fragment {
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         signOutWordPressCom();
+                        mDispatcher.dispatch(SiteActionBuilder.newRemoveAllSitesAction());
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
