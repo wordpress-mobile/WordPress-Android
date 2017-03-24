@@ -189,7 +189,7 @@ public class PostsListFragment extends Fragment
             boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
 
             if (hasChanges) {
-                if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
                     ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
                             ToastUtils.Duration.SHORT);
                 } else {
@@ -203,7 +203,7 @@ public class PostsListFragment extends Fragment
                                             publishPost(post);
                                         }
                                     }).show();
-                        } else {
+                        } else if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
                             Snackbar.make(getActivity().findViewById(R.id.coordinator),
                                     R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
                                     .setAction(R.string.button_publish, new View.OnClickListener() {
