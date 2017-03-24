@@ -1274,6 +1274,22 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Media Library - Added Video");
                 break;
+            case MEDIA_UPLOAD_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Started");
+                break;
+            case MEDIA_UPLOAD_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Response Error");
+                break;
+            case MEDIA_UPLOAD_SUCCESS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Response OK");
+                break;
+            case MEDIA_UPLOAD_CANCELED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Canceled");
+                break;
             default:
                 instructions = null;
                 break;
