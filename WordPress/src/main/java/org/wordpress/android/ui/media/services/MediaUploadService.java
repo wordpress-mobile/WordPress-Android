@@ -24,10 +24,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -116,13 +115,13 @@ public class MediaUploadService extends Service {
         if (event.canceled) {
             // Upload canceled
             AppLog.i(AppLog.T.MEDIA, "Upload successfully canceled.");
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED, mCurrentUpload);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED, mCurrentUpload, null);
             completeCurrentUpload();
             uploadNextInQueue();
         } else if (event.completed) {
             // Upload completed
             AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, mCurrentUpload);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, mCurrentUpload, null);
             mCurrentUpload.setMediaId(event.media.getMediaId());
             completeCurrentUpload();
             uploadNextInQueue();
@@ -141,7 +140,9 @@ public class MediaUploadService extends Service {
         completeCurrentUpload();
         // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
         // event.media, event.error
-        trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, mCurrentUpload);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("error_type", event.error.type.name());
+        trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, mCurrentUpload, properties);
         uploadNextInQueue();
     }
 
@@ -168,7 +169,7 @@ public class MediaUploadService extends Service {
         }
 
         dispatchUploadAction(mCurrentUpload);
-        trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, mCurrentUpload);
+        trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, mCurrentUpload, null);
     }
 
     private void completeCurrentUpload() {
@@ -287,13 +288,15 @@ public class MediaUploadService extends Service {
      *
      * @param media The media being uploaded
      */
-    private void trackUploadMediaEvents(AnalyticsTracker.Stat stat, MediaModel media) {
+    private void trackUploadMediaEvents(AnalyticsTracker.Stat stat, MediaModel media, Map<String, Object> properties) {
         if (media == null) {
             AppLog.e(AppLog.T.MEDIA, "Cannot track media upload service events if the original media is null!!");
             return;
         }
-
-        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
-        AnalyticsTracker.track(stat, properties);
+        Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
+        if (properties != null) {
+            mediaProperties.putAll(properties);
+        }
+        AnalyticsTracker.track(stat, mediaProperties);
     }
 }
