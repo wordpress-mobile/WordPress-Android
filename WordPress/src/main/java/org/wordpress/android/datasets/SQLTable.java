@@ -1,11 +1,11 @@
 package org.wordpress.android.datasets;
 
-import java.util.Map;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+
+import java.util.Map;
 
 /**
  * A class to represent an database table.
