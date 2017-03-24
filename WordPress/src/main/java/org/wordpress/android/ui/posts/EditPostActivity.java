@@ -970,6 +970,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case AUTHORIZATION_REQUIRED:
                 errorMessage = getString(R.string.media_error_no_permission_upload);
                 break;
+            case REQUEST_TOO_LARGE:
+                errorMessage = getString(R.string.media_error_too_large_upload);
+                break;
             case GENERIC_ERROR:
             default:
                 errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
@@ -1692,22 +1695,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private String getPathFromContentUri(Uri imageUri) {
-        String path = null;
-        String[] projection = new String[]{android.provider.MediaStore.Images.Media.DATA};
-        Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
-        if (cur != null && cur.moveToFirst()) {
-            int dataColumn = cur.getColumnIndex(android.provider.MediaStore.Images.Media.DATA);
-            path = cur.getString(dataColumn);
-        }
-        SqlUtils.closeCursor(cur);
-        return path;
-    }
-
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
         String path;
         if (uri.toString().contains("content:")) {
-            path = getPathFromContentUri(uri);
+            path = MediaUtils.getPath(this, uri);
         } else {
             // File is not in media library
             path = uri.toString().replace("file://", "");
