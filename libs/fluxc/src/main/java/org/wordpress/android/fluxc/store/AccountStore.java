@@ -186,6 +186,7 @@ public class AccountStore extends Store {
         ACCOUNT_FETCH_ERROR,
         SETTINGS_FETCH_ERROR,
         SETTINGS_POST_ERROR,
+        SEND_VERIFICATION_EMAIL_ERROR,
         GENERIC_ERROR
     }
 
@@ -451,7 +452,9 @@ public class AccountStore extends Store {
     private void handleSentVerificationEmail(NewAccountResponsePayload payload) {
         OnAccountChanged accountChanged = new OnAccountChanged();
         accountChanged.causeOfChange = AccountAction.SEND_VERIFICATION_EMAIL;
-        accountChanged.accountInfosChanged = !payload.isError();
+        if (payload.isError()) {
+            accountChanged.error = new AccountError(AccountErrorType.SEND_VERIFICATION_EMAIL_ERROR, "");
+        }
         emitChange(accountChanged);
     }
 
