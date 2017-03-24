@@ -312,12 +312,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     /**
      * Analytics about new media
      *
+     * @param isNewMedia Whether is a fresh (just taken) photo/video or not
      * @param isVideo Whether is a video or not
      * @param uri The URI of the media on the device, or null
      */
     private void trackAddMediaFromDeviceEvents(boolean isNewMedia, boolean isVideo, Uri uri) {
         if (uri == null) {
-            AppLog.e(AppLog.T.MEDIA, "Cannot track new media events if mediaURI is null!!");
+            AppLog.e(AppLog.T.MEDIA, "Cannot track new media event if mediaURI is null!!");
             return;
         }
 
