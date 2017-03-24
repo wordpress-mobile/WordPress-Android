@@ -1712,7 +1712,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
         boolean isOptimized = optimizedMedia != null;
-        if (optimizedMedia!= null) {
+        if (optimizedMedia != null) {
             uri = optimizedMedia;
         }
 

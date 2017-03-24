@@ -80,6 +80,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -293,7 +294,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri = Uri.parse(mMediaCapturePath);
+                    Uri uri;
+                    Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, mMediaCapturePath, false);
+                    if (optimizedMedia != null) {
+                        uri = optimizedMedia;
+                    } else {
+                        uri = Uri.parse(mMediaCapturePath);
+                    }
                     mMediaCapturePath = null;
                     queueFileForUpload(uri, getContentResolver().getType(uri));
                     trackAddMediaFromDeviceEvents(true, false, uri);
