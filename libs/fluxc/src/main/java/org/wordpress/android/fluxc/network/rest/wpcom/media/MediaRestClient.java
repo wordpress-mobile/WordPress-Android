@@ -123,6 +123,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Uploads a single media item to a WP.com site.
      */
     public void uploadMedia(final SiteModel site, final MediaModel mediaToUpload) {
+        if (mediaToUpload == null || mediaToUpload.getId() == 0) {
+            // we can't have a MediaModel without an ID.
+            MediaStore.MediaError error = new MediaError(MediaErrorType.INVALID_ID);
+            notifyMediaUploaded(mediaToUpload, error);
+            return;
+        }
         performUpload(mediaToUpload, site);
     }
 
