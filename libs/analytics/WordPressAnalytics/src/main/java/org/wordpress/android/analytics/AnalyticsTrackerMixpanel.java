@@ -1280,7 +1280,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 break;
             case MEDIA_UPLOAD_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Media Service - Response Error");
+                        mixpanelInstructionsForEventName("Media Service - Upload Error");
                 break;
             case MEDIA_UPLOAD_SUCCESS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
