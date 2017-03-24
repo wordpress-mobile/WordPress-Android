@@ -1062,15 +1062,16 @@
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
-    <string name="error_upload">An error occurred while uploading the %s</string>
+    <string name="error_upload">Error while uploading the %1$s: %2$s</string>
     <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
     <string name="error_media_not_found">Media could not be found</string>
     <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
-    <string name="error_media_parse_format">Could not parse response to %s media</string>
+    <string name="error_media_parse_format">Could not parse response after media upload</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_media_upload_connection">A connection error occurred while uploading media</string>
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1088,6 +1089,10 @@
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
+
+    <!-- Post Error -->
+    <string name="error_unknown_post">Unknown post, local copy of this post could be desynchronized with you server</string>
+    <string name="error_unknown_post_type">Unknown post format</string>
 
     <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
