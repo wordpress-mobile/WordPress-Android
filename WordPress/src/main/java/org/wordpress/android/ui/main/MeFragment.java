@@ -257,7 +257,7 @@ public class MeFragment extends Fragment {
             }
         });
 
-        rootView.findViewById(R.id.row_wpcom_connect).setOnClickListener(new View.OnClickListener() {
+        mWPComConnectRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mAccountStore.hasAccessToken()) {
