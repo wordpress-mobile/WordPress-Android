@@ -194,6 +194,9 @@ public class MediaStore extends Store {
         NOT_AUTHENTICATED,
         REQUEST_TOO_LARGE,
 
+        // logic constraints errors
+        INVALID_ID,
+
         // unknown/unspecified
         GENERIC_ERROR;
 
