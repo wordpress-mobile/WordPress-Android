@@ -18,10 +18,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.FadeInNetworkImageView;
@@ -32,7 +32,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -53,7 +52,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private ImageLoader mImageLoader;
     private final Context mContext;
     private final SiteModel mSite;
-    private Cursor mCursor;
+
+    private final ArrayList<MediaModel> mMediaList = new ArrayList<>();
 
     private final int mThumbWidth;
     private final int mThumbHeight;
@@ -100,7 +100,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setCursor(Cursor cursor) {
-        mCursor = cursor;
+        // TODO: populate mMediaList
         notifyDataSetChanged();
     }
 
@@ -116,15 +116,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return;
         }
 
-        mCursor.moveToPosition(position);
+        MediaModel media = mMediaList.get(position);
         holder.imageView.setTag(null);
 
-        int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
+        int localMediaId = media.getId();
 
-        String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
+        String filePath = media.getFilePath();
+        String mimeType = media.getMimeType();
 
-        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+        String strState = media.getUploadState();
         MediaUploadState state = MediaUploadState.fromString(strState);
 
         boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(filePath);
@@ -136,7 +136,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (isLocalFile) {
                 loadLocalImage(filePath, holder.imageView);
             } else {
-                String imageUrl = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.URL));
+                String imageUrl = media.getUrl();
                 String thumbUrl;
                 // if this isn't a private site use Photon to request the image at the exact size,
                 // otherwise append the standard wp query params to request the desired size
@@ -150,8 +150,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         } else {
             // not an image, so show file name and file type
             holder.imageView.setImageDrawable(null);
-            String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
-            String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
+            String fileName = media.getFileName();
+            String title = media.getTitle();
             String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
             holder.fileContainer.setVisibility(View.VISIBLE);
             holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
@@ -290,15 +290,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         }
                     } else {
                         // retry uploading this media item if it previously failed
-                        mCursor.moveToPosition(position);
-                        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-                        MediaUploadState state = MediaUploadState.fromString(strState);
+                        MediaModel media = mMediaList.get(position);
+                        MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
                         if (state == MediaUploadState.FAILED) {
                             stateTextView.setText(R.string.upload_queued);
                             stateTextView.setCompoundDrawables(null, null, null, null);
                             if (mCallback != null) {
-                                int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
-                                mCallback.onAdapterRetryUpload(localMediaId);
+                                mCallback.onAdapterRetryUpload(media.getId());
                             }
                         } else if (mCallback != null) {
                             mCallback.onAdapterItemSelected(position);
@@ -330,8 +328,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public int getLocalMediaIdAtPosition(int position) {
         if (isValidPosition(position)) {
-            mCursor.moveToPosition(position);
-            return mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
+            mMediaList.get(position).getId();
         }
         return INVALID_POSITION;
     }
@@ -344,9 +341,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (!mAllowMultiselect || !isValidPosition(position)) {
             return false;
         }
-        mCursor.moveToPosition(position);
-        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-        MediaUploadState state = MediaUploadState.fromString(strState);
+        MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
         return state != MediaUploadState.DELETE && state != MediaUploadState.DELETED;
     }
 
@@ -379,7 +374,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     @Override
     public int getItemCount() {
-        return mCursor != null ? mCursor.getCount() : 0;
+        return mMediaList.size();
     }
 
     public static int getColumnCount(Context context) {
@@ -416,17 +411,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
-        if (mCursor == null || !isValidPosition(position)) {
+        if (!isValidPosition(position)) {
             return;
         }
 
-        mCursor.moveToPosition(position);
-        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
-        if (columnIndex == -1) {
-            return;
-        }
-
-        int localMediaId = mCursor.getInt(columnIndex);
+        int localMediaId = mMediaList.get(position).getId();
         if (selected) {
             mSelectedItems.add(localMediaId);
         } else {
@@ -463,16 +452,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void toggleItemSelected(GridViewHolder holder, int position) {
-        if (mCursor == null || !isValidPosition(position)) {
+        if (!isValidPosition(position)) {
             return;
         }
-        mCursor.moveToPosition(position);
-        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
-        if (columnIndex != -1) {
-            int localMediaId = mCursor.getInt(columnIndex);
-            boolean isSelected = mSelectedItems.contains(localMediaId);
-            setItemSelectedByPosition(holder, position, !isSelected);
-        }
+        int localMediaId = mMediaList.get(position).getId();
+        boolean isSelected = mSelectedItems.contains(localMediaId);
+        setItemSelectedByPosition(holder, position, !isSelected);
     }
 
     public void setSelectedItems(ArrayList<Integer> selectedItems) {
