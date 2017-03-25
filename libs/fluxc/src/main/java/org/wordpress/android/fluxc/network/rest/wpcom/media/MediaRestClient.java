@@ -124,7 +124,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      */
     public void uploadMedia(final SiteModel site, final MediaModel mediaToUpload) {
         if (mediaToUpload == null || mediaToUpload.getId() == 0) {
-            // we can't have a MediaModel without an ID.
+            // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
             MediaStore.MediaError error = new MediaError(MediaErrorType.INVALID_ID);
             notifyMediaUploaded(mediaToUpload, error);
             return;
@@ -292,11 +292,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         Call call = mOkHttpClient.newCall(request);
         mCurrentUploadCalls.put(media.getId(), call);
 
+        AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
+
         call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.isSuccessful()) {
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
+                    AppLog.d(T.MEDIA, "media upload successful for media.getId: " + media.getId());
                     String jsonBody = response.body().string();
 
                     Gson gson = new Gson();
@@ -307,7 +310,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, siteModel.getId());
                     if (responseMedia != null && !responseMedia.isEmpty()) {
                         MediaModel uploadedMedia = responseMedia.get(0);
+                        AppLog.d(T.MEDIA, "mediaRestClient: uploadedMediaId: " + uploadedMedia.getId());
+                        AppLog.d(T.MEDIA, "mediaRestClient: uploadedMedia-MediaId: " + uploadedMedia.getMediaId());
                         uploadedMedia.setId(media.getId());
+                        AppLog.d(T.MEDIA, "mediaRestClient: new uploadedMediaId: " + uploadedMedia.getId());
                         notifyMediaUploaded(uploadedMedia, null);
                     } else {
                         MediaStore.MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -315,6 +321,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                     // clean from the current uploads map
                     mCurrentUploadCalls.remove(media.getId());
+                    AppLog.d(T.MEDIA, "mediaRestClient: removed from current uploads, remaining: " + mCurrentUploadCalls.size());
+
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaUploaded(media, parseUploadError(response));
