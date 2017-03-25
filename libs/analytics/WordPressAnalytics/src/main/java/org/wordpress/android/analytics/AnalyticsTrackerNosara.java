@@ -660,6 +660,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_library_photo_added";
             case MEDIA_LIBRARY_ADDED_VIDEO:
                 return "media_library_video_added";
+            case MEDIA_UPLOAD_STARTED:
+                return "media_service_upload_started";
+            case MEDIA_UPLOAD_ERROR:
+                return "media_service_upload_response_error";
+            case MEDIA_UPLOAD_SUCCESS:
+                return "media_service_upload_response_ok";
+            case MEDIA_UPLOAD_CANCELED:
+                return "media_service_upload_canceled";
             default:
                 return null;
         }

@@ -229,6 +229,10 @@ public final class AnalyticsTracker {
         DEEP_LINKED,
         DEEP_LINKED_FALLBACK,
         DEEP_LINK_NOT_DEFAULT_HANDLER,
+        MEDIA_UPLOAD_STARTED,
+        MEDIA_UPLOAD_ERROR,
+        MEDIA_UPLOAD_SUCCESS,
+        MEDIA_UPLOAD_CANCELED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
