@@ -124,31 +124,25 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         MediaModel media = mMediaList.get(position);
         holder.imageView.setTag(null);
 
-        int localMediaId = media.getId();
-
-        String filePath = media.getFilePath();
-        String mimeType = media.getMimeType();
-
         String strState = media.getUploadState();
         MediaUploadState state = MediaUploadState.fromString(strState);
 
-        boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(filePath);
-        boolean isSelected = isItemSelected(localMediaId);
-        boolean isImage = mimeType.startsWith("image/");
+        boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(media.getFilePath());
+        boolean isSelected = isItemSelected(media.getId());
+        boolean isImage = media.getMimeType().startsWith("image/");
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
             if (isLocalFile) {
-                loadLocalImage(filePath, holder.imageView);
+                loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                String imageUrl = media.getUrl();
-                String thumbUrl;
                 // if this isn't a private site use Photon to request the image at the exact size,
                 // otherwise append the standard wp query params to request the desired size
+                String thumbUrl;
                 if (SiteUtils.isPhotonCapable(mSite)) {
-                    thumbUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbWidth, mThumbHeight);
+                    thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
                 } else {
-                    thumbUrl = UrlUtils.removeQuery(imageUrl) + "?w=" + mThumbWidth + "&h=" + mThumbHeight;
+                    thumbUrl = UrlUtils.removeQuery(media.getUrl()) + "?w=" + mThumbWidth + "&h=" + mThumbHeight;
                 }
                 WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }
@@ -157,7 +151,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.imageView.setImageDrawable(null);
             String fileName = media.getFileName();
             String title = media.getTitle();
-            String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
+            String fileExtension = MediaUtils.getExtensionForMimeType(media.getMimeType());
             holder.fileContainer.setVisibility(View.VISIBLE);
             holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
             holder.fileTypeView.setText(fileExtension.toUpperCase());
@@ -168,7 +162,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // show selection count when selected
         holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         if (isSelected) {
-            int count = mSelectedItems.indexOf(localMediaId) + 1;
+            int count = mSelectedItems.indexOf(media.getId()) + 1;
             holder.selectionCountTextView.setText(Integer.toString(count));
         }
 
