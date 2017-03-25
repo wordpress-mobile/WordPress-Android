@@ -352,10 +352,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void updateFilterText() {
-        int countAll = mMediaStore.getAllSiteMediaAsCursor(mSite).getCount();
-        int countImages = mMediaStore.getNotDeletedSiteImagesAsCursor(mSite).getCount();
-        int countUnattached = mMediaStore.getNotDeletedUnattachedMediaAsCursor(mSite).getCount();
-        setFiltersText(countAll, countImages, countUnattached);
+        int countAll = mMediaStore.getAllSiteMedia(mSite).size();
+        int countImages = mMediaStore.getSiteImages(mSite).size();
+        int countUnattached = mMediaStore.getUnattachedSiteMedia(mSite).size();
+        mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
+        mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
+        mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
     }
 
     private List<MediaModel> filterItems(Filter filter) {
@@ -427,12 +429,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.spinner_menu_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
         mSpinner.setSelection(mFilter.ordinal());
-    }
-
-    private void setFiltersText(int countAll, int countImages, int countUnattached) {
-        mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
-        mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
-        mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
     }
 
     private void updateActionModeTitle(int selectCount) {
