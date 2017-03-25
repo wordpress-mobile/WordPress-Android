@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.FadeInNetworkImageView;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -101,10 +102,41 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        // TODO: compare the lists
+        if (isSameList(mediaList)) {
+            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
+            return;
+        }
+
         mMediaList.clear();
         mMediaList.addAll(mediaList);
         notifyDataSetChanged();
+    }
+
+    /*
+     * returns true if the passed list is the same as the existing one
+     */
+    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
+        if (mediaList.size() != mMediaList.size()) {
+            return false;
+        }
+        for (MediaModel media: mediaList) {
+            if (indexOfId(media.getId()) == INVALID_POSITION) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+     * returns the index of the passed media ID in the current media list
+     */
+    private int indexOfId(int id) {
+        for (int i = 0; i < mMediaList.size(); i++) {
+            if (mMediaList.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return INVALID_POSITION;
     }
 
     @Override
