@@ -327,7 +327,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public int getLocalMediaIdAtPosition(int position) {
         if (isValidPosition(position)) {
-            mMediaList.get(position).getId();
+            return mMediaList.get(position).getId();
         }
         return INVALID_POSITION;
     }
