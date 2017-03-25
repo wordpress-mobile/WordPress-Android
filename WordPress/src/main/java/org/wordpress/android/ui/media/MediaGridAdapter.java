@@ -481,8 +481,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (mediaList.size() != mMediaList.size()) {
             return false;
         }
+
         for (MediaModel media: mediaList) {
-            if (indexOfId(media.getId()) == INVALID_POSITION) {
+            // make sure this media item is in the existing media list
+            int index = indexOfId(media.getId());
+            if (index == INVALID_POSITION) {
+                return false;
+            }
+
+            // make sure media item is the same as existing (upload state may be different, etc.)
+            MediaModel thisMedia = mMediaList.get(index);
+            if (!thisMedia.equals(media)) {
                 return false;
             }
         }
