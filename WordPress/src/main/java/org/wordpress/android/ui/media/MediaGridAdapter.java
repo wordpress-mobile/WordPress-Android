@@ -56,12 +56,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private final SiteModel mSite;
 
     private final ArrayList<MediaModel> mMediaList = new ArrayList<>();
+    private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
 
     private final int mThumbWidth;
     private final int mThumbHeight;
-
-    // Must be an ArrayList (order is important for galleries)
-    private ArrayList<Integer> mSelectedItems;
 
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .85f;
@@ -81,7 +79,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         mContext = context;
         mSite = site;
-        mSelectedItems = new ArrayList<>();
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
 
@@ -110,33 +107,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mMediaList.clear();
         mMediaList.addAll(mediaList);
         notifyDataSetChanged();
-    }
-
-    /*
-     * returns true if the passed list is the same as the existing one
-     */
-    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
-        if (mediaList.size() != mMediaList.size()) {
-            return false;
-        }
-        for (MediaModel media: mediaList) {
-            if (indexOfId(media.getId()) == INVALID_POSITION) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /*
-     * returns the index of the passed media ID in the current media list
-     */
-    private int indexOfId(int id) {
-        for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).getId() == id) {
-                return i;
-            }
-        }
-        return INVALID_POSITION;
     }
 
     @Override
@@ -496,10 +466,38 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setSelectedItems(ArrayList<Integer> selectedItems) {
-        mSelectedItems = selectedItems;
+        mSelectedItems.clear();
+        mSelectedItems.addAll(selectedItems);
         if (mCallback != null) {
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
         notifyDataSetChanged();
+    }
+
+    /*
+     * returns true if the passed list is the same as the existing one
+     */
+    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
+        if (mediaList.size() != mMediaList.size()) {
+            return false;
+        }
+        for (MediaModel media: mediaList) {
+            if (indexOfId(media.getId()) == INVALID_POSITION) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+     * returns the index of the passed media ID in the current media list
+     */
+    private int indexOfId(int id) {
+        for (int i = 0; i < mMediaList.size(); i++) {
+            if (mMediaList.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return INVALID_POSITION;
     }
 }
