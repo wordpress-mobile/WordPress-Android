@@ -6,7 +6,6 @@ import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -52,6 +51,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -298,8 +298,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        Cursor cursor = mMediaStore.searchSiteMediaByTitleAsCursor(mSite, mSearchTerm);
-        mGridAdapter.setCursor(cursor);
+        List<MediaModel> mediaList = mMediaStore.searchSiteMediaByTitle(mSite, mSearchTerm);
+        mGridAdapter.setMediaList(mediaList);
     }
 
     public void setFilterEnabled(boolean enabled) {
@@ -310,16 +310,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void setFilter(Filter filter) {
         mFilter = filter;
-        Cursor cursor = filterItems(mFilter);
-        if (cursor == null || cursor.getCount() == 0) {
+        List<MediaModel> mediaList = filterItems(mFilter);
+        mGridAdapter.setMediaList(mediaList);
+        if (mediaList.size() == 0) {
             mResultView.setVisibility(View.GONE);
-        }
-        if (cursor != null && cursor.getCount() != 0) {
-            mGridAdapter.setCursor(cursor);
-            hideEmptyView();
         } else {
-            // No data to display. Clear the GridView and display a message in the empty view
-            mGridAdapter.setCursor(null);
+            hideEmptyView();
         }
         // Overwrite the LOADING message
         if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
@@ -362,16 +358,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         setFiltersText(countAll, countImages, countUnattached);
     }
 
-    private Cursor filterItems(Filter filter) {
+    private List<MediaModel> filterItems(Filter filter) {
         switch (filter) {
-            case ALL:
-                return mMediaStore.getAllSiteMediaAsCursor(mSite);
             case IMAGES:
-                return mMediaStore.getNotDeletedSiteImagesAsCursor(mSite);
+                return mMediaStore.getSiteImages(mSite);
             case UNATTACHED:
-                return mMediaStore.getNotDeletedUnattachedMediaAsCursor(mSite);
+                return mMediaStore.getUnattachedSiteMedia(mSite);
+            default:
+                return mMediaStore.getAllSiteMedia(mSite);
         }
-        return null;
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
@@ -523,8 +518,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
         MediaGridAdapter adapter = (MediaGridAdapter) mRecycler.getAdapter();
 
-        Cursor mediaCursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-        adapter.setCursor(mediaCursor);
+        List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
+        adapter.setMediaList(mediaList);
 
         mHasRetrievedAllMedia = !event.canLoadMore;
         adapter.setHasRetrievedAll(mHasRetrievedAllMedia);

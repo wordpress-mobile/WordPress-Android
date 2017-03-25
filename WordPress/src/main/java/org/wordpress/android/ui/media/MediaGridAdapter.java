@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.media;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -35,6 +35,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An adapter for the media gallery grid.
@@ -99,8 +100,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mImageLoader = imageLoader;
     }
 
-    public void setCursor(Cursor cursor) {
-        // TODO: populate mMediaList
+    public void setMediaList(@NonNull List<MediaModel> mediaList) {
+        // TODO: compare the lists
+        mMediaList.clear();
+        mMediaList.addAll(mediaList);
         notifyDataSetChanged();
     }
 
