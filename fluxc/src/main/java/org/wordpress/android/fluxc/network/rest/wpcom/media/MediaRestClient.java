@@ -315,6 +315,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     if (responseMedia != null && !responseMedia.isEmpty()) {
                         MediaModel uploadedMedia = responseMedia.get(0);
                         uploadedMedia.setId(media.getId());
+                        // TODO these two following setter calls are not strictly needed but make it
+                        // easier to debug multi-upload feature
                         uploadedMedia.setUploadUUID(media.getUploadUUID());
                         uploadedMedia.setUploadCancelled(media.isUploadCancelled());
                         notifyMediaUploaded(uploadedMedia, null);
