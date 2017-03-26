@@ -21,6 +21,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -204,7 +205,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             PostViewHolder postHolder = (PostViewHolder) holder;
 
             if (StringUtils.isNotEmpty(post.getTitle())) {
-                postHolder.txtTitle.setText(post.getTitle());
+                // Unescape HTML
+                String cleanPostTitle = StringEscapeUtils.unescapeHtml(post.getTitle());
+                postHolder.txtTitle.setText(cleanPostTitle);
             } else {
                 postHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
             }
