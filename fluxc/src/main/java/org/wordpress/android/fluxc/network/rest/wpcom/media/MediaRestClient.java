@@ -336,6 +336,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!media.isUploadCancelled()) {
+                    // TODO it would be great to raise some more fine grained errors here, for
+                    // instance timeouts should be raised
                     MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                     notifyMediaUploaded(media, error);
                 }
