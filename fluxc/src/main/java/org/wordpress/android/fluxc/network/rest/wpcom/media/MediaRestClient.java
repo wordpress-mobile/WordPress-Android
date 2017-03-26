@@ -252,6 +252,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         UUID uuid = media.getUploadUUID();
         // make sure we know which call/media to look for
         if (uuid != null) {
+            AppLog.d(T.MEDIA, "cancelling upload for: " + media.getUploadUUID());
             Call correspondingCall = mCurrentUploadCalls.get(uuid);
             if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
                 AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
@@ -295,6 +296,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         Call call = mOkHttpClient.newCall(request);
         media.generateUploadUUID();
         mCurrentUploadCalls.put(media.getUploadUUID(), call);
+
+        AppLog.d(T.MEDIA, "starting upload for: " + media.getUploadUUID());
 
         call.enqueue(new Callback() {
             @Override
