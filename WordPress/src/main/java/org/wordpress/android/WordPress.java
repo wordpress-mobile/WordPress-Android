@@ -66,6 +66,8 @@ import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AppLog.AppLogListener;
+import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -228,14 +230,23 @@ public class WordPress extends MultiDexApplication {
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        ProfilingUtils.start("App Startup");
-        // Enable log recording
-        AppLog.enableRecording(true);
-        AppLog.i(T.UTILS, "WordPress.onCreate");
-
         if (!PackageUtils.isDebugBuild()) {
             Fabric.with(this, new Crashlytics());
         }
+
+        ProfilingUtils.start("App Startup");
+        // Enable log recording
+        AppLog.enableRecording(true);
+        AppLog.addListener(new AppLogListener() {
+            @Override
+            public void onLog(T tag, LogLevel logLevel, String message) {
+                StringBuffer sb = new StringBuffer();
+                sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
+                        .append(tag.toString()).append(": ").append(message);
+                CrashlyticsUtils.log(sb.toString());
+            }
+        });
+        AppLog.i(T.UTILS, "WordPress.onCreate");
 
         // If the migration was not done and if we have something to migrate
         runFluxCMigration();
