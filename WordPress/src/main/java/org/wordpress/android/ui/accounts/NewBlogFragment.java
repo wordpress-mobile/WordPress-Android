@@ -23,7 +23,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
@@ -36,6 +35,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
@@ -54,7 +55,6 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private long mNewSiteRemoteId;
 
     @Inject Dispatcher mDispatcher;
-    @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
     @Override
@@ -331,7 +331,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
         mNewSiteRemoteId = event.newSiteRemoteId;
-        // Site created, update sites
+        // We can't get all the site informations from the new site endpoint, so we have to fetch the site list.
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
@@ -344,9 +344,19 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         endProgress();
-        Intent intent = new Intent();
+        if (event.isError()) {
+            // Site has been created but there was a error while fetching the sites. Can happen if we get
+            // a response including a broken Jetpack site. We can continue and check if the newly created
+            // site has been fetched.
+            AppLog.e(T.NUX, event.error.type.toString());
+        }
         SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        Intent intent = new Intent();
+        if (site != null) {
+            intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_fetch_site_after_creation, Duration.LONG);
+        }
         getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
     }
