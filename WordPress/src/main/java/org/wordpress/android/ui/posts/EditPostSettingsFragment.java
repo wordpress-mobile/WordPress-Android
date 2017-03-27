@@ -408,7 +408,7 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String tags = TextUtils.join(",", mPost.getTagNameList());
-        if (!tags.equals("")) {
+        if (!tags.equals("") && mTagsEditText != null) {
             mTagsEditText.setText(tags);
         }
 

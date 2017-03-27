@@ -103,22 +103,7 @@ Language: sr_RS
 	<string name="hide">Сакриј</string>
 	<string name="select_all">Изабери све</string>
 	<string name="show">Прикажи</string>
-	<string name="select_from_new_picker">Изаберите више опција помоћу новог бирача</string>
 	<string name="stats_generic_error">Тражене статистике се не могу учитати</string>
-	<string name="no_media_sources">Није могуће добавити медије</string>
-	<string name="loading_blog_videos">Добављам видео снимке</string>
-	<string name="loading_blog_images">Добављам слике</string>
-	<string name="error_loading_videos">Грешка приликом учитавања видео снимака</string>
-	<string name="error_loading_images">Грешка приликом учитавања слика</string>
-	<string name="error_loading_blog_videos">Није могуће добавити видео снимке</string>
-	<string name="no_blog_videos">Нема видео снимака</string>
-	<string name="no_device_images">Нема слика</string>
-	<string name="error_loading_blog_images">Није могуће добавити слике</string>
-	<string name="no_blog_images">Нема слика</string>
-	<string name="no_device_videos">Нема видео снимака</string>
-	<string name="no_media">Не постоје медији</string>
-	<string name="loading_images">Учитавам слике</string>
-	<string name="loading_videos">Учитавам видео снимке</string>
 	<string name="two_step_sms_sent">Потражите верификациони код међу вашим текстуалним порукама.</string>
 	<string name="two_step_footer_button">Пошаљите код путем текстуалне поруке</string>
 	<string name="two_step_footer_label">Унесите код са своје апликације за аутентикацију.</string>
@@ -127,14 +112,6 @@ Language: sr_RS
 	<string name="verification_code">Код за потврђивање</string>
 	<string name="editor_toast_invalid_path">Неисправна путања до датотеке</string>
 	<string name="error_publish_no_network">Није могуће објавити услед недостатка интернет везе. Сачувано као нацрт.</string>
-	<string name="tab_title_site_videos">Видео снимци са веб места</string>
-	<string name="tab_title_site_images">Слике са веб места</string>
-	<string name="tab_title_device_videos">Видео снимци на уређају</string>
-	<string name="tab_title_device_images">Слике на уређају</string>
-	<string name="take_video">Направи видео снимак</string>
-	<string name="take_photo">Направи фотографију</string>
-	<string name="media_picker_title">Изабери медије</string>
-	<string name="add_to_post">Додајте у чланак</string>
 	<string name="language">Језик</string>
 	<string name="device">Уређај</string>
 	<string name="reader_empty_posts_request_failed">Није могуће добавити чланке</string>
@@ -239,7 +216,6 @@ Language: sr_RS
 	<string name="reader_empty_posts_liked">Нисте означили да вам се свиђа ниједан чланак</string>
 	<string name="error_refresh_unauthorized_pages">Немате дозволу да прегледате или уређујете стране</string>
 	<string name="posting_post">Објављивање "%s"</string>
-	<string name="media_empty_list_custom_date">Не постоје медији у том временском периоду</string>
 	<string name="comment_reply_to_user">Одговор %s</string>
 	<string name="comment_trashed">Коментар померен на отпад</string>
 	<string name="posts_empty_list">Не постоје чланци. Зашто не бисте направили нови?</string>
@@ -364,7 +340,6 @@ Language: sr_RS
 	<string name="reply_failed">Одговарање неуспешно</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>
 	<string name="stats_empty_comments">Нема коментара</string>
-	<string name="no_site_error">Није могуће повезати се на Вордпрес веб место</string>
 	<string name="no_account">Није пронађен Вордпрес налог. Додајте налог и покушајте поново</string>
 	<string name="category_automatically_renamed">Име категорије %1$s није исправно. Преименована је у %2$s.</string>
 	<string name="cat_name_required">Име категорије је неопходно</string>
@@ -395,7 +370,6 @@ Language: sr_RS
 	<string name="category_parent">Надређена категорија (опционо):</string>
 	<string name="share_action_post">Нови чланак</string>
 	<string name="category_desc">Опис категорије (опционо)</string>
-	<string name="category_slug">Подложак категорије (опционо)</string>
 	<string name="add_new_category">Додај нову категорију</string>
 	<string name="category_name">Име категорије</string>
 	<string name="post_not_published">Стање чланка није објављено</string>
@@ -404,7 +378,6 @@ Language: sr_RS
 	<string name="reader_toast_err_remove_tag">Није могуће уклонити ову ознаку</string>
 	<string name="reader_toast_err_add_tag">Није могуће додати ову ознаку</string>
 	<string name="reader_share_link">Подели везу</string>
-	<string name="jetpack_message_not_admin">Џетпек додатак је неопходан ѕа статистике. Контактирајте управника веб места.</string>
 	<string name="wordpress_blog">Вордпрес блог</string>
 	<string name="error_blog_hidden">Овај блог је сакривен и не може се учитати. У подешавањима поново омогућите да буде видљив и пробајте поново.</string>
 	<string name="add_account_blog_url">Адреса блога</string>
@@ -516,7 +489,6 @@ Language: sr_RS
 	<string name="reader_share_subject">Подељено од стране %s</string>
 	<string name="reader_untitled_post">(Без наслова)</string>
 	<string name="jetpack_not_found">Додатак Џетпек није пронађен</string>
-	<string name="jetpack_message">Џетпек додатак је неопходан за статистике. Да ли желите да инсталирате Џетпек?</string>
 	<string name="reader_toast_err_share_intent">Није могуће делити</string>
 	<string name="reader_toast_err_tag_invalid">Ово није исправна ознака</string>
 	<string name="reader_toast_err_tag_exists">Већ пратите ову ознаку</string>
@@ -542,7 +514,6 @@ Language: sr_RS
 	<string name="media_edit_failure">Ажурирање неуспешно</string>
 	<string name="media_edit_success">Ажуриран</string>
 	<string name="media_gallery_type_tiled">Поплочан</string>
-	<string name="custom_date">Прилагођени датум</string>
 	<string name="unattached">Непридружено</string>
 	<string name="themes">Теме</string>
 	<string name="all">Све</string>

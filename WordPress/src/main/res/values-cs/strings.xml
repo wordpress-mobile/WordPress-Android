@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-01 19:54:19+0000
+Translation-Revision-Date: 2017-03-23 07:47:35+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -392,11 +392,9 @@ Language: cs_CZ
 	<string name="site_settings_discussion_hint">Prohlédněte a změňte si nastavení vašich webových diskusí</string>
 	<string name="site_settings_more_hint">Zobrazit veškerá dostupná nastavení diskusí</string>
 	<string name="site_settings_related_posts_hint">Zobrazte nebo skryjte podobné příspěvky ve čtečce</string>
-	<string name="site_settings_upload_and_link_image_hint">Povolte pokud chcete vždy nahrávat plnou velikost obrázků</string>
 	<string name="site_settings_image_width_hint">Změní velikost obrázků v příspěvcích na tuto šířku</string>
 	<string name="site_settings_format_hint">Nastaví nový formát příspěvku</string>
 	<string name="site_settings_category_hint">Nastaví novou rubriku příspěvku</string>
-	<string name="site_settings_location_hint">Automaticky vkládat data polohy do vašich příspěvků</string>
 	<string name="site_settings_password_hint">Změňte si své heslo</string>
 	<string name="site_settings_username_hint">Aktuální uživatelský účet</string>
 	<string name="site_settings_language_hint">Jazyk, kterým je tento web psán je</string>
@@ -425,7 +423,6 @@ Language: cs_CZ
 	<string name="site_settings_allow_comments_title">Povolit komentáře</string>
 	<string name="site_settings_default_format_title">Výchozí formát</string>
 	<string name="site_settings_default_category_title">Výchozí rubrika</string>
-	<string name="site_settings_location_title">Povolit polohu</string>
 	<string name="site_settings_address_title">Adresa</string>
 	<string name="site_settings_tagline_title">Popis webu</string>
 	<string name="site_settings_title_title">Název webu</string>
@@ -622,33 +619,10 @@ Language: cs_CZ
 	<string name="deselect_all">Zrušit výběr</string>
 	<string name="sign_out_wpcom_confirm">Po odpojení se vám z účtu vymažou všechny @%s  WordPress.com údaje z tohoto zařízení, včetně lokálních konceptů a změn.</string>
 	<string name="show">Zobrazit</string>
-	<string name="select_from_new_picker">Nový vícenásobný výběr</string>
-	<string name="no_device_images">Žádné obrázky</string>
-	<string name="no_blog_videos">Žádná videa</string>
-	<string name="no_device_videos">Žádná videa</string>
-	<string name="no_blog_images">Žádné obrázky</string>
-	<string name="error_loading_images">Chyba při zobrazování obrázků</string>
-	<string name="error_loading_videos">Chyba při zobrazování videí</string>
-	<string name="loading_blog_images">Načítání obrázků</string>
-	<string name="loading_blog_videos">Načítání videí</string>
-	<string name="no_media_sources">Nelze načíst média</string>
-	<string name="error_loading_blog_videos">Nelze načíst videa</string>
 	<string name="stats_generic_error">Požadované statistiky se nepodařilo načíst</string>
-	<string name="error_loading_blog_images">Nelze načíst obrázky</string>
-	<string name="loading_images">Načítání obrázků</string>
-	<string name="loading_videos">Načítání videí</string>
-	<string name="no_media">Žádná média</string>
 	<string name="verify">Ověřit</string>
-	<string name="tab_title_site_images">Obrázky na webu</string>
-	<string name="tab_title_site_videos">Videa na webu</string>
-	<string name="tab_title_device_videos">Videa v zařízení</string>
-	<string name="take_video">Vybrat video</string>
-	<string name="tab_title_device_images">Obrázky v zařízení</string>
-	<string name="take_photo">Vybrat obrázek</string>
-	<string name="media_picker_title">Vybrat médium</string>
 	<string name="language">Jazyk</string>
 	<string name="device">Zařízení</string>
-	<string name="add_to_post">Přidat do příspěvku</string>
 	<string name="error_publish_no_network">Nelze publikovat bez připojení. Uloženo jako koncept.</string>
 	<string name="editor_toast_invalid_path">Neplatná cesta k souboru</string>
 	<string name="verification_code">Ověřovací kód</string>
@@ -782,7 +756,6 @@ Language: cs_CZ
 	<string name="sending_content">Nahrávání obsahu %s</string>
 	<string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
 	<string name="pages_empty_list">Žádné stránky. Přejete si nějakou vytvořit?</string>
-	<string name="media_empty_list_custom_date">Žádné soubory v tomto časovém intervalu</string>
 	<string name="agree_terms_of_service">Založením účtu souhlasíte s našimi %1$sPodmínkami používání služby%2$s</string>
 	<string name="create_new_blog_wpcom">Vytvořit web na WordPress.com</string>
 	<string name="more">Více</string>
@@ -893,7 +866,6 @@ Language: cs_CZ
 	<string name="blog_name_required">Vlož adresu webu</string>
 	<string name="invalid_url_message">Zkontrolujte platnost zadané adresy webu</string>
 	<string name="blog_not_found">Nastala chyba při přístupu na tento web</string>
-	<string name="no_site_error">Nemohu se připojit k serveru WordPress</string>
 	<string name="adding_cat_failed">Chyba při přidávání rubriky</string>
 	<string name="adding_cat_success">Rubrubrika úspěšně přidána</string>
 	<string name="cat_name_required">Název rubriky je vyžadován</string>
@@ -994,7 +966,6 @@ Language: cs_CZ
 	<string name="add_account_blog_url">Zadej URL webu</string>
 	<string name="blog_removed_successfully">Web byl úspěšně odstraněn</string>
 	<string name="select_categories">Vyberte rubriku</string>
-	<string name="category_slug">Název rubriky v URL (nepovinné)</string>
 	<string name="category_desc">Popis rubriky (nepovinné)</string>
 	<string name="category_parent">Nadřazená rubrika (nepovinné):</string>
 	<string name="invalid_site_url_message">Zkontrolujte platnost URL adresy stránky</string>
@@ -1045,7 +1016,6 @@ Language: cs_CZ
 	<string name="reader_untitled_post">(bez názvu)</string>
 	<string name="reader_share_subject">Sdíleno z %s</string>
 	<string name="reader_btn_follow">Sledovat</string>
-	<string name="jetpack_message">Plugin Jetpack je vyžadován pro zobrazení statistik. Přejete si nainstalovat tento plugin?</string>
 	<string name="reader_btn_unfollow">Sleduji</string>
 	<string name="reader_hint_comment_on_comment">Odpovědět na komentář...</string>
 	<string name="reader_likes_one">To se líbí jedné osobě</string>
@@ -1109,7 +1079,6 @@ Language: cs_CZ
 	<string name="stats_view_clicks">Kliknutí</string>
 	<string name="stats_timeframe_weeks">Týdny</string>
 	<string name="unattached">Nepřiřazeno</string>
-	<string name="custom_date">Vlastní datum</string>
 	<string name="post_excerpt">Stručný obsah</string>
 	<string name="passcode_preference_title">Zámek PIN</string>
 	<string name="passcode_turn_off">Vypnout zámek PIN</string>

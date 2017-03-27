@@ -1089,6 +1089,7 @@
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
+    <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>

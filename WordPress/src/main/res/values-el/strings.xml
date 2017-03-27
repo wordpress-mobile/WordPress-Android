@@ -360,11 +360,9 @@ Language: el_GR
 	<string name="site_settings_discussion_hint">Προβολή και αλλαγή των ρυθμίσεων συζήτησης των ιστοτόπων σας</string>
 	<string name="site_settings_more_hint">Προβολή όλων των διαθέσιμων ρυθμίσεων Συζητήσεων</string>
 	<string name="site_settings_related_posts_hint">Εμφάνιση ή απόκρυψη σχετικών άρθρων στον αναγνώστη</string>
-	<string name="site_settings_upload_and_link_image_hint">Ενεργοποιήστε για να μεταφορτώνεται πάντα η εικόνα πλήρους μεγέθους</string>
 	<string name="site_settings_image_width_hint">Αλλαγή μεγέθους των εικόνων στα άρθρα σε αυτό το πλάτος</string>
 	<string name="site_settings_format_hint">Ορίζει τη μορφή του νέου άρθρου</string>
 	<string name="site_settings_category_hint">Ορίζει την κατηγορία του νέου άρθρου</string>
-	<string name="site_settings_location_hint">Αυτόματη εισαγωγή δεδομένων τοποθεσίας στα άρθρα σας</string>
 	<string name="site_settings_password_hint">Αλλαγή του συνθηματικού σας</string>
 	<string name="site_settings_username_hint">Τρέχων λογαριασμός χρήστη</string>
 	<string name="site_settings_language_hint">Η γλώσσα στην οποία κυρίως γράφεται αυτό το ιστολόγιο</string>
@@ -392,7 +390,6 @@ Language: el_GR
 	<string name="site_settings_allow_comments_title">Να επιτρέπονται τα Σχόλια</string>
 	<string name="site_settings_default_format_title">Προεπιλεγμένη Μορφή</string>
 	<string name="site_settings_default_category_title">Προεπιλεγμένη κατηγορία</string>
-	<string name="site_settings_location_title">Ενεργοποίηση Τοποθεσίας</string>
 	<string name="site_settings_address_title">Διεύθυνση</string>
 	<string name="site_settings_tagline_title">Γραμμή ετικετών</string>
 	<string name="site_settings_title_title">Τίτλος Ιστότοπου</string>
@@ -583,22 +580,7 @@ Language: el_GR
 	<string name="hide">Απόκρυψη</string>
 	<string name="show">Προβολή</string>
 	<string name="deselect_all">Αποεπιλογή όλων</string>
-	<string name="select_from_new_picker">Πολλαπλή επιλογή με το νέο επιλογέα</string>
-	<string name="no_media_sources">Αδυναμία λήψης πολυμέσων</string>
-	<string name="loading_blog_videos">Λήψη βίντεο</string>
-	<string name="loading_blog_images">Λήψη εικόνων</string>
-	<string name="error_loading_videos">Σφάλμα κατά τη φόρτωση βίντεο</string>
-	<string name="error_loading_images">Σφάλμα κατά τη φόρτωση εικόνων</string>
-	<string name="error_loading_blog_videos">Αδυναμία λήψης βίντεο</string>
-	<string name="error_loading_blog_images">Αδυναμία λήψης εικόνων</string>
-	<string name="no_device_images">Δεν υπάρχουν φωτογραφίες</string>
-	<string name="no_blog_videos">Δεν υπάρχουν βίντεο</string>
-	<string name="no_blog_images">Δεν υπάρχουν φωτογραφίες</string>
-	<string name="no_device_videos">Δεν υπάρχουν βίντεο</string>
 	<string name="stats_generic_error">Τα Στατιστικά που ζητήθηκαν δεν μπόρεσαν να φορτωθούν</string>
-	<string name="no_media">Δεν βρέθηκαν πολυμέσα</string>
-	<string name="loading_images">Φόρτωση εικόνων</string>
-	<string name="loading_videos">Φόρτωση βίντεο</string>
 	<string name="two_step_sms_sent">Ελέγξτε τα μηνύματα κειμένου σας για τον κωδικό επαλήθευσης.</string>
 	<string name="two_step_footer_button">Αποστολή κώδικα μέσω μηνύματος κειμένου</string>
 	<string name="two_step_footer_label">Εισάγετε τον κωδικό από την εφαρμογή σας πιστοποίησης.</string>
@@ -609,14 +591,6 @@ Language: el_GR
 	<string name="error_publish_no_network">Αδυναμία δημοσίευσης ενώ δεν υπάρχει σύνδεση. Αποθηκεύτηκε ως προσχέδιο.</string>
 	<string name="media_details_label_file_type">Τύπος αρχείου</string>
 	<string name="media_details_label_file_name">Όνομα αρχείου</string>
-	<string name="tab_title_site_videos">Βίντεο Ιστότοπου</string>
-	<string name="tab_title_site_images">Εικόνες Ιστότοπου</string>
-	<string name="tab_title_device_videos">Βίντεο Συσκευής</string>
-	<string name="tab_title_device_images">Εικόνες Συσκευής</string>
-	<string name="take_video">Βγάλε ένα βίντεο</string>
-	<string name="take_photo">Βγάλε μια φωτογραφία</string>
-	<string name="media_picker_title">Επιλογή μέσων</string>
-	<string name="add_to_post">Προσθήκη στο Άρθρο</string>
 	<string name="language">Γλώσσα</string>
 	<string name="device">Συσκευή</string>
 	<string name="media_fetching">Λήψη πολυμέσων...</string>
@@ -715,7 +689,6 @@ Language: el_GR
 	<string name="delete_sure">Διαγραφή αυτού του προσχεδίου</string>
 	<string name="delete_sure_post">Διαγραφή αυτής της ανάρτησης</string>
 	<string name="posting_post">Δημοσίευση "%s"</string>
-	<string name="media_empty_list_custom_date">Δεν υπάρχουν πολυμέσα σε αυτό το χρονικό διάστημα</string>
 	<string name="pages_empty_list">Δεν υπάρχουν σελίδες ακόμη. Γιατί να μη δημιουργήσετε μία;</string>
 	<string name="comment_reply_to_user">Απάντηση σε %s</string>
 	<string name="posts_empty_list">Δεν υπάρχουν άρθρα ακόμη. Γιατί να μη δημιουργήσετε ένα;</string>
@@ -844,7 +817,6 @@ Language: el_GR
 	<string name="cat_name_required">Απαιτείται το πεδίο ονόματος κατηγορίας</string>
 	<string name="adding_cat_success">Η κατηγορία προστέθηκε επιτυχώς</string>
 	<string name="adding_cat_failed">Αποτυχία προσθήκης κατηγορίας</string>
-	<string name="no_site_error">Αδυναμία σύνδεσης στον ιστότοπο του WordPress</string>
 	<string name="mnu_comment_unspam">Δεν είναι spam</string>
 	<string name="comments_empty_list">Δεν υπάρχουν σχόλια</string>
 	<string name="theme_auth_error_message">Βεβαιωθείτε ότι έχετε δικαίωμα ορισμού θεμάτων</string>
@@ -868,7 +840,6 @@ Language: el_GR
 	<string name="reader_toast_err_add_tag">Αδυναμία προσθήκης αυτής της ετικέτας</string>
 	<string name="reader_share_link">Μοιραστείτε το σύνδεσμο</string>
 	<string name="reader_title_applog">Αρχείο καταγραφής εφαρμογής</string>
-	<string name="jetpack_message_not_admin">Το πρόσθετο Jetpack απαιτείται για τα στατιστικά. Επικοινωνήστε με το διαχειριστή του ιστοτόπου.</string>
 	<string name="fatal_db_error">Προέκυψε σφάλμα κατά τη δημιουργία της βάσης δεδομένων της εφαρμογής. Δοκιμάστε να την εγκαταστήσετε ξανά.</string>
 	<string name="error_blog_hidden">Αυτό το ιστολόγιο είναι κρυφό και δεν μπόρεσε να φορτωθεί. Ενεργοποιήστε το ξανά στις ρυθμίσεις και δοκιμάστε ξανά.</string>
 	<string name="wordpress_blog">Ιστολόγιο WordPress</string>
@@ -892,7 +863,6 @@ Language: el_GR
 	<string name="share_action_post">Νέα ανάρτηση</string>
 	<string name="category_parent">Γονική κατηγορία (προαιρετικό)</string>
 	<string name="category_desc">Περιγραφή κατηγορίας (προαιρετικό)</string>
-	<string name="category_slug">Σύντομο όνομα κατηγορίας (προαιρετικό)</string>
 	<string name="category_name">Όνομα κατηγορίας</string>
 	<string name="add_new_category">Προσθήκη νέας κατηγορίας</string>
 	<string name="view_in_browser">Προβολή στον περιηγητή</string>
@@ -1013,7 +983,6 @@ Language: el_GR
 	<string name="reader_share_subject">Μοιράστηκε από %s</string>
 	<string name="reader_untitled_post">Ανώνυμο</string>
 	<string name="jetpack_not_found">Δεν βρέθηκε το Jetpack plugin</string>
-	<string name="jetpack_message">Το Jetpack plugin είναι αναγκαίο για την συλλογή στατιστικών στοιχείων. Θέλετε να εγκαταστήσετε το Jetpack;</string>
 	<string name="select_from_media_library">Διαλέξτε από την βιβλιοθήκη πολυμέσων</string>
 	<string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
 	<string name="media_add_new_media_gallery">Δημιουργία έκθεσης</string>
@@ -1071,7 +1040,6 @@ Language: el_GR
 	<string name="media_gallery_image_order_random">Τυχαία</string>
 	<string name="media_add_popup_capture_video">Λήψη βίντεο</string>
 	<string name="media_add_popup_capture_photo">Λήψη φωτογραφίας</string>
-	<string name="custom_date">Προσαρμοσμένη ημερομηνία</string>
 	<string name="unattached">Μη συνδεδεμένα</string>
 	<string name="images">Εικόνες</string>
 	<string name="all">Όλα</string>

@@ -98,22 +98,7 @@ Language: gd_GB
 	<string name="hide">Falaich</string>
 	<string name="show">Seall</string>
 	<string name="deselect_all">Dì-thagh na h-uile</string>
-	<string name="select_from_new_picker">Dèan ioma-thaghadh leis an roghnaichear ùr</string>
-	<string name="no_media_sources">Cha b’ urrainn dhuinn na meadhanan fhaighinn</string>
-	<string name="loading_blog_images">A’ faighinn nan dealbhan</string>
-	<string name="loading_blog_videos">A’ faighinn nam videothan</string>
-	<string name="error_loading_videos">Mearachd le luchdadh nan videothan</string>
-	<string name="error_loading_images">Mearachd le luchdadh nan dealbhan</string>
-	<string name="error_loading_blog_videos">Chan urrainn dhuinn na videothan fhaighinn</string>
-	<string name="error_loading_blog_images">Chan urrainn dhuinn na dealbhan fhaighinn</string>
-	<string name="no_blog_videos">Gun videothan</string>
-	<string name="no_device_images">Gun dealbhan</string>
-	<string name="no_device_videos">Gun videothan</string>
-	<string name="no_blog_images">Gun dealbhan</string>
 	<string name="stats_generic_error">Cha b’ urrainn dhuinn na stats a dh’iarr thu a luchdadh</string>
-	<string name="no_media">Chan eil meadhanan ann</string>
-	<string name="loading_images">A’ luchdadh nan dealbhan</string>
-	<string name="loading_videos">A’ luchdadh nan videothan</string>
 	<string name="two_step_sms_sent">Thoir sùil air na teachdaireachdan teacsa agad airson a’ chòd dearbhaidh.</string>
 	<string name="two_step_footer_button">Cuir an còd slighe teachdaireachd teacsa</string>
 	<string name="two_step_footer_label">Cuir a-steach on aplacaid dearbhaidh agad.</string>
@@ -122,14 +107,6 @@ Language: gd_GB
 	<string name="verification_code">Còd dearbhaidh</string>
 	<string name="editor_toast_invalid_path">Tha slighe an fhaidhle mì-dhligheach</string>
 	<string name="error_publish_no_network">Chan urrainn dhut foillseachadh mur eil ceangal ann. Chaidh dreachd dheth a shàbhaladh.</string>
-	<string name="tab_title_site_videos">Videothan na làraich</string>
-	<string name="tab_title_device_videos">Videothan an uidheim</string>
-	<string name="tab_title_site_images">Dealbhan na làraich</string>
-	<string name="take_video">Tog video</string>
-	<string name="tab_title_device_images">Dealbhan an uidheim</string>
-	<string name="take_photo">Tog dealbh</string>
-	<string name="media_picker_title">Tagh meadhan</string>
-	<string name="add_to_post">Cuir ris a’ phost</string>
 	<string name="language">Cànan</string>
 	<string name="device">Uidheam</string>
 	<string name="media_details_label_file_name">Ainm an fhaidhle</string>
@@ -230,7 +207,6 @@ Language: gd_GB
 	<string name="confirm_delete_multi_media">A bheil thu airson na rudan a thagh thu a sguabadh às?</string>
 	<string name="delete_sure_post">Sguab às am post seo</string>
 	<string name="posting_post">A’ postadh “%s”</string>
-	<string name="media_empty_list_custom_date">Cha robh meadhan ann san eadaramh ùine seo</string>
 	<string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
 	<string name="posts_empty_list">Chan eil post agad fhathast. Carson nach cruthaich thu fear?</string>
 	<string name="comment_reply_to_user">Freagair %s</string>
@@ -357,7 +333,6 @@ Language: gd_GB
 	<string name="cat_name_required">Tha feum air raon ainm na roinn-seòrsa</string>
 	<string name="adding_cat_success">Chaidh an roinn-seòrsa a chur ris</string>
 	<string name="adding_cat_failed">Dh’fhàillig cur ris na roinn-seòrsa</string>
-	<string name="no_site_error">Cha b’ urrainn dhuinn ceangal ri làrach WordPress</string>
 	<string name="theme_set_failed">Cha b’ urrainn dhuinn an t-ùrlar a shuidheachadh</string>
 	<string name="theme_auth_error_message">Dèan cinnteach gu bheil cead agad ùrlaran a shuidheachadh</string>
 	<string name="comments_empty_list">Gun bheachdan</string>
@@ -381,7 +356,6 @@ Language: gd_GB
 	<string name="reader_toast_err_add_tag">Cha ghabh an taga seo a chur ris</string>
 	<string name="reader_toast_err_remove_tag">Cha ghabh an taga seo a thoirt air falbh</string>
 	<string name="reader_share_link">Co-roinn an ceangal</string>
-	<string name="jetpack_message_not_admin">Tha feum air plugan Jetpack mu choinneamh nan stats. Cuir fios gu rianaire na làraich.</string>
 	<string name="reader_title_applog">Loga na h-aplacaid</string>
 	<string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
 	<string name="error_blog_hidden">’S e bloga falaichte a tha ann is cha b’ urrainn dhuinn a luchdadh. Cuir an comas e sna roghainnean is feuch ris a-rithist.</string>
@@ -404,7 +378,6 @@ Language: gd_GB
 	<string name="share_action_media">Leabhar-lann nam meadhanan</string>
 	<string name="category_parent">Pàrant na roinn-seòrsa (roghainneil):</string>
 	<string name="category_desc">Tuairisgeul na roinn-seòrsa (roghainneil)</string>
-	<string name="category_slug">Sluga na roinn-seòrsa (roghainneil)</string>
 	<string name="category_name">Ainm na roinne-seòrsa</string>
 	<string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
 	<string name="view_in_browser">Seall sa bhrabhsair</string>
@@ -507,7 +480,6 @@ Language: gd_GB
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
 	<string name="media_add_new_media_gallery">Cruthaich gailearaidh</string>
 	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
-	<string name="jetpack_message">Tha feum air plugan Jetpack mus fhaigh thu na stats. A bheil thu airson Jetpack a stàladh?</string>
 	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
 	<string name="reader_share_subject">Air a cho-roinneadh o %s</string>
@@ -536,7 +508,6 @@ Language: gd_GB
 	<string name="all">Na h-uile</string>
 	<string name="images">Dealbhan</string>
 	<string name="unattached">Gun cheangal ris</string>
-	<string name="custom_date">Ceann-là gnàthaichte</string>
 	<string name="media_add_popup_capture_photo">Tog dealbh</string>
 	<string name="media_add_popup_capture_video">Tog video</string>
 	<string name="media_gallery_image_order_random">Air thuaiream</string>
