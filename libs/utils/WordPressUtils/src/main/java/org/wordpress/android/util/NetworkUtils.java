@@ -58,6 +58,15 @@ public class NetworkUtils {
     }
 
     /**
+     * returns true if the user is connected with the mobile data connection
+     */
+    public static boolean isMobileConnected(Context context) {
+        int networkType = getActiveNetworkType(context);
+        return (networkType == ConnectivityManager.TYPE_MOBILE ||
+                networkType == ConnectivityManager.TYPE_MOBILE_DUN);
+    }
+
+    /**
      * returns true if airplane mode has been enabled
      */
     @TargetApi(VERSION_CODES.JELLY_BEAN_MR1)

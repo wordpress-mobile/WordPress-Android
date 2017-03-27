@@ -355,10 +355,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_video_added";
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_video_added";
-            case EDITOR_RESIZED_PHOTO:
-                return "editor_resized_photo";
-            case EDITOR_RESIZED_PHOTO_ERROR:
-                return "editor_resized_photo_error";
+            case MEDIA_PHOTO_OPTIMIZED:
+                return "media_photo_optimized";
+            case MEDIA_PHOTO_OPTIMIZE_ERROR:
+                return "media_photo_optimize_error";
             case EDITOR_PUBLISHED_POST:
                 return "editor_post_published";
             case EDITOR_UPDATED_POST:
@@ -660,6 +660,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_library_photo_added";
             case MEDIA_LIBRARY_ADDED_VIDEO:
                 return "media_library_video_added";
+            case MEDIA_UPLOAD_STARTED:
+                return "media_service_upload_started";
+            case MEDIA_UPLOAD_ERROR:
+                return "media_service_upload_response_error";
+            case MEDIA_UPLOAD_SUCCESS:
+                return "media_service_upload_response_ok";
+            case MEDIA_UPLOAD_CANCELED:
+                return "media_service_upload_canceled";
             default:
                 return null;
         }
