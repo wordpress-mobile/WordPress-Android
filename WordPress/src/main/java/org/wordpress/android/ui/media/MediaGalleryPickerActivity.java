@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -29,6 +28,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -186,13 +186,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
             // the activity may be gone by the time this finishes, so check for it
             if (!isFinishing()) {
+                List<MediaModel> mediaList;
                 if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
-                    Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-                    mGridAdapter.setCursor(cursor);
+                    mediaList = mMediaStore.getSiteImagesExcludingIds(mSite, mFilteredItems);
                 } else {
-                    Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
-                    mGridAdapter.setCursor(cursor);
+                    mediaList = mMediaStore.getSiteImages(mSite);
                 }
+                mGridAdapter.setMediaList(mediaList);
             }
         }
     }
@@ -243,14 +243,14 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshViews() {
-        final Cursor cursor;
+        List<MediaModel> mediaList;
         if (mFilteredItems != null) {
-            cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+            mediaList = mMediaStore.getSiteImagesExcludingIds(mSite, mFilteredItems);
         } else {
-            cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-            mGridAdapter.setCursor(cursor);
+            mediaList = mMediaStore.getAllSiteMedia(mSite);
         }
-        if (cursor.getCount() == 0) {
+        mGridAdapter.setMediaList(mediaList);
+        if (mediaList.size() == 0) {
             refreshMediaFromServer(false);
         }
     }
