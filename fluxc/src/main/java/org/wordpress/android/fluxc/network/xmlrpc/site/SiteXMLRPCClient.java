@@ -29,29 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 public class SiteXMLRPCClient extends BaseXMLRPCClient {
-    //
-    // Site fetch request keys
-    //
-    public static final String SOFTWARE_VERSION_KEY = "software_version";
-    public static final String POST_THUMBNAIL_KEY = "post_thumbnail";
-    public static final String DEFAULT_COMMENT_STATUS_KEY = "default_comment_status";
-    public static final String JETPACK_CLIENT_ID_KEY = "jetpack_client_id";
-    public static final String SITE_PUBLIC_KEY = "blog_public";
-    public static final String HOME_URL_KEY = "home_url";
-    public static final String ADMIN_URL_KEY = "admin_url";
-    public static final String LOGIN_URL_KEY = "login_url";
-    public static final String SITE_TITLE_KEY = "blog_title";
-    public static final String TIME_ZONE_KEY = "time_zone";
-
-    //
-    // Sites response keys
-    //
-    public static final String SITE_ID_KEY = "blogid";
-    public static final String SITE_NAME_KEY = "blogName";
-    public static final String SITE_URL_KEY = "url";
-    public static final String SITE_XMLRPC_URL_KEY = "xmlrpc";
-    public static final String SITE_ADMIN_KEY = "isAdmin";
-
     public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
@@ -94,8 +71,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(new String[] {
-                SOFTWARE_VERSION_KEY, POST_THUMBNAIL_KEY, DEFAULT_COMMENT_STATUS_KEY, JETPACK_CLIENT_ID_KEY,
-                SITE_PUBLIC_KEY, HOME_URL_KEY, ADMIN_URL_KEY, LOGIN_URL_KEY, SITE_TITLE_KEY, TIME_ZONE_KEY });
+                "software_version", "post_thumbnail", "default_comment_status", "jetpack_client_id",
+                "blog_public", "home_url", "admin_url", "login_url", "blog_title", "time_zone" });
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
@@ -157,11 +134,11 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             }
             HashMap<?, ?> siteMap = (HashMap<?, ?>) siteObject;
             SiteModel site = new SiteModel();
-            site.setSelfHostedSiteId(MapUtils.getMapInt(siteMap, SITE_ID_KEY, 1));
-            site.setName(MapUtils.getMapStr(siteMap, SITE_NAME_KEY));
-            site.setUrl(MapUtils.getMapStr(siteMap, SITE_URL_KEY));
-            site.setXmlRpcUrl(MapUtils.getMapStr(siteMap, SITE_XMLRPC_URL_KEY));
-            site.setIsSelfHostedAdmin(MapUtils.getMapBool(siteMap, SITE_ADMIN_KEY));
+            site.setSelfHostedSiteId(MapUtils.getMapInt(siteMap, "blogid", 1));
+            site.setName(MapUtils.getMapStr(siteMap, "blogName"));
+            site.setUrl(MapUtils.getMapStr(siteMap, "url"));
+            site.setXmlRpcUrl(MapUtils.getMapStr(siteMap, "xmlrpc"));
+            site.setIsSelfHostedAdmin(MapUtils.getMapBool(siteMap, "isAdmin"));
             // From what we know about the host
             site.setIsWPCom(false);
             site.setUsername(username);
@@ -192,7 +169,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         // * Jetpack installed, activated and connected: field "jetpack_client_id" included and is correctly
         //   set to wpcom unique id eg. "1234"
 
-        String jetpackClientIdStr = getOption(siteOptions, JETPACK_CLIENT_ID_KEY, String.class);
+        String jetpackClientIdStr = getOption(siteOptions, "jetpack_client_id", String.class);
         long jetpackClientId = 0;
         // jetpackClientIdStr can be a boolean "0" (false), in that case we keep the default value "0".
         if (!"false".equals(jetpackClientIdStr)) {
@@ -223,29 +200,29 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
-        String siteTitle = getOption(siteOptions, SITE_TITLE_KEY, String.class);
+        String siteTitle = getOption(siteOptions, "blog_title", String.class);
         if (!TextUtils.isEmpty(siteTitle)) {
             oldModel.setName(siteTitle);
         }
 
         // TODO: set a canonical URL here
-        String homeUrl = getOption(siteOptions, HOME_URL_KEY, String.class);
+        String homeUrl = getOption(siteOptions, "home_url", String.class);
         if (!TextUtils.isEmpty(homeUrl)) {
             oldModel.setUrl(homeUrl);
         }
-        oldModel.setSoftwareVersion(getOption(siteOptions, SOFTWARE_VERSION_KEY, String.class));
-        Boolean postThumbnail = getOption(siteOptions, POST_THUMBNAIL_KEY, Boolean.class);
+        oldModel.setSoftwareVersion(getOption(siteOptions, "software_version", String.class));
+        Boolean postThumbnail = getOption(siteOptions, "post_thumbnail", Boolean.class);
         oldModel.setIsFeaturedImageSupported((postThumbnail != null) && postThumbnail);
-        oldModel.setDefaultCommentStatus(getOption(siteOptions, DEFAULT_COMMENT_STATUS_KEY, String.class));
-        oldModel.setTimezone(getOption(siteOptions, TIME_ZONE_KEY, String.class));
-        oldModel.setLoginUrl(getOption(siteOptions, LOGIN_URL_KEY, String.class));
-        oldModel.setAdminUrl(getOption(siteOptions, ADMIN_URL_KEY, String.class));
+        oldModel.setDefaultCommentStatus(getOption(siteOptions, "default_comment_status", String.class));
+        oldModel.setTimezone(getOption(siteOptions, "time_zone", String.class));
+        oldModel.setLoginUrl(getOption(siteOptions, "login_url", String.class));
+        oldModel.setAdminUrl(getOption(siteOptions, "admin_url", String.class));
 
         setJetpackStatus(siteOptions, oldModel);
         // If the site is not public, it's private. Note: this field doesn't always exist.
         oldModel.setIsPrivate(false);
-        if (siteOptions.containsKey(SITE_PUBLIC_KEY)) {
-            Boolean isPublic = getOption(siteOptions, SITE_PUBLIC_KEY, Boolean.class);
+        if (siteOptions.containsKey("blog_public")) {
+            Boolean isPublic = getOption(siteOptions, "blog_public", Boolean.class);
             if (isPublic != null) {
                 oldModel.setIsPrivate(!isPublic);
             }
