@@ -83,23 +83,34 @@ public class CommentList extends ArrayList<CommentModel> {
                 return false;
             }
             final CommentModel thisComment = this.get(index);
-            if (!thisComment.getStatus().equals(comment.getStatus())) {
+            if (!isEqual(thisComment.getStatus(), comment.getStatus())) {
                 return false;
             }
-            if (!thisComment.getContent().equals(comment.getContent())) {
+            if (!isEqual(thisComment.getContent(), comment.getContent())) {
                 return false;
             }
-            if (!thisComment.getAuthorName().equals(comment.getAuthorName())) {
+            if (!isEqual(thisComment.getAuthorName(), comment.getAuthorName())) {
                 return false;
             }
-            if (!thisComment.getAuthorEmail().equals(comment.getAuthorEmail())) {
+            if (!isEqual(thisComment.getAuthorEmail(), comment.getAuthorEmail())) {
                 return false;
             }
-            if (!thisComment.getAuthorUrl().equals(comment.getAuthorUrl())) {
+            if (!isEqual(thisComment.getAuthorUrl(), comment.getAuthorUrl())) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private boolean isEqual(String first, String second) {
+        if (first == null && second == null) {
+            return true;
+        }
+        if (first != null) {
+            return first.equals(second);
+        }
+        // first is `null`, but second is not
+        return false;
     }
 }
