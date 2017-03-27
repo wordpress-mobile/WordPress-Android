@@ -85,9 +85,22 @@ function checkGradleProperties() {
   pOk
 }
 
+function checkKeystore() {
+  keystore=`cat WordPress/gradle.properties | grep storeFile | cut -d= -f 2`
+  /bin/echo -n "Check keystore file in $keystore..."
+  checksum=`cd WordPress && sha1sum $keystore | cut -d" " -f1`
+  known_checksum="7b20577a43b217b668fa875693c006d693679c0c"
+  if [ x$checksum != x$known_checksum ]; then
+    pFail
+    exit 6
+  fi
+  pOk
+}
+
 checkNewLanguages
 checkENStrings
 checkGradleProperties
+checkKeystore
 printVersion
 # checkDeviceToTest
 # runConnectedTests
