@@ -56,7 +56,7 @@ public class ReaderBlogActions {
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-        final String path = "sites/" + blogId + "/follows/" + (isAskingToFollow ? "new" : "mine/delete");
+        final String path = "sites/" + blogId + "/follows/" + (isAskingToFollow ? "new?source=android" : "mine/delete");
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -202,8 +202,8 @@ public class ReaderBlogActions {
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
         final String path = "read/following/mine/"
-                + (isAskingToFollow ? "new" : "delete")
-                + "?url=" + UrlUtils.urlEncode(feedUrl);
+                + (isAskingToFollow ? "new?source=android&url=" : "delete?url=")
+                + UrlUtils.urlEncode(feedUrl);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
