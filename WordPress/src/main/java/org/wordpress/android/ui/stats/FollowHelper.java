@@ -56,7 +56,7 @@ class FollowHelper {
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
                 final String restPath;
                 if (!followData.isFollowing()) {
-                    restPath = String.format(Locale.US, "/sites/%s/follows/new", followData.getSiteID());
+                    restPath = String.format(Locale.US, "/sites/%s/follows/new?source=android", followData.getSiteID());
                 } else {
                     restPath = String.format(Locale.US, "/sites/%s/follows/mine/delete", followData.getSiteID());
                 }
