@@ -22,6 +22,10 @@
 
         <item name="colorButtonNormal">@color/light_gray</item>
 
+        <item name="android:dialogTheme">@style/DialogTheme.WordPress</item>
+        <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
+        <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
+
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
@@ -96,6 +100,19 @@
         <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
         <item name="android:paddingRight">@dimen/margin_large</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="DialogTheme.WordPress" parent="android:Theme.Material.Dialog">
+        <item name="android:datePickerStyle">@style/DatePicker.WordPress</item>
+        <item name="android:timePickerStyle">@style/TimePicker.WordPress</item>
+    </style>
+
+    <style name="DatePicker.WordPress" parent="android:Widget.Material.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
+    </style>
+
+    <style name="TimePicker.WordPress" parent="android:Widget.Material.TimePicker">
+        <item name="android:timePickerMode">spinner</item>
     </style>
 
     <style name="FilteredRecyclerViewToolbar" parent="Widget.AppCompat.Toolbar">

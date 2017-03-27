@@ -578,7 +578,8 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostTimeSelectionDialog() {
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 mHour = selectedHour;
