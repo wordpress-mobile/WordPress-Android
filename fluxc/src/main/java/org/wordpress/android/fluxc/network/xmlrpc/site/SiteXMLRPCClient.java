@@ -155,14 +155,13 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             if (!(siteObject instanceof HashMap)) {
                 continue;
             }
-            HashMap<String, ?> siteMap = (HashMap<String, ?>) siteObject;
+            HashMap<?, ?> siteMap = (HashMap<?, ?>) siteObject;
             SiteModel site = new SiteModel();
-            // TODO: use MapUtils.getX(map,"", defaultValue) here
-            site.setSelfHostedSiteId(Integer.parseInt((String) siteMap.get(SITE_ID_KEY)));
-            site.setName((String) siteMap.get(SITE_NAME_KEY));
-            site.setUrl((String) siteMap.get(SITE_URL_KEY));
-            site.setXmlRpcUrl((String) siteMap.get(SITE_XMLRPC_URL_KEY));
-            site.setIsSelfHostedAdmin((Boolean) siteMap.get(SITE_ADMIN_KEY));
+            site.setSelfHostedSiteId(MapUtils.getMapInt(siteMap, SITE_ID_KEY, 1));
+            site.setName(MapUtils.getMapStr(siteMap, SITE_NAME_KEY));
+            site.setUrl(MapUtils.getMapStr(siteMap, SITE_URL_KEY));
+            site.setXmlRpcUrl(MapUtils.getMapStr(siteMap, SITE_XMLRPC_URL_KEY));
+            site.setIsSelfHostedAdmin(MapUtils.getMapBool(siteMap, SITE_ADMIN_KEY));
             // From what we know about the host
             site.setIsWPCom(false);
             site.setUsername(username);
