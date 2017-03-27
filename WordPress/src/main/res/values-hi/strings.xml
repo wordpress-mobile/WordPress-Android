@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-08 14:11:09+0000
+Translation-Revision-Date: 2017-03-24 06:46:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: hi_IN
 -->
 <resources>
+	<string name="jetpack_stats_module_disabled_message_not_admin">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। साइट व्यवस्थापक से संपर्क करें।</string>
+	<string name="jetpack_stats_module_disabled_message">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। क्या आप आँकड़े सक्रिय करना चाहते हैं?</string>
+	<string name="jetpack_info">जेटपैक की जानकारी</string>
+	<string name="reader_photo_by">Photo by %s</string>
+	<string name="pending_draft_more">आप %d के पदों का मसौदा तैयार किया है, लेकिन उन्हें कभी नहीं प्रकाशित किया। जाँच करने के लिए टैप करें I</string>
+	<string name="all_your_sites">मेरी</string>
+	<string name="reader_label_visit">भेंट</string>
+	<string name="swipe_for_more">अधिक के लिए स्वाइप करें</string>
+	<string name="reader_err_get_post_not_authorized_signin_fallback">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें या एक ब्राउज़र को खोलने के लिए शीर्ष कार्रवाई बटन का उपयोग करें।</string>
+	<string name="reader_err_get_post_not_authorized_signin">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें</string>
+	<string name="reader_err_get_post_not_authorized_fallback">आप इस पोस्ट देखने के लिए अधिकृत नहीं  हैं। एक ब्राउज़र बदले की कोशिश करने के लिए शीर्ष कार्रवाई बटन का प्रयोग करें</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
+	<string name="reader_toast_err_already_liked">आपने पहले से ही उस टिप्पणी को पसंद किया हुआ हैI</string>
+	<string name="reader_toast_err_comment_not_found">कोई टिप्पणी नहीं पाया!</string>
+	<string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
+	<string name="reader_title_post_detail_wpcom">WordPress.com पोस्ट</string>
+	<string name="error_notif_q_action_reply">टिप्पणी करने के लिए जवाब नहीं कर सके। बाद में पुन: प्रयास करें।</string>
+	<string name="reader_title_deeplink">वर्डप्रेस रीडर</string>
+	<string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
+	<string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
+	<string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
+	<string name="notifications_label_new_notifications">नई सूचनाएं I</string>
 	<string name="like">लाइक</string>
 	<string name="timespan_now">अब</string>
 	<string name="visual_editor">विजुअल सम्पादक</string>
@@ -138,30 +160,11 @@ Language: hi_IN
 	<string name="show">दिखाएँ</string>
 	<string name="hide">छुपाएँ</string>
 	<string name="select_all">सभी चुनें</string>
-	<string name="loading_blog_images">छवियाँ लाई जा रही है</string>
 	<string name="stats_generic_error">आवश्यक सांख्यिकी लोड करने में असफल</string>
-	<string name="error_loading_videos">वीडियो लाने में असमर्थ</string>
-	<string name="no_media_sources">मीडिया लाने में असफल</string>
-	<string name="error_loading_blog_videos">वीडियो लाने में असमर्थ</string>
-	<string name="error_loading_images">छवियाँ लाने में असमर्थ</string>
-	<string name="error_loading_blog_images">छवियाँ लाने में असमर्थ</string>
-	<string name="no_blog_videos">कोई वीडियो नहीं</string>
-	<string name="no_device_images">कोई चित्र नहीं</string>
-	<string name="no_blog_images">कोई चित्र नहीं</string>
-	<string name="loading_blog_videos">वीडियोलाये जा रहे है</string>
-	<string name="no_device_videos">कोई वीडियो नहीं</string>
-	<string name="loading_videos">वीडियो लोड हो रहे है</string>
-	<string name="loading_images">छवियाँ लोड हो रही है</string>
-	<string name="no_media">मीडिया नहीं</string>
 	<string name="device">यंत्र</string>
 	<string name="language">भाषा</string>
-	<string name="add_to_post">पोस्ट में जोड़ें</string>
 	<string name="verify">सत्यापित करें</string>
 	<string name="verification_code">सत्यापन कोड</string>
-	<string name="take_video">वीडियो बनाए</string>
-	<string name="take_photo">फोटो खींचे</string>
-	<string name="tab_title_site_videos">साइट वीडियो</string>
-	<string name="tab_title_site_images">साइट की छवियां</string>
 	<string name="pages_fetching">पृष्ठ ला रहे है...</string>
 	<string name="publisher">प्रकाशक:</string>
 	<string name="stats_view_authors">लेखक</string>
@@ -298,7 +301,6 @@ Language: hi_IN
 	<string name="blog_name_reserved_but_may_be_available">वह साइट वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
 	<string name="username_reserved_but_may_be_available">वह  उपयोगकर्ता नाम वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
 	<string name="blog_not_found">इस ब्लॉग से पहुँच स्थापित करते समय ​​एक त्रुटि हुई</string>
-	<string name="no_site_error">वर्डप्रेस साइट से संपर्क स्थापित नहीं सका</string>
 	<string name="error_refresh_notifications">सूचनाएं को इस समय रिफ्रेश नहीं किया जा सकता</string>
 	<string name="error_refresh_posts">पोस्ट को इस समय रिफ्रेश नहीं किया जा सकता</string>
 	<string name="theme_auth_error_message">यह सुनिश्चित करे की आपको थीमस निर्धारित करने का विशेषाधिकार है</string>
@@ -392,7 +394,6 @@ Language: hi_IN
 	<string name="local_changes">स्थानीय परिवर्तन</string>
 	<string name="local_draft">स्थानीय प्रारूप</string>
 	<string name="category_parent">श्रेणी जनक (वैकल्पिक):</string>
-	<string name="category_slug">श्रेणी स्लग (वैकल्पिक)</string>
 	<string name="scaled_image_error">एक वैध बढ़ाया चौड़ाई का मान दर्ज करें</string>
 	<string name="error_blog_hidden">यह ब्लॉग छिपा हुआ है और लोड नहीं किया जा सकता है. सेटिंग्स में इसे फिर से सक्रिय करे और फिर कोशिश करें.</string>
 	<string name="file_error_create">मीडिया अपलोड करने के लिए अस्थायी फ़ाइल नहीं बनाया जा सका. आपके डिवाइस पर पर्याप्त खाली स्थान है सुनिश्चित करें.</string>
@@ -401,7 +402,6 @@ Language: hi_IN
 	<string name="themes_live_preview">लाइव पूर्वावलोकन</string>
 	<string name="reader_title_applog">एप्लीकेशन लॉग</string>
 	<string name="xmlrpc_error">कनेक्ट नहीं हो सका.अपने साईट पर xmlrpc.php का पूरा पथ दर्ज करें और पुन: प्रयास करे</string>
-	<string name="jetpack_message_not_admin">Jetpack प्लगइन आँकड़ों के लिए आवश्यक है. साइट व्यवस्थापक से संपर्क करें.</string>
 	<string name="http_credentials">HTTP क्रेडेंशियल्स (वैकल्पिक)</string>
 	<string name="email_cant_be_used_to_signup">आप पंजीकरण करने के लिए कि उस ईमेल पते का उपयोग नहीं कर सकते हैं. हमें उनके साथ समस्या हो रही है क्योंकि वे  हमारे ईमेल को ब्लॉक कर रहे है. एक अन्य ईमेल प्रदाता का प्रयोग करें.</string>
 	<string name="email_reserved">यह ईमेल पता पहले से ही इस्तेमाल में है. सक्रियण ईमेल के लिए अपने इनबॉक्स की जाँच करें. यदि आप सक्रिय नहीं करेंगे, तो आप कुछ दिनों में फिर से कोशिश कर सकते हैं.</string>
@@ -459,7 +459,6 @@ Language: hi_IN
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
-	<string name="jetpack_message">Jetpack प्लगइन आँकड़ों के लिए आवश्यक है. आप Jetpack इनस्टॉल करना चाहते हैं?</string>
 	<string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
 	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
 	<string name="create_account_wpcom">Wordpress.com पे अकाउंट बनाये|</string>
@@ -510,7 +509,6 @@ Language: hi_IN
 	<string name="stats_view_referrers">रेफ़ररस</string>
 	<string name="passcode_set">पिन निर्धारित करें</string>
 	<string name="stats_totals_plays">चलाया गया</string>
-	<string name="custom_date">कस्टम तिथि</string>
 	<string name="post_excerpt">अंश</string>
 	<string name="media_add_popup_capture_photo">छवि कैप्चर करे</string>
 	<string name="media_add_popup_capture_video">विडियो कैप्चर करे</string>
@@ -601,4 +599,5 @@ Language: hi_IN
 	<string name="save">सहेजें</string>
 	<string name="yes">हां</string>
 	<string name="category_refresh_error">श्रेणी रिफ्रेश त्रुटि</string>
+	<string name="notification_settings">अधिसूचना सेटिंग</string>
 </resources>

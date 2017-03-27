@@ -115,7 +115,6 @@ Language: mk
 	<string name="posts_empty_list">Сеуште нема написи. Зошто не создадете еден?</string>
 	<string name="comment_reply_to_user">Одговори на %s</string>
 	<string name="pages_empty_list">Сеуште нема страници. Зошто не создадете една?</string>
-	<string name="media_empty_list_custom_date">Нема медиа во овој временски интервал</string>
 	<string name="posting_post">Објавување "%s"</string>
 	<string name="comment_trashed">Комента исфрлен</string>
 	<string name="reader_toast_err_generic">Неможе да се изврши ова дејство</string>
@@ -169,7 +168,6 @@ Language: mk
 	<string name="theme_set_failed">Неможе да промени тема</string>
 	<string name="theme_auth_error_message">Осигурете се дека имате привилегија за поставување на теми</string>
 	<string name="invalid_email_message">Вашата е-пошта е невалидна</string>
-	<string name="no_site_error">Неможе да се поврза со страницата на WordPress</string>
 	<string name="invalid_password_message">Лозинка мора да содржи барем 4 знаци</string>
 	<string name="invalid_username_too_short">Корисничкото име мора да содржи барем 4 знаци</string>
 	<string name="adding_cat_failed">Додавањето категорија е неуспешно</string>
@@ -256,7 +254,6 @@ Language: mk
 	<string name="error_blog_hidden">Овој блог е скриен и неможе да се вчита. Овозможи го повторно во подесувањата и обиди се повторно.</string>
 	<string name="account_details">Детаили за сметка</string>
 	<string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
-	<string name="jetpack_message_not_admin">Jetpack додатокот е задолжителен за статистика. Контактирајте го администраторот на страницата.</string>
 	<string name="reader_title_applog">Дневник на апликацијата</string>
 	<string name="reader_share_link">Сподели врска</string>
 	<string name="reader_toast_err_add_tag">Неможе да се додаде оваа обележување</string>
@@ -297,7 +294,6 @@ Language: mk
 	<string name="share_action_post">Нов напис</string>
 	<string name="new_media">Нова медиа</string>
 	<string name="view_site">Види страница</string>
-	<string name="category_slug">Голич на категорија (опционален)</string>
 	<string name="category_desc">Опис на категорија (опционален)</string>
 	<string name="category_parent">Родител на категорија (опционален)</string>
 	<string name="comment_status_trash">Исфрлени</string>
@@ -350,7 +346,6 @@ Language: mk
 	<string name="media_add_new_media_gallery">Креирај галерија</string>
 	<string name="empty_list_default">Оваа листа е празна</string>
 	<string name="select_from_media_library">Избери медиа од библиотеката</string>
-	<string name="jetpack_message">Jetpack додатокот е задолжителен за статистиката. Дали сакате да инсталирате Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack додатокот не е пронајден</string>
 	<string name="reader_untitled_post">(без наслов)</string>
 	<string name="reader_share_subject">Споделено од %s</string>
@@ -424,7 +419,6 @@ Language: mk
 	<string name="media_gallery_image_order_random">Случајни</string>
 	<string name="stats_view_referrers">Препорачувачи</string>
 	<string name="stats_entry_referrers">Препорачувач</string>
-	<string name="custom_date">Прилагодена дата</string>
 	<string name="media_add_popup_capture_photo">Сликање</string>
 	<string name="media_add_popup_capture_video">Снимање</string>
 	<string name="unattached">Неприкачени</string>

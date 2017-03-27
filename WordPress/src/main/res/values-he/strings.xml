@@ -374,11 +374,9 @@ Language: he_IL
 	<string name="site_settings_discussion_hint">הצגה ושינוי של הגדרות הדיון באתרים שלך</string>
 	<string name="site_settings_more_hint">הצגת כל הגדרות הדיון הזמינות</string>
 	<string name="site_settings_related_posts_hint">הצגה/הסתרה של פוסטים קשורים ב-Reader</string>
-	<string name="site_settings_upload_and_link_image_hint">מאפשר תמיד להעלות תמונה בגודל מלא</string>
 	<string name="site_settings_image_width_hint">שינוי גודל של תמונות בפוסטים לרוחב זה</string>
 	<string name="site_settings_format_hint">הגדרת סוג פוסט חדש</string>
 	<string name="site_settings_category_hint">הגדרת קטגוריית פוסט חדשה</string>
-	<string name="site_settings_location_hint">הוספה אוטומטית של נתוני מיקום לפוסטים שלך</string>
 	<string name="site_settings_password_hint">שינוי סיסמה</string>
 	<string name="site_settings_username_hint">חשבון משתמש נוכחי</string>
 	<string name="site_settings_language_hint">השפה עיקרית בה כתוב בלוג זה</string>
@@ -407,7 +405,6 @@ Language: he_IL
 	<string name="site_settings_allow_comments_title">אפשר תגובות</string>
 	<string name="site_settings_default_format_title">סוג ברירת מחדל</string>
 	<string name="site_settings_default_category_title">קטגוריית ברירת מחדל</string>
-	<string name="site_settings_location_title">אפשר מיקום</string>
 	<string name="site_settings_address_title">כתובת</string>
 	<string name="site_settings_title_title">שם האתר</string>
 	<string name="site_settings_tagline_title">תיאור האתר</string>
@@ -604,22 +601,7 @@ Language: he_IL
 	<string name="select_all">בחר הכל</string>
 	<string name="show">הצג</string>
 	<string name="sign_out_wpcom_confirm">ניתוק החשבון יסיר את כל נתוני וורדפרס.קום ‏של %s ממכשיר זה, כולל טיוטות מקומיות ושינויים מקומיים.</string>
-	<string name="select_from_new_picker">בחירה מרובה בעזרת רכיב חדש</string>
-	<string name="no_media_sources">לא ניתן לטעון קבצי מדיה</string>
-	<string name="loading_blog_videos">טוען וידאו</string>
-	<string name="loading_blog_images">טוען תמונות</string>
-	<string name="error_loading_videos">שגיאה בטעינת וידאו</string>
-	<string name="error_loading_images">שגיאה בטעינת תמונות</string>
-	<string name="error_loading_blog_images">לא ניתן לטעון תמונות</string>
-	<string name="error_loading_blog_videos">לא ניתן לטעון וידאו</string>
-	<string name="no_device_images">אין תמונות</string>
 	<string name="stats_generic_error">לא ניתן לטעון סטטוס נדרש</string>
-	<string name="no_device_videos">אין וידאו</string>
-	<string name="no_blog_images">אין תמונות</string>
-	<string name="no_blog_videos">אין וידאו</string>
-	<string name="loading_videos">טוען וידאו</string>
-	<string name="no_media">אין קבצי מדיה</string>
-	<string name="loading_images">טוען תמונות</string>
 	<string name="editor_toast_invalid_path">נתיב קובץ שגוי</string>
 	<string name="verification_code">קוד אימות</string>
 	<string name="invalid_verification_code">קוד אימות שגוי</string>
@@ -629,14 +611,6 @@ Language: he_IL
 	<string name="two_step_sms_sent">יש לבדוק הודעות טקסט לקבלת קוד אימות.</string>
 	<string name="error_publish_no_network">לא ניתן לפרסם כאשר אין חיבור אינטרנט. נשמר כטיוטה.</string>
 	<string name="auth_required">יש להתחבר שוב כדי המשיך.</string>
-	<string name="tab_title_site_videos">וידאו מהאתר</string>
-	<string name="tab_title_site_images">תמונות מהאתר</string>
-	<string name="tab_title_device_videos">וידאו מהמכשיר</string>
-	<string name="tab_title_device_images">תמונות מהמכשיר</string>
-	<string name="take_video">צילום וידאו</string>
-	<string name="take_photo">צילום תמונה</string>
-	<string name="media_picker_title">בחירה</string>
-	<string name="add_to_post">הוספה לפוסט</string>
 	<string name="language">שפה</string>
 	<string name="device">מכשיר</string>
 	<string name="sign_in_jetpack">יש להתחבר לחשבון וורדפרס.קום כדי להתחבר אל Jetpack.</string>
@@ -768,7 +742,6 @@ Language: he_IL
 	<string name="select_a_blog">בחר אתר WordPress</string>
 	<string name="uploading_total">העלאה %1$d של %2$d</string>
 	<string name="mnu_comment_liked">פרסם לייק</string>
-	<string name="media_empty_list_custom_date">אין מדיה במרווח זמן זה</string>
 	<string name="posting_post">מפרסם "%s"</string>
 	<string name="signing_out">יוצא מהמערכת...</string>
 	<string name="agree_terms_of_service">‏יצירת חשבון מהווה הסכמה ל%1$sתנאי השימוש המרתקים%2$s שלנו</string>
@@ -828,7 +801,6 @@ Language: he_IL
 	<string name="theme_auth_error_message">ודא שיש לך הרשאה להגדיר ערכות עיצוב</string>
 	<string name="comments_empty_list">אין תגובות</string>
 	<string name="mnu_comment_unspam">לא תגובת זבל</string>
-	<string name="no_site_error">לא ניתן היה להתחבר לאתר WordPress</string>
 	<string name="adding_cat_failed">הוספת קטגוריה נכשלה</string>
 	<string name="adding_cat_success">הקטגוריה הוספה בהצלחה</string>
 	<string name="cat_name_required">שם הקטגוריה הוא שדה חובה</string>
@@ -949,7 +921,6 @@ Language: he_IL
 	<string name="view_in_browser">הצג בדפדפן</string>
 	<string name="add_new_category">הוסף קטגוריה חדשה</string>
 	<string name="category_name">שם קטגוריה</string>
-	<string name="category_slug">מזהה לכתובת קטגוריה (אופציונאלי)</string>
 	<string name="category_desc">תיאור קטגוריה (אופציונאלי)</string>
 	<string name="category_parent">קטגוריית-אב (אופציונאלי):</string>
 	<string name="share_action_post">רשומה חדשה</string>
@@ -968,7 +939,6 @@ Language: he_IL
 	<string name="local_changes">שינויים מקומיים</string>
 	<string name="image_settings">הגדרות תמונה</string>
 	<string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
-	<string name="jetpack_message_not_admin">התוסף Jetpack נדרש לקבלת נתונים סטטיסטיים. פנה למנהל האתר.</string>
 	<string name="reader_title_applog">יומן יישום</string>
 	<string name="reader_share_link">שתף בקישור</string>
 	<string name="reader_toast_err_add_tag">לא ניתן להוסיף תגית זו</string>
@@ -1020,7 +990,6 @@ Language: he_IL
 	<string name="media_add_new_media_gallery">צור גלרייה</string>
 	<string name="empty_list_default">רשימה זו ריקה</string>
 	<string name="select_from_media_library">בחר מתוך ספריית מדיה</string>
-	<string name="jetpack_message">התוסף Jetpack נדרש לקבלת נתונים סטטיסטיים. אתה מעוניין להתקין את Jetpack?</string>
 	<string name="jetpack_not_found">התוסף Jetpack לא נמצא</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
 	<string name="reader_share_subject">שיתוף מ-%s</string>
@@ -1051,7 +1020,6 @@ Language: he_IL
 	<string name="media_gallery_image_order_random">אקראי</string>
 	<string name="stats_view_tags_and_categories">תגים וקטגוריות</string>
 	<string name="unattached">מנותק</string>
-	<string name="custom_date">תאריך מותאם אישית</string>
 	<string name="media_add_popup_capture_photo">צלם תמונה</string>
 	<string name="media_add_popup_capture_video">צלם וידאו</string>
 	<string name="media_gallery_image_order_reverse">אחורה</string>
