@@ -259,10 +259,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
-            correspondingCall.cancel();
             // set the upload Cancelled flag on the media model so in case a failure is raised for this upload
             // after cancellation (or as a product of it) we don't need to notify about the error
             media.setUploadCancelled(true);
+            correspondingCall.cancel();
             // clean from the current uploads map
             mCurrentUploadCalls.remove(mediaModelId);
 
