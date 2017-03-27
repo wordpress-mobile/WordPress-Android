@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -225,7 +226,10 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
         oldModel.setName(getOption(siteOptions, SITE_TITLE_KEY, String.class));
         // TODO: set a canonical URL here
-        oldModel.setUrl(getOption(siteOptions, HOME_URL_KEY, String.class));
+        String homeUrl = getOption(siteOptions, HOME_URL_KEY, String.class);
+        if (!TextUtils.isEmpty(homeUrl)) {
+            oldModel.setUrl(homeUrl);
+        }
         oldModel.setSoftwareVersion(getOption(siteOptions, SOFTWARE_VERSION_KEY, String.class));
         Boolean postThumbnail = getOption(siteOptions, POST_THUMBNAIL_KEY, Boolean.class);
         oldModel.setIsFeaturedImageSupported((postThumbnail != null) && postThumbnail);
