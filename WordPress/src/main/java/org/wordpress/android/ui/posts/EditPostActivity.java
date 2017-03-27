@@ -297,8 +297,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
-                categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
-                String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
+                String postFormat = "";
+                if (mSite.isWPCom() || mSite.isJetpackConnected()) {
+                    // TODO: replace SiteSettingsInterface.getX by calls to mSite.getDefaultCategory
+                    // and mSite.getDefaultFormat. We can get these from /me/sites endpoint for .com/jetpack sites.
+                    // There might be a way to get that information from a XMLRPC request as well.
+                    categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
+                    postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
+                }
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras

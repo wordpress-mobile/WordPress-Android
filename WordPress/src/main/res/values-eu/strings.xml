@@ -364,23 +364,9 @@ Language: eu_ES
 	<string name="hide">Ezkutatu</string>
 	<string name="show">Ikusi</string>
 	<string name="select_all">Aukeratu denak</string>
-	<string name="no_device_videos">Bideorik ez</string>
-	<string name="no_blog_images">Irudirik ez</string>
-	<string name="no_blog_videos">Bideorik ez</string>
-	<string name="no_device_images">Irudirik ez</string>
-	<string name="error_loading_images">Errorea irudiak kargatzean</string>
-	<string name="error_loading_videos">Errorea bideoak kargatzean</string>
-	<string name="loading_blog_images">Irudiak eskuratzen</string>
-	<string name="loading_blog_videos">Bideoak eskuratzen</string>
-	<string name="no_media_sources">Ezin izan da media eskuratu</string>
-	<string name="error_loading_blog_images">Ezin dira irudiak eskuratu</string>
-	<string name="error_loading_blog_videos">Ezin dira bideoak eskuratu</string>
-	<string name="no_media">Mediarik ez</string>
-	<string name="take_photo">Atera argazkia</string>
 	<string name="language">Hizkuntza</string>
 	<string name="sign_in_jetpack">Hasi saioa WordPress.com-eko zure kontuan Jetpack konektatzeko.</string>
 	<string name="device">Gailua</string>
-	<string name="media_picker_title">Aukeratu media</string>
 	<string name="media_details_label_file_name">Fitxategi izena</string>
 	<string name="media_details_label_file_type">Fitxategi mota</string>
 	<string name="verification_code">Egiaztaketa kodea</string>
@@ -501,7 +487,6 @@ Language: eu_ES
 	<string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>
 	<string name="out_of_memory">Gailuaren memoria agortu da</string>
 	<string name="mnu_comment_unspam">Ez da spama</string>
-	<string name="no_site_error">Ezin izan da WordPressekin konektatu</string>
 	<string name="adding_cat_failed">Ezin izan da kategoria gehitu</string>
 	<string name="notifications_empty_list">Jakinarazpenik gabe</string>
 	<string name="error_generic">Errore bat gertatu da</string>
@@ -637,7 +622,6 @@ Language: eu_ES
 	<string name="cannot_delete_multi_media_items">Mediaren bat ezin izan da orain ezabatu. Saiatu zaitez berriz beranduago.</string>
 	<string name="email_cant_be_used_to_signup">Ezin duzu e-posta helbide hori erabili izena emateko. Hornitzaile honekin arazoak edukitzen ari gara gure e-posta batzuk blokeatzen dituelako. Erabili beste hornitzaile bat.</string>
 	<string name="xmlrpc_error">Ezin izan da konektatu. Sartu xmlrpc.php-ra bide guztia zure gunean eta saiatu berriz.</string>
-	<string name="jetpack_message_not_admin">Jetpack plugina beharrezkoa da estatistikentzako. Jarri harremanetan guneko administratzailearekin.</string>
 	<string name="theme_current_theme">Egungo itxura</string>
 	<string name="edit_post">Editatu bidalketa</string>
 	<string name="post_not_found">Errore bat gertatu da bidalketa kargatzean. Eguneratu bidalketak eta saiatu berriz.</string>
@@ -648,7 +632,6 @@ Language: eu_ES
 	<string name="author_email">Egilearen e-posta</string>
 	<string name="author_url">Egilearen URLa</string>
 	<string name="link_enter_url_text">Estekaren testua (hautazkoa)</string>
-	<string name="category_slug">Karegoriaren slug-a (hautazkoa)</string>
 	<string name="category_parent">Kategoriaren gurasoa (hautazkoa)</string>
 	<string name="http_credentials">HTTP egiaztagiria (hautazkoa)</string>
 	<string name="site_address">Zuk ostatatutako helbidea (URL)</string>
@@ -707,7 +690,6 @@ Language: eu_ES
 	<string name="media_add_new_media_gallery">Sortu bilduma</string>
 	<string name="select_from_media_library">Aukeratu media bildumatik</string>
 	<string name="jetpack_not_found">Ez da Jetpack plugina aurkitu</string>
-	<string name="jetpack_message">Jetpack plugina ezinbestekoa da estatistikentzako. Jetpack instalatu nahi duzu?</string>
 	<string name="reader_untitled_post">(Izenbururik gabe)</string>
 	<string name="reader_btn_unfollow">Jarraitzen</string>
 	<string name="reader_label_removed_tag">%s ezabatua</string>
@@ -721,7 +703,6 @@ Language: eu_ES
 	<string name="button_next">Hurrengoa</string>
 	<string name="limit_reached">Mugara iritsi zara. Minutu bat barru berriz proba dezakezu. Lehenago saiatuz gero debekua luzatzea besterik ez duzu lortuko. Hau errore bat dela baderitzozu, kontaktatu laguntza zerbitzua. </string>
 	<string name="images">Irudiak</string>
-	<string name="custom_date">Data pertsonalizatua</string>
 	<string name="media_gallery_type">Mota</string>
 	<string name="media_gallery_type_squares">Karratuak</string>
 	<string name="media_edit_title_text">Izenburua</string>

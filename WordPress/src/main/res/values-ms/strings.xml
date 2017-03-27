@@ -374,11 +374,9 @@ Language: ms
 	<string name="site_settings_discussion_hint">Lihat dan ubah tetapan perbincangan laman anda</string>
 	<string name="site_settings_more_hint">Lihat semua tetapan Perbincangan yang ada</string>
 	<string name="site_settings_related_posts_hint">Tunjukkan atau sembunyikan kiriman berkaitan dalam pembaca</string>
-	<string name="site_settings_upload_and_link_image_hint">Bolehkan untuk selalu memuat naik imej saiz penuh</string>
 	<string name="site_settings_image_width_hint">Saiz semula imej dalam kiriman ke lebar ini</string>
 	<string name="site_settings_format_hint">Tetapkan format kiriman baharu</string>
 	<string name="site_settings_category_hint">Tetapkan kategori kiriman baharu</string>
-	<string name="site_settings_location_hint">Tambah data lokasi secara automatik ke kiriman anda</string>
 	<string name="site_settings_password_hint">Tukar kata laluan anda</string>
 	<string name="site_settings_username_hint">Akaun pengguna semasa</string>
 	<string name="site_settings_language_hint">Bahasa utama blog ini ditulis dalam</string>
@@ -407,7 +405,6 @@ Language: ms
 	<string name="site_settings_allow_comments_title">Benarkan Ulasan</string>
 	<string name="site_settings_default_format_title">Format Lalai</string>
 	<string name="site_settings_default_category_title">Kategori Lalai</string>
-	<string name="site_settings_location_title">Bolehkan Lokasi</string>
 	<string name="site_settings_address_title">Alamat</string>
 	<string name="site_settings_tagline_title">Baris Slogan</string>
 	<string name="site_settings_title_title">Tajuk Laman</string>
@@ -604,22 +601,7 @@ Language: ms
 	<string name="hide">Sembunyi</string>
 	<string name="show">Tunjuk</string>
 	<string name="deselect_all">Nyahpilih semua</string>
-	<string name="select_from_new_picker">Pilihan jamak dengan pemetik baharu</string>
-	<string name="no_media_sources">Tidak dapat mengambil media</string>
-	<string name="loading_blog_videos">Mengambil video</string>
-	<string name="loading_blog_images">Mengambil imej</string>
-	<string name="error_loading_videos">Ralat memuat video</string>
-	<string name="error_loading_images">Ralat memuat imej</string>
-	<string name="error_loading_blog_videos">Tidak dapat mengambil video</string>
-	<string name="error_loading_blog_images">Tidak dapat mengambil imej</string>
-	<string name="no_device_images">Tiada imej</string>
-	<string name="no_blog_videos">Tiada video</string>
-	<string name="no_blog_images">Tiada imej</string>
-	<string name="no_device_videos">Tiada video</string>
 	<string name="stats_generic_error">Statistik Yang Diperlukan tidak dapat dimuatkan</string>
-	<string name="no_media">Tiada media</string>
-	<string name="loading_images">Memuat imej</string>
-	<string name="loading_videos">Memuat video</string>
 	<string name="auth_required">Log masuk semula untuk meneruskan.</string>
 	<string name="sign_in_jetpack">Log masuk ke akaun WordPress.com anda dan untuk menyambung ke Jetpack.</string>
 	<string name="two_step_sms_sent">Periksa mesej teks anda untuk kod pengesahan.</string>
@@ -632,14 +614,6 @@ Language: ms
 	<string name="error_publish_no_network">Tidak boleh menerbit semasa tiada sambungan. Disimpan sebagai draf.</string>
 	<string name="media_details_label_file_type">Jenis fail</string>
 	<string name="media_details_label_file_name">Nama fail</string>
-	<string name="tab_title_site_videos">Video Laman</string>
-	<string name="tab_title_site_images">Imej Laman</string>
-	<string name="tab_title_device_videos">Video Peranti</string>
-	<string name="tab_title_device_images">Imej Peranti</string>
-	<string name="take_video">Ambil video</string>
-	<string name="take_photo">Ambil gambar</string>
-	<string name="media_picker_title">Pilih media</string>
-	<string name="add_to_post">Tambah ke Kiriman</string>
 	<string name="language">Bahasa</string>
 	<string name="device">Peranti</string>
 	<string name="media_fetching">Mengambil media...</string>
@@ -739,7 +713,6 @@ Language: ms
 	<string name="delete_sure_post">Hapuskan kiriman ini</string>
 	<string name="signing_out">Melog keluar…</string>
 	<string name="posting_post">Mengirim "%s"</string>
-	<string name="media_empty_list_custom_date">Tiada media dalam jangka masa ini</string>
 	<string name="pages_empty_list">Belum ada halaman. Kenapa tidak wujudkannya?</string>
 	<string name="comment_reply_to_user">Balasan kepada %s</string>
 	<string name="posts_empty_list">Belum ada kiriman. Kenapa tidak wujudkannya?</string>
@@ -868,7 +841,6 @@ Language: ms
 	<string name="cat_name_required">Medan nama kategori dikehendaki</string>
 	<string name="adding_cat_success">Kategori berjaya ditambah</string>
 	<string name="adding_cat_failed">Tambah kategori telah gagal</string>
-	<string name="no_site_error">Tidak dapat menyambung ke laman WordPress</string>
 	<string name="mnu_comment_unspam">Bukan spam</string>
 	<string name="comments_empty_list">Tiada ulasan</string>
 	<string name="theme_auth_error_message">Pastikan anda mempunyai hak untuk menetapkan tema</string>
@@ -892,7 +864,6 @@ Language: ms
 	<string name="reader_toast_err_add_tag">Tidak dapat menambah tag ini</string>
 	<string name="reader_share_link">Kongsi pautan</string>
 	<string name="reader_title_applog">Log aplikasi</string>
-	<string name="jetpack_message_not_admin">Pemalan Jetpack diperlukan bagi statistik. Hubungi pentadbir laman.</string>
 	<string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
 	<string name="error_blog_hidden">Blog ini disembunyi dan tidak dapat dimuatkan. Bolehkan ia semula dalam tetapan dan cuba lagi.</string>
 	<string name="wordpress_blog">Blog WordPress</string>
@@ -916,7 +887,6 @@ Language: ms
 	<string name="share_action_post">Kiriman baharu</string>
 	<string name="category_parent">Induk kategori (pilihan):</string>
 	<string name="category_desc">Keterangan kategori (pilihan)</string>
-	<string name="category_slug">Slug kategori (pilihan)</string>
 	<string name="category_name">Nama kategori</string>
 	<string name="add_new_category">Tambah kategori baharu</string>
 	<string name="view_in_browser">Lihat di pelayar</string>
@@ -1040,7 +1010,6 @@ Language: ms
 	<string name="reader_share_subject">Dikongsi dari %s</string>
 	<string name="reader_untitled_post">(Tanpa tajuk)</string>
 	<string name="jetpack_not_found">Pemalam Jetpack tidak dijumpai</string>
-	<string name="jetpack_message">Pemalam Jetpack diperlukan bagi statistik. Anda ingin memasang Jetpack?</string>
 	<string name="select_from_media_library">Pilih dari perpustakaan media</string>
 	<string name="empty_list_default">Senarai ini kosong</string>
 	<string name="media_add_new_media_gallery">Cipta galeri</string>
@@ -1098,7 +1067,6 @@ Language: ms
 	<string name="media_gallery_image_order_random">Rawak</string>
 	<string name="media_add_popup_capture_video">Tangkap video</string>
 	<string name="media_add_popup_capture_photo">Tangkap gambar</string>
-	<string name="custom_date">Tarikh Disuai</string>
 	<string name="unattached">Tidak terikat</string>
 	<string name="images">Imej</string>
 	<string name="all">Semua</string>

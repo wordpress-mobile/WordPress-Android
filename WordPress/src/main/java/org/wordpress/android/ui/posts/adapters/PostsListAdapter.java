@@ -205,7 +205,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             PostViewHolder postHolder = (PostViewHolder) holder;
 
             if (StringUtils.isNotEmpty(post.getTitle())) {
-                postHolder.txtTitle.setText(post.getTitle());
+                // Unescape HTML
+                String cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.getTitle());
+                postHolder.txtTitle.setText(cleanPostTitle);
             } else {
                 postHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
             }
