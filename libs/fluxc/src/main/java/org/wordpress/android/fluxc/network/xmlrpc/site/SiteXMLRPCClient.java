@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -20,6 +19,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.MapUtils;
 
@@ -169,7 +169,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         // * Jetpack installed, activated and connected: field "jetpack_client_id" included and is correctly
         //   set to wpcom unique id eg. "1234"
 
-        String jetpackClientIdStr = getOption(siteOptions, "jetpack_client_id", String.class);
+        String jetpackClientIdStr = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "jetpack_client_id", "");
         long jetpackClientId = 0;
         // jetpackClientIdStr can be a boolean "0" (false), in that case we keep the default value "0".
         if (!"false".equals(jetpackClientIdStr)) {
@@ -200,33 +200,29 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
-        String siteTitle = getOption(siteOptions, "blog_title", String.class);
-        if (!TextUtils.isEmpty(siteTitle)) {
+        String siteTitle = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_title", "");
+        if (!siteTitle.isEmpty()) {
             oldModel.setName(siteTitle);
         }
 
         // TODO: set a canonical URL here
-        String homeUrl = getOption(siteOptions, "home_url", String.class);
-        if (!TextUtils.isEmpty(homeUrl)) {
+        String homeUrl = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "home_url", "");
+        if (!homeUrl.isEmpty()) {
             oldModel.setUrl(homeUrl);
         }
-        oldModel.setSoftwareVersion(getOption(siteOptions, "software_version", String.class));
-        Boolean postThumbnail = getOption(siteOptions, "post_thumbnail", Boolean.class);
-        oldModel.setIsFeaturedImageSupported((postThumbnail != null) && postThumbnail);
-        oldModel.setDefaultCommentStatus(getOption(siteOptions, "default_comment_status", String.class));
-        oldModel.setTimezone(getOption(siteOptions, "time_zone", String.class));
-        oldModel.setLoginUrl(getOption(siteOptions, "login_url", String.class));
-        oldModel.setAdminUrl(getOption(siteOptions, "admin_url", String.class));
+
+        oldModel.setSoftwareVersion(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "software_version", ""));
+        oldModel.setIsFeaturedImageSupported(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "post_thumbnail", false));
+        oldModel.setDefaultCommentStatus(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "default_comment_status",
+                "open"));
+        oldModel.setTimezone(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "time_zone", "0"));
+        oldModel.setLoginUrl(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "login_url", ""));
+        oldModel.setAdminUrl(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "admin_url", ""));
 
         setJetpackStatus(siteOptions, oldModel);
         // If the site is not public, it's private. Note: this field doesn't always exist.
-        oldModel.setIsPrivate(false);
-        if (siteOptions.containsKey("blog_public")) {
-            Boolean isPublic = getOption(siteOptions, "blog_public", Boolean.class);
-            if (isPublic != null) {
-                oldModel.setIsPrivate(!isPublic);
-            }
-        }
+        boolean isPublic = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_public", true);
+        oldModel.setIsPrivate(!isPublic);
         return oldModel;
     }
 
@@ -242,17 +238,5 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             res.add(postFormat);
         }
         return res;
-    }
-
-    private <T> T getOption(Map<?, ?> siteOptions, String key, Class<T> type) {
-        Map<?, ?> map = (HashMap<?, ?>) siteOptions.get(key);
-        if (map != null) {
-            if (type == String.class) {
-                return (T) MapUtils.getMapStr(map, "value");
-            } else if (type == Boolean.class) {
-                return (T) Boolean.valueOf(MapUtils.getMapBool(map, "value"));
-            }
-        }
-        return null;
     }
 }
