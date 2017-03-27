@@ -102,4 +102,15 @@ public class CommentList extends ArrayList<CommentModel> {
 
         return true;
     }
+
+    private boolean isEqual(String first, String second) {
+        if (first == null && second == null) {
+            return true;
+        }
+        if (first != null) {
+            return first.equals(second);
+        }
+        // first is `null`, but second is not
+        return false;
+    }
 }
