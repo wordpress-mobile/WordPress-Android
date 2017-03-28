@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.site;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -588,7 +589,9 @@ public class SiteStoreUnitTest {
         boolean duplicate = false;
         try {
             SiteSqlUtils.insertOrUpdateSite(site2);
-        } catch (DuplicateSiteException e) {
+        } catch (SQLiteException e) {
+            // We should catch a DuplicateSiteException here, but since Roboelectric uses a different SQL stack, we
+            // can't catch `SQLiteConstraintException` in SiteSqlUtils.insertOrUpdateSite.
             duplicate = true;
         }
         assertTrue(duplicate);

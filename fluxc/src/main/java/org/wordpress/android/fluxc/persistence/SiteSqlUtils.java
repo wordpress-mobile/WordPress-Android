@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PostFormatModelTable;
@@ -139,7 +139,7 @@ public class SiteSqlUtils {
             try {
                 return WellSql.update(SiteModel.class).whereId(oldId)
                         .put(site, new UpdateAllExceptId<SiteModel>()).execute();
-            } catch (SQLiteException e) {
+            } catch (SQLiteConstraintException e) {
                 AppLog.e(T.DB, "Error while updating site: siteId=" + site.getSiteId() + " url=" + site.getUrl()
                         + " xmlrpc=" + site.getXmlRpcUrl(), e);
                 // Can happen on self hosted sites with incorrect url values in wp.getOption response.
