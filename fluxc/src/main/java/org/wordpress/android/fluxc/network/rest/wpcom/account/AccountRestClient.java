@@ -138,10 +138,10 @@ public class AccountRestClient extends BaseWPComRestClient {
 
     public void sendVerificationEmail() {
         String url = WPCOMREST.me.send_verification_email.getUrlV1_1();
-        add(WPComGsonRequest.buildPostRequest(url, null, NewAccountResponse.class,
-                new Listener<NewAccountResponse>() {
+        add(WPComGsonRequest.buildPostRequest(url, null, AccountBoolResponse.class,
+                new Listener<AccountBoolResponse>() {
                     @Override
-                    public void onResponse(NewAccountResponse response) {
+                    public void onResponse(AccountBoolResponse response) {
                         NewAccountResponsePayload payload = new NewAccountResponsePayload();
                         mDispatcher.dispatch(AccountActionBuilder.newSentVerificationEmailAction(payload));
                     }
@@ -199,11 +199,11 @@ public class AccountRestClient extends BaseWPComRestClient {
         body.put("client_id", mAppSecrets.getAppId());
         body.put("client_secret", mAppSecrets.getAppSecret());
 
-        WPComGsonRequest<NewAccountResponse> request = WPComGsonRequest.buildPostRequest(url, body,
-                NewAccountResponse.class,
-                new Listener<NewAccountResponse>() {
+        WPComGsonRequest<AccountBoolResponse> request = WPComGsonRequest.buildPostRequest(url, body,
+                AccountBoolResponse.class,
+                new Listener<AccountBoolResponse>() {
                     @Override
-                    public void onResponse(NewAccountResponse response) {
+                    public void onResponse(AccountBoolResponse response) {
                         NewAccountResponsePayload payload = new NewAccountResponsePayload();
                         payload.dryRun = dryRun;
                         mDispatcher.dispatch(AccountActionBuilder.newCreatedNewAccountAction(payload));
