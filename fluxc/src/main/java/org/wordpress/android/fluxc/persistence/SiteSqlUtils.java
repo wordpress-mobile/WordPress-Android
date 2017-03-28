@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.content.ContentValues;
+import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PostFormatModelTable;
@@ -135,8 +136,16 @@ public class SiteSqlUtils {
             // Update old site
             AppLog.d(T.DB, "Updating site: " + site.getUrl());
             int oldId = siteResult.get(0).getId();
-            return WellSql.update(SiteModel.class).whereId(oldId)
-                    .put(site, new UpdateAllExceptId<SiteModel>()).execute();
+            try {
+                return WellSql.update(SiteModel.class).whereId(oldId)
+                        .put(site, new UpdateAllExceptId<SiteModel>()).execute();
+            } catch (SQLiteException e) {
+                AppLog.e(T.DB, "Error while updating site: siteId=" + site.getSiteId() + " url=" + site.getUrl()
+                        + " xmlrpc=" + site.getXmlRpcUrl(), e);
+                // Can happen on self hosted sites with incorrect url values in wp.getOption response.
+                // See https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/397
+                throw new DuplicateSiteException();
+            }
         }
     }
 
