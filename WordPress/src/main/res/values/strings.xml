@@ -140,7 +140,6 @@
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
-    <string name="upload_queued">Queued</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
     <string name="media_uploaded_on">Uploaded on: %s</string>
