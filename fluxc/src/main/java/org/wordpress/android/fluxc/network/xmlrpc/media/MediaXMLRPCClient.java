@@ -194,7 +194,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             @Override
             public void onFailure(Call call, IOException e) {
                 if (mCurrentUploadCall != null && mCurrentUploadCall.isCanceled()) {
-                    // Do not report errors since the upload was canceled
+                    // Do not report errors since the upload was canceled and notified separately
                     mCurrentUploadCall = null;
                     return;
                 }
@@ -334,7 +334,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         // cancel in-progress upload if necessary
         if (mCurrentUploadCall != null && mCurrentUploadCall.isExecuted() && !mCurrentUploadCall.isCanceled()) {
             mCurrentUploadCall.cancel();
-            // always report without error
             notifyMediaUploadCanceled(media);
         }
     }
