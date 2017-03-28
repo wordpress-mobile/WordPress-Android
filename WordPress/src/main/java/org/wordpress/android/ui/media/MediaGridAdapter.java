@@ -178,7 +178,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.stateContainer.setVisibility(View.VISIBLE);
 
             // only show progress for items currently being uploaded or deleted
-            boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETE;
+            boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETING;
             holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
 
             // failed uploads can be retried
@@ -186,7 +186,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
             } else {
-                holder.stateTextView.setText(strState);
+                holder.stateTextView.setText(MediaUploadState.getLabel(mContext, state));
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
@@ -292,7 +292,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         MediaModel media = mMediaList.get(position);
                         MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
                         if (state == MediaUploadState.FAILED) {
-                            stateTextView.setText(R.string.upload_queued);
+                            stateTextView.setText(R.string.media_upload_state_queued);
                             stateTextView.setCompoundDrawables(null, null, null, null);
                             if (mCallback != null) {
                                 mCallback.onAdapterRetryUpload(media.getId());
@@ -341,7 +341,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return false;
         }
         MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
-        return state != MediaUploadState.DELETE && state != MediaUploadState.DELETED;
+        return state != MediaUploadState.DELETING && state != MediaUploadState.DELETED;
     }
 
     private void loadLocalImage(final String filePath, ImageView imageView) {
