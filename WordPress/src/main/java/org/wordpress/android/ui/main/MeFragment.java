@@ -547,7 +547,7 @@ public class MeFragment extends Fragment {
         options.setShowCropGrid(false);
         options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
         options.setToolbarColor(ContextCompat.getColor(context, R.color.color_primary));
-        options.setAllowedGestures(UCropActivity.ALL, UCropActivity.ALL, UCropActivity.ALL);
+        options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
         options.setHideBottomControls(true);
 
         UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))
