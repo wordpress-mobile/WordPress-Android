@@ -383,6 +383,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         setupAdaptersAndUpdateUIAndNote();
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
+        ToastUtils.showToast(this, getString(R.string.error_refresh_notifications));
+        mSwipeToRefreshHelper.setRefreshing(false);
+    }
+
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
         private ArrayList<Note> mNoteList;
