@@ -248,10 +248,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (mCurrentUploadCall != null && mCurrentUploadCall.isExecuted() && !mCurrentUploadCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
             mCurrentUploadCall.cancel();
-            mCurrentUploadCall = null;
+            notifyMediaUploadCanceled(media);
         }
-        // always report without error
-        notifyMediaUploadCanceled(media);
     }
 
     private void performUpload(final MediaModel media, final SiteModel siteModel) {
@@ -294,19 +292,24 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaStore.MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
                         notifyMediaUploaded(media, error);
                     }
-                    mCurrentUploadCall = null;
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaUploaded(media, parseUploadError(response));
-                    mCurrentUploadCall = null;
                 }
+                mCurrentUploadCall = null;
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
+                if (mCurrentUploadCall != null && mCurrentUploadCall.isCanceled()) {
+                    // Do not report errors since the upload was canceled and notified separately
+                    mCurrentUploadCall = null;
+                    return;
+                }
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                 notifyMediaUploaded(media, error);
+                mCurrentUploadCall = null;
             }
         });
     }
