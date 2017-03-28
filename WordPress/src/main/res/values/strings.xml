@@ -147,12 +147,12 @@
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
 
-    <string name="media_upload_state_queued">Queued</string>
-    <string name="media_upload_state_uploading">Uploading</string>
-    <string name="media_upload_state_deleting">Deleting</string>
-    <string name="media_upload_state_deleted">Deleted</string>
-    <string name="media_upload_state_failed">Failed</string>
-    <string name="media_upload_state_uploaded">Uploaded</string>
+    <string name="media_upload_state_queued">QUEUED</string>
+    <string name="media_upload_state_uploading">UPLOADING</string>
+    <string name="media_upload_state_deleting">DELETING</string>
+    <string name="media_upload_state_deleted">DELETED</string>
+    <string name="media_upload_state_failed">FAILED</string>
+    <string name="media_upload_state_uploaded">UPLOADED</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
