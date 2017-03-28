@@ -30,6 +30,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -99,38 +100,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
         }
 
-        if (mNoteId == null) {
-            showErrorToastAndFinish();
-            return;
-        }
-
-        final Note note = NotificationsTable.getNoteById(mNoteId);
-        if (note == null) {
-            showErrorToastAndFinish();
-            return;
-        }
-
-        // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
-        NotificationsActions.updateSeenTimestamp(note);
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("notification_type", note.getType());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+        setupAdaptersAndUpdateUIAndNote();
 
         //set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
-
-        NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
-        if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
-            filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
-        }
-        mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
-
-        //set title
-        setActionBarTitleForNote(note);
-        markNoteAsRead(note);
 
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -146,7 +121,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             }
         });
 
-
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
                 (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
                 new SwipeToRefreshHelper.RefreshListener() {
@@ -157,9 +131,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                             return;
                         }
 
-                        // TODO try to obtain the item from the local db, otherwise trigger the service
+                        // try to obtain the item from the local db, otherwise trigger the service
                         // update and wait
-
+                        setupAdaptersAndUpdateUIAndNote();
                     }
                 });
 
@@ -169,6 +143,38 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
     }
 
+    private void setupAdaptersAndUpdateUIAndNote() {
+        if (mNoteId == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+
+        final Note note = NotificationsTable.getNoteById(mNoteId);
+        if (note == null) {
+            // here start the service and wait for it
+            mSwipeToRefreshHelper.setRefreshing(true);
+            NotificationsUpdateService.startService(this, mNoteId);
+            return;
+        }
+
+        NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
+        if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
+            filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
+        }
+        mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
+
+        //set title
+        setActionBarTitleForNote(note);
+        markNoteAsRead(note);
+
+        // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
+        NotificationsActions.updateSeenTimestamp(note);
+
+        // analytics tracking
+        Map<String, String> properties = new HashMap<>();
+        properties.put("notification_type", note.getType());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -369,6 +375,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
+        mSwipeToRefreshHelper.setRefreshing(false);
+        setupAdaptersAndUpdateUIAndNote();
     }
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
