@@ -1163,7 +1163,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void publishPost() {
 
-        boolean isFirstTimePublish = updatePostObject();
+        boolean isFirstTimePublish = isFirstTimePublish();
+
+        boolean postUpdateSuccessful = updatePostObject();
+        if (!postUpdateSuccessful) {
+            return;
+        }
+
         boolean isPublishable = PostUtils.isPublishable(mPost);
 
         // if post was modified or has unsaved local changes and is publishable, save it
@@ -1186,7 +1192,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // check if the opened post had some unsaved local changes
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
-        boolean isFirstTimePublish = updatePostObject();
+        boolean isFirstTimePublish = isFirstTimePublish();
+
+        boolean postUpdateSuccessful = updatePostObject();
+        if (!postUpdateSuccessful) {
+            return;
+        }
+
         boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
         boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
@@ -1222,17 +1234,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean updatePostObject() {
-        boolean isFirstTimePublish = PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
+    private boolean isFirstTimePublish() {
+        return PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
                 (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
+    }
 
+    private boolean updatePostObject() {
         try {
             updatePostObject(false);
         } catch (IllegalEditorStateException e) {
             AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+            return false;
         }
 
-        return isFirstTimePublish;
+        return true;
     }
 
     private void savePostLocallyAndFinishAsync() {
