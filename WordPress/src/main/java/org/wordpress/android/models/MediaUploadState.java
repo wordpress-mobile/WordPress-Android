@@ -23,7 +23,7 @@ public enum MediaUploadState {
         return UPLOADED;
     }
 
-    public static String getUIString(Context context, MediaUploadState state) {
+    public static String getLabel(Context context, MediaUploadState state) {
         switch (state) {
             case QUEUED:
                 return context.getString(R.string.media_upload_state_queued);

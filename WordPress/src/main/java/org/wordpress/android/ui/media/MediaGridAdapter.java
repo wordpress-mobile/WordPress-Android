@@ -186,7 +186,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
             } else {
-                holder.stateTextView.setText(MediaUploadState.getUIString(mContext, state));
+                holder.stateTextView.setText(MediaUploadState.getLabel(mContext, state));
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
