@@ -574,4 +574,18 @@ public class SiteStoreUnitTest {
         assertEquals(0, res2.rowsAffected);
         assertEquals(1, mSiteStore.getSitesCount());
     }
+
+    @Test
+    public void testUpdateSiteUniqueConstraintFail() throws DuplicateSiteException {
+        // Create 2 test sites
+        SiteModel site1 = generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true);
+        SiteSqlUtils.insertOrUpdateSite(site1);
+        SiteModel site2 = generateTestSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true, true);
+        SiteSqlUtils.insertOrUpdateSite(site2);
+
+        // Update the second site and reuse the site url and id from the first
+        site2.setSiteId(1);
+        site2.setUrl("https://pony1.com");
+        SiteSqlUtils.insertOrUpdateSite(site2);
+    }
 }
