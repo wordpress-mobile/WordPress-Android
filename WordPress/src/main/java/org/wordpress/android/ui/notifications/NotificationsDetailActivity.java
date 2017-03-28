@@ -100,7 +100,21 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
         }
 
-        setupAdaptersAndUpdateUIAndNote();
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!NetworkUtils.checkConnection(NotificationsDetailActivity.this)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+
+                        // try to obtain the item from the local db, otherwise trigger the service
+                        // update and wait
+                        setupAdaptersAndUpdateUIAndNote();
+                    }
+                });
 
         //set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
@@ -121,21 +135,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             }
         });
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
-                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (!NetworkUtils.checkConnection(NotificationsDetailActivity.this)) {
-                            mSwipeToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-
-                        // try to obtain the item from the local db, otherwise trigger the service
-                        // update and wait
-                        setupAdaptersAndUpdateUIAndNote();
-                    }
-                });
+        setupAdaptersAndUpdateUIAndNote();
 
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
