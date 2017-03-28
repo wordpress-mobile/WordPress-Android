@@ -47,22 +47,6 @@ Language: nb_NO
 	<string name="show">Vis</string>
 	<string name="hide">Skjul</string>
 	<string name="select_all">Velg alle</string>
-	<string name="no_device_videos">Ingen videoer</string>
-	<string name="no_blog_images">Ingen bilder</string>
-	<string name="no_blog_videos">Ingen videoer</string>
-	<string name="no_device_images">Ingen bilder</string>
-	<string name="loading_blog_images">Henter bilder</string>
-	<string name="loading_blog_videos">Henter videoer</string>
-	<string name="no_media_sources">Kunne ikke hente media</string>
-	<string name="loading_videos">Laster filmer</string>
-	<string name="no_media">Ingen media</string>
-	<string name="loading_images">Laster bilder</string>
-	<string name="take_video">Lag en film</string>
-	<string name="add_to_post">Legg til innlegg</string>
-	<string name="tab_title_site_videos">Filmer på nettsted</string>
-	<string name="tab_title_site_images">Bilder på nettsted</string>
-	<string name="tab_title_device_videos">Filmer på enhet</string>
-	<string name="tab_title_device_images">Bilder på enhet</string>
 	<string name="two_step_footer_label">Skriv inn koden fra din autentiseringsapp.</string>
 	<string name="two_step_footer_button">Send kode via tekstmelding.</string>
 	<string name="two_step_sms_sent">Sjekk dine tekstmeldinger for verifikasjonskoden.</string>
@@ -72,8 +56,6 @@ Language: nb_NO
 	<string name="verify">Verifiser</string>
 	<string name="error_publish_no_network">Kan ikke publisere uten tilkobling. Laget som utkast.</string>
 	<string name="language">Språk</string>
-	<string name="media_picker_title">Velg media</string>
-	<string name="take_photo">Ta et bilde</string>
 	<string name="device">Enhet</string>
 	<string name="reader_empty_posts_request_failed">Ute av stand til å hente innlegg</string>
 	<string name="publisher">Skrevet av:</string>
@@ -209,7 +191,6 @@ Language: nb_NO
 	<string name="preview_page">Forhåndsvis side</string>
 	<string name="media_gallery_settings_title">Galleri-innstillinger</string>
 	<string name="category_name">Kategorinavn</string>
-	<string name="category_slug">Permalenke for kategori (valgfritt)</string>
 	<string name="wordpress_blog">WordPress-blogg</string>
 	<string name="reader_toast_err_add_tag">Kunne ikke legge til dette stikkordet</string>
 	<string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette stikkordet</string>
@@ -245,7 +226,6 @@ Language: nb_NO
 	<string name="create_account_wpcom">Opprett en konto på WordPress.com</string>
 	<string name="media_add_new_media_gallery">Lag nytt galleri</string>
 	<string name="reader_btn_unfollow">Følger</string>
-	<string name="jetpack_message">Jetpack er påkrevd for statistikk. Vil du installere Jetpack?</string>
 	<string name="reader_likes_only_you">Du liker dette</string>
 	<string name="reader_empty_followed_tags">Du følger ingen stikkord</string>
 	<string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
@@ -256,7 +236,6 @@ Language: nb_NO
 	<string name="themes">Temaer</string>
 	<string name="all">Alle</string>
 	<string name="images">Bilder</string>
-	<string name="custom_date">Egendefinert Dato</string>
 	<string name="media_add_popup_capture_photo">Ta bilde</string>
 	<string name="media_gallery_type">Type</string>
 	<string name="media_gallery_image_order_random">Tilfeldig</string>

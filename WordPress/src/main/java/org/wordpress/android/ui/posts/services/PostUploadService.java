@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
@@ -28,6 +29,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
@@ -544,12 +546,41 @@ public class PostUploadService extends Service {
     /**
      * Returns an error message string for a failed post upload.
      */
-    private String buildErrorMessage(PostModel post, PostError error) {
-        // TODO: We should interpret event.error.type and pass our own string rather than use event.error.message
-        String postType = mContext.getResources().getText(post.isPage() ? R.string.page : R.string.post).toString().toLowerCase();
-        String errorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(), postType);
-        errorMessage += ": " + error.message;
-        return errorMessage;
+    private @NonNull String getErrorMessageFromPostError(PostModel post, PostError error) {
+        switch (error.type) {
+            case UNKNOWN_POST:
+                return getString(R.string.error_unknown_post);
+            case UNKNOWN_POST_TYPE:
+                return getString(R.string.error_unknown_post_type);
+            case UNAUTHORIZED:
+                return post.isPage() ? getString(R.string.error_refresh_unauthorized_pages) :
+                        getString(R.string.error_refresh_unauthorized_posts);
+        }
+        // In case of a generic or uncaught error, return the message from the API response or the error type
+        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
+    }
+
+    private @NonNull String getErrorMessageFromMediaError(MediaError error) {
+         switch (error.type) {
+            case FS_READ_PERMISSION_DENIED:
+                return getString(R.string.error_media_insufficient_fs_permissions);
+            case NOT_FOUND:
+                return getString(R.string.error_media_not_found);
+            case AUTHORIZATION_REQUIRED:
+                return getString(R.string.error_media_unauthorized);
+             case PARSE_ERROR:
+                 return getString(R.string.error_media_parse_error);
+            case REQUEST_TOO_LARGE:
+                return getString(R.string.error_media_request_too_large);
+        }
+        // In case of a generic or uncaught error, return the message from the API response or the error type
+        return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
+    }
+
+    private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
+        String postType = getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
+        return String.format(mContext.getResources().getText(R.string.error_upload_params).toString(), postType,
+                specificMessage);
     }
 
     @SuppressWarnings("unused")
@@ -558,9 +589,9 @@ public class PostUploadService extends Service {
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
 
         if (event.isError()) {
-            AppLog.e(T.EDITOR, "Post upload failed. " + event.error.type + ": " + event.error.message);
-            mPostUploadNotifier.updateNotificationError(event.post, site, buildErrorMessage(event.post, event.error),
-                    false);
+            AppLog.e(T.POSTS, "Post upload failed. " + event.error.type + ": " + event.error.message);
+            String message = getErrorMessage(event.post, getErrorMessageFromPostError(event.post, event.error));
+            mPostUploadNotifier.updateNotificationError(event.post, site, message, false);
             mFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.cancelNotification(event.post);
@@ -576,17 +607,15 @@ public class PostUploadService extends Service {
     public void onMediaUploaded(OnMediaUploaded event) {
         // Event for unknown media, ignoring
         if (event.media == null || mCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
-            AppLog.w(T.POSTS, "Media event not recognized: " + event.media);
+            AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
             return;
         }
 
         if (event.isError()) {
+            AppLog.e(T.MEDIA, "Media upload failed. " + event.error.type + ": " + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
-
-            // TODO: We should interpret event.error.type and pass our own string rather than use error.message
-            String message = TextUtils.isEmpty(event.error.message) ? event.error.type.toString() : event.error.message;
+            String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event.error));
             mPostUploadNotifier.updateNotificationError(mCurrentUploadingPost, site, message, true);
-
             mFirstPublishPosts.remove(mCurrentUploadingPost.getId());
             finishUpload();
             return;
@@ -598,7 +627,7 @@ public class PostUploadService extends Service {
         }
 
         if (event.completed) {
-            AppLog.i(T.POSTS, "Media upload completed for post. Media id: " + event.media.getId()
+            AppLog.i(T.MEDIA, "Media upload completed for post. Media id: " + event.media.getId()
                     + ", post id: " + mCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());

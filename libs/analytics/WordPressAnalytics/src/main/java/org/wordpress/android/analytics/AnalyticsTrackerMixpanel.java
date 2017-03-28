@@ -564,17 +564,17 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_added_video_via_wp_media_library");
                 instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_wp_media_library_to_post");
                 break;
-            case EDITOR_RESIZED_PHOTO:
+            case MEDIA_PHOTO_OPTIMIZED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Photo Resized");
+                        mixpanelInstructionsForEventName("Media - Photo Optimized");
                 instructions.
-                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_resized");
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_optimized");
                 break;
-            case EDITOR_RESIZED_PHOTO_ERROR:
+            case MEDIA_PHOTO_OPTIMIZE_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Photo Resized Error");
+                        mixpanelInstructionsForEventName("Media - Photo Optimize Error");
                 instructions.
-                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_resized_error");
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_optimize_error");
                 break;
             case EDITOR_PUBLISHED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -1273,6 +1273,22 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case MEDIA_LIBRARY_ADDED_VIDEO:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Media Library - Added Video");
+                break;
+            case MEDIA_UPLOAD_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Started");
+                break;
+            case MEDIA_UPLOAD_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Error");
+                break;
+            case MEDIA_UPLOAD_SUCCESS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Response OK");
+                break;
+            case MEDIA_UPLOAD_CANCELED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Canceled");
                 break;
             default:
                 instructions = null;

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.media;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,24 +18,25 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.FadeInNetworkImageView;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An adapter for the media gallery grid.
@@ -53,13 +54,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private ImageLoader mImageLoader;
     private final Context mContext;
     private final SiteModel mSite;
-    private Cursor mCursor;
+
+    private final ArrayList<MediaModel> mMediaList = new ArrayList<>();
+    private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
 
     private final int mThumbWidth;
     private final int mThumbHeight;
-
-    // Must be an ArrayList (order is important for galleries)
-    private ArrayList<Integer> mSelectedItems;
 
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .85f;
@@ -79,7 +79,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         mContext = context;
         mSite = site;
-        mSelectedItems = new ArrayList<>();
         mInflater = LayoutInflater.from(context);
         mHandler = new Handler();
 
@@ -99,8 +98,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mImageLoader = imageLoader;
     }
 
-    public void setCursor(Cursor cursor) {
-        mCursor = cursor;
+    public void setMediaList(@NonNull List<MediaModel> mediaList) {
+        if (isSameList(mediaList)) {
+            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
+            return;
+        }
+
+        mMediaList.clear();
+        mMediaList.addAll(mediaList);
         notifyDataSetChanged();
     }
 
@@ -116,43 +121,37 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return;
         }
 
-        mCursor.moveToPosition(position);
+        MediaModel media = mMediaList.get(position);
         holder.imageView.setTag(null);
 
-        int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
-
-        String filePath = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_PATH));
-        String mimeType = StringUtils.notNullStr(mCursor.getString(mCursor.getColumnIndex(MediaModelTable.MIME_TYPE)));
-
-        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
+        String strState = media.getUploadState();
         MediaUploadState state = MediaUploadState.fromString(strState);
 
-        boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(filePath);
-        boolean isSelected = isItemSelected(localMediaId);
-        boolean isImage = mimeType.startsWith("image/");
+        boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(media.getFilePath());
+        boolean isSelected = isItemSelected(media.getId());
+        boolean isImage = media.getMimeType().startsWith("image/");
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
             if (isLocalFile) {
-                loadLocalImage(filePath, holder.imageView);
+                loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                String imageUrl = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.URL));
-                String thumbUrl;
                 // if this isn't a private site use Photon to request the image at the exact size,
                 // otherwise append the standard wp query params to request the desired size
+                String thumbUrl;
                 if (SiteUtils.isPhotonCapable(mSite)) {
-                    thumbUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbWidth, mThumbHeight);
+                    thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
                 } else {
-                    thumbUrl = UrlUtils.removeQuery(imageUrl) + "?w=" + mThumbWidth + "&h=" + mThumbHeight;
+                    thumbUrl = UrlUtils.removeQuery(media.getUrl()) + "?w=" + mThumbWidth + "&h=" + mThumbHeight;
                 }
                 WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }
         } else {
             // not an image, so show file name and file type
             holder.imageView.setImageDrawable(null);
-            String fileName = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.FILE_NAME));
-            String title = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.TITLE));
-            String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
+            String fileName = media.getFileName();
+            String title = media.getTitle();
+            String fileExtension = MediaUtils.getExtensionForMimeType(media.getMimeType());
             holder.fileContainer.setVisibility(View.VISIBLE);
             holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
             holder.fileTypeView.setText(fileExtension.toUpperCase());
@@ -163,7 +162,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // show selection count when selected
         holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         if (isSelected) {
-            int count = mSelectedItems.indexOf(localMediaId) + 1;
+            int count = mSelectedItems.indexOf(media.getId()) + 1;
             holder.selectionCountTextView.setText(Integer.toString(count));
         }
 
@@ -290,15 +289,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         }
                     } else {
                         // retry uploading this media item if it previously failed
-                        mCursor.moveToPosition(position);
-                        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-                        MediaUploadState state = MediaUploadState.fromString(strState);
+                        MediaModel media = mMediaList.get(position);
+                        MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
                         if (state == MediaUploadState.FAILED) {
                             stateTextView.setText(R.string.upload_queued);
                             stateTextView.setCompoundDrawables(null, null, null, null);
                             if (mCallback != null) {
-                                int localMediaId = mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
-                                mCallback.onAdapterRetryUpload(localMediaId);
+                                mCallback.onAdapterRetryUpload(media.getId());
                             }
                         } else if (mCallback != null) {
                             mCallback.onAdapterItemSelected(position);
@@ -330,8 +327,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public int getLocalMediaIdAtPosition(int position) {
         if (isValidPosition(position)) {
-            mCursor.moveToPosition(position);
-            return mCursor.getInt(mCursor.getColumnIndex(MediaModelTable.ID));
+            return mMediaList.get(position).getId();
         }
         return INVALID_POSITION;
     }
@@ -344,9 +340,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (!mAllowMultiselect || !isValidPosition(position)) {
             return false;
         }
-        mCursor.moveToPosition(position);
-        String strState = mCursor.getString(mCursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-        MediaUploadState state = MediaUploadState.fromString(strState);
+        MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
         return state != MediaUploadState.DELETE && state != MediaUploadState.DELETED;
     }
 
@@ -379,7 +373,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     @Override
     public int getItemCount() {
-        return mCursor != null ? mCursor.getCount() : 0;
+        return mMediaList.size();
     }
 
     public static int getColumnCount(Context context) {
@@ -416,17 +410,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
-        if (mCursor == null || !isValidPosition(position)) {
+        if (!isValidPosition(position)) {
             return;
         }
 
-        mCursor.moveToPosition(position);
-        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
-        if (columnIndex == -1) {
-            return;
-        }
-
-        int localMediaId = mCursor.getInt(columnIndex);
+        int localMediaId = mMediaList.get(position).getId();
         if (selected) {
             mSelectedItems.add(localMediaId);
         } else {
@@ -463,23 +451,50 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void toggleItemSelected(GridViewHolder holder, int position) {
-        if (mCursor == null || !isValidPosition(position)) {
+        if (!isValidPosition(position)) {
             return;
         }
-        mCursor.moveToPosition(position);
-        int columnIndex = mCursor.getColumnIndex(MediaModelTable.ID);
-        if (columnIndex != -1) {
-            int localMediaId = mCursor.getInt(columnIndex);
-            boolean isSelected = mSelectedItems.contains(localMediaId);
-            setItemSelectedByPosition(holder, position, !isSelected);
-        }
+        int localMediaId = mMediaList.get(position).getId();
+        boolean isSelected = mSelectedItems.contains(localMediaId);
+        setItemSelectedByPosition(holder, position, !isSelected);
     }
 
     public void setSelectedItems(ArrayList<Integer> selectedItems) {
-        mSelectedItems = selectedItems;
+        mSelectedItems.clear();
+        mSelectedItems.addAll(selectedItems);
         if (mCallback != null) {
             mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
         }
         notifyDataSetChanged();
+    }
+
+    /*
+     * returns true if the passed list is the same as the existing one
+     */
+    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
+        if (mediaList.size() != mMediaList.size()) {
+            return false;
+        }
+
+        for (MediaModel media: mediaList) {
+            MediaModel thisMedia = getMediaFromId(media.getId());
+            if (thisMedia == null || !thisMedia.equals(media)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * returns the media item with the passed media ID in the current media list
+     */
+    private MediaModel getMediaFromId(int id) {
+        for (int i = 0; i < mMediaList.size(); i++) {
+            if (mMediaList.get(i).getId() == id) {
+                return mMediaList.get(i);
+            }
+        }
+        return null;
     }
 }

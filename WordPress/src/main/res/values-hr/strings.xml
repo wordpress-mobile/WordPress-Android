@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-18 09:28:48+0000
+Translation-Revision-Date: 2017-03-21 08:44:46+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -84,11 +84,9 @@ Language: hr
 	<string name="site_settings_discussion_hint">Pregledajte i promijenite postavke rasprave na web-stranici</string>
 	<string name="site_settings_more_hint">Pregledajte sve dostupne postavke resprave</string>
 	<string name="site_settings_related_posts_hint">Prikažite ili sakrijte srodne objave u čitaču</string>
-	<string name="site_settings_upload_and_link_image_hint">Omogućite da se uvijek prenose slike u punoj veličini</string>
 	<string name="site_settings_image_width_hint">Redimenzionirajte slike u objavama na ovu širinu</string>
 	<string name="site_settings_format_hint">Postavlja novi format objave</string>
 	<string name="site_settings_category_hint">Postavlja novu kategoriju objave</string>
-	<string name="site_settings_location_hint">Automatski dodaj podatke o lokaciji mojim objavama</string>
 	<string name="site_settings_password_hint">Promijenite svoju lozinku</string>
 	<string name="site_settings_username_hint">Trenutni korisnički račun</string>
 	<string name="site_settings_language_hint">Jezik na kojem je primarno pisan ovaj blog</string>
@@ -117,7 +115,6 @@ Language: hr
 	<string name="site_settings_allow_comments_title">Dopusti komentare</string>
 	<string name="site_settings_default_format_title">Zadani format</string>
 	<string name="site_settings_default_category_title">Zadana kategorija</string>
-	<string name="site_settings_location_title">Omogući lokaciju</string>
 	<string name="site_settings_address_title">Adresa</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Naslov web-strancie</string>
@@ -314,33 +311,11 @@ Language: hr
 	<string name="select_all">Odaberi sve</string>
 	<string name="deselect_all">Odznači sve</string>
 	<string name="sign_out_wpcom_confirm">Odspajanjem računa ukloniti će se svi @%s’s WordPress.com podaci sa ovog uređaja, uključujući lokalne skice i lokalne promjene.</string>
-	<string name="select_from_new_picker">Višestruki odabir s novim odabirom</string>
-	<string name="no_device_videos">Bez videa</string>
-	<string name="no_blog_images">Bez slika</string>
-	<string name="no_blog_videos">Bez videa</string>
-	<string name="no_device_images">Bez slika</string>
 	<string name="stats_generic_error">Traženu statistiku nije moguće učitati</string>
-	<string name="error_loading_blog_images">Nije moguće dohvatiti slike</string>
-	<string name="error_loading_blog_videos">Nije moguće dohvatiti video</string>
-	<string name="error_loading_images">Greška pri učitavanju slika</string>
-	<string name="error_loading_videos">Greška pri učitavanju videa</string>
-	<string name="loading_blog_images">Dohvaćanje slika</string>
-	<string name="loading_blog_videos">Dohvaćanje videa</string>
-	<string name="no_media_sources">Nije moguće dohvatiti medijske zapise</string>
-	<string name="loading_videos">Učitavanje videa</string>
-	<string name="loading_images">Učitavanje slika</string>
-	<string name="no_media">Nema medijskih zapisa</string>
 	<string name="device">Uređaj</string>
 	<string name="language">Jezik</string>
-	<string name="add_to_post">Dodaj u objavu</string>
-	<string name="take_photo">Slikaj</string>
-	<string name="take_video">Snimi video</string>
-	<string name="tab_title_site_images">Slike stranice</string>
 	<string name="verification_code">Kod za provjeru</string>
 	<string name="verify">Provjeri</string>
-	<string name="media_picker_title">Odabir medijskoga zapisa</string>
-	<string name="tab_title_device_images">Slike sa uređaja</string>
-	<string name="tab_title_device_videos">Video sa uređaja</string>
 	<string name="error_publish_no_network">Nije moguće objaviti dok nema veze. Snimljeno kao skica.</string>
 	<string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
 	<string name="invalid_verification_code">Neispravan verifikacijski kod</string>
@@ -351,7 +326,6 @@ Language: hr
 	<string name="auth_required">Ponovno se prijavite za nastavak.</string>
 	<string name="media_details_label_file_name">Ime datoteke</string>
 	<string name="media_details_label_file_type">Vrsta datoteke</string>
-	<string name="tab_title_site_videos">Video sa web-stranice</string>
 	<string name="publisher">Izdavač:</string>
 	<string name="error_notification_open">Ne mogu otvoriti obavjesti</string>
 	<string name="comments_fetching">Dohvaćanje komentara</string>
@@ -475,7 +449,6 @@ Language: hr
 	<string name="posts_empty_list">Još nemate objava. Zašto ne napišete jednu?</string>
 	<string name="comment_reply_to_user">Odgovor na %s</string>
 	<string name="pages_empty_list">Još nemate stranica. Zašto ne kreirate jednu?</string>
-	<string name="media_empty_list_custom_date">Nema medijski zapisa u ovom vremenskom intervalu</string>
 	<string name="posting_post">Objavljivanje "%s"</string>
 	<string name="nux_help_description">Posjetite centar za pomoć kako bi dobili odgovore na učestala pitanja, ili posjetite forume kako bi postavili nova pitanja</string>
 	<string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
@@ -578,7 +551,6 @@ Language: hr
 	<string name="email_not_allowed">Ta adresa e-pošte nije dopuštena</string>
 	<string name="email_exists">Ova adresa e-pošte se već koristi</string>
 	<string name="invalid_url_message">Provjerite da je uneseni URL ispravan</string>
-	<string name="no_site_error">Nije se moguće spojiti na WordPress web-stranicu</string>
 	<string name="could_not_remove_account">Nije moguće ukloniti web-stranicu</string>
 	<string name="blog_name_reserved_but_may_be_available">Naveden web-stranica je trenutno rezervirana, ali možda se oslobodi kroz par dana</string>
 	<string name="blog_name_reserved">Navedena web-stranica je rezervirana</string>
@@ -657,7 +629,6 @@ Language: hr
 	<string name="post_not_published">Status objave nije objavljen</string>
 	<string name="page_not_published">Status stranice nije objavljen</string>
 	<string name="view_in_browser">Pregled u pregledniku</string>
-	<string name="category_slug">Slug kategorije (opcionalno)</string>
 	<string name="category_desc">Opis kategorije (opcionalno)</string>
 	<string name="category_parent">Matična kategorija (opcionalno)</string>
 	<string name="share_action_post">Nova objava</string>
@@ -749,7 +720,6 @@ Language: hr
 	<string name="connecting_wpcom">Spajanje sa WordPress.com</string>
 	<string name="username_invalid">Neispravno korisničko ime</string>
 	<string name="nux_tutorial_get_started_title">Započnimo!</string>
-	<string name="jetpack_message">Za statistiku je potreban dodatak Jetpack. Želite li instalirati Jetpack?</string>
 	<string name="reader_share_subject">Podijeljeno sa %s</string>
 	<string name="limit_reached">Dosegnuti je limit. Možete ponovno pokušati za 1 minutu. Ako pokušate prije toga produžiti ćete vrijeme koje morate čekati prije nego što se digne ban. Ako mislite da je ovo greška, kontaktirajte podršku.</string>
 	<string name="stats_timeframe_days">Dani</string>
@@ -780,7 +750,6 @@ Language: hr
 	<string name="stats_view_visitors_and_views">Posjetitelji i pregledi</string>
 	<string name="stats_view_clicks">Klikovi</string>
 	<string name="images">Slike</string>
-	<string name="custom_date">Prilagođeni datum</string>
 	<string name="media_add_popup_capture_photo">Uslikajte fotografiju</string>
 	<string name="media_add_popup_capture_video">Snimite video</string>
 	<string name="media_gallery_image_order_random">Nasumično</string>

@@ -117,6 +117,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -296,8 +297,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 // Create a new post
                 List<Long> categories = new ArrayList<>();
-                categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
-                String postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
+                String postFormat = "";
+                if (mSite.isWPCom() || mSite.isJetpackConnected()) {
+                    // TODO: replace SiteSettingsInterface.getX by calls to mSite.getDefaultCategory
+                    // and mSite.getDefaultFormat. We can get these from /me/sites endpoint for .com/jetpack sites.
+                    // There might be a way to get that information from a XMLRPC request as well.
+                    categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
+                    postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
+                }
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
@@ -1764,29 +1771,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        boolean isOptimized = false;
-        if (!NetworkUtils.isWiFiConnected(this) && !isVideo) {
-            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mSite, null);
-            // Site Settings are implemented on .com/Jetpack sites only
-            if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
-                // Not on WiFi and optimize image is set to ON
-                // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-                String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
-
-                if (optimizedPath == null) {
-                    AppLog.e(T.EDITOR, "Optimized picture was null!");
-                    // TODO: track analytics here
-                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
-                } else {
-                    // TODO: track analytics here
-                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
-                    Uri optimizedImageUri = Uri.parse(optimizedPath);
-                    if (optimizedImageUri != null) {
-                        uri = optimizedImageUri;
-                        isOptimized = true;
-                    }
-                }
-            }
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
+        boolean isOptimized = optimizedMedia != null;
+        if (optimizedMedia != null) {
+            uri = optimizedMedia;
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
@@ -1995,8 +1983,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     errorMessage = getString(R.string.error_media_unauthorized);
                     break;
                 case PARSE_ERROR:
-                    String errorFormat = getString(R.string.error_media_parse_format);
-                    errorMessage = String.format(errorFormat, event.cause.toString());
+                    errorMessage = getString(R.string.error_media_parse_error);
                     break;
                 case MALFORMED_MEDIA_ARG:
                 case NULL_MEDIA_ARG:

@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-01 21:13:25+0000
+Translation-Revision-Date: 2017-03-20 18:56:42+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="role_subscriber">Abonat</string>
+	<string name="tell_me_more">Spune-mi mai mult</string>
+	<string name="duplicate_site_detected">A fost detectat un sit duplicat.</string>
+	<string name="cannot_add_duplicate_site">Acest sit există deja în aplicație, nu-l poți adăuga.</string>
+	<string name="already_logged_in_wpcom_same_username">Ești deja autentificat în contul tău WordPress.com. Situl tău ar trebui să apară în selectorul de sit, asigură-te că nu este ascuns.</string>
+	<string name="already_logged_in_wpcom">Ești deja autentificat în contul tău WordPress.com, nu poți adăuga un sit WordPress.com legat la un alt cont.</string>
+	<string name="migration_error_not_connected">Procesul de migrație a eșuat: încearcă să lansezi aplicația când ai o\n        conexiune la rețea.</string>
+	<string name="migration_message">Actualizez aplicația WordPress...</string>
+	<string name="checking_username">Verific numele de utilizator</string>
+	<string name="jetpack_different_com_account">Siturile Jetpack aparținând altor conturi WordPress.com nu sunt suportate.</string>
+	<string name="jetpack_use_com_account">Pentru a-ți adăuga situl Jetpack, autentifică-te în contul WordPress.com pe care l-ai folosit pentru a te conecta la Jetpack.</string>
+	<string name="jetpack_message">Modulul Jetpack trebuie să fie instalat și activat. Vrei să instalezi sau să activezi Jetpack?</string>
+	<string name="error_media_load">Nu pot încărca media</string>
+	<string name="error_media_refresh_no_connection">Este necesară o conexiune pentru a împrospăta biblioteca</string>
+	<string name="error_media_parse_format">Nu pot interpreta răspunsul la %s media</string>
+	<string name="error_media_unauthorized">Nu ai permisiunea de a vedea sau edita media</string>
+	<string name="error_media_not_found">Media n-a putut fi găsită</string>
+	<string name="error_media_insufficient_fs_permissions">Este necesară permisiunea de citire în fișierul media</string>
+	<string name="site_settings_optimize_images_hint">Activează pentru a salva lățimea de bandă în conexiuni pentru mobil</string>
+	<string name="site_settings_optimize_images">Optimizează imagini</string>
+	<string name="no_site_error">Nu m-am putut conecta la situl WordPress. Nu este niciun sit WordPress valid la\n        această adresă. Verifică adresa sitului (URL) pe care ai introdus-o.</string>
+	<string name="media_generic_error">A apărut o eroare media</string>
+	<string name="media_upload_error">A apărut o eroare la încarcarea media</string>
+	<string name="retry">Reîncearcă</string>
+	<string name="confirm">Confirmă</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Nu m-am putut conecta. Am primit o eroare 403 la încercarea de a accesa\n        punctul-final al sitului tău XMLRPC. Aplicația are nevoie de ea pentru a comunica cu situl tău. Contactează-ți gazda pentru a rezolva\n        această problemă.</string>
+	<string name="xmlrpc_post_blocked_error">Nu m-am putut conecta. Gazda ta blochează cererile POST și aplicația trebuie\n        să comunice cu situl tău. Contactează-ți gazda pentru a rezolva această problemă.</string>
 	<string name="reader_liked_default_tag">Articole pe care le apreciez</string>
-	<string name="reader_followed_default_tag">Situri urmărite</string>
 	<string name="reader_discover_default_tag">Descoperă</string>
+	<string name="reader_followed_default_tag">Situri urmărite</string>
 	<string name="reader_empty_followed_blogs_search_title">Nu se potrivește niciun sit</string>
 	<string name="reader_hint_search_followed_sites">Caută situri urmărite</string>
 	<string name="visual_editor_disabled">Editor vizual dezactivat</string>
@@ -392,11 +419,9 @@ Language: ro
 	<string name="site_settings_discussion_hint">Vezi și modifică setările pentru discuții ale siturilor tale</string>
 	<string name="site_settings_more_hint">Vezi toate setările disponibile pentru discuții</string>
 	<string name="site_settings_related_posts_hint">Arată sau ascunde articolele similare în cititor</string>
-	<string name="site_settings_upload_and_link_image_hint">Validează ca întotdeauna imaginile să fie încărcate la dimensiune completă</string>
 	<string name="site_settings_image_width_hint">Rescalează imaginile în articole la această lățime</string>
 	<string name="site_settings_format_hint">Setare format nou de articol</string>
 	<string name="site_settings_category_hint">Setare categorie nouă de articol</string>
-	<string name="site_settings_location_hint">Adaugă automat informații despre locație articolelor tale</string>
 	<string name="site_settings_password_hint">Schimbă-ți parola</string>
 	<string name="site_settings_username_hint">Cont utilizator actual</string>
 	<string name="site_settings_language_hint">Limba principală în care se scrie pe blogul tău</string>
@@ -425,7 +450,6 @@ Language: ro
 	<string name="site_settings_allow_comments_title">Permite comentarii</string>
 	<string name="site_settings_default_format_title">Format implicit</string>
 	<string name="site_settings_default_category_title">Categorie implicită</string>
-	<string name="site_settings_location_title">Activare Locație</string>
 	<string name="site_settings_address_title">Adresă</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Titlu sit</string>
@@ -622,22 +646,7 @@ Language: ro
 	<string name="hide">Ascunde</string>
 	<string name="show">Arată</string>
 	<string name="deselect_all">Deselectează tot</string>
-	<string name="select_from_new_picker">Fă o selecție multiplă cu noul selector</string>
-	<string name="no_media_sources">Nu s-a putut aduce media</string>
-	<string name="loading_blog_videos">Se aduc videouri</string>
-	<string name="loading_blog_images">Se aduc imagini</string>
-	<string name="error_loading_videos">Eroare încărcare video-uri</string>
-	<string name="error_loading_images">Eroare încărcare imagini</string>
-	<string name="error_loading_blog_videos">Nu se pot aduce videouri</string>
-	<string name="error_loading_blog_images">Nu se pot aduce imagini</string>
-	<string name="no_device_images">Nicio imagine</string>
-	<string name="no_blog_videos">Niciun video</string>
-	<string name="no_blog_images">Nicio imagine</string>
-	<string name="no_device_videos">Niciun video</string>
 	<string name="stats_generic_error">Statisticile cerute nu pot fi încărcate</string>
-	<string name="no_media">Nicio media</string>
-	<string name="loading_images">Încărcare imagini</string>
-	<string name="loading_videos">Încărcare videouri</string>
 	<string name="auth_required">Autentifică-te din nou pentru a continua.</string>
 	<string name="sign_in_jetpack">Autentifică-te în contul tău de WordPress.com pentru conectare la Jetpack.</string>
 	<string name="two_step_sms_sent">Uită-te la mesajele text după codul de verificare.</string>
@@ -650,14 +659,6 @@ Language: ro
 	<string name="error_publish_no_network">Nu pot publica cât timp nu există o conexiune. Salvat ca ciornă.</string>
 	<string name="media_details_label_file_type">Tip fișier</string>
 	<string name="media_details_label_file_name">Nume fișier</string>
-	<string name="tab_title_site_videos">Videouri sit</string>
-	<string name="tab_title_site_images">Imagini sit</string>
-	<string name="tab_title_device_videos">Videouri din dispozitiv</string>
-	<string name="tab_title_device_images">Imagini din dispozitiv</string>
-	<string name="take_video">Fă un video</string>
-	<string name="take_photo">Fă o poză</string>
-	<string name="media_picker_title">Selectare media</string>
-	<string name="add_to_post">Adaugă la articol</string>
 	<string name="language">Limbă</string>
 	<string name="device">Dispozitiv</string>
 	<string name="media_fetching">Se aduc media...</string>
@@ -757,7 +758,6 @@ Language: ro
 	<string name="delete_sure_post">Șterge acest articol</string>
 	<string name="signing_out">Deautentificare....</string>
 	<string name="posting_post">Public "%s"</string>
-	<string name="media_empty_list_custom_date">Nicio media în acest interval de timp</string>
 	<string name="pages_empty_list">Nicio pagină încă. De ce să nu creezi una?</string>
 	<string name="comment_reply_to_user">Răspunde la %s</string>
 	<string name="posts_empty_list">Niciun articol încă. De ce să nu creezi unul?</string>
@@ -886,7 +886,6 @@ Language: ro
 	<string name="cat_name_required">Câmpul cu numele categoriei este obligatoriu</string>
 	<string name="adding_cat_success">Categoria a fost adăugată cu succes</string>
 	<string name="adding_cat_failed">Adăugarea categoriei a eșuat</string>
-	<string name="no_site_error">Nu m-am putut conecta la situl WordPress</string>
 	<string name="mnu_comment_unspam">Nu e spam</string>
 	<string name="comments_empty_list">Fără comentarii</string>
 	<string name="theme_auth_error_message">Asigură-te că ai dreptul să setezi teme</string>
@@ -910,7 +909,7 @@ Language: ro
 	<string name="reader_toast_err_add_tag">Nu se poate adăuga această etichetă</string>
 	<string name="reader_share_link">Partajare legătură</string>
 	<string name="reader_title_applog">Jurnal aplicație</string>
-	<string name="jetpack_message_not_admin">Modulul Jetpack este necesar pentru statistici. Contactează administratorul sitului.</string>
+	<string name="jetpack_message_not_admin">Este necesar modulul Jetpack. Contactează administratorul sitului.</string>
 	<string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
 	<string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
 	<string name="wordpress_blog">Blog WordPress</string>
@@ -934,7 +933,6 @@ Language: ro
 	<string name="share_action_post">Articol nou</string>
 	<string name="category_parent">Părintele categoriei (opțional):</string>
 	<string name="category_desc">Descriere categorie (opțional)</string>
-	<string name="category_slug">Descriptor categorie (opțional)</string>
 	<string name="category_name">Nume categorie</string>
 	<string name="add_new_category">Adaugă categorie nouă</string>
 	<string name="view_in_browser">Vezi în browser</string>
@@ -1058,7 +1056,6 @@ Language: ro
 	<string name="reader_share_subject">Partajat de la %s</string>
 	<string name="reader_untitled_post">(Fără titlu)</string>
 	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
-	<string name="jetpack_message">Modulul Jetpack e necesar pentru statistici. Vrei să instalezi Jetpack?</string>
 	<string name="select_from_media_library">Selectează din biblioteca media</string>
 	<string name="empty_list_default">Această listă e goală</string>
 	<string name="media_add_new_media_gallery">Creează galerie</string>
@@ -1116,7 +1113,6 @@ Language: ro
 	<string name="media_gallery_image_order_random">Aleatoriu</string>
 	<string name="media_add_popup_capture_video">Video luat</string>
 	<string name="media_add_popup_capture_photo">Fotografie luată</string>
-	<string name="custom_date">Dată personalizată</string>
 	<string name="unattached">Neatașate</string>
 	<string name="images">Imagini</string>
 	<string name="all">Toate</string>
