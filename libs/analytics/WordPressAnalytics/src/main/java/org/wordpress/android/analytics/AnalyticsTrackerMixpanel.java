@@ -536,12 +536,19 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Editor - Closed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_closed");
                 break;
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_PHOTO_NEW:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Added Photo via Local Library");
+                        mixpanelInstructionsForEventName("Editor - Added Photo via Device Camera");
+                instructions.
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_device_camera");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_device_camera_to_post");
+                break;
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Photo via Device Library");
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_local_library");
-                instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_local_library_to_post");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_device_library_to_post");
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -550,12 +557,19 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_added_photo_via_wp_media_library");
                 instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_wp_media_library_to_post");
                 break;
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_VIDEO_NEW:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Added Video via Local Library");
+                        mixpanelInstructionsForEventName("Editor - Added Video via Device Camera");
+                instructions.
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_video_via_device_camera");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_device_camera_to_post");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Video via Device Library");
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_video_via_local_library");
-                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_local_library_to_post");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_device_library_to_post");
                 break;
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
