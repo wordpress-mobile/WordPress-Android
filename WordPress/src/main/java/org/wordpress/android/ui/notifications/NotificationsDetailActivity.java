@@ -14,6 +14,8 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
+import com.android.volley.VolleyError;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -74,6 +76,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private String mNoteId;
 
     private WPViewPager mViewPager;
+    private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
@@ -112,7 +115,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
                         // try to obtain the item from the local db, otherwise trigger the service
                         // update and wait
-                        setupAdaptersAndUpdateUIAndNote();
+                        updateUIAndNote(true);
                     }
                 });
 
@@ -121,21 +124,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         mViewPager.setPageTransformer(false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
-                AppPrefs.setNotificationsSwipeToNavigateShown(true);
-                //change the action bar title for the current note
-                Note currentNote = mAdapter.getNoteAtPosition(position);
-                if (currentNote != null) {
-                    setActionBarTitleForNote(currentNote);
-                    markNoteAsRead(currentNote);
-                }
-            }
-        });
-
-        setupAdaptersAndUpdateUIAndNote();
+        Note note = NotificationsTable.getNoteById(mNoteId);
+        updateUIAndNote(note == null);
 
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
@@ -143,17 +133,23 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
     }
 
-    private void setupAdaptersAndUpdateUIAndNote() {
+    private void updateUIAndNote(boolean doRefresh) {
         if (mNoteId == null) {
             showErrorToastAndFinish();
             return;
         }
 
-        final Note note = NotificationsTable.getNoteById(mNoteId);
-        if (note == null) {
+        if (doRefresh) {
             // here start the service and wait for it
             mSwipeToRefreshHelper.setRefreshing(true);
             NotificationsUpdateService.startService(this, mNoteId);
+            return;
+        }
+
+        Note note = NotificationsTable.getNoteById(mNoteId);
+        if (note == null) {
+            // no note found
+            showErrorToastAndFinish();
             return;
         }
 
@@ -161,7 +157,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
             filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
         }
+
         mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
+
+        resetOnPageChangeListener();
 
         //set title
         setActionBarTitleForNote(note);
@@ -174,6 +173,29 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Map<String, String> properties = new HashMap<>();
         properties.put("notification_type", note.getType());
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+        mSwipeToRefreshHelper.setRefreshing(false);
+    }
+
+    private void resetOnPageChangeListener() {
+        if (mOnPageChangeListener != null) {
+            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
+        } else {
+            mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+                @Override
+                public void onPageSelected(int position) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
+                    AppPrefs.setNotificationsSwipeToNavigateShown(true);
+                    //change the action bar title for the current note
+                    Note currentNote = mAdapter.getNoteAtPosition(position);
+                    if (currentNote != null) {
+                        setActionBarTitleForNote(currentNote);
+                        markNoteAsRead(currentNote);
+                    }
+                }
+            };
+        }
+        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
     @Override
@@ -198,11 +220,18 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        EventBus.getDefault().registerSticky(this);
         //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
         if (!AppPrefs.isNotificationsSwipeToNavigateShown() && (mAdapter.getCount() > 1)) {
             WPSwipeSnackbar.show(mViewPager);
         }
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     private void showErrorToastAndFinish() {
@@ -380,12 +409,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
         mSwipeToRefreshHelper.setRefreshing(false);
-        setupAdaptersAndUpdateUIAndNote();
+        updateUIAndNote(false);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
-        ToastUtils.showToast(this, getString(R.string.error_refresh_notifications));
+        ToastUtils.showToast(this, getString(R.string.error_refresh_notification));
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
