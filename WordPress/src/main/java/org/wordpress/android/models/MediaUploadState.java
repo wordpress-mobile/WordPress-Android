@@ -7,7 +7,7 @@ import org.wordpress.android.R;
 public enum MediaUploadState {
     QUEUED,
     UPLOADING,
-    DELETE,
+    DELETING,
     DELETED,
     FAILED,
     UPLOADED;
@@ -29,7 +29,7 @@ public enum MediaUploadState {
                 return context.getString(R.string.media_upload_state_queued);
             case UPLOADING:
                 return context.getString(R.string.media_upload_state_uploading);
-            case DELETE:
+            case DELETING:
                 return context.getString(R.string.media_upload_state_deleting);
             case DELETED:
                 return context.getString(R.string.media_upload_state_deleted);

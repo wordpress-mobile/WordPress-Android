@@ -178,7 +178,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.stateContainer.setVisibility(View.VISIBLE);
 
             // only show progress for items currently being uploaded or deleted
-            boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETE;
+            boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETING;
             holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
 
             // failed uploads can be retried
@@ -341,7 +341,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return false;
         }
         MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
-        return state != MediaUploadState.DELETE && state != MediaUploadState.DELETED;
+        return state != MediaUploadState.DELETING && state != MediaUploadState.DELETED;
     }
 
     private void loadLocalImage(final String filePath, ImageView imageView) {
