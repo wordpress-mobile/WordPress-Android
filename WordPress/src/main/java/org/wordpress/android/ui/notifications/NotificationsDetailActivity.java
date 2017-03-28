@@ -14,8 +14,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.android.volley.VolleyError;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -358,7 +356,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         showStatsActivityForSite(site, rangeType);
     }
 
-    public void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
+    private void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
         if (isFinishing()) return;
 
         if (rangeType == NoteBlockRangeType.FOLLOW) {
@@ -420,7 +418,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
-        private ArrayList<Note> mNoteList;
+        final private ArrayList<Note> mNoteList;
 
         NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
             super(fm);
