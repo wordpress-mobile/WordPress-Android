@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -154,14 +155,13 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             if (!(siteObject instanceof HashMap)) {
                 continue;
             }
-            HashMap<String, ?> siteMap = (HashMap<String, ?>) siteObject;
+            HashMap<?, ?> siteMap = (HashMap<?, ?>) siteObject;
             SiteModel site = new SiteModel();
-            // TODO: use MapUtils.getX(map,"", defaultValue) here
-            site.setSelfHostedSiteId(Integer.parseInt((String) siteMap.get(SITE_ID_KEY)));
-            site.setName((String) siteMap.get(SITE_NAME_KEY));
-            site.setUrl((String) siteMap.get(SITE_URL_KEY));
-            site.setXmlRpcUrl((String) siteMap.get(SITE_XMLRPC_URL_KEY));
-            site.setIsSelfHostedAdmin((Boolean) siteMap.get(SITE_ADMIN_KEY));
+            site.setSelfHostedSiteId(MapUtils.getMapInt(siteMap, SITE_ID_KEY, 1));
+            site.setName(MapUtils.getMapStr(siteMap, SITE_NAME_KEY));
+            site.setUrl(MapUtils.getMapStr(siteMap, SITE_URL_KEY));
+            site.setXmlRpcUrl(MapUtils.getMapStr(siteMap, SITE_XMLRPC_URL_KEY));
+            site.setIsSelfHostedAdmin(MapUtils.getMapBool(siteMap, SITE_ADMIN_KEY));
             // From what we know about the host
             site.setIsWPCom(false);
             site.setUsername(username);
@@ -223,9 +223,16 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
-        oldModel.setName(getOption(siteOptions, SITE_TITLE_KEY, String.class));
+        String siteTitle = getOption(siteOptions, SITE_TITLE_KEY, String.class);
+        if (!TextUtils.isEmpty(siteTitle)) {
+            oldModel.setName(siteTitle);
+        }
+
         // TODO: set a canonical URL here
-        oldModel.setUrl(getOption(siteOptions, HOME_URL_KEY, String.class));
+        String homeUrl = getOption(siteOptions, HOME_URL_KEY, String.class);
+        if (!TextUtils.isEmpty(homeUrl)) {
+            oldModel.setUrl(homeUrl);
+        }
         oldModel.setSoftwareVersion(getOption(siteOptions, SOFTWARE_VERSION_KEY, String.class));
         Boolean postThumbnail = getOption(siteOptions, POST_THUMBNAIL_KEY, Boolean.class);
         oldModel.setIsFeaturedImageSupported((postThumbnail != null) && postThumbnail);
