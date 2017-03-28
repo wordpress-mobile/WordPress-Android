@@ -40,8 +40,11 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -71,6 +74,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     private WPViewPager mViewPager;
     private NotificationDetailFragmentAdapter mAdapter;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,6 +145,23 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 }
             }
         });
+
+
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (!NetworkUtils.checkConnection(NotificationsDetailActivity.this)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+
+                        // TODO try to obtain the item from the local db, otherwise trigger the service
+                        // update and wait
+
+                    }
+                });
 
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
