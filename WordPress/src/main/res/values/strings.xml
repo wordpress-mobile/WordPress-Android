@@ -1164,9 +1164,6 @@
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
 
-    <!-- subject line when sharing a reader url -->
-    <string name="reader_share_subject">Shared from %s</string>
-
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>
     <string name="reader_menu_block_blog">Block this blog</string>
