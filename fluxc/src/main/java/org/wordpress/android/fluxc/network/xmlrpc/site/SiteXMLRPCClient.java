@@ -223,7 +223,11 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
         Map<?, ?> siteOptions = (Map<?, ?>) response;
-        oldModel.setName(getOption(siteOptions, SITE_TITLE_KEY, String.class));
+        String siteTitle = getOption(siteOptions, SITE_TITLE_KEY, String.class);
+        if (!TextUtils.isEmpty(siteTitle)) {
+            oldModel.setName(siteTitle);
+        }
+
         // TODO: set a canonical URL here
         String homeUrl = getOption(siteOptions, HOME_URL_KEY, String.class);
         if (!TextUtils.isEmpty(homeUrl)) {
