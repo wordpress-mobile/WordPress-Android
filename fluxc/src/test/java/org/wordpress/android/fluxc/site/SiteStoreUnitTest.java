@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.site;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -573,5 +574,26 @@ public class SiteStoreUnitTest {
         assertTrue(res2.duplicateSiteFound);
         assertEquals(0, res2.rowsAffected);
         assertEquals(1, mSiteStore.getSitesCount());
+    }
+
+    @Test
+    public void testUpdateSiteUniqueConstraintFail() throws DuplicateSiteException {
+        // Create 2 test sites
+        SiteModel site1 = generateTestSite(0, "https://pony1.com", "https://pony1.com/xmlrpc.php", false, true);
+        SiteSqlUtils.insertOrUpdateSite(site1);
+        SiteModel site2 = generateTestSite(0, "https://pony2.com", "https://pony2.com/xmlrpc.php", false, true);
+        SiteSqlUtils.insertOrUpdateSite(site2);
+
+        // Update the second site and reuse the site url and id from the first
+        site2.setUrl("https://pony1.com");
+        boolean duplicate = false;
+        try {
+            SiteSqlUtils.insertOrUpdateSite(site2);
+        } catch (SQLiteException e) {
+            // We should catch a DuplicateSiteException here, but since Roboelectric uses a different SQL stack, we
+            // can't catch `SQLiteConstraintException` in SiteSqlUtils.insertOrUpdateSite.
+            duplicate = true;
+        }
+        assertTrue(duplicate);
     }
 }
