@@ -54,14 +54,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 predefinedEventProperties.put("via", "device_camera");
                 break;
             case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
-                predefinedEventProperties.put("via", "device_library");
-                break;
-            case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
-                predefinedEventProperties.put("via", "media_library");
-                break;
             case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
                 predefinedEventProperties.put("via", "device_library");
                 break;
+            case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 predefinedEventProperties.put("via", "media_library");
                 break;
