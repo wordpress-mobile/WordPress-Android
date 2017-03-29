@@ -69,6 +69,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
     private boolean mAllowMultiSelect;
     private boolean mIsMultiSelectEnabled;
+    private boolean mPhotosOnly;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
@@ -175,6 +176,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
     void setAllowMultiSelect(boolean allow) {
         mAllowMultiSelect = allow;
+    }
+
+    void setShowPhotosOnly(boolean value) {
+        mPhotosOnly = value;
     }
 
     void setMultiSelectEnabled(boolean enabled) {
@@ -345,7 +350,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
             // videos
-            addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
+            if (!mPhotosOnly) {
+                addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
+            }
 
             // sort by id in reverse (newest first)
             Collections.sort(tmpList, new Comparator<PhotoPickerItem>() {

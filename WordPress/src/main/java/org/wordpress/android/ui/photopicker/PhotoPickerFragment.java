@@ -41,6 +41,7 @@ public class PhotoPickerFragment extends Fragment {
 
     public enum PhotoPickerOption {
         ALLOW_MULTI_SELECT,
+        PHOTOS_ONLY,
         SHOW_ICONS
     }
 
@@ -62,20 +63,21 @@ public class PhotoPickerFragment extends Fragment {
 
     private boolean mAllowMultiSelect;
     private boolean mShowIcons;
+    private boolean mPhotosOnly;
 
     private static String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
     private static String ARG_SHOW_ICONS = "show_icons";
+    private static String ARG_PHOTOS_ONLY = "photos_only";
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   EnumSet<PhotoPickerOption> options) {
         Bundle args = new Bundle();
         PhotoPickerFragment fragment = new PhotoPickerFragment();
         fragment.setPhotoPickerListener(listener);
-        if (options != null && options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT)) {
-            args.putBoolean(ARG_ALLOW_MULTI_SELECT, true);
-        }
-        if (options != null && options.contains(PhotoPickerOption.SHOW_ICONS)) {
-            args.putBoolean(ARG_SHOW_ICONS, true);
+        if (options != null) {
+            args.putBoolean(ARG_ALLOW_MULTI_SELECT, options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT));
+            args.putBoolean(ARG_SHOW_ICONS, options.contains(PhotoPickerOption.SHOW_ICONS));
+            args.putBoolean(ARG_PHOTOS_ONLY, options.contains(PhotoPickerOption.PHOTOS_ONLY));
         }
         fragment.setArguments(args);
         return fragment;
@@ -95,12 +97,14 @@ public class PhotoPickerFragment extends Fragment {
         super.setArguments(args);
         mAllowMultiSelect = args != null && args.getBoolean(ARG_ALLOW_MULTI_SELECT);
         mShowIcons = args != null && args.getBoolean(ARG_SHOW_ICONS);
+        mPhotosOnly = args != null && args.getBoolean(ARG_PHOTOS_ONLY);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(ARG_ALLOW_MULTI_SELECT, mAllowMultiSelect);
-        outState.getBoolean(ARG_SHOW_ICONS, mShowIcons);
+        outState.putBoolean(ARG_SHOW_ICONS, mShowIcons);
+        outState.putBoolean(ARG_PHOTOS_ONLY, mPhotosOnly);
         super.onSaveInstanceState(outState);
     }
 
@@ -241,6 +245,7 @@ public class PhotoPickerFragment extends Fragment {
         if (mAdapter == null) {
             mAdapter = new PhotoPickerAdapter(getActivity(), mAdapterListener);
             mAdapter.setAllowMultiSelect(mAllowMultiSelect);
+            mAdapter.setShowPhotosOnly(mPhotosOnly);
         }
         return mAdapter;
     }
