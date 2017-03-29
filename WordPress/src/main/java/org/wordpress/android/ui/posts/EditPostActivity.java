@@ -1964,7 +1964,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
-                if (media.getUploadState().equals(UploadState.QUEUED.name())) {
+                if (UploadState.QUEUED.name().equals(media.getUploadState())) {
                     mediaList.add(media);
                 }
             }
