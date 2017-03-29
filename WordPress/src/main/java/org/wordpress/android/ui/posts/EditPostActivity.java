@@ -1825,18 +1825,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     /**
      * Media
      */
-
     private void addAllMedia(List<Uri> mediaUris) {
+        boolean isErrorAddingMedia = false;
         for (Uri mediaUri : mediaUris) {
-            if (mediaUri == null) {
-                Toast.makeText(EditPostActivity.this, getString(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                continue;
+            if (mediaUri == null || !addMedia(mediaUri)) {
+                isErrorAddingMedia = true;
             }
-
-            if (!addMedia(mediaUri)) {
-                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
-                        Toast.LENGTH_SHORT).show();
-            }
+        }
+        if (isErrorAddingMedia) {
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
