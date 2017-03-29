@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photopicker;
+package org.wordpress.android.ui.photopicker;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.posts.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
+import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photopicker;
+package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
-import static org.wordpress.android.ui.posts.photopicker.PhotoPickerFragment.NUM_COLUMNS;
+import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
 
 class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
 

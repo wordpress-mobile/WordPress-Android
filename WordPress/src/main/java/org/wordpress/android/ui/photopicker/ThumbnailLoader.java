@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photopicker;
+package org.wordpress.android.ui.photopicker;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;

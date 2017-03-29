@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photopicker;
+package org.wordpress.android.ui.photopicker;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
