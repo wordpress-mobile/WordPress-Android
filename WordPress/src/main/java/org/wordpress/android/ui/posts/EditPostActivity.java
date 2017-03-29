@@ -113,7 +113,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -235,7 +234,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (mDroppedMediaUris != null) {
                 final List<Uri> mediaUris = mDroppedMediaUris;
                 mDroppedMediaUris = null;
-                EditPostActivity.this.fetchMedia(mediaUris);
+                EditPostActivity.this.addAllMedia(mediaUris);
             }
         }
     };
@@ -1613,24 +1612,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
     }
 
-    /**
-     * Media
-     */
-
-    private void fetchMedia(List<Uri> mediaUris) {
-        for (Uri mediaUri : mediaUris) {
-            if (mediaUri == null) {
-                Toast.makeText(EditPostActivity.this, getString(R.string.gallery_error), Toast.LENGTH_SHORT).show();
-                continue;
-            }
-
-            if (!addMedia(mediaUri)) {
-                Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     private void updateMediaFileOnServer(MediaFile mediaFile) {
         if (mediaFile == null) {
             return;
@@ -1641,27 +1622,35 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /**
-     * Analytics about new media
+     * Analytics about media from device
      *
+     * @param isNew Whether is a fresh media
      * @param isVideo Whether is a video or not
-     * @param isOptimized Whether the media was "optimized" device side
      * @param uri The URI of the media on the device, or null
-     * @param path The path of the media on the device, or null
      */
-    private void trackAddMediaFromDeviceEvents(boolean isVideo, boolean isOptimized, Uri uri, String path) {
-        if (TextUtils.isEmpty(path) && uri == null) {
+    private void trackAddMediaFromDeviceEvents(boolean isNew, boolean isVideo, Uri uri) {
+        if (uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
             return;
         }
 
-        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
-        properties.put("optimized", isOptimized);
-
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
+        Stat currentStat;
         if (isVideo) {
-            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY, properties);
+            if (isNew) {
+                currentStat = Stat.EDITOR_ADDED_VIDEO_NEW;
+            } else {
+                currentStat = Stat.EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY;
+            }
         } else {
-            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY, properties);
+            if (isNew) {
+                currentStat = Stat.EDITOR_ADDED_PHOTO_NEW;
+            } else {
+                currentStat = Stat.EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY;
+            }
         }
+
+        AnalyticsTracker.track(currentStat, properties);
     }
 
     /**
@@ -1717,14 +1706,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
-        boolean isOptimized = optimizedMedia != null;
         if (optimizedMedia != null) {
             uri = optimizedMedia;
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-        trackAddMediaFromDeviceEvents(isVideo, isOptimized, null, path);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
@@ -1733,8 +1720,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        trackAddMediaFromDeviceEvents(isVideo, false, mediaUri, null);
-
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
         if (isVideo) {
             mediaModel.setTitle(getResources().getString(R.string.video));
@@ -1754,50 +1739,57 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case MediaGalleryActivity.REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK) {
-                        handleMediaGalleryResult(data);
-                    }
+                    handleMediaGalleryResult(data);
+                    // TODO: No analytics here?
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK) {
-                        handleMediaGalleryPickerResult(data);
-                    }
+                    handleMediaGalleryPickerResult(data);
+                    // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
-                    String mimeType = getContentResolver().getType(imageUri);
-                    fetchMedia(imageUri, mimeType);
+                    fetchMedia(imageUri);
+                    trackAddMediaFromDeviceEvents(false, false, imageUri);
                     break;
                 case RequestCodes.TAKE_PHOTO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        try {
-                            File f = new File(mMediaCapturePath);
-                            Uri capturedImageUri = Uri.fromFile(f);
-                            if (!addMedia(capturedImageUri)) {
-                                ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-                            }
-                            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                    + Environment.getExternalStorageDirectory())));
-                        } catch (RuntimeException e) {
-                            AppLog.e(T.POSTS, e);
-                        } catch (OutOfMemoryError e) {
-                            AppLog.e(T.POSTS, e);
+                    try {
+                        File f = new File(mMediaCapturePath);
+                        Uri capturedImageUri = Uri.fromFile(f);
+                        if (!addMedia(capturedImageUri)) {
+                            ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                        } else {
+                            trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
                         }
+                        this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                                + Environment.getExternalStorageDirectory())));
+                    } catch (RuntimeException e) {
+                        AppLog.e(T.POSTS, e);
+                    } catch (OutOfMemoryError e) {
+                        AppLog.e(T.POSTS, e);
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
                     Uri videoUri = data.getData();
-                    fetchMedia(Arrays.asList(videoUri));
+                    List<Uri> mediaUris = Arrays.asList(videoUri);
+                    for (Uri mediaUri : mediaUris) {
+                        trackAddMediaFromDeviceEvents(false, true, mediaUri);
+                    }
+                    addAllMedia(mediaUris);
                     break;
                 case RequestCodes.TAKE_VIDEO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                        if (!addMedia(capturedVideoUri)) {
-                            ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-                        }
+                    Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
+                    if (!addMedia(capturedVideoUri)) {
+                        ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                    } else {
+                        AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
+                        trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
                     }
                     break;
             }
@@ -1806,7 +1798,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
-    private void fetchMedia(Uri mediaUri, final String mimeType) {
+    private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
             new AsyncTask<Uri, Integer, Uri>() {
@@ -1827,6 +1819,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
             queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri));
+        }
+    }
+
+    /**
+     * Media
+     */
+    private void addAllMedia(List<Uri> mediaUris) {
+        boolean isErrorAddingMedia = false;
+        for (Uri mediaUri : mediaUris) {
+            if (mediaUri == null || !addMedia(mediaUri)) {
+                isErrorAddingMedia = true;
+            }
+        }
+        if (isErrorAddingMedia) {
+            Toast.makeText(EditPostActivity.this, getResources().getText(R.string.gallery_error),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
