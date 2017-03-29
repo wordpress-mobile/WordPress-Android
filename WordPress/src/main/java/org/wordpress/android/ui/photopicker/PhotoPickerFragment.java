@@ -65,9 +65,9 @@ public class PhotoPickerFragment extends Fragment {
     private boolean mShowIcons;
     private boolean mPhotosOnly;
 
-    private static String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
-    private static String ARG_SHOW_ICONS = "show_icons";
-    private static String ARG_PHOTOS_ONLY = "photos_only";
+    private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
+    private static final String ARG_SHOW_ICONS = "show_icons";
+    private static final String ARG_PHOTOS_ONLY = "photos_only";
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   EnumSet<PhotoPickerOption> options) {
@@ -106,6 +106,21 @@ public class PhotoPickerFragment extends Fragment {
         outState.putBoolean(ARG_SHOW_ICONS, mShowIcons);
         outState.putBoolean(ARG_PHOTOS_ONLY, mPhotosOnly);
         super.onSaveInstanceState(outState);
+    }
+
+    public void setOptions(EnumSet<PhotoPickerOption> options) {
+        mAllowMultiSelect = options != null && options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
+        mShowIcons = options != null && options.contains(PhotoPickerOption.SHOW_ICONS);
+        mPhotosOnly = options != null && options.contains(PhotoPickerOption.PHOTOS_ONLY);
+
+        if (hasAdapter()) {
+            getAdapter().setAllowMultiSelect(mAllowMultiSelect);
+            getAdapter().setShowPhotosOnly(mPhotosOnly);
+        }
+
+        if (mBottomBar != null) {
+            mBottomBar.setVisibility(mShowIcons ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -150,7 +165,7 @@ public class PhotoPickerFragment extends Fragment {
         return view;
     }
 
-    private void setPhotoPickerListener(PhotoPickerListener listener) {
+    void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
 
@@ -239,6 +254,10 @@ public class PhotoPickerFragment extends Fragment {
                 startWidth,
                 startHeight);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
+    private boolean hasAdapter() {
+        return mAdapter != null;
     }
 
     private PhotoPickerAdapter getAdapter() {

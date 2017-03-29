@@ -37,15 +37,17 @@ public class PhotoPickerActivity extends AppCompatActivity
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        if (!hasPhotoPickerFragment()) {
-            EnumSet<PhotoPickerOption> options =
-                    EnumSet.of(PhotoPickerOption.PHOTOS_ONLY);
-
-            Fragment fragment = PhotoPickerFragment.newInstance(this, options);
+        EnumSet<PhotoPickerOption> options = EnumSet.of(PhotoPickerOption.PHOTOS_ONLY);
+        PhotoPickerFragment fragment = getPickerFragment();
+        if (fragment == null) {
+            fragment = PhotoPickerFragment.newInstance(this, options);
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commitAllowingStateLoss();
+        } else {
+            fragment.setOptions(options);
+            fragment.setPhotoPickerListener(this);
         }
     }
 
@@ -67,10 +69,6 @@ public class PhotoPickerActivity extends AppCompatActivity
         return null;
     }
 
-    private boolean hasPhotoPickerFragment() {
-        return getPickerFragment() != null;
-    }
-
     @Override
     public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
         if (uriList.size() > 0) {
@@ -82,6 +80,6 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon) {
-        // TODO
+        // noop
     }
 }
