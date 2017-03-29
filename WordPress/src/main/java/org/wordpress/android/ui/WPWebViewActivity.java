@@ -78,6 +78,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
     public static final String SHARABLE_URL = "sharable_url";
+    public static final String SHARE_SUBJECT = "share_subject";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
@@ -94,15 +95,17 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url, null);
+        openWPCOMURL(context, url, null, null);
     }
 
-    public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String sharableUrl) {
-        openWPCOMURL(context, url, sharableUrl);
+    public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String sharableUrl,
+                                                                String shareSubject) {
+        openWPCOMURL(context, url, sharableUrl, shareSubject);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
-    public static void openJetpackBlogPostPreview(Context context, String url, String sharableUrl, String frameNonce) {
+    public static void openJetpackBlogPostPreview(Context context, String url, String sharableUrl, String shareSubject,
+                                                  String frameNonce) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + frameNonce;
         }
@@ -111,6 +114,9 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
         if (!TextUtils.isEmpty(sharableUrl)) {
             intent.putExtra(WPWebViewActivity.SHARABLE_URL, sharableUrl);
+        }
+        if (!TextUtils.isEmpty(shareSubject)) {
+            intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
         context.startActivity(intent);
     }
@@ -190,7 +196,7 @@ public class WPWebViewActivity extends WebViewActivity {
         return true;
     }
 
-    private static void openWPCOMURL(Context context, String url, String sharableUrl) {
+    private static void openWPCOMURL(Context context, String url, String sharableUrl, String shareSubject) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -201,6 +207,9 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         if (!TextUtils.isEmpty(sharableUrl)) {
             intent.putExtra(WPWebViewActivity.SHARABLE_URL, sharableUrl);
+        }
+        if (!TextUtils.isEmpty(shareSubject)) {
+            intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
         context.startActivity(intent);
     }
@@ -387,6 +396,10 @@ public class WPWebViewActivity extends WebViewActivity {
                 sharableUrl = mWebView.getUrl();
             }
             share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
+            String shareSubject = extras.getString(SHARE_SUBJECT, null);
+            if (!TextUtils.isEmpty(shareSubject)) {
+                share.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+            }
             startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             return true;
         } else if (itemID == R.id.menu_browser) {

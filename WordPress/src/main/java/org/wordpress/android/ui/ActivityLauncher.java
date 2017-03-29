@@ -198,10 +198,11 @@ public class ActivityLauncher {
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
         String sharableUrl = post.getLink();
+        String shareSubject = post.getTitle();
         if (site.isWPCom()) {
-            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, sharableUrl);
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, sharableUrl, shareSubject);
         } else if (site.isJetpackConnected()) {
-            WPWebViewActivity.openJetpackBlogPostPreview(context, url, sharableUrl, site.getFrameNonce());
+            WPWebViewActivity.openJetpackBlogPostPreview(context, url, sharableUrl, shareSubject, site.getFrameNonce());
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
