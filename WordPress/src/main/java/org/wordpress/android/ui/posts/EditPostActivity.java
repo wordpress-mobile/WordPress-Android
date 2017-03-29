@@ -1739,19 +1739,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
                 case MediaGalleryActivity.REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK) {
-                        handleMediaGalleryResult(data);
-                        // TODO: No analytics here?
-                    }
+                    handleMediaGalleryResult(data);
+                    // TODO: No analytics here?
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
-                    if (resultCode == Activity.RESULT_OK) {
-                        handleMediaGalleryPickerResult(data);
-                        // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
-                    }
+                    handleMediaGalleryPickerResult(data);
+                    // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
@@ -1759,22 +1759,20 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     trackAddMediaFromDeviceEvents(false, false, imageUri);
                     break;
                 case RequestCodes.TAKE_PHOTO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        try {
-                            File f = new File(mMediaCapturePath);
-                            Uri capturedImageUri = Uri.fromFile(f);
-                            if (!addMedia(capturedImageUri)) {
-                                ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-                            } else {
-                                trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
-                            }
-                            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                    + Environment.getExternalStorageDirectory())));
-                        } catch (RuntimeException e) {
-                            AppLog.e(T.POSTS, e);
-                        } catch (OutOfMemoryError e) {
-                            AppLog.e(T.POSTS, e);
+                    try {
+                        File f = new File(mMediaCapturePath);
+                        Uri capturedImageUri = Uri.fromFile(f);
+                        if (!addMedia(capturedImageUri)) {
+                            ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                        } else {
+                            trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
                         }
+                        this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                                + Environment.getExternalStorageDirectory())));
+                    } catch (RuntimeException e) {
+                        AppLog.e(T.POSTS, e);
+                    } catch (OutOfMemoryError e) {
+                        AppLog.e(T.POSTS, e);
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
@@ -1786,14 +1784,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     addAllMedia(mediaUris);
                     break;
                 case RequestCodes.TAKE_VIDEO:
-                    if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                        if (!addMedia(capturedVideoUri)) {
-                            ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-                        } else {
-                            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
-                            trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
-                        }
+                    Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
+                    if (!addMedia(capturedVideoUri)) {
+                        ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                    } else {
+                        AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
+                        trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
                     }
                     break;
             }
