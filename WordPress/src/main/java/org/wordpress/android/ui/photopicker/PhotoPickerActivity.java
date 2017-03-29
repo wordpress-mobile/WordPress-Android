@@ -30,6 +30,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         setContentView(R.layout.photo_picker_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
