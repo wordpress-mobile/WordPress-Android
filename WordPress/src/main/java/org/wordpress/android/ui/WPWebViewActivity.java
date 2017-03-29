@@ -23,7 +23,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
@@ -77,7 +76,8 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String URL_TO_LOAD = "url_to_load";
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
     public static final String LOCAL_BLOG_ID = "local_blog_id";
-    public static final String SHARABLE_URL = "sharable_url";
+    public static final String SHAREABLE_URL = "shareable_url";
+    public static final String SHARE_SUBJECT = "share_subject";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
@@ -94,17 +94,29 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url);
+        openWPCOMURL(context, url, null, null);
+    }
+
+    public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
+                                                                String shareSubject) {
+        openWPCOMURL(context, url, shareableUrl, shareSubject);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
-    public static void openJetpackBlogPostPreview(Context context, String url, String frameNonce) {
+    public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
+                                                  String frameNonce) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + frameNonce;
         }
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        if (!TextUtils.isEmpty(shareableUrl)) {
+            intent.putExtra(WPWebViewActivity.SHAREABLE_URL, shareableUrl);
+        }
+        if (!TextUtils.isEmpty(shareSubject)) {
+            intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
+        }
         context.startActivity(intent);
     }
 
@@ -138,7 +150,10 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
             intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
-            intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(site, post));
+            intent.putExtra(WPWebViewActivity.SHAREABLE_URL, post.getLink());
+            if (!TextUtils.isEmpty(post.getTitle())) {
+                intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, post.getTitle());
+            }
         }
         context.startActivity(intent);
     }
@@ -183,7 +198,7 @@ public class WPWebViewActivity extends WebViewActivity {
         return true;
     }
 
-    private static void openWPCOMURL(Context context, String url) {
+    private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -192,6 +207,12 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        if (!TextUtils.isEmpty(shareableUrl)) {
+            intent.putExtra(WPWebViewActivity.SHAREABLE_URL, shareableUrl);
+        }
+        if (!TextUtils.isEmpty(shareSubject)) {
+            intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
+        }
         context.startActivity(intent);
     }
 
@@ -370,13 +391,17 @@ public class WPWebViewActivity extends WebViewActivity {
         } else if (itemID == R.id.menu_share) {
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/plain");
-            // Use the preferred sharable URL or the default webview URL
+            // Use the preferred shareable URL or the default webview URL
             Bundle extras = getIntent().getExtras();
-            String sharableUrl = extras.getString(SHARABLE_URL, null);
-            if (sharableUrl == null) {
-                sharableUrl = mWebView.getUrl();
+            String shareableUrl = extras.getString(SHAREABLE_URL, null);
+            if (TextUtils.isEmpty(shareableUrl)) {
+                shareableUrl = mWebView.getUrl();
             }
-            share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
+            share.putExtra(Intent.EXTRA_TEXT, shareableUrl);
+            String shareSubject = extras.getString(SHARE_SUBJECT, null);
+            if (!TextUtils.isEmpty(shareSubject)) {
+                share.putExtra(Intent.EXTRA_SUBJECT, shareSubject);
+            }
             startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             return true;
         } else if (itemID == R.id.menu_browser) {
