@@ -198,7 +198,7 @@ public class ActivityLauncher {
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
         if (site.isWPCom()) {
-            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, post.getLink());
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity.openJetpackBlogPostPreview(context, url, site.getFrameNonce());
         } else {

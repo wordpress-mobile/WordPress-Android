@@ -94,7 +94,11 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url);
+        openWPCOMURL(context, url, null);
+    }
+
+    public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String sharableUrl) {
+        openWPCOMURL(context, url, sharableUrl);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
@@ -183,7 +187,7 @@ public class WPWebViewActivity extends WebViewActivity {
         return true;
     }
 
-    private static void openWPCOMURL(Context context, String url) {
+    private static void openWPCOMURL(Context context, String url, String sharableUrl) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -192,6 +196,9 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        if (!TextUtils.isEmpty(sharableUrl)) {
+            intent.putExtra(WPWebViewActivity.SHARABLE_URL, sharableUrl);
+        }
         context.startActivity(intent);
     }
 
