@@ -1174,6 +1174,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         boolean postUpdateSuccessful = updatePostObject();
         if (!postUpdateSuccessful) {
+            // just return, since the only case updatePostObject() can fail is when the editor
+            // fragment is not added to the activity
             return;
         }
 
@@ -1203,6 +1205,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         boolean postUpdateSuccessful = updatePostObject();
         if (!postUpdateSuccessful) {
+            // just return, since the only case updatePostObject() can fail is when the editor
+            // fragment is not added to the activity
             return;
         }
 
