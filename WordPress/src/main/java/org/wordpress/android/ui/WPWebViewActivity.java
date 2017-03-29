@@ -392,7 +392,7 @@ public class WPWebViewActivity extends WebViewActivity {
             // Use the preferred sharable URL or the default webview URL
             Bundle extras = getIntent().getExtras();
             String sharableUrl = extras.getString(SHARABLE_URL, null);
-            if (sharableUrl == null) {
+            if (TextUtils.isEmpty(sharableUrl)) {
                 sharableUrl = mWebView.getUrl();
             }
             share.putExtra(Intent.EXTRA_TEXT, sharableUrl);
