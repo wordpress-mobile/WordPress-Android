@@ -23,7 +23,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
@@ -151,7 +150,10 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
             intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
-            intent.putExtra(WPWebViewActivity.SHARABLE_URL, WPMeShortlinks.getPostShortlink(site, post));
+            intent.putExtra(WPWebViewActivity.SHARABLE_URL, post.getLink());
+            if (!TextUtils.isEmpty(post.getTitle())) {
+                intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, post.getTitle());
+            }
         }
         context.startActivity(intent);
     }
