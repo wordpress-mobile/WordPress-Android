@@ -290,9 +290,9 @@
     <dimen name="people_list_divider_height">1dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
 
-    <!-- photo chooser (post editor) -->
-    <dimen name="photo_chooser_item_padding">2dp</dimen>
-    <dimen name="photo_chooser_selected_item_padding">4dp</dimen>
-    <dimen name="photo_chooser_icon">48dp</dimen>
-    <dimen name="photo_chooser_video_overlay">36dp</dimen>
+    <!-- photo picker -->
+    <dimen name="photo_picker_item_padding">2dp</dimen>
+    <dimen name="photo_picker_selected_item_padding">4dp</dimen>
+    <dimen name="photo_picker_icon">48dp</dimen>
+    <dimen name="photo_picker_video_overlay">36dp</dimen>
 </resources>
