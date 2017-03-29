@@ -38,7 +38,8 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
 
         if (!hasPhotoPickerFragment()) {
-            EnumSet<PhotoPickerOption> options = EnumSet.of(PhotoPickerOption.PHOTOS_ONLY);
+            EnumSet<PhotoPickerOption> options =
+                    EnumSet.of(PhotoPickerOption.PHOTOS_ONLY);
 
             Fragment fragment = PhotoPickerFragment.newInstance(this, options);
             getFragmentManager().beginTransaction()

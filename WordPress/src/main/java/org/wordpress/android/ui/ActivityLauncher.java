@@ -71,11 +71,7 @@ public class ActivityLauncher {
 
     public static void showPhotoPickerForResult(Activity activity) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.activity_slide_in_from_left,
-                R.anim.do_nothing);
-        ActivityCompat.startActivityForResult(activity, intent, RequestCodes.PHOTO_PICKER, options.toBundle());
+        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
