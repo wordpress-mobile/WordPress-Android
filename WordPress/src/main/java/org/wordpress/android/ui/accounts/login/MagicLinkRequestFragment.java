@@ -138,15 +138,16 @@ public class MagicLinkRequestFragment extends Fragment {
         WordPress.getRestClientUtilsV1_1().sendLoginEmail(params, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
+                mProgressDialog.cancel();
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
                 if (mListener != null) {
-                    mProgressDialog.cancel();
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
                     mListener.onMagicLinkSent();
                 }
             }
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                mProgressDialog.cancel();
                 HashMap<String, String> errorProperties = new HashMap<>();
                 errorProperties.put(ERROR_KEY, error.getMessage());
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
