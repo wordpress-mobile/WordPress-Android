@@ -23,6 +23,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.JetpackCallbacks;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -128,6 +129,10 @@ public class MagicLinkRequestFragment extends Fragment {
     }
 
     private void sendMagicLinkRequest() {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            ToastUtils.showToast(getActivity(), R.string.no_network_message, ToastUtils.Duration.LONG);
+            return;
+        }
         disableRequestEmailButtonAndShowProgressDialog();
 
         Map<String, String> params = new HashMap<>();
