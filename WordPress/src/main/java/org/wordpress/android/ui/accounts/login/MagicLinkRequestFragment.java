@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.JetpackCallbacks;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
@@ -147,13 +147,11 @@ public class MagicLinkRequestFragment extends Fragment {
         }, new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mProgressDialog.cancel();
                 HashMap<String, String> errorProperties = new HashMap<>();
                 errorProperties.put(ERROR_KEY, error.getMessage());
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
-                if (getView() != null) {
-                    Snackbar.make(getView(), R.string.magic_link_unavailable_error_message, Snackbar.LENGTH_SHORT);
-                }
+                mProgressDialog.cancel();
+                ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message, ToastUtils.Duration.LONG);
                 if (mListener != null) {
                     mListener.onEnterPasswordRequested();
                 }
