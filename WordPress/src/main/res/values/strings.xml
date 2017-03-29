@@ -142,13 +142,19 @@
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
-    <string name="upload_queued">Queued</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
     <string name="media_uploaded_on">Uploaded on: %s</string>
     <string name="media_dimensions">Dimensions: %s</string>
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
+
+    <string name="media_upload_state_queued">Queued</string>
+    <string name="media_upload_state_uploading">Uploading</string>
+    <string name="media_upload_state_deleting">Deleting</string>
+    <string name="media_upload_state_deleted">Deleted</string>
+    <string name="media_upload_state_failed">Failed</string>
+    <string name="media_upload_state_uploaded">Uploaded</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -1169,9 +1175,6 @@
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
-
-    <!-- subject line when sharing a reader url -->
-    <string name="reader_share_subject">Shared from %s</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>

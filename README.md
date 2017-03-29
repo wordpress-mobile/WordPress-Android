@@ -78,7 +78,7 @@ Say hello on our [Slack][4] channel: `#mobile`.
 ## FAQ ##
 
 * Q: I can't build/test/package the project because of a `PermGen space` error.
-* A: Create a `build.properties` file in the project root directory with the
+* A: Create a `gradle.properties` file in the project root directory with the
 following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
 
 ## License ##
