@@ -102,13 +102,16 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
-    public static void openJetpackBlogPostPreview(Context context, String url, String frameNonce) {
+    public static void openJetpackBlogPostPreview(Context context, String url, String sharableUrl, String frameNonce) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + frameNonce;
         }
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, false);
+        if (!TextUtils.isEmpty(sharableUrl)) {
+            intent.putExtra(WPWebViewActivity.SHARABLE_URL, sharableUrl);
+        }
         context.startActivity(intent);
     }
 
