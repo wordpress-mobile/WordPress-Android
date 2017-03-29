@@ -25,6 +25,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class PhotoPickerFragment extends Fragment {
@@ -35,6 +36,10 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CAMERA,
         ANDROID_PICKER,
         WP_MEDIA
+    }
+
+    public enum PhotoPickerOption {
+        ALLOW_MULTI_SELECT
     }
 
     /*
@@ -52,11 +57,18 @@ public class PhotoPickerFragment extends Fragment {
     private GridLayoutManager mGridManager;
     private Parcelable mRestoreState;
     private PhotoPickerListener mListener;
+    private boolean mAllowMultiSelect;
 
-    public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener) {
+    private static String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
+
+    public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
+                                                  EnumSet<PhotoPickerOption> options) {
         Bundle args = new Bundle();
         PhotoPickerFragment fragment = new PhotoPickerFragment();
         fragment.setPhotoPickerListener(listener);
+        if (options != null && options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT)) {
+            args.putBoolean(ARG_ALLOW_MULTI_SELECT, true);
+        }
         fragment.setArguments(args);
         return fragment;
     }

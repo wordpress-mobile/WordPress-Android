@@ -243,6 +243,9 @@ public class WPMainActivity extends AppCompatActivity {
 
         // monitor whether we're not the default app
         trackDefaultApp();
+
+        // TODO: remove this, only here for testing
+        ActivityLauncher.showPhotoPickerForResult(this);
     }
 
     private void setTabLayoutElevation(float newElevation){

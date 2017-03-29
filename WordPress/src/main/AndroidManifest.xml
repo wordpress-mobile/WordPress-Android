@@ -392,6 +392,11 @@
             android:label="@string/site_picker_title"
             android:theme="@style/CalypsoTheme" />
 
+        <activity
+            android:name=".ui.photopicker.PhotoPickerActivity"
+            android:label="@string/photo_picker_title"
+            android:theme="@style/Calypso.NoActionBar" />
+
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
