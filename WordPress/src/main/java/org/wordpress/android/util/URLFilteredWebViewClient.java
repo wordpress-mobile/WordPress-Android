@@ -5,7 +5,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import org.wordpress.android.*;
+import org.wordpress.android.WordPress;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
