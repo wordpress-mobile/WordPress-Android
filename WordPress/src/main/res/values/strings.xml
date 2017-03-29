@@ -1621,7 +1621,7 @@
     <string name="alert_error_adding_media">An error occurred while inserting media</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
-    <string name="stop_upload_button">Stop Upload</string>
+    <string name="stop_upload_button" translatable="false">@string/ok</string>
 
     <string name="image_settings_dismiss_dialog_title">Discard unsaved changes?</string>
     <string name="image_settings_save_toast">Changes saved</string>
