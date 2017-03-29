@@ -1627,15 +1627,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * @param isNew Whether is a fresh media
      * @param isVideo Whether is a video or not
      * @param uri The URI of the media on the device, or null
-     * @param path The path of the media on the device, or null
      */
-    private void trackAddMediaFromDeviceEvents(boolean isNew, boolean isVideo, Uri uri, String path) {
-        if (TextUtils.isEmpty(path) && uri == null) {
+    private void trackAddMediaFromDeviceEvents(boolean isNew, boolean isVideo, Uri uri) {
+        if (uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
             return;
         }
 
-        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
         Stat currentStat;
         if (isVideo) {
             if (isNew) {
@@ -1757,7 +1756,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
-                    trackAddMediaFromDeviceEvents(false, false, imageUri, null);
+                    trackAddMediaFromDeviceEvents(false, false, imageUri);
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1767,7 +1766,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             if (!addMedia(capturedImageUri)) {
                                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                             } else {
-                                trackAddMediaFromDeviceEvents(true, false, capturedImageUri, null);
+                                trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
                             }
                             this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
@@ -1782,7 +1781,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     Uri videoUri = data.getData();
                     List<Uri> mediaUris = Arrays.asList(videoUri);
                     for (Uri mediaUri : mediaUris) {
-                        trackAddMediaFromDeviceEvents(false, true, mediaUri, null);
+                        trackAddMediaFromDeviceEvents(false, true, mediaUri);
                     }
                     addAllMedia(mediaUris);
                     break;
@@ -1793,7 +1792,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                         } else {
                             AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_NEW);
-                            trackAddMediaFromDeviceEvents(true, true, capturedVideoUri, null);
+                            trackAddMediaFromDeviceEvents(true, true, capturedVideoUri);
                         }
                     }
                     break;
