@@ -67,6 +67,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private int mThumbWidth;
     private int mThumbHeight;
 
+    private boolean mAllowMultiSelect;
     private boolean mIsMultiSelectEnabled;
 
     private final ThumbnailLoader mThumbnailLoader;
@@ -170,6 +171,10 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     boolean isVideoUri(Uri uri) {
         int index = indexOfUri(uri);
         return index > -1 && getItemAtPosition(index).isVideo;
+    }
+
+    void setAllowMultiSelect(boolean allow) {
+        mAllowMultiSelect = allow;
     }
 
     void setMultiSelectEnabled(boolean enabled) {
@@ -302,7 +307,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 @Override
                 public void onLongPress(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position)) {
+                    if (isValidPosition(position) && mAllowMultiSelect) {
                         if (!mIsMultiSelectEnabled) {
                             setMultiSelectEnabled(true);
                         }

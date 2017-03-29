@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -71,6 +72,26 @@ public class PhotoPickerFragment extends Fragment {
         }
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mAllowMultiSelect = savedInstanceState.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
+        }
+    }
+
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+        mAllowMultiSelect = args != null && args.getBoolean(ARG_ALLOW_MULTI_SELECT);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(ARG_ALLOW_MULTI_SELECT, mAllowMultiSelect);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -205,6 +226,7 @@ public class PhotoPickerFragment extends Fragment {
     private PhotoPickerAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new PhotoPickerAdapter(getActivity(), mAdapterListener);
+            mAdapter.setAllowMultiSelect(mAllowMultiSelect);
         }
         return mAdapter;
     }
