@@ -52,6 +52,7 @@ import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -213,7 +214,8 @@ public class MeFragment extends Fragment {
 
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
-                    askForCameraOrGallery();
+                    //askForCameraOrGallery();
+                    showPhotoPickerForGravatar();
                 } else {
                     AppLockManager.getInstance().setExtendedTimeout();
                 }
@@ -470,7 +472,8 @@ public class MeFragment extends Fragment {
 
                     if (denied.size() == 0) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_ACCEPTED);
-                        askForCameraOrGallery();
+                        //askForCameraOrGallery();
+                        showPhotoPickerForGravatar();
                     } else {
                         ToastUtils.showToast(this.getActivity(), getString(R.string
                                 .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
@@ -510,6 +513,15 @@ public class MeFragment extends Fragment {
                     }
                 }
                 break;
+            case RequestCodes.PHOTO_PICKER:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
+                    if (strMediaUri != null) {
+                        Uri uri = Uri.parse(strMediaUri);
+                        startCropActivity(uri);
+                    }
+                }
+                break;
             case UCrop.REQUEST_CROP:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_CROPPED);
 
@@ -523,6 +535,10 @@ public class MeFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    private void showPhotoPickerForGravatar() {
+        ActivityLauncher.showPhotoPickerForResult(getActivity());
     }
 
     private void askForCameraOrGallery() {

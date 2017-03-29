@@ -2,6 +2,7 @@ package org.wordpress.android.ui.photopicker;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         implements PhotoPickerFragment.PhotoPickerListener {
 
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
+    public static final String EXTRA_MEDIA_URI = "picker_media_uri";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,11 +61,15 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     @Override
     public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
-
+        if (uriList.size() > 0) {
+            Uri mediaUri = uriList.get(0);
+            setResult(RESULT_OK, new Intent().putExtra(EXTRA_MEDIA_URI, mediaUri.toString()));
+            finish();
+        }
     }
 
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon) {
-
+        // TODO
     }
 }
