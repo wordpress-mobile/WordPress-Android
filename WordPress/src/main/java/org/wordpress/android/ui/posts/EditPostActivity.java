@@ -546,8 +546,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // size the picker before creating the fragment to avoid having it load media now
         resizePhotoPicker();
 
-        EnumSet<PhotoPickerOption> options = EnumSet.noneOf(PhotoPickerOption.class);
-        options.add(PhotoPickerOption.ALLOW_MULTI_SELECT);
+        EnumSet<PhotoPickerOption> options =
+                EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT, PhotoPickerOption.SHOW_ICONS);
         mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, options);
 
         getFragmentManager()

@@ -40,7 +40,8 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     public enum PhotoPickerOption {
-        ALLOW_MULTI_SELECT
+        ALLOW_MULTI_SELECT,
+        SHOW_ICONS
     }
 
     /*
@@ -58,9 +59,12 @@ public class PhotoPickerFragment extends Fragment {
     private GridLayoutManager mGridManager;
     private Parcelable mRestoreState;
     private PhotoPickerListener mListener;
+
     private boolean mAllowMultiSelect;
+    private boolean mShowIcons;
 
     private static String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
+    private static String ARG_SHOW_ICONS = "show_icons";
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   EnumSet<PhotoPickerOption> options) {
@@ -69,6 +73,9 @@ public class PhotoPickerFragment extends Fragment {
         fragment.setPhotoPickerListener(listener);
         if (options != null && options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT)) {
             args.putBoolean(ARG_ALLOW_MULTI_SELECT, true);
+        }
+        if (options != null && options.contains(PhotoPickerOption.SHOW_ICONS)) {
+            args.putBoolean(ARG_SHOW_ICONS, true);
         }
         fragment.setArguments(args);
         return fragment;
@@ -79,6 +86,7 @@ public class PhotoPickerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mAllowMultiSelect = savedInstanceState.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
+            mShowIcons = savedInstanceState.getBoolean(ARG_SHOW_ICONS, false);
         }
     }
 
@@ -86,11 +94,13 @@ public class PhotoPickerFragment extends Fragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         mAllowMultiSelect = args != null && args.getBoolean(ARG_ALLOW_MULTI_SELECT);
+        mShowIcons = args != null && args.getBoolean(ARG_SHOW_ICONS);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(ARG_ALLOW_MULTI_SELECT, mAllowMultiSelect);
+        outState.getBoolean(ARG_SHOW_ICONS, mShowIcons);
         super.onSaveInstanceState(outState);
     }
 
@@ -102,30 +112,34 @@ public class PhotoPickerFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
-        mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAMERA);
+        if (mShowIcons) {
+            mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAMERA);
+                    }
                 }
-            }
-        });
-        mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_PICKER);
+            });
+            mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_PICKER);
+                    }
                 }
-            }
-        });
-        mBottomBar.findViewById(R.id.icon_wpmedia).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.WP_MEDIA);
+            });
+            mBottomBar.findViewById(R.id.icon_wpmedia).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.WP_MEDIA);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            mBottomBar.setVisibility(View.GONE);
+        }
 
         reload();
 
@@ -137,13 +151,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showBottomBar() {
-        if (!isBottomBarShowing()) {
+        if (!isBottomBarShowing() && mShowIcons) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
     private void hideBottomBar() {
-        if (isBottomBarShowing()) {
+        if (isBottomBarShowing() && mShowIcons) {
             AniUtils.animateBottomBar(mBottomBar, false);
         }
     }
