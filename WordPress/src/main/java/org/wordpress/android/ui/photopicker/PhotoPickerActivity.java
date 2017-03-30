@@ -31,9 +31,26 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
+
     public static final String EXTRA_MEDIA_URI = "picker_media_uri";
+    public static final String EXTRA_MEDIA_SOURCE = "media_source";
 
     private String mMediaCapturePath;
+
+    public enum PhotoPickerMediaSource {
+        ANDROID_CAMERA,
+        ANDROID_PICKER,
+        APP_PICKER;
+
+        public static PhotoPickerMediaSource fromString(String strSource) {
+            for (PhotoPickerMediaSource source: PhotoPickerMediaSource.values()) {
+                if (source.name().equalsIgnoreCase(strSource)) {
+                    return source;
+                }
+            }
+            return null;
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,14 +119,14 @@ public class PhotoPickerActivity extends AppCompatActivity
             case RequestCodes.PICTURE_LIBRARY:
                 if (data != null) {
                     Uri imageUri = data.getData();
-                    pictureSelected(imageUri);
+                    pictureSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
                 try {
                     File f = new File(mMediaCapturePath);
                     Uri capturedImageUri = Uri.fromFile(f);
-                    pictureSelected(capturedImageUri);
+                    pictureSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
                 } catch (RuntimeException e) {
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
@@ -141,15 +158,18 @@ public class PhotoPickerActivity extends AppCompatActivity
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    private void pictureSelected(@NonNull Uri mediaUri) {
-        setResult(RESULT_OK, new Intent().putExtra(EXTRA_MEDIA_URI, mediaUri.toString()));
+    private void pictureSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
+        Intent intent = new Intent()
+                .putExtra(EXTRA_MEDIA_URI, mediaUri.toString())
+                .putExtra(EXTRA_MEDIA_SOURCE, source.name());
+        setResult(RESULT_OK, intent);
         finish();
     }
 
     @Override
     public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
         if (uriList.size() > 0) {
-            pictureSelected(uriList.get(0));
+            pictureSelected(uriList.get(0), PhotoPickerMediaSource.APP_PICKER);
         }
     }
 
