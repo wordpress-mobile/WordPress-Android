@@ -42,7 +42,9 @@ public class PhotoPickerFragment extends Fragment {
     public enum PhotoPickerOption {
         ALLOW_MULTI_SELECT,     // allow selecting more than one item
         PHOTOS_ONLY,            // show only photos (no videos)
-        SHOW_ICONS              // show icons enabling selection from camera, native picker & wp library
+        SHOW_ICONS              // show icons enabling selection from camera, native
+                                // picker & wp library - requires activity to implement
+                                // each of these features
     }
 
     /*
