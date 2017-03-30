@@ -65,7 +65,6 @@ Language: hu
 	<string name="older_two_days">2 napnál régebbi</string>
 	<string name="older_last_week">Egy hétnél régebbi</string>
 	<string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
-	<string name="media_empty_list_custom_date">Ebben az időintervallumban nincs média</string>
 	<string name="reader_menu_block_blog">Blog tiltása</string>
 	<string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
 	<string name="reader_toast_err_block_blog">Nem sikerült a blog letiltása</string>
@@ -146,7 +145,6 @@ Language: hu
 	<string name="empty_list_default">Ez a lista üres</string>
 	<string name="themes">Sablonok</string>
 	<string name="all">Összes</string>
-	<string name="custom_date">Egyedi dátum</string>
 	<string name="media_add_popup_capture_photo">Fénykép készítése</string>
 	<string name="media_add_popup_capture_video">Videó készítése</string>
 	<string name="media_gallery_image_order_random">Véletlenszerű</string>

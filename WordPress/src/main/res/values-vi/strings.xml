@@ -295,11 +295,9 @@ Language: vi_VN
 	<string name="site_settings_discussion_hint">Xem và thay đổi các thiết đặt thảo luận site của bạn</string>
 	<string name="site_settings_more_hint">Xem tất cả thiết đặt Thảo luận sẵn có</string>
 	<string name="site_settings_related_posts_hint">Hiện hoặc ẩn bài viết liên quan tới người đọc</string>
-	<string name="site_settings_upload_and_link_image_hint">Cho phép luôn tải lên ảnh kích thước đầy đủ</string>
 	<string name="site_settings_image_width_hint">Sửa kích cỡ ảnh trong các bài viết sang chiều rộng này</string>
 	<string name="site_settings_format_hint">Thiết đặt định dạng bài viết mới</string>
 	<string name="site_settings_category_hint">Thiết đặt danh mục bài viết mới</string>
-	<string name="site_settings_location_hint">Tự động thêm dữ liệu vị trí vào bài viết của bạn</string>
 	<string name="site_settings_password_hint">Thay đổi mật khẩu của bạn</string>
 	<string name="site_settings_username_hint">Tài khoản người dùng hiện tại</string>
 	<string name="site_settings_language_hint">Ngôn ngữ blog này được viết chính trong</string>
@@ -328,7 +326,6 @@ Language: vi_VN
 	<string name="site_settings_allow_comments_title">Cho phép bình luận</string>
 	<string name="site_settings_default_format_title">Định dạng mặc định</string>
 	<string name="site_settings_default_category_title">Danh mục mặc định</string>
-	<string name="site_settings_location_title">Cho phép vị trí</string>
 	<string name="site_settings_address_title">Địa chỉ</string>
 	<string name="site_settings_tagline_title">Khẩu hiệu</string>
 	<string name="site_settings_title_title">Tiêu đề Site</string>
@@ -525,22 +522,7 @@ Language: vi_VN
 	<string name="hide">Ẩn</string>
 	<string name="show">Hiện</string>
 	<string name="deselect_all">Bỏ chọn tất cả</string>
-	<string name="select_from_new_picker">Nhiều lựa chọn với công cụ chọn mới</string>
-	<string name="no_media_sources">Không thể tìm nạp media</string>
-	<string name="loading_blog_videos">Đang tìm nạp video</string>
-	<string name="loading_blog_images">Đang lấy ảnh</string>
-	<string name="error_loading_videos">Lỗi nạp video</string>
-	<string name="error_loading_images">Lỗi nạp hình ảnh</string>
-	<string name="error_loading_blog_videos">Không thể lấy video</string>
-	<string name="error_loading_blog_images">Không thể lấy hình ảnh</string>
-	<string name="no_device_images">Không ảnh</string>
-	<string name="no_blog_videos">Không video</string>
-	<string name="no_blog_images">Không ảnh</string>
-	<string name="no_device_videos">Không video</string>
 	<string name="stats_generic_error">Thống kê được yêu cầu không thể được nạp</string>
-	<string name="no_media">Không có media</string>
-	<string name="loading_images">Đang nạp ảnh</string>
-	<string name="loading_videos">Đang nạp video</string>
 	<string name="auth_required">Đăng nhập lại để tiếp tục</string>
 	<string name="sign_in_jetpack">Đăng nhập vào tài khoản WordPress.com của bạn để kết nối tới Jetpack.</string>
 	<string name="two_step_sms_sent">Kiểm tra tin nhắn văn bản của bạn cho mã xác minh.</string>
@@ -553,14 +535,6 @@ Language: vi_VN
 	<string name="error_publish_no_network">Không thể xuất bản trong khi không có kết nối mạng. Đã lưu như bản nháp.</string>
 	<string name="media_details_label_file_type">Loại tập tin</string>
 	<string name="media_details_label_file_name">Tên tập tin</string>
-	<string name="tab_title_site_videos">Video site</string>
-	<string name="tab_title_site_images">Ảnh site</string>
-	<string name="tab_title_device_videos">Video thiết bị</string>
-	<string name="tab_title_device_images">Ảnh thiết bị</string>
-	<string name="take_video">Ghi một video</string>
-	<string name="take_photo">Chụp một ảnh</string>
-	<string name="media_picker_title">Chọn media</string>
-	<string name="add_to_post">Thêm vào Bài viết</string>
 	<string name="language">Ngôn ngữ</string>
 	<string name="device">Thiết bị</string>
 	<string name="media_fetching">Đang tìm nạp media...</string>
@@ -660,7 +634,6 @@ Language: vi_VN
 	<string name="delete_sure_post">Xóa bài viết này</string>
 	<string name="signing_out">Đang đăng xuất...</string>
 	<string name="posting_post">Đang viết bài "%s"</string>
-	<string name="media_empty_list_custom_date">Không có media trong khoảng thời gian này</string>
 	<string name="pages_empty_list">Chưa có trang nào. Tại sao không tạo 1 trang?</string>
 	<string name="comment_reply_to_user">Trả lời tới %s</string>
 	<string name="posts_empty_list">Chưa viết bài nào. Tại sao không tạo 1 bài?</string>
@@ -788,7 +761,6 @@ Language: vi_VN
 	<string name="cat_name_required">Dòng tên danh mục là bắt buộc</string>
 	<string name="adding_cat_success">Danh mục đã thêm thành công</string>
 	<string name="adding_cat_failed">Thêm danh mục bị lỗi</string>
-	<string name="no_site_error">Không thể kết nối tới site WordPress</string>
 	<string name="mnu_comment_unspam">Không phải spam</string>
 	<string name="comments_empty_list">Không có bình luận</string>
 	<string name="theme_auth_error_message">Hãy đảm bảo bạn có đặc quyền để thiết đặt chủ đề</string>
@@ -812,7 +784,6 @@ Language: vi_VN
 	<string name="reader_toast_err_add_tag">Không thể thêm thẻ này</string>
 	<string name="reader_share_link">Chia sẻ liên kết</string>
 	<string name="reader_title_applog">Nhật kí ứng dụng</string>
-	<string name="jetpack_message_not_admin">Plugin Jetpack là cần thiết cho thống kê. Liên hệ với quản trị trang web.</string>
 	<string name="fatal_db_error">Một lỗi đã xảy ra trong khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
 	<string name="error_blog_hidden">Blog này bị ẩn và không thể tải được. Bật nó lên trong thiết đặt và thử lại.</string>
 	<string name="wordpress_blog">Blog WordPress</string>
@@ -836,7 +807,6 @@ Language: vi_VN
 	<string name="share_action_post">Bài viết mới</string>
 	<string name="category_parent">Danh mục chính (tùy chọn):</string>
 	<string name="category_desc">Mô tả danh mục (tùy chọn)</string>
-	<string name="category_slug">Slug danh mục (tùy chọn)</string>
 	<string name="category_name">Tên danh mục</string>
 	<string name="add_new_category">Thêm danh mục mới</string>
 	<string name="view_in_browser">Xem trong trình duyệt</string>
@@ -960,7 +930,6 @@ Language: vi_VN
 	<string name="reader_share_subject">Được chia sẻ từ %s</string>
 	<string name="reader_untitled_post">(Chưa có tiêu đề)</string>
 	<string name="jetpack_not_found">Plugin Jetpack không tìm thấy</string>
-	<string name="jetpack_message">Plugin Jetpack là cần thiết cho thống kê. Bạn có muốn cài đặt Jetpack?</string>
 	<string name="select_from_media_library">Chọn từ thư viện media</string>
 	<string name="empty_list_default">Danh sách này trống rỗng</string>
 	<string name="media_add_new_media_gallery">Tạo bộ sưu tập</string>
@@ -1018,7 +987,6 @@ Language: vi_VN
 	<string name="media_gallery_image_order_random">Ngẫu nhiên</string>
 	<string name="media_add_popup_capture_video">Quay video</string>
 	<string name="media_add_popup_capture_photo">Chụp ảnh</string>
-	<string name="custom_date">Ngày tùy chỉnh</string>
 	<string name="unattached">Không được đính kèm</string>
 	<string name="images">Hình ảnh</string>
 	<string name="all">Tất cả</string>

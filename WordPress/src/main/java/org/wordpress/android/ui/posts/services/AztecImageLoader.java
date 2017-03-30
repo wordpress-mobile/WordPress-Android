@@ -46,7 +46,7 @@ public class AztecImageLoader implements Html.ImageGetter {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                callbacks.onImageLoadingFailed();
+                callbacks.onImageFailed();
             }
         }, maxWidth, 0);
     }

@@ -32,7 +32,6 @@ Language: uz
 	<string name="media_add_popup_title">Media kutubxonasiga qo‘sh</string>
 	<string name="empty_list_default">Ushbu ro‘yxat bo‘sh</string>
 	<string name="select_from_media_library">Media kutubxonadan tanla</string>
-	<string name="jetpack_message">Statistikalar uchun JetPack plagini lozim. JetPack plaginini o‘rnatasizmi?</string>
 	<string name="reader_btn_share">Bo‘lish</string>
 	<string name="reader_btn_follow">Kuzatish</string>
 	<string name="reader_btn_unfollow">Kuzatmoqda</string>
@@ -91,7 +90,6 @@ Language: uz
 	<string name="stats_totals_views">Ko‘rishlar</string>
 	<string name="stats_totals_clicks">Bosishlar</string>
 	<string name="stats_totals_plays">Ko‘rishlar</string>
-	<string name="custom_date">Ixtiyoriy sana</string>
 	<string name="media_add_popup_capture_photo">Sur‘atga oling</string>
 	<string name="media_add_popup_capture_video">Videoga oling</string>
 	<string name="stats_view_referrers">Referrerlar</string>

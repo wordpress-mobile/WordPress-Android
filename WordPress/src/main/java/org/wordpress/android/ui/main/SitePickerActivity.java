@@ -282,7 +282,13 @@ public class SitePickerActivity extends AppCompatActivity
         mAdapter.setOnSelectedCountChangedListener(this);
     }
 
-    private void saveHiddenSites(Set<SiteRecord> changeSet) {
+    private void saveSiteVisibility(SiteRecord siteRecord) {
+        Set<SiteRecord> siteRecords = new HashSet<>();
+        siteRecords.add(siteRecord);
+        saveSitesVisibility(siteRecords);
+    }
+
+    private void saveSitesVisibility(Set<SiteRecord> changeSet) {
         boolean skippedCurrentSite = false;
         String currentSiteName = null;
         SiteList hiddenSites = getAdapter().getHiddenSites();
@@ -431,6 +437,11 @@ public class SitePickerActivity extends AppCompatActivity
             AppPrefs.addRecentlyPickedSiteId(siteRecord.localId);
             setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
             mDidUserSelectSite = true;
+            // If the site is hidden, make sure to make it visible
+            if (siteRecord.isHidden) {
+                siteRecord.isHidden = false;
+                saveSiteVisibility(siteRecord);
+            }
             finish();
         }
     }
@@ -507,7 +518,7 @@ public class SitePickerActivity extends AppCompatActivity
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
             if (mHasChanges) {
-                saveHiddenSites(mChangeSet);
+                saveSitesVisibility(mChangeSet);
             }
             getAdapter().setEnableEditMode(false);
             mActionMode = null;

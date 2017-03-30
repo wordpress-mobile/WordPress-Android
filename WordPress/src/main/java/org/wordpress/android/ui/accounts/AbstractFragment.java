@@ -52,8 +52,9 @@ public abstract class AbstractFragment extends Fragment {
             }
 
             // hide keyboard before calling the done action
-            View view = getActivity().getCurrentFocus();
-            if (view != null) WPActivityUtils.hideKeyboard(view);
+            if (getActivity() != null) {
+                WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
+            }
 
             // call child action
             onDoneAction();

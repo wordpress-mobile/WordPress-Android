@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -14,18 +13,14 @@ import android.support.v4.content.FileProvider;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.wellsql.generated.MediaModelTable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -216,26 +211,6 @@ public class WordPressMediaUtils {
     }
 
     /**
-     * Given a media file cursor, returns the thumbnail network URL. Will use photon if available, using the specified
-     * width.
-     * @param cursor the media file cursor
-     * @param width width to use for photon request (if applicable)
-     */
-    public static String getNetworkThumbnailUrl(Cursor cursor, SiteModel site, int width) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(MediaModelTable.THUMBNAIL_URL));
-
-        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if (SiteUtils.isPhotonCapable(site)) {
-            String imageURL = cursor.getString(cursor.getColumnIndex(MediaModelTable.URL));
-            if (imageURL != null) {
-                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, width, 0);
-            }
-        }
-
-        return thumbnailURL;
-    }
-
-    /**
      * Loads the given network image URL into the {@link NetworkImageView}.
      */
     public static void loadNetworkImage(String imageUrl, NetworkImageView imageView, ImageLoader imageLoader) {
@@ -246,8 +221,8 @@ public class WordPressMediaUtils {
             int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
             imageView.setErrorImageResId(placeholderResId);
 
-            // no default image while downloading
-            imageView.setDefaultImageResId(0);
+            // default image while downloading
+            imageView.setDefaultImageResId(R.drawable.media_item_background);
 
             if (MediaUtils.isValidImage(filepath)) {
                 imageView.setTag(imageUrl);

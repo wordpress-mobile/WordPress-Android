@@ -13,14 +13,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.widgets.WPViewPagerTransformer;
-import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 
 /**
  * Full-screen photo viewer - uses a ViewPager to enable scrolling between images in a blog

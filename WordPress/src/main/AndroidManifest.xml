@@ -497,10 +497,6 @@
             android:name=".ui.notifications.services.NotificationsUpdateService"
             android:exported="false"
             android:label="Notifications Update Service" />
-        <service
-            android:name=".push.NotificationsScreenLockWatchService"
-            android:exported="false"
-            android:label="Notifications Screen Lock watch Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library
@@ -537,11 +533,6 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
-        </receiver>
-        <receiver android:name=".ui.notifications.ScreenLockUnlockBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
         </receiver>
 
         <!-- Google Cloud Messaging receiver and services -->

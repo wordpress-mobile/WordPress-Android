@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-03 12:26:28+0000
+Translation-Revision-Date: 2017-03-22 20:46:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="role_subscriber">Pajtimtar</string>
+	<string name="tell_me_more">Tregomëni më tepër</string>
+	<string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
+	<string name="cannot_add_duplicate_site">Ky sajt ekziston tashmë në aplikacion, s’mund ta shtoni.</string>
+	<string name="already_logged_in_wpcom_same_username">Jeni tashmë i futur në llogarinë tuaj WordPress.com. Sajti juaj duhet të shfaqet te zgjedhësi i sajteve, shihni se mos është i fshehur.</string>
+	<string name="already_logged_in_wpcom">Jeni tashmë i futur në një llogari WordPress.com, s’mund të shtoni një sajt WordPress.com të lidhur pas një llogarie tjetër.</string>
+	<string name="migration_error_not_connected">Procesi i migrimit dështoi: provoni ta nisni aplikacionin kur të keni\n        lidhje në rrjet.</string>
+	<string name="migration_message">Po përditësohet aplikacioni Wordpress…</string>
+	<string name="checking_username">Po kontrollohet emri i përdoruesit</string>
+	<string name="jetpack_different_com_account">Nuk mbulohet sajtet me Jetpack që përkasin llogarive të ndryshme WordPress.com</string>
+	<string name="jetpack_use_com_account">Që të shtoni sajt Jetpack, bëni hyrjen te llogaria WordPress.com që përdorët për të lidhur Jetpack-un.</string>
+	<string name="jetpack_message">Shtojca Jetpack duhet të jetë e instaluar dhe e aktivizuar. Doni të instalohet ose të aktivizohet Jetpack-u?</string>
+	<string name="error_media_load">S’arrihet të ngarkohet media</string>
+	<string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
+	<string name="error_media_parse_format">S’u gatit dor përgjigje për median %s</string>
+	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
+	<string name="error_media_not_found">S’u gjet dot media</string>
+	<string name="error_media_insufficient_fs_permissions">Lypset leje leximi mbi kartelë media</string>
+	<string name="site_settings_optimize_images_hint">Aktivizojeni për të kursyer bandë në lidhje celulari</string>
+	<string name="site_settings_optimize_images">Optimizo Figurat</string>
+	<string name="no_site_error">S’u lidh dot te sajt WordPress. S’ka sajt WordPress të vlefshëm në këtë\n        adresë. Kontrolloni adresën (URL) të sajtit që dhatë.</string>
+	<string name="media_generic_error">Ndodhi një gabim mediash</string>
+	<string name="media_upload_error">Ndodhi një gabim ngarkimi mediash</string>
+	<string name="retry">Riprovoni</string>
+	<string name="confirm">Ripohojeni</string>
+	<string name="xmlrpc_endpoint_forbidden_error">S’u bë dot lidhja. Morëm një gabim 403 error, kur provuat të hyjmë\n        në pikë fundore XMLRPC të sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
+	<string name="xmlrpc_post_blocked_error">S’u bë dot lidhja. Strehuesi juaj i bllokon kërkesat POST, dhe aplikacionit\n        i duhen që të mund të komunikojë me sajtin tuaj. Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
 	<string name="reader_liked_default_tag">Postime Që Pëlqej</string>
 	<string name="reader_discover_default_tag">Zbuloni</string>
 	<string name="reader_followed_default_tag">Sajte të Ndjekur</string>
@@ -392,11 +419,9 @@ Language: sq_AL
 	<string name="site_settings_discussion_hint">Shihni dhe ndryshoni rregullimet mbi diskutimet në sajtin tuaj</string>
 	<string name="site_settings_more_hint">Shihni krejt rregullimet e mundshme për Diskutimet</string>
 	<string name="site_settings_related_posts_hint">Shfaqni ose fshihni te lexuesi postime të afërta</string>
-	<string name="site_settings_upload_and_link_image_hint">Aktivizojeni që të ngarkohet përherë figura në madhësi të plotë</string>
 	<string name="site_settings_image_width_hint">Figurat në postime ripërmasoji sa kjo gjerësi</string>
 	<string name="site_settings_format_hint">Cakton format të ri postimesh</string>
 	<string name="site_settings_category_hint">Cakton kategori të re postimesh</string>
-	<string name="site_settings_location_hint">Shto vevetiu të dhëna vendi te postimet tuaja</string>
 	<string name="site_settings_password_hint">Ndryshoni fjalëkalimin tuaj</string>
 	<string name="site_settings_username_hint">Llogaria e përdoruesit të tanishëm</string>
 	<string name="site_settings_language_hint">Gjuha në të cilën shkruhet kryesisht në këtë blog</string>
@@ -425,7 +450,6 @@ Language: sq_AL
 	<string name="site_settings_allow_comments_title">Lejo Komente</string>
 	<string name="site_settings_default_format_title">Format Parazgjedhje</string>
 	<string name="site_settings_default_category_title">Kategori Parazgjedhje</string>
-	<string name="site_settings_location_title">Aktivizoni Vendndodhje</string>
 	<string name="site_settings_address_title">Adresë</string>
 	<string name="site_settings_title_title">Titull Sajti</string>
 	<string name="site_settings_tagline_title">Përmbledhtas</string>
@@ -622,32 +646,9 @@ Language: sq_AL
 	<string name="select_all">Përzgjidhe krejt</string>
 	<string name="deselect_all">Përzgjidhe/Shpërzgjidhe krejt</string>
 	<string name="sign_out_wpcom_confirm">Dalja nga llogaria juaj do të heqë prej kësaj pajisje krejt të dhënat WordPress.com për @%s, përfshi skica dhe ndryshime vendore.</string>
-	<string name="select_from_new_picker">Përzgjidhni shumëfish me marrësin e ri</string>
-	<string name="error_loading_images">Gabim në ngarkim figurash</string>
-	<string name="error_loading_videos">Gabim në ngarkim videosh</string>
-	<string name="loading_blog_images">Po sillen figura</string>
-	<string name="loading_blog_videos">Po sillen video</string>
 	<string name="stats_generic_error">Statistikat e kërkuara s&amp;#8217;u ngarkuan dot</string>
-	<string name="no_device_videos">S&amp;#8217;ka video</string>
-	<string name="no_blog_images">S&amp;#8217;ka figura</string>
-	<string name="no_blog_videos">S&amp;#8217;ka video</string>
-	<string name="no_device_images">S&amp;#8217;ka figura</string>
-	<string name="error_loading_blog_images">S&amp;#8217;arrin të sjellë figura</string>
-	<string name="error_loading_blog_videos">S&amp;#8217;arrin të sjellë video</string>
-	<string name="no_media_sources">S&amp;#8217;solli dot media</string>
-	<string name="loading_videos">Po ngarkohen video</string>
-	<string name="loading_images">Po ngarkohen figura</string>
-	<string name="no_media">S&amp;#8217;ka media</string>
 	<string name="device">Pajisje</string>
 	<string name="language">Gjuhë</string>
-	<string name="add_to_post">Shtoje në Postim</string>
-	<string name="media_picker_title">Përzgjidhni media</string>
-	<string name="take_photo">Bëni një foto</string>
-	<string name="take_video">Bëni një video</string>
-	<string name="tab_title_device_images">Figura Te Pajisja</string>
-	<string name="tab_title_device_videos">Video Te Pajisja</string>
-	<string name="tab_title_site_images">Figura Te Sajti</string>
-	<string name="tab_title_site_videos">Video Figura Te Sajti</string>
 	<string name="editor_toast_invalid_path">Shteg kartele i pavlefshëm</string>
 	<string name="verification_code">Kod verifikimi</string>
 	<string name="invalid_verification_code">Kod verifikimi i pavlefshëm</string>
@@ -792,7 +793,6 @@ Language: sq_AL
 	<string name="error_refresh_unauthorized_pages">S&amp;#8217;keni leje të shihni ose të përpunoni faqe</string>
 	<string name="error_refresh_unauthorized_comments">S&amp;#8217;keni leje të shihni ose të përpunoni postime komente</string>
 	<string name="stats_no_blog">S&amp;#8217;u ngarkuan dot statistikat për blogun e kërkuar</string>
-	<string name="media_empty_list_custom_date">S&amp;#8217;ka media në këtë interval kohor</string>
 	<string name="reader_label_liked_by">Pëlqyer Nga</string>
 	<string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
 	<string name="reader_toast_err_block_blog">I pazoti të bllokojë këtë blog</string>
@@ -880,7 +880,6 @@ Language: sq_AL
 	<string name="could_not_remove_account">S&amp;#8217;u hoq dot sajti</string>
 	<string name="gallery_error">S&amp;#8217;u mor dot objekti media</string>
 	<string name="comments_empty_list">S&amp;#8217;ka komente</string>
-	<string name="no_site_error">S&amp;#8217;u lidh dot te sajti WordPress</string>
 	<string name="category_automatically_renamed">Emri i kategorisë %1$s s&amp;#8217;është i vlefshëm. I riemërtua si %2$s.</string>
 	<string name="no_account">S&amp;#8217;u gjet llogari WordPress, shtoni një llogari dhe riprovoni</string>
 	<string name="stats_bar_graph_empty">S&amp;#8217;ka statistika gati</string>
@@ -955,7 +954,6 @@ Language: sq_AL
 	<string name="view_in_browser">Shiheni në shfletues</string>
 	<string name="add_new_category">Shtoni kategori të re</string>
 	<string name="category_name">Emër kategorie</string>
-	<string name="category_slug">Identifikues kategorie (opsional)</string>
 	<string name="category_desc">Përshkrim kategorie (opsional)</string>
 	<string name="share_action_post">Postim i ri</string>
 	<string name="share_action_media">Bibliotekë media</string>
@@ -972,7 +970,6 @@ Language: sq_AL
 	<string name="add_account_blog_url">Adresë blogu</string>
 	<string name="wordpress_blog">Blog WordPress</string>
 	<string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
-	<string name="jetpack_message_not_admin">Për statistika lypset shtojca Jetpack. Lidhuni me përgjegjësin e sistemit.</string>
 	<string name="reader_title_applog">Regjistër aplikacioni</string>
 	<string name="reader_share_link">Ndani lidhjen me të tjerët</string>
 	<string name="reader_toast_err_add_tag">I pazoti të shtojë këtë etiketë</string>
@@ -1001,6 +998,7 @@ Language: sq_AL
 	<string name="error_blog_hidden">Ky blog është i fshehur dhe s&amp;#8217;u ngarkua dot. Aktivizojeni sërish te rregullimet dhe riprovoni.</string>
 	<string name="email_cant_be_used_to_signup">S&amp;#8217;mund të përdorni për regjistrim atë adresë email. Kemi probleme me ta, se bllokojnë disa nga email-et tanë. Ju lutemi, përdorni një mundësues tjetër email-esh.</string>
 	<string name="email_reserved">Kjo adresë email është tashmë e përdorur. Kontrolloni email-et e marrë për një email aktivizimi. Nëse s&amp;#8217;e aktivizoni, mund të riprovoni pas pak ditësh.</string>
+	<string name="jetpack_message_not_admin">Shtojca Jetpack është e domosdoshme. Lidhuni me përgjegjësin e sajtit.</string>
 	<string name="deleting_page">Po fshihet faqe</string>
 	<string name="deleting_post">Po fshihet postim</string>
 	<string name="share_url_post">Ndajeni postimin me të tjerët</string>
@@ -1061,13 +1059,11 @@ Language: sq_AL
 	<string name="reader_toast_err_view_image">S&amp;#8217;arrin të shihet figura</string>
 	<string name="reader_toast_err_url_intent">S&amp;#8217;arrin të hapë %s</string>
 	<string name="reader_empty_followed_tags">S&amp;#8217;ndiqni ndonjë etiketë</string>
-	<string name="jetpack_message">Për statistika lypset shtojca Jetpack. Doni të instalohet Jetpack-u?</string>
 	<string name="limit_reached">U mbërrit në kufi. Mund të riprovoni pas 1 minute. Riprovimi para kësaj vetëm sa do të shtojë kohën që ju duhet të prisni para se të hiqet përzënia. Nëse mendoni se bëhet fjalë për një gabim, lidhuni me asistencën.</string>
 	<string name="themes">Tema</string>
 	<string name="all">Krejt</string>
 	<string name="images">Figura</string>
 	<string name="unattached">Të pabashkëngjitura</string>
-	<string name="custom_date">Datë Vetjake</string>
 	<string name="media_add_popup_capture_photo">Bëni foto</string>
 	<string name="media_add_popup_capture_video">Regjistroni video</string>
 	<string name="media_gallery_image_order_random">Kuturu</string>

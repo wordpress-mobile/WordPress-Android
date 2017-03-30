@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-07 09:14:29+0000
+Translation-Revision-Date: 2017-03-14 00:35:18+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="reader_liked_default_tag">「いいね」した投稿</string>
+	<string name="reader_discover_default_tag">Discover</string>
+	<string name="reader_followed_default_tag">フォロー中のサイト</string>
+	<string name="reader_empty_followed_blogs_search_title">一致するサイトがありません</string>
+	<string name="reader_hint_search_followed_sites">フォローしているサイトの検索</string>
+	<string name="visual_editor_disabled">ビジュアルエディターが無効になっています</string>
+	<string name="preference_editor_visual">ビジュアル</string>
+	<string name="preference_editor_legacy">レガシー</string>
+	<string name="preference_editor_type">エディタータイプの設定</string>
+	<string name="pending_draft_one_generic">途中でやめないでください。「%1$s」は公開待ち中です。</string>
+	<string name="pending_draft_one_month">途中でやめないでください。「%1$s」は公開待ち中です。</string>
+	<string name="pending_draft_one_week_2">「%1$s」は下書きのままになります。忘れずに公開してください。</string>
+	<string name="pending_draft_one_week_1">下書き「%1$s」を公開するのを忘れないようにしてください。</string>
+	<string name="pending_draft_one_day_2">「%1$s」はまだ下書きの状態です。公開しましょう。</string>
+	<string name="pending_draft_one_day_1">昨日「%1$s」の下書きを作成しました。公開するのを忘れないで下さい。</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">Jetpack プラグインは連携済みですが、統計情報モジュールが有効化されていません。サイト管理者に連絡してください。</string>
 	<string name="jetpack_stats_module_disabled_message">Jetpack プラグインは連携済みですが、統計情報モジュールが有効化されていません。有効化しますか ?</string>
 	<string name="jetpack_info">Jetpack 情報</string>
@@ -377,11 +392,9 @@ Language: ja_JP
 	<string name="site_settings_discussion_hint">サイトのディスカッション設定を表示して変更します</string>
 	<string name="site_settings_more_hint">使用可能なディスカッション設定をすべて表示します</string>
 	<string name="site_settings_related_posts_hint">Reader で関連記事を表示または非表示にします</string>
-	<string name="site_settings_upload_and_link_image_hint">常時フルサイズ画像でのアップロードを有効にします</string>
 	<string name="site_settings_image_width_hint">投稿の画像のサイズを幅に合わせて変更します</string>
 	<string name="site_settings_format_hint">新しい投稿のフォーマットを設定します</string>
 	<string name="site_settings_category_hint">新しい投稿のカテゴリーを設定します</string>
-	<string name="site_settings_location_hint">位置データを投稿に自動的に追加します</string>
 	<string name="site_settings_password_hint">パスワードを変更します</string>
 	<string name="site_settings_username_hint">現在のユーザーアカウント</string>
 	<string name="site_settings_language_hint">ブログを書くときに使う主な言語</string>
@@ -410,7 +423,6 @@ Language: ja_JP
 	<string name="site_settings_allow_comments_title">コメントを許可</string>
 	<string name="site_settings_default_format_title">デフォルトのフォーマット</string>
 	<string name="site_settings_default_category_title">デフォルトカテゴリー</string>
-	<string name="site_settings_location_title">位置情報を有効化</string>
 	<string name="site_settings_address_title">住所</string>
 	<string name="site_settings_title_title">サイトのタイトル</string>
 	<string name="site_settings_tagline_title">キャッチフレーズ</string>
@@ -607,22 +619,7 @@ Language: ja_JP
 	<string name="hide">隠す</string>
 	<string name="select_all">すべて選択</string>
 	<string name="sign_out_wpcom_confirm">アカウントからログアウトすると、ローカルの下書きおよび変更を含む @%s のすべての WordPress.com データがこのデバイスから削除されます。</string>
-	<string name="select_from_new_picker">新しいピッカーでの複数選択</string>
-	<string name="error_loading_videos">動画読み込みエラー</string>
 	<string name="stats_generic_error">必須の統計情報が読み込めませんでした</string>
-	<string name="no_blog_images">画像なし</string>
-	<string name="no_device_videos">動画なし</string>
-	<string name="no_blog_videos">動画なし</string>
-	<string name="no_device_images">画像なし</string>
-	<string name="error_loading_images">画像読み込みエラー</string>
-	<string name="loading_blog_videos">動画を取得中</string>
-	<string name="no_media_sources">メディアを取得できませんでした</string>
-	<string name="error_loading_blog_videos">動画を取得できません</string>
-	<string name="loading_blog_images">画像を取得中</string>
-	<string name="error_loading_blog_images">画像を取得できません</string>
-	<string name="no_media">メディアがありません</string>
-	<string name="loading_videos">動画を読み込み中</string>
-	<string name="loading_images">画像を読み込み中</string>
 	<string name="two_step_sms_sent">テキストメッセージの認証コードを確認してください。</string>
 	<string name="two_step_footer_button">テキストメッセージでコードを送信</string>
 	<string name="two_step_footer_label">お使いの認証アプリからのコードを入力してください。</string>
@@ -632,14 +629,6 @@ Language: ja_JP
 	<string name="editor_toast_invalid_path">無効なファイルパス</string>
 	<string name="error_publish_no_network">接続がないため公開できません。下書きとして保存します。</string>
 	<string name="device">端末</string>
-	<string name="tab_title_site_images">サイトの画像</string>
-	<string name="tab_title_site_videos">サイトの動画</string>
-	<string name="tab_title_device_images">端末の画像</string>
-	<string name="tab_title_device_videos">端末の動画</string>
-	<string name="take_video">動画を撮る</string>
-	<string name="take_photo">写真を撮る</string>
-	<string name="media_picker_title">メディアを選択</string>
-	<string name="add_to_post">投稿に追加</string>
 	<string name="language">言語</string>
 	<string name="media_details_label_file_name">ファイル名</string>
 	<string name="media_details_label_file_type">ファイル形式</string>
@@ -769,7 +758,6 @@ Language: ja_JP
 	<string name="posts_empty_list">投稿はまだありません。新規作成してください。</string>
 	<string name="comment_reply_to_user">%s への返信</string>
 	<string name="pages_empty_list">ページはまだありません。新規作成してください。</string>
-	<string name="media_empty_list_custom_date">この期間のメディアはありません。</string>
 	<string name="posting_post">"%s" を投稿</string>
 	<string name="signing_out">ログアウト中…</string>
 	<string name="reader_label_comment_count_multi">コメント%,d件</string>
@@ -855,7 +843,6 @@ Language: ja_JP
 	<string name="invalid_username_too_long">ユーザー名は半角で61文字以下にしてください。</string>
 	<string name="invalid_username_too_short">ユーザー名は4文字以上にしてください</string>
 	<string name="no_account">WordPress アカウントが見つかりません。アカウントを追加して、もう一度お試しください。</string>
-	<string name="no_site_error">WordPress サイトに接続できませんでした</string>
 	<string name="notifications_empty_list">通知がありません</string>
 	<string name="nux_cannot_log_in">ログインできませんでした。</string>
 	<string name="passcode_wrong_passcode">不正な PIN 番号</string>
@@ -900,7 +887,6 @@ Language: ja_JP
 	<string name="category_desc">カテゴリーの説明 (オプション):</string>
 	<string name="category_name">カテゴリー名</string>
 	<string name="category_parent">親カテゴリー (オプション):</string>
-	<string name="category_slug">カテゴリースラッグ (オプション):</string>
 	<string name="comment_added">コメントを追加しました</string>
 	<string name="comment_status_approved">承認済み</string>
 	<string name="comment_status_spam">スパム</string>
@@ -975,7 +961,6 @@ Language: ja_JP
 	<string name="wordpress_blog">WordPress ブログ</string>
 	<string name="xmlrpc_error">接続できませんでした。サイト上の xmlrpc.php へのフルパスを入力し、もう一度お試しください。</string>
 	<string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
-	<string name="jetpack_message_not_admin">統計情報を表示するには Jetpack プラグインが必要です。サイト管理者にご連絡ください。</string>
 	<string name="post_not_found">投稿を読み込む際にエラーが発生しました。再読み込みしてもう一度お試しください。</string>
 	<string name="media_error_no_permission">メディアライブラリを表示する権限がありません</string>
 	<string name="cannot_delete_multi_media_items">一部のメディアは現在削除できません。後ほどもう一度お試しください。</string>
@@ -1041,7 +1026,6 @@ Language: ja_JP
 	<string name="reader_toast_err_url_intent">%sを開けませんでした</string>
 	<string name="reader_empty_followed_tags">現在何もタグをフォローしていません</string>
 	<string name="create_account_wpcom">WordPress.com でアカウントを作成</string>
-	<string name="jetpack_message">統計情報を表示するには Jetpack プラグインが必要です。Jetpack をインストールしますか ?</string>
 	<string name="reader_likes_one">1人がいいねをつけました</string>
 	<string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
 	<string name="limit_reached">上限に達しました。1分後にもう一度お試しいただけます。それより前にログインしようとすると、制限解除までの時間がさらに長くなります。エラーだと思われる場合はサポートにご連絡ください。</string>
@@ -1105,7 +1089,6 @@ Language: ja_JP
 	<string name="theme_set_success">テーマの設定を完了しました。</string>
 	<string name="share_action_title">追加先</string>
 	<string name="theme_auth_error_title">テーマ情報の取得に失敗しました</string>
-	<string name="custom_date">カスタム日付</string>
 	<string name="upload">アップロード</string>
 	<string name="discard">削除</string>
 	<string name="sign_in">ログイン</string>

@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+
 import org.wordpress.android.R;
 
 public class FlowLayout extends ViewGroup {

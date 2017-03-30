@@ -295,13 +295,19 @@ public class WPLegacyMigrationUtils {
                     postModel.setDateCreated(DateTimeUtils.iso8601UTCFromTimestamp(dateCreated / 1000));
                 }
 
-                long dateLocallyChanged = c.getLong(c.getColumnIndex("dateLastUpdated"));
+                // Safety check as 'dateLastUpdated' was somewhat recently added and a user migrating from an old
+                // version of the app might not have it
+                int dateLastUpdatedIndex = c.getColumnIndex("dateLastUpdated");
+                long dateLocallyChanged = dateLastUpdatedIndex > 0 ? c.getLong(dateLastUpdatedIndex) : 0;
                 if (dateLocallyChanged > 0) {
                     postModel.setDateLocallyChanged(DateTimeUtils.iso8601UTCFromTimestamp(dateLocallyChanged / 1000));
                 }
 
+                int featuredImageIndex = c.getColumnIndex("wp_post_thumbnail");
+                long featuredImageId = featuredImageIndex > 0 ? c.getLong(featuredImageIndex) : 0;
+                postModel.setFeaturedImageId(featuredImageId);
+
                 postModel.setExcerpt(c.getString(c.getColumnIndex("mt_excerpt")));
-                postModel.setFeaturedImageId(c.getLong(c.getColumnIndex("wp_post_thumbnail")));
                 postModel.setLink(c.getString(c.getColumnIndex("link")));
                 postModel.setTagNames(c.getString(c.getColumnIndex("mt_keywords")));
                 postModel.setStatus(c.getString(c.getColumnIndex("post_status")));

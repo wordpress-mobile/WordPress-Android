@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-15 08:15:44+0000
+Translation-Revision-Date: 2017-03-14 09:05:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="reader_liked_default_tag">Berichten die ik leuk vind</string>
+	<string name="reader_discover_default_tag">Ontdek</string>
+	<string name="reader_followed_default_tag">Gevolgde sites</string>
 	<string name="reader_empty_followed_blogs_search_title">Geen sites gevonden</string>
 	<string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
 	<string name="visual_editor_disabled">Visuele editor uitgeschakeld</string>
@@ -389,11 +392,9 @@ Language: nl
 	<string name="site_settings_discussion_hint">Geef discussie-instellingen van je site weer en wijzig ze</string>
 	<string name="site_settings_more_hint">Geef alle beschikbare discussie-instellingen weer</string>
 	<string name="site_settings_related_posts_hint">Toon of verberg alle gerelateerde berichten in de reader</string>
-	<string name="site_settings_upload_and_link_image_hint">Inschakelen dat de afbeelding altijd op volledige grootte wordt geüpload</string>
 	<string name="site_settings_image_width_hint">De afmeting van afbeeldingen in berichten wijzigen naar deze breedte</string>
 	<string name="site_settings_format_hint">Een nieuwe post format instellen</string>
 	<string name="site_settings_category_hint">Een nieuwe berichtcategorie instellen</string>
-	<string name="site_settings_location_hint">Automatisch locatiegegevens aan je berichten toevoegen</string>
 	<string name="site_settings_password_hint">Wijzig je wachtwoord</string>
 	<string name="site_settings_username_hint">Huidig gebruikersaccount</string>
 	<string name="site_settings_language_hint">Taal waarin deze blog voornamelijk is geschreven</string>
@@ -422,7 +423,6 @@ Language: nl
 	<string name="site_settings_allow_comments_title">Reacties toestaan</string>
 	<string name="site_settings_default_format_title">Standaard indeling</string>
 	<string name="site_settings_default_category_title">Standaard categorie</string>
-	<string name="site_settings_location_title">Locatie inschakelen</string>
 	<string name="site_settings_address_title">Adres</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Sitetitel</string>
@@ -619,22 +619,7 @@ Language: nl
 	<string name="hide">Verbergen</string>
 	<string name="show">Tonen</string>
 	<string name="deselect_all">Alles deselecteren</string>
-	<string name="select_from_new_picker">Meerdere selecteren met de nieuwe picker </string>
-	<string name="no_media_sources">Media ophalen mislukt</string>
-	<string name="loading_blog_videos">Video\'s ophalen</string>
-	<string name="loading_blog_images">Afbeeldingen ophalen</string>
-	<string name="error_loading_videos">Fout bij het laden van video\'s</string>
-	<string name="error_loading_images">Fout bij het laden van afbeeldingen</string>
-	<string name="error_loading_blog_videos">Ophalen van video\'s mislukt</string>
-	<string name="error_loading_blog_images">Ophalen van afbeeldingen mislukt</string>
-	<string name="no_device_images">Geen afbeeldingen</string>
-	<string name="no_blog_videos">Geen video\'s</string>
-	<string name="no_blog_images">Geen afbeeldingen</string>
-	<string name="no_device_videos">Geen video\'s </string>
 	<string name="stats_generic_error">Benodigde statistieken konden niet geladen worden</string>
-	<string name="no_media">Geen media</string>
-	<string name="loading_images">Afbeeldingen laden</string>
-	<string name="loading_videos">Video\'s laden</string>
 	<string name="auth_required">Log opnieuw in om door te gaan.</string>
 	<string name="sign_in_jetpack">Log in met je WordPress.com account om verbinding te maken met Jetpack.</string>
 	<string name="two_step_sms_sent">Kijk in je sms\'jes voor de verificatiecode.</string>
@@ -647,14 +632,6 @@ Language: nl
 	<string name="error_publish_no_network">Kan niet publiceren als er geen verbinding is. Opgeslagen als concept.</string>
 	<string name="media_details_label_file_type">Bestandstype</string>
 	<string name="media_details_label_file_name">Bestandsnaam</string>
-	<string name="tab_title_site_videos">Sitevideo\'s</string>
-	<string name="tab_title_site_images">Siteafbeeldingen</string>
-	<string name="tab_title_device_videos">Apparaatvideo\'s</string>
-	<string name="tab_title_device_images">Apparaatafbeeldingen</string>
-	<string name="take_video">Een video maken</string>
-	<string name="take_photo">Een foto maken</string>
-	<string name="media_picker_title">Media selecteren</string>
-	<string name="add_to_post">Toevoegen aan bericht</string>
 	<string name="language">Taal</string>
 	<string name="device">Apparaat</string>
 	<string name="media_fetching">Fetching media…</string>
@@ -754,7 +731,6 @@ Language: nl
 	<string name="delete_sure_post">Dit bericht verwijderen</string>
 	<string name="signing_out">Uitloggen…</string>
 	<string name="posting_post">Publiceren "%s"</string>
-	<string name="media_empty_list_custom_date">Geen media in dit tijdsinterval</string>
 	<string name="pages_empty_list">Nog geen pagina\'s. Waarom maak je er niet een?</string>
 	<string name="comment_reply_to_user">Antwoord op %s</string>
 	<string name="posts_empty_list">Nog geen berichten. Waarom maak je er niet een?</string>
@@ -883,7 +859,6 @@ Language: nl
 	<string name="cat_name_required">Het veld Categorienaam is verplicht</string>
 	<string name="adding_cat_success">Categorie toegevoegd</string>
 	<string name="adding_cat_failed">Toevoegen van categorie mislukt</string>
-	<string name="no_site_error">Kan niet verbinden met de WordPress-site</string>
 	<string name="mnu_comment_unspam">Geen spam</string>
 	<string name="comments_empty_list">Geen reacties</string>
 	<string name="theme_auth_error_message">Controleer of je rechten hebt om thema\'s in te stellen</string>
@@ -907,7 +882,6 @@ Language: nl
 	<string name="reader_toast_err_add_tag">Deze tag kan niet worden toegevoegd</string>
 	<string name="reader_share_link">Link delen</string>
 	<string name="reader_title_applog">Applicatielogboek</string>
-	<string name="jetpack_message_not_admin">De Jetpack-plugin is vereist voor statistieken. Neem contact op met de sitebeheerder.</string>
 	<string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
 	<string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
 	<string name="wordpress_blog">WordPress-blog</string>
@@ -931,7 +905,6 @@ Language: nl
 	<string name="share_action_post">Nieuw bericht</string>
 	<string name="category_parent">Bovenliggende categorie (optioneel)</string>
 	<string name="category_desc">Beschrijving categorie (optioneel)</string>
-	<string name="category_slug">Tijdelijke aanduiding categorie (optioneel)</string>
 	<string name="category_name">Naam categorie</string>
 	<string name="add_new_category">Nieuwe categorie toevoegen</string>
 	<string name="view_in_browser">Weergeven in browser</string>
@@ -1055,7 +1028,6 @@ Language: nl
 	<string name="reader_share_subject">gedeeld van %s</string>
 	<string name="reader_untitled_post">(geen titel)</string>
 	<string name="jetpack_not_found">Jetpack plugin niet gevonden</string>
-	<string name="jetpack_message">De Jetpack plugin is nodig voor statistieken. Wil je Jetpack installeren?</string>
 	<string name="select_from_media_library">Selecteer uit de mediabibliotheek</string>
 	<string name="empty_list_default">Deze lijst is leeg</string>
 	<string name="media_add_new_media_gallery">Een nieuwe galerij aanmaken</string>
@@ -1113,7 +1085,6 @@ Language: nl
 	<string name="media_gallery_image_order_random">Willekeurig</string>
 	<string name="media_add_popup_capture_video">Maak een nieuwe video</string>
 	<string name="media_add_popup_capture_photo">Maak een nieuwe foto</string>
-	<string name="custom_date">Aan te passen datum</string>
 	<string name="unattached">Niet gekoppeld</string>
 	<string name="images">Afbeeldingen</string>
 	<string name="all">Alle</string>
