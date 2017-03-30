@@ -147,27 +147,9 @@ Language: es_CL
 	<string name="show">Mostrar</string>
 	<string name="hide">Ocultar</string>
 	<string name="select_all">Seleccionar todo</string>
-	<string name="select_from_new_picker">Selección múltiple con el nuevo selector</string>
 	<string name="stats_generic_error">No se pudieron cargar las estadísticas solicitadas.</string>
-	<string name="no_device_videos">No hay vídeos</string>
-	<string name="no_blog_images">No hay imágenes</string>
-	<string name="no_blog_videos">No hay vídeos</string>
-	<string name="no_device_images">No hay imágenes</string>
-	<string name="error_loading_blog_images">No se pudieron traer las imágenes</string>
-	<string name="error_loading_blog_videos">No se pudieron traer los vídeos</string>
-	<string name="error_loading_images">Error cargando imágenes</string>
-	<string name="error_loading_videos">Error cargando vídeos</string>
-	<string name="loading_blog_images">Trayendo imágenes</string>
-	<string name="loading_blog_videos">Trayendo vídeos</string>
-	<string name="no_media_sources">No se pudieron traer los archivos multimedia</string>
-	<string name="loading_videos">Cargando vídeos</string>
-	<string name="loading_images">Cargando imágenes</string>
-	<string name="no_media">No hay archivos multimedia</string>
 	<string name="device">Dispositivo</string>
 	<string name="language">Idioma</string>
-	<string name="media_picker_title">Selecciona medio</string>
-	<string name="take_photo">Sacar una foto</string>
-	<string name="take_video">Grabar un vídeo</string>
 	<string name="media_details_label_file_name">Nombre del archivo:</string>
 	<string name="media_details_label_file_type">Tipo de archivo:</string>
 	<string name="error_publish_no_network">No se puede publicar mientras no haya conexión. Guardado como borrador.</string>
@@ -178,11 +160,6 @@ Language: es_CL
 	<string name="two_step_footer_label">Introduce el código de tu app de autentificación.</string>
 	<string name="two_step_footer_button">Enviar código vía mensaje de texto</string>
 	<string name="two_step_sms_sent">Revisa tus mensajes de texto para el código de verificación.</string>
-	<string name="add_to_post">Añadir a la Entrada</string>
-	<string name="tab_title_device_images">Imágenes del Dispositivo</string>
-	<string name="tab_title_device_videos">Vídeos del Dispositivo</string>
-	<string name="tab_title_site_images">Imágenes del Sitio</string>
-	<string name="tab_title_site_videos">Vídeos del Sitio</string>
 	<string name="reader_empty_posts_request_failed">No fue posible cargar las entradas</string>
 	<string name="publisher">Autor:</string>
 	<string name="error_notification_open">No se pudo abrir la notificación</string>
@@ -311,7 +288,6 @@ Language: es_CL
 	<string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
 	<string name="comment_reply_to_user">Responder a %s</string>
 	<string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
-	<string name="media_empty_list_custom_date">Sin multimedia durante este intervalo de tiempo.</string>
 	<string name="posting_post">Publicando "%s"</string>
 	<string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes.</string>
 	<string name="reader_toast_err_generic">No es posible realizar esta acción</string>
@@ -363,7 +339,6 @@ Language: es_CL
 	<string name="theme_auth_error_message">Asegúrate que tienes autorización para elegir temas</string>
 	<string name="comments_empty_list">No hay comentarios.</string>
 	<string name="mnu_comment_unspam">No es spam</string>
-	<string name="no_site_error">No se pudo conectar con el sitio WordPress</string>
 	<string name="adding_cat_failed">No se pudo añadir la categoría</string>
 	<string name="adding_cat_success">Categoría agregada correctamente.</string>
 	<string name="cat_name_required">El campo nombre de categoría es necesario</string>
@@ -484,7 +459,6 @@ Language: es_CL
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
 	<string name="category_name">Nombre de la categoría</string>
-	<string name="category_slug">Slug de la categoría (opcional)</string>
 	<string name="category_desc">Descripción de la categoría (opcional)</string>
 	<string name="category_parent">Categoría padre (opcional):</string>
 	<string name="share_action_post">Nueva entrada</string>
@@ -506,7 +480,6 @@ Language: es_CL
 	<string name="wordpress_blog">Blog de WordPress</string>
 	<string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
-	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack para tener estadísticas. Contacta con el administrador del sitio para activarlo.</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
 	<string name="reader_share_link">Compartir enlace</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
@@ -554,7 +527,6 @@ Language: es_CL
 	<string name="media_add_new_media_gallery">Crear galería</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
-	<string name="jetpack_message">Necesitas el pluging Jetpack para tener estadísticas estadísticas. ¿Quieres instalar Jetpack?</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_share_subject">Compartido desde %s</string>
@@ -630,7 +602,6 @@ Language: es_CL
 	<string name="passcode_preference_title">PIN bloqueado</string>
 	<string name="passcode_turn_off">Desbloquear PIN</string>
 	<string name="passcode_turn_on">Bloquear PIN</string>
-	<string name="custom_date">Fecha Personalizada</string>
 	<string name="media_add_popup_capture_photo">Tomar Foto</string>
 	<string name="media_add_popup_capture_video">Capturar Vídeo</string>
 	<string name="stats_view_visitors_and_views">Visitantes y Visualizaciones</string>

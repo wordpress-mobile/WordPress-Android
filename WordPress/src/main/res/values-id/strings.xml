@@ -389,11 +389,9 @@ Language: id
 	<string name="site_settings_discussion_hint">Tampilkan dan ubah pengaturan diskusi situs</string>
 	<string name="site_settings_more_hint">Tampilkan semua pengaturan Diskusi yang ada</string>
 	<string name="site_settings_related_posts_hint">Tampilkan atau sembunyikan pos terkait di pembaca</string>
-	<string name="site_settings_upload_and_link_image_hint">Perbolehkan untuk selalu mengirim gambar dalam ukuran asli</string>
 	<string name="site_settings_image_width_hint">Ubah ukuran gambar dalam pos ke lebar berikut</string>
 	<string name="site_settings_format_hint">Tentukan format pos baru</string>
 	<string name="site_settings_category_hint">Tentukan kategori pos baru</string>
-	<string name="site_settings_location_hint">Tambahkan secara otomatis data lokasi ke pos Anda</string>
 	<string name="site_settings_password_hint">Ubah kata sandi Anda</string>
 	<string name="site_settings_username_hint">Akun pengguna saat ini</string>
 	<string name="site_settings_language_hint">Bahasa yang dipakai dalam blog mayoritas adalah</string>
@@ -422,7 +420,6 @@ Language: id
 	<string name="site_settings_allow_comments_title">Izinkan Komentar</string>
 	<string name="site_settings_default_format_title">Format Baku</string>
 	<string name="site_settings_default_category_title">Kategori Baku</string>
-	<string name="site_settings_location_title">Aktifkan Lokasi</string>
 	<string name="site_settings_address_title">Alamat</string>
 	<string name="site_settings_tagline_title">Slogan</string>
 	<string name="site_settings_title_title">Judul Situs</string>
@@ -619,22 +616,7 @@ Language: id
 	<string name="hide">Sembunyikan</string>
 	<string name="show">Tampilkan</string>
 	<string name="deselect_all">Batalkan semua pilihan</string>
-	<string name="select_from_new_picker">Beberapa-pilihan dengan pemilih baru</string>
-	<string name="no_media_sources">Gagal memuat media</string>
-	<string name="loading_blog_videos">Memuat video</string>
-	<string name="loading_blog_images">Memuat gambar</string>
-	<string name="error_loading_videos">Galat memuat video</string>
-	<string name="error_loading_images">Galat memuat gambar</string>
-	<string name="error_loading_blog_videos">Gagal memuat video</string>
-	<string name="error_loading_blog_images">Gagal memuat gambar</string>
-	<string name="no_device_images">Tak ada gambar</string>
-	<string name="no_blog_videos">Tak ada video</string>
-	<string name="no_blog_images">Tak ada gambar</string>
-	<string name="no_device_videos">Tak ada video</string>
 	<string name="stats_generic_error">Statistik yang diminta gagal dimuat</string>
-	<string name="no_media">Tak ada media</string>
-	<string name="loading_images">Memuat gambar</string>
-	<string name="loading_videos">Memuat video</string>
 	<string name="auth_required">Log in lagi untuk melanjutkan.</string>
 	<string name="sign_in_jetpack">Log in ke akun WordPress.com Anda untuk menyambungkan dengan Jetpack.</string>
 	<string name="two_step_sms_sent">Periksa pesan teks Anda untuk melihat kode verifikasi.</string>
@@ -647,14 +629,6 @@ Language: id
 	<string name="error_publish_no_network">Tak bisa menerbitkan tanpa koneksi internet. Tersimpan sebagai draf.</string>
 	<string name="media_details_label_file_type">Tipe file</string>
 	<string name="media_details_label_file_name">Nama file</string>
-	<string name="tab_title_site_videos">Video Situs</string>
-	<string name="tab_title_site_images">Gambar Situs</string>
-	<string name="tab_title_device_videos">Video Perangkat</string>
-	<string name="tab_title_device_images">Gambar Perangkat</string>
-	<string name="take_video">Ambil video</string>
-	<string name="take_photo">Ambil foto</string>
-	<string name="media_picker_title">Pilih media</string>
-	<string name="add_to_post">Tambahkan ke Pos</string>
 	<string name="language">Bahasa</string>
 	<string name="device">Perangkat</string>
 	<string name="media_fetching">Memuat media...</string>
@@ -754,7 +728,6 @@ Language: id
 	<string name="delete_sure_post">Hapus pos ini</string>
 	<string name="signing_out">Log out…</string>
 	<string name="posting_post">Mengeposkan "%s"</string>
-	<string name="media_empty_list_custom_date">Tidak ada media dalam interval waktu ini</string>
 	<string name="pages_empty_list">Belum ada halaman. Mengapa tidak membuatnya?</string>
 	<string name="comment_reply_to_user">Balas ke %s</string>
 	<string name="posts_empty_list">Belum ada pos. Mengapa tidak membuatnya?</string>
@@ -883,7 +856,6 @@ Language: id
 	<string name="cat_name_required">Nama kategori wajib diisi</string>
 	<string name="adding_cat_success">Berhasil menambahkan kategori</string>
 	<string name="adding_cat_failed">Gagal menambahkan kategori</string>
-	<string name="no_site_error">Gagal terhubung dengan situs WordPress</string>
 	<string name="mnu_comment_unspam">Bukan spam</string>
 	<string name="comments_empty_list">Tidak ada tanggapan</string>
 	<string name="theme_auth_error_message">Pastikan kamu punya hak untuk mengatur tema</string>
@@ -907,7 +879,6 @@ Language: id
 	<string name="reader_toast_err_add_tag">Tidak bisa menambahkan tag ini</string>
 	<string name="reader_share_link">Bagikan tautan</string>
 	<string name="reader_title_applog">Log aplikasi</string>
-	<string name="jetpack_message_not_admin">Plugin Jetpack dibutuhkan untuk statistik. Hubungi administrator situs.</string>
 	<string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
 	<string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>
 	<string name="wordpress_blog">Blog WordPress</string>
@@ -931,7 +902,6 @@ Language: id
 	<string name="share_action_post">Pos baru</string>
 	<string name="category_parent">Induk kategori (opsional)</string>
 	<string name="category_desc">Deskripsi kategori (opsional)</string>
-	<string name="category_slug">Slug kategori (opsional)</string>
 	<string name="category_name">Nama kategori</string>
 	<string name="add_new_category">Tambahkan kategori baru</string>
 	<string name="view_in_browser">Tampilkan di peramban</string>
@@ -1055,7 +1025,6 @@ Language: id
 	<string name="reader_share_subject">di sebarkan dari %s</string>
 	<string name="reader_untitled_post">(Tanpa Judul)</string>
 	<string name="jetpack_not_found">Plugin Jetpack tidak ditemukan</string>
-	<string name="jetpack_message">Plugin Jetpack diperlukan untuk Statistik. Apakah anda akan menginstall Jetpack ?</string>
 	<string name="select_from_media_library">Pilih dari pustaka media</string>
 	<string name="empty_list_default">List ini masih kosong</string>
 	<string name="media_add_new_media_gallery">Buat album</string>
@@ -1113,7 +1082,6 @@ Language: id
 	<string name="media_gallery_image_order_random">Acak</string>
 	<string name="media_add_popup_capture_video">Rekam video</string>
 	<string name="media_add_popup_capture_photo">Ambil foto</string>
-	<string name="custom_date">Tanggal Tersuai</string>
 	<string name="unattached">Tidak terlampir</string>
 	<string name="images">Gambar</string>
 	<string name="all">Semua</string>

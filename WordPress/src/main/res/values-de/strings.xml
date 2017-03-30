@@ -7,8 +7,8 @@ Language: de
 -->
 <resources>
 	<string name="reader_liked_default_tag">Beiträge, die mir gefallen</string>
-	<string name="reader_followed_default_tag">Websites, denen ich folge</string>
 	<string name="reader_discover_default_tag">Entdecken</string>
+	<string name="reader_followed_default_tag">Websites, denen ich folge</string>
 	<string name="reader_empty_followed_blogs_search_title">Keine entsprechenden Websites gefunden</string>
 	<string name="reader_hint_search_followed_sites">Abonnierte Websites durchsuchen</string>
 	<string name="visual_editor_disabled">Visueller Editor deaktiviert</string>
@@ -392,11 +392,9 @@ Language: de
 	<string name="site_settings_discussion_hint">Diskussionseinstellungen für deine Websites anzeigen und ändern</string>
 	<string name="site_settings_more_hint">Alle verfügbaren Diskussionseinstellungen anzeigen</string>
 	<string name="site_settings_related_posts_hint">Ähnliche Beiträge im Reader anzeigen oder ausblenden</string>
-	<string name="site_settings_upload_and_link_image_hint">Aktivieren, damit Bilder immer in voller Größe hochgeladen werden</string>
 	<string name="site_settings_image_width_hint">Größe von Bildern in Beiträgen auf diese Breite ändern</string>
 	<string name="site_settings_format_hint">Legt ein neues Beitragsformat fest</string>
 	<string name="site_settings_category_hint">Legt eine neue Beitragskategorie fest</string>
-	<string name="site_settings_location_hint">Zu deinen Beiträgen automatisch Ortsangaben hinzufügen</string>
 	<string name="site_settings_password_hint">Ändere dein Passwort</string>
 	<string name="site_settings_username_hint">Aktuelles Benutzerkonto</string>
 	<string name="site_settings_language_hint">Sprache, in der dieses Blog vornehmlich geschrieben wird.</string>
@@ -425,7 +423,6 @@ Language: de
 	<string name="site_settings_allow_comments_title">Kommentare zulassen</string>
 	<string name="site_settings_default_format_title">Standardformat</string>
 	<string name="site_settings_default_category_title">Standardkategorie</string>
-	<string name="site_settings_location_title">Ort aktivieren</string>
 	<string name="site_settings_address_title">Adresse</string>
 	<string name="site_settings_tagline_title">Untertitel</string>
 	<string name="site_settings_title_title">Website-Titel</string>
@@ -622,22 +619,7 @@ Language: de
 	<string name="hide">Ausblenden</string>
 	<string name="show">Anzeigen</string>
 	<string name="deselect_all">Alle abwählen</string>
-	<string name="select_from_new_picker">Mehrfach-Auswahl mit dem neuen Auswahlwerkzeug</string>
-	<string name="no_media_sources">Konnte Medien nicht abrufen</string>
-	<string name="loading_blog_videos">Videos werden abgerufen</string>
-	<string name="loading_blog_images">Bilder werden abgerufen</string>
-	<string name="error_loading_videos">Fehler beim Laden der Videos</string>
-	<string name="error_loading_images">Fehler beim Laden der Bilder</string>
-	<string name="error_loading_blog_videos">Konnte Videos nicht abrufen</string>
-	<string name="error_loading_blog_images">Konnte Bilder nicht abrufen</string>
-	<string name="no_device_images">Keine Bilder</string>
-	<string name="no_blog_videos">Keine Videos</string>
-	<string name="no_blog_images">Keine Bilder</string>
-	<string name="no_device_videos">Keine Videos</string>
 	<string name="stats_generic_error">Erforderliche Statistiken konnten nicht geladen werden</string>
-	<string name="no_media">Keine Medien</string>
-	<string name="loading_images">Lade Bilder</string>
-	<string name="loading_videos">Lade Videos</string>
 	<string name="auth_required">Melde dich erneut an, um fortzufahren.</string>
 	<string name="sign_in_jetpack">Melde dich bei deinem WordPress.com-Konto an, um dich mit Jetpack zu verbinden.</string>
 	<string name="two_step_sms_sent">Der Überprüfungscode kommt per Textnachricht.</string>
@@ -650,14 +632,6 @@ Language: de
 	<string name="error_publish_no_network">Kann ohne Verbindung nicht veröffentlichen. Als Entwurf gespeichert.</string>
 	<string name="media_details_label_file_type">Dateityp</string>
 	<string name="media_details_label_file_name">Dateiname</string>
-	<string name="tab_title_site_videos">Website-Videos</string>
-	<string name="tab_title_site_images">Website-Bilder</string>
-	<string name="tab_title_device_videos">Videos vom Gerät</string>
-	<string name="tab_title_device_images">Bilder vom Gerät</string>
-	<string name="take_video">Mache ein Video</string>
-	<string name="take_photo">Schieße ein Foto</string>
-	<string name="media_picker_title">Medien auswählen</string>
-	<string name="add_to_post">Zum Beitrag hinzufügen</string>
 	<string name="language">Sprache</string>
 	<string name="device">Gerät</string>
 	<string name="media_fetching">Medien werden abgerufen…</string>
@@ -757,7 +731,6 @@ Language: de
 	<string name="delete_sure_post">Lösche diesen Beitrag</string>
 	<string name="signing_out">Abmelden ...</string>
 	<string name="posting_post">Veröffentliche "%s"</string>
-	<string name="media_empty_list_custom_date">Keine Medien in diesem Zeitabschnitt</string>
 	<string name="pages_empty_list">Keine Seiten bisher. Warum nicht jetzt Eine erstellen?</string>
 	<string name="comment_reply_to_user">Antwort zu %s</string>
 	<string name="posts_empty_list">Keine Beiträge bisher. Warum nicht jetzt einen erstellen?</string>
@@ -886,7 +859,6 @@ Language: de
 	<string name="cat_name_required">Das Feld Kategorie-Name ist erforderlich</string>
 	<string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
 	<string name="adding_cat_failed">Hinzufügen der Kategorie fehlgeschlagen</string>
-	<string name="no_site_error">Konnte nicht zur WordPress-Website verbinden</string>
 	<string name="mnu_comment_unspam">Kein Spam</string>
 	<string name="comments_empty_list">Keine Kommentare</string>
 	<string name="theme_auth_error_message">Stelle sicher, dass du die Berechtigung hast Themes festzulegen</string>
@@ -910,7 +882,6 @@ Language: de
 	<string name="reader_toast_err_add_tag">Hinzufügen des Tags nicht möglich</string>
 	<string name="reader_share_link">Link teilen</string>
 	<string name="reader_title_applog">Anwendungslog</string>
-	<string name="jetpack_message_not_admin">Das Jetpack Plugin wird für die Statistiken benötigt. Kontaktiere den Website-Administrator.</string>
 	<string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
 	<string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktivierte ihn erneut in den Einstellungen und versuche es nochmal.</string>
 	<string name="wordpress_blog">WordPress-Blog</string>
@@ -934,7 +905,6 @@ Language: de
 	<string name="share_action_post">Neuer Beitrag</string>
 	<string name="category_parent">Elternkategorie (optional):</string>
 	<string name="category_desc">Kategorie-Beschreibung (optional)</string>
-	<string name="category_slug">Kategorie-Titelform (optional)</string>
 	<string name="category_name">Kategorie-Name</string>
 	<string name="add_new_category">Neue Kategorie hinzufügen</string>
 	<string name="view_in_browser">Im Browser anschauen</string>
@@ -1058,7 +1028,6 @@ Language: de
 	<string name="reader_share_subject">Geteilt von %s</string>
 	<string name="reader_untitled_post">(Ohne Titel)</string>
 	<string name="jetpack_not_found">Jetpack Plugin nicht gefunden</string>
-	<string name="jetpack_message">Das Jetpack-Plugin ist erforderlich für Statistiken. Möchtest Du Jetpack installieren?</string>
 	<string name="select_from_media_library">Aus der Mediathek auswählen</string>
 	<string name="empty_list_default">Diese Liste ist leer</string>
 	<string name="media_add_new_media_gallery">Erstelle Galerie</string>
@@ -1116,7 +1085,6 @@ Language: de
 	<string name="media_gallery_image_order_random">Zufall</string>
 	<string name="media_add_popup_capture_video">Video aufnehmen</string>
 	<string name="media_add_popup_capture_photo">Foto aufnehmen</string>
-	<string name="custom_date">Benutzerdefiniertes Datum</string>
 	<string name="unattached">Unverknüpft</string>
 	<string name="images">Bilder</string>
 	<string name="all">Alle</string>

@@ -20,6 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_large"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius"
                 card_view:cardElevation="@dimen/card_elevation">
@@ -308,72 +309,65 @@
             </RelativeLayout>
 
             <!--EXTERNAL-->
-            <LinearLayout
-                android:id="@+id/external_section"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
 
-                <LinearLayout style="@style/MySiteListHeaderLayout">
-                    <org.wordpress.android.widgets.WPTextView
-                        style="@style/MySiteListHeaderTextView"
-                        android:text="@string/my_site_header_external" />
+            <LinearLayout style="@style/MySiteListHeaderLayout">
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/MySiteListHeaderTextView"
+                    android:text="@string/my_site_header_external" />
 
-                    <View style="@style/MySiteListSectionDividerView" />
+                <View style="@style/MySiteListSectionDividerView" />
 
-                </LinearLayout>
-
-                <!--View Site-->
-                <RelativeLayout
-                    android:id="@+id/row_view_site"
-                    style="@style/MySiteListRowLayout"
-                    android:layout_marginTop="@dimen/my_site_margin_general">
-
-                    <ImageView
-                        android:id="@+id/my_site_view_site_icon"
-                        style="@style/MySiteListRowIcon"
-                        app:srcCompat="@drawable/ic_globe_grey_24dp" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/my_site_view_site_text_view"
-                        style="@style/MySiteListRowTextView"
-                        android:layout_toRightOf="@id/my_site_view_site_icon"
-                        android:text="@string/my_site_btn_view_site" />
-
-                    <ImageView
-                        android:id="@+id/my_site_view_site_icon_external"
-                        style="@style/MySiteListRowSecondaryIcon"
-                        android:layout_toRightOf="@+id/my_site_view_site_text_view"
-                        android:tint="@color/grey_darken_10"
-                        app:srcCompat="@drawable/ic_external_black_24dp" />
-
-                </RelativeLayout>
-
-                <!--View Admin-->
-                <RelativeLayout
-                    android:id="@+id/row_admin"
-                    style="@style/MySiteListRowLayout">
-
-                    <ImageView
-                        android:id="@+id/my_site_view_admin_icon"
-                        style="@style/MySiteListRowIcon"
-                        app:srcCompat="@drawable/ic_my_sites_grey_24dp" />
-
-                    <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/my_site_view_admin_text_view"
-                        style="@style/MySiteListRowTextView"
-                        android:layout_toRightOf="@id/my_site_view_admin_icon"
-                        android:text="@string/my_site_btn_view_admin" />
-
-                    <ImageView
-                        android:id="@+id/my_site_admin_icon_external"
-                        style="@style/MySiteListRowSecondaryIcon"
-                        android:layout_toRightOf="@+id/my_site_view_admin_text_view"
-                        android:tint="@color/grey_darken_10"
-                        app:srcCompat="@drawable/ic_external_black_24dp" />
-
-                </RelativeLayout>
             </LinearLayout>
+
+            <!--View Site-->
+            <RelativeLayout
+                android:id="@+id/row_view_site"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_view_site_icon"
+                    style="@style/MySiteListRowIcon"
+                    app:srcCompat="@drawable/ic_globe_grey_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_view_site_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_view_site_icon"
+                    android:text="@string/my_site_btn_view_site" />
+
+                <ImageView
+                    android:id="@+id/my_site_view_site_icon_external"
+                    style="@style/MySiteListRowSecondaryIcon"
+                    android:layout_toRightOf="@+id/my_site_view_site_text_view"
+                    android:tint="@color/grey_darken_10"
+                    app:srcCompat="@drawable/ic_external_black_24dp" />
+
+            </RelativeLayout>
+
+            <!--View Admin-->
+            <RelativeLayout
+                android:id="@+id/row_admin"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_view_admin_icon"
+                    style="@style/MySiteListRowIcon"
+                    app:srcCompat="@drawable/ic_my_sites_grey_24dp" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_view_admin_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_view_admin_icon"
+                    android:text="@string/my_site_btn_view_admin" />
+
+                <ImageView
+                    android:id="@+id/my_site_admin_icon_external"
+                    style="@style/MySiteListRowSecondaryIcon"
+                    android:layout_toRightOf="@+id/my_site_view_admin_text_view"
+                    android:tint="@color/grey_darken_10"
+                    app:srcCompat="@drawable/ic_external_black_24dp" />
+
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"

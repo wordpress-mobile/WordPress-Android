@@ -7,8 +7,8 @@ Language: pl
 -->
 <resources>
 	<string name="reader_liked_default_tag">Polubione wpisy</string>
-	<string name="reader_discover_default_tag">Odkrywaj</string>
 	<string name="reader_followed_default_tag">Obserwowane witryny</string>
+	<string name="reader_discover_default_tag">Odkrywaj</string>
 	<string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria wyszukiwania</string>
 	<string name="reader_hint_search_followed_sites">Przeszukaj obserwowane witryny</string>
 	<string name="visual_editor_disabled">Edytor wizualny został wyłączony </string>
@@ -392,11 +392,9 @@ Language: pl
 	<string name="site_settings_discussion_hint">Pokaż i zmień ustawienia dyskusji twoich witryn</string>
 	<string name="site_settings_more_hint">Pokaż wszystkie dostępne ustawienia Dyskusji</string>
 	<string name="site_settings_related_posts_hint">Pokaż lub ukryj powiązane wpisy w czytniku</string>
-	<string name="site_settings_upload_and_link_image_hint">Uaktywnij aby zawsze przesyłać obrazek oryginalnym rozmiarze</string>
 	<string name="site_settings_image_width_hint">Zmienia rozmiar obrazka do zadanej szerokości</string>
 	<string name="site_settings_format_hint">Ustawia format dla nowych wpisów</string>
 	<string name="site_settings_category_hint">Ustawia kategorię dla nowego wpisu</string>
-	<string name="site_settings_location_hint">Automatycznie dodawaj dane lokalizacyjne do twoich wpisów</string>
 	<string name="site_settings_password_hint">Zmień hasło</string>
 	<string name="site_settings_username_hint">Konto aktualnego użytkownika</string>
 	<string name="site_settings_language_hint">Główny język, w którym ten blog jest prowadzony</string>
@@ -425,7 +423,6 @@ Language: pl
 	<string name="site_settings_allow_comments_title">Włącz komentowanie</string>
 	<string name="site_settings_default_format_title">Domyślny format wpisów</string>
 	<string name="site_settings_default_category_title">Domyślna kategoria wpisów</string>
-	<string name="site_settings_location_title">Włącz lokalizację</string>
 	<string name="site_settings_address_title">Adres</string>
 	<string name="site_settings_tagline_title">Opis</string>
 	<string name="site_settings_title_title">Tytuł witryny</string>
@@ -622,22 +619,7 @@ Language: pl
 	<string name="hide">Ukryj</string>
 	<string name="show">Pokaż</string>
 	<string name="deselect_all">Odznacz wszystko</string>
-	<string name="select_from_new_picker">Wybierz media z kilku źródeł</string>
-	<string name="no_media_sources">Nie udało się załadować mediów</string>
-	<string name="loading_blog_videos">Ładowanie filmów</string>
-	<string name="loading_blog_images">Ładowanie zdjęć</string>
-	<string name="error_loading_videos">Błąd podczas ładowania filmów</string>
-	<string name="error_loading_images">Błąd podczas ładowania zdjęć</string>
-	<string name="error_loading_blog_videos">Nie udało się pobrać filmów</string>
-	<string name="error_loading_blog_images">Nie udało się pobrać zdjęć</string>
-	<string name="no_device_images">Brak zdjęć</string>
-	<string name="no_blog_videos">Brak filmów</string>
-	<string name="no_blog_images">Brak zdjęć</string>
-	<string name="no_device_videos">Brak filmów</string>
 	<string name="stats_generic_error">Nie udało się załadować wymaganych statystyk</string>
-	<string name="no_media">Brak mediów</string>
-	<string name="loading_images">Ładowanie zdjęć</string>
-	<string name="loading_videos">Ładowanie filmów</string>
 	<string name="auth_required">Zaloguj się ponownie, by kontynuować.</string>
 	<string name="sign_in_jetpack">Zaloguj się do swojego konta WordPress.com aby połączyć Jetpack.</string>
 	<string name="two_step_sms_sent">Sprawdź swoje SMSy w poszukiwaniu kodu weryfikacyjnego.</string>
@@ -650,14 +632,6 @@ Language: pl
 	<string name="error_publish_no_network">Publikacja nie jest możliwa bez połączenia z Internetem. Treść zapisano jako szkic.</string>
 	<string name="media_details_label_file_type">Typ pliku</string>
 	<string name="media_details_label_file_name">Nazwa pliku</string>
-	<string name="tab_title_site_videos">Filmy z witryny</string>
-	<string name="tab_title_site_images">Zdjęcia z witryny</string>
-	<string name="tab_title_device_videos">Filmy z urządzenia</string>
-	<string name="tab_title_device_images">Zdjęcia z urządzenia</string>
-	<string name="take_video">Nagraj film</string>
-	<string name="take_photo">Zrób zdjęcie</string>
-	<string name="media_picker_title">Wybierz media</string>
-	<string name="add_to_post">Dodaj do wpisu</string>
 	<string name="language">Język</string>
 	<string name="device">Urządzenie</string>
 	<string name="media_fetching">Ładowanie mediów...</string>
@@ -757,7 +731,6 @@ Language: pl
 	<string name="delete_sure_post">Usuń ten wpis</string>
 	<string name="signing_out">Wylogowywanie...</string>
 	<string name="posting_post">Publikowanie "%s"</string>
-	<string name="media_empty_list_custom_date">Brak mediów w tym przedziale czasowym</string>
 	<string name="pages_empty_list">Brak stron. Może jakąś opublikujesz?</string>
 	<string name="comment_reply_to_user">Odpowiedz na komentarz %s</string>
 	<string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
@@ -886,7 +859,6 @@ Language: pl
 	<string name="cat_name_required">Nazwa kategorii jest wymagana</string>
 	<string name="adding_cat_success">Pomyślnie dodano kategorię</string>
 	<string name="adding_cat_failed">Nie udało się dodać kategorii</string>
-	<string name="no_site_error">Nie można nawiązać połączenia ze stroną WordPressa</string>
 	<string name="mnu_comment_unspam">To nie jest spam</string>
 	<string name="comments_empty_list">Brak komentarzy</string>
 	<string name="theme_auth_error_message">Upewnij się, że masz uprawnienia do zmiany motywu</string>
@@ -910,7 +882,6 @@ Language: pl
 	<string name="reader_toast_err_add_tag">Nie udało się dodać tagu</string>
 	<string name="reader_share_link">Udostępnij link</string>
 	<string name="reader_title_applog">Dziennik aplikacji</string>
-	<string name="jetpack_message_not_admin">Wtyczka Jetpack jest wymagana dla statystyk. Skontaktuj się z administratorem strony.</string>
 	<string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
 	<string name="error_blog_hidden">Ten blog jest ukryty i nie mógł zostać wczytany. Włącz go ponownie w ustawieniach i spróbuj ponownie.</string>
 	<string name="wordpress_blog">WordPress blog</string>
@@ -934,7 +905,6 @@ Language: pl
 	<string name="share_action_post">Nowy wpis</string>
 	<string name="category_parent">Kategoria nadrzędna (opcjonalnie):</string>
 	<string name="category_desc">Opis kategorii (opcjonalnie)</string>
-	<string name="category_slug">Uproszczona nazwa kategorii (opcjonalnie)</string>
 	<string name="category_name">Nazwa kategorii</string>
 	<string name="add_new_category">Dodaj nową kategorię</string>
 	<string name="view_in_browser">Zobacz w przeglądarce</string>
@@ -1058,7 +1028,6 @@ Language: pl
 	<string name="reader_share_subject">Udostępnione przez %s</string>
 	<string name="reader_untitled_post">(Brak tytułu)</string>
 	<string name="jetpack_not_found">Wtyczka Jetpack nie została znaleziona</string>
-	<string name="jetpack_message">Wtyczka Jetpack jest wymagana, aby uzyskać dostęp do statystyk. Zainstalować wtyczkę?</string>
 	<string name="select_from_media_library">Wybierz z biblioteki mediów</string>
 	<string name="empty_list_default">Lista jest pusta</string>
 	<string name="media_add_new_media_gallery">Tworzenie galerii</string>
@@ -1116,7 +1085,6 @@ Language: pl
 	<string name="media_gallery_image_order_random">Losowa</string>
 	<string name="media_add_popup_capture_video">Nagraj film</string>
 	<string name="media_add_popup_capture_photo">Wykonaj zdjęcie</string>
-	<string name="custom_date">Własna data</string>
 	<string name="unattached">Niezałączone</string>
 	<string name="images">Obrazki</string>
 	<string name="all">Wszystkie</string>

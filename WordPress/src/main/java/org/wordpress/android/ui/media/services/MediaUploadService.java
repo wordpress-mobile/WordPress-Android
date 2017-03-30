@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -22,13 +23,16 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -109,16 +113,19 @@ public class MediaUploadService extends Service {
         if (event.canceled) {
             // Upload canceled
             AppLog.i(AppLog.T.MEDIA, "Upload successfully canceled.");
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED, getMediaFromQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else if (event.completed) {
             // Upload completed
             AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
+
             // here we need to edit the corresponding post
             updatePostWithMediaUrl(event.media);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromQueueById(event.media.getId()), null);
+
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
-            stopServiceIfUploadsComplete();
         } else {
             // Upload Progress
             // TODO check if we need to re-broadcast event.media, event.progress or we're just fine with
@@ -135,6 +142,13 @@ public class MediaUploadService extends Service {
             media.setUploadState(UploadState.FAILED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         }
+
+        // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
+        // event.media, event.error
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("error_type", event.error.type.name());
+        trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, media, properties);
+
         completeUploadWithId(event.media.getId());
         uploadNextInQueue();
     }
@@ -189,8 +203,11 @@ public class MediaUploadService extends Service {
     }
 
     private void completeUploadWithId(int id) {
-        getUploadQueue().remove(getMediaFromQueueById(id));
-        stopServiceIfUploadsComplete();
+        MediaModel media = getMediaFromQueueById(id);
+        if (media != null) {
+            getUploadQueue().remove(media);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
+        }
     }
 
     private MediaModel getMediaFromQueueById(int id) {
@@ -314,5 +331,22 @@ public class MediaUploadService extends Service {
         } else {
             handleOnMediaUploadedSuccess(event);
         }
+    }
+
+    /**
+     * Analytics about media being uploaded
+     *
+     * @param media The media being uploaded
+     */
+    private void trackUploadMediaEvents(AnalyticsTracker.Stat stat, MediaModel media, Map<String, Object> properties) {
+        if (media == null) {
+            AppLog.e(AppLog.T.MEDIA, "Cannot track media upload service events if the original media is null!!");
+            return;
+        }
+        Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
+        if (properties != null) {
+            mediaProperties.putAll(properties);
+        }
+        AnalyticsTracker.track(stat, mediaProperties);
     }
 }

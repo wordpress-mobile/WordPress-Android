@@ -35,7 +35,7 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.ccil.cowan.tagsoup.AttributesImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -579,7 +579,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         @Override
         public boolean matches(@NotNull Attributes attrs) {
-            return attrs.getIndex(mAttributeName) > -1 && attrs.getValue("data-wpid").equals(mId);
+            return attrs.getIndex(mAttributeName) > -1 && attrs.getValue(mAttributeName).equals(mId);
         }
     }
 

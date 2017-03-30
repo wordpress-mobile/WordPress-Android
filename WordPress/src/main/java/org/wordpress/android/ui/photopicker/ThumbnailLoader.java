@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photochooser;
+package org.wordpress.android.ui.photopicker;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -69,7 +69,7 @@ class ThumbnailLoader {
             mTag = Long.toString(mImageId);
             imageView.setTag(mTag);
             if (mIsFadeEnabled) {
-                imageView.setImageResource(R.drawable.photo_chooser_item_background);
+                imageView.setImageResource(R.drawable.photo_picker_item_background);
             }
         }
 

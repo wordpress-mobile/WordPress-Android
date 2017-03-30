@@ -49,15 +49,15 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         Map<String, Object> predefinedEventProperties = new HashMap<String, Object>();
         switch (stat) {
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
-                predefinedEventProperties.put("via", "local_library");
+            case EDITOR_ADDED_PHOTO_NEW:
+            case EDITOR_ADDED_VIDEO_NEW:
+                predefinedEventProperties.put("via", "device_camera");
+                break;
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
+                predefinedEventProperties.put("via", "device_library");
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
-                predefinedEventProperties.put("via", "media_library");
-                break;
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
-                predefinedEventProperties.put("via", "local_library");
-                break;
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 predefinedEventProperties.put("via", "media_library");
                 break;
@@ -347,18 +347,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_retried";
             case EDITOR_CLOSED:
                 return "editor_closed";
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_PHOTO_NEW:
+                return "editor_photo_added";
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
                 return "editor_photo_added";
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_photo_added";
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_VIDEO_NEW:
+                return "editor_video_added";
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
                 return "editor_video_added";
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_video_added";
-            case EDITOR_RESIZED_PHOTO:
-                return "editor_resized_photo";
-            case EDITOR_RESIZED_PHOTO_ERROR:
-                return "editor_resized_photo_error";
+            case MEDIA_PHOTO_OPTIMIZED:
+                return "media_photo_optimized";
+            case MEDIA_PHOTO_OPTIMIZE_ERROR:
+                return "media_photo_optimize_error";
             case EDITOR_PUBLISHED_POST:
                 return "editor_post_published";
             case EDITOR_UPDATED_POST:
@@ -656,6 +660,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deep_linked_fallback";
             case DEEP_LINK_NOT_DEFAULT_HANDLER:
                 return "deep_link_not_default_handler";
+            case MEDIA_LIBRARY_ADDED_PHOTO:
+                return "media_library_photo_added";
+            case MEDIA_LIBRARY_ADDED_VIDEO:
+                return "media_library_video_added";
+            case MEDIA_UPLOAD_STARTED:
+                return "media_service_upload_started";
+            case MEDIA_UPLOAD_ERROR:
+                return "media_service_upload_response_error";
+            case MEDIA_UPLOAD_SUCCESS:
+                return "media_service_upload_response_ok";
+            case MEDIA_UPLOAD_CANCELED:
+                return "media_service_upload_canceled";
             default:
                 return null;
         }
