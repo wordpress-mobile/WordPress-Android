@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -136,7 +137,8 @@ public class PostsListFragment extends Fragment
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found,
+                    ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
     }
@@ -176,6 +178,52 @@ public class PostsListFragment extends Fragment
         });
 
         return view;
+    }
+
+    public void handleEditPostResult(int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && data != null && isAdded()) {
+
+            boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+            final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
+            boolean isPublishable = post != null && PostUtils.isPublishable(post);
+            boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
+
+            if (hasChanges) {
+                if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
+                    ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
+                            ToastUtils.Duration.SHORT);
+                } else {
+                    if (isPublishable) {
+                        if (savedLocally) {
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
+                                    R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.button_publish, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            publishPost(post);
+                                        }
+                                    }).show();
+                        } else if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
+                                    R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.button_publish, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            publishPost(post);
+                                        }
+                                    }).show();
+                        }
+                    } else {
+                        if (savedLocally) {
+                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_locally);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_online);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private void initSwipeToRefreshHelper() {
@@ -451,7 +499,8 @@ public class PostsListFragment extends Fragment
 
     private void publishPost(final PostModel post) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            ToastUtils.showToast(getActivity(), R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
+                    ToastUtils.Duration.SHORT);
             return;
         }
 

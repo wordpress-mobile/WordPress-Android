@@ -29,6 +29,13 @@ public class CrashlyticsUtils {
         logException(tr, null, null);
     }
 
+    public static void log(String message) {
+        if (!Fabric.isInitialized() || message == null) {
+            return;
+        }
+        Crashlytics.log(message);
+    }
+
     // Utility functions to force us to use and reuse a limited set of keys
 
     public static void setInt(String key, int value) {

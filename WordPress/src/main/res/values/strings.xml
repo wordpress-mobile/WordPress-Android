@@ -44,6 +44,8 @@
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="update_draft">Update draft</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="search">Search</string>
@@ -140,13 +142,19 @@
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
-    <string name="upload_queued">Queued</string>
     <string name="media_file_type">File type: %s</string>
     <string name="media_file_name">File name: %s</string>
     <string name="media_uploaded_on">Uploaded on: %s</string>
     <string name="media_dimensions">Dimensions: %s</string>
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
+
+    <string name="media_upload_state_queued">Queued</string>
+    <string name="media_upload_state_uploading">Uploading</string>
+    <string name="media_upload_state_deleting">Deleting</string>
+    <string name="media_upload_state_deleted">Deleted</string>
+    <string name="media_upload_state_failed">Failed</string>
+    <string name="media_upload_state_uploaded">Uploaded</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -939,6 +947,10 @@
     <string name="editor_post_title_placeholder">Post Title</string>
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
+    <string name="editor_post_saved_locally">The post was saved on your device</string>
+    <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
+    <string name="editor_post_saved_online">The post was saved online</string>
+    <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
@@ -1061,7 +1073,7 @@
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
     <string name="error_publish_empty_post">Can\'t publish an empty post</string>
-    <string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
+    <string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
     <string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
     <string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
     <string name="error_media_not_found">Media could not be found</string>
@@ -1163,9 +1175,6 @@
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
-
-    <!-- subject line when sharing a reader url -->
-    <string name="reader_share_subject">Shared from %s</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>

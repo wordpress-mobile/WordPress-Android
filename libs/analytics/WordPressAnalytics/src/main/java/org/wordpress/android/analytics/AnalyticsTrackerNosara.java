@@ -49,15 +49,15 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         Map<String, Object> predefinedEventProperties = new HashMap<String, Object>();
         switch (stat) {
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
-                predefinedEventProperties.put("via", "local_library");
+            case EDITOR_ADDED_PHOTO_NEW:
+            case EDITOR_ADDED_VIDEO_NEW:
+                predefinedEventProperties.put("via", "device_camera");
+                break;
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
+                predefinedEventProperties.put("via", "device_library");
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
-                predefinedEventProperties.put("via", "media_library");
-                break;
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
-                predefinedEventProperties.put("via", "local_library");
-                break;
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 predefinedEventProperties.put("via", "media_library");
                 break;
@@ -347,11 +347,15 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_upload_media_retried";
             case EDITOR_CLOSED:
                 return "editor_closed";
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_PHOTO_NEW:
+                return "editor_photo_added";
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
                 return "editor_photo_added";
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_photo_added";
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_VIDEO_NEW:
+                return "editor_video_added";
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
                 return "editor_video_added";
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 return "editor_video_added";

@@ -190,8 +190,7 @@ public class MediaItemFragment extends Fragment {
         }
 
         // check whether or not to show the edit button
-        String state = mediaModel.getUploadState();
-        mIsLocal = MediaUtils.isLocalFile(state);
+        mIsLocal = MediaUtils.isLocalFile(mediaModel.getUploadState());
         if (mIsLocal && getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }

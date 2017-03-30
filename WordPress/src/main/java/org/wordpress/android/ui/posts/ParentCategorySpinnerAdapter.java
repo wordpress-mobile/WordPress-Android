@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.models.CategoryNode;
 
