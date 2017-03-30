@@ -557,8 +557,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     void showPhotoPicker() {
         // request permissions if we don't already have them
-        if (!PermissionUtils.checkCameraAndStoragePermissions(this)) {
-            PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE);
+        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {;
             return;
         }
 
