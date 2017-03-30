@@ -148,6 +148,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
+    public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -557,7 +558,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      */
     void showPhotoPicker() {
         // request permissions if we don't already have them
-        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {;
+        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
             return;
         }
 
@@ -796,7 +797,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mViewPager.setCurrentItem(PAGE_CONTENT);
                 invalidateOptionsMenu();
             } else {
-                saveAndFinish();
+                savePostAndFinish();
             }
             return true;
         }
@@ -808,7 +809,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (itemId == R.id.menu_save_post) {
-            return publishPost();
+            publishPost();
         } else if (itemId == R.id.menu_preview_post) {
             mViewPager.setCurrentItem(PAGE_PREVIEW);
         } else if (itemId == R.id.menu_post_settings) {
@@ -822,12 +823,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return false;
     }
 
-    private boolean publishPost() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            ToastUtils.showToast(this, R.string.error_publish_no_network, Duration.SHORT);
-            return false;
-        }
+    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish) {
+        new SavePostOnlineAndFinishTask(isFirstTimePublish).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
+    private boolean hasFailedMedia() {
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (mEditorFragment.hasFailedMediaUploads()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -841,53 +841,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             builder.create().show();
             return true;
         }
-
-        // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
-        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
-        // on API 16 with the visual editor.
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean isFirstTimePublish = false;
-                if (PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
-                        (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT)) {
-                    isFirstTimePublish = true;
-                }
-                try {
-                    updatePostObject(false);
-                } catch (IllegalEditorStateException e) {
-                    AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
-                    return;
-                }
-
-                savePostToDb();
-
-                // If the post is empty, don't publish
-                if (!PostUtils.isPublishable(mPost)) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
-                        }
-                    });
-                    return;
-                }
-
-                PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
-
-                if (isFirstTimePublish) {
-                    PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
-                } else {
-                    PostUploadService.addPostToUpload(mPost);
-                }
-                PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
-                startService(new Intent(EditPostActivity.this, PostUploadService.class));
-                PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
-                setResult(RESULT_OK);
-                finish();
-            }
-        }).start();
-        return true;
+        return false;
     }
 
     @Override
@@ -1101,6 +1055,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private synchronized void savePostToDb() {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+
+        // update the original post object, so we'll know of new changes
+        mOriginalPost = mPost.clone();
     }
 
     @Override
@@ -1128,7 +1085,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditorFragment != null && !mEditorFragment.onBackPressed()) {
-            saveAndFinish();
+            savePostAndFinish();
         }
     }
 
@@ -1136,25 +1093,44 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mIsNewPost;
     }
 
-    private class SaveAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+    private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
+
+        boolean isFirstTimePublish;
+
+        SavePostOnlineAndFinishTask(boolean isFirstTimePublish) {
+            this.isFirstTimePublish = isFirstTimePublish;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
+
+            if (isFirstTimePublish) {
+                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+            } else {
+                PostUploadService.addPostToUpload(mPost);
+            }
+            PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
+            startService(new Intent(EditPostActivity.this, PostUploadService.class));
+            PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void saved) {
+            saveResult(true, false);
+            finish();
+        }
+    }
+
+    private class SavePostLocallyAndFinishTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // Fetch post title and content from editor fields and update the Post object
-            try {
-                updatePostObject(false);
-            } catch (IllegalEditorStateException e) {
-                AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                return false;
-            }
 
-            if (mEditorFragment != null && PostUtils.hasEmptyContentFields(mPost)) {
-                // New and empty post? delete it
-                if (mIsNewPost) {
-                    mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
-                    return false;
-                }
-            } else if (mOriginalPost != null && !PostUtils.postHasEdits(mOriginalPost, mPost)) {
+            if (mOriginalPost != null && !PostUtils.postHasEdits(mOriginalPost, mPost)) {
                 // If no changes have been made to the post, set it back to the original - don't save it
                 mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mOriginalPost));
                 return false;
@@ -1165,16 +1141,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mShowNewEditor || mShowAztecEditor) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
-                    savePostToDb();
-                } else {
-                    try {
-                        updatePostObject(false);
-                    } catch (IllegalEditorStateException e) {
-                        AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
-                        return false;
-                    }
-                    savePostToDb();
                 }
+
+                savePostToDb();
 
                 // now set the pending notification alarm to be triggered in the next day, week, and month
                 PendingDraftsNotificationsUtils.scheduleNextNotifications(EditPostActivity.this, mPost);
@@ -1185,23 +1154,115 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         protected void onPostExecute(Boolean saved) {
-            if (saved) {
-                Intent i = new Intent();
-                i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
-                i.putExtra(EXTRA_IS_PAGE, mIsPage);
-                setResult(RESULT_OK, i);
-                ToastUtils.showToast(EditPostActivity.this, R.string.editor_toast_changes_saved);
+            saveResult(saved, true);
+            finish();
+        }
+    }
+
+    private void saveResult(boolean saved, boolean savedLocally) {
+        Intent i = getIntent();
+        i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
+        i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_HAS_CHANGES, saved);
+        i.putExtra(EXTRA_POST, mPost);
+        setResult(RESULT_OK, i);
+    }
+
+    private void publishPost() {
+
+        boolean isFirstTimePublish = isFirstTimePublish();
+
+        boolean postUpdateSuccessful = updatePostObject();
+        if (!postUpdateSuccessful) {
+            // just return, since the only case updatePostObject() can fail is when the editor
+            // fragment is not added to the activity
+            return;
+        }
+
+        boolean isPublishable = PostUtils.isPublishable(mPost);
+
+        // if post was modified or has unsaved local changes and is publishable, save it
+        saveResult(isPublishable, false);
+
+        if (isPublishable) {
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                if (!hasFailedMedia()) {
+                    savePostOnlineAndFinishAsync(isFirstTimePublish);
+                }
+            } else {
+                savePostLocallyAndFinishAsync();
+            }
+        } else {
+            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+        }
+    }
+
+    private void savePostAndFinish() {
+
+        // check if the opened post had some unsaved local changes
+        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
+        boolean isFirstTimePublish = isFirstTimePublish();
+
+        boolean postUpdateSuccessful = updatePostObject();
+        if (!postUpdateSuccessful) {
+            // just return, since the only case updatePostObject() can fail is when the editor
+            // fragment is not added to the activity
+            return;
+        }
+
+        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+        boolean isPublishable = PostUtils.isPublishable(mPost);
+        boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
+                isPublishable && hasLocalChanges;
+
+        // if post was modified or has unsaved local changes and is publishable, save it
+        boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
+        saveResult(shouldSave, false);
+
+        if (shouldSave) {
+            if (isNewPost()) {
+                // new post - user just left the editor without publishing, they probably want
+                // to keep the post as a draft
+                mPost.setStatus(PostStatus.DRAFT.toString());
+                if (mEditPostSettingsFragment != null) {
+                    mEditPostSettingsFragment.updateStatusSpinner();
+                }
+            }
+
+            if (PostStatus.fromPost(mPost) != PostStatus.PUBLISHED && isPublishable && NetworkUtils.isNetworkAvailable(this)) {
+                if (!hasFailedMedia()) {
+                    savePostOnlineAndFinishAsync(isFirstTimePublish);
+                }
+            } else {
+                savePostLocallyAndFinishAsync();
+            }
+        } else {
+            // discard post if new & empty
+            if (!isPublishable && isNewPost()) {
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
             }
             finish();
         }
     }
 
-    private void saveAndFinish() {
-        if (mShowAztecEditor && mAztecEditorFragment != null) {
-            mAztecEditorFragment.saveContentFromSource();
+    private boolean isFirstTimePublish() {
+        return PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
+                (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
+    }
+
+    private boolean updatePostObject() {
+        try {
+            updatePostObject(false);
+        } catch (IllegalEditorStateException e) {
+            AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
+            return false;
         }
 
-        new SaveAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        return true;
+    }
+
+    private void savePostLocallyAndFinishAsync() {
+        new SavePostLocallyAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
