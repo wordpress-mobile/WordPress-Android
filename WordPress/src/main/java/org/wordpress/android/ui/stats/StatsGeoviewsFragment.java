@@ -256,11 +256,11 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             holder.setEntryText(entry);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // On Android >= 5.0, ese the emoji flag
+                // On Android >= 5.0, use the emoji flag
                 holder.alternativeImage.setText(currentRowData.getFlagEmoji());
                 holder.alternativeImage.setVisibility(View.VISIBLE);
             } else {
-                // On other devices, use the Gravatar image
+                // On other Android versions, use the Gravatar image
                 holder.networkImageView.setImageUrl(
                         GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.headerAvatarSizePx),
                         WPNetworkImageView.ImageType.BLAVATAR);
