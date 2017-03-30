@@ -383,7 +383,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mSiteStore.getSiteBySiteId(mSite.getSiteId()), getActivity(),
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mSite, getActivity(),
                 mSuggestionServiceConnectionManager);
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
@@ -436,9 +436,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return mNote;
     }
 
+    private SiteModel createDummyWordPressComSite(long siteId) {
+        SiteModel site = new SiteModel();
+        site.setIsWPCom(true);
+        site.setSiteId(siteId);
+        return site;
+    }
+
     public void setNote(Note note) {
         mNote = note;
         mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
+        if (mSite == null) {
+            // This should not exist, we should clean that screen so a note without a site/comment can be displayed
+            mSite = createDummyWordPressComSite(mNote.getSiteId());
+        }
         if (isAdded() && mNote != null) {
             setIdForCommentContainer();
             showComment();
@@ -588,8 +599,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mNote != null) {
                 SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
                 if (site == null) {
-                    ToastUtils.showToast(getActivity(), R.string.error_load_comment);
-                    return;
+                    // This should not exist, we should clean that screen so a note without a site/comment
+                    // can be displayed
+                    site = createDummyWordPressComSite(mNote.getSiteId());
                 }
 
                 // Check if the comment is already in our store

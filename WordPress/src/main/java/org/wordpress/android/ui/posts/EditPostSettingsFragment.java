@@ -390,6 +390,10 @@ public class EditPostSettingsFragment extends Fragment
             mPasswordEditText.setText(mPost.getPassword());
         }
 
+        updateStatusSpinner();
+    }
+
+    public void updateStatusSpinner() {
         switch (PostStatus.fromPost(mPost)) {
             case PUBLISHED:
             case SCHEDULED:
