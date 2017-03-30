@@ -32,7 +32,10 @@ public class PhotoPickerActivity extends AppCompatActivity
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
 
+    // the uri of the selected image will be returned as a string in EXTRA_MEDIA_URI
     public static final String EXTRA_MEDIA_URI = "picker_media_uri";
+
+    // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
     public static final String EXTRA_MEDIA_SOURCE = "media_source";
 
     private String mMediaCapturePath;
@@ -85,6 +88,14 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
     }
 
+    private PhotoPickerFragment getPickerFragment() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(PICKER_FRAGMENT_TAG);
+        if (fragment != null) {
+            return (PhotoPickerFragment) fragment;
+        }
+        return null;
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -118,12 +129,14 @@ public class PhotoPickerActivity extends AppCompatActivity
         }
 
         switch (requestCode) {
+            // user chose a photo from the device library
             case RequestCodes.PICTURE_LIBRARY:
                 if (data != null) {
                     Uri imageUri = data.getData();
                     pictureSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
+            // user took a photo with the device camera
             case RequestCodes.TAKE_PHOTO:
                 try {
                     File f = new File(mMediaCapturePath);
@@ -134,14 +147,6 @@ public class PhotoPickerActivity extends AppCompatActivity
                 }
                 break;
         }
-    }
-
-    private PhotoPickerFragment getPickerFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(PICKER_FRAGMENT_TAG);
-        if (fragment != null) {
-            return (PhotoPickerFragment) fragment;
-        }
-        return null;
     }
 
     private void launchCamera() {
