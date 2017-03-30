@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -14,6 +16,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.text.BreakIterator;
 import java.util.HashMap;
@@ -124,6 +127,19 @@ public class PostUtils {
                 break;
             default:
                 // No-op
+        }
+    }
+
+    public static void showCustomDialog(Activity activity, String title, String message,
+                                        String positiveButton, String negativeButton, String tag) {
+        FragmentManager fm = activity.getFragmentManager();
+        WPAlertDialogFragment saveDialog = (WPAlertDialogFragment) fm.findFragmentByTag(tag);
+        if (saveDialog == null) {
+
+            saveDialog = WPAlertDialogFragment.newCustomDialog(title, message, positiveButton, negativeButton);
+        }
+        if (!saveDialog.isAdded()) {
+            saveDialog.show(fm, tag);
         }
     }
 
