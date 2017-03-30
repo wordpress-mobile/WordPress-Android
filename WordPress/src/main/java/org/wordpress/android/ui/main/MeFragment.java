@@ -214,6 +214,7 @@ public class MeFragment extends Fragment {
 
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
+                    // TODO
                     //askForCameraOrGallery();
                     showPhotoPickerForGravatar();
                 } else {
