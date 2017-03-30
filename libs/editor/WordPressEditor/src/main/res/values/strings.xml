@@ -19,7 +19,6 @@
     <string name="alert_error_adding_media">An error occurred while inserting media</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
-    <string name="stop_upload_button">Stop Upload</string>
 
     <string name="format_bar_tag_bold" translatable="false">bold</string>
     <string name="format_bar_tag_italic" translatable="false">italic</string>
