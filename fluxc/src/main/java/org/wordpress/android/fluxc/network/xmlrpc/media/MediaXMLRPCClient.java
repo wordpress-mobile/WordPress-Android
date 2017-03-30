@@ -301,7 +301,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
                 // clean from the current uploads map
                 removeCallFromCurrentUploadsMap(media.getId());
-
             }
         }, new BaseRequest.BaseErrorListener() {
             @Override
