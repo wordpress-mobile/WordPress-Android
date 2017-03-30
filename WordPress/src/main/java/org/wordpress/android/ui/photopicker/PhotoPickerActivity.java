@@ -43,9 +43,11 @@ public class PhotoPickerActivity extends AppCompatActivity
         APP_PICKER;
 
         public static PhotoPickerMediaSource fromString(String strSource) {
-            for (PhotoPickerMediaSource source: PhotoPickerMediaSource.values()) {
-                if (source.name().equalsIgnoreCase(strSource)) {
-                    return source;
+            if (strSource != null) {
+                for (PhotoPickerMediaSource source : PhotoPickerMediaSource.values()) {
+                    if (source.name().equalsIgnoreCase(strSource)) {
+                        return source;
+                    }
                 }
             }
             return null;
