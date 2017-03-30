@@ -2041,7 +2041,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (!mediaList.isEmpty()) {
                 // before starting the service, we need to update the posts' contents so we are sure the service
                 // can retrieve it from there on
-                hidePhotoChooser();
+                hidePhotoPicker();
                 savePostAsync(new AfterSavePostListener() {
                     @Override
                     public void onPostSave() {
