@@ -179,9 +179,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (mOnPageChangeListener != null) {
             mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
         } else {
-            mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+            mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onPageSelected(int position) {
+                public void onPageScrolled( int position, float v, int i1 ) {
+                }
+
+                @Override
+                public void onPageSelected( int position ) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
                     AppPrefs.setNotificationsSwipeToNavigateShown(true);
                     //change the action bar title for the current note
@@ -189,6 +193,14 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     if (currentNote != null) {
                         setActionBarTitleForNote(currentNote);
                         markNoteAsRead(currentNote);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged( int state ) {
+                    // we'e doing this to prevent the swipe down/ left/ right gesture confusion
+                    if (mSwipeToRefreshHelper != null) {
+                        mSwipeToRefreshHelper.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
                     }
                 }
             };
