@@ -42,9 +42,7 @@ public class PhotoPickerFragment extends Fragment {
     public enum PhotoPickerOption {
         ALLOW_MULTI_SELECT,     // allow selecting more than one item
         PHOTOS_ONLY,            // show only photos (no videos)
-        SHOW_ICONS              // show icons enabling selection from camera, native
-                                // picker & wp library - requires activity to implement
-                                // each of these features
+        DEVICE_ONLY             // no WP media
     }
 
     /*
@@ -64,12 +62,12 @@ public class PhotoPickerFragment extends Fragment {
     private PhotoPickerListener mListener;
 
     private boolean mAllowMultiSelect;
-    private boolean mShowIcons;
     private boolean mPhotosOnly;
+    private boolean mDeviceOnly;
 
     private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
-    private static final String ARG_SHOW_ICONS = "show_icons";
     private static final String ARG_PHOTOS_ONLY = "photos_only";
+    private static final String ARG_DEVICE_ONLY = "device_only";
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   EnumSet<PhotoPickerOption> options) {
@@ -78,8 +76,8 @@ public class PhotoPickerFragment extends Fragment {
         fragment.setPhotoPickerListener(listener);
         if (options != null) {
             args.putBoolean(ARG_ALLOW_MULTI_SELECT, options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT));
-            args.putBoolean(ARG_SHOW_ICONS, options.contains(PhotoPickerOption.SHOW_ICONS));
             args.putBoolean(ARG_PHOTOS_ONLY, options.contains(PhotoPickerOption.PHOTOS_ONLY));
+            args.putBoolean(ARG_DEVICE_ONLY, options.contains(PhotoPickerOption.DEVICE_ONLY));
         }
         fragment.setArguments(args);
         return fragment;
@@ -90,7 +88,8 @@ public class PhotoPickerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mAllowMultiSelect = savedInstanceState.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
-            mShowIcons = savedInstanceState.getBoolean(ARG_SHOW_ICONS, false);
+            mPhotosOnly = savedInstanceState.getBoolean(ARG_PHOTOS_ONLY, false);
+            mDeviceOnly = savedInstanceState.getBoolean(ARG_DEVICE_ONLY, false);
         }
     }
 
@@ -98,30 +97,25 @@ public class PhotoPickerFragment extends Fragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         mAllowMultiSelect = args != null && args.getBoolean(ARG_ALLOW_MULTI_SELECT);
-        mShowIcons = args != null && args.getBoolean(ARG_SHOW_ICONS);
         mPhotosOnly = args != null && args.getBoolean(ARG_PHOTOS_ONLY);
+        mDeviceOnly = args != null && args.getBoolean(ARG_DEVICE_ONLY);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(ARG_ALLOW_MULTI_SELECT, mAllowMultiSelect);
-        outState.putBoolean(ARG_SHOW_ICONS, mShowIcons);
         outState.putBoolean(ARG_PHOTOS_ONLY, mPhotosOnly);
+        outState.putBoolean(ARG_DEVICE_ONLY, mDeviceOnly);
         super.onSaveInstanceState(outState);
     }
 
     public void setOptions(EnumSet<PhotoPickerOption> options) {
         mAllowMultiSelect = options != null && options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mShowIcons = options != null && options.contains(PhotoPickerOption.SHOW_ICONS);
         mPhotosOnly = options != null && options.contains(PhotoPickerOption.PHOTOS_ONLY);
 
         if (hasAdapter()) {
             getAdapter().setAllowMultiSelect(mAllowMultiSelect);
             getAdapter().setShowPhotosOnly(mPhotosOnly);
-        }
-
-        if (mBottomBar != null) {
-            mBottomBar.setVisibility(mShowIcons ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -133,24 +127,28 @@ public class PhotoPickerFragment extends Fragment {
         mRecycler.setHasFixedSize(true);
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
-        if (mShowIcons) {
-            mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAMERA);
-                    }
+        mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAMERA);
                 }
-            });
-            mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_PICKER);
-                    }
+            }
+        });
+        mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_PICKER);
                 }
-            });
-            mBottomBar.findViewById(R.id.icon_wpmedia).setOnClickListener(new View.OnClickListener() {
+            }
+        });
+
+        View wpMediaIcon = mBottomBar.findViewById(R.id.icon_wpmedia);
+        if (mDeviceOnly) {
+            wpMediaIcon.setVisibility(View.GONE);
+        } else {
+            wpMediaIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
@@ -158,8 +156,6 @@ public class PhotoPickerFragment extends Fragment {
                     }
                 }
             });
-        } else {
-            mBottomBar.setVisibility(View.GONE);
         }
 
         reload();
@@ -172,13 +168,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showBottomBar() {
-        if (!isBottomBarShowing() && mShowIcons) {
+        if (!isBottomBarShowing()) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
     private void hideBottomBar() {
-        if (isBottomBarShowing() && mShowIcons) {
+        if (isBottomBarShowing()) {
             AniUtils.animateBottomBar(mBottomBar, false);
         }
     }

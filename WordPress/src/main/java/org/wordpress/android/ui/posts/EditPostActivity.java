@@ -548,7 +548,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         resizePhotoPicker();
 
         EnumSet<PhotoPickerOption> options =
-                EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT, PhotoPickerOption.SHOW_ICONS);
+                EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT);
         mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, options);
 
         getFragmentManager()

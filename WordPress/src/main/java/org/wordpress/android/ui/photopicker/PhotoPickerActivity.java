@@ -49,9 +49,10 @@ public class PhotoPickerActivity extends AppCompatActivity
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
+        // only show photos (no videos) and only from device (no wp media)
         EnumSet<PhotoPickerOption> options = EnumSet.of(
                 PhotoPickerOption.PHOTOS_ONLY,
-                PhotoPickerOption.SHOW_ICONS);
+                PhotoPickerOption.DEVICE_ONLY);
         PhotoPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
             fragment = PhotoPickerFragment.newInstance(this, options);
@@ -140,10 +141,6 @@ public class PhotoPickerActivity extends AppCompatActivity
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    private void launchMediaGallery() {
-        // TODO
-    }
-
     private void pictureSelected(@NonNull Uri mediaUri) {
         setResult(RESULT_OK, new Intent().putExtra(EXTRA_MEDIA_URI, mediaUri.toString()));
         finish();
@@ -164,9 +161,6 @@ public class PhotoPickerActivity extends AppCompatActivity
                 break;
             case ANDROID_PICKER:
                 launchPictureLibrary();
-                break;
-            case WP_MEDIA:
-                launchMediaGallery();
                 break;
         }
     }
