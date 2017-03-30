@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photochooser;
+package org.wordpress.android.ui.photopicker;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -20,18 +20,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.posts.photochooser.PhotoChooserAdapter.PhotoChooserAdapterListener;
+import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoChooserFragment extends Fragment {
+public class PhotoPickerFragment extends Fragment {
 
     static final int NUM_COLUMNS = 3;
 
-    public enum PhotoChooserIcon {
+    public enum PhotoPickerIcon {
         ANDROID_CAMERA,
         ANDROID_PICKER,
         WP_MEDIA
@@ -40,30 +40,30 @@ public class PhotoChooserFragment extends Fragment {
     /*
      * parent activity must implement this listener
      */
-    public interface PhotoChooserListener {
-        void onPhotoChooserMediaChosen(@NonNull List<Uri> uriList);
-        void onPhotoChooserIconClicked(@NonNull PhotoChooserIcon icon);
+    public interface PhotoPickerListener {
+        void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList);
+        void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon);
     }
 
     private RecyclerView mRecycler;
-    private PhotoChooserAdapter mAdapter;
+    private PhotoPickerAdapter mAdapter;
     private View mBottomBar;
     private ActionMode mActionMode;
     private GridLayoutManager mGridManager;
     private Parcelable mRestoreState;
-    private PhotoChooserListener mListener;
+    private PhotoPickerListener mListener;
 
-    public static PhotoChooserFragment newInstance(@NonNull PhotoChooserListener listener) {
+    public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener) {
         Bundle args = new Bundle();
-        PhotoChooserFragment fragment = new PhotoChooserFragment();
-        fragment.setPhotoChooserListener(listener);
+        PhotoPickerFragment fragment = new PhotoPickerFragment();
+        fragment.setPhotoPickerListener(listener);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.photo_chooser_fragment, container, false);
+        View view = inflater.inflate(R.layout.photo_picker_fragment, container, false);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
@@ -73,7 +73,7 @@ public class PhotoChooserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onPhotoChooserIconClicked(PhotoChooserIcon.ANDROID_CAMERA);
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAMERA);
                 }
             }
         });
@@ -81,7 +81,7 @@ public class PhotoChooserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onPhotoChooserIconClicked(PhotoChooserIcon.ANDROID_PICKER);
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_PICKER);
                 }
             }
         });
@@ -89,7 +89,7 @@ public class PhotoChooserFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onPhotoChooserIconClicked(PhotoChooserIcon.WP_MEDIA);
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.WP_MEDIA);
                 }
             }
         });
@@ -99,7 +99,7 @@ public class PhotoChooserFragment extends Fragment {
         return view;
     }
 
-    private void setPhotoChooserListener(PhotoChooserListener listener) {
+    private void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
 
@@ -124,13 +124,13 @@ public class PhotoChooserFragment extends Fragment {
      *   - double tap previews the photo
      *   - long press enables multi-select
      */
-    private final PhotoChooserAdapterListener mAdapterListener = new PhotoChooserAdapterListener() {
+    private final PhotoPickerAdapterListener mAdapterListener = new PhotoPickerAdapterListener() {
         @Override
         public void onItemTapped(Uri mediaUri) {
             if (mListener != null) {
                 List<Uri> uriList = new ArrayList<>();
                 uriList.add(mediaUri);
-                mListener.onPhotoChooserMediaChosen(uriList);
+                mListener.onPhotoPickerMediaChosen(uriList);
             }
         }
 
@@ -172,9 +172,9 @@ public class PhotoChooserFragment extends Fragment {
      */
     private void showPreview(View sourceView, Uri mediaUri) {
         boolean isVideo = getAdapter().isVideoUri(mediaUri);
-        Intent intent = new Intent(getActivity(), PhotoChooserPreviewActivity.class);
-        intent.putExtra(PhotoChooserPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
-        intent.putExtra(PhotoChooserPreviewActivity.ARG_IS_VIDEO, isVideo);
+        Intent intent = new Intent(getActivity(), PhotoPickerPreviewActivity.class);
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
 
         int startWidth = sourceView.getWidth();
         int startHeight = sourceView.getHeight();
@@ -190,9 +190,9 @@ public class PhotoChooserFragment extends Fragment {
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
-    private PhotoChooserAdapter getAdapter() {
+    private PhotoPickerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new PhotoChooserAdapter(getActivity(), mAdapterListener);
+            mAdapter = new PhotoPickerAdapter(getActivity(), mAdapterListener);
         }
         return mAdapter;
     }
@@ -202,7 +202,7 @@ public class PhotoChooserFragment extends Fragment {
      */
     public void reload() {
         if (!isAdded()) {
-            AppLog.w(AppLog.T.POSTS, "Photo chooser > can't reload when not added");
+            AppLog.w(AppLog.T.POSTS, "Photo picker > can't reload when not added");
             return;
         }
 
@@ -222,7 +222,7 @@ public class PhotoChooserFragment extends Fragment {
      */
     public void refresh() {
         if (!isAdded()) {
-            AppLog.w(AppLog.T.POSTS, "Photo chooser > can't refresh when not added");
+            AppLog.w(AppLog.T.POSTS, "Photo picker > can't refresh when not added");
             return;
         }
         if (mGridManager == null || mAdapter == null) {
@@ -251,7 +251,7 @@ public class PhotoChooserFragment extends Fragment {
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.photo_chooser_action_mode, menu);
+            inflater.inflate(R.menu.photo_picker_action_mode, menu);
             hideBottomBar();
             return true;
         }
@@ -265,7 +265,7 @@ public class PhotoChooserFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.mnu_confirm_selection && mListener != null) {
                 ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
-                mListener.onPhotoChooserMediaChosen(uriList);
+                mListener.onPhotoPickerMediaChosen(uriList);
                 return true;
             }
             return false;
