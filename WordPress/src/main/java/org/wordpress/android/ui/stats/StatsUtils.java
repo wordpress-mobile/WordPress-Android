@@ -521,4 +521,10 @@ public class StatsUtils {
 
         return "";
     }
+
+    public static String countryCodeToEmoji(String countryCode) {
+        int char1 = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+        int char2 = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        return new String(Character.toChars(char1)) + new String(Character.toChars(char2));
+    }
 }
