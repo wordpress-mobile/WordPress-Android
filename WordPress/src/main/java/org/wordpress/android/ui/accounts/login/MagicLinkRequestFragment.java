@@ -156,7 +156,9 @@ public class MagicLinkRequestFragment extends Fragment {
                 errorProperties.put(ERROR_KEY, error.getMessage());
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
                 mProgressDialog.cancel();
-                ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message, ToastUtils.Duration.LONG);
+                if (isAdded()) {
+                    ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message, ToastUtils.Duration.LONG);
+                }
                 if (mListener != null) {
                     mListener.onEnterPasswordRequested();
                 }
