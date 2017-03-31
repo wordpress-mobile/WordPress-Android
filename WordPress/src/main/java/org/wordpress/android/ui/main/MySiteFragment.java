@@ -153,6 +153,13 @@ public class MySiteFragment extends Fragment
             mFabView.setVisibility(View.INVISIBLE);
         }
 
+        rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite());
+            }
+        });
+
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
