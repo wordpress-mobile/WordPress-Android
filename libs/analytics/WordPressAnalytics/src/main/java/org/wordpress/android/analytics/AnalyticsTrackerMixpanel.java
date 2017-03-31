@@ -789,6 +789,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened View Site");
                 break;
+            case OPENED_VIEW_SITE_FROM_HEADER:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Site Menu - Opened View Site From Header");
+                break;
             case OPENED_VIEW_ADMIN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened View Admin");
