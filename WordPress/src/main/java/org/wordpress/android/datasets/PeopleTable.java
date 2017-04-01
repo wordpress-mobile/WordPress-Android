@@ -120,27 +120,27 @@ public class PeopleTable {
         database.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static void saveUsers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
-        savePeople(TEAM_TABLE, peopleList, localTableBlogId, isFreshList);
+    public static void saveUsers(List<Person> peopleList, int localTableBlogId, boolean freshListEh) {
+        savePeople(TEAM_TABLE, peopleList, localTableBlogId, freshListEh);
     }
 
-    public static void saveFollowers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
-        savePeople(FOLLOWERS_TABLE, peopleList, localTableBlogId, isFreshList);
+    public static void saveFollowers(List<Person> peopleList, int localTableBlogId, boolean freshListEh) {
+        savePeople(FOLLOWERS_TABLE, peopleList, localTableBlogId, freshListEh);
     }
 
-    public static void saveEmailFollowers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
-        savePeople(EMAIL_FOLLOWERS_TABLE, peopleList, localTableBlogId, isFreshList);
+    public static void saveEmailFollowers(List<Person> peopleList, int localTableBlogId, boolean freshListEh) {
+        savePeople(EMAIL_FOLLOWERS_TABLE, peopleList, localTableBlogId, freshListEh);
     }
 
-    public static void saveViewers(List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
-        savePeople(VIEWERS_TABLE, peopleList, localTableBlogId, isFreshList);
+    public static void saveViewers(List<Person> peopleList, int localTableBlogId, boolean freshListEh) {
+        savePeople(VIEWERS_TABLE, peopleList, localTableBlogId, freshListEh);
     }
 
-    private static void savePeople(String table, List<Person> peopleList, int localTableBlogId, boolean isFreshList) {
+    private static void savePeople(String table, List<Person> peopleList, int localTableBlogId, boolean freshListEh) {
         getWritableDb().beginTransaction();
         try {
             // We have a fresh list, remove the previous list of people in case it was deleted on remote
-            if (isFreshList) {
+            if (freshListEh) {
                 PeopleTable.deletePeople(table, localTableBlogId);
             }
 

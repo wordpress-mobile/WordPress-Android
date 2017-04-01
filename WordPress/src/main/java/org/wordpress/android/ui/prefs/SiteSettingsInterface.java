@@ -123,7 +123,7 @@ public abstract class SiteSettingsInterface {
     public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
         if (host == null || site == null) return null;
 
-        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (SiteUtils.accessibleViaWPComAPIEh(site)) {
             return new DotComSiteSettings(host, site, listener);
         }
         // Not implemented for self hosted sites
@@ -672,7 +672,7 @@ public abstract class SiteSettingsInterface {
      * @return
      * true unless the provided IDs are different from the current IDs or in a different order
      */
-    public boolean isSameFormatList(CharSequence[] ids) {
+    public boolean sameFormatListEh(CharSequence[] ids) {
         if (ids == null) return mSettings.postFormats == null;
         if (mSettings.postFormats == null || ids.length != mSettings.postFormats.size()) return false;
 
@@ -693,7 +693,7 @@ public abstract class SiteSettingsInterface {
      * @return
      * true unless the provided IDs are different from the current IDs or in a different order
      */
-    public boolean isSameCategoryList(CharSequence[] ids) {
+    public boolean sameCategoryListEh(CharSequence[] ids) {
         if (ids == null) return mSettings.categories == null;
         if (mSettings.categories == null || ids.length != mSettings.categories.length) return false;
 
@@ -726,8 +726,8 @@ public abstract class SiteSettingsInterface {
      */
     protected void credentialsVerified(boolean valid) {
         Exception e = valid ? null : new AuthenticationError();
-        if (mSettings.hasVerifiedCredentials != valid) notifyCredentialsVerifiedOnUiThread(e);
-        mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
+        if (mSettings.verifiedCredentialsEh != valid) notifyCredentialsVerifiedOnUiThread(e);
+        mRemoteSettings.verifiedCredentialsEh = mSettings.verifiedCredentialsEh = valid;
     }
 
     /**
@@ -769,7 +769,7 @@ public abstract class SiteSettingsInterface {
             localSettings.close();
             notifyUpdatedOnUiThread(null);
         } else {
-            mSettings.isInLocalTable = false;
+            mSettings.inLocalTableEh = false;
             setAddress(mSite.getUrl());
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());
@@ -824,7 +824,7 @@ public abstract class SiteSettingsInterface {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostFormatsChanged(OnPostFormatsChanged event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             return;
         }
         notifyUpdatedOnUiThread(null);

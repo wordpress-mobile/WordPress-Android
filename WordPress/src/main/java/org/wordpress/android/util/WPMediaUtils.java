@@ -13,8 +13,8 @@ public class WPMediaUtils {
     private static final int OPTIMIZE_IMAGE_MAX_WIDTH = 3000;
     private static final int OPTIMIZE_IMAGE_ENCODER_QUALITY = 85;
 
-    public static Uri getOptimizedMedia(Activity activity, SiteModel siteModel, String path, boolean isVideo) {
-        if (isVideo || !NetworkUtils.isMobileConnected(activity)) {
+    public static Uri getOptimizedMedia(Activity activity, SiteModel siteModel, String path, boolean videoEh) {
+        if (videoEh || !NetworkUtils.mobileConnectedEh(activity)) {
             // Not on mobile data. Skip optimization.
             return null;
         }

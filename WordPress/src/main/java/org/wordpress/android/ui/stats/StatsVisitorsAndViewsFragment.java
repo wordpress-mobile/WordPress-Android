@@ -59,7 +59,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private CheckedTextView mLegendLabel;
     private LinearLayout mVisitorsCheckboxContainer;
     private CheckBox mVisitorsCheckbox;
-    private boolean mIsCheckboxChecked = true;
+    private boolean mCheckboxCheckedEh = true;
 
     private OnDateChangeListener mListener;
     private OnOverviewItemChangeListener mOverviewItemChangeListener;
@@ -133,9 +133,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
             for (int i = 0; i < mModuleButtonsContainer.getChildCount(); i++) {
                 LinearLayout currentTab = (LinearLayout) mModuleButtonsContainer.getChildAt(i);
-                boolean isLastItem = i == (overviewItems.length - 1);
-                boolean isChecked = i == mSelectedOverviewItemIndex;
-                TabViewHolder currentTabViewHolder = new TabViewHolder(currentTab, overviewItems[i], isChecked, isLastItem);
+                boolean lastItemEh = i == (overviewItems.length - 1);
+                boolean checkedEh = i == mSelectedOverviewItemIndex;
+                TabViewHolder currentTabViewHolder = new TabViewHolder(currentTab, overviewItems[i], checkedEh, lastItemEh);
                 currentTab.setOnClickListener(TopButtonsOnClickListener);
                 currentTab.setTag(currentTabViewHolder);
             }
@@ -152,10 +152,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         final TextView value;
         final ImageView icon;
         final OverviewLabel labelItem;
-        boolean isChecked = false;
-        boolean isLastItem = false;
+        boolean checkedEh = false;
+        boolean lastItemEh = false;
 
-        public TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
+        public TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean lastItemEh) {
             tab = currentTab;
             innerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
             label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
@@ -163,8 +163,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
             icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
             this.labelItem = labelItem;
-            this.isChecked = checked;
-            this.isLastItem = isLastItem;
+            this.checkedEh = checked;
+            this.lastItemEh = lastItemEh;
             updateBackGroundAndIcon(0);
         }
 
@@ -183,7 +183,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public void updateBackGroundAndIcon(int currentValue) {
-            if (isChecked) {
+            if (checkedEh) {
                 value.setTextColor(getResources().getColor(R.color.orange_jazzy));
             } else {
                 if (currentValue == 0) {
@@ -195,14 +195,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
             icon.setImageDrawable(getTabIcon());
 
-            if (isLastItem) {
-                if (isChecked) {
+            if (lastItemEh) {
+                if (checkedEh) {
                     tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);
                 } else {
                     tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_blue_light);
                 }
             } else {
-                if (isChecked) {
+                if (checkedEh) {
                     tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_white);
                 } else {
                     tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_blue_light);
@@ -211,7 +211,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public void setChecked(boolean checked) {
-            this.isChecked = checked;
+            this.checkedEh = checked;
         }
     }
 
@@ -225,7 +225,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             //LinearLayout tab = (LinearLayout) v;
             TabViewHolder tabViewHolder = (TabViewHolder) v.getTag();
 
-            if (tabViewHolder.isChecked) {
+            if (tabViewHolder.checkedEh) {
                 // already checked. Do nothing
                 return;
             }
@@ -261,25 +261,25 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         @Override
         public void onClick(View view) {
             // Is the view now checked?
-            mIsCheckboxChecked = ((CheckBox) view).isChecked();
+            mCheckboxCheckedEh = ((CheckBox) view).checkedEh();
             updateUI();
         }
     };
 
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mVisitsData != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
         }
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
         outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
         outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
-        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
+        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.checkedEh());
     }
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
@@ -297,7 +297,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mPrevNumberOfBarsGraph = savedInstanceState.getInt(ARG_PREV_NUMBER_OF_BARS, -1);
             }
 
-            mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
+            mCheckboxCheckedEh = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
         }
     }
 
@@ -354,7 +354,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             case VIEWS:
                 mVisitorsCheckboxContainer.setVisibility(View.VISIBLE);
                 mVisitorsCheckbox.setEnabled(true);
-                mVisitorsCheckbox.setChecked(mIsCheckboxChecked);
+                mVisitorsCheckbox.setChecked(mCheckboxCheckedEh);
                 break;
             default:
                 mVisitorsCheckboxContainer.setVisibility(View.GONE);
@@ -367,7 +367,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         GraphView.GraphViewData[] mainSeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
 
         GraphView.GraphViewData[] secondarySeriesItems = null;
-        if (mIsCheckboxChecked && selectedStatsType == OverviewLabel.VIEWS) {
+        if (mCheckboxCheckedEh && selectedStatsType == OverviewLabel.VIEWS) {
             secondarySeriesItems = new GraphView.GraphViewData[dataToShowOnGraph.length];
         }
 
@@ -405,7 +405,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 atLeastOneResultIsAvailable = true;
             }
 
-            if (mIsCheckboxChecked && secondarySeriesItems != null) {
+            if (mCheckboxCheckedEh && secondarySeriesItems != null) {
                 secondarySeriesItems[i] = new GraphView.GraphViewData(i, dataToShowOnGraph[i].getVisitors());
             }
 
@@ -447,7 +447,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.addSeries(mainSeriesOnScreen);
 
         // Add the Visitors series if it's checked in the legend
-        if (mIsCheckboxChecked && secondarySeriesItems != null && selectedStatsType == OverviewLabel.VIEWS) {
+        if (mCheckboxCheckedEh && secondarySeriesItems != null && selectedStatsType == OverviewLabel.VIEWS) {
             GraphViewSeries secondarySeries = new GraphViewSeries(secondarySeriesItems);
             secondarySeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 10);
             secondarySeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_secondary_series);
@@ -809,7 +809,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mListener!= null) {
             // Should never be null
             SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
-            if (site != null && SiteUtils.isAccessibleViaWPComAPI(site)) {
+            if (site != null && SiteUtils.accessibleViaWPComAPIEh(site)) {
                 mListener.onDateChanged(site.getSiteId(), getTimeframe(), calculatedDate);
             }
         }

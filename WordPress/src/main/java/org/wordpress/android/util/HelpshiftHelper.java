@@ -303,12 +303,12 @@ public class HelpshiftHelper {
         return config;
     }
 
-    public static Tag chooseHelpshiftLoginTag(boolean isJetpackAuth, boolean isWPComMode) {
+    public static Tag chooseHelpshiftLoginTag(boolean jetpackAuthEh, boolean wPComModeEh) {
         // Tag assignment:
         //  ORIGIN_LOGIN_SCREEN_JETPACK when trying to view stats on a Jetpack site and need to login with WPCOM
         //  ORIGIN_LOGIN_SCREEN_WPCOM for when trying to log into a WPCOM site and UI not in forced self-hosted mode
         //  ORIGIN_LOGIN_SCREEN_SELFHOSTED when logging in a selfhosted site
-        return isJetpackAuth ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK :
-                (isWPComMode ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED);
+        return jetpackAuthEh ? Tag.ORIGIN_LOGIN_SCREEN_JETPACK :
+                (wPComModeEh ? Tag.ORIGIN_LOGIN_SCREEN_WPCOM : Tag.ORIGIN_LOGIN_SCREEN_SELFHOSTED);
     }
 }

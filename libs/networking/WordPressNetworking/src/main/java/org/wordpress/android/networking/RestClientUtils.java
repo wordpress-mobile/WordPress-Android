@@ -261,7 +261,7 @@ public class RestClientUtils {
         post("auth/send-login-email", params, null, listener, errorListener);
     }
 
-    public void isAvailable(String email, Listener listener, ErrorListener errorListener) {
+    public void availableEh(String email, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "is-available/email?q=%s", email);
         get(path, listener, errorListener);
     }

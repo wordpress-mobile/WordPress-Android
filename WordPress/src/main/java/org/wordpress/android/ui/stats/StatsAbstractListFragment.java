@@ -56,13 +56,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract boolean isExpandableList();
-    protected abstract boolean isViewAllOptionAvailable();
+    protected abstract boolean expandableListEh();
+    protected abstract boolean viewAllOptionAvailableEh();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
-        if (isExpandableList()) {
+        if (expandableListEh()) {
             view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
         } else {
             view = inflater.inflate(R.layout.stats_list_fragment, container, false);
@@ -159,7 +159,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             mListContainer.setVisibility(View.VISIBLE);
             mList.setVisibility(View.VISIBLE);
 
-            if (!isSingleView() && isViewAllOptionAvailable()) {
+            if (!singleViewEh() && viewAllOptionAvailableEh()) {
                 // No view all button if already in single view
                 configureViewAllButton();
             } else {
@@ -194,7 +194,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     }
 
     private void configureViewAllButton() {
-        if (isSingleView()) {
+        if (singleViewEh()) {
             // No view all button if you're already in single view
             mViewAll.setVisibility(View.GONE);
             return;
@@ -203,11 +203,11 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isSingleView()) {
+                if (singleViewEh()) {
                     return; // already in single view
                 }
 
-                if (!hasDataAvailable()) {
+                if (!dataAvailableEh()) {
                     return;
                 }
 
@@ -227,7 +227,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     }
 
     int getMaxNumberOfItemsToShowInList() {
-        return isSingleView() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST : MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
+        return singleViewEh() ? MAX_NUM_OF_ITEMS_DISPLAYED_IN_SINGLE_VIEW_LIST : MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     void setupTopModulePager(LayoutInflater inflater, ViewGroup container, View view, String[] buttonTitles) {
@@ -263,7 +263,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             }
 
             CheckedTextView ctv = (CheckedTextView) v;
-            if (ctv.isChecked()) {
+            if (ctv.checkedEh()) {
                 // already checked. Do nothing
                 return;
             }

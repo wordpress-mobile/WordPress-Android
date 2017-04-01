@@ -364,7 +364,7 @@ public class WPHtml {
         String shortcode = "";
         MediaGallery gallery = gallerySpan.getMediaGallery();
         shortcode += "[gallery ";
-        if (gallery.isRandom())
+        if (gallery.randomEh())
             shortcode += " orderby=\"rand\"";
         if (gallery.getType().equals(""))
             shortcode += " columns=\"" + gallery.getNumColumns() + "\"";
@@ -388,10 +388,10 @@ public class WPHtml {
         if (mediaId == null || mediaId.length() == 0)
             return content;
 
-        boolean isVideo = mediaFile.isVideo();
+        boolean videoEh = mediaFile.videoEh();
         String url = imageSpan.getImageSource().toString();
 
-        if (isVideo) {
+        if (videoEh) {
             if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                 content = mediaFile.getVideoPressShortCode();
             } else {

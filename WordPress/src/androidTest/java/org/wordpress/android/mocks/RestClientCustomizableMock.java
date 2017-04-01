@@ -144,7 +144,7 @@ public class RestClientCustomizableMock extends RestClient {
     public void setAccessToken(String token) {
     }
 
-    public boolean isAuthenticated() {
+    public boolean authenticatedEh() {
         return true;
     }
 }

@@ -22,7 +22,7 @@ import org.wordpress.android.R;
 public class ReaderFollowButton extends LinearLayout {
     private TextView mTextFollow;
     private ImageView mImageFollow;
-    private boolean mIsFollowed;
+    private boolean mFollowedEh;
     private boolean mShowCaption;
 
     public ReaderFollowButton(Context context){
@@ -66,14 +66,14 @@ public class ReaderFollowButton extends LinearLayout {
 
     private void updateFollowText() {
         if (mShowCaption) {
-            mTextFollow.setText(mIsFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+            mTextFollow.setText(mFollowedEh ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
         }
-        mTextFollow.setSelected(mIsFollowed);
+        mTextFollow.setSelected(mFollowedEh);
 
         // show green icon if site is followed, gray icon if not followed and there's a caption,
         // blue icon if not followed and there is no caption
         int drawableId;
-        if (mIsFollowed) {
+        if (mFollowedEh) {
             drawableId = R.drawable.ic_reader_following_alert_green_24dp;
         } else {
             drawableId = R.drawable.ic_reader_follow_blue_medium_24dp;
@@ -88,18 +88,18 @@ public class ReaderFollowButton extends LinearLayout {
         mImageFollow.setEnabled(enabled);
     }
 
-    public void setIsFollowed(boolean isFollowed) {
-        setIsFollowed(isFollowed, false);
+    public void setIsFollowed(boolean followedEh) {
+        setIsFollowed(followedEh, false);
     }
-    public void setIsFollowedAnimated(boolean isFollowed) {
-        setIsFollowed(isFollowed, true);
+    public void setIsFollowedAnimated(boolean followedEh) {
+        setIsFollowed(followedEh, true);
     }
-    private void setIsFollowed(boolean isFollowed, boolean animateChanges) {
-        if (isFollowed == mIsFollowed && mTextFollow.isSelected() == isFollowed) {
+    private void setIsFollowed(boolean followedEh, boolean animateChanges) {
+        if (followedEh == mFollowedEh && mTextFollow.selectedEh() == followedEh) {
             return;
         }
 
-        mIsFollowed = isFollowed;
+        mFollowedEh = followedEh;
 
         if (animateChanges) {
             ObjectAnimator anim = ObjectAnimator.ofFloat(this, View.SCALE_Y, 1f, 0f);

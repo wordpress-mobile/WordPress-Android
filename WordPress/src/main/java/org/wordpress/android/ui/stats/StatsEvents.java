@@ -260,9 +260,9 @@ public class StatsEvents {
     }
 
     public static class JetpackSettingsCompleted {
-        public final boolean isError;
-        public JetpackSettingsCompleted(boolean isError) {
-            this.isError = isError;
+        public final boolean errorEh;
+        public JetpackSettingsCompleted(boolean errorEh) {
+            this.errorEh = errorEh;
         }
     }
 

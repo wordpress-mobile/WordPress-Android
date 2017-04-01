@@ -64,7 +64,7 @@ public class NotificationsActions {
         }
 
         // mark the note as read if it's unread
-        if (note.isUnread()) {
+        if (note.unreadEh()) {
             WordPress.getRestClientUtilsV1_1().decrementUnreadCount(note.getId(), "9999", new RestRequest.Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -94,7 +94,7 @@ public class NotificationsActions {
                             List<Note> notes = NotificationsActions.parseNotes(response);
                             if (notes.size() > 0) {
                                 NotificationsTable.saveNote(notes.get(0));
-                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(notes.get(0).isUnread()));
+                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(notes.get(0).unreadEh()));
                             } else {
                                 AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
                             }

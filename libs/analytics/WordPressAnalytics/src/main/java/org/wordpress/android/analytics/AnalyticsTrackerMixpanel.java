@@ -178,8 +178,8 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             JSONObject properties = new JSONObject();
             properties.put(MIXPANEL_PLATFORM, "Android");
             properties.put(MIXPANEL_SESSION_COUNT, metadata.getSessionCount());
-            properties.put(DOTCOM_USER, metadata.isUserConnected());
-            properties.put(JETPACK_USER, metadata.isJetpackUser());
+            properties.put(DOTCOM_USER, metadata.userConnectedEh());
+            properties.put(JETPACK_USER, metadata.jetpackUserEh());
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(APP_LOCALE, mContext.getResources().getConfiguration().locale.toString());
             mMixpanel.registerSuperProperties(properties);
@@ -188,7 +188,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
 
 
-        if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
+        if (metadata.userConnectedEh() && metadata.wordPressComUserEh()) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
@@ -207,7 +207,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
 
         // Application opened and start.
-        if (metadata.isUserConnected()) {
+        if (metadata.userConnectedEh()) {
             try {
                 String userID = getWordPressComUserName() != null ? getWordPressComUserName() : getAnonID();
                 if (userID == null) {

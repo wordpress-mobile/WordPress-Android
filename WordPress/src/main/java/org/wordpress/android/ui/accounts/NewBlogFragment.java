@@ -93,7 +93,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mCancelButton.setVisibility(View.VISIBLE);
     }
 
-    public boolean isSignoutOnCancelMode() {
+    public boolean signoutOnCancelModeEh() {
         return mSignoutOnCancelMode;
     }
 
@@ -164,7 +164,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    protected boolean isUserDataValid() {
+    protected boolean userDataValidEh() {
         final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         boolean retValue = true;
@@ -192,7 +192,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             AlertUtils.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
             return;
         }
-        if (!isUserDataValid()) {
+        if (!userDataValidEh()) {
             return;
         }
 
@@ -252,8 +252,8 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mSiteTitleTextField.addTextChangedListener(mSiteTitleWatcher);
         mSiteTitleTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+            public void onFocusChange(View v, boolean focusEh) {
+                if (focusEh) {
                     mAutoCompleteUrl = EditTextUtils.getText(mSiteTitleTextField)
                             .equals(EditTextUtils.getText(mSiteUrlTextField))
                             || EditTextUtils.isEmpty(mSiteUrlTextField);
@@ -324,7 +324,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError()) {
+        if (event.errorEh()) {
             endProgress();
             showError(event.error.type, event.error.message);
             return;
@@ -344,7 +344,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         endProgress();
-        if (event.isError()) {
+        if (event.errorEh()) {
             // Site has been created but there was a error while fetching the sites. Can happen if we get
             // a response including a broken Jetpack site. We can continue and check if the newly created
             // site has been fetched.

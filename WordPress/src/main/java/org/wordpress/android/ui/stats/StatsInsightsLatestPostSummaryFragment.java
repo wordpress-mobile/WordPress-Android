@@ -30,12 +30,12 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     private InsightsLatestPostDetailsModel mInsightsLatestPostDetailsModel;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mInsightsLatestPostModel != null && mInsightsLatestPostDetailsModel != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mInsightsLatestPostModel);
             outState.putSerializable(ARG_REST_RESPONSE_DETAILS, mInsightsLatestPostDetailsModel);
         }
@@ -66,9 +66,9 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         // check if there is a post "published" on the blog
         View mainView = getView();
         if (mainView != null) {
-            mainView.setVisibility(mInsightsLatestPostModel.isLatestPostAvailable() ? View.VISIBLE : View.GONE);
+            mainView.setVisibility(mInsightsLatestPostModel.latestPostAvailableEh() ? View.VISIBLE : View.GONE);
         }
-        if (!mInsightsLatestPostModel.isLatestPostAvailable()) {
+        if (!mInsightsLatestPostModel.latestPostAvailableEh()) {
             // No need to go further into UI updating. There are no posts on this blog and the
             // entire fragment is hidden.
             return;
@@ -117,12 +117,12 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     protected void updateUI() {
         super.updateUI();
 
-        if (!isAdded() || !hasDataAvailable()) {
+        if (!isAdded() || !dataAvailableEh()) {
             return;
         }
 
         // check if there are posts "published" on the blog
-        if (!mInsightsLatestPostModel.isLatestPostAvailable()) {
+        if (!mInsightsLatestPostModel.latestPostAvailableEh()) {
             // No need to go further into UI updating. There are no posts on this blog and the
             // entire fragment is hidden.
             return;

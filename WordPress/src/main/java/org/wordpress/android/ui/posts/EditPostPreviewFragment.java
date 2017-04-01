@@ -132,7 +132,7 @@ public class EditPostPreviewFragment extends Fragment {
             String postTitle = "<h1>" + mPost.getTitle() + "</h1>";
             String postContent = postTitle + mPost.getContent();
 
-            if (mPost.isLocalDraft()) {
+            if (mPost.localDraftEh()) {
                 contentSpannable = WPHtml.fromHtml(
                         postContent.replaceAll("\uFFFC", ""),
                         getActivity(),
@@ -153,7 +153,7 @@ public class EditPostPreviewFragment extends Fragment {
         @Override
         protected void onPostExecute(Spanned spanned) {
             if (mPost != null && spanned != null) {
-                if (mPost.isLocalDraft()) {
+                if (mPost.localDraftEh()) {
                     mTextView.setVisibility(View.VISIBLE);
                     mWebView.setVisibility(View.GONE);
                     mTextView.setText(spanned);

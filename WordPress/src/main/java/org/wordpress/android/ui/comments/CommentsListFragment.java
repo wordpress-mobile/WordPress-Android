@@ -81,9 +81,9 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    private boolean mIsUpdatingComments = false;
+    private boolean mUpdatingCommentsEh = false;
     private boolean mCanLoadMoreComments = true;
-    boolean mHasAutoRefreshedComments = false;
+    boolean mAutoRefreshedCommentsEh = false;
 
     private final CommentStatusCriteria[] commentStatuses = {
             CommentStatusCriteria.ALL, CommentStatusCriteria.UNAPPROVED, CommentStatusCriteria.APPROVED,
@@ -142,7 +142,7 @@ public class CommentsListFragment extends Fragment {
                     if (!isEmpty) {
                         // Hide the empty view if there are already some displayed comments
                         mFilteredCommentsView.hideEmptyView();
-                    } else if (!mIsUpdatingComments) {
+                    } else if (!mUpdatingCommentsEh) {
                         // Change LOADING to NO_CONTENT message
                         mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
                     }
@@ -153,7 +153,7 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.OnLoadMoreListener loadMoreListener = new CommentAdapter.OnLoadMoreListener() {
                 @Override
                 public void onLoadMore() {
-                    if (mCanLoadMoreComments && !mIsUpdatingComments) {
+                    if (mCanLoadMoreComments && !mUpdatingCommentsEh) {
                         updateComments(true);
                     }
                 }
@@ -216,7 +216,7 @@ public class CommentsListFragment extends Fragment {
         return mAdapter;
     }
 
-    private boolean hasAdapter() {
+    private boolean adapterEh() {
         return (mAdapter != null);
     }
 
@@ -225,7 +225,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     public void removeComment(CommentModel comment) {
-        if (hasAdapter() && comment != null) {
+        if (adapterEh() && comment != null) {
             getAdapter().removeComment(comment);
         }
         // Show the empty view if the comment count drop to zero
@@ -238,15 +238,15 @@ public class CommentsListFragment extends Fragment {
 
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
-            mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+            mAutoRefreshedCommentsEh = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
             mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(extras.getString(
                     CommentsActivity.KEY_EMPTY_VIEW_MESSAGE));
         } else {
-            mHasAutoRefreshedComments = false;
+            mAutoRefreshedCommentsEh = false;
             mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
@@ -254,9 +254,9 @@ public class CommentsListFragment extends Fragment {
         // Restore the empty view's message
         mFilteredCommentsView.updateEmptyView(mEmptyViewMessageType);
 
-        if (!mHasAutoRefreshedComments) {
+        if (!mAutoRefreshedCommentsEh) {
             updateComments(false);
-            mHasAutoRefreshedComments = true;
+            mAutoRefreshedCommentsEh = true;
         }
     }
 
@@ -360,7 +360,7 @@ public class CommentsListFragment extends Fragment {
         super.onResume();
         if (mFilteredCommentsView.getAdapter() == null) {
             mFilteredCommentsView.setAdapter(getAdapter());
-            if (!NetworkUtils.isNetworkAvailable(getActivity())){
+            if (!NetworkUtils.networkAvailableEh(getActivity())){
                 ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
             }
             getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
@@ -514,10 +514,10 @@ public class CommentsListFragment extends Fragment {
      * existing ones
      */
     void updateComments(boolean loadMore) {
-        if (mIsUpdatingComments) {
+        if (mUpdatingCommentsEh) {
             AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
             return;
-        } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        } else if (!NetworkUtils.networkAvailableEh(getActivity())) {
             mFilteredCommentsView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             mFilteredCommentsView.setRefreshing(false);
             ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
@@ -585,15 +585,15 @@ public class CommentsListFragment extends Fragment {
             return true;
         }
 
-        private void setItemEnabled(Menu menu, int menuId, boolean isEnabled) {
+        private void setItemEnabled(Menu menu, int menuId, boolean enabledEh) {
             final MenuItem item = menu.findItem(menuId);
-            if (item == null || item.isEnabled() == isEnabled)
+            if (item == null || item.enabledEh() == enabledEh)
                 return;
-            item.setEnabled(isEnabled);
+            item.setEnabled(enabledEh);
             if (item.getIcon() != null) {
                 // must mutate the drawable to avoid affecting other instances of it
                 Drawable icon = item.getIcon().mutate();
-                icon.setAlpha(isEnabled ? 255 : 128);
+                icon.setAlpha(enabledEh ? 255 : 128);
                 item.setIcon(icon);
             }
         }
@@ -602,17 +602,17 @@ public class CommentsListFragment extends Fragment {
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
             final CommentList selectedComments = getAdapter().getSelectedComments();
 
-            boolean hasSelection = (selectedComments.size() > 0);
-            boolean hasApproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.APPROVED);
-            boolean hasUnapproved = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.UNAPPROVED);
-            boolean hasSpam = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.SPAM);
-            boolean hasAnyNonSpam = hasSelection && selectedComments.hasAnyWithoutStatus(CommentStatus.SPAM);
-            boolean hasTrash = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.TRASH);
+            boolean selectionEh = (selectedComments.size() > 0);
+            boolean approvedEh = selectionEh && selectedComments.anyWithStatusEh(CommentStatus.APPROVED);
+            boolean unapprovedEh = selectionEh && selectedComments.anyWithStatusEh(CommentStatus.UNAPPROVED);
+            boolean spamEh = selectionEh && selectedComments.anyWithStatusEh(CommentStatus.SPAM);
+            boolean anyNonSpamEh = selectionEh && selectedComments.anyWithoutStatusEh(CommentStatus.SPAM);
+            boolean trashEh = selectionEh && selectedComments.anyWithStatusEh(CommentStatus.TRASH);
 
-            setItemEnabled(menu, R.id.menu_approve, hasUnapproved || hasSpam || hasTrash);
-            setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
-            setItemEnabled(menu, R.id.menu_spam, hasAnyNonSpam);
-            setItemEnabled(menu, R.id.menu_trash, hasSelection);
+            setItemEnabled(menu, R.id.menu_approve, unapprovedEh || spamEh || trashEh);
+            setItemEnabled(menu, R.id.menu_unapprove, approvedEh);
+            setItemEnabled(menu, R.id.menu_spam, anyNonSpamEh);
+            setItemEnabled(menu, R.id.menu_trash, selectionEh);
 
             final MenuItem trashItem = menu.findItem(R.id.menu_trash);
             if (trashItem != null && mCommentStatusFilter == CommentStatusCriteria.TRASH) {
@@ -665,7 +665,7 @@ public class CommentsListFragment extends Fragment {
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
             loadComments();
         }
-        if (event.isError()) {
+        if (event.errorEh()) {
             if (!TextUtils.isEmpty(event.error.message)) {
                 ToastUtils.showToast(getActivity(), event.error.message);
             }

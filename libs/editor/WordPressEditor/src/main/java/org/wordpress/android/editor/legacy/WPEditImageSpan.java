@@ -41,7 +41,7 @@ public class WPEditImageSpan extends WPImageSpan {
                      Paint paint) {
         super.draw(canvas, text, start, end, x, top, y, bottom, paint);
 
-        if (mEditIconBitmap != null && !mMediaFile.isVideo()) {
+        if (mEditIconBitmap != null && !mMediaFile.videoEh()) {
             // Add 'edit' icon at bottom right of image
             int width = getSize(paint, text, start, end, paint.getFontMetricsInt());
             float editIconXPosition = (x + width) - mEditIconBitmap.getWidth();

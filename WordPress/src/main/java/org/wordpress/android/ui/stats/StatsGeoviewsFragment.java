@@ -33,12 +33,12 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     private GeoviewsModel mCountries;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mCountries != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mCountries);
         }
     }
@@ -187,7 +187,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasCountries()) {
+        if (countriesEh()) {
             List<GeoviewModel> countries = getCountries();
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), countries);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
@@ -199,25 +199,25 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasCountries() {
+    private boolean countriesEh() {
         return mCountries != null && mCountries.getCountries() != null;
     }
 
     private List<GeoviewModel> getCountries() {
-        if (!hasCountries()) {
+        if (!countriesEh()) {
             return null;
         }
         return mCountries.getCountries();
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        return (hasCountries()
+    protected boolean viewAllOptionAvailableEh() {
+        return (countriesEh()
                 && mCountries.getCountries().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return false;
     }
 

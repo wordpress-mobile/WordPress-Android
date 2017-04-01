@@ -8,21 +8,21 @@ import java.util.List;
 
 public class NotificationEvents {
     public static class NotificationsChanged {
-        final public boolean hasUnseenNotes;
+        final public boolean unseenNotesEh;
         public NotificationsChanged() {
-            this.hasUnseenNotes = false;
+            this.unseenNotesEh = false;
         }
-        public NotificationsChanged(boolean hasUnseenNotes) {
-            this.hasUnseenNotes = hasUnseenNotes;
+        public NotificationsChanged(boolean unseenNotesEh) {
+            this.unseenNotesEh = unseenNotesEh;
         }
     }
     public static class NoteModerationFailed {}
     public static class NoteModerationStatusChanged {
-        final boolean isModerating;
+        final boolean moderatingEh;
         final String noteId;
-        public NoteModerationStatusChanged(String noteId, boolean isModerating) {
+        public NoteModerationStatusChanged(String noteId, boolean moderatingEh) {
             this.noteId = noteId;
-            this.isModerating = isModerating;
+            this.moderatingEh = moderatingEh;
         }
     }
     public static class NoteLikeStatusChanged {
@@ -32,11 +32,11 @@ public class NotificationEvents {
         }
     }
     public static class NoteVisibilityChanged {
-        final boolean isHidden;
+        final boolean hiddenEh;
         final String noteId;
-        public NoteVisibilityChanged(String noteId, boolean isHidden) {
+        public NoteVisibilityChanged(String noteId, boolean hiddenEh) {
             this.noteId = noteId;
-            this.isHidden = isHidden;
+            this.hiddenEh = hiddenEh;
         }
     }
     public static class NotificationsSettingsStatusChanged {
@@ -50,9 +50,9 @@ public class NotificationEvents {
         }
     }
     public static class NotificationsUnseenStatus {
-        final public boolean hasUnseenNotes;
-        public NotificationsUnseenStatus(boolean hasUnseenNotes) {
-            this.hasUnseenNotes = hasUnseenNotes;
+        final public boolean unseenNotesEh;
+        public NotificationsUnseenStatus(boolean unseenNotesEh) {
+            this.unseenNotesEh = unseenNotesEh;
         }
     }
     public static class NotificationsRefreshCompleted {

@@ -110,10 +110,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private String mContentPlaceholder = "";
 
     private boolean mDomHasLoaded = false;
-    private boolean mIsKeyboardOpen = false;
+    private boolean mKeyboardOpenEh = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
-    private boolean mIsFormatBarDisabled = false;
+    private boolean mFormatBarDisabledEh = false;
 
     private ConcurrentHashMap<String, MediaFile> mWaitingMediaFiles = new ConcurrentHashMap<>();
     private Set<MediaGallery> mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
@@ -135,7 +135,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
         private long lastSetCoordsTimestamp;
 
-        private boolean isSupported(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
+        private boolean supportedEh(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
             if (clipDescription == null) {
                 return false;
             }
@@ -153,8 +153,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         public boolean onDrag(View view, DragEvent dragEvent) {
             switch (dragEvent.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT) ||
-                            isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE);
+                    return supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT) ||
+                            supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE);
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // would be nice to start marking the place the item will drop
                     break;
@@ -175,7 +175,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     break;
                 case DragEvent.ACTION_DROP:
                     if (mSourceView.getVisibility() == View.VISIBLE) {
-                        if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
+                        if (supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
                             // don't allow dropping images into the HTML source
                             ToastUtils.showToast(getActivity(), R.string.editor_dropped_html_images_not_allowed,
                                     ToastUtils.Duration.LONG);
@@ -186,7 +186,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         }
                     }
 
-                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
+                    if (supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
                             ("zss_field_title".equals(mFocusedFieldId))) {
                         // don't allow dropping images into the title field
                         ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed,
@@ -345,8 +345,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // Toggle format bar on/off as user changes focus between title and content in HTML mode
         mSourceViewTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                updateFormatBarEnabledState(!hasFocus);
+            public void onFocusChange(View v, boolean focusEh) {
+                updateFormatBarEnabledState(!focusEh);
             }
         });
 
@@ -376,7 +376,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onPause() {
         super.onPause();
         mEditorWasPaused = true;
-        mIsKeyboardOpen = false;
+        mKeyboardOpenEh = false;
     }
 
     @Override
@@ -388,7 +388,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         if (mEditorWasPaused
                 && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mIsKeyboardOpen = true;
+            mKeyboardOpenEh = true;
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
         }
@@ -456,7 +456,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Remember the currently active format bar buttons so they can be re-activated after the reload
                 ArrayList<String> activeTags = new ArrayList<>();
                 for (Map.Entry<String, ToggleButton> entry : mTagToggleButtonMap.entrySet()) {
-                    if (entry.getValue().isChecked()) {
+                    if (entry.getValue().checkedEh()) {
                         activeTags.add(entry.getKey());
                     }
                 }
@@ -470,7 +470,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 setupFormatBarButtonMap(formatBar);
 
-                if (mIsFormatBarDisabled) {
+                if (mFormatBarDisabledEh) {
                     updateFormatBarEnabledState(false);
                 }
 
@@ -590,7 +590,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
-        if (hasFailedMediaUploads()) {
+        if (failedMediaUploadsEh()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new OnClickListener() {
@@ -611,7 +611,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
-    public boolean isActionInProgress() {
+    public boolean actionInProgressEh() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
     }
 
@@ -623,7 +623,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
         // Don't switch to HTML mode if currently uploading media
-        if (!mUploadingMedia.isEmpty() || isActionInProgress()) {
+        if (!mUploadingMedia.isEmpty() || actionInProgressEh()) {
             toggleButton.setChecked(false);
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
@@ -632,7 +632,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         clearFormatBarButtons();
         updateFormatBarEnabledState(true);
 
-        if (toggleButton.isChecked()) {
+        if (toggleButton.checkedEh()) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -767,7 +767,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
             ((ToggleButton) v).setChecked(false);
 
-            if (isActionInProgress()) {
+            if (actionInProgressEh()) {
                 ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
                 return;
             }
@@ -779,7 +779,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_MEDIA));
             }
         } else if (id == R.id.format_bar_button_link) {
-            if (!((ToggleButton) v).isChecked()) {
+            if (!((ToggleButton) v).checkedEh()) {
                 // The link button was checked when it was pressed; remove the current link
                 mWebView.execJavaScriptFromString("ZSSEditor.unlink();");
                 mEditorFragmentListener.onTrackableEvent(TrackableEvent.UNLINK_BUTTON_TAPPED);
@@ -802,7 +802,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         if (event.getAction() == MotionEvent.ACTION_UP) {
             // If the WebView or EditText has received a touch event, the keyboard will be displayed and the action bar
             // should hide
-            mIsKeyboardOpen = true;
+            mKeyboardOpenEh = true;
             hideActionBarIfNeeded();
         }
         return false;
@@ -813,7 +813,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      */
     @Override
     public void onImeBack() {
-        mIsKeyboardOpen = false;
+        mKeyboardOpenEh = false;
         showActionBarIfNeeded();
     }
 
@@ -889,7 +889,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
             final String imageMeta = Utils.escapeQuotes(StringUtils.notNullStr(extras.getString("imageMeta")));
             final int imageRemoteId = extras.getInt("imageRemoteId");
-            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
+            final boolean featuredImageEh = extras.getBoolean("featuredEh");
 
             mWebView.post(new Runnable() {
                 @Override
@@ -899,7 +899,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             });
 
             if (imageRemoteId != 0) {
-                if (isFeaturedImage) {
+                if (featuredImageEh) {
                     mFeaturedImageId = imageRemoteId;
                     mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
                 } else {
@@ -1026,7 +1026,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             public void run() {
                 String mediaId = String.valueOf(mediaFile.getId());
                 if (URLUtil.isNetworkUrl(mediaUrl)) {
-                    if (mediaFile.isVideo()) {
+                    if (mediaFile.videoEh()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                                 mediaFile.getVideoPressShortCode());
@@ -1039,7 +1039,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                     mActionStartedAt = System.currentTimeMillis();
                 } else {
-                    if (mediaFile.isVideo()) {
+                    if (mediaFile.videoEh()) {
                         String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
                         mWebView.execJavaScriptFromString("ZSSEditor.insertLocalVideo(" + mediaId + ", '" + posterUrl +
                                 "');");
@@ -1088,12 +1088,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public boolean isUploadingMedia() {
+    public boolean uploadingMediaEh() {
         return (mUploadingMedia.size() > 0);
     }
 
     @Override
-    public boolean hasFailedMediaUploads() {
+    public boolean failedMediaUploadsEh() {
         return (mFailedMediaIds.size() > 0);
     }
 
@@ -1440,7 +1440,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 String imageId = JSONUtils.getString(meta, "attachment_id");
                 if (!imageId.isEmpty()) {
-                    dialogBundle.putBoolean("isFeatured", mFeaturedImageId == Integer.parseInt(imageId));
+                    dialogBundle.putBoolean("featuredEh", mFeaturedImageId == Integer.parseInt(imageId));
                 }
 
                 imageSettingsDialogFragment.setArguments(dialogBundle);
@@ -1544,7 +1544,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null
-                && !isHardwareKeyboardPresent()
+                && !hardwareKeyboardPresentEh()
                 && mHideActionBarOnSoftKeyboardUp
                 && mIsKeyboardOpen
                 && actionBar.isShowing()) {
@@ -1566,7 +1566,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     /**
      * Returns true if a hardware keyboard is detected, otherwise false.
      */
-    private boolean isHardwareKeyboardPresent() {
+    private boolean hardwareKeyboardPresentEh() {
         Configuration config = getResources().getConfiguration();
         boolean returnValue = false;
         if (config.keyboard != Configuration.KEYBOARD_NOKEYS) {
@@ -1582,7 +1582,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             button.setAlpha(alpha);
         }
 
-        mIsFormatBarDisabled = !enabled;
+        mFormatBarDisabledEh = !enabled;
     }
 
     private void clearFormatBarButtons() {
@@ -1673,7 +1673,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             content.insert(selectionEnd + startTag.length(), endTag);
             toggleButton.setChecked(false);
             mSourceViewContent.setSelection(selectionEnd + startTag.length() + endTag.length());
-        } else if (toggleButton.isChecked()) {
+        } else if (toggleButton.checkedEh()) {
             // Insert opening tag
             content.insert(selectionStart, startTag);
             mSourceViewContent.setSelection(selectionEnd + startTag.length());

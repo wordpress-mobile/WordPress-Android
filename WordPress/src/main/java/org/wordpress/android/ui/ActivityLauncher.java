@@ -110,7 +110,7 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
-        if (ThemeBrowserActivity.isAccessible(site)) {
+        if (ThemeBrowserActivity.accessibleEh(site)) {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
@@ -152,7 +152,7 @@ public class ActivityLauncher {
         openUrlExternal(context, site.getAdminUrl());
     }
 
-    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post, boolean isPage) {
+    public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post, boolean pageEh) {
         if (post == null) return;
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
@@ -171,12 +171,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage) {
+    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean pageEh) {
         if (site == null) return;
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, pageEh);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -263,12 +263,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean pageEh) {
         if (post == null) return;
 
         StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),
                 String.valueOf(post.getRemotePostId()), post.getTitle(), post.getLink(),
-                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+                pageEh ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, statsPostModel);
     }
 

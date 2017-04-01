@@ -19,12 +19,12 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     private TopPostsAndPagesModel mTopPostsAndPagesModel = null;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mTopPostsAndPagesModel != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mTopPostsAndPagesModel);
         }
     }
@@ -64,7 +64,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasTopPostsAndPages()) {
+        if (topPostsAndPagesEh()) {
             List<StatsPostModel> postViews = mTopPostsAndPagesModel.getTopPostsAndPages();
             ArrayAdapter adapter = new PostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
@@ -74,24 +74,24 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasTopPostsAndPages() {
-        return mTopPostsAndPagesModel != null && mTopPostsAndPagesModel.hasTopPostsAndPages();
+    private boolean topPostsAndPagesEh() {
+        return mTopPostsAndPagesModel != null && mTopPostsAndPagesModel.topPostsAndPagesEh();
     }
 
     private List<StatsPostModel> getTopPostsAndPages() {
-        if (!hasTopPostsAndPages()) {
+        if (!topPostsAndPagesEh()) {
             return new ArrayList<StatsPostModel>(0);
         }
         return mTopPostsAndPagesModel.getTopPostsAndPages();
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        return hasTopPostsAndPages() && getTopPostsAndPages().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
+    protected boolean viewAllOptionAvailableEh() {
+        return topPostsAndPagesEh() && getTopPostsAndPages().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return false;
     }
 

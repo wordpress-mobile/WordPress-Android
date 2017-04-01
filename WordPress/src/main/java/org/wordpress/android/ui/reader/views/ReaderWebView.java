@@ -59,10 +59,10 @@ public class ReaderWebView extends WebView {
     private ReaderWebViewPageFinishedListener mPageFinishedListener;
 
     private static String mToken;
-    private static boolean mIsPrivatePost;
+    private static boolean mPrivatePostEh;
     private static boolean mBlogSchemeIsHttps;
 
-    private boolean mIsDestroyed;
+    private boolean mDestroyedEh;
     @Inject AccountStore mAccountStore;
 
     public ReaderWebView(Context context) {
@@ -112,12 +112,12 @@ public class ReaderWebView extends WebView {
 
     @Override
     public void destroy() {
-        mIsDestroyed = true;
+        mDestroyedEh = true;
         super.destroy();
     }
 
-    public boolean isDestroyed() {
-        return mIsDestroyed;
+    public boolean destroyedEh() {
+        return mDestroyedEh;
     }
 
 
@@ -133,7 +133,7 @@ public class ReaderWebView extends WebView {
         mUrlClickListener = listener;
     }
 
-    private boolean hasUrlClickListener() {
+    private boolean urlClickListenerEh() {
         return (mUrlClickListener != null);
     }
 
@@ -145,7 +145,7 @@ public class ReaderWebView extends WebView {
         mPageFinishedListener = listener;
     }
 
-    private boolean hasPageFinishedListener() {
+    private boolean pageFinishedListenerEh() {
         return (mPageFinishedListener != null);
     }
 
@@ -153,7 +153,7 @@ public class ReaderWebView extends WebView {
         mCustomViewListener = listener;
     }
 
-    private boolean hasCustomViewListener() {
+    private boolean customViewListenerEh() {
         return (mCustomViewListener != null);
     }
 
@@ -161,25 +161,25 @@ public class ReaderWebView extends WebView {
         return mCustomViewListener;
     }
 
-    public void setIsPrivatePost(boolean isPrivatePost) {
-        mIsPrivatePost = isPrivatePost;
+    public void setIsPrivatePost(boolean privatePostEh) {
+        mPrivatePostEh = privatePostEh;
     }
 
     public void setBlogSchemeIsHttps(boolean blogSchemeIsHttps) {
         mBlogSchemeIsHttps = blogSchemeIsHttps;
     }
 
-    private static boolean isValidClickedUrl(String url) {
+    private static boolean validClickedUrlEh(String url) {
         // only return true for http(s) urls so we avoid file: and data: clicks
         return (url != null && (url.startsWith("http") || url.startsWith("wordpress:")));
     }
 
-    public boolean isCustomViewShowing() {
-        return mReaderChromeClient.isCustomViewShowing();
+    public boolean customViewShowingEh() {
+        return mReaderChromeClient.customViewShowingEh();
     }
 
     public void hideCustomView() {
-        if (isCustomViewShowing()) {
+        if (customViewShowingEh()) {
             mReaderChromeClient.onHideCustomView();
         }
     }
@@ -191,8 +191,8 @@ public class ReaderWebView extends WebView {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
             HitTestResult hr = getHitTestResult();
-            if (hr != null && isValidClickedUrl(hr.getExtra())) {
-                if (UrlUtils.isImageUrl(hr.getExtra())) {
+            if (hr != null && validClickedUrlEh(hr.getExtra())) {
+                if (UrlUtils.imageUrlEh(hr.getExtra())) {
                     return mUrlClickListener.onImageUrlClick(
                             hr.getExtra(),
                             this,
@@ -218,7 +218,7 @@ public class ReaderWebView extends WebView {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            if (mReaderWebView.hasPageFinishedListener()) {
+            if (mReaderWebView.pageFinishedListenerEh()) {
                 mReaderWebView.getPageFinishedListener().onPageFinished(view, url);
             }
         }
@@ -230,8 +230,8 @@ public class ReaderWebView extends WebView {
             // automatically try to open urls (without being clicked)
             // before the page has loaded
             return view.getVisibility() == View.VISIBLE
-                    && mReaderWebView.hasUrlClickListener()
-                    && isValidClickedUrl(url)
+                    && mReaderWebView.urlClickListenerEh()
+                    && validClickedUrlEh(url)
                     && mReaderWebView.getUrlClickListener().onUrlClick(url);
         }
 
@@ -239,7 +239,7 @@ public class ReaderWebView extends WebView {
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             URL imageUrl  = null;
-            if (mIsPrivatePost && mBlogSchemeIsHttps && UrlUtils.isImageUrl(url)) {
+            if (mPrivatePostEh && mBlogSchemeIsHttps && UrlUtils.imageUrlEh(url)) {
                 try {
                     imageUrl = new URL(UrlUtils.makeHttps(url));
                 } catch (MalformedURLException e) {
@@ -284,7 +284,7 @@ public class ReaderWebView extends WebView {
          * request the view that will host the fullscreen video
          */
         private ViewGroup getTargetView() {
-            if (mReaderWebView.hasCustomViewListener()) {
+            if (mReaderWebView.customViewListenerEh()) {
                 return mReaderWebView.getCustomViewListener().onRequestCustomView();
             } else {
                 return null;
@@ -295,7 +295,7 @@ public class ReaderWebView extends WebView {
          * request the view that should be hidden when showing fullscreen video
          */
         private ViewGroup getContentView() {
-            if (mReaderWebView.hasCustomViewListener()) {
+            if (mReaderWebView.customViewListenerEh()) {
                 return mReaderWebView.getCustomViewListener().onRequestContentView();
             } else {
                 return null;
@@ -325,7 +325,7 @@ public class ReaderWebView extends WebView {
                 targetView.setVisibility(View.VISIBLE);
             }
 
-            if (mReaderWebView.hasCustomViewListener()) {
+            if (mReaderWebView.customViewListenerEh()) {
                 mReaderWebView.getCustomViewListener().onCustomViewShown();
             }
 
@@ -358,7 +358,7 @@ public class ReaderWebView extends WebView {
             if (mCustomViewCallback != null) {
                 mCustomViewCallback.onCustomViewHidden();
             }
-            if (mReaderWebView.hasCustomViewListener()) {
+            if (mReaderWebView.customViewListenerEh()) {
                 mReaderWebView.getCustomViewListener().onCustomViewHidden();
             }
 
@@ -366,7 +366,7 @@ public class ReaderWebView extends WebView {
             mCustomViewCallback = null;
         }
 
-        boolean isCustomViewShowing() {
+        boolean customViewShowingEh() {
             return (mCustomView != null);
         }
     }

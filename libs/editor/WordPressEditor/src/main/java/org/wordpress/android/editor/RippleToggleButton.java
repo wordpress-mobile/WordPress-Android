@@ -86,7 +86,7 @@ public class RippleToggleButton extends ToggleButton {
     }
 
     private void startRippleAnimation() {
-        if (this.isEnabled() && !mAnimationIsRunning) {
+        if (this.enabledEh() && !mAnimationIsRunning) {
             mHalfWidth = getMeasuredWidth() / 2;
             mAnimationIsRunning = true;
             invalidate();

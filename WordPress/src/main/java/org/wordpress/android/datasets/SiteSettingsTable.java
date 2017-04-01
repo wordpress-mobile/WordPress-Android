@@ -74,7 +74,7 @@ public final class SiteSettingsTable {
         if (category == null) return;
 
         ContentValues values = category.serializeToDatabase();
-        category.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
+        category.inLocalTableEh = WordPress.wpDB.getDatabase().insertWithOnConflict(
                 CATEGORIES_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
     }
 
@@ -90,7 +90,7 @@ public final class SiteSettingsTable {
         if (settings == null) return;
 
         ContentValues values = settings.serializeToDatabase();
-        settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
+        settings.inLocalTableEh = WordPress.wpDB.getDatabase().insertWithOnConflict(
                 SiteSettingsModel.SETTINGS_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE) != -1;
 
         saveCategories(settings.categories);

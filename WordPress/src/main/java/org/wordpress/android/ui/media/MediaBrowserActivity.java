@@ -245,7 +245,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
-            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
+            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.dirtyEh()) {
                 // alert the user that there are unsaved changes
                 new AlertDialog.Builder(this)
                         .setMessage(R.string.confirm_discard_changes)
@@ -316,19 +316,19 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
      * Analytics about new media
      *
      * @param isNewMedia Whether is a fresh (just taken) photo/video or not
-     * @param isVideo Whether is a video or not
+     * @param videoEh Whether is a video or not
      * @param uri The URI of the media on the device, or null
      */
-    private void trackAddMediaFromDeviceEvents(boolean isNewMedia, boolean isVideo, Uri uri) {
+    private void trackAddMediaFromDeviceEvents(boolean isNewMedia, boolean videoEh, Uri uri) {
         if (uri == null) {
             AppLog.e(AppLog.T.MEDIA, "Cannot track new media event if mediaURI is null!!");
             return;
         }
 
-        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
+        Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, videoEh, uri, null);
         properties.put("via", isNewMedia ? "device_camera" : "device_library");
 
-        if (isVideo) {
+        if (videoEh) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_VIDEO, properties);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, properties);
@@ -541,7 +541,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.w(AppLog.T.MEDIA, "Received onMediaChanged error: " + event.error.type
                     + " - " + event.error.message);
             showMediaToastError(R.string.media_generic_error, event.error.message);
@@ -577,7 +577,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.w(AppLog.T.MEDIA, "Received OnMediaListFetched error: " + event.error.type
                     + " - " + event.error.message);
             ToastUtils.showToast(this, "Media fetch error occurred: " + event.error.message, ToastUtils.Duration.LONG);
@@ -589,7 +589,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.d(AppLog.T.MEDIA, "Received onMediaUploaded error:" + event.error.type
                     + " - " + event.error.message);
             switch (event.error.type) {
@@ -663,7 +663,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
             if (WordPressMediaUtils.canDeleteMedia(mediaModel)) {
                 if (mediaModel.getUploadState() != null &&
-                        MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
+                        MediaUtils.localFileEh(mediaModel.getUploadState().toLowerCase())) {
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
                     sanitizedIds.add(String.valueOf(currentId));
                     continue;
@@ -802,7 +802,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void fetchMedia(Uri mediaUri, final String mimeType) {
-        if (!MediaUtils.isInMediaStore(mediaUri)) {
+        if (!MediaUtils.inMediaStoreEh(mediaUri)) {
             // Create an AsyncTask to download the file
             new AsyncTask<Uri, Integer, Uri>() {
                 @Override
@@ -827,7 +827,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void addMediaToUploadService(@NonNull MediaModel media) {
         // Start the upload service if it's not started and fill the media queue
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.networkAvailableEh(this)) {
             AppLog.v(AppLog.T.MEDIA, "Unable to start MediaUploadService, internet connection required.");
             return;
         }
@@ -905,7 +905,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void startMediaDeleteService(ArrayList<MediaModel> mediaToDelete) {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.networkAvailableEh(this)) {
             AppLog.v(AppLog.T.MEDIA, "Unable to start MediaDeleteService, internet connection required.");
             return;
         }

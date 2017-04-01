@@ -121,28 +121,28 @@ public class ReaderCommentActions {
     /*
      * like or unlike the passed comment
      */
-    public static boolean performLikeAction(final ReaderComment comment, boolean isAskingToLike,
+    public static boolean performLikeAction(final ReaderComment comment, boolean askingToLikeEh,
                                             final long wpComUserId) {
         if (comment == null) {
             return false;
         }
 
         // make sure like status is changing
-        boolean isCurrentlyLiked = ReaderCommentTable.isCommentLikedByCurrentUser(comment);
-        if (isCurrentlyLiked == isAskingToLike) {
+        boolean currentlyLikedEh = ReaderCommentTable.commentLikedByCurrentUserEh(comment);
+        if (currentlyLikedEh == askingToLikeEh) {
             AppLog.w(T.READER, "comment like unchanged");
             return false;
         }
 
         // update like status and like count in local db
-        int newNumLikes = (isAskingToLike ? comment.numLikes + 1 : comment.numLikes - 1);
-        ReaderCommentTable.setLikesForComment(comment, newNumLikes, isAskingToLike);
-        ReaderLikeTable.setCurrentUserLikesComment(comment, isAskingToLike, wpComUserId);
+        int newNumLikes = (askingToLikeEh ? comment.numLikes + 1 : comment.numLikes - 1);
+        ReaderCommentTable.setLikesForComment(comment, newNumLikes, askingToLikeEh);
+        ReaderLikeTable.setCurrentUserLikesComment(comment, askingToLikeEh, wpComUserId);
 
         // sites/$site/comments/$comment_ID/likes/new
-        final String actionName = isAskingToLike ? "like" : "unlike";
+        final String actionName = askingToLikeEh ? "like" : "unlike";
         String path = "sites/" + comment.blogId + "/comments/" + comment.commentId + "/likes/";
-        if (isAskingToLike) {
+        if (askingToLikeEh) {
             path += "new";
         } else {
             path += "mine/delete";
@@ -156,8 +156,8 @@ public class ReaderCommentActions {
                     AppLog.d(T.READER, String.format("comment %s succeeded", actionName));
                 } else {
                     AppLog.w(T.READER, String.format("comment %s failed", actionName));
-                    ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.isLikedByCurrentUser);
-                    ReaderLikeTable.setCurrentUserLikesComment(comment, comment.isLikedByCurrentUser, wpComUserId);
+                    ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.likedByCurrentUserEh);
+                    ReaderLikeTable.setCurrentUserLikesComment(comment, comment.likedByCurrentUserEh, wpComUserId);
                 }
             }
         };
@@ -172,8 +172,8 @@ public class ReaderCommentActions {
                     AppLog.w(T.READER, String.format("comment %s failed (%s)", actionName, error));
                 }
                 AppLog.e(T.READER, volleyError);
-                ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.isLikedByCurrentUser);
-                ReaderLikeTable.setCurrentUserLikesComment(comment, comment.isLikedByCurrentUser, wpComUserId);
+                ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.likedByCurrentUserEh);
+                ReaderLikeTable.setCurrentUserLikesComment(comment, comment.likedByCurrentUserEh, wpComUserId);
             }
         };
 

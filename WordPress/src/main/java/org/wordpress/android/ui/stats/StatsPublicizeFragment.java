@@ -25,7 +25,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     private PublicizeModel mPublicizeData;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mPublicizeData != null;
     }
     @Override
@@ -67,7 +67,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasPublicize()) {
+        if (publicizeEh()) {
             ArrayAdapter adapter = new PublicizeAdapter(getActivity(), getPublicize());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -76,26 +76,26 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasPublicize() {
+    private boolean publicizeEh() {
         return mPublicizeData != null
                 && mPublicizeData.getServices() != null
                 && mPublicizeData.getServices().size() > 0;
     }
 
     private List<SingleItemModel> getPublicize() {
-        if (!hasPublicize()) {
+        if (!publicizeEh()) {
             return null;
         }
         return mPublicizeData.getServices();
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
+    protected boolean viewAllOptionAvailableEh() {
         return false;
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return false;
     }
 

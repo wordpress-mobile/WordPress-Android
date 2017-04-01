@@ -20,7 +20,7 @@ class ThumbnailLoader {
     private final Context mContext;
     private final ThreadPoolExecutor mExecutor;
     private final Handler mHandler;
-    private boolean mIsFadeEnabled = true;
+    private boolean mFadeEnabledEh = true;
 
     private static final int FADE_TRANSITION = 250;
 
@@ -33,8 +33,8 @@ class ThumbnailLoader {
         mHandler = new Handler(Looper.getMainLooper());
     }
 
-    void loadThumbnail(ImageView imageView, long imageId, boolean isVideo) {
-        Runnable task = new ThumbnailLoaderRunnable(imageView, imageId, isVideo);
+    void loadThumbnail(ImageView imageView, long imageId, boolean videoEh) {
+        Runnable task = new ThumbnailLoaderRunnable(imageView, imageId, videoEh);
         mExecutor.submit(task);
     }
 
@@ -43,11 +43,11 @@ class ThumbnailLoader {
      * to prevent unnecessary fade/flicker
      */
     void temporarilyDisableFade() {
-        mIsFadeEnabled = false;
+        mFadeEnabledEh = false;
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mIsFadeEnabled = true;
+                mFadeEnabledEh = true;
             }
         }, 500);
     }
@@ -58,22 +58,22 @@ class ThumbnailLoader {
         private final WeakReference<ImageView> mWeakImageView;
         private final long mImageId;
         private final String mTag;
-        private final boolean mIsVideo;
+        private final boolean mVideoEh;
         private Bitmap mThumbnail;
 
-        ThumbnailLoaderRunnable(ImageView imageView, long imageId, boolean isVideo) {
+        ThumbnailLoaderRunnable(ImageView imageView, long imageId, boolean videoEh) {
             mWeakImageView = new WeakReference<>(imageView);
             mImageId = imageId;
-            mIsVideo = isVideo;
+            mVideoEh = videoEh;
 
             mTag = Long.toString(mImageId);
             imageView.setTag(mTag);
-            if (mIsFadeEnabled) {
+            if (mFadeEnabledEh) {
                 imageView.setImageResource(R.drawable.photo_picker_item_background);
             }
         }
 
-        private boolean isImageViewValid() {
+        private boolean imageViewValidEh() {
             ImageView imageView = mWeakImageView.get();
             if (imageView != null && imageView.getTag() instanceof String) {
                 // make sure this imageView has the original tag - it may
@@ -87,7 +87,7 @@ class ThumbnailLoader {
 
         @Override
         public void run() {
-            if (mIsVideo) {
+            if (mVideoEh) {
                 mThumbnail = MediaStore.Video.Thumbnails.getThumbnail(
                         mContext.getContentResolver(),
                         mImageId,
@@ -104,9 +104,9 @@ class ThumbnailLoader {
                 @Override
                 public void run() {
                     // TODO: handle null thumbnail - show error image, maybe?
-                    if (mThumbnail != null && isImageViewValid()) {
+                    if (mThumbnail != null && imageViewValidEh()) {
                         mWeakImageView.get().setImageBitmap(mThumbnail);
-                        if (mIsFadeEnabled) {
+                        if (mFadeEnabledEh) {
                             ObjectAnimator alpha = ObjectAnimator.ofFloat(
                                     mWeakImageView.get(), View.ALPHA, 0.25f, 1f);
                             alpha.setDuration(FADE_TRANSITION);

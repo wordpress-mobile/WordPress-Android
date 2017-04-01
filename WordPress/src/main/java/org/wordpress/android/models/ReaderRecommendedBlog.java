@@ -66,7 +66,7 @@ public class ReaderRecommendedBlog {
         this.imageUrl = StringUtils.notNullStr(imageUrl);
     }
 
-    protected boolean isSameAs(ReaderRecommendedBlog blog) {
+    protected boolean sameAsEh(ReaderRecommendedBlog blog) {
         if (blog == null) {
             return false;
         }

@@ -58,10 +58,10 @@ public class ReaderTagStrip extends LinearLayout {
 
         mNumTags = 0;
 
-        if (post.hasPrimaryTag()) {
+        if (post.primaryTagEh()) {
             addTag(post.getPrimaryTag());
         }
-        if (post.hasSecondaryTag()) {
+        if (post.secondaryTagEh()) {
             addTag(post.getSecondaryTag());
         }
 

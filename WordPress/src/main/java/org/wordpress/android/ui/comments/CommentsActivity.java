@@ -146,7 +146,7 @@ public class CommentsActivity extends AppCompatActivity
         return (CommentDetailFragment) fragment;
     }
 
-    private boolean hasDetailFragment() {
+    private boolean detailFragmentEh() {
         return (getDetailFragment() != null);
     }
 
@@ -159,7 +159,7 @@ public class CommentsActivity extends AppCompatActivity
         return (CommentsListFragment) fragment;
     }
 
-    private boolean hasListFragment() {
+    private boolean listFragmentEh() {
         return (getListFragment() != null);
     }
 
@@ -173,7 +173,7 @@ public class CommentsActivity extends AppCompatActivity
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
           .addToBackStack(tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (hasDetailFragment())
+        if (detailFragmentEh())
             ft.hide(getDetailFragment());
         ft.commit();
     }
@@ -239,12 +239,12 @@ public class CommentsActivity extends AppCompatActivity
         outState.putSerializable(WordPress.SITE, mSite);
 
         // retain the id of the highlighted and selected comments
-        if (mComment != null && hasDetailFragment()) {
+        if (mComment != null && detailFragmentEh()) {
             outState.putSerializable(KEY_SELECTED_COMMENT, mComment);
         }
 
-        if (hasListFragment()) {
-            outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
+        if (listFragmentEh()) {
+            outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mAutoRefreshedCommentsEh);
             outState.putString(KEY_EMPTY_VIEW_MESSAGE, getListFragment().getEmptyViewMessage());
         }
         super.onSaveInstanceState(outState);

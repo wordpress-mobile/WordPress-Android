@@ -24,13 +24,13 @@ public class FollowDataModel implements Serializable {
     private String followText;
     private String followingText;
     private String followingHoverText;
-    private boolean isFollowing;
+    private boolean followingEh;
     private int blogID;
     private int siteID;
     private String statsSource;
     private String blogDomain;
 
-    public transient boolean isRestCallInProgress = false;
+    public transient boolean restCallInProgressEh = false;
 
     public FollowDataModel(JSONObject followDataJSON) throws JSONException {
         this.type = followDataJSON.getString("type");
@@ -38,19 +38,19 @@ public class FollowDataModel implements Serializable {
         this.followText = paramsJSON.getString("follow-text");
         this.followingText = paramsJSON.getString("following-text");
         this.followingHoverText = paramsJSON.getString("following-hover-text");
-        this.isFollowing = paramsJSON.getBoolean("is_following");
+        this.followingEh = paramsJSON.getBoolean("is_following");
         this.blogID = paramsJSON.getInt("blog_id");
         this.siteID = paramsJSON.getInt("site_id");
         this.statsSource = paramsJSON.getString("stat-source");
         this.blogDomain = paramsJSON.getString("blog_domain");
     }
 
-    public boolean isFollowing() {
-        return isFollowing;
+    public boolean followingEh() {
+        return followingEh;
     }
 
     public void setIsFollowing(boolean following) {
-        isFollowing = following;
+        followingEh = following;
     }
 
     public int getBlogID() {

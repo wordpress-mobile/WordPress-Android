@@ -69,7 +69,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private View mNewNotificationsBar;
 
     private long mRestoredScrollNoteID;
-    private boolean mIsAnimatingOutNewNotificationsBar;
+    private boolean mAnimatingOutNewNotificationsBarEh;
 
     @Inject AccountStore mAccountStore;
 
@@ -292,10 +292,10 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL);
     }
 
-    private void setNoteIsHidden(String noteId, boolean isHidden) {
+    private void setNoteIsHidden(String noteId, boolean hiddenEh) {
         if (mNotesAdapter == null) return;
 
-        if (isHidden) {
+        if (hiddenEh) {
             mNotesAdapter.addHiddenNoteId(noteId);
         } else {
             // Scroll the row into view if it isn't visible so the animation can be seen
@@ -309,10 +309,10 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
     }
 
-    private void setNoteIsModerating(String noteId, boolean isModerating) {
+    private void setNoteIsModerating(String noteId, boolean moderatingEh) {
         if (mNotesAdapter == null) return;
 
-        if (isModerating) {
+        if (moderatingEh) {
             mNotesAdapter.addModeratingNoteId(noteId);
         } else {
             mNotesAdapter.removeModeratingNoteId(noteId);
@@ -384,7 +384,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             return;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             mSwipeRefreshLayout.setRefreshing(false);
             return;
         }
@@ -549,8 +549,8 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NoteModerationStatusChanged event) {
-        if (event.isModerating) {
-            setNoteIsModerating(event.noteId, event.isModerating);
+        if (event.moderatingEh) {
+            setNoteIsModerating(event.noteId, event.moderatingEh);
             EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
         } else {
             // Moderation done -> refresh the note before calling the end.
@@ -558,13 +558,13 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                     new RestRequest.Listener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            setNoteIsModerating(event.noteId, event.isModerating);
+                            setNoteIsModerating(event.noteId, event.moderatingEh);
                             EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
                         }
                     }, new RestRequest.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            setNoteIsModerating(event.noteId, event.isModerating);
+                            setNoteIsModerating(event.noteId, event.moderatingEh);
                             EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteModerationStatusChanged.class);
                         }
                     }
@@ -597,7 +597,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NoteVisibilityChanged event) {
-        setNoteIsHidden(event.noteId, event.isHidden);
+        setNoteIsHidden(event.noteId, event.hiddenEh);
 
         EventBus.getDefault().removeStickyEvent(NotificationEvents.NoteVisibilityChanged.class);
     }
@@ -626,7 +626,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
         mRestoredScrollNoteID = getFirstVisibleItemID(); // Remember the ID of the first note visible on the screen
         getNotesAdapter().reloadNotesFromDBAsync();
-        if (event.hasUnseenNotes) {
+        if (event.unseenNotesEh) {
             showNewUnseenNotificationsUI();
         }
     }
@@ -637,7 +637,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             return;
         }
         // if a new note arrives when the notifications list is on Foreground.
-        if (event.hasUnseenNotes) {
+        if (event.unseenNotesEh) {
             showNewUnseenNotificationsUI();
         } else {
             hideNewNotificationsBar();
@@ -676,12 +676,12 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     /*
      * bar that appears at the bottom when new notifications are available
      */
-    private boolean isNewNotificationsBarShowing() {
+    private boolean newNotificationsBarShowingEh() {
         return (mNewNotificationsBar != null && mNewNotificationsBar.getVisibility() == View.VISIBLE);
     }
 
     private void showNewNotificationsBar() {
-        if (!isAdded() || isNewNotificationsBarShowing()) {
+        if (!isAdded() || newNotificationsBarShowingEh()) {
             return;
         }
 
@@ -690,11 +690,11 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     }
 
     private void hideNewNotificationsBar() {
-        if (!isAdded() || !isNewNotificationsBarShowing() || mIsAnimatingOutNewNotificationsBar) {
+        if (!isAdded() || !newNotificationsBarShowingEh() || mAnimatingOutNewNotificationsBarEh) {
             return;
         }
 
-        mIsAnimatingOutNewNotificationsBar = true;
+        mAnimatingOutNewNotificationsBarEh = true;
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
@@ -703,7 +703,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             public void onAnimationEnd(Animation animation) {
                 if (isAdded()) {
                     mNewNotificationsBar.setVisibility(View.GONE);
-                    mIsAnimatingOutNewNotificationsBar = false;
+                    mAnimatingOutNewNotificationsBarEh = false;
                 }
             }
             @Override

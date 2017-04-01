@@ -72,7 +72,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.siteTextView.setVisibility(View.GONE);
         }
 
-        if (hasImageMediaItem()) {
+        if (imageMediaItemEh()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
@@ -101,7 +101,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         int paddingRight = view.getPaddingRight();
         int paddingBottom = view.getPaddingBottom();
         if (mCommentStatus == CommentStatus.UNAPPROVED) {
-            if (hasCommentNestingLevel()) {
+            if (commentNestingLevelEh()) {
                 paddingLeft = mIndentedLeftPadding;
                 view.setBackgroundResource(R.drawable.comment_reply_unapproved_background);
             } else {
@@ -116,7 +116,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.nameTextView.setTextColor(mUnapprovedTextColor);
             noteBlockHolder.commentTextView.setTextColor(mUnapprovedTextColor);
         } else {
-            if (hasCommentNestingLevel()) {
+            if (commentNestingLevelEh()) {
                 paddingLeft = mIndentedLeftPadding;
                 view.setBackgroundResource(R.drawable.comment_reply_background);
                 noteBlockHolder.dividerView.setVisibility(View.INVISIBLE);
@@ -148,7 +148,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return getNoteData().optInt("timestamp", 0);
     }
 
-    private boolean hasCommentNestingLevel() {
+    private boolean commentNestingLevelEh() {
         try {
             JSONObject commentTextObject = getNoteData().getJSONObject("comment_text");
             return commentTextObject.optInt("nest_level", 0) > 0;

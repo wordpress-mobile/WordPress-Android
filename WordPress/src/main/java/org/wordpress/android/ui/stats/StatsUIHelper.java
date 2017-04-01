@@ -34,7 +34,7 @@ class StatsUIHelper {
     private static final int TABLET_720DP = 720;
     private static final int TABLET_600DP = 600;
 
-    private static boolean isInLandscape(Activity act) {
+    private static boolean inLandscapeEh(Activity act) {
         Display display = act.getWindowManager().getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
@@ -143,17 +143,17 @@ class StatsUIHelper {
 
         // add each group
         for (int i = 0; i < groupCount; i++) {
-            boolean isExpanded = mGroupIdToExpandedMap.get(i);
+            boolean expandedEh = mGroupIdToExpandedMap.get(i);
 
             // reuse existing view when possible
             final View groupView;
             if (i < numExistingGroupViews) {
                 View convertView = mLinearLayout.getChildAt(i);
-                groupView = mAdapter.getGroupView(i, isExpanded, convertView, mLinearLayout);
+                groupView = mAdapter.getGroupView(i, expandedEh, convertView, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
                 setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);
             } else {
-                groupView = mAdapter.getGroupView(i, isExpanded, null, mLinearLayout);
+                groupView = mAdapter.getGroupView(i, expandedEh, null, mLinearLayout);
                 groupView.setBackgroundColor(bgColor);
                 setViewBackgroundWithoutResettingPadding(groupView, i == 0 ? 0 : R.drawable.stats_list_item_background);
                 mLinearLayout.addView(groupView);
@@ -172,7 +172,7 @@ class StatsUIHelper {
             }
 
             // add children if this group is expanded
-            if (isExpanded) {
+            if (expandedEh) {
                 StatsUIHelper.showChildViews(mAdapter, mLinearLayout, i, groupView, false);
             }
 
@@ -235,12 +235,12 @@ class StatsUIHelper {
     /*
      * shows the correct up/down chevron for the passed group
      */
-    private static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition, boolean animate) {
+    private static void setGroupChevron(final boolean groupExpandedEh, View groupView, int groupPosition, boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
         if (chevron == null) {
             return;
         }
-        if (isGroupExpanded) {
+        if (groupExpandedEh) {
             // change the background of the parent
             setViewBackgroundWithoutResettingPadding(groupView, R.drawable.stats_list_item_expanded_background);
         } else {
@@ -250,9 +250,9 @@ class StatsUIHelper {
         chevron.clearAnimation(); // Remove any other prev animations set on the chevron
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp : R.drawable.ic_chevron_down_blue_wordpress_24dp);
-            float start = (isGroupExpanded ? 0.0f : 0.0f);
-            float end = (isGroupExpanded ? 90.0f : -90.0f);
+            chevron.setImageResource(groupExpandedEh ? R.drawable.ic_chevron_right_blue_wordpress_24dp : R.drawable.ic_chevron_down_blue_wordpress_24dp);
+            float start = (groupExpandedEh ? 0.0f : 0.0f);
+            float end = (groupExpandedEh ? 90.0f : -90.0f);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f);
             rotate.setDuration(ANIM_DURATION);
@@ -260,7 +260,7 @@ class StatsUIHelper {
             rotate.setFillAfter(true);
             chevron.startAnimation(rotate);
         } else {
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_blue_wordpress_24dp : R.drawable.ic_chevron_right_blue_wordpress_24dp);
+            chevron.setImageResource(groupExpandedEh ? R.drawable.ic_chevron_down_blue_wordpress_24dp : R.drawable.ic_chevron_right_blue_wordpress_24dp);
         }
     }
 
@@ -284,17 +284,17 @@ class StatsUIHelper {
         }
 
         for (int i = 0; i < childCount; i++) {
-            boolean isLastChild = (i == childCount - 1);
+            boolean lastChildEh = (i == childCount - 1);
             if (i < numExistingViews) {
                 View convertView = childContainer.getChildAt(i);
-                mAdapter.getChildView(groupPosition, i, isLastChild, convertView, mLinearLayout);
+                mAdapter.getChildView(groupPosition, i, lastChildEh, convertView, mLinearLayout);
             } else {
-                View childView = mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout);
+                View childView = mAdapter.getChildView(groupPosition, i, lastChildEh, null, mLinearLayout);
                 // remove the right/left padding so the child total aligns to left
                 childView.setPadding(0,
                         childView.getPaddingTop(),
                         0,
-                        isLastChild ? 0 : childView.getPaddingBottom()); // No padding bottom on last child
+                        lastChildEh ? 0 : childView.getPaddingBottom()); // No padding bottom on last child
                 setViewBackgroundWithoutResettingPadding(childView, R.drawable.stats_list_item_child_background);
                 childContainer.addView(childView);
             }
@@ -333,7 +333,7 @@ class StatsUIHelper {
     }
 
     public static int getNumOfBarsToShow() {
-        if (StatsUtils.getSmallestWidthDP() >= TABLET_720DP && DisplayUtils.isLandscape(WordPress.getContext())) {
+        if (StatsUtils.getSmallestWidthDP() >= TABLET_720DP && DisplayUtils.landscapeEh(WordPress.getContext())) {
             return 15;
         } else if (StatsUtils.getSmallestWidthDP() >= TABLET_600DP) {
             return 10;

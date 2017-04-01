@@ -21,7 +21,7 @@ public class CategoryModel {
     public String description;
     public int parentId;
     public int postCount;
-    public boolean isInLocalTable;
+    public boolean inLocalTableEh;
 
     public CategoryModel() {
         id = -1;
@@ -30,7 +30,7 @@ public class CategoryModel {
         description = "";
         parentId = -1;
         postCount = 0;
-        isInLocalTable = false;
+        inLocalTableEh = false;
     }
 
     /**
@@ -45,7 +45,7 @@ public class CategoryModel {
         description = cursor.getString(cursor.getColumnIndex(DESC_COLUMN_NAME));
         parentId = cursor.getInt(cursor.getColumnIndex(PARENT_ID_COLUMN_NAME));
         postCount = cursor.getInt(cursor.getColumnIndex(POST_COUNT_COLUMN_NAME));
-        isInLocalTable = true;
+        inLocalTableEh = true;
     }
 
     /**

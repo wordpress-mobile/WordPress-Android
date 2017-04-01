@@ -394,13 +394,13 @@ public class AppPrefs {
     }
 
     // Aztec Editor
-    public static void setAztecEditorEnabled(boolean isEnabled) {
-        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
-        AnalyticsTracker.track(isEnabled ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
+    public static void setAztecEditorEnabled(boolean enabledEh) {
+        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, enabledEh);
+        AnalyticsTracker.track(enabledEh ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
     }
 
-    public static boolean isAztecEditorEnabled() {
-        return isAztecEditorAvailable() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
+    public static boolean aztecEditorEnabledEh() {
+        return aztecEditorAvailableEh() && getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, true);
     }
 
     public static void setAztecEditorAvailable(boolean aztecEditorAvailable) {
@@ -410,7 +410,7 @@ public class AppPrefs {
         }
     }
 
-    public static boolean isAztecEditorAvailable() {
+    public static boolean aztecEditorAvailableEh() {
         return BuildConfig.AZTEC_EDITOR_AVAILABLE || getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, false);
     }
 
@@ -427,15 +427,15 @@ public class AppPrefs {
         }
     }
 
-    public static boolean isVisualEditorAvailable() {
+    public static boolean visualEditorAvailableEh() {
         return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, true);
     }
 
-    public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
+    public static boolean visualEditorEnabledEh() {
+        return visualEditorAvailableEh() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !aztecEditorEnabledEh());
     }
 
-    public static boolean isVisualEditorPromoRequired() {
+    public static boolean visualEditorPromoRequiredEh() {
         return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, true);
     }
 
@@ -443,7 +443,7 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, required);
     }
 
-    public static boolean isGravatarChangePromoRequired() {
+    public static boolean gravatarChangePromoRequiredEh() {
         return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);
     }
 
@@ -473,7 +473,7 @@ public class AppPrefs {
         return getString(UndeletablePrefKey.GLOBAL_PLANS_PLANS_FEATURES, "");
     }
 
-    public static boolean isInAppPurchaseRefreshRequired() {
+    public static boolean inAppPurchaseRefreshRequiredEh() {
         return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
     }
 
@@ -505,7 +505,7 @@ public class AppPrefs {
         setLong(DeletablePrefKey.PUSH_NOTIFICATIONS_LAST_NOTE_ID, time);
     }
 
-    public static boolean isNotificationsSwipeToNavigateShown() {
+    public static boolean notificationsSwipeToNavigateShownEh() {
         return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, false);
     }
 
@@ -513,7 +513,7 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS, alreadyShown);
     }
 
-    public static boolean isReaderSwipeToNavigateShown() {
+    public static boolean readerSwipeToNavigateShownEh() {
         return getBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, false);
     }
 
@@ -575,7 +575,7 @@ public class AppPrefs {
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
     }
 
-    public static boolean wasAccessTokenMigrated() {
+    public static boolean accessTokenMigratedEh() {
         return getBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, false);
     }
 
@@ -583,7 +583,7 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.ACCESS_TOKEN_MIGRATED, migrated);
     }
 
-    public static boolean wereSelfHostedSitesMigratedToFluxC() {
+    public static boolean selfHostedSitesMigratedToFluxCEh() {
         return getBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, false);
     }
 
@@ -591,7 +591,7 @@ public class AppPrefs {
         setBoolean(UndeletablePrefKey.SELF_HOSTED_SITES_MIGRATED_TO_FLUXC, migrated);
     }
 
-    public static boolean wereDraftsMigratedToFluxC() {
+    public static boolean draftsMigratedToFluxCEh() {
         return getBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, false);
     }
 

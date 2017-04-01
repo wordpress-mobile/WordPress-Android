@@ -147,7 +147,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
                     }
                     break;
                 case FILTER_UNREAD:
-                    if (currentNote.isUnread()) {
+                    if (currentNote.unreadEh()) {
                         filteredNotes.add(currentNote);
                     }
                     break;
@@ -161,7 +161,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     private Note getNoteAtPosition(int position) {
-        if (isValidPosition(position)) {
+        if (validPositionEh(position)) {
             return mFilteredNotes.get(position);
         }
 
@@ -177,7 +177,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
     }
 
-    private boolean isValidPosition(int position) {
+    private boolean validPositionEh(int position) {
         return (position >= 0 && position < mFilteredNotes.size());
     }
 
@@ -281,19 +281,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         String avatarUrl = GravatarUtils.fixGravatarUrl(note.getIconURL(), mAvatarSz);
         noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
-        boolean isUnread = note.isUnread();
+        boolean unreadEh = note.unreadEh();
 
         String noticonCharacter = note.getNoticonCharacter();
         noteViewHolder.noteIcon.setText(noticonCharacter);
         if (commentStatus == CommentStatus.UNAPPROVED) {
             noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
-        } else if (isUnread) {
+        } else if (unreadEh) {
             noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
         } else {
             noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_grey);
         }
 
-        if (isUnread) {
+        if (unreadEh) {
             noteViewHolder.itemView.setBackgroundColor(mColorUnread);
         } else {
             noteViewHolder.itemView.setBackgroundColor(mColorRead);

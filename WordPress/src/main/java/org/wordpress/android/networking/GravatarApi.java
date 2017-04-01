@@ -69,7 +69,7 @@ public class GravatarApi {
                 new Callback() {
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
-                        if (!response.isSuccessful()) {
+                        if (!response.successfulEh()) {
                             Map<String, Object> properties = new HashMap<>();
                             properties.put("network_response_code", response.code());
 
@@ -92,7 +92,7 @@ public class GravatarApi {
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
-                                if (response.isSuccessful()) {
+                                if (response.successfulEh()) {
                                     gravatarUploadListener.onSuccess();
                                 } else {
                                     gravatarUploadListener.onError();

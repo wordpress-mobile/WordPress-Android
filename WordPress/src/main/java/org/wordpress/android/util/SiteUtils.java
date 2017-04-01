@@ -29,11 +29,11 @@ public class SiteUtils {
     /**
      * @return true if the site is WPCom or Jetpack and is not private
      */
-    public static boolean isPhotonCapable(SiteModel site) {
-        return SiteUtils.isAccessibleViaWPComAPI(site) && !site.isPrivate();
+    public static boolean photonCapableEh(SiteModel site) {
+        return SiteUtils.accessibleViaWPComAPIEh(site) && !site.privateEh();
     }
 
-    public static boolean isAccessibleViaWPComAPI(SiteModel site) {
+    public static boolean accessibleViaWPComAPIEh(SiteModel site) {
         return site.isWPCom() || site.isJetpackConnected();
     }
 

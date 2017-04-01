@@ -57,7 +57,7 @@ public class RestClientEmptyMock extends RestClient {
     public void setAccessToken(java.lang.String token) {
     }
 
-    public boolean isAuthenticated() {
+    public boolean authenticatedEh() {
         return true;
     }
 }

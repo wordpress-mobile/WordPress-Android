@@ -195,7 +195,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     }
 
     @Override
-    public boolean hasHint() {
+    public boolean hintEh() {
         return !TextUtils.isEmpty(mHint);
     }
 

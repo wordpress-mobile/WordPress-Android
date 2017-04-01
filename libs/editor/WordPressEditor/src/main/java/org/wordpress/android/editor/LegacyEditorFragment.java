@@ -95,9 +95,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     private ToggleButton mUnderlineToggleButton, mStrikeToggleButton;
     private LinearLayout mFormatBar, mPostContentLinearLayout, mPostSettingsLinearLayout;
     private Button mAddPictureButton;
-    private boolean mIsBackspace;
+    private boolean mBackspaceEh;
     private boolean mScrollDetected;
-    private boolean mIsLocalDraft;
+    private boolean mLocalDraftEh;
 
     private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom;
     private int mLastPosition = -1;
@@ -158,8 +158,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         return mContentEditText.getText();
     }
 
-    public void setLocalDraft(boolean isLocalDraft) {
-        mIsLocalDraft = isLocalDraft;
+    public void setLocalDraft(boolean localDraftEh) {
+        mLocalDraftEh = localDraftEh;
     }
 
     @Override
@@ -362,7 +362,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 if (editable == null) {
                     return;
                 }
-                if (mIsLocalDraft) {
+                if (mLocalDraftEh) {
                     if (linkText == null) {
                         if (mSelectionStart < mSelectionEnd) {
                             editable.delete(mSelectionStart, mSelectionEnd);
@@ -468,7 +468,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
         Uri imageUri = Uri.parse(mediaFile.getFilePath());
         Bitmap thumbnailBitmap;
-        if (MediaUtils.isVideo(imageUri.toString())) {
+        if (MediaUtils.videoEh(imageUri.toString())) {
             thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.media_movieclip);
         } else {
             thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(context, imageUri.getEncodedPath(),
@@ -489,7 +489,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         if (context == null || mediaFile == null || mediaFile.getFileURL() == null) {
             return null;
         }
-        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.legacy_dashicon_format_image_big_grey;
+        int drawable = mediaFile.videoEh() ? R.drawable.media_movieclip : R.drawable.legacy_dashicon_format_image_big_grey;
         Uri uri = Uri.parse(mediaFile.getFileURL());
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
         imageSpan.setMediaFile(mediaFile);
@@ -539,7 +539,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
         Object[] allSpans = s.getSpans(selectionStart, selectionEnd, styleClass);
         boolean textIsSelected = selectionEnd > selectionStart;
-        if (mIsLocalDraft) {
+        if (mLocalDraftEh) {
             // Local drafts can use the rich text editor. Yay!
             boolean shouldAddSpan = true;
             for (Object span : allSpans) {
@@ -550,12 +550,12 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         continue;
                     }
                 }
-                if (!toggleButton.isChecked() && textIsSelected) {
+                if (!toggleButton.checkedEh() && textIsSelected) {
                     // If span exists and text is selected, remove the span
                     s.removeSpan(span);
                     shouldAddSpan = false;
                     break;
-                } else if (!toggleButton.isChecked()) {
+                } else if (!toggleButton.checkedEh()) {
                     // Remove span at cursor point if button isn't checked
                     Object[] spans = s.getSpans(mStyleStart - 1, mStyleStart, styleClass);
                     for (Object removeSpan : spans) {
@@ -591,10 +591,10 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 content.insert(selectionEnd + startTag.length(), endTag);
                 toggleButton.setChecked(false);
                 mContentEditText.setSelection(selectionEnd + startTag.length() + endTag.length());
-            } else if (toggleButton.isChecked()) {
+            } else if (toggleButton.checkedEh()) {
                 content.insert(selectionStart, startTag);
                 mContentEditText.setSelection(selectionEnd + startTag.length());
-            } else if (!toggleButton.isChecked()) {
+            } else if (!toggleButton.checkedEh()) {
                 content.insert(selectionEnd, endTag);
                 mContentEditText.setSelection(selectionEnd + endTag.length());
             }
@@ -623,8 +623,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 mediaFile.setWidth(getEditTextIntegerClamped(imageWidthText, 10, maxWidth));
                 String captionText = (caption.getText() != null) ? caption.getText().toString() : "";
                 mediaFile.setCaption(captionText);
-                mediaFile.setFeatured(featuredCheckBox.isChecked());
-                if (featuredCheckBox.isChecked()) {
+                mediaFile.setFeatured(featuredCheckBox.checkedEh());
+                if (featuredCheckBox.checkedEh()) {
                     // remove featured flag from all other images
                     Spannable contentSpannable = mContentEditText.getText();
                     WPImageSpan[] imageSpans =
@@ -641,7 +641,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         }
                     }
                 }
-                mediaFile.setFeaturedInPost(featuredInPostCheckBox.isChecked());
+                mediaFile.setFeaturedInPost(featuredInPostCheckBox.checkedEh());
                 // TODO: remove this
                 mEditorFragmentListener.saveMediaFile(mediaFile);
             }
@@ -702,7 +702,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     MediaFile mediaFile = imageSpan.getMediaFile();
                     if (mediaFile == null)
                         return false;
-                    if (!mediaFile.isVideo()) {
+                    if (!mediaFile.videoEh()) {
                         LayoutInflater factory = LayoutInflater.from(getActivity());
                         final View alertView = factory.inflate(R.layout.alert_image_options, null);
                         if (alertView == null)
@@ -721,8 +721,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
                         featuredCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             @Override
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
+                            public void onCheckedChanged(CompoundButton buttonView, boolean checkedEh) {
+                                if (checkedEh) {
                                     featuredInPostCheckBox.setVisibility(View.VISIBLE);
                                 } else {
                                     featuredInPostCheckBox.setVisibility(View.GONE);
@@ -742,15 +742,15 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         seekBar.setProgress(mediaFile.getWidth());
                         titleText.setText(mediaFile.getTitle());
                         caption.setText(mediaFile.getCaption());
-                        featuredCheckBox.setChecked(mediaFile.isFeatured());
+                        featuredCheckBox.setChecked(mediaFile.featuredEh());
 
-                        if (mediaFile.isFeatured()) {
+                        if (mediaFile.featuredEh()) {
                             featuredInPostCheckBox.setVisibility(View.VISIBLE);
                         } else {
                             featuredInPostCheckBox.setVisibility(View.GONE);
                         }
 
-                        featuredInPostCheckBox.setChecked(mediaFile.isFeaturedInPost());
+                        featuredInPostCheckBox.setChecked(mediaFile.featuredInPostEh());
 
                         alignmentSpinner.setSelection(mediaFile.getHorizontalAlignment(), true);
 
@@ -781,8 +781,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
                         imageWidthText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                             @Override
-                            public void onFocusChange(View v, boolean hasFocus) {
-                                if (hasFocus) {
+                            public void onFocusChange(View v, boolean focusEh) {
+                                if (focusEh) {
                                     imageWidthText.setText("");
                                 }
                             }
@@ -835,7 +835,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     @Override
     public void afterTextChanged(Editable s) {
         int position = Selection.getSelectionStart(mContentEditText.getText());
-        if ((mIsBackspace && position != 1) || mLastPosition == position || !mIsLocalDraft)
+        if ((mBackspaceEh && position != 1) || mLastPosition == position || !mLocalDraftEh)
             return;
 
         if (position < 0) {
@@ -847,11 +847,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 mStyleStart = position - 1;
             }
 
-            boolean shouldBold = mBoldToggleButton.isChecked();
-            boolean shouldEm = mEmToggleButton.isChecked();
-            boolean shouldUnderline = mUnderlineToggleButton.isChecked();
-            boolean shouldStrike = mStrikeToggleButton.isChecked();
-            boolean shouldQuote = mBquoteToggleButton.isChecked();
+            boolean shouldBold = mBoldToggleButton.checkedEh();
+            boolean shouldEm = mEmToggleButton.checkedEh();
+            boolean shouldUnderline = mUnderlineToggleButton.checkedEh();
+            boolean shouldStrike = mStrikeToggleButton.checkedEh();
+            boolean shouldQuote = mBquoteToggleButton.checkedEh();
 
             Object[] allSpans = s.getSpans(mStyleStart, position, Object.class);
             for (Object span : allSpans) {
@@ -885,7 +885,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        mIsBackspace = (count - after == 1) || (s.length() == 0);
+        mBackspaceEh = (count - after == 1) || (s.length() == 0);
     }
 
     @Override
@@ -894,7 +894,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     @Override
     public void onSelectionChanged() {
-        if (!mIsLocalDraft) {
+        if (!mLocalDraftEh) {
             return;
         }
 
@@ -993,7 +993,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         if (mediaFile == null) {
                             continue;
                         }
-                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded()) {
+                        if (mediaId.equals(mediaFile.getMediaId()) && !is.networkImageLoadedEh()) {
                             // replace the existing span with a new one with the correct image, re-add
                             // it to the same position.
                             int spanStart = is.getStartPosition();
@@ -1161,12 +1161,12 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
-    public boolean isUploadingMedia() {
+    public boolean uploadingMediaEh() {
         return false;
     }
 
     @Override
-    public boolean hasFailedMediaUploads() {
+    public boolean failedMediaUploadsEh() {
         return false;
     }
 
@@ -1182,7 +1182,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
-    public boolean isActionInProgress() {
+    public boolean actionInProgressEh() {
         return false;
     }
 }

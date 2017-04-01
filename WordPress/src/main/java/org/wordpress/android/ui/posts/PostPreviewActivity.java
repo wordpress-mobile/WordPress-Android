@@ -47,7 +47,7 @@ import de.greenrobot.event.EventBus;
 public class PostPreviewActivity extends AppCompatActivity {
     public static final String EXTRA_POST = "postModel";
 
-    private boolean mIsUpdatingPost;
+    private boolean mUpdatingPostEh;
 
     private PostModel mPost;
     private SiteModel mSite;
@@ -88,7 +88,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         }
 
 
-        setTitle(mPost.isPage() ? getString(R.string.preview_page) : getString(R.string.preview_post));
+        setTitle(mPost.pageEh() ? getString(R.string.preview_page) : getString(R.string.preview_post));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         mDispatcher.register(this);
 
         mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-        if (hasPreviewFragment()) {
+        if (previewFragmentEh()) {
             refreshPreview();
         } else {
             showPreviewFragment();
@@ -126,7 +126,7 @@ public class PostPreviewActivity extends AppCompatActivity {
                 .commitAllowingStateLoss();
     }
 
-    private boolean hasPreviewFragment() {
+    private boolean previewFragmentEh() {
         return (getPreviewFragment() != null);
     }
 
@@ -186,8 +186,8 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         if (mPost == null
                 || mIsUpdatingPost
-                || PostUploadService.isPostUploading(mPost)
-                || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
+                || PostUploadService.postUploadingEh(mPost)
+                || (!mPost.isLocallyChanged() && !mPost.localDraftEh())
                 && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
             messageView.setVisibility(View.GONE);
             return;
@@ -196,7 +196,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         TextView messageText = (TextView) messageView.findViewById(R.id.message_text);
         if (mPost.isLocallyChanged()) {
             messageText.setText(R.string.local_changes_explainer);
-        } else if (mPost.isLocalDraft()) {
+        } else if (mPost.localDraftEh()) {
             messageText.setText(R.string.local_draft_explainer);
         } else if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
             messageText.setText(R.string.draft_explainer);
@@ -263,10 +263,10 @@ public class PostPreviewActivity extends AppCompatActivity {
             return;
         }
 
-        if (mIsUpdatingPost) {
+        if (mUpdatingPostEh) {
             AppLog.d(AppLog.T.POSTS, "post preview > already updating post");
         } else {
-            mIsUpdatingPost = true;
+            mUpdatingPostEh = true;
             showProgress();
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
@@ -276,7 +276,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
     private void publishPost() {
         if (!isFinishing() && NetworkUtils.checkConnection(this)) {
-            if (!mPost.isLocalDraft()) {
+            if (!mPost.localDraftEh()) {
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, mSite);
             }
 
@@ -284,7 +284,7 @@ public class PostPreviewActivity extends AppCompatActivity {
                 // Remote draft being published
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
                 PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
-            } else if (mPost.isLocalDraft() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
+            } else if (mPost.localDraftEh() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
                 // Local draft being published
                 PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
             } else {
@@ -319,9 +319,9 @@ public class PostPreviewActivity extends AppCompatActivity {
     public void onPostChanged(OnPostChanged event) {
         switch (event.causeOfChange) {
             case UPDATE_POST:
-                mIsUpdatingPost = false;
+                mUpdatingPostEh = false;
                 hideProgress();
-                if (event.isError()) {
+                if (event.errorEh()) {
                     // TODO: Report error to user
                     AppLog.e(AppLog.T.POSTS, "UPDATE_POST failed: " + event.error.type + " - " + event.error.message);
                 } else {

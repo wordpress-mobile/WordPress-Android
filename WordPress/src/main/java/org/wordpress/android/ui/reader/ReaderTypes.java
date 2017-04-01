@@ -11,7 +11,7 @@ public class ReaderTypes {
         BLOG_PREVIEW,   // list posts in a specific blog/feed
         SEARCH_RESULTS; // list posts matching a specific search keyword or phrase
 
-        public boolean isTagType() {
+        public boolean tagTypeEh() {
             return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
         }
     }

@@ -17,18 +17,18 @@ import de.greenrobot.event.EventBus;
  * android.net.conn.CONNECTIVITY_CHANGE
  */
 public class ConnectionChangeReceiver extends BroadcastReceiver {
-    private static boolean mIsFirstReceive = true;
-    private static boolean mWasConnected = true;
-    private static boolean mIsEnabled = false; // this value must be synchronized with the ConnectionChangeReceiver
+    private static boolean mFirstReceiveEh = true;
+    private static boolean mConnectedEh = true;
+    private static boolean mEnabledEh = false; // this value must be synchronized with the ConnectionChangeReceiver
                                                // state in our AndroidManifest
 
     public static class ConnectionChangeEvent {
-        private final boolean mIsConnected;
-        public ConnectionChangeEvent(boolean isConnected) {
-            mIsConnected = isConnected;
+        private final boolean mConnectedEh;
+        public ConnectionChangeEvent(boolean connectedEh) {
+            mConnectedEh = connectedEh;
         }
-        public boolean isConnected() {
-            return mIsConnected;
+        public boolean connectedEh() {
+            return mConnectedEh;
         }
     }
 
@@ -40,31 +40,31 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        boolean isConnected = NetworkUtils.isNetworkAvailable(context);
-        if (mIsFirstReceive || isConnected != mWasConnected) {
-            postConnectionChangeEvent(isConnected);
+        boolean connectedEh = NetworkUtils.networkAvailableEh(context);
+        if (mFirstReceiveEh || connectedEh != mConnectedEh) {
+            postConnectionChangeEvent(connectedEh);
         }
     }
 
-    private static void postConnectionChangeEvent(boolean isConnected) {
-        AppLog.i(T.UTILS, "Connection status changed, isConnected=" + isConnected);
-        mWasConnected = isConnected;
-        mIsFirstReceive = false;
-        EventBus.getDefault().post(new ConnectionChangeEvent(isConnected));
+    private static void postConnectionChangeEvent(boolean connectedEh) {
+        AppLog.i(T.UTILS, "Connection status changed, connectedEh=" + connectedEh);
+        mConnectedEh = connectedEh;
+        mFirstReceiveEh = false;
+        EventBus.getDefault().post(new ConnectionChangeEvent(connectedEh));
     }
 
     public static void setEnabled(Context context, boolean enabled) {
-        if (mIsEnabled == enabled) {
+        if (mEnabledEh == enabled) {
             return;
         }
-        mIsEnabled = enabled;
+        mEnabledEh = enabled;
         AppLog.i(T.UTILS, "ConnectionChangeReceiver.setEnabled " + enabled);
         int flag = (enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
                               PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
         ComponentName component = new ComponentName(context, ConnectionChangeReceiver.class);
         context.getPackageManager().setComponentEnabledSetting(component, flag, PackageManager.DONT_KILL_APP);
-        if (mIsEnabled) {
-            postConnectionChangeEvent(NetworkUtils.isNetworkAvailable(context));
+        if (mEnabledEh) {
+            postConnectionChangeEvent(NetworkUtils.networkAvailableEh(context));
         }
     }
 }

@@ -242,7 +242,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
         int checkmarkVisibility;
-        if (mEnableSelection && isItemSelected(position)) {
+        if (mEnableSelection && itemSelectedEh(position)) {
             checkmarkVisibility = View.VISIBLE;
             holder.containerView.setBackgroundColor(mSelectedColor);
         } else {
@@ -275,7 +275,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public CommentModel getItem(int position) {
-        if (isPositionValid(position)) {
+        if (positionValidEh(position)) {
             return mComments.get(position);
         } else {
             return null;
@@ -328,21 +328,21 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         for (Integer position: mSelectedPositions) {
-            if (isPositionValid(position))
+            if (positionValidEh(position))
                 comments.add(mComments.get(position));
         }
 
         return comments;
     }
 
-    private boolean isItemSelected(int position) {
+    private boolean itemSelectedEh(int position) {
         return mSelectedPositions.contains(position);
     }
 
-    void setItemSelected(int position, boolean isSelected, View view) {
-        if (isItemSelected(position) == isSelected) return;
+    void setItemSelected(int position, boolean selectedEh, View view) {
+        if (itemSelectedEh(position) == selectedEh) return;
 
-        if (isSelected) {
+        if (selectedEh) {
             mSelectedPositions.add(position);
         } else {
             mSelectedPositions.remove(position);
@@ -353,8 +353,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (view != null && view.getTag() instanceof CommentHolder) {
             CommentHolder holder = (CommentHolder) view.getTag();
             // animate the selection change
-            AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-            holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+            AniUtils.startAnimation(holder.imgCheckmark, selectedEh ? R.anim.cab_select : R.anim.cab_deselect);
+            holder.imgCheckmark.setVisibility(selectedEh ? View.VISIBLE : View.GONE);
         }
 
         if (mOnSelectedChangeListener != null) {
@@ -363,14 +363,14 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     void toggleItemSelected(int position, View view) {
-        setItemSelected(position, !isItemSelected(position), view);
+        setItemSelected(position, !itemSelectedEh(position), view);
     }
 
     private int indexOfCommentId(long commentId) {
         return mComments.indexOfCommentId(commentId);
     }
 
-    private boolean isPositionValid(int position) {
+    private boolean positionValidEh(int position) {
         return (position >= 0 && position < mComments.size());
     }
 
@@ -386,7 +386,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * load comments using an AsyncTask
      */
     void loadComments(CommentStatus statusFilter) {
-        if (mIsLoadTaskRunning) {
+        if (mLoadTaskRunningEh) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
         } else {
             new LoadCommentsTask(statusFilter).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -396,7 +396,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /*
      * AsyncTask to load comments from SQLite
      */
-    private boolean mIsLoadTaskRunning = false;
+    private boolean mLoadTaskRunningEh = false;
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         CommentList tmpComments;
         final CommentStatus mStatusFilter;
@@ -407,11 +407,11 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         protected void onPreExecute() {
-            mIsLoadTaskRunning = true;
+            mLoadTaskRunningEh = true;
         }
         @Override
         protected void onCancelled() {
-            mIsLoadTaskRunning = false;
+            mLoadTaskRunningEh = false;
         }
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -427,7 +427,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tmpComments = new CommentList();
             tmpComments.addAll(comments);
 
-            return !mComments.isSameList(tmpComments);
+            return !mComments.sameListEh(tmpComments);
         }
         @Override
         protected void onPostExecute(Boolean result) {
@@ -453,7 +453,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 mOnDataLoadedListener.onDataLoaded(isEmpty());
             }
 
-            mIsLoadTaskRunning = false;
+            mLoadTaskRunningEh = false;
         }
     }
 

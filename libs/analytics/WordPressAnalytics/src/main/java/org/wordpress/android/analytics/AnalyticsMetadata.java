@@ -1,9 +1,9 @@
 package org.wordpress.android.analytics;
 
 public class AnalyticsMetadata {
-    private boolean mIsUserConnected;
-    private boolean mIsWordPressComUser;
-    private boolean mIsJetpackUser;
+    private boolean mUserConnectedEh;
+    private boolean mWordPressComUserEh;
+    private boolean mJetpackUserEh;
     private int mSessionCount;
     private int mNumBlogs;
     private String mUsername = "";
@@ -11,28 +11,28 @@ public class AnalyticsMetadata {
 
     public AnalyticsMetadata() {}
 
-    public boolean isUserConnected() {
-        return mIsUserConnected;
+    public boolean userConnectedEh() {
+        return mUserConnectedEh;
     }
 
-    public void setUserConnected(boolean isUserConnected) {
-        mIsUserConnected = isUserConnected;
+    public void setUserConnected(boolean userConnectedEh) {
+        mUserConnectedEh = userConnectedEh;
     }
 
-    public boolean isWordPressComUser() {
-        return mIsWordPressComUser;
+    public boolean wordPressComUserEh() {
+        return mWordPressComUserEh;
     }
 
-    public void setWordPressComUser(boolean isWordPressComUser) {
-        mIsWordPressComUser = isWordPressComUser;
+    public void setWordPressComUser(boolean wordPressComUserEh) {
+        mWordPressComUserEh = wordPressComUserEh;
     }
 
-    public boolean isJetpackUser() {
-        return mIsJetpackUser;
+    public boolean jetpackUserEh() {
+        return mJetpackUserEh;
     }
 
-    public void setJetpackUser(boolean isJetpackUser) {
-        mIsJetpackUser = isJetpackUser;
+    public void setJetpackUser(boolean jetpackUserEh) {
+        mJetpackUserEh = jetpackUserEh;
     }
 
     public int getSessionCount() {

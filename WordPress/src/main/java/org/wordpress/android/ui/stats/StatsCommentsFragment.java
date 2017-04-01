@@ -32,7 +32,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     private CommentFollowersModel mCommentFollowersModel;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mCommentsModel != null && mCommentFollowersModel != null;
     }
     @Override
@@ -131,9 +131,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
         ArrayAdapter adapter = null;
 
-        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()) {
+        if (mTopPagerSelectedButtonIndex == 0 && authorsEh()) {
             adapter = new AuthorsAdapter(getActivity(), getAuthors());
-        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()) {
+        } else if (mTopPagerSelectedButtonIndex == 1 && postsEh()) {
             adapter = new PostsAndPagesAdapter(getActivity(), getPosts());
         }
 
@@ -145,44 +145,44 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasAuthors() {
+    private boolean authorsEh() {
         return mCommentsModel != null
                 && mCommentsModel.getAuthors() != null
                 && mCommentsModel.getAuthors().size() > 0;
     }
 
     private List<AuthorModel> getAuthors() {
-        if (!hasAuthors()) {
+        if (!authorsEh()) {
             return new ArrayList<AuthorModel>(0);
         }
         return mCommentsModel.getAuthors();
     }
 
-    private boolean hasPosts() {
+    private boolean postsEh() {
         return  mCommentsModel != null
                 && mCommentsModel.getPosts() != null
                 && mCommentsModel.getPosts().size() > 0;
     }
 
     private List<StatsPostModel> getPosts() {
-        if (!hasPosts()) {
+        if (!postsEh()) {
             return new ArrayList<StatsPostModel>(0);
         }
         return mCommentsModel.getPosts();
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+    protected boolean viewAllOptionAvailableEh() {
+        if (mTopPagerSelectedButtonIndex == 0 && authorsEh() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
-        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+        } else if (mTopPagerSelectedButtonIndex == 1 && postsEh() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         }
         return false;
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return false;
     }
 

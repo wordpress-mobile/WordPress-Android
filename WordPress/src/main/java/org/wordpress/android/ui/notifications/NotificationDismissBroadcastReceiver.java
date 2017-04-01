@@ -19,7 +19,7 @@ public class NotificationDismissBroadcastReceiver extends BroadcastReceiver {
         } else {
             GCMMessageService.removeNotification(notificationId);
             // Dismiss the grouped notification if a user dismisses all notifications from a wear device
-            if (!GCMMessageService.hasNotifications()) {
+            if (!GCMMessageService.notificationsEh()) {
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
             }

@@ -60,7 +60,7 @@ public class WPImageSpan extends ImageSpan implements Parcelable {
         return mImageSource;
     }
 
-    public boolean isNetworkImageLoaded() {
+    public boolean networkImageLoadedEh() {
         return mNetworkImageLoaded;
     }
 
@@ -117,7 +117,7 @@ public class WPImageSpan extends ImageSpan implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeBooleanArray(new boolean[] {mNetworkImageLoaded, mMediaFile.isVideo()});
+        parcel.writeBooleanArray(new boolean[] {mNetworkImageLoaded, mMediaFile.videoEh()});
         parcel.writeString(mImageSource.toString());
         parcel.writeString(mMediaFile.getMediaId());
         parcel.writeString(mMediaFile.getBlogId());

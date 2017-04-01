@@ -35,9 +35,9 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         }
         for (int i = 0; i < size(); i++) {
             if (this.get(i).postId == post.postId) {
-                if (post.isExternal && post.feedId == this.get(i).feedId) {
+                if (post.externalEh && post.feedId == this.get(i).feedId) {
                     return i;
-                } else if (!post.isExternal && post.blogId == this.get(i).blogId) {
+                } else if (!post.externalEh && post.blogId == this.get(i).blogId) {
                     return i;
                 }
             }
@@ -50,7 +50,7 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
             return -1;
         }
         for (int i = 0; i < size(); i++) {
-            if (this.get(i).hasIds(ids)) {
+            if (this.get(i).idsEh(ids)) {
                 return i;
             }
         }
@@ -60,14 +60,14 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
     /*
      * does passed list contain the same posts as this list?
      */
-    public boolean isSameList(ReaderPostList posts) {
+    public boolean sameListEh(ReaderPostList posts) {
         if (posts == null || posts.size() != this.size()) {
             return false;
         }
 
         for (ReaderPost post: posts) {
             int index = indexOfPost(post);
-            if (index == -1 || !post.isSamePost(this.get(index))) {
+            if (index == -1 || !post.samePostEh(this.get(index))) {
                 return false;
             }
         }

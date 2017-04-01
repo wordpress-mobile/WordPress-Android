@@ -132,15 +132,15 @@ public class ReaderUserListActivity extends AppCompatActivity {
                                   final long postId,
                                   final long commentId) {
         final int numLikes;
-        final boolean isLikedByCurrentUser;
+        final boolean likedByCurrentUserEh;
         if (commentId == 0) {
             numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
-            isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+            likedByCurrentUserEh = ReaderPostTable.postLikedByCurrentUserEh(blogId, postId);
         } else {
             numLikes = ReaderCommentTable.getNumLikesForComment(blogId, postId, commentId);
-            isLikedByCurrentUser = ReaderCommentTable.isCommentLikedByCurrentUser(blogId, postId, commentId);
+            likedByCurrentUserEh = ReaderCommentTable.commentLikedByCurrentUserEh(blogId, postId, commentId);
         }
-        return ReaderUtils.getLongLikeLabelText(this, numLikes, isLikedByCurrentUser);
+        return ReaderUtils.getLongLikeLabelText(this, numLikes, likedByCurrentUserEh);
     }
 
 }

@@ -27,8 +27,8 @@ public class ReferrerGroupModel implements Serializable {
     private String mUrl;
     private List<ReferrerResultModel> mResults;
 
-    public transient boolean isRestCallInProgress = false;
-    public transient boolean isMarkedAsSpam = false;
+    public transient boolean restCallInProgressEh = false;
+    public transient boolean markedAsSpamEh = false;
 
     public ReferrerGroupModel(long blogId, String date, JSONObject groupJSON) throws JSONException {
         setBlogId(blogId);

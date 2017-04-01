@@ -86,7 +86,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
 
-    private boolean mIsKeyboardOpen = false;
+    private boolean mKeyboardOpenEh = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
@@ -141,8 +141,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         title.setOnFocusChangeListener(
             new View.OnFocusChangeListener() {
                 @Override
-                public void onFocusChange(View view, boolean hasFocus) {
-                    formattingToolbar.enableFormatButtons(!hasFocus);
+                public void onFocusChange(View view, boolean focusEh) {
+                    formattingToolbar.enableFormatButtons(!focusEh);
                 }
             }
         );
@@ -183,7 +183,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onPause() {
         super.onPause();
         mEditorWasPaused = true;
-        mIsKeyboardOpen = false;
+        mKeyboardOpenEh = false;
     }
 
     @Override
@@ -195,7 +195,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mEditorWasPaused
                 && (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
-            mIsKeyboardOpen = true;
+            mKeyboardOpenEh = true;
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
         }
@@ -300,7 +300,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      */
     @Override
     public void onImeBack() {
-        mIsKeyboardOpen = false;
+        mKeyboardOpenEh = false;
         showActionBarIfNeeded();
     }
 
@@ -340,7 +340,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void checkForFailedUploadAndSwitchToHtmlMode() {
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
-        if (hasFailedMediaUploads()) {
+        if (failedMediaUploadsEh()) {
             new AlertDialog.Builder(getActivity())
                     .setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
@@ -366,7 +366,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
         // Don't switch to HTML mode if currently uploading media
-        if (!mUploadingMedia.isEmpty() || isActionInProgress()) {
+        if (!mUploadingMedia.isEmpty() || actionInProgressEh()) {
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
         }
@@ -385,7 +385,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public boolean isActionInProgress() {
+    public boolean actionInProgressEh() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
     }
 
@@ -394,7 +394,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             @Override
             public boolean matches(@NonNull Attributes attrs) {
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
-                return attributesWithClass.hasClass("failed");
+                return attributesWithClass.classEh("failed");
             }
         };
 
@@ -441,7 +441,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         final String safeMediaUrl = Utils.escapeQuotes(mediaUrl);
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            if (mediaFile.isVideo()) {
+            if (mediaFile.videoEh()) {
                 // TODO: insert video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
@@ -451,7 +451,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
-            if (mediaFile.isVideo()) {
+            if (mediaFile.videoEh()) {
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
@@ -501,12 +501,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public boolean isUploadingMedia() {
+    public boolean uploadingMediaEh() {
         return (mUploadingMedia.size() > 0);
     }
 
     @Override
-    public boolean hasFailedMediaUploads() {
+    public boolean failedMediaUploadsEh() {
         return (mFailedMediaIds.size() > 0);
     }
 
@@ -515,7 +515,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.removeMedia(new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NotNull Attributes attrs) {
-                return new AttributesWithClass(attrs).hasClass("failed");
+                return new AttributesWithClass(attrs).classEh("failed");
             }
         });
     }
@@ -645,7 +645,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mClasses.remove(c);
         }
 
-        boolean hasClass(String clazz) {
+        boolean classEh(String clazz) {
             return mClasses.contains(clazz);
         }
 
@@ -684,7 +684,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null
-                && !isHardwareKeyboardPresent()
+                && !hardwareKeyboardPresentEh()
                 && mHideActionBarOnSoftKeyboardUp
                 && mIsKeyboardOpen
                 && actionBar.isShowing()) {
@@ -706,7 +706,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     /**
      * Returns true if a hardware keyboard is detected, otherwise false.
      */
-    private boolean isHardwareKeyboardPresent() {
+    private boolean hardwareKeyboardPresentEh() {
         Configuration config = getResources().getConfiguration();
         boolean returnValue = false;
         if (config.keyboard != Configuration.KEYBOARD_NOKEYS) {
@@ -716,7 +716,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
-        private boolean isSupported(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
+        private boolean supportedEh(ClipDescription clipDescription, List<String> mimeTypesToCheck) {
             if (clipDescription == null) {
                 return false;
             }
@@ -734,8 +734,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         public boolean onDrag(View view, DragEvent dragEvent) {
             switch (dragEvent.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    return isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT) ||
-                            isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE);
+                    return supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_TEXT) ||
+                            supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE);
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // would be nice to start marking the place the item will drop
                     break;
@@ -750,7 +750,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     break;
                 case DragEvent.ACTION_DROP:
                     if (source.getVisibility() == View.VISIBLE) {
-                        if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
+                        if (supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE)) {
                             // don't allow dropping images into the HTML source
                             ToastUtils.showToast(getActivity(), R.string.editor_dropped_html_images_not_allowed,
                                     ToastUtils.Duration.LONG);
@@ -761,8 +761,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         }
                     }
 
-                    if (isSupported(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
-                            isTitleFocused()) {
+                    if (supportedEh(dragEvent.getClipDescription(), DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE) &&
+                            titleFocusedEh()) {
                         // don't allow dropping images into the title field
                         ToastUtils.showToast(getActivity(), R.string.editor_dropped_title_images_not_allowed,
                                 ToastUtils.Duration.LONG);
@@ -835,8 +835,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return text;
         }
 
-        private boolean isTitleFocused() {
-            return title.isFocused();
+        private boolean titleFocusedEh() {
+            return title.focusedEh();
         }
     };
 
@@ -853,12 +853,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onToolbarAddMediaClicked() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
 
-        if (isActionInProgress()) {
+        if (actionInProgressEh()) {
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
         }
 
-        if (source.isFocused()) {
+        if (source.focusedEh()) {
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
         } else {
             mEditorFragmentListener.onAddMediaClicked();
@@ -1104,7 +1104,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 String imageId = JSONUtils.getString(meta, "attachment_id");
                 if (!imageId.isEmpty()) {
-                    dialogBundle.putBoolean("isFeatured", mFeaturedImageId == Integer.parseInt(imageId));
+                    dialogBundle.putBoolean("featuredEh", mFeaturedImageId == Integer.parseInt(imageId));
                 }
 
                 imageSettingsDialogFragment.setArguments(dialogBundle);

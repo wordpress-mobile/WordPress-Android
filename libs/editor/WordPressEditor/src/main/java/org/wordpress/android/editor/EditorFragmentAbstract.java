@@ -24,9 +24,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
-    public abstract boolean isUploadingMedia();
-    public abstract boolean isActionInProgress();
-    public abstract boolean hasFailedMediaUploads();
+    public abstract boolean uploadingMediaEh();
+    public abstract boolean actionInProgressEh();
+    public abstract boolean failedMediaUploadsEh();
     public abstract void removeAllFailedMediaUploads();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
@@ -128,9 +128,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
     /**
      * The editor may need to differentiate local draft and published articles
      *
-     * @param isLocalDraft edited post is a local draft
+     * @param localDraftEh edited post is a local draft
      */
-    public void setLocalDraft(boolean isLocalDraft) {
+    public void setLocalDraft(boolean localDraftEh) {
         // Not unused in the new editor
     }
 

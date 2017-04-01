@@ -15,7 +15,7 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
     /*
      * does passed list contain the same comments as this list?
      */
-    public boolean isSameList(ReaderCommentList comments) {
+    public boolean sameListEh(ReaderCommentList comments) {
         if (comments==null || comments.size()!=this.size())
             return false;
 
@@ -53,14 +53,14 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
             return new ReaderCommentList();
 
         // first check if there are any child comments - if not, just return the passed list
-        boolean hasChildComments = false;
+        boolean childCommentsEh = false;
         for (ReaderComment comment: thisList) {
             if (comment.parentId!=0) {
-                hasChildComments = true;
+                childCommentsEh = true;
                 break;
             }
         }
-        if (!hasChildComments)
+        if (!childCommentsEh)
             return thisList;
 
         ReaderCommentList result = new ReaderCommentList();

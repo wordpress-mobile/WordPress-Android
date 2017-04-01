@@ -137,21 +137,21 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         }
 
         // different styling for visible/hidden sites
-        if (holder.isSiteHidden == null || holder.isSiteHidden != site.isHidden) {
-            holder.isSiteHidden = site.isHidden;
-            holder.txtTitle.setTextColor(site.isHidden ? mTextColorHidden : mTextColorNormal);
-            holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
-            holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
+        if (holder.isSiteHidden == null || holder.isSiteHidden != site.hiddenEh) {
+            holder.isSiteHidden = site.hiddenEh;
+            holder.txtTitle.setTextColor(site.hiddenEh ? mTextColorHidden : mTextColorNormal);
+            holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.hiddenEh ? Typeface.NORMAL : Typeface.BOLD);
+            holder.imgBlavatar.setAlpha(site.hiddenEh ? 0.5f : 1f);
         }
 
         // hide the divider for the last item
-        boolean isLastItem = (position == getItemCount() - 1);
-        holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
+        boolean lastItemEh = (position == getItemCount() - 1);
+        holder.divider.setVisibility(lastItemEh ?  View.INVISIBLE : View.VISIBLE);
     }
 
 
     private void loadSites() {
-        if (mIsTaskRunning) {
+        if (mTaskRunningEh) {
             AppLog.w(AppLog.T.UTILS, "site picker > already loading sites");
         } else {
             new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -161,18 +161,18 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
     /*
      * AsyncTask which loads sites from database and populates the adapter
      */
-    private boolean mIsTaskRunning;
+    private boolean mTaskRunningEh;
     private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mIsTaskRunning = true;
+            mTaskRunningEh = true;
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
         }
 
         @Override
@@ -194,7 +194,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
                 }
             });
 
-            if (mSites == null || !mSites.isSameList(sites)) {
+            if (mSites == null || !mSites.sameListEh(sites)) {
                 mSites = sites;
             }
 
@@ -204,7 +204,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         @Override
         protected void onPostExecute(Void results) {
             notifyDataSetChanged();
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
         }
 
         private List<SiteModel> getBlogsForCurrentView() {
@@ -240,8 +240,8 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        final boolean isDotComOrJetpack;
-        final boolean isHidden;
+        final boolean dotComOrJetpackEh;
+        final boolean hiddenEh;
 
         SiteRecord(SiteModel site) {
             localId = site.getId();
@@ -250,8 +250,8 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             homeURL = SiteUtils.getHomeURLOrHostName(site);
             url = site.getUrl();
             blavatarUrl = SiteUtils.getSiteIconUrl(site, mBlavatarSz);
-            isDotComOrJetpack = SiteUtils.isAccessibleViaWPComAPI(site);
-            isHidden = !site.isVisible();
+            dotComOrJetpackEh = SiteUtils.accessibleViaWPComAPIEh(site);
+            hiddenEh = !site.isVisible();
         }
 
         String getBlogNameOrHomeURL() {
@@ -272,14 +272,14 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             }
         }
 
-        boolean isSameList(SiteList sites) {
+        boolean sameListEh(SiteList sites) {
             if (sites == null || sites.size() != this.size()) {
                 return false;
             }
             int i;
             for (SiteRecord site: sites) {
                 i = indexOfSite(site);
-                if (i == -1 || this.get(i).isHidden != site.isHidden) {
+                if (i == -1 || this.get(i).hiddenEh != site.hiddenEh) {
                     return false;
                 }
             }

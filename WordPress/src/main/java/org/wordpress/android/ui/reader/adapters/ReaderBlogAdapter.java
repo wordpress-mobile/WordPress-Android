@@ -62,7 +62,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void refresh() {
-        if (mIsTaskRunning) {
+        if (mTaskRunningEh) {
             AppLog.w(T.READER, "load blogs task is already running");
             return;
         }
@@ -125,14 +125,14 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 case FOLLOWED:
                     final ReaderBlog blogInfo = mFollowedBlogs.get(position);
-                    if (blogInfo.hasName()) {
+                    if (blogInfo.nameEh()) {
                         blogHolder.txtTitle.setText(blogInfo.getName());
                     } else {
                         blogHolder.txtTitle.setText(R.string.reader_untitled_post);
                     }
-                    if (blogInfo.hasUrl()) {
+                    if (blogInfo.urlEh()) {
                         blogHolder.txtUrl.setText(UrlUtils.getHost(blogInfo.getUrl()));
-                    } else if (blogInfo.hasFeedUrl()) {
+                    } else if (blogInfo.feedUrlEh()) {
                         blogHolder.txtUrl.setText(UrlUtils.getHost(blogInfo.getFeedUrl()));
                     } else {
                         blogHolder.txtUrl.setText("");
@@ -189,19 +189,19 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private boolean mIsTaskRunning = false;
+    private boolean mTaskRunningEh = false;
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
         ReaderBlogList tmpFollowedBlogs;
 
         @Override
         protected void onPreExecute() {
-            mIsTaskRunning = true;
+            mTaskRunningEh = true;
         }
 
         @Override
         protected void onCancelled() {
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
         }
 
         @Override
@@ -209,12 +209,12 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             switch (getBlogType()) {
                 case RECOMMENDED:
                     tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs();
-                    return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
+                    return !mRecommendedBlogs.sameListEh(tmpRecommendedBlogs);
 
                 case FOLLOWED:
                     tmpFollowedBlogs = new ReaderBlogList();
                     ReaderBlogList allFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
-                    if (hasSearchFilter()) {
+                    if (searchFilterEh()) {
                         String query = mSearchFilter.toLowerCase();
                         for (ReaderBlog blog: allFollowedBlogs) {
                             if (blog.getName().toLowerCase().contains(query)) {
@@ -235,7 +235,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             return thisName.compareToIgnoreCase(thatName);
                         }
                     });
-                    return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
+                    return !mFollowedBlogs.sameListEh(tmpFollowedBlogs);
 
                 default:
                     return false;
@@ -256,7 +256,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 notifyDataSetChanged();
             }
 
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
 
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
@@ -266,9 +266,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private String getBlogNameForComparison(ReaderBlog blog) {
             if (blog == null) {
                 return "";
-            } else if (blog.hasName()) {
+            } else if (blog.nameEh()) {
                 return blog.getName();
-            } else if (blog.hasUrl()) {
+            } else if (blog.urlEh()) {
                 return StringUtils.notNullStr(UrlUtils.getHost(blog.getUrl()));
             } else {
                 return "";
@@ -290,7 +290,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    public boolean hasSearchFilter() {
+    public boolean searchFilterEh() {
         return !TextUtils.isEmpty(mSearchFilter);
     }
 

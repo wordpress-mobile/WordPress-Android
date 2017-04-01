@@ -25,7 +25,7 @@ public class Plan implements Serializable {
     private long mCost;
     private int mBillPeriod;
     private String mProductType;
-    private boolean mIsAvailable;
+    private boolean mAvailableEh;
     private String mBillPeriodLabel;
     private String mPrice;
     private String mFormattedPrice;
@@ -51,7 +51,7 @@ public class Plan implements Serializable {
     // Info attached to the current site/user
     private int mRawDiscount;
     private String mFormattedDiscount;
-    private boolean mIsCurrentPlan;
+    private boolean mCurrentPlanEh;
     private boolean mCanStartTrial;
     private String mExpiry;
     private boolean mFreeTrial;
@@ -82,7 +82,7 @@ public class Plan implements Serializable {
         mCost = planJSONObject.getLong("cost");
         mBillPeriod = planJSONObject.getInt("bill_period");
         mProductType = planJSONObject.getString("product_type");
-        mIsAvailable = JSONUtils.getBool(planJSONObject, "available");
+        mAvailableEh = JSONUtils.getBool(planJSONObject, "available");
         mBillPeriodLabel = planJSONObject.getString("bill_period_label");
         mPrice = planJSONObject.getString("price");
         mFormattedPrice = planJSONObject.getString("formatted_price");
@@ -123,7 +123,7 @@ public class Plan implements Serializable {
         mRawDiscount = planJSONObject.optInt("raw_discount", 0);
         mFormattedDiscount = planJSONObject.optString("formatted_discount");
         mCanStartTrial = JSONUtils.getBool(planJSONObject, "can_start_trial");
-        mIsCurrentPlan = JSONUtils.getBool(planJSONObject, "current_plan");
+        mCurrentPlanEh = JSONUtils.getBool(planJSONObject, "current_plan");
         mExpiry = planJSONObject.optString("expiry");
         mUserFacingExpiry = planJSONObject.optString("user_facing_expiry");
         mSubscribedDate = planJSONObject.optString("subscribed_date");
@@ -172,8 +172,8 @@ public class Plan implements Serializable {
         return StringUtils.notNullStr(mProductType);
     }
 
-    public boolean isAvailable() {
-        return mIsAvailable;
+    public boolean availableEh() {
+        return mAvailableEh;
     }
 
     public int getWidth() {
@@ -242,7 +242,7 @@ public class Plan implements Serializable {
     public void setIconUrl(String iconUrl) {
         mIconUrl = StringUtils.notNullStr(iconUrl);
     }
-    public boolean hasIconUrl() {
+    public boolean iconUrlEh() {
         return !TextUtils.isEmpty(mIconUrl);
     }
 
@@ -255,8 +255,8 @@ public class Plan implements Serializable {
     }
 
 
-    public boolean isCurrentPlan() {
-        return mIsCurrentPlan;
+    public boolean currentPlanEh() {
+        return mCurrentPlanEh;
     }
 
     public boolean canStartTrial() {
@@ -271,7 +271,7 @@ public class Plan implements Serializable {
         return StringUtils.notNullStr(mUserFacingExpiry);
     }
 
-    public boolean isFreeTrial() {
+    public boolean freeTrialEh() {
         return mFreeTrial;
     }
 

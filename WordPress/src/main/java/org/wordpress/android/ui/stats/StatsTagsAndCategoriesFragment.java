@@ -24,7 +24,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     private TagsContainerModel mTagsContainer;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mTagsContainer != null;
     }
     @Override
@@ -68,7 +68,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasTags()) {
+        if (tagsEh()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getTags());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -77,26 +77,26 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasTags() {
+    private boolean tagsEh() {
         return mTagsContainer != null
                 && mTagsContainer.getTags() != null
                 && mTagsContainer.getTags().size() > 0;
     }
 
     private List<TagsModel> getTags() {
-        if (!hasTags()) {
+        if (!tagsEh()) {
             return new ArrayList<TagsModel>(0);
         }
         return mTagsContainer.getTags();
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        return hasTags() && getTags().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
+    protected boolean viewAllOptionAvailableEh() {
+        return tagsEh() && getTags().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return true;
     }
 
@@ -147,7 +147,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition,
-                                 boolean isLastChild, View convertView, ViewGroup parent) {
+                                 boolean lastChildEh, View convertView, ViewGroup parent) {
 
             final TagModel children = (TagModel) getChild(groupPosition, childPosition);
 
@@ -208,7 +208,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded,
+        public View getGroupView(int groupPosition, boolean expandedEh,
                                  View convertView, ViewGroup parent) {
 
             if (convertView == null) {
@@ -264,12 +264,12 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public boolean hasStableIds() {
+        public boolean stableIdsEh() {
             return false;
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
+        public boolean childSelectableEh(int groupPosition, int childPosition) {
             return false;
         }
 

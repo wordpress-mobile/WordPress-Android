@@ -177,7 +177,7 @@ public class WordPressMediaUtils {
     private static Intent makePickOrCaptureIntent(Context context, String applicationId, LaunchCameraCallback callback) {
         Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
 
-        if (DeviceUtils.getInstance().hasCamera(context)) {
+        if (DeviceUtils.getInstance().cameraEh(context)) {
             Intent cameraIntent = getLaunchCameraIntent(context, applicationId, callback);
             pickPhotoIntent.putExtra(
                     Intent.EXTRA_INITIAL_INTENTS,
@@ -188,17 +188,17 @@ public class WordPressMediaUtils {
     }
 
     public static int getPlaceholder(String url) {
-        if (MediaUtils.isValidImage(url)) {
+        if (MediaUtils.validImageEh(url)) {
             return R.drawable.media_image_placeholder;
-        } else if (MediaUtils.isDocument(url)) {
+        } else if (MediaUtils.documentEh(url)) {
             return R.drawable.media_document;
-        } else if (MediaUtils.isPowerpoint(url)) {
+        } else if (MediaUtils.powerpointEh(url)) {
             return R.drawable.media_powerpoint;
-        } else if (MediaUtils.isSpreadsheet(url)) {
+        } else if (MediaUtils.spreadsheetEh(url)) {
             return R.drawable.media_spreadsheet;
-        } else if (MediaUtils.isVideo(url)) {
+        } else if (MediaUtils.videoEh(url)) {
             return org.wordpress.android.editor.R.drawable.media_movieclip;
-        } else if (MediaUtils.isAudio(url)) {
+        } else if (MediaUtils.audioEh(url)) {
             return R.drawable.media_audio;
         } else {
             return 0;
@@ -224,7 +224,7 @@ public class WordPressMediaUtils {
             // default image while downloading
             imageView.setDefaultImageResId(R.drawable.media_item_background);
 
-            if (MediaUtils.isValidImage(filepath)) {
+            if (MediaUtils.validImageEh(filepath)) {
                 imageView.setTag(imageUrl);
                 imageView.setImageUrl(imageUrl, imageLoader);
             } else {

@@ -50,7 +50,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         mDataLoadedListener = listener;
     }
 
-    private boolean hasContext() {
+    private boolean contextEh() {
         return (getContext() != null);
     }
 
@@ -59,7 +59,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     }
 
     public void refresh() {
-        if (mIsTaskRunning) {
+        if (mTaskRunningEh) {
             AppLog.w(T.READER, "tag task is already running");
             return;
         }
@@ -107,7 +107,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && hasContext()) {
+                if (!succeeded && contextEh()) {
                     ToastUtils.showToast(getContext(), R.string.reader_toast_err_remove_tag);
                     refresh();
                 }
@@ -143,15 +143,15 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     /*
      * AsyncTask to load tags
      */
-    private boolean mIsTaskRunning = false;
+    private boolean mTaskRunningEh = false;
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {
-            mIsTaskRunning = true;
+            mTaskRunningEh = true;
         }
         @Override
         protected void onCancelled() {
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
         }
         @Override
         protected ReaderTagList doInBackground(Void... params) {
@@ -159,12 +159,12 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         }
         @Override
         protected void onPostExecute(ReaderTagList tagList) {
-            if (tagList != null && !tagList.isSameList(mTags)) {
+            if (tagList != null && !tagList.sameListEh(mTags)) {
                 mTags.clear();
                 mTags.addAll(tagList);
                 notifyDataSetChanged();
             }
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
             }

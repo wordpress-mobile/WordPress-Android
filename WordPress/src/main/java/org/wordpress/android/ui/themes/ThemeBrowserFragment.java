@@ -300,7 +300,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
         }
         mEmptyView.setVisibility(visible ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
         mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
-        if (visible && !NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
+        if (visible && !NetworkUtils.networkAvailableEh(mThemeBrowserActivity)) {
             mEmptyTextView.setText(R.string.no_network_title);
         }
     }
@@ -376,7 +376,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
                     }
 
                     @Override
-                    public void onResponse(ImageContainer response, boolean isImmediate) {
+                    public void onResponse(ImageContainer response, boolean immediateEh) {
                     }
 
                 });
@@ -404,7 +404,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener, 
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (shouldFetchThemesOnScroll(firstVisibleItem + visibleItemCount, totalItemCount) && NetworkUtils.networkAvailableEh(getActivity())) {
             mPage++;
             mThemeBrowserActivity.fetchThemes();
             mProgressBar.setVisibility(View.VISIBLE);

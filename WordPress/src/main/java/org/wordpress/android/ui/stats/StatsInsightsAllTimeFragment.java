@@ -17,12 +17,12 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
     private InsightsAllTimeModel mInsightsAllTimeModel;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mInsightsAllTimeModel != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mInsightsAllTimeModel);
         }
     }
@@ -57,7 +57,7 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
     protected void updateUI() {
         super.updateUI();
 
-        if (!isAdded() || !hasDataAvailable()) {
+        if (!isAdded() || !dataAvailableEh()) {
             return;
         }
 

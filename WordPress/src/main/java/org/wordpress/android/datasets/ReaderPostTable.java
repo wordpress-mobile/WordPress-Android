@@ -334,23 +334,23 @@ public class ReaderPostTable {
             return ReaderActions.UpdateResult.UNCHANGED;
         }
 
-        boolean hasChanges = false;
+        boolean changesEh = false;
         for (ReaderPost post: posts) {
             ReaderPost existingPost = getBlogPost(post.blogId, post.postId, true);
             if (existingPost == null) {
                 return ReaderActions.UpdateResult.HAS_NEW;
-            } else if (!hasChanges && !post.isSamePost(existingPost)) {
-                hasChanges = true;
+            } else if (!changesEh && !post.samePostEh(existingPost)) {
+                changesEh = true;
             }
         }
 
-        return (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+        return (changesEh ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
     }
 
     /*
      * returns true if any posts in the passed list exist in this list
      */
-    public static boolean hasOverlap(ReaderPostList posts) {
+    public static boolean overlapEh(ReaderPostList posts) {
         for (ReaderPost post: posts) {
             if (postExists(post.blogId, post.postId)) {
                 return true;
@@ -384,10 +384,10 @@ public class ReaderPostTable {
                 args);
     }
 
-    public static boolean isPostLikedByCurrentUser(ReaderPost post) {
-        return post != null && isPostLikedByCurrentUser(post.blogId, post.postId);
+    public static boolean postLikedByCurrentUserEh(ReaderPost post) {
+        return post != null && postLikedByCurrentUserEh(post.blogId, post.postId);
     }
-    public static boolean isPostLikedByCurrentUser(long blogId, long postId) {
+    public static boolean postLikedByCurrentUserEh(long blogId, long postId) {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT is_liked FROM tbl_posts WHERE blog_id=? AND post_id=?",
@@ -397,7 +397,7 @@ public class ReaderPostTable {
     /*
      * updates both the like count for a post and whether it's liked by the current user
      */
-    public static void setLikesForPost(ReaderPost post, int numLikes, boolean isLikedByCurrentUser) {
+    public static void setLikesForPost(ReaderPost post, int numLikes, boolean likedByCurrentUserEh) {
         if (post == null) {
             return;
         }
@@ -406,7 +406,7 @@ public class ReaderPostTable {
 
         ContentValues values = new ContentValues();
         values.put("num_likes", numLikes);
-        values.put("is_liked", SqlUtils.boolToSql(isLikedByCurrentUser));
+        values.put("is_liked", SqlUtils.boolToSql(likedByCurrentUserEh));
 
         ReaderDatabase.getWritableDb().update(
                 "tbl_posts",
@@ -416,7 +416,7 @@ public class ReaderPostTable {
     }
 
 
-    public static boolean isPostFollowed(ReaderPost post) {
+    public static boolean postFollowedEh(ReaderPost post) {
         if (post == null) {
             return false;
         }
@@ -567,13 +567,13 @@ public class ReaderPostTable {
      *      tagged posts     sort by the date the post was tagged
      */
     private static String getSortColumnForTag(ReaderTag tag) {
-        if (tag.isPostsILike()) {
+        if (tag.postsILikeEh()) {
             return "date_liked";
-        } else if (tag.isFollowedSites()) {
+        } else if (tag.followedSitesEh()) {
             return "date_published";
         } else if (tag.tagType == ReaderTagType.SEARCH) {
             return "score";
-        } else if (tag.isTagTopic()) {
+        } else if (tag.tagTopicEh()) {
             return "date_tagged";
         } else {
             return "date_published";
@@ -598,13 +598,13 @@ public class ReaderPostTable {
         }
     }
 
-    public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
-        setFollowStatusForPosts(blogId, 0, isFollowed);
+    public static void setFollowStatusForPostsInBlog(long blogId, boolean followedEh) {
+        setFollowStatusForPosts(blogId, 0, followedEh);
     }
-    public static void setFollowStatusForPostsInFeed(long feedId, boolean isFollowed) {
-        setFollowStatusForPosts(0, feedId, isFollowed);
+    public static void setFollowStatusForPostsInFeed(long feedId, boolean followedEh) {
+        setFollowStatusForPosts(0, feedId, followedEh);
     }
-    private static void setFollowStatusForPosts(long blogId, long feedId, boolean isFollowed) {
+    private static void setFollowStatusForPosts(long blogId, long feedId, boolean followedEh) {
         if (blogId == 0 && feedId == 0) {
             return;
         }
@@ -613,18 +613,18 @@ public class ReaderPostTable {
         db.beginTransaction();
         try {
             if (blogId != 0) {
-                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(followedEh)
                           + " WHERE blog_id=?";
                 db.execSQL(sql, new String[]{Long.toString(blogId)});
             } else {
-                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(followedEh)
                           + " WHERE feed_id=?";
                 db.execSQL(sql, new String[]{Long.toString(feedId)});
             }
 
 
             // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites"
-            if (!isFollowed) {
+            if (!followedEh) {
                 if (blogId != 0) {
                     db.delete("tbl_posts", "blog_id=? AND tag_name=?",
                             new String[]{Long.toString(blogId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
@@ -655,7 +655,7 @@ public class ReaderPostTable {
         }
         // if the post has an excerpt (which should always be the case), store it as the full text
         // with a link to the full article
-        if (post.hasExcerpt()) {
+        if (post.excerptEh()) {
             AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing excerpt");
             return "<p>" + post.getExcerpt() + "</p>"
                   + String.format("<p style='text-align:center'><a href='%s'>%s</a></p>",
@@ -684,7 +684,7 @@ public class ReaderPostTable {
 
             // we can safely assume there's no gap marker because any existing gap marker is
             // already removed before posts are updated
-            boolean hasGapMarker = false;
+            boolean gapMarkerEh = false;
 
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
@@ -713,13 +713,13 @@ public class ReaderPostTable {
                 stmtPosts.bindString(24, post.getDateTagged());
                 stmtPosts.bindLong  (25, post.numReplies);
                 stmtPosts.bindLong  (26, post.numLikes);
-                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.isLikedByCurrentUser));
-                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
-                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isCommentsOpen));
-                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isExternal));
-                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.isPrivate));
-                stmtPosts.bindLong  (32, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindLong  (33, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindLong  (27, SqlUtils.boolToSql(post.likedByCurrentUserEh));
+                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.followedByCurrentUserEh));
+                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.commentsOpenEh));
+                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.externalEh));
+                stmtPosts.bindLong  (31, SqlUtils.boolToSql(post.privateEh));
+                stmtPosts.bindLong  (32, SqlUtils.boolToSql(post.videoPressEh));
+                stmtPosts.bindLong  (33, SqlUtils.boolToSql(post.jetpackEh));
                 stmtPosts.bindString(34, post.getPrimaryTag());
                 stmtPosts.bindString(35, post.getSecondaryTag());
                 stmtPosts.bindString(36, post.getAttachmentsJson());
@@ -729,7 +729,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(40, post.getRailcarJson());
                 stmtPosts.bindString(41, tagName);
                 stmtPosts.bindLong  (42, tagType);
-                stmtPosts.bindLong  (43, SqlUtils.boolToSql(hasGapMarker));
+                stmtPosts.bindLong  (43, SqlUtils.boolToSql(gapMarkerEh));
                 stmtPosts.bindString(44, ReaderCardType.toString(post.getCardType()));
                 stmtPosts.execute();
             }
@@ -753,9 +753,9 @@ public class ReaderPostTable {
         if (tag.tagType == ReaderTagType.DEFAULT) {
             // skip posts that are no longer liked if this is "Posts I Like", skip posts that are no
             // longer followed if this is "Followed Sites"
-            if (tag.isPostsILike()) {
+            if (tag.postsILikeEh()) {
                 sql += " AND is_liked != 0";
-            } else if (tag.isFollowedSites()) {
+            } else if (tag.followedSitesEh()) {
                 sql += " AND is_followed != 0";
             }
         }
@@ -819,9 +819,9 @@ public class ReaderPostTable {
         String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE tag_name=? AND tag_type=?";
 
         if (tag.tagType == ReaderTagType.DEFAULT) {
-            if (tag.isPostsILike()) {
+            if (tag.postsILikeEh()) {
                 sql += " AND is_liked != 0";
-            } else if (tag.isFollowedSites()) {
+            } else if (tag.followedSitesEh()) {
                 sql += " AND is_followed != 0";
             }
         }
@@ -914,13 +914,13 @@ public class ReaderPostTable {
         post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
         post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
 
-        post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
-        post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt( c.getColumnIndex("is_followed")));
-        post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
-        post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
-        post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
-        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
-        post.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
+        post.likedByCurrentUserEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
+        post.followedByCurrentUserEh = SqlUtils.sqlToBool(c.getInt( c.getColumnIndex("is_followed")));
+        post.commentsOpenEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
+        post.externalEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
+        post.privateEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
+        post.videoPressEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
+        post.jetpackEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
 
         post.setPrimaryTag(c.getString(c.getColumnIndex("primary_tag")));
         post.setSecondaryTag(c.getString(c.getColumnIndex("secondary_tag")));

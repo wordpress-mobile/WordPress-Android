@@ -65,7 +65,7 @@ public class ReaderActions {
         CHANGED,    // no new posts/comments, but existing ones have changed
         UNCHANGED,  // no new or changed posts/comments
         FAILED;     // request failed
-        public boolean isNewOrChanged() {
+        public boolean newOrChangedEh() {
             return (this == HAS_NEW || this == CHANGED);
         }
     }

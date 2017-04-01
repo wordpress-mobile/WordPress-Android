@@ -48,7 +48,7 @@ public class PlansUtils {
      * @return string containing photon-ized url for the plan icon
      */
     public static String getIconUrlForPlan(Plan plan, int iconSize) {
-        if (plan == null || !plan.hasIconUrl()) {
+        if (plan == null || !plan.iconUrlEh()) {
             return null;
         }
         return PhotonUtils.getPhotonImageUrl(plan.getIconUrl(), iconSize, iconSize);
@@ -60,7 +60,7 @@ public class PlansUtils {
      * @param planID - The plan ID
      * @return boolean - true if the current blog is on a free plan.
      */
-    private static boolean isFreePlan(long planID) {
+    private static boolean freePlanEh(long planID) {
         return planID == PlansConstants.JETPACK_FREE_PLAN_ID || planID == PlansConstants.FREE_PLAN_ID;
     }
 

@@ -70,7 +70,7 @@ public abstract class StatsAbstractInsightsFragment extends StatsAbstractFragmen
         }
 
         // Another check that the data is available. At this point it should be available.
-        if (!hasDataAvailable()) {
+        if (!dataAvailableEh()) {
             showErrorUI();
             return;
         }

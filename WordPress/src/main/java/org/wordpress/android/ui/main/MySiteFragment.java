@@ -106,7 +106,7 @@ public class MySiteFragment extends Fragment
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails();
 
-        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
+        if (ServiceUtils.serviceRunningEh(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
         // redisplay hidden fab after a short delay
@@ -336,17 +336,17 @@ public class MySiteFragment extends Fragment
 
         toggleAdminVisibility(site);
 
-        int themesVisibility = ThemeBrowserActivity.isAccessible(getSelectedSite()) ? View.VISIBLE : View.GONE;
+        int themesVisibility = ThemeBrowserActivity.accessibleEh(getSelectedSite()) ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessibleViaWPComAPI(site);
-        mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
+        boolean adminOrSelfHostedEh = site.getHasCapabilityManageOptions() || !SiteUtils.accessibleViaWPComAPIEh(site);
+        mSettingsView.setVisibility(adminOrSelfHostedEh ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
 
         // if either people or settings is visible, configuration header should be visible
-        int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
+        int settingsVisibility = (adminOrSelfHostedEh || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;
         mConfigurationHeader.setVisibility(settingsVisibility);
 
         mBlavatarImageView.setImageUrl(SiteUtils.getSiteIconUrl(site, mBlavatarSz), WPNetworkImageView

@@ -115,7 +115,7 @@ public enum Role {
             return INVITE_ROLES_JETPACK;
         }
 
-        if (site.isPrivate()) {
+        if (site.privateEh()) {
             return INVITE_ROLES_WPCOM_PRIVATE;
         }
         return INVITE_ROLES_WPCOM;

@@ -39,12 +39,12 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         if (titleView != null) {
             Resources res = getContext().getResources();
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10));
+            titleView.setTextColor(res.getColor(enabledEh() ? R.color.grey_dark : R.color.grey_lighten_10));
         }
     }
 
     @Override
-    public boolean hasHint() {
+    public boolean hintEh() {
         return !TextUtils.isEmpty(mHint);
     }
 

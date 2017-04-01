@@ -17,13 +17,13 @@ public class SuggestionUtils {
     public static SuggestionAdapter setupSuggestions(SiteModel site, Context context,
                                                      SuggestionServiceConnectionManager serviceConnectionManager) {
         return SuggestionUtils.setupSuggestions(site.getSiteId(), context, serviceConnectionManager,
-                SiteUtils.isAccessibleViaWPComAPI(site));
+                SiteUtils.accessibleViaWPComAPIEh(site));
     }
 
     public static SuggestionAdapter setupSuggestions(final long siteId, Context context,
                                                      SuggestionServiceConnectionManager serviceConnectionManager,
-                                                     boolean isDotcomFlag) {
-        if (!isDotcomFlag) {
+                                                     boolean dotcomFlagEh) {
+        if (!dotcomFlagEh) {
             return null;
         }
 
@@ -41,13 +41,13 @@ public class SuggestionUtils {
     public static TagSuggestionAdapter setupTagSuggestions(SiteModel site, Context context,
                                                            SuggestionServiceConnectionManager serviceConnectionManager) {
         return SuggestionUtils.setupTagSuggestions(site.getSiteId(), context, serviceConnectionManager,
-                SiteUtils.isAccessibleViaWPComAPI(site));
+                SiteUtils.accessibleViaWPComAPIEh(site));
     }
 
     public static TagSuggestionAdapter setupTagSuggestions(final long siteId, Context context,
                                                            SuggestionServiceConnectionManager serviceConnectionManager,
-                                                           boolean isDotcomFlag) {
-        if (!isDotcomFlag) {
+                                                           boolean dotcomFlagEh) {
+        if (!dotcomFlagEh) {
             return null;
         }
 

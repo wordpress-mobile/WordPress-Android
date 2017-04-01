@@ -568,19 +568,19 @@ public class NotificationsProcessingService extends Service {
             return;
         }
         if (event.causeOfChange == CommentAction.PUSH_COMMENT) {
-            if (event.isError()) {
+            if (event.errorEh()) {
                 mQuickActionProcessor.requestFailed(ARG_ACTION_APPROVE);
             } else {
                 mQuickActionProcessor.requestCompleted(ARG_ACTION_APPROVE);
             }
         } else if (event.causeOfChange == CommentAction.LIKE_COMMENT) {
-            if (event.isError()) {
+            if (event.errorEh()) {
                 mQuickActionProcessor.requestFailed(ARG_ACTION_LIKE);
             } else {
                 mQuickActionProcessor.requestCompleted(ARG_ACTION_LIKE);
             }
         } else if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
-            if (event.isError()) {
+            if (event.errorEh()) {
                 mQuickActionProcessor.requestFailed(ARG_ACTION_REPLY);
             } else {
                 mQuickActionProcessor.requestCompleted(ARG_ACTION_REPLY);

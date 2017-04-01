@@ -57,7 +57,7 @@ public class AnalyticsUtils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
 
         metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
-        metadata.setUserConnected(FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore));
+        metadata.setUserConnected(FluxCUtils.signedInWPComOrHasWPOrgSiteEh(accountStore, siteStore));
         metadata.setWordPressComUser(accountStore.hasAccessToken());
         metadata.setJetpackUser(siteStore.hasJetpackSite());
         metadata.setNumBlogs(siteStore.getSitesCount());
@@ -105,13 +105,13 @@ public class AnalyticsUtils {
      */
     public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
                                             Map<String, Object> properties) {
-        if (site == null || !SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (site == null || !SiteUtils.accessibleViaWPComAPIEh(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
             AnalyticsTracker.track(stat, properties);
             return;
         }
 
-        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (SiteUtils.accessibleViaWPComAPIEh(site)) {
             if (properties == null) {
                 properties = new HashMap<>();
             }
@@ -152,19 +152,19 @@ public class AnalyticsUtils {
         // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
         // RSS pass should pass: feed_id, feed_item_id, is_jetpack
         Map<String, Object> properties = new HashMap<>();
-        if (post.isWP() || post.isJetpack) {
+        if (post.wPEh() || post.jetpackEh) {
             properties.put(BLOG_ID_KEY, post.blogId);
             properties.put(POST_ID_KEY, post.postId);
         }
         properties.put(FEED_ID_KEY, post.feedId);
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
-        properties.put(IS_JETPACK_KEY, post.isJetpack);
+        properties.put(IS_JETPACK_KEY, post.jetpackEh);
 
         AnalyticsTracker.track(stat, properties);
 
         // record a railcar interact event if the post has a railcar and this can be tracked
         // as an interaction
-        if (canTrackRailcarInteraction(stat) && post.hasRailcar()) {
+        if (canTrackRailcarInteraction(stat) && post.railcarEh()) {
             trackRailcarInteraction(stat, post.getRailcarJson());
         }
     }
@@ -308,7 +308,7 @@ public class AnalyticsUtils {
         return properties;
     }
 
-    public static Map<String, Object> getMediaProperties(Context context, boolean isVideo, Uri mediaURI, String path) {
+    public static Map<String, Object> getMediaProperties(Context context, boolean videoEh, Uri mediaURI, String path) {
         Map<String, Object> properties = new HashMap<>();
         if(context == null) {
             AppLog.e(AppLog.T.MEDIA, "In order to track media properties Context cannot be null.");
@@ -351,7 +351,7 @@ public class AnalyticsUtils {
         String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
         properties.put("ext", fileExtension);
 
-        if (!isVideo) {
+        if (!videoEh) {
             int[] dimensions = ImageUtils.getImageSize(Uri.fromFile(file), context);
             double megapixels = dimensions[0] * dimensions[1];
             megapixels = megapixels / 1000000;

@@ -15,7 +15,7 @@ public class PhotonUtils {
     /*
     * returns true if the passed url is an obvious "mshots" url
     */
-    public static boolean isMshotsUrl(final String imageUrl) {
+    public static boolean mshotsUrlEh(final String imageUrl) {
         return (imageUrl != null && imageUrl.contains("/mshots/"));
     }
 
@@ -53,7 +53,7 @@ public class PhotonUtils {
         imageUrl = UrlUtils.removeQuery(imageUrl);
 
         // if this is an "mshots" url, skip photon and return it with a query that sets the width/height
-        if (isMshotsUrl(imageUrl)) {
+        if (mshotsUrlEh(imageUrl)) {
             return imageUrl + "?w=" + width + "&h=" + height;
         }
 
@@ -95,7 +95,7 @@ public class PhotonUtils {
         }
 
         // must use https for https image urls
-        if (UrlUtils.isHttps(imageUrl)) {
+        if (UrlUtils.httpsEh(imageUrl)) {
             return "https://i0.wp.com/" + imageUrl.substring(schemePos+3, imageUrl.length()) + query;
         } else {
             return "http://i0.wp.com/" + imageUrl.substring(schemePos+3, imageUrl.length()) + query;

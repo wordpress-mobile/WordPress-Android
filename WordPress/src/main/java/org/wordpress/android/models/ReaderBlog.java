@@ -13,9 +13,9 @@ public class ReaderBlog {
     public long blogId;
     public long feedId;
 
-    public boolean isPrivate;
-    public boolean isJetpack;
-    public boolean isFollowing;
+    public boolean privateEh;
+    public boolean jetpackEh;
+    public boolean followingEh;
     public int numSubscribers;
 
     private String name;
@@ -40,9 +40,9 @@ public class ReaderBlog {
             blog.setName(JSONUtils.getStringDecoded(jsonSite, "name"));
             blog.setDescription(JSONUtils.getStringDecoded(jsonSite, "description"));
             blog.setUrl(JSONUtils.getString(jsonSite, "URL"));
-            blog.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
-            blog.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
-            blog.isFollowing = JSONUtils.getBool(jsonSite, "is_following");
+            blog.jetpackEh = JSONUtils.getBool(jsonSite, "jetpack");
+            blog.privateEh = JSONUtils.getBool(jsonSite, "is_private");
+            blog.followingEh = JSONUtils.getBool(jsonSite, "is_following");
             blog.numSubscribers = jsonSite.optInt("subscribers_count");
             JSONObject jsonIcon = jsonSite.optJSONObject("icon");
             if (jsonIcon != null) {
@@ -55,7 +55,7 @@ public class ReaderBlog {
             blog.setUrl(JSONUtils.getString(jsonFeed, "URL"));
             blog.numSubscribers = jsonFeed.optInt("subscribers_count");
             // read/following/mine doesn't include is_following for feeds, so assume to be true
-            blog.isFollowing = true;
+            blog.followingEh = true;
         } else {
             blog.blogId = json.optLong("ID");
             blog.feedId = json.optLong("feed_ID");
@@ -63,9 +63,9 @@ public class ReaderBlog {
             blog.setDescription(JSONUtils.getStringDecoded(json, "description"));
             blog.setUrl(JSONUtils.getString(json, "URL"));
             blog.setFeedUrl(JSONUtils.getString(json, "feed_URL"));
-            blog.isJetpack = JSONUtils.getBool(json, "jetpack");
-            blog.isPrivate = JSONUtils.getBool(json, "is_private");
-            blog.isFollowing = JSONUtils.getBool(json, "is_following");
+            blog.jetpackEh = JSONUtils.getBool(json, "jetpack");
+            blog.privateEh = JSONUtils.getBool(json, "is_private");
+            blog.followingEh = JSONUtils.getBool(json, "is_following");
             blog.numSubscribers = json.optInt("subscribers_count");
         }
 
@@ -77,7 +77,7 @@ public class ReaderBlog {
         JSONObject jsonIcon = JSONUtils.getJSONChild(json, "icon");
         if (jsonIcon != null) {
             blog.setImageUrl(JSONUtils.getString(jsonIcon, "img"));
-            if (!blog.hasImageUrl()) {
+            if (!blog.imageUrlEh()) {
                 blog.setImageUrl(JSONUtils.getString(jsonIcon, "ico"));
             }
         }
@@ -120,25 +120,25 @@ public class ReaderBlog {
         this.feedUrl = StringUtils.notNullStr(feedUrl);
     }
 
-    public boolean hasUrl() {
+    public boolean urlEh() {
         return !TextUtils.isEmpty(url);
     }
 
-    public boolean hasFeedUrl() {
+    public boolean feedUrlEh() {
         return !TextUtils.isEmpty(feedUrl);
     }
 
-    public boolean hasImageUrl() {
+    public boolean imageUrlEh() {
         return !TextUtils.isEmpty(imageUrl);
     }
-    public boolean hasName() {
+    public boolean nameEh() {
         return !TextUtils.isEmpty(name);
     }
-    public boolean hasDescription() {
+    public boolean descriptionEh() {
         return !TextUtils.isEmpty(description);
     }
 
-    public boolean isExternal() {
+    public boolean externalEh() {
         return (feedId != 0);
     }
 
@@ -155,12 +155,12 @@ public class ReaderBlog {
              + String.format(Locale.US, "?w=%d", width);
     }
 
-    public boolean isSameAs(ReaderBlog blogInfo) {
+    public boolean sameAsEh(ReaderBlog blogInfo) {
         return blogInfo != null
             && this.blogId == blogInfo.blogId
             && this.feedId == blogInfo.feedId
-            && this.isFollowing == blogInfo.isFollowing
-            && this.isPrivate == blogInfo.isPrivate
+            && this.followingEh == blogInfo.isFollowing
+            && this.privateEh == blogInfo.isPrivate
             && this.numSubscribers == blogInfo.numSubscribers
             && this.getName().equals(blogInfo.getName())
             && this.getDescription().equals(blogInfo.getDescription())

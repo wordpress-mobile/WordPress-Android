@@ -179,7 +179,7 @@ public class ReaderCommentTable {
                 stmt.bindString(12, comment.getStatus());
                 stmt.bindString(13, comment.getText());
                 stmt.bindLong  (14, comment.numLikes);
-                stmt.bindLong  (15, SqlUtils.boolToSql(comment.isLikedByCurrentUser));
+                stmt.bindLong  (15, SqlUtils.boolToSql(comment.likedByCurrentUserEh));
                 stmt.bindLong  (16, comment.pageNumber);
 
                 stmt.execute();
@@ -219,17 +219,17 @@ public class ReaderCommentTable {
      * returns true if any of the passed comments don't already exist
      * IMPORTANT: assumes passed comments are all for the same post
      */
-    public static boolean hasNewComments(ReaderCommentList comments) {
+    public static boolean newCommentsEh(ReaderCommentList comments) {
         if (comments == null || comments.size() == 0) {
             return false;
         }
 
         StringBuilder sb = new StringBuilder(
                 "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id IN (");
-        boolean isFirst = true;
+        boolean firstEh = true;
         for (ReaderComment comment: comments) {
-            if (isFirst) {
-                isFirst = false;
+            if (firstEh) {
+                firstEh = false;
             } else {
                 sb.append(",");
             }
@@ -258,7 +258,7 @@ public class ReaderCommentTable {
     /*
      * updates both the like count for a comment and whether it's liked by the current user
      */
-    public static void setLikesForComment(ReaderComment comment, int numLikes, boolean isLikedByCurrentUser) {
+    public static void setLikesForComment(ReaderComment comment, int numLikes, boolean likedByCurrentUserEh) {
         if (comment == null) {
             return;
         }
@@ -270,7 +270,7 @@ public class ReaderCommentTable {
 
         ContentValues values = new ContentValues();
         values.put("num_likes", numLikes);
-        values.put("is_liked", SqlUtils.boolToSql(isLikedByCurrentUser));
+        values.put("is_liked", SqlUtils.boolToSql(likedByCurrentUserEh));
 
         ReaderDatabase.getWritableDb().update(
                 "tbl_comments",
@@ -279,13 +279,13 @@ public class ReaderCommentTable {
                 args);
     }
 
-    public static boolean isCommentLikedByCurrentUser(ReaderComment comment) {
+    public static boolean commentLikedByCurrentUserEh(ReaderComment comment) {
         if (comment == null) {
             return false;
         }
-        return isCommentLikedByCurrentUser(comment.blogId, comment.postId, comment.commentId);
+        return commentLikedByCurrentUserEh(comment.blogId, comment.postId, comment.commentId);
     }
-    public static boolean isCommentLikedByCurrentUser(long blogId, long postId, long commentId) {
+    public static boolean commentLikedByCurrentUserEh(long blogId, long postId, long commentId) {
         String[] args = {Long.toString(blogId),
                 Long.toString(postId),
                 Long.toString(commentId)};
@@ -328,7 +328,7 @@ public class ReaderCommentTable {
         comment.setText(c.getString(c.getColumnIndex("text")));
 
         comment.numLikes = c.getInt(c.getColumnIndex("num_likes"));
-        comment.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
+        comment.likedByCurrentUserEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
         comment.pageNumber = c.getInt(c.getColumnIndex("page_number"));
 
         return comment;

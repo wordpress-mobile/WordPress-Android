@@ -90,7 +90,7 @@ public class SearchTermsModel extends BaseStatsModel {
         return mSearchTerms;
     }
 
-    public boolean hasSearchTerms() {
+    public boolean searchTermsEh() {
         return mSearchTerms != null && mSearchTerms.size() > 0;
     }
 

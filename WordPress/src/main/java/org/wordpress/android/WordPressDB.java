@@ -66,9 +66,9 @@ public class WordPressDB {
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
-        boolean isNewInstall = (currentVersion == 0);
+        boolean newInstallEh = (currentVersion == 0);
 
-        if (!isNewInstall && currentVersion != DATABASE_VERSION) {
+        if (!newInstallEh && currentVersion != DATABASE_VERSION) {
             AppLog.d(T.DB, "upgrading database from version " + currentVersion + " to " + DATABASE_VERSION);
         }
 
@@ -330,9 +330,9 @@ public class WordPressDB {
             String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
             String stylesheet = cursor.getString(cursor.getColumnIndex(Theme.STYLESHEET));
             String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
-            boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) > 0;
+            boolean currentEh = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) > 0;
 
-            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, isCurrent);
+            Theme theme = new Theme(id, author, screenshot, authorURI, demoURI, name, stylesheet, price, blogId, currentEh);
             cursor.close();
 
             return theme;

@@ -106,7 +106,7 @@ public class ReaderCommentService extends Service {
             @Override
             public void onUpdateResult(UpdateResult result) {
                 if (commentId > 0) {
-                    if (ReaderCommentTable.commentExists(blogId, postId, commentId) || !result.isNewOrChanged()) {
+                    if (ReaderCommentTable.commentExists(blogId, postId, commentId) || !result.newOrChangedEh()) {
                         EventBus.getDefault().post(new ReaderEvents.UpdateCommentsEnded(result));
                         stopSelf();
                     } else {
@@ -163,7 +163,7 @@ public class ReaderCommentService extends Service {
         new Thread() {
             @Override
             public void run() {
-                final boolean hasNewComments;
+                final boolean newCommentsEh;
 
                 ReaderDatabase.getWritableDb().beginTransaction();
                 try {
@@ -188,7 +188,7 @@ public class ReaderCommentService extends Service {
                         }
                     }
 
-                    hasNewComments = (serverComments.size() > 0);
+                    newCommentsEh = (serverComments.size() > 0);
 
                     // save to db regardless of whether any are new so changes to likes are stored
                     ReaderCommentTable.addOrUpdateComments(serverComments);
@@ -198,7 +198,7 @@ public class ReaderCommentService extends Service {
                 }
 
                 ReaderActions.UpdateResult result =
-                        (hasNewComments ? ReaderActions.UpdateResult.HAS_NEW : ReaderActions.UpdateResult.UNCHANGED);
+                        (newCommentsEh ? ReaderActions.UpdateResult.HAS_NEW : ReaderActions.UpdateResult.UNCHANGED);
                 resultListener.onUpdateResult(result);
             }
         }.start();

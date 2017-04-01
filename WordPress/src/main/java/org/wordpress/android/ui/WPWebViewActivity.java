@@ -279,7 +279,7 @@ public class WPWebViewActivity extends WebViewActivity {
             username = mAccountStore.getAccount().getUserName();
         }
 
-        if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
+        if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.validUrlAndHostNotNullEh(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
             Toast.makeText(this, getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
@@ -298,7 +298,7 @@ public class WPWebViewActivity extends WebViewActivity {
                 loadUrl(addressToLoad);
             }
         } else {
-            if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
+            if (TextUtils.isEmpty(authURL) || !UrlUtils.validUrlAndHostNotNullEh(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity");
                 Toast.makeText(this, getText(R.string.invalid_site_url_message),
                         Toast.LENGTH_SHORT).show();

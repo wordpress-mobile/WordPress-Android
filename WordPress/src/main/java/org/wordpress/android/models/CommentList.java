@@ -49,7 +49,7 @@ public class CommentList extends ArrayList<CommentModel> {
     /*
      * returns true if any comments in this list have the passed status
      */
-    public boolean hasAnyWithStatus(CommentStatus status) {
+    public boolean anyWithStatusEh(CommentStatus status) {
         for (CommentModel comment : this) {
             if (status.toString().equals(comment.getStatus())) {
                 return true;
@@ -61,7 +61,7 @@ public class CommentList extends ArrayList<CommentModel> {
     /*
      * returns true if any comments in this list do NOT have the passed status
      */
-    public boolean hasAnyWithoutStatus(CommentStatus status) {
+    public boolean anyWithoutStatusEh(CommentStatus status) {
         for (CommentModel comment : this) {
             if (!status.toString().equals(comment.getStatus())) {
                 return true;
@@ -73,7 +73,7 @@ public class CommentList extends ArrayList<CommentModel> {
     /*
      * does passed list contain the same comments as this list?
      */
-    public boolean isSameList(CommentList comments) {
+    public boolean sameListEh(CommentList comments) {
         if (comments == null || comments.size() != this.size()) {
             return false;
         }

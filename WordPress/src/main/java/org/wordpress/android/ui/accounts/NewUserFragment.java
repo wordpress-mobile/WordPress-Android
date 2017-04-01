@@ -148,7 +148,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlTextField.setError(null);
     }
 
-    protected boolean isUserDataValid() {
+    protected boolean userDataValidEh() {
         // try to create the user
         final String email = EditTextUtils.getText(mEmailTextField).trim();
         final String password = EditTextUtils.getText(mPasswordTextField).trim();
@@ -371,7 +371,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             AlertUtils.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
             return;
         }
-        if (!isUserDataValid()) {
+        if (!userDataValidEh()) {
             return;
         }
 
@@ -562,8 +562,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+            public void onFocusChange(View v, boolean focusEh) {
+                if (focusEh) {
                     mAutoCompleteUrl = EditTextUtils.getText(mUsernameTextField)
                             .equals(EditTextUtils.getText(mSiteUrlTextField))
                             || EditTextUtils.isEmpty(mSiteUrlTextField);
@@ -572,8 +572,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         });
 
         mEmailTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+            public void onFocusChange(View v, boolean focusEh) {
+                if (!focusEh) {
                     autocorrectEmail();
                 }
             }
@@ -629,7 +629,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError()) {
+        if (event.errorEh()) {
             endProgress();
             finishAndShowSignInScreen();
             return;
@@ -654,7 +654,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewUserCreated(OnNewUserCreated event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError()) {
+        if (event.errorEh()) {
             endProgress();
             AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
             showUserError(event.error.type, event.error.message);
@@ -675,7 +675,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
-        if (event.isError()) {
+        if (event.errorEh()) {
             endProgress();
             AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
             showSiteError(event.error.type, event.error.message);

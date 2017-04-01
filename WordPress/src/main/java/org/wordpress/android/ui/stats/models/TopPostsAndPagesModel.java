@@ -87,7 +87,7 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
         return mTopPostsAndPages;
     }
 
-    public boolean hasTopPostsAndPages() {
+    public boolean topPostsAndPagesEh() {
         return mTopPostsAndPages != null && mTopPostsAndPages.size() > 0;
     }
 }

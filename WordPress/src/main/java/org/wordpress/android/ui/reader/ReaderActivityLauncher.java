@@ -33,21 +33,21 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderPostDetail(Context context,
-                                            boolean isFeed,
+                                            boolean feedEh,
                                             long blogId,
                                             long postId,
                                             DirectOperation directOperation,
                                             int commentId,
-                                            boolean isRelatedPost,
+                                            boolean relatedPostEh,
                                             String interceptedUri) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
-        intent.putExtra(ReaderConstants.ARG_IS_FEED, isFeed);
+        intent.putExtra(ReaderConstants.ARG_IS_FEED, feedEh);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         intent.putExtra(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         intent.putExtra(ReaderConstants.ARG_COMMENT_ID, commentId);
         intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
-        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        intent.putExtra(ReaderConstants.ARG_IS_RELATED_POST, relatedPostEh);
         intent.putExtra(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
         context.startActivity(intent);
     }
@@ -102,7 +102,7 @@ public class ReaderActivityLauncher {
         if (post == null) {
             return;
         }
-        if (post.isExternal) {
+        if (post.externalEh) {
             showReaderFeedPreview(context, post.feedId);
         } else {
             showReaderBlogPreview(context, post.blogId);
@@ -223,13 +223,13 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        boolean isPrivate = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE);
-        boolean isGallery = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE);
+        boolean privateEh = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_PRIVATE_IMAGE);
+        boolean galleryEh = imageOptions != null && imageOptions.contains(PhotoViewerOption.IS_GALLERY_IMAGE);
 
         Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl);
-        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate);
-        intent.putExtra(ReaderConstants.ARG_IS_GALLERY, isGallery);
+        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, privateEh);
+        intent.putExtra(ReaderConstants.ARG_IS_GALLERY, galleryEh);
         if (!TextUtils.isEmpty(content)) {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content);
         }
@@ -270,7 +270,7 @@ public class ReaderActivityLauncher {
      */
     private static void openUrlInternal(Context context, @NonNull String url) {
         // That won't work on wpcom sites with custom urls
-        if (WPUrlUtils.isWordPressCom(url)) {
+        if (WPUrlUtils.wordPressComEh(url)) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);

@@ -68,7 +68,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             return;
         }
 
-        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (SiteUtils.accessibleViaWPComAPIEh(mSite)) {
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setHomeButtonEnabled(true);
@@ -114,7 +114,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (SiteUtils.isAccessibleViaWPComAPI(mSite) || mBlogDeleted) {
+        if (SiteUtils.accessibleViaWPComAPIEh(mSite) || mBlogDeleted) {
             return;
         }
 
@@ -154,10 +154,10 @@ public class BlogPreferencesActivity extends AppCompatActivity {
                 (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
 
         if (siteSettingsFragment != null) {
-            if (!event.isConnected()) {
+            if (!event.connectedEh()) {
                 ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast));
             }
-            siteSettingsFragment.setEditingEnabled(event.isConnected());
+            siteSettingsFragment.setEditingEnabled(event.connectedEh());
 
             // TODO: add this back when delete blog is back
             //https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
@@ -181,7 +181,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
                 (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
 
         if (siteSettingsFragment != null) {
-            if (event.isError()) {
+            if (event.errorEh()) {
                 siteSettingsFragment.handleDeleteSiteError(event.error);
                 return;
             }

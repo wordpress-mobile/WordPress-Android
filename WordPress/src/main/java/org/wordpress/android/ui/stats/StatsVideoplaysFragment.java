@@ -23,12 +23,12 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     private VideoPlaysModel mVideos;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mVideos != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mVideos);
         }
     }
@@ -66,7 +66,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasVideoplays()) {
+        if (videoplaysEh()) {
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), getVideoplays());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -75,26 +75,26 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasVideoplays() {
+    private boolean videoplaysEh() {
         return mVideos != null
                 && mVideos.getPlays() != null
                 && mVideos.getPlays().size() > 0;
     }
 
     private List<SingleItemModel> getVideoplays() {
-        if (!hasVideoplays()) {
+        if (!videoplaysEh()) {
             return new ArrayList<SingleItemModel>(0);
         }
         return mVideos.getPlays();
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        return hasVideoplays() && getVideoplays().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
+    protected boolean viewAllOptionAvailableEh() {
+        return videoplaysEh() && getVideoplays().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return false;
     }
 

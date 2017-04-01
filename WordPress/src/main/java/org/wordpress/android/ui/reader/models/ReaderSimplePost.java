@@ -14,7 +14,7 @@ import org.wordpress.android.util.JSONUtils;
 public class ReaderSimplePost {
     private long mPostId;
     private long mSiteId;
-    private boolean mIsFollowing;
+    private boolean mFollowingEh;
 
     private String mTitle;
     private String mAuthorName;
@@ -48,7 +48,7 @@ public class ReaderSimplePost {
             return null;
         }
 
-        post.mIsFollowing = JSONUtils.getBool(json, "is_following");
+        post.mFollowingEh = JSONUtils.getBool(json, "is_following");
 
         post.mTitle = JSONUtils.getStringDecoded(json, "title");
         post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
@@ -65,7 +65,7 @@ public class ReaderSimplePost {
         }
 
         // if there's no featured image, check if featured media has been set to an image
-        if (!post.hasFeaturedImageUrl() && json.has("featured_media")) {
+        if (!post.featuredImageUrlEh() && json.has("featured_media")) {
             JSONObject jsonMedia = json.optJSONObject("featured_media");
             String type = JSONUtils.getString(jsonMedia, "type");
             if (type.equals("image")) {
@@ -117,23 +117,23 @@ public class ReaderSimplePost {
         return mRailcarJson;
     }
 
-    public boolean isFollowing() {
-        return mIsFollowing;
+    public boolean followingEh() {
+        return mFollowingEh;
     }
 
-    public void setIsFollowing(boolean isFollowing) {
-        mIsFollowing = isFollowing;
+    public void setIsFollowing(boolean followingEh) {
+        mFollowingEh = followingEh;
     }
 
-    public boolean hasExcerpt() {
+    public boolean excerptEh() {
         return !TextUtils.isEmpty(mExcerpt);
     }
 
-    public boolean hasAuthorAvatarUrl() {
+    public boolean authorAvatarUrlEh() {
         return !TextUtils.isEmpty(mAuthorAvatarUrl);
     }
 
-    public boolean hasFeaturedImageUrl() {
+    public boolean featuredImageUrlEh() {
         return !TextUtils.isEmpty(mFeaturedImageUrl);
     }
 }

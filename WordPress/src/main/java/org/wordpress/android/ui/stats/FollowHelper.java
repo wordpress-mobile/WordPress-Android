@@ -41,10 +41,10 @@ class FollowHelper {
         final PopupMenu popup = new PopupMenu(mActivityRef.get(), anchor);
         final MenuItem menuItem;
 
-        if (followData.isRestCallInProgress) {
+        if (followData.restCallInProgressEh) {
             menuItem = popup.getMenu().add(workingText);
         } else {
-            menuItem = popup.getMenu().add(followData.isFollowing() ? unfollowText : followText);
+            menuItem = popup.getMenu().add(followData.followingEh() ? unfollowText : followText);
         }
 
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -55,13 +55,13 @@ class FollowHelper {
 
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
                 final String restPath;
-                if (!followData.isFollowing()) {
+                if (!followData.followingEh()) {
                     restPath = String.format(Locale.US, "/sites/%s/follows/new?source=android", followData.getSiteID());
                 } else {
                     restPath = String.format(Locale.US, "/sites/%s/follows/mine/delete", followData.getSiteID());
                 }
 
-                followData.isRestCallInProgress = true;
+                followData.restCallInProgressEh = true;
                 FollowRestListener vListener = new FollowRestListener(mActivityRef.get(), followData);
                 restClientUtils.post(restPath, vListener, vListener);
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following REST request " + restPath);
@@ -89,11 +89,11 @@ class FollowHelper {
                 return;
             }
 
-            mFollowData.isRestCallInProgress = false;
+            mFollowData.restCallInProgressEh = false;
             if (response!= null) {
                 try {
-                    boolean isFollowing = response.getBoolean("is_following");
-                    mFollowData.setIsFollowing(isFollowing);
+                    boolean followingEh = response.getBoolean("is_following");
+                    mFollowData.setIsFollowing(followingEh);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, e.getMessage());
                 }
@@ -110,7 +110,7 @@ class FollowHelper {
                 return;
             }
 
-            mFollowData.isRestCallInProgress = false;
+            mFollowData.restCallInProgressEh = false;
             ToastUtils.showToast(mActivityRef.get(),
                     mActivityRef.get().getString(R.string.reader_toast_err_follow_blog),
                     ToastUtils.Duration.LONG);

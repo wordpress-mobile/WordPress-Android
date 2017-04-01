@@ -66,7 +66,7 @@ public class ReaderSubsActivity extends AppCompatActivity
     private SubsPageAdapter mPageAdapter;
 
     private String mLastAddedTagName;
-    private boolean mHasPerformedUpdate;
+    private boolean mPerformedUpdateEh;
 
     private static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
@@ -161,7 +161,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         EventBus.getDefault().register(this);
 
         // update list of tags and blogs from the server
-        if (!mHasPerformedUpdate) {
+        if (!mPerformedUpdateEh) {
             performUpdate();
         }
     }
@@ -192,18 +192,18 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     private void performUpdate(EnumSet<UpdateTask> tasks) {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.networkAvailableEh(this)) {
             return;
         }
 
         ReaderUpdateService.startService(this, tasks);
-        mHasPerformedUpdate = true;
+        mPerformedUpdateEh = true;
     }
 
     private void restoreState(Bundle state) {
         if (state != null) {
             mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
-            mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
+            mPerformedUpdateEh = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
     }
 
@@ -221,13 +221,13 @@ public class ReaderSubsActivity extends AppCompatActivity
         return mPageAdapter;
     }
 
-    private boolean hasPageAdapter() {
+    private boolean pageAdapterEh() {
         return mPageAdapter != null;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mPerformedUpdateEh);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
         }
@@ -252,9 +252,9 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         // is it a url or a tag?
-        boolean isUrl = !entry.contains(" ")
+        boolean urlEh = !entry.contains(" ")
                 && (entry.contains(".") || entry.contains("://"));
-        if (isUrl) {
+        if (urlEh) {
             addAsUrl(entry);
         } else {
             addAsTag(entry);
@@ -269,12 +269,12 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
-        if (!ReaderTag.isValidTagName(entry)) {
+        if (!ReaderTag.validTagNameEh(entry)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid);
             return;
         }
 
-        if (ReaderTagTable.isFollowedTagName(entry)) {
+        if (ReaderTagTable.followedTagNameEh(entry)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
             return;
         }
@@ -308,7 +308,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         // make sure it isn't already followed
-        if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
+        if (ReaderBlogTable.followedBlogUrlEh(normUrl) || ReaderBlogTable.followedFeedUrlEh(normUrl)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_already_follow_blog);
             return;
         }
@@ -470,7 +470,7 @@ public class ReaderSubsActivity extends AppCompatActivity
      * return to the previously selected page in the viewPager
      */
     private void restorePreviousPage() {
-        if (mViewPager == null || !hasPageAdapter()) {
+        if (mViewPager == null || !pageAdapterEh()) {
             return;
         }
 

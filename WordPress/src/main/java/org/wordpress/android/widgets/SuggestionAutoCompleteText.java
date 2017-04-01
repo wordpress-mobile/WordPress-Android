@@ -77,7 +77,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
         SavedState savedState = new SavedState(super.onSaveInstanceState());
 
         // store the current Focused state
-        savedState.isFocused = isFocused();
+        savedState.focusedEh = focusedEh();
 
         return savedState;
     }
@@ -93,7 +93,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
         super.onRestoreInstanceState(savedState.getSuperState());
 
         // if we were focused, setup a properly timed future request for focus
-        if (savedState.isFocused) {
+        if (savedState.focusedEh) {
             // this OnLayoutChangeListener will self unregister upon running and it's there so we can properly time the
             // on-screen IME opening
             addOnLayoutChangeListener(mOneoffFocusRequest);
@@ -171,7 +171,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
      * Local class for holding the EditBox's focused or not state
      */
     static class SavedState extends BaseSavedState {
-        boolean isFocused;
+        boolean focusedEh;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -179,13 +179,13 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
 
         private SavedState(Parcel in) {
             super(in);
-            this.isFocused = (in.readInt() == 1);
+            this.focusedEh = (in.readInt() == 1);
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeInt(this.isFocused ? 1 : 0);
+            out.writeInt(this.focusedEh ? 1 : 0);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {

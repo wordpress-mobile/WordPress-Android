@@ -90,7 +90,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     protected void onResume() {
         super.onResume();
         actionMode(getIntent().getExtras());
-        if (hasMagicLinkLoginIntent()) {
+        if (magicLinkLoginIntentEh()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPENED);
             attemptLoginWithToken(getIntent().getData());
         }
@@ -148,7 +148,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         mProgressDialog.show();
     }
 
-    private boolean hasMagicLinkLoginIntent() {
+    private boolean magicLinkLoginIntentEh() {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
@@ -277,7 +277,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     @Override
-    public boolean isJetpackAuth() {
+    public boolean jetpackAuthEh() {
         return mJetpackSite != null;
     }
 

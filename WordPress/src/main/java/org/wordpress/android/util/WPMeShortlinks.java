@@ -64,7 +64,7 @@ public class WPMeShortlinks {
             return null;
         }
 
-        if (!SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (!SiteUtils.accessibleViaWPComAPIEh(site)) {
             return null;
         }
 
@@ -84,7 +84,7 @@ public class WPMeShortlinks {
         } else {
             id = wpme_dec2sixtwo(postId);
 
-            if (post.isPage()) {
+            if (post.pageEh()) {
                 type = "P";
             } else {
                 type = "p";

@@ -55,15 +55,15 @@ public class ReaderTagHeaderInfo {
         this.sourcePostId = postId;
     }
 
-    public boolean hasAuthorName() {
+    public boolean authorNameEh() {
         return !TextUtils.isEmpty(authorName);
     }
 
-    public boolean hasBlogName() {
+    public boolean blogNameEh() {
         return !TextUtils.isEmpty(blogName);
     }
 
-    public boolean hasSourcePost() {
+    public boolean sourcePostEh() {
         return sourceBlogId != 0 && sourcePostId != 0;
     }
 }

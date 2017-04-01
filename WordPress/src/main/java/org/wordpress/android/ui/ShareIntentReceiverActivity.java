@@ -85,7 +85,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         // If type is text/plain hide Media Gallery option
         mActionSpinner = (Spinner) findViewById(R.id.action_spinner);
-        if (isSharingText()) {
+        if (sharingTextEh()) {
             mActionSpinner.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
             // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
@@ -118,7 +118,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void finishIfNoVisibleBlogs() {
         // If not logged in, then ask to log in, else inform the user to set at least one blog
         // visible
-        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();
@@ -152,7 +152,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         }
     }
 
-    private boolean isSharingText() {
+    private boolean sharingTextEh() {
         return "text/plain".equals(getIntent().getType());
     }
 
@@ -218,7 +218,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
      */
     private boolean shareIt() {
         Intent intent = null;
-        if (!isSharingText()) {
+        if (!sharingTextEh()) {
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
             if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return false;

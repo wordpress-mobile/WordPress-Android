@@ -26,9 +26,9 @@ public class ReaderVideoUtils {
      * we support YouTube, Vimeo & standard images
      */
     public static boolean canShowVideoThumbnail(String videoUrl) {
-        return isVimeoLink(videoUrl)
-                || isYouTubeVideoLink(videoUrl)
-                || MediaUtils.isValidImage(videoUrl);
+        return vimeoLinkEh(videoUrl)
+                || youTubeVideoLinkEh(videoUrl)
+                || MediaUtils.validImageEh(videoUrl);
     }
 
     /*
@@ -46,7 +46,7 @@ public class ReaderVideoUtils {
 	/*
 	 * returns true if the passed url is a link to a YouTube video
 	 */
-	public static boolean isYouTubeVideoLink(final String link) {
+	public static boolean youTubeVideoLinkEh(final String link) {
 		return (!TextUtils.isEmpty(getYouTubeVideoId(link)));
 	}
 
@@ -108,7 +108,7 @@ public class ReaderVideoUtils {
     /*
      * returns true if the passed url is a link to a Vimeo video
      */
-	public static boolean isVimeoLink(final String link) {
+	public static boolean vimeoLinkEh(final String link) {
 		return (!TextUtils.isEmpty(getVimeoVideoId(link)));
 	}
 

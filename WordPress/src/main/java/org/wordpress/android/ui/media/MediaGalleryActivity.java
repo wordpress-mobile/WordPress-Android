@@ -43,7 +43,7 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
     private MediaGallerySettingsFragment mMediaGallerySettingsFragment;
 
     private SlidingUpPanelLayout mSlidingPanelLayout;
-    private boolean mIsPanelCollapsed = true;
+    private boolean mPanelCollapsedEh = true;
     private MediaGallery mMediaGallery;
 
     private SiteModel mSite;
@@ -85,7 +85,7 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
                 R.id.mediaGallerySettingsFragment);
         if (savedInstanceState == null) {
             // if not null, the fragments will remember its state
-            mMediaGallerySettingsFragment.setRandom(mMediaGallery.isRandom());
+            mMediaGallerySettingsFragment.setRandom(mMediaGallery.randomEh());
             mMediaGallerySettingsFragment.setNumColumns(mMediaGallery.getNumColumns());
             mMediaGallerySettingsFragment.setType(mMediaGallery.getType());
             mMediaGalleryEditFragment.setMediaIds(mMediaGallery.getIds());
@@ -105,13 +105,13 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
                 @Override
                 public void onPanelExpanded(View panel) {
                     mMediaGallerySettingsFragment.onPanelExpanded();
-                    mIsPanelCollapsed = false;
+                    mPanelCollapsedEh = false;
                 }
 
                 @Override
                 public void onPanelCollapsed(View panel) {
                     mMediaGallerySettingsFragment.onPanelCollapsed();
-                    mIsPanelCollapsed = true;
+                    mPanelCollapsedEh = true;
                 }
             });
         }
@@ -173,12 +173,12 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
     private void handleSaveMedia() {
         Intent intent = new Intent();
         ArrayList<Long> ids = mMediaGalleryEditFragment.getMediaIds();
-        boolean isRandom = mMediaGallerySettingsFragment.isRandom();
+        boolean randomEh = mMediaGallerySettingsFragment.randomEh();
         int numColumns = mMediaGallerySettingsFragment.getNumColumns();
         String type = mMediaGallerySettingsFragment.getType();
 
         mMediaGallery.setIds(ids);
-        mMediaGallery.setRandom(isRandom);
+        mMediaGallery.setRandom(randomEh);
         mMediaGallery.setNumColumns(numColumns);
         mMediaGallery.setType(type);
 
@@ -189,7 +189,7 @@ public class MediaGalleryActivity extends AppCompatActivity implements MediaGall
 
     @Override
     public void onBackPressed() {
-        if (mSlidingPanelLayout != null && !mIsPanelCollapsed) {
+        if (mSlidingPanelLayout != null && !mPanelCollapsedEh) {
             mSlidingPanelLayout.collapsePane();
         } else {
             super.onBackPressed();

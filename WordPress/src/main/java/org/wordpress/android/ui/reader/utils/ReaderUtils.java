@@ -21,17 +21,17 @@ import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUtils {
 
-    public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
-        return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);
+    public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean privateEh) {
+        return getResizedImageUrl(imageUrl, width, height, privateEh, PhotonUtils.Quality.MEDIUM);
     }
     public static String getResizedImageUrl(final String imageUrl,
                                             int width,
                                             int height,
-                                            boolean isPrivate,
+                                            boolean privateEh,
                                             PhotonUtils.Quality quality) {
 
         final String unescapedUrl = HtmlUtils.fastUnescapeHtml(imageUrl);
-        if (isPrivate) {
+        if (privateEh) {
             return getPrivateImageForDisplay(unescapedUrl, width, height);
         } else {
             return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality);
@@ -81,8 +81,8 @@ public class ReaderUtils {
     /*
      * returns the long text to use for a like label ("Liked by 3 people", etc.)
      */
-    public static String getLongLikeLabelText(Context context, int numLikes, boolean isLikedByCurrentUser) {
-        if (isLikedByCurrentUser) {
+    public static String getLongLikeLabelText(Context context, int numLikes, boolean likedByCurrentUserEh) {
+        if (likedByCurrentUserEh) {
             switch (numLikes) {
                 case 1:
                     return context.getString(R.string.reader_likes_only_you);
@@ -143,12 +143,12 @@ public class ReaderUtils {
         return "wordpress://blogpreview?blogId=" + Long.toString(blogId);
     }
 
-    public static boolean isBlogPreviewUrl(String url) {
+    public static boolean blogPreviewUrlEh(String url) {
         return (url != null && url.startsWith("wordpress://blogpreview"));
     }
 
     public static long getBlogIdFromBlogPreviewUrl(String url) {
-        if (isBlogPreviewUrl(url)) {
+        if (blogPreviewUrlEh(url)) {
             String strBlogId = Uri.parse(url).getQueryParameter("blogId");
             return StringUtils.stringToLong(strBlogId);
         } else {

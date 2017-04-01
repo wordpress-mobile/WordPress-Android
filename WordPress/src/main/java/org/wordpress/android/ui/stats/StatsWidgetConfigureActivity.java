@@ -62,7 +62,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
 
         // If not signed into WordPress inform the user
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_account, ToastUtils.Duration.LONG);
             finish();
             return;
@@ -144,7 +144,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             return;
         }
 
-        if (!SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (!SiteUtils.accessibleViaWPComAPIEh(site)) {
             // The blog could be a self-hosted blog with NO Jetpack installed on it
             // Or a Jetpack blog whose options are not yet synched in the app
             // In both of these cases show a generic message that encourages the user to refresh

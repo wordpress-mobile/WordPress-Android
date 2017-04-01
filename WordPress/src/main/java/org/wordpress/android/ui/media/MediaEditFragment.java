@@ -145,14 +145,14 @@ public class MediaEditFragment extends Fragment {
         mCallback = null;
     }
 
-    private boolean hasCallback() {
+    private boolean callbackEh() {
         return (mCallback != null);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (hasCallback()) {
+        if (callbackEh()) {
             mCallback.onResume(this);
             mCallback.setLookClosable();
         }
@@ -161,7 +161,7 @@ public class MediaEditFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (hasCallback()) {
+        if (callbackEh()) {
             mCallback.onPause(this);
         }
     }
@@ -217,14 +217,14 @@ public class MediaEditFragment extends Fragment {
         mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, mMediaModel)));
     }
 
-    private void refreshImageView(MediaModel mediaModel, boolean isLocal) {
+    private void refreshImageView(MediaModel mediaModel, boolean localEh) {
         final String imageUri;
-        if (isLocal) {
+        if (localEh) {
             imageUri = mediaModel.getFilePath();
         } else {
             imageUri = mediaModel.getUrl();
         }
-        if (MediaUtils.isValidImage(imageUri)) {
+        if (MediaUtils.validImageEh(imageUri)) {
             int width = mediaModel.getWidth();
             int height = mediaModel.getHeight();
 
@@ -243,7 +243,7 @@ public class MediaEditFragment extends Fragment {
                 width = (int) (width / (height / screenHeight));
             }
 
-            if (isLocal) {
+            if (localEh) {
                 loadLocalImage(mLocalImageView, imageUri, width, height);
                 mLocalImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
             } else {
@@ -266,8 +266,8 @@ public class MediaEditFragment extends Fragment {
 
         mScrollView.scrollTo(0, 0);
 
-        boolean isLocal = MediaUtils.isLocalFile(mediaModel.getUploadState());
-        if (isLocal) {
+        boolean localEh = MediaUtils.localFileEh(mediaModel.getUploadState());
+        if (localEh) {
             mNetworkImageView.setVisibility(View.GONE);
             mLocalImageView.setVisibility(View.VISIBLE);
         } else {
@@ -276,9 +276,9 @@ public class MediaEditFragment extends Fragment {
         }
 
         // user can't edit local files
-        mTitleView.setEnabled(!isLocal);
-        mCaptionView.setEnabled(!isLocal);
-        mDescriptionView.setEnabled(!isLocal);
+        mTitleView.setEnabled(!localEh);
+        mCaptionView.setEnabled(!localEh);
+        mDescriptionView.setEnabled(!localEh);
 
         mTitleOriginal = mediaModel.getTitle();
         mCaptionOriginal = mediaModel.getCaption();
@@ -290,7 +290,7 @@ public class MediaEditFragment extends Fragment {
         mCaptionView.setText(mediaModel.getCaption());
         mDescriptionView.setText(mediaModel.getDescription());
 
-        refreshImageView(mediaModel, isLocal);
+        refreshImageView(mediaModel, localEh);
     }
 
     @Override
@@ -319,7 +319,7 @@ public class MediaEditFragment extends Fragment {
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
-        if (MediaUtils.isValidImage(filePath)) {
+        if (MediaUtils.validImageEh(filePath)) {
             imageView.setTag(filePath);
 
             Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
@@ -340,7 +340,7 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
-    public boolean isDirty() {
+    public boolean dirtyEh() {
         return mLocalMediaId != MISSING_MEDIA_ID &&
                 (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
                 || !StringUtils.equals(mCaptionOriginal, mCaptionView.getText().toString())
@@ -354,11 +354,11 @@ public class MediaEditFragment extends Fragment {
     public void onMediaChanged(OnMediaChanged event) {
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
-            Toast.makeText(getActivity(), event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
+            Toast.makeText(getActivity(), event.errorEh() ? R.string.media_edit_failure : R.string.media_edit_success,
                     Toast.LENGTH_LONG).show();
         }
-        if (hasCallback()) {
-            mCallback.onSavedEdit(mLocalMediaId, !event.isError());
+        if (callbackEh()) {
+            mCallback.onSavedEdit(mLocalMediaId, !event.errorEh());
         }
     }
 }

@@ -141,9 +141,9 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
 
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+        public void onCheckedChanged(CompoundButton compoundButton, boolean checkedEh) {
             try {
-                mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
+                mUpdatedJson.put(compoundButton.getTag().toString(), checkedEh);
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
             }

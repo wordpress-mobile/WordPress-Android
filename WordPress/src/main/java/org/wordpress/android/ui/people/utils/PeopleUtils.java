@@ -35,8 +35,8 @@ public class PeopleUtils {
                         JSONArray jsonArray = jsonObject.getJSONArray("users");
                         List<Person> people = peopleListFromJSON(jsonArray, site.getId(), Person.PersonType.USER);
                         int numberOfUsers = jsonObject.optInt("found");
-                        boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
-                        callback.onSuccess(people, isEndOfList);
+                        boolean endOfListEh = (people.size() + offset) >= numberOfUsers;
+                        callback.onSuccess(people, endOfListEh);
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
@@ -75,20 +75,20 @@ public class PeopleUtils {
     }
 
     private static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback,
-                                       final boolean isEmailFollower) {
+                                       final boolean emailFollowerEh) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
-                        Person.PersonType personType = isEmailFollower ?
+                        Person.PersonType personType = emailFollowerEh ?
                                 Person.PersonType.EMAIL_FOLLOWER : Person.PersonType.FOLLOWER;
                         List<Person> people = peopleListFromJSON(jsonArray, site.getId(), personType);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
-                        boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
-                        callback.onSuccess(people, pageFetched, isEndOfList);
+                        boolean endOfListEh = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
+                        callback.onSuccess(people, pageFetched, endOfListEh);
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
@@ -112,7 +112,7 @@ public class PeopleUtils {
         Map<String, String> params = new HashMap<>();
         params.put("max", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
-        params.put("type", isEmailFollower ? "email" : "wp_com");
+        params.put("type", emailFollowerEh ? "email" : "wp_com");
         String path = String.format(Locale.US, "sites/%d/stats/followers", site.getSiteId());
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
@@ -126,8 +126,8 @@ public class PeopleUtils {
                         JSONArray jsonArray = jsonObject.getJSONArray("viewers");
                         List<Person> people = peopleListFromJSON(jsonArray, site.getId(), Person.PersonType.VIEWER);
                         int numberOfUsers = jsonObject.optInt("found");
-                        boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
-                        callback.onSuccess(people, isEndOfList);
+                        boolean endOfListEh = (people.size() + offset) >= numberOfUsers;
+                        callback.onSuccess(people, endOfListEh);
                     }
                     catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
@@ -304,8 +304,8 @@ public class PeopleUtils {
             } else if (personType == Person.PersonType.VIEWER) {
                 person = Person.viewerFromJSON(jsonArray.optJSONObject(i), localTableBlogId);
             } else {
-                boolean isEmailFollower = (personType == Person.PersonType.EMAIL_FOLLOWER);
-                person = Person.followerFromJSON(jsonArray.optJSONObject(i), localTableBlogId, isEmailFollower);
+                boolean emailFollowerEh = (personType == Person.PersonType.EMAIL_FOLLOWER);
+                person = Person.followerFromJSON(jsonArray.optJSONObject(i), localTableBlogId, emailFollowerEh);
             }
             if (person != null) {
                 peopleList.add(person);
@@ -316,15 +316,15 @@ public class PeopleUtils {
     }
 
     public interface FetchUsersCallback extends Callback {
-        void onSuccess(List<Person> peopleList, boolean isEndOfList);
+        void onSuccess(List<Person> peopleList, boolean endOfListEh);
     }
 
     public interface FetchFollowersCallback extends Callback {
-        void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList);
+        void onSuccess(List<Person> peopleList, int pageFetched, boolean endOfListEh);
     }
 
     public interface FetchViewersCallback extends Callback {
-        void onSuccess(List<Person> peopleList, boolean isEndOfList);
+        void onSuccess(List<Person> peopleList, boolean endOfListEh);
     }
 
     public interface RemovePersonCallback extends Callback {

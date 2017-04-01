@@ -52,7 +52,7 @@ public class HeaderGridView extends GridView {
         /** The data backing the view. This is returned from {@link ListAdapter#getItem(int)}. */
         public Object data;
         /** <code>true</code> if the fixed view should be selectable in the grid */
-        public boolean isSelectable;
+        public boolean selectableEh;
     }
 
     private ArrayList<FixedViewInfo> mHeaderViewInfos = new ArrayList<FixedViewInfo>();
@@ -100,9 +100,9 @@ public class HeaderGridView extends GridView {
      *
      * @param v The view to add.
      * @param data Data to associate with this view
-     * @param isSelectable whether the item is selectable
+     * @param selectableEh whether the item is selectable
      */
-    public void addHeaderView(View v, Object data, boolean isSelectable) {
+    public void addHeaderView(View v, Object data, boolean selectableEh) {
         ListAdapter adapter = getAdapter();
 
         if (adapter != null && ! (adapter instanceof HeaderViewGridAdapter)) {
@@ -116,7 +116,7 @@ public class HeaderGridView extends GridView {
         info.view = v;
         info.viewContainer = fl;
         info.data = data;
-        info.isSelectable = isSelectable;
+        info.selectableEh = selectableEh;
         mHeaderViewInfos.add(info);
 
         // in the case of re-adding a header view, or adding one later on,
@@ -226,11 +226,11 @@ public class HeaderGridView extends GridView {
 
         boolean mAreAllFixedViewsSelectable;
 
-        private final boolean mIsFilterable;
+        private final boolean mFilterableEh;
 
         public HeaderViewGridAdapter(ArrayList<FixedViewInfo> headerViewInfos, ListAdapter adapter) {
             mAdapter = adapter;
-            mIsFilterable = adapter instanceof Filterable;
+            mFilterableEh = adapter instanceof Filterable;
 
             if (headerViewInfos == null) {
                 throw new IllegalArgumentException("headerViewInfos cannot be null");
@@ -262,7 +262,7 @@ public class HeaderGridView extends GridView {
         private boolean areAllListInfosSelectable(ArrayList<FixedViewInfo> infos) {
             if (infos != null) {
                 for (FixedViewInfo info : infos) {
-                    if (!info.isSelectable) {
+                    if (!info.selectableEh) {
                         return false;
                     }
                 }
@@ -305,12 +305,12 @@ public class HeaderGridView extends GridView {
         }
 
         @Override
-        public boolean isEnabled(int position) {
+        public boolean enabledEh(int position) {
             // Header (negative positions will throw an ArrayIndexOutOfBoundsException)
             int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns;
             if (position < numHeadersAndPlaceholders) {
                 return (position % mNumColumns == 0)
-                        && mHeaderViewInfos.get(position / mNumColumns).isSelectable;
+                        && mHeaderViewInfos.get(position / mNumColumns).selectableEh;
             }
 
             // Adapter
@@ -319,7 +319,7 @@ public class HeaderGridView extends GridView {
             if (mAdapter != null) {
                 adapterCount = mAdapter.getCount();
                 if (adjPosition < adapterCount) {
-                    return mAdapter.isEnabled(adjPosition);
+                    return mAdapter.enabledEh(adjPosition);
                 }
             }
 
@@ -364,9 +364,9 @@ public class HeaderGridView extends GridView {
         }
 
         @Override
-        public boolean hasStableIds() {
+        public boolean stableIdsEh() {
             if (mAdapter != null) {
-                return mAdapter.hasStableIds();
+                return mAdapter.stableIdsEh();
             }
             return false;
         }
@@ -449,7 +449,7 @@ public class HeaderGridView extends GridView {
 
         @Override
         public Filter getFilter() {
-            if (mIsFilterable) {
+            if (mFilterableEh) {
                 return ((Filterable) mAdapter).getFilter();
             }
             return null;

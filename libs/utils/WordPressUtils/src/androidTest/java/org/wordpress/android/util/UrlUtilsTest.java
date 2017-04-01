@@ -79,23 +79,23 @@ public class UrlUtilsTest extends InstrumentationTestCase {
     }
 
     public void testHttps1() {
-        assertFalse(UrlUtils.isHttps(buildURL("http://wordpress.com/xmlrpc.php")));
+        assertFalse(UrlUtils.httpsEh(buildURL("http://wordpress.com/xmlrpc.php")));
     }
 
     public void testHttps2() {
-        assertFalse(UrlUtils.isHttps(buildURL("http://wordpress.com#.b.com/test")));
+        assertFalse(UrlUtils.httpsEh(buildURL("http://wordpress.com#.b.com/test")));
     }
 
     public void testHttps3() {
-        assertFalse(UrlUtils.isHttps(buildURL("http://wordpress.com/xmlrpc.php")));
+        assertFalse(UrlUtils.httpsEh(buildURL("http://wordpress.com/xmlrpc.php")));
     }
 
     public void testHttps4() {
-        assertTrue(UrlUtils.isHttps(buildURL("https://wordpress.com")));
+        assertTrue(UrlUtils.httpsEh(buildURL("https://wordpress.com")));
     }
 
     public void testHttps5() {
-        assertTrue(UrlUtils.isHttps(buildURL("https://wordpress.com/test#test")));
+        assertTrue(UrlUtils.httpsEh(buildURL("https://wordpress.com/test#test")));
     }
 
     private URL buildURL(String address) {

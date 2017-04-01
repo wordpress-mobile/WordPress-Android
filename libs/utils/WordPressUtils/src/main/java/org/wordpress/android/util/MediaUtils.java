@@ -42,7 +42,7 @@ public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
     private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
 
-    public static boolean isValidImage(String url) {
+    public static boolean validImageEh(String url) {
         if (url == null) {
             return false;
         }
@@ -50,7 +50,7 @@ public class MediaUtils {
         return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".gif");
     }
 
-    public static boolean isDocument(String url) {
+    public static boolean documentEh(String url) {
         if (url == null) {
             return false;
         }
@@ -58,7 +58,7 @@ public class MediaUtils {
         return url.endsWith(".doc") || url.endsWith(".docx") || url.endsWith(".odt") || url.endsWith(".pdf");
     }
 
-    public static boolean isPowerpoint(String url) {
+    public static boolean powerpointEh(String url) {
         if (url == null) {
             return false;
         }
@@ -67,7 +67,7 @@ public class MediaUtils {
                 url.endsWith(".key");
     }
 
-    public static boolean isSpreadsheet(String url) {
+    public static boolean spreadsheetEh(String url) {
         if (url == null) {
             return false;
         }
@@ -75,7 +75,7 @@ public class MediaUtils {
         return url.endsWith(".xls") || url.endsWith(".xlsx");
     }
 
-    public static boolean isVideo(String url) {
+    public static boolean videoEh(String url) {
         if (url == null) {
             return false;
         }
@@ -85,7 +85,7 @@ public class MediaUtils {
                 url.endsWith(".3g2") || url.contains("video");
     }
 
-    public static boolean isAudio(String url) {
+    public static boolean audioEh(String url) {
         if (url == null) {
             return false;
         }
@@ -107,7 +107,7 @@ public class MediaUtils {
         return sdf.format(date);
     }
 
-    public static boolean isLocalFile(String state) {
+    public static boolean localFileEh(String state) {
         if (state == null) {
             return false;
         }
@@ -177,7 +177,7 @@ public class MediaUtils {
         return getMaximumImageWidth(dimensions[0], imageWidthBlogSettingString);
     }
 
-    public static boolean isInMediaStore(Uri mediaUri) {
+    public static boolean inMediaStoreEh(Uri mediaUri) {
         // Check if the image is externally hosted (Picasa/Google Photos for example)
         if (mediaUri != null && mediaUri.toString().startsWith("content://media/")) {
             return true;
@@ -208,11 +208,11 @@ public class MediaUtils {
         File cacheDir = null;
 
         String mimeType = context.getContentResolver().getType(imageUri);
-        boolean isVideo = (mimeType != null && mimeType.contains("video"));
+        boolean videoEh = (mimeType != null && mimeType.contains("video"));
 
         // If the device has an SD card
         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            String mediaFolder = isVideo ? "video" : "images";
+            String mediaFolder = videoEh ? "video" : "images";
             cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/" + mediaFolder);
         } else {
             if (context.getApplicationContext() != null) {
@@ -418,12 +418,12 @@ public class MediaUtils {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private static String getDocumentProviderPathKitkatOrHigher(final Context context, final Uri uri) {
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        final boolean kitKatEh = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (kitKatEh && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
+            if (externalStorageDocumentEh(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -435,7 +435,7 @@ public class MediaUtils {
                 // TODO handle non-primary volumes
             }
             // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
+            else if (downloadsDocumentEh(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
@@ -444,7 +444,7 @@ public class MediaUtils {
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
-            else if (isMediaDocument(uri)) {
+            else if (mediaDocumentEh(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -511,7 +511,7 @@ public class MediaUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    public static boolean externalStorageDocumentEh(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -519,7 +519,7 @@ public class MediaUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    public static boolean downloadsDocumentEh(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -527,7 +527,7 @@ public class MediaUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public static boolean isMediaDocument(Uri uri) {
+    public static boolean mediaDocumentEh(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 

@@ -195,8 +195,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus && mUsernameEditText.getText().toString().length() > 0) {
+            public void onFocusChange(View v, boolean focusEh) {
+                if (!focusEh && mUsernameEditText.getText().toString().length() > 0) {
                     addUsername(mUsernameEditText, null);
                 }
             }
@@ -362,7 +362,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         updateUsernameError(username, null);
     }
 
-    private boolean isUserInInvitees(String username) {
+    private boolean userInInviteesEh(String username) {
         return mUsernameButtons.get(username) != null;
     }
 
@@ -429,7 +429,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                         return;
                     }
 
-                    if (!isUserInInvitees(username)) {
+                    if (!userInInviteesEh(username)) {
                         //user is removed from invitees before validation
                         return;
                     }

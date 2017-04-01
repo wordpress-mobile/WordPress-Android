@@ -98,7 +98,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private Toolbar mToolbar;
 
     private ReaderTag mCurrentTag;
-    private boolean mIsFeed;
+    private boolean mFeedEh;
     private long mBlogId;
     private long mPostId;
     private int mCommentId;
@@ -108,9 +108,9 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private ReaderPostListType mPostListType;
 
     private boolean mPostSlugsResolutionUnderway;
-    private boolean mIsRequestingMorePosts;
-    private boolean mIsSinglePostView;
-    private boolean mIsRelatedPostView;
+    private boolean mRequestingMorePostsEh;
+    private boolean mSinglePostViewEh;
+    private boolean mRelatedPostViewEh;
 
     private boolean mBackFromLogin;
 
@@ -138,14 +138,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
         if (savedInstanceState != null) {
-            mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
+            mFeedEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mDirectOperation = (DirectOperation) savedInstanceState
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
-            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
-            mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
+            mSinglePostViewEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
+            mRelatedPostViewEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -161,14 +161,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 }
             }
         } else {
-            mIsFeed = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
+            mFeedEh = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_FEED, false);
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mDirectOperation = (DirectOperation) getIntent()
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0);
-            mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
-            mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
+            mSinglePostViewEh = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
+            mRelatedPostViewEh = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -184,7 +184,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
-        if (mIsRelatedPostView) {
+        if (mRelatedPostViewEh) {
             mToolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -233,7 +233,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      */
     private void updateTitle(int position) {
         // for related posts, always show "Related Post" as the title
-        if (mIsRelatedPostView) {
+        if (mRelatedPostViewEh) {
             setTitle(R.string.reader_title_related_post_detail);
             return;
         }
@@ -249,7 +249,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         // default when post hasn't been retrieved yet
-        setTitle(isDeepLinking() ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
+        setTitle(deepLinkingEh() ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
     }
 
     /*
@@ -262,7 +262,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
     }
 
-    private boolean isDeepLinking() {
+    private boolean deepLinkingEh() {
         return Intent.ACTION_VIEW.equals(getIntent().getAction());
     }
 
@@ -300,7 +300,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         interceptType = InterceptType.READER_BLOG;
                     } else if (segments.get(1).equals("feeds")) {
                         interceptType = InterceptType.READER_FEED;
-                        mIsFeed = true;
+                        mFeedEh = true;
                     }
                 }
 
@@ -339,8 +339,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     private void showPost(@NonNull InterceptType interceptType, final String blogIdentifier, final String
             postIdentifier) {
         if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
-            mIsSinglePostView = true;
-            mIsRelatedPostView = false;
+            mSinglePostViewEh = true;
+            mRelatedPostViewEh = false;
 
             switch (interceptType) {
                 case READER_BLOG:
@@ -511,8 +511,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         super.onResume();
         EventBus.getDefault().register(this);
 
-        if (!hasPagerAdapter() || mBackFromLogin) {
-            if (isDeepLinking()) {
+        if (!pagerAdapterEh() || mBackFromLogin) {
+            if (deepLinkingEh()) {
                 handleDeepLinking();
             }
 
@@ -539,7 +539,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean hasPagerAdapter() {
+    private boolean pagerAdapterEh() {
         return (mViewPager != null && mViewPager.getAdapter() != null);
     }
 
@@ -553,14 +553,14 @@ public class ReaderPostPagerActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
-        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mSinglePostViewEh);
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mRelatedPostViewEh);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, mCommentId);
 
-        if (hasCurrentTag()) {
+        if (currentTagEh()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
         }
         if (getPostListType() != null) {
@@ -601,7 +601,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         ReaderPostDetailFragment fragment = getActiveDetailFragment();
-        if (fragment != null && fragment.isCustomViewShowing()) {
+        if (fragment != null && fragment.customViewShowingEh()) {
             // if full screen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
         } else if (fragment != null && fragment.goBackInPostHistory()) {
@@ -616,7 +616,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      * if it hasn't already been done
      */
     private void trackPostAtPositionIfNeeded(int position) {
-        if (!hasPagerAdapter() || mTrackedPositions.contains(position)) return;
+        if (!pagerAdapterEh() || mTrackedPositions.contains(position)) return;
 
         ReaderBlogIdPostId idPair = getAdapterBlogIdPostIdAtPosition(position);
         if (idPair == null) return;
@@ -650,7 +650,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             @Override
             public void run() {
                 final ReaderBlogIdPostIdList idList;
-                if (mIsSinglePostView) {
+                if (mSinglePostViewEh) {
                     idList = new ReaderBlogIdPostIdList();
                     idList.add(new ReaderBlogIdPostId(blogId, postId));
                 } else {
@@ -678,18 +678,18 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                         PostPagerAdapter adapter =
                                 new PostPagerAdapter(getFragmentManager(), idList);
                         mViewPager.setAdapter(adapter);
-                        if (adapter.isValidPosition(newPosition)) {
+                        if (adapter.validPositionEh(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
                             trackPostAtPositionIfNeeded(newPosition);
                             updateTitle(newPosition);
-                        } else if (adapter.isValidPosition(currentPosition)) {
+                        } else if (adapter.validPositionEh(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
                             updateTitle(currentPosition);
                         }
 
                         // let the user know they can swipe between posts
-                        if (adapter.getCount() > 1 && !AppPrefs.isReaderSwipeToNavigateShown()) {
+                        if (adapter.getCount() > 1 && !AppPrefs.readerSwipeToNavigateShownEh()) {
                             WPSwipeSnackbar.show(mViewPager);
                         }
                     }
@@ -702,7 +702,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         return mCurrentTag;
     }
 
-    private boolean hasCurrentTag() {
+    private boolean currentTagEh() {
         return mCurrentTag != null;
     }
 
@@ -749,7 +749,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
      * current tag or in the current blog
      */
     private void requestMorePosts() {
-        if (mIsRequestingMorePosts) return;
+        if (mRequestingMorePostsEh) return;
 
         AppLog.d(AppLog.T.READER, "reader pager > requesting older posts");
         switch (getPostListType()) {
@@ -774,7 +774,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     public void onEventMainThread(ReaderEvents.UpdatePostsStarted event) {
         if (isFinishing()) return;
 
-        mIsRequestingMorePosts = true;
+        mRequestingMorePostsEh = true;
         mProgress.setVisibility(View.VISIBLE);
     }
 
@@ -785,7 +785,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         PostPagerAdapter adapter = getPagerAdapter();
         if (adapter == null) return;
 
-        mIsRequestingMorePosts = false;
+        mRequestingMorePostsEh = false;
         mProgress.setVisibility(View.GONE);
 
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW) {
@@ -861,10 +861,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             return !mAllPostsLoaded
                 && !mIsSinglePostView
                 && (mIdList != null && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY)
-                && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
+                && NetworkUtils.networkAvailableEh(ReaderPostPagerActivity.this);
         }
 
-        boolean isValidPosition(int position) {
+        boolean validPositionEh(int position) {
             return (position >= 0 && position < getCount());
         }
 
@@ -880,12 +880,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
             }
 
             return ReaderPostDetailFragment.newInstance(
-                    mIsFeed,
+                    mFeedEh,
                     mIdList.get(position).getBlogId(),
                     mIdList.get(position).getPostId(),
                     mDirectOperation,
                     mCommentId,
-                    mIsRelatedPostView,
+                    mRelatedPostViewEh,
                     mInterceptedUri,
                     getPostListType(),
                     mPostSlugsResolutionUnderway);
@@ -911,7 +911,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         private Fragment getFragmentAtPosition(int position) {
-            if (isValidPosition(position)) {
+            if (validPositionEh(position)) {
                 return mFragmentMap.get(position);
             } else {
                 return null;
@@ -924,7 +924,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         ReaderBlogIdPostId getBlogIdPostIdAtPosition(int position) {
-            if (isValidPosition(position)) {
+            if (validPositionEh(position)) {
                 return mIdList.get(position);
             } else {
                 return null;

@@ -13,7 +13,7 @@ import org.wordpress.android.util.HtmlUtils;
 class ReaderResourceVars {
     final int marginMediumPx;
 
-    final boolean isWideDisplay;
+    final boolean wideDisplayEh;
 
     final int fullSizeImageWidthPx;
     final int featuredImageHeightPx;
@@ -31,7 +31,7 @@ class ReaderResourceVars {
 
         int displayWidthPx = DisplayUtils.getDisplayPixelWidth(context);
 
-        isWideDisplay = DisplayUtils.pxToDp(context, displayWidthPx) > 640;
+        wideDisplayEh = DisplayUtils.pxToDp(context, displayWidthPx) > 640;
 
         int marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large);
         int detailMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_detail_margin);

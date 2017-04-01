@@ -43,11 +43,11 @@ public abstract class AbstractFragment extends Fragment {
 
     protected abstract void onDoneAction();
 
-    protected abstract boolean isUserDataValid();
+    protected abstract boolean userDataValidEh();
 
     protected boolean onDoneEvent(int actionId, KeyEvent event) {
         if (didPressEnterKey(actionId, event)) {
-            if (!isUserDataValid()) {
+            if (!userDataValidEh()) {
                 return true;
             }
 

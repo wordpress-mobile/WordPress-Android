@@ -172,7 +172,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             }
 
             // Check if Jetpack or .com
-            if (SiteUtils.isAccessibleViaWPComAPI(site)) {
+            if (SiteUtils.accessibleViaWPComAPIEh(site)) {
                 // User cannot access stats for this .com blog
                 showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_no_permissions),
                         siteStore);
@@ -329,7 +329,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    public static synchronized boolean isBlogDisplayedInWidget(long remoteBlogID) {
+    public static synchronized boolean blogDisplayedInWidgetEh(long remoteBlogID) {
         String prevWidgetKeysString = AppPrefs.getStatsWidgetsKeys();
         if (StringUtils.isEmpty(prevWidgetKeysString)) {
             return false;
@@ -459,7 +459,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(context)) {
+        if (!NetworkUtils.networkAvailableEh(context)) {
             showMessage(context, new int[] {widgetID}, context.getString(R.string.no_network_title), siteStore);
         } else {
             showMessage(context, new int[] {widgetID}, context.getString(R.string.stats_widget_loading_data), siteStore);
@@ -514,7 +514,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
             // If network is not available check if NO cache, and show the generic error
             // If network is available always start a refresh, and show prev data or the loading in progress message.
-            if (!NetworkUtils.isNetworkAvailable(context)) {
+            if (!NetworkUtils.networkAvailableEh(context)) {
                 if (cache == null) {
                     showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_generic), siteStore);
                 }

@@ -17,21 +17,21 @@ import org.wordpress.android.util.DisplayUtils;
 
 public class ReaderPhotoViewerFragment extends Fragment {
     private String mImageUrl;
-    private boolean mIsPrivate;
+    private boolean mPrivateEh;
 
     private ReaderPhotoView mPhotoView;
     private PhotoViewListener mPhotoViewListener;
 
     /**
      * @param imageUrl the url of the image to load
-     * @param isPrivate whether image is from a private blog
+     * @param privateEh whether image is from a private blog
      */
-    static ReaderPhotoViewerFragment newInstance(String imageUrl, boolean isPrivate) {
+    static ReaderPhotoViewerFragment newInstance(String imageUrl, boolean privateEh) {
         AppLog.d(AppLog.T.READER, "reader photo fragment > newInstance");
 
         Bundle args = new Bundle();
         args.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
-        args.putBoolean(ReaderConstants.ARG_IS_PRIVATE, isPrivate);
+        args.putBoolean(ReaderConstants.ARG_IS_PRIVATE, privateEh);
 
         ReaderPhotoViewerFragment fragment = new ReaderPhotoViewerFragment();
         fragment.setArguments(args);
@@ -44,7 +44,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         super.setArguments(args);
         if (args != null) {
             mImageUrl = args.getString(ReaderConstants.ARG_IMAGE_URL);
-            mIsPrivate = args.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+            mPrivateEh = args.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
         }
     }
 
@@ -55,7 +55,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
-            mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+            mPrivateEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
         }
 
         return view;
@@ -79,7 +79,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
-        outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
+        outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mPrivateEh);
         super.onSaveInstanceState(outState);
     }
 
@@ -88,7 +88,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
             // use max of width/height so image is cached the same regardless of orientation
             Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
             int hiResWidth = Math.max(pt.x, pt.y);
-            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, mPhotoViewListener);
+            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mPrivateEh, mPhotoViewListener);
         }
     }
 }

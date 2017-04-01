@@ -83,14 +83,14 @@ public class RelatedPostsDialog extends DialogFragment
             mShowImages.setChecked(args.getBoolean(SHOW_IMAGES_KEY));
         }
 
-        toggleShowHeader(mShowHeader.isChecked());
-        toggleShowImages(mShowImages.isChecked());
+        toggleShowHeader(mShowHeader.checkedEh());
+        toggleShowImages(mShowImages.checkedEh());
 
         mShowRelatedPosts.setOnCheckedChangeListener(this);
         mShowHeader.setOnCheckedChangeListener(this);
         mShowImages.setOnCheckedChangeListener(this);
 
-        toggleViews(mShowRelatedPosts.isChecked());
+        toggleViews(mShowRelatedPosts.checkedEh());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
@@ -123,13 +123,13 @@ public class RelatedPostsDialog extends DialogFragment
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(CompoundButton buttonView, boolean checkedEh) {
         if (buttonView == mShowRelatedPosts) {
-            toggleViews(isChecked);
+            toggleViews(checkedEh);
         } else if (buttonView == mShowHeader) {
-            toggleShowHeader(isChecked);
+            toggleShowHeader(checkedEh);
         } else if (buttonView == mShowImages) {
-            toggleShowImages(isChecked);
+            toggleShowImages(checkedEh);
         }
     }
 
@@ -161,9 +161,9 @@ public class RelatedPostsDialog extends DialogFragment
     private Intent getResultIntent() {
         if (mConfirmed) {
             return new Intent()
-                    .putExtra(SHOW_RELATED_POSTS_KEY, mShowRelatedPosts.isChecked())
-                    .putExtra(SHOW_HEADER_KEY, mShowHeader.isChecked())
-                    .putExtra(SHOW_IMAGES_KEY, mShowImages.isChecked());
+                    .putExtra(SHOW_RELATED_POSTS_KEY, mShowRelatedPosts.checkedEh())
+                    .putExtra(SHOW_HEADER_KEY, mShowHeader.checkedEh())
+                    .putExtra(SHOW_IMAGES_KEY, mShowImages.checkedEh());
         }
 
         return null;

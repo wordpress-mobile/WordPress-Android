@@ -287,7 +287,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(first.getDateSubscribed(), "2014-12-16T14:53:21+00:00");
                 assertNotNull(first.getFollowData());
                 FollowDataModel followDatamodel = first.getFollowData();
-                assertFalse(followDatamodel.isFollowing());
+                assertFalse(followDatamodel.followingEh());
                 assertEquals(followDatamodel.getType(), "follow");
 
             }

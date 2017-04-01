@@ -139,7 +139,7 @@ public class WPActivityUtils {
         return context;
     }
 
-    public static boolean isEmailClientAvailable(Context context) {
+    public static boolean emailClientAvailableEh(Context context) {
         if (context == null) {
             return false;
         }

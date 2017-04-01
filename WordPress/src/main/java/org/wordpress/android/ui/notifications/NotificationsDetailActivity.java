@@ -172,7 +172,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         super.onStart();
         //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
-        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && (mAdapter.getCount() > 1)) {
+        if (!AppPrefs.notificationsSwipeToNavigateShownEh() && (mAdapter.getCount() > 1)) {
             WPSwipeSnackbar.show(mViewPager);
         }
     }
@@ -186,7 +186,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private void markNoteAsRead(Note note) {
         GCMMessageService.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
         // mark the note as read if it's unread
-        if (note.isUnread()) {
+        if (note.unreadEh()) {
             NotificationsActions.markNoteAsRead(note);
             note.setRead();
             NotificationsTable.saveNote(note);
@@ -251,20 +251,20 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
+            boolean instantReplyEh = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
                     false);
             fragment = CommentDetailFragment.newInstance(note.getId(),
                     getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA),
                     idForFragmentContainer);
 
-            if (isInstantReply) {
+            if (instantReplyEh) {
                 ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
             }
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
-            boolean isPost = (note.getSiteId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
-            if (isPost) {
+            boolean postEh = (note.getSiteId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
+            if (postEh) {
                 fragment = ReaderPostDetailFragment.newInstance(note.getSiteId(), note.getPostId());
             } else {
                 fragment = NotificationsDetailListFragment.newInstance(note.getId());
@@ -387,12 +387,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             return super.saveState();
         }
 
-        boolean isValidPosition(int position) {
+        boolean validPositionEh(int position) {
             return (position >= 0 && position < getCount());
         }
 
         public Note getNoteAtPosition(int position){
-            if (isValidPosition(position))
+            if (validPositionEh(position))
                 return mNoteList.get(position);
             else
                 return null;

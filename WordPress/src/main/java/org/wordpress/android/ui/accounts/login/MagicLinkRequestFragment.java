@@ -120,7 +120,7 @@ public class MagicLinkRequestFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
                 intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
-                        (mJetpackCallbacks.isJetpackAuth(), true));
+                        (mJetpackCallbacks.jetpackAuthEh(), true));
                 startActivity(intent);
             }
         };
@@ -129,7 +129,7 @@ public class MagicLinkRequestFragment extends Fragment {
     }
 
     private void sendMagicLinkRequest() {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             ToastUtils.showToast(getActivity(), R.string.no_network_message, ToastUtils.Duration.LONG);
             return;
         }

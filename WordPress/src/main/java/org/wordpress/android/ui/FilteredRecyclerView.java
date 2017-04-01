@@ -73,8 +73,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    public boolean isRefreshing(){
-        return mSwipeToRefreshHelper.isRefreshing();
+    public boolean refreshingEh(){
+        return mSwipeToRefreshHelper.refreshingEh();
     }
 
     public void setCurrentFilter(FilterCriteria filter) {
@@ -223,7 +223,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     }
 
-    private boolean hasAdapter() {
+    private boolean adapterEh() {
         return (mAdapter != null);
     }
 
@@ -240,7 +240,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     public void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView == null) return;
 
-        if ((hasAdapter() && mAdapter.getItemCount() == 0) || !hasAdapter()) {
+        if ((adapterEh() && mAdapter.getItemCount() == 0) || !adapterEh()) {
             if (mFilterListener != null){
                 if (mCustomEmptyView == null){
                     String msg = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
@@ -473,7 +473,7 @@ public class FilteredRecyclerView extends RelativeLayout {
      * returns true if the first item is still visible in the RecyclerView - will return
      * false if the first item is scrolled out of view, or if the list is empty
      */
-    public boolean isFirstItemVisible() {
+    public boolean firstItemVisibleEh() {
         if (mRecyclerView == null
                 || mRecyclerView.getLayoutManager() == null) {
             return false;

@@ -200,7 +200,7 @@ public class GCMMessageService extends GcmListenerService {
         return sActiveNotificationsMap.size();
     }
 
-    public static synchronized boolean hasNotifications() {
+    public static synchronized boolean notificationsEh() {
         return !sActiveNotificationsMap.isEmpty();
     }
 
@@ -212,7 +212,7 @@ public class GCMMessageService extends GcmListenerService {
 
     // Removes a specific notification from the system bar
     public static synchronized void removeNotificationWithNoteIdFromSystemBar(Context context, String noteID) {
-        if (context == null || TextUtils.isEmpty(noteID) || !hasNotifications()) {
+        if (context == null || TextUtils.isEmpty(noteID) || !notificationsEh()) {
             return;
         }
 
@@ -236,7 +236,7 @@ public class GCMMessageService extends GcmListenerService {
 
     // Removes all app notifications from the system bar
     public static synchronized void removeAllNotifications(Context context) {
-        if (context == null || !hasNotifications()) {
+        if (context == null || !notificationsEh()) {
             return;
         }
 
@@ -256,7 +256,7 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void remove2FANotification(Context context) {
-        if (context == null || !hasNotifications()) {
+        if (context == null || !notificationsEh()) {
             return;
         }
 
@@ -289,7 +289,7 @@ public class GCMMessageService extends GcmListenerService {
     private static void bumpPushNotificationsAnalytics(Stat stat, Bundle noteBundle,
                                                        Map<String, Object> properties) {
         // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
-        if (!NotificationsUtils.isNotificationsEnabled(WordPress.getContext())) {
+        if (!NotificationsUtils.notificationsEnabledEh(WordPress.getContext())) {
             return;
         }
         if (properties == null) {
@@ -418,7 +418,7 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
-            if (NotificationsUtils.isNotificationsEnabled(context)) {
+            if (NotificationsUtils.notificationsEnabledEh(context)) {
                 Map<String, Object> properties = new HashMap<>();
                 if (!TextUtils.isEmpty(noteType)) {
                     // 'comment' and 'comment_pingback' types are sent in PN as type = "c"
@@ -854,7 +854,7 @@ public class GCMMessageService extends GcmListenerService {
             if (!TextUtils.isEmpty(noteID)) {
                 Note note = NotificationsTable.getNoteById(noteID);
                 // mark the note as read if it's unread and update the DB silently
-                if (note != null && note.isUnread()) {
+                if (note != null && note.unreadEh()) {
                     note.setRead();
                     NotificationsTable.saveNote(note);
                 }

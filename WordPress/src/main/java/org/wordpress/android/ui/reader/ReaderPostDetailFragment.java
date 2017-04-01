@@ -84,7 +84,7 @@ public class ReaderPostDetailFragment extends Fragment
     private long mBlogId;
     private DirectOperation mDirectOperation;
     private int mCommentId;
-    private boolean mIsFeed;
+    private boolean mFeedEh;
     private String mInterceptedUri;
     private ReaderPost mPost;
     private ReaderPostRenderer mRenderer;
@@ -105,18 +105,18 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderSimplePostContainerView mLocalRelatedPostsView;
 
     private boolean mPostSlugsResolutionUnderway;
-    private boolean mHasAlreadyUpdatedPost;
-    private boolean mHasAlreadyRequestedPost;
-    private boolean mIsWebViewPaused;
-    private boolean mIsRelatedPost;
+    private boolean mAlreadyUpdatedPostEh;
+    private boolean mAlreadyRequestedPostEh;
+    private boolean mWebViewPausedEh;
+    private boolean mRelatedPostEh;
 
-    private boolean mHasTrackedGlobalRelatedPosts;
-    private boolean mHasTrackedLocalRelatedPosts;
+    private boolean mTrackedGlobalRelatedPostsEh;
+    private boolean mTrackedLocalRelatedPostsEh;
 
     private int mToolbarHeight;
     private String mErrorMessage;
 
-    private boolean mIsToolbarShowing = true;
+    private boolean mToolbarShowingEh = true;
     private AutoHideToolbarListener mAutoHideToolbarListener;
 
     // min scroll distance before toggling toolbar
@@ -129,22 +129,22 @@ public class ReaderPostDetailFragment extends Fragment
         return newInstance(false, blogId, postId, null, 0, false, null, null, false);
     }
 
-    public static ReaderPostDetailFragment newInstance(boolean isFeed,
+    public static ReaderPostDetailFragment newInstance(boolean feedEh,
                                                        long blogId,
                                                        long postId,
                                                        DirectOperation directOperation,
                                                        int commentId,
-                                                       boolean isRelatedPost,
+                                                       boolean relatedPostEh,
                                                        String interceptedUri,
                                                        ReaderPostListType postListType,
                                                        boolean postSlugsResolutionUnderway) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
-        args.putBoolean(ReaderConstants.ARG_IS_FEED, isFeed);
+        args.putBoolean(ReaderConstants.ARG_IS_FEED, feedEh);
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
-        args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost);
+        args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, relatedPostEh);
         args.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation);
         args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId);
         args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri);
@@ -172,12 +172,12 @@ public class ReaderPostDetailFragment extends Fragment
     public void setArguments(Bundle args) {
         super.setArguments(args);
         if (args != null) {
-            mIsFeed = args.getBoolean(ReaderConstants.ARG_IS_FEED);
+            mFeedEh = args.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
             mDirectOperation = (DirectOperation) args.getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = args.getInt(ReaderConstants.ARG_COMMENT_ID);
-            mIsRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
+            mRelatedPostEh = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = args.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -268,7 +268,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private boolean hasPost() {
+    private boolean postEh() {
         return (mPost != null);
     }
 
@@ -284,7 +284,7 @@ public class ReaderPostDetailFragment extends Fragment
         super.onPrepareOptionsMenu(menu);
 
         // browse & share require the post to have a URL (some feed-based posts don't have one)
-        boolean postHasUrl = hasPost() && mPost.hasUrl();
+        boolean postHasUrl = postEh() && mPost.urlEh();
         MenuItem mnuBrowse = menu.findItem(R.id.menu_browse);
         if (mnuBrowse != null) {
             mnuBrowse.setVisible(postHasUrl || (mInterceptedUri != null));
@@ -299,7 +299,7 @@ public class ReaderPostDetailFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.menu_browse) {
-            if (hasPost()) {
+            if (postEh()) {
                 ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
             } else if (mInterceptedUri != null) {
                 AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
@@ -322,20 +322,20 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(ReaderConstants.ARG_IS_FEED, mIsFeed);
+        outState.putBoolean(ReaderConstants.ARG_IS_FEED, mFeedEh);
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, mCommentId);
 
-        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPost);
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mRelatedPostEh);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
         outState.putBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY, mPostSlugsResolutionUnderway);
-        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
-        outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mAlreadyUpdatedPostEh);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mAlreadyRequestedPostEh);
 
-        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS, mHasTrackedGlobalRelatedPosts);
-        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS, mHasTrackedLocalRelatedPosts);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS, mTrackedGlobalRelatedPostsEh);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS, mTrackedLocalRelatedPostsEh);
 
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -357,19 +357,19 @@ public class ReaderPostDetailFragment extends Fragment
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mIsFeed = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
+            mFeedEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_FEED);
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mDirectOperation = (DirectOperation) savedInstanceState
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
-            mIsRelatedPost = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
+            mRelatedPostEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             mPostSlugsResolutionUnderway = savedInstanceState.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY);
-            mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
-            mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
-            mHasTrackedGlobalRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS);
-            mHasTrackedLocalRelatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS);
+            mAlreadyUpdatedPostEh = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
+            mAlreadyRequestedPostEh = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
+            mTrackedGlobalRelatedPostsEh = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS);
+            mTrackedLocalRelatedPostsEh = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -404,28 +404,28 @@ public class ReaderPostDetailFragment extends Fragment
      * changes the like on the passed post
      */
     private void togglePostLike() {
-        if (hasPost()) {
-            setPostLike(!mPost.isLikedByCurrentUser);
+        if (postEh()) {
+            setPostLike(!mPost.likedByCurrentUserEh);
         }
     }
 
     /*
      * changes the like on the passed post
      */
-    private void setPostLike(boolean isAskingToLike) {
-        if (!isAdded() || !hasPost() || !NetworkUtils.checkConnection(getActivity())) {
+    private void setPostLike(boolean askingToLikeEh) {
+        if (!isAdded() || !postEh() || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        if (isAskingToLike != ReaderPostTable.isPostLikedByCurrentUser(mPost)) {
+        if (askingToLikeEh != ReaderPostTable.postLikedByCurrentUserEh(mPost)) {
             ReaderIconCountView likeCount = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
-            likeCount.setSelected(isAskingToLike);
-            ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
+            likeCount.setSelected(askingToLikeEh);
+            ReaderAnim.animateLikeButton(likeCount.getImageView(), askingToLikeEh);
 
-            boolean success = ReaderPostActions.performLikeAction(mPost, isAskingToLike,
+            boolean success = ReaderPostActions.performLikeAction(mPost, askingToLikeEh,
                     mAccountStore.getAccount().getUserId());
             if (!success) {
-                likeCount.setSelected(!isAskingToLike);
+                likeCount.setSelected(!askingToLikeEh);
                 return;
             }
 
@@ -435,7 +435,7 @@ public class ReaderPostDetailFragment extends Fragment
             refreshIconCounts();
         }
 
-        if (isAskingToLike) {
+        if (askingToLikeEh) {
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, mPost);
         } else {
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, mPost);
@@ -446,11 +446,11 @@ public class ReaderPostDetailFragment extends Fragment
      * display the standard Android share chooser to share this post
      */
     private void sharePage() {
-        if (!isAdded() || !hasPost()) {
+        if (!isAdded() || !postEh()) {
             return;
         }
 
-        String url = (mPost.hasShortUrl() ? mPost.getShortUrl() : mPost.getUrl());
+        String url = (mPost.shortUrlEh() ? mPost.getShortUrl() : mPost.getUrl());
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -467,7 +467,7 @@ public class ReaderPostDetailFragment extends Fragment
      * replace the current post with the passed one
      */
     private void replacePost(long blogId, long postId, boolean clearCommentOperation) {
-        mIsFeed = false;
+        mFeedEh = false;
         mBlogId = blogId;
         mPostId = postId;
 
@@ -476,10 +476,10 @@ public class ReaderPostDetailFragment extends Fragment
             mCommentId = 0;
         }
 
-        mHasAlreadyRequestedPost = false;
-        mHasAlreadyUpdatedPost = false;
-        mHasTrackedGlobalRelatedPosts = false;
-        mHasTrackedLocalRelatedPosts = false;
+        mAlreadyRequestedPostEh = false;
+        mAlreadyUpdatedPostEh = false;
+        mTrackedGlobalRelatedPostsEh = false;
+        mTrackedLocalRelatedPostsEh = false;
 
         // hide views that would show info for the previous post - these will be re-displayed
         // with the correct info once the new post loads
@@ -505,7 +505,7 @@ public class ReaderPostDetailFragment extends Fragment
      * request posts related to the current one - only available for wp.com
      */
     private void requestRelatedPosts() {
-        if (hasPost() && mPost.isWP()) {
+        if (postEh() && mPost.wPEh()) {
             ReaderPostActions.requestRelatedPosts(mPost);
         }
     }
@@ -515,14 +515,14 @@ public class ReaderPostDetailFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.RelatedPostsUpdated event) {
-        if (!isAdded() || !hasPost()) return;
+        if (!isAdded() || !postEh()) return;
 
         // make sure this event is for the current post
         if (event.getSourcePostId() == mPost.postId && event.getSourceSiteId() == mPost.blogId) {
-            if (event.hasLocalRelatedPosts()) {
+            if (event.localRelatedPostsEh()) {
                 showRelatedPosts(event.getLocalRelatedPosts(), false);
             }
-            if (event.hasGlobalRelatedPosts()) {
+            if (event.globalRelatedPostsEh()) {
                 showRelatedPosts(event.getGlobalRelatedPosts(), true);
             }
         }
@@ -532,18 +532,18 @@ public class ReaderPostDetailFragment extends Fragment
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private void showRelatedPosts(@NonNull ReaderSimplePostList relatedPosts, final boolean isGlobal) {
+    private void showRelatedPosts(@NonNull ReaderSimplePostList relatedPosts, final boolean globalEh) {
         // tapping a related post should open the related post detail
         ReaderSimplePostView.OnSimplePostClickListener listener = new ReaderSimplePostView.OnSimplePostClickListener() {
             @Override
             public void onSimplePostClick(View v, long siteId, long postId) {
-                showRelatedPostDetail(siteId, postId, isGlobal);
+                showRelatedPostDetail(siteId, postId, globalEh);
             }
         };
 
         // different container views for global/local related posts
-        ReaderSimplePostContainerView relatedPostsView = isGlobal ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
-        relatedPostsView.showPosts(relatedPosts, mPost.getBlogName(), isGlobal, listener);
+        ReaderSimplePostContainerView relatedPostsView = globalEh ? mGlobalRelatedPostsView : mLocalRelatedPostsView;
+        relatedPostsView.showPosts(relatedPosts, mPost.getBlogName(), globalEh, listener);
 
         // fade in this related posts view
         if (relatedPostsView.getVisibility() != View.VISIBLE) {
@@ -558,14 +558,14 @@ public class ReaderPostDetailFragment extends Fragment
      * already tracked it
      */
     private void trackRelatedPostsIfShowing() {
-        if (!mHasTrackedGlobalRelatedPosts && isVisibleAndScrolledIntoView(mGlobalRelatedPostsView)) {
-            mHasTrackedGlobalRelatedPosts = true;
+        if (!mTrackedGlobalRelatedPostsEh && visibleAndScrolledIntoViewEh(mGlobalRelatedPostsView)) {
+            mTrackedGlobalRelatedPostsEh = true;
             AppLog.d(T.READER, "reader post detail > global related posts rendered");
             mGlobalRelatedPostsView.trackRailcarRender();
         }
 
-        if (!mHasTrackedLocalRelatedPosts && isVisibleAndScrolledIntoView(mLocalRelatedPostsView)) {
-            mHasTrackedLocalRelatedPosts = true;
+        if (!mTrackedLocalRelatedPostsEh && visibleAndScrolledIntoViewEh(mLocalRelatedPostsView)) {
+            mTrackedLocalRelatedPostsEh = true;
             AppLog.d(T.READER, "reader post detail > local related posts rendered");
             mLocalRelatedPostsView.trackRailcarRender();
         }
@@ -575,7 +575,7 @@ public class ReaderPostDetailFragment extends Fragment
      * returns True if the passed view is visible and has been scrolled into view - assumes
      * that the view is a child of mScrollView
      */
-    private boolean isVisibleAndScrolledIntoView(View view) {
+    private boolean visibleAndScrolledIntoViewEh(View view) {
         if (view != null && view.getVisibility() == View.VISIBLE) {
             Rect scrollBounds = new Rect();
             mScrollView.getHitRect(scrollBounds);
@@ -589,13 +589,13 @@ public class ReaderPostDetailFragment extends Fragment
      * history stack so the user can back-button through the history - otherwise start a new detail
      * activity for this related post
      */
-    private void showRelatedPostDetail(long blogId, long postId, boolean isGlobal) {
+    private void showRelatedPostDetail(long blogId, long postId, boolean globalEh) {
         AnalyticsTracker.Stat stat = isGlobal
                 ? AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
                 : AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED;
         AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId);
 
-        if (mIsRelatedPost) {
+        if (mRelatedPostEh) {
             mPostHistory.push(new ReaderBlogIdPostId(mPost.blogId, mPost.postId));
             replacePost(blogId, postId, true);
         } else {
@@ -628,7 +628,7 @@ public class ReaderPostDetailFragment extends Fragment
      * get the latest version of this post
      */
     private void updatePost() {
-        if (!hasPost() || !mPost.isWP()) {
+        if (!postEh() || !mPost.wPEh()) {
             setRefreshing(false);
             return;
         }
@@ -642,7 +642,7 @@ public class ReaderPostDetailFragment extends Fragment
                     return;
                 }
                 // if the post has changed, reload it from the db and update the like/comment counts
-                if (result.isNewOrChanged()) {
+                if (result.newOrChangedEh()) {
                     mPost = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, false);
                     refreshIconCounts();
                 }
@@ -664,7 +664,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void refreshIconCounts() {
-        if (!isAdded() || !hasPost() || !canShowFooter()) {
+        if (!isAdded() || !postEh() || !canShowFooter()) {
             return;
         }
 
@@ -688,7 +688,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (canShowLikeCount()) {
             countLikes.setCount(mPost.numLikes);
             countLikes.setVisibility(View.VISIBLE);
-            countLikes.setSelected(mPost.isLikedByCurrentUser);
+            countLikes.setSelected(mPost.likedByCurrentUserEh);
             if (!mAccountStore.hasAccessToken()) {
                 countLikes.setEnabled(false);
             } else if (mPost.canLikePost()) {
@@ -735,7 +735,7 @@ public class ReaderPostDetailFragment extends Fragment
      * show latest likes for this post
      */
     private void refreshLikes() {
-        if (!isAdded() || !hasPost() || !mPost.canLikePost()) {
+        if (!isAdded() || !postEh() || !mPost.canLikePost()) {
             return;
         }
 
@@ -772,9 +772,9 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         String postContent = (mRenderer != null ? mRenderer.getRenderedHtml() : null);
-        boolean isPrivatePost = (mPost != null && mPost.isPrivate);
+        boolean privatePostEh = (mPost != null && mPost.privateEh);
         EnumSet<PhotoViewerOption> options = EnumSet.noneOf(PhotoViewerOption.class);
-        if (isPrivatePost) {
+        if (privatePostEh) {
             options.add(ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE);
         }
 
@@ -801,7 +801,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.OnRequestListener listener = new ReaderActions.OnRequestListener() {
             @Override
             public void onSuccess() {
-                mHasAlreadyRequestedPost = true;
+                mAlreadyRequestedPostEh = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     showPost();
@@ -811,7 +811,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             @Override
             public void onFailure(int statusCode) {
-                mHasAlreadyRequestedPost = true;
+                mAlreadyRequestedPostEh = true;
                 if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     onRequestFailure(statusCode);
@@ -819,7 +819,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
         };
 
-        if (mIsFeed) {
+        if (mFeedEh) {
             ReaderPostActions.requestFeedPost(mBlogId, mPostId, listener);
         } else {
             ReaderPostActions.requestBlogPost(mBlogId, mPostId, listener);
@@ -847,13 +847,13 @@ public class ReaderPostDetailFragment extends Fragment
 
     private void onRequestFailure(int statusCode) {
         int errMsgResId;
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             errMsgResId = R.string.no_network_message;
         } else {
             switch (statusCode) {
                 case 401:
                 case 403:
-                    final boolean offerSignIn = WPUrlUtils.isWordPressCom(mInterceptedUri)
+                    final boolean offerSignIn = WPUrlUtils.wordPressComEh(mInterceptedUri)
                             && !mAccountStore.hasAccessToken();
 
                     if (!offerSignIn) {
@@ -904,7 +904,7 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        if (mIsPostTaskRunning) {
+        if (mPostTaskRunningEh) {
             AppLog.w(T.READER, "reader post detail > show post task already running");
             return;
         }
@@ -915,35 +915,35 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * AsyncTask to retrieve this post from SQLite and display it
      */
-    private boolean mIsPostTaskRunning = false;
+    private boolean mPostTaskRunningEh = false;
 
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
-            mIsPostTaskRunning = true;
+            mPostTaskRunningEh = true;
         }
 
         @Override
         protected void onCancelled() {
-            mIsPostTaskRunning = false;
+            mPostTaskRunningEh = false;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            mPost = mIsFeed ? ReaderPostTable.getFeedPost(mBlogId, mPostId, false)
+            mPost = mFeedEh ? ReaderPostTable.getFeedPost(mBlogId, mPostId, false)
                     : ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
             }
 
             // "discover" Editor Pick posts should open the original (source) post
-            if (mPost.isDiscoverPost()) {
+            if (mPost.discoverPostEh()) {
                 ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
                 if (discoverData != null
                         && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
                         && discoverData.getBlogId() != 0
                         && discoverData.getPostId() != 0) {
-                    mIsFeed = false;
+                    mFeedEh = false;
                     mBlogId = discoverData.getBlogId();
                     mPostId = discoverData.getPostId();
                     mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
@@ -958,7 +958,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         @Override
         protected void onPostExecute(Boolean result) {
-            mIsPostTaskRunning = false;
+            mPostTaskRunningEh = false;
 
             if (!isAdded()) return;
 
@@ -968,7 +968,7 @@ public class ReaderPostDetailFragment extends Fragment
             if (!result) {
                 // post couldn't be loaded which means it doesn't exist in db, so request it from
                 // the server if it hasn't already been requested
-                if (!mHasAlreadyRequestedPost) {
+                if (!mAlreadyRequestedPostEh) {
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
                 } else if (!TextUtils.isEmpty(mErrorMessage)) {
@@ -1003,8 +1003,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, mPost);
 
-            mReaderWebView.setIsPrivatePost(mPost.isPrivate);
-            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(mPost.getBlogUrl()));
+            mReaderWebView.setIsPrivatePost(mPost.privateEh);
+            mReaderWebView.setBlogSchemeIsHttps(UrlUtils.httpsEh(mPost.getBlogUrl()));
 
             TextView txtTitle = (TextView) getView().findViewById(R.id.text_title);
             TextView txtDateline = (TextView) getView().findViewById(R.id.text_dateline);
@@ -1028,7 +1028,7 @@ public class ReaderPostDetailFragment extends Fragment
             mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
             mRenderer.beginRender();
 
-            txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
+            txtTitle.setText(mPost.titleEh() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             String timestamp = DateTimeUtils.javaDateToTimeSpan(mPost.getDisplayDate(), WordPress.getContext());
             txtDateline.setText(timestamp);
@@ -1063,8 +1063,8 @@ public class ReaderPostDetailFragment extends Fragment
                         return;
                     }
                     refreshLikes();
-                    if (!mHasAlreadyUpdatedPost) {
-                        mHasAlreadyUpdatedPost = true;
+                    if (!mAlreadyUpdatedPostEh) {
+                        mAlreadyUpdatedPostEh = true;
                         updatePost();
                     }
                     requestRelatedPosts();
@@ -1117,8 +1117,8 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    boolean isCustomViewShowing() {
-        return mReaderWebView != null && mReaderWebView.isCustomViewShowing();
+    boolean customViewShowingEh() {
+        return mReaderWebView != null && mReaderWebView.customViewShowingEh();
     }
 
     void hideCustomView() {
@@ -1131,7 +1131,7 @@ public class ReaderPostDetailFragment extends Fragment
     public boolean onUrlClick(String url) {
         // if this is a "wordpress://blogpreview?" link, show blog preview for the blog - this is
         // used for Discover posts that highlight a blog
-        if (ReaderUtils.isBlogPreviewUrl(url)) {
+        if (ReaderUtils.blogPreviewUrlEh(url)) {
             long siteId = ReaderUtils.getBlogIdFromBlogPreviewUrl(url);
             if (siteId != 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(getActivity(), siteId);
@@ -1149,7 +1149,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private boolean shouldOpenExternal(String url) {
         // open YouTube videos in external app so they launch the YouTube player
-        if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+        if (ReaderVideoUtils.youTubeVideoLinkEh(url)) {
             return true;
         }
 
@@ -1182,21 +1182,21 @@ public class ReaderPostDetailFragment extends Fragment
     void pauseWebView() {
         if (mReaderWebView == null) {
             AppLog.w(T.READER, "reader post detail > attempt to pause null webView");
-        } else if (!mIsWebViewPaused) {
+        } else if (!mWebViewPausedEh) {
             AppLog.d(T.READER, "reader post detail > pausing webView");
             mReaderWebView.hideCustomView();
             mReaderWebView.onPause();
-            mIsWebViewPaused = true;
+            mWebViewPausedEh = true;
         }
     }
 
     void resumeWebViewIfPaused() {
         if (mReaderWebView == null) {
             AppLog.w(T.READER, "reader post detail > attempt to resume null webView");
-        } else if (mIsWebViewPaused) {
+        } else if (mWebViewPausedEh) {
             AppLog.d(T.READER, "reader post detail > resuming paused webView");
             mReaderWebView.onResume();
-            mIsWebViewPaused = false;
+            mWebViewPausedEh = false;
         }
     }
 
@@ -1233,7 +1233,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void showToolbar(boolean show) {
-        mIsToolbarShowing = show;
+        mToolbarShowingEh = show;
         if (mAutoHideToolbarListener != null) {
             mAutoHideToolbarListener.onShowHideToolbar(show);
         }
@@ -1259,10 +1259,10 @@ public class ReaderPostDetailFragment extends Fragment
         if (!mAccountStore.hasAccessToken()) {
             return mPost.numReplies > 0;
         }
-        return mPost.isWP()
+        return mPost.wPEh()
                 && !mPost.isJetpack
-                && !mPost.isDiscoverPost()
-                && (mPost.isCommentsOpen || mPost.numReplies > 0);
+                && !mPost.discoverPostEh()
+                && (mPost.commentsOpenEh || mPost.numReplies > 0);
     }
 
     private boolean canShowLikeCount() {

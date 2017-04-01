@@ -30,9 +30,9 @@ public class PageMenuAdapter extends BaseAdapter {
         super();
         mInflater = LayoutInflater.from(context);
 
-        boolean showViewItem = !page.isLocalDraft() && PostStatus.fromPost(page) == PostStatus.PUBLISHED;
-        boolean showStatsItem = !page.isLocalDraft() && PostStatus.fromPost(page) == PostStatus.PUBLISHED;
-        boolean showTrashItem = !page.isLocalDraft();
+        boolean showViewItem = !page.localDraftEh() && PostStatus.fromPost(page) == PostStatus.PUBLISHED;
+        boolean showStatsItem = !page.localDraftEh() && PostStatus.fromPost(page) == PostStatus.PUBLISHED;
+        boolean showTrashItem = !page.localDraftEh();
         boolean showDeleteItem = !showTrashItem;
 
         // edit item always appears

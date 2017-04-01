@@ -105,7 +105,7 @@ public class MediaDeleteService extends Service {
             return;
         }
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             handleOnMediaChangedError(event);
         } else {
             handleMediaChangedSuccess(event);
