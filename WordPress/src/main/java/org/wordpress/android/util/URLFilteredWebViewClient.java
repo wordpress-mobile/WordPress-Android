@@ -35,7 +35,7 @@ public class URLFilteredWebViewClient extends WebViewClient {
         allowedURLs.addAll(urls);
     }
 
-    protected boolean isAllURLsAllowed() {
+    protected boolean allURLsAllowedEh() {
         return allowedURLs.size() == 0;
     }
 
@@ -47,7 +47,7 @@ public class URLFilteredWebViewClient extends WebViewClient {
             return true;
         }
 
-        if (isAllURLsAllowed() || allowedURLs.contains(url)) {
+        if (allURLsAllowedEh() || allowedURLs.contains(url)) {
             view.loadUrl(url);
         } else {
             // show "links are disabled" message.

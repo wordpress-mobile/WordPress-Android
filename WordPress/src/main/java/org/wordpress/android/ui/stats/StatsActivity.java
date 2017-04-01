@@ -89,10 +89,10 @@ public class StatsActivity extends AppCompatActivity
 
     private int mResultCode = -1;
     private SiteModel mSite;
-    private boolean mIsInFront;
+    private boolean mInFrontEh;
     private StatsTimeframe mCurrentTimeframe = StatsTimeframe.INSIGHTS;
     private String mRequestedDate;
-    private boolean mIsUpdatingStats;
+    private boolean mUpdatingStatsEh;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
     private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
@@ -280,7 +280,7 @@ public class StatsActivity extends AppCompatActivity
 
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
         // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
-        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (!SiteUtils.accessibleViaWPComAPIEh(mSite)) {
             if (!site.isJetpackInstalled()) {
                 JetpackUtils.showInstallJetpackAlert(this, site);
                 return false;
@@ -343,7 +343,7 @@ public class StatsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mIsInFront = true;
+        mInFrontEh = true;
         if (!NetworkUtils.checkConnection(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
@@ -353,8 +353,8 @@ public class StatsActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        mIsInFront = false;
-        mIsUpdatingStats = false;
+        mInFrontEh = false;
+        mUpdatingStatsEh = false;
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
@@ -500,10 +500,10 @@ public class StatsActivity extends AppCompatActivity
                 if (isFinishing()) {
                     return;
                 }
-                boolean isInsights = mCurrentTimeframe == StatsTimeframe.INSIGHTS;
-                findViewById(R.id.stats_other_recent_stats_label_insights).setVisibility(isInsights ? View.VISIBLE : View.GONE);
-                findViewById(R.id.stats_other_recent_stats_label_timeline).setVisibility(isInsights ? View.GONE : View.VISIBLE);
-                findViewById(R.id.stats_other_recent_stats_moved).setVisibility(isInsights ? View.GONE : View.VISIBLE);
+                boolean insightsEh = mCurrentTimeframe == StatsTimeframe.INSIGHTS;
+                findViewById(R.id.stats_other_recent_stats_label_insights).setVisibility(insightsEh ? View.VISIBLE : View.GONE);
+                findViewById(R.id.stats_other_recent_stats_label_timeline).setVisibility(insightsEh ? View.GONE : View.VISIBLE);
+                findViewById(R.id.stats_other_recent_stats_moved).setVisibility(insightsEh ? View.GONE : View.VISIBLE);
             }
         }, StatsConstants.STATS_LABELS_SETUP_DELAY);
     }
@@ -590,7 +590,7 @@ public class StatsActivity extends AppCompatActivity
     }
 
     private void refreshStatsFromCurrentDate() {
-        if (mIsUpdatingStats) {
+        if (mUpdatingStatsEh) {
             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
             return;
         }
@@ -621,7 +621,7 @@ public class StatsActivity extends AppCompatActivity
     }
 
     private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
-        if (mIsUpdatingStats || mThereWasAnErrorLoadingStats) {
+        if (mUpdatingStatsEh || mThereWasAnErrorLoadingStats) {
             // Do nothing in case of errors or when it's still loading
             return;
         }
@@ -646,13 +646,13 @@ public class StatsActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
-        if (isFinishing() || !mIsInFront) {
+        if (isFinishing() || !mInFrontEh) {
             return;
         }
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
-        mIsUpdatingStats = event.mUpdating;
+        mUpdatingStatsEh = event.mUpdating;
 
-        if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
+        if (!mUpdatingStatsEh && !mThereWasAnErrorLoadingStats) {
             // Do not bump promo analytics or show the dialog in case of errors or when it's still loading
             bumpPromoAnaylticsAndShowPromoDialogIfNecessary();
         }
@@ -661,7 +661,7 @@ public class StatsActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
         // There was an error loading Stats. Don't bump stats for promo widget.
-        if (isFinishing() || !mIsInFront) {
+        if (isFinishing() || !mInFrontEh) {
             return;
         }
 

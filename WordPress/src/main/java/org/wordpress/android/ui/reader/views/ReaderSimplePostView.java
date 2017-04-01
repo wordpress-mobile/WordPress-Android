@@ -60,7 +60,7 @@ public class ReaderSimplePostView extends LinearLayout {
 
     public void showPost(ReaderSimplePost simplePost,
                          ViewGroup parent,
-                         boolean isGlobal,
+                         boolean globalEh,
                          final OnSimplePostClickListener listener) {
         mSimplePost = simplePost;
         int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
@@ -74,7 +74,7 @@ public class ReaderSimplePostView extends LinearLayout {
 
         txtTitle.setText(mSimplePost.getTitle());
 
-        if (mSimplePost.hasExcerpt()) {
+        if (mSimplePost.excerptEh()) {
             txtExcerpt.setText(mSimplePost.getExcerpt());
             txtExcerpt.setVisibility(View.VISIBLE);
         } else {
@@ -82,13 +82,13 @@ public class ReaderSimplePostView extends LinearLayout {
         }
 
         // site header only appears for global related posts
-        if (isGlobal) {
+        if (globalEh) {
             WPNetworkImageView imgAvatar = (WPNetworkImageView) siteHeader.findViewById(R.id.image_avatar);
             TextView txtSiteName = (TextView) siteHeader.findViewById(R.id.text_site_name);
             TextView txtAuthorName = (TextView) siteHeader.findViewById(R.id.text_author_name);
             txtSiteName.setText(mSimplePost.getSiteName());
             txtAuthorName.setText(mSimplePost.getAuthorName());
-            if (mSimplePost.hasAuthorAvatarUrl()) {
+            if (mSimplePost.authorAvatarUrlEh()) {
                 imgAvatar.setVisibility(View.VISIBLE);
                 String avatarUrl = GravatarUtils.fixGravatarUrl(mSimplePost.getAuthorAvatarUrl(), avatarSize);
                 imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
@@ -97,7 +97,7 @@ public class ReaderSimplePostView extends LinearLayout {
             }
 
             ReaderFollowButton btnFollow = (ReaderFollowButton) siteHeader.findViewById(R.id.simple_post_follow_button);
-            btnFollow.setIsFollowed(mSimplePost.isFollowing());
+            btnFollow.setIsFollowed(mSimplePost.followingEh());
             btnFollow.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -129,7 +129,7 @@ public class ReaderSimplePostView extends LinearLayout {
     private void toggleFollowStatus(final ReaderFollowButton btnFollow) {
         if (!NetworkUtils.checkConnection(getContext())) return;
 
-        final boolean isAskingToFollow = !mSimplePost.isFollowing();
+        final boolean askingToFollowEh = !mSimplePost.followingEh();
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
@@ -138,11 +138,11 @@ public class ReaderSimplePostView extends LinearLayout {
 
                 btnFollow.setEnabled(true);
                 if (succeeded) {
-                    mSimplePost.setIsFollowing(isAskingToFollow);
+                    mSimplePost.setIsFollowing(askingToFollowEh);
                 } else {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    int errResId = askingToFollowEh ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
-                    btnFollow.setIsFollowed(!isAskingToFollow);
+                    btnFollow.setIsFollowed(!askingToFollowEh);
                 }
             }
         };
@@ -150,15 +150,15 @@ public class ReaderSimplePostView extends LinearLayout {
         // disable follow button until call completes
         btnFollow.setEnabled(false);
 
-        ReaderBlogActions.followBlogById(mSimplePost.getSiteId(), isAskingToFollow, listener);
-        btnFollow.setIsFollowedAnimated(isAskingToFollow);
+        ReaderBlogActions.followBlogById(mSimplePost.getSiteId(), askingToFollowEh, listener);
+        btnFollow.setIsFollowedAnimated(askingToFollowEh);
     }
 
     private void showFeaturedImage(final View postView) {
         final WPNetworkImageView imgFeatured = (WPNetworkImageView) postView.findViewById(R.id.image_featured);
 
         // post must have an excerpt in order to show featured image (not enough space otherwise)
-        if (!mSimplePost.hasFeaturedImageUrl() || !mSimplePost.hasExcerpt()) {
+        if (!mSimplePost.featuredImageUrlEh() || !mSimplePost.excerptEh()) {
             imgFeatured.setVisibility(View.GONE);
             return;
         }

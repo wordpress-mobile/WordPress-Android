@@ -53,12 +53,12 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     private VisitsModel mVisitsModel;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mVisitsModel != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mVisitsModel);
         }
     }
@@ -92,7 +92,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     protected void updateUI() {
         super.updateUI();
 
-        if (!isAdded() || !hasDataAvailable()) {
+        if (!isAdded() || !dataAvailableEh()) {
             return;
         }
 

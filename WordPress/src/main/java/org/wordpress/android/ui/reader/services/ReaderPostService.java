@@ -291,7 +291,7 @@ public class ReaderPostService extends Service {
             public void run() {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
-                if (updateResult.isNewOrChanged()) {
+                if (updateResult.newOrChangedEh()) {
                     // gap detection - only applies to posts with a specific tag
                     ReaderPost postWithGap = null;
                     if (tag != null) {
@@ -303,7 +303,7 @@ public class ReaderPostService extends Service {
                                 int numServerPosts = serverPosts.size();
                                 if (numServerPosts >= 2
                                         && ReaderPostTable.getNumPostsWithTag(tag) > 0
-                                        && !ReaderPostTable.hasOverlap(serverPosts)) {
+                                        && !ReaderPostTable.overlapEh(serverPosts)) {
                                     // treat the second to last server post as having a gap
                                     postWithGap = serverPosts.get(numServerPosts - 2);
                                     // remove the last server post to deal with the edge case of

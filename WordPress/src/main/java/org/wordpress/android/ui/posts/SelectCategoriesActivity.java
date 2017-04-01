@@ -122,9 +122,9 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         populateCategoryList();
 
-        if (NetworkUtils.isNetworkAvailable(this)) {
+        if (NetworkUtils.networkAvailableEh(this)) {
             mEmptyView.setText(R.string.empty_list_default);
-            if (isCategoryListEmpty()) {
+            if (categoryListEmptyEh()) {
                 refreshCategories();
             }
         } else {
@@ -138,7 +138,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private boolean isCategoryListEmpty() {
+    private boolean categoryListEmptyEh() {
         if (mListView.getAdapter() != null) {
             return mListView.getAdapter().isEmpty();
         } else {
@@ -275,7 +275,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
             case FETCH_CATEGORIES:
                 mSwipeToRefreshHelper.setRefreshing(false);
 
-                if (event.isError()) {
+                if (event.errorEh()) {
                     if (!isFinishing()) {
                         ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
                     }
@@ -291,7 +291,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     public void onTermUploaded(OnTermUploaded event) {
         mSwipeToRefreshHelper.setRefreshing(false);
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             if (!isFinishing()) {
                 ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
             }

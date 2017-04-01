@@ -46,7 +46,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_post_avatar);
 
         txtTitle.setText(post.getTitle());
-        if (post.hasBlogName()) {
+        if (post.blogNameEh()) {
             txtBlogName.setText(post.getBlogName());
         } else {
             txtBlogName.setText(R.string.reader_untitled_post);
@@ -54,7 +54,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
 
         java.util.Date dtPost = DateTimeUtils.dateFromIso8601(post.getDatePublished());
         String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPost, WordPress.getContext());
-        if (post.isCommentsOpen || post.numReplies > 0) {
+        if (post.commentsOpenEh || post.numReplies > 0) {
             dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(getContext(), post.numReplies);
         }
         if (post.canLikePost() || post.numLikes > 0) {
@@ -64,7 +64,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         String avatarUrl;
-        if (post.hasBlogUrl()) {
+        if (post.blogUrlEh()) {
             avatarUrl = GravatarUtils.blavatarFromUrl(post.getBlogUrl(), avatarSz);
             imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
         } else {

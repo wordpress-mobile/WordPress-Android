@@ -14,7 +14,7 @@ public class DisplayUtils {
         throw new AssertionError();
     }
 
-    public static boolean isLandscape(Context context) {
+    public static boolean landscapeEh(Context context) {
         if (context == null)
             return false;
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
@@ -55,7 +55,7 @@ public class DisplayUtils {
         return (int) ((px/displayMetrics.density)+0.5);
     }
 
-    public static boolean isXLarge(Context context) {
+    public static boolean xLargeEh(Context context) {
         if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
                 == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
             return true;
@@ -85,7 +85,7 @@ public class DisplayUtils {
     /**
      * detect when FEATURE_ACTION_BAR_OVERLAY has been set
      */
-    public static boolean hasActionBarOverlay(Window window) {
+    public static boolean actionBarOverlayEh(Window window) {
         return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }
 }

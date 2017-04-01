@@ -23,14 +23,14 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
     private static ReaderLinkMovementMethod mMovementMethod;
     private static ReaderLinkMovementMethod mMovementMethodPrivate;
 
-    private final boolean mIsPrivate;
+    private final boolean mPrivateEh;
 
     /*
      * note that separate instances are returned depending on whether we're showing
      * content from a private blog
      */
-    public static ReaderLinkMovementMethod getInstance(boolean isPrivate) {
-        if (isPrivate) {
+    public static ReaderLinkMovementMethod getInstance(boolean privateEh) {
+        if (privateEh) {
             if (mMovementMethodPrivate == null) {
                 mMovementMethodPrivate = new ReaderLinkMovementMethod(true);
             }
@@ -51,9 +51,9 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
         return getInstance(false);
     }
 
-    private ReaderLinkMovementMethod(boolean isPrivate) {
+    private ReaderLinkMovementMethod(boolean privateEh) {
         super();
-        mIsPrivate = isPrivate;
+        mPrivateEh = privateEh;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
             ImageSpan[] images = buffer.getSpans(off, off, ImageSpan.class);
             if (images != null && images.length > 0) {
                 EnumSet<PhotoViewerOption> options = EnumSet.noneOf(PhotoViewerOption.class);
-                if (mIsPrivate) {
+                if (mPrivateEh) {
                     options.add(ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE);
                 }
                 String imageUrl = StringUtils.notNullStr(images[0].getSource());

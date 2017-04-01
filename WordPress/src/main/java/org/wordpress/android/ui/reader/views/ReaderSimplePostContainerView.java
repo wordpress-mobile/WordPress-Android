@@ -48,7 +48,7 @@ public class ReaderSimplePostContainerView extends LinearLayout {
 
     public void showPosts(ReaderSimplePostList posts,
                           String siteName,
-                          boolean isGlobal,
+                          boolean globalEh,
                           ReaderSimplePostView.OnSimplePostClickListener listener) {
         mSimplePostList.clear();
         mSimplePostList.addAll(posts);
@@ -63,12 +63,12 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         for (int index = 0; index < mSimplePostList.size(); index++) {
             ReaderSimplePost relatedPost = mSimplePostList.get(index);
             ReaderSimplePostView postView = new ReaderSimplePostView(getContext());
-            postView.showPost(relatedPost, container, isGlobal, listener);
+            postView.showPost(relatedPost, container, globalEh, listener);
         }
 
         // make sure the label for these posts has the correct caption
         TextView label = (TextView) findViewById(R.id.text_related_posts_label);
-        if (isGlobal) {
+        if (globalEh) {
             label.setText(getContext().getString(R.string.reader_label_global_related_posts));
         } else {
             label.setText(String.format(getContext().getString(R.string.reader_label_local_related_posts), siteName));

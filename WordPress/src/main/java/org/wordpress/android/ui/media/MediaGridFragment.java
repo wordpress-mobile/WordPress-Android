@@ -79,8 +79,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
 
-    private boolean mIsRefreshing;
-    private boolean mHasRetrievedAllMedia;
+    private boolean mRefreshingEh;
+    private boolean mRetrievedAllMediaEh;
     private ActionMode mActionMode;
     private String mSearchTerm;
 
@@ -236,7 +236,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterFetchMoreData() {
-        if (!mHasRetrievedAllMedia) {
+        if (!mRetrievedAllMediaEh) {
             fetchMediaList(true);
         }
     }
@@ -267,7 +267,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             handleFetchAllMediaError(event.error.type);
             return;
         }
@@ -286,8 +286,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         updateFilterText();
         updateSpinnerAdapter();
         if (mGridAdapter.getItemCount() == 0) {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                if (!mHasRetrievedAllMedia) {
+            if (NetworkUtils.networkAvailableEh(getActivity())) {
+                if (!mRetrievedAllMediaEh) {
                     fetchMediaList(false);
                 }
             } else {
@@ -330,7 +330,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void removeFromMultiSelect(int localMediaId) {
-        if (mGridAdapter.isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
+        if (mGridAdapter.inMultiSelectEh() && mGridAdapter.itemSelectedEh(localMediaId)) {
             mGridAdapter.removeSelectionByLocalId(localMediaId);
             setFilterEnabled(mGridAdapter.getSelectedItems().size() == 0);
         }
@@ -411,8 +411,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void saveState(Bundle outState) {
         outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridManager.findFirstCompletelyVisibleItemPosition());
-        outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
-        outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, mGridAdapter.isInMultiSelect());
+        outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mRetrievedAllMediaEh);
+        outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, mGridAdapter.inMultiSelectEh());
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putSerializable(WordPress.SITE, mSite);
@@ -470,8 +470,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (savedInstanceState == null)
             return;
 
-        boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
-        if (isInMultiSelectMode) {
+        boolean inMultiSelectModeEh = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
+        if (inMultiSelectModeEh) {
             mGridAdapter.setInMultiSelect(true);
             if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
                 ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
@@ -481,7 +481,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         }
 
-        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
+        mRetrievedAllMediaEh = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
@@ -489,7 +489,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private void fetchMediaList(boolean loadMore) {
         // do not refresh if there is no network
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             setRefreshing(false);
             return;
@@ -501,8 +501,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             return;
         }
 
-        if (!mIsRefreshing) {
-            mIsRefreshing = true;
+        if (!mRefreshingEh) {
+            mRefreshingEh = true;
             updateEmptyView(EmptyViewMessageType.LOADING);
             setRefreshing(true);
 
@@ -517,10 +517,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
         adapter.setMediaList(mediaList);
 
-        mHasRetrievedAllMedia = !event.canLoadMore;
-        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+        mRetrievedAllMediaEh = !event.canLoadMore;
+        adapter.setHasRetrievedAll(mRetrievedAllMediaEh);
 
-        mIsRefreshing = false;
+        mRefreshingEh = false;
 
         // the activity may be gone by the time this finishes, so check for it
         if (getActivity() != null && isVisible()) {
@@ -537,9 +537,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private void handleFetchAllMediaError(MediaErrorType errorType) {
         AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
-        final boolean isPermissionError = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
+        final boolean permissionErrorEh = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
         if (getActivity() != null) {
-            if (!isPermissionError) {
+            if (!permissionErrorEh) {
                 ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media),
                         Duration.LONG);
             } else {
@@ -550,7 +550,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         }
         MediaGridAdapter adapter = (MediaGridAdapter) mRecycler.getAdapter();
-        mHasRetrievedAllMedia = true;
+        mRetrievedAllMediaEh = true;
         adapter.setHasRetrievedAll(true);
 
         // the activity may be gone by the time we get this, so check for it
@@ -558,9 +558,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mIsRefreshing = false;
+                    mRefreshingEh = false;
                     mSwipeToRefreshHelper.setRefreshing(false);
-                    if (isPermissionError) {
+                    if (permissionErrorEh) {
                         updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
                     } else {
                         updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);

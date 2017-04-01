@@ -39,7 +39,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
 
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
         if (emptyView != null) {
-            boolean isEmpty = hasTagAdapter() && getTagAdapter().isEmpty();
+            boolean isEmpty = tagAdapterEh() && getTagAdapter().isEmpty();
             emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
             if (isEmpty) {
                 emptyView.setText(R.string.reader_empty_followed_tags);
@@ -55,7 +55,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     }
 
     void refresh() {
-        if (hasTagAdapter()) {
+        if (tagAdapterEh()) {
             AppLog.d(AppLog.T.READER, "reader subs > refreshing tag fragment");
             getTagAdapter().refresh();
         }
@@ -76,7 +76,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
         return mTagAdapter;
     }
 
-    private boolean hasTagAdapter() {
+    private boolean tagAdapterEh() {
         return (mTagAdapter != null);
     }
 

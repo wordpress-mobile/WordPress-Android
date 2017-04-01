@@ -9,10 +9,10 @@ import java.util.ArrayList;
  */
 
 public class ReaderImageList extends ArrayList<String> {
-    private final boolean mIsPrivate;
+    private final boolean mPrivateEh;
 
-    public ReaderImageList(boolean isPrivate) {
-        mIsPrivate = isPrivate;
+    public ReaderImageList(boolean privateEh) {
+        mPrivateEh = privateEh;
     }
 
     // image urls are always added normalized and without query params for easier matching, and
@@ -37,7 +37,7 @@ public class ReaderImageList extends ArrayList<String> {
         return -1;
     }
 
-    public boolean hasImageUrl(final String imageUrl) {
+    public boolean imageUrlEh(final String imageUrl) {
         return (indexOfImageUrl(imageUrl) > -1);
     }
 
@@ -54,7 +54,7 @@ public class ReaderImageList extends ArrayList<String> {
         }
     }
 
-    public boolean isPrivate() {
-        return mIsPrivate;
+    public boolean privateEh() {
+        return mPrivateEh;
     }
 }

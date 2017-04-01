@@ -276,7 +276,7 @@ public class MediaUploadService extends Service {
             return;
         }
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             handleOnMediaUploadedError(event);
         } else {
             handleOnMediaUploadedSuccess(event);
@@ -293,7 +293,7 @@ public class MediaUploadService extends Service {
             AppLog.e(AppLog.T.MEDIA, "Cannot track media upload service events if the original media is null!!");
             return;
         }
-        Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
+        Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(this, media.videoEh(), null, media.getFilePath());
         if (properties != null) {
             mediaProperties.putAll(properties);
         }

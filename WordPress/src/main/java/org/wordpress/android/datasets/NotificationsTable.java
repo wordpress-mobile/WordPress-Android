@@ -69,7 +69,7 @@ public class NotificationsTable {
         values.put("raw_note_data", note.getJSON().toString());
 
         long result;
-        if(checkBeforeInsert && isNoteAvailable(note.getId())) {
+        if(checkBeforeInsert && noteAvailableEh(note.getId())) {
             // Update
             String[] args = {note.getId()};
             result = getDb().update(
@@ -119,7 +119,7 @@ public class NotificationsTable {
         return saved;
     }
 
-    private static boolean isNoteAvailable(String noteID) {
+    private static boolean noteAvailableEh(String noteID) {
         if (TextUtils.isEmpty(noteID)) {
             AppLog.e(AppLog.T.DB, "Asking for a note with null Id. Really?" + noteID);
             return false;

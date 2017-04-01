@@ -143,11 +143,11 @@ public class EditCommentActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                boolean hasError = (editContent.getError() != null);
-                boolean hasText = (s != null && s.length() > 0);
-                if (!hasText && !hasError) {
+                boolean errorEh = (editContent.getError() != null);
+                boolean textEh = (s != null && s.length() > 0);
+                if (!textEh && !errorEh) {
                     editContent.setError(getString(R.string.content_required));
-                } else if (hasText && hasError) {
+                } else if (textEh && errorEh) {
                     editContent.setError(null);
                 }
             }
@@ -190,7 +190,7 @@ public class EditCommentActivity extends AppCompatActivity {
         }
 
         // return immediately if comment hasn't changed
-        if (!isCommentEdited()) {
+        if (!commentEditedEh()) {
             ToastUtils.showToast(this, R.string.toast_comment_unedited);
             return;
         }
@@ -208,7 +208,7 @@ public class EditCommentActivity extends AppCompatActivity {
     /*
      * returns true if user made any changes to the comment
      */
-    private boolean isCommentEdited() {
+    private boolean commentEditedEh() {
         if (mComment == null) {
             return false;
         }
@@ -267,7 +267,7 @@ public class EditCommentActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (isCommentEdited()) {
+        if (commentEditedEh()) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                     EditCommentActivity.this);
             dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
@@ -297,7 +297,7 @@ public class EditCommentActivity extends AppCompatActivity {
 
         dismissSaveDialog();
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
             showEditErrorAlert();
             return;
@@ -312,7 +312,7 @@ public class EditCommentActivity extends AppCompatActivity {
         mFetchingComment = false;
         setFetchProgressVisible(false);
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
             showErrorAndFinish();
             return;

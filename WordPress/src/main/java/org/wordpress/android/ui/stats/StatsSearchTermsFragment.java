@@ -25,12 +25,12 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     private SearchTermsModel mSearchTerms;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mSearchTerms != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mSearchTerms);
         }
     }
@@ -67,7 +67,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasSearchTerms()) {
+        if (searchTermsEh()) {
 
             /**
              *  At this point we can have:
@@ -107,7 +107,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasSearchTerms() {
+    private boolean searchTermsEh() {
         return mSearchTerms != null
                 && ((mSearchTerms.getSearchTerms() != null && mSearchTerms.getSearchTerms().size() > 0)
                         ||  mSearchTerms.getEncryptedSearchTerms() > 0
@@ -115,8 +115,8 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        if (!hasSearchTerms()) {
+    protected boolean viewAllOptionAvailableEh() {
+        if (!searchTermsEh()) {
             return false;
         }
 
@@ -131,7 +131,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return false;
     }
 
@@ -165,7 +165,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
 
         @Override
         public int getPosition(SearchTermModel item) {
-            if (item.isEncriptedTerms()) {
+            if (item.encriptedTermsEh()) {
                 return super.getCount(); // "Encrypted" is always at the end of the list
             }
 
@@ -188,7 +188,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
 
             String term = currentRowData.getTitle();
 
-            if (currentRowData.isEncriptedTerms()) {
+            if (currentRowData.encriptedTermsEh()) {
                 holder.setEntryTextOrLink(UNKNOWN_SEARCH_TERMS_HELP_PAGE, getString(R.string.stats_search_terms_unknown_search_terms));
             } else {
                 holder.setEntryText(term, getResources().getColor(R.color.stats_text_color));

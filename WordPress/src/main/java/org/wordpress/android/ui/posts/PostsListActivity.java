@@ -24,7 +24,7 @@ public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
 
-    private boolean mIsPage = false;
+    private boolean mPageEh = false;
     private PostsListFragment mPostList;
     private SiteModel mSite;
 
@@ -37,14 +37,14 @@ public class PostsListActivity extends AppCompatActivity {
 
         setContentView(R.layout.post_list_activity);
 
-        mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
+        mPageEh = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setTitle(getString(mPageEh ? R.string.pages : R.string.posts));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -69,7 +69,7 @@ public class PostsListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
+        ActivityId.trackLastActivity(mPageEh ? ActivityId.PAGES : ActivityId.POSTS);
     }
 
     @Override
@@ -105,8 +105,8 @@ public class PostsListActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    public boolean isRefreshing() {
-        return mPostList.isRefreshing();
+    public boolean refreshingEh() {
+        return mPostList.refreshingEh();
     }
 
     @Override

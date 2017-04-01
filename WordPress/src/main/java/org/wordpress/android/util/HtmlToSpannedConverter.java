@@ -126,7 +126,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
     private void handleStartTag(String tag, Attributes attributes) {
         if (!mysteryTagFound) {
             if (mPost != null) {
-                if (!mPost.isLocalDraft()) {
+                if (!mPost.localDraftEh()) {
                     if (tag.equalsIgnoreCase("img"))
                         startImg(mSpannableStringBuilder, attributes,
                                 mImageGetter);
@@ -201,7 +201,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
     private void handleEndTag(String tag) {
         if (mPost != null) {
-            if (!mPost.isLocalDraft())
+            if (!mPost.localDraftEh())
                 return;
         }
         if (!mysteryTagFound) {
@@ -379,7 +379,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else if (mPost != null) {
-            if (mPost.isLocalDraft()) {
+            if (mPost.localDraftEh()) {
                 if (attributes != null) {
                     text.append("<img");
                     for (int i = 0; i < attributes.getLength(); i++) {

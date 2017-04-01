@@ -59,7 +59,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     private void setTagTitle(String title) {
         this.tagTitle = StringUtils.notNullStr(title);
     }
-    private boolean hasTagTitle() {
+    private boolean tagTitleEh() {
         return !TextUtils.isEmpty(tagTitle);
     }
 
@@ -101,7 +101,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * used to ensure a tag name is valid before adding it
      */
     private static final Pattern INVALID_CHARS = Pattern.compile("^.*[~#@*+%{}<>\\[\\]|\"\\_].*$");
-    public static boolean isValidTagName(String tagName) {
+    public static boolean validTagNameEh(String tagName) {
         return !TextUtils.isEmpty(tagName)
             && !INVALID_CHARS.matcher(tagName).matches();
     }
@@ -132,7 +132,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     /*
      * is the passed string one of the default tags?
      */
-    public static boolean isDefaultTagTitle(String title) {
+    public static boolean defaultTagTitleEh(String title) {
         if (TextUtils.isEmpty(title)) {
             return false;
         }
@@ -141,7 +141,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
                 || title.equalsIgnoreCase(TAG_TITLE_LIKED));
     }
 
-    public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
+    public static boolean sameTagEh(ReaderTag tag1, ReaderTag tag2) {
         if (tag1 == null || tag2 == null) {
             return false;
         }
@@ -149,23 +149,23 @@ public class ReaderTag implements Serializable, FilterCriteria {
             && tag1.getTagSlug().equalsIgnoreCase(tag2.getTagSlug());
     }
 
-    public boolean isPostsILike() {
+    public boolean postsILikeEh() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
     }
 
-    public boolean isFollowedSites() {
+    public boolean followedSitesEh() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
 
-    public boolean isDiscover() {
+    public boolean discoverEh() {
         return tagType == ReaderTagType.DEFAULT && getTagSlug().equals(TAG_TITLE_DISCOVER);
     }
 
-    public boolean isTagTopic() {
+    public boolean tagTopicEh() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase().contains("/read/tags/");
     }
-    public boolean isListTopic() {
+    public boolean listTopicEh() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase().contains("/read/list/");
     }
@@ -178,18 +178,18 @@ public class ReaderTag implements Serializable, FilterCriteria {
         if (tagType == ReaderTagType.DEFAULT) {
             // translate default tags
             // ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5240
-            if (isDiscover()) {
+            if (discoverEh()) {
                 return WordPress.getContext().getString(R.string.reader_discover_default_tag);
-            } else if (isFollowedSites()) {
+            } else if (followedSitesEh()) {
                 return WordPress.getContext().getString(R.string.reader_followed_default_tag);
-            } else if (isPostsILike()) {
+            } else if (postsILikeEh()) {
                 return WordPress.getContext().getString(R.string.reader_liked_default_tag);
             } else {
                 return getTagTitle();
             }
-        } else if (isTagDisplayNameAlphaNumeric()) {
+        } else if (tagDisplayNameAlphaNumericEh()) {
             return getTagDisplayName().toLowerCase();
-        } else if (hasTagTitle()) {
+        } else if (tagTitleEh()) {
             return getTagTitle();
         } else {
             return getTagDisplayName();
@@ -199,7 +199,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     /*
      * returns true if the tag display name contains only alpha-numeric characters or hyphens
      */
-    private boolean isTagDisplayNameAlphaNumeric() {
+    private boolean tagDisplayNameAlphaNumericEh() {
         if (TextUtils.isEmpty(tagDisplayName)) {
             return false;
         }

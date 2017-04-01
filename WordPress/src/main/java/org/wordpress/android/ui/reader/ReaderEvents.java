@@ -144,10 +144,10 @@ public class ReaderEvents {
         public ReaderSimplePostList getGlobalRelatedPosts() {
             return mGlobalRelatedPosts;
         }
-        public boolean hasLocalRelatedPosts() {
+        public boolean localRelatedPostsEh() {
             return mLocalRelatedPosts.size() > 0;
         }
-        public boolean hasGlobalRelatedPosts() {
+        public boolean globalRelatedPostsEh() {
             return mGlobalRelatedPosts.size() > 0;
         }
     }

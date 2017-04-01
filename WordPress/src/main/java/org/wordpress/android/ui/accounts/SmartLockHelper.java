@@ -67,7 +67,7 @@ public class SmartLockHelper {
 
     public void smartLockAutoFill(@NonNull final Callback callback) {
         Activity activity = getActivityAndCheckAvailability();
-        if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
+        if (activity == null || mCredentialsClient == null || !mCredentialsClient.connectedEh()) {
             return;
         }
         CredentialRequest credentialRequest = new CredentialRequest.Builder()
@@ -106,7 +106,7 @@ public class SmartLockHelper {
     public void saveCredentialsInSmartLock(@NonNull final String username, @NonNull final String password,
                                            @NonNull final String displayName, @NonNull final Uri profilePicture) {
         Activity activity = getActivityAndCheckAvailability();
-        if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
+        if (activity == null || mCredentialsClient == null || !mCredentialsClient.connectedEh()) {
             return;
         }
         Credential credential = new Credential.Builder(username).setPassword(password)
@@ -133,7 +133,7 @@ public class SmartLockHelper {
 
     public void deleteCredentialsInSmartLock(@NonNull final String username, @NonNull final String password) {
         Activity activity = getActivityAndCheckAvailability();
-        if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
+        if (activity == null || mCredentialsClient == null || !mCredentialsClient.connectedEh()) {
             return;
         }
 

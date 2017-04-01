@@ -43,7 +43,7 @@ public class WPMainTabLayout extends TabLayout {
         addTab(R.drawable.main_tab_notifications, R.string.notifications, true);
     }
 
-    private void addTab(@DrawableRes int iconId, @StringRes int contentDescriptionId, boolean isNoteTab) {
+    private void addTab(@DrawableRes int iconId, @StringRes int contentDescriptionId, boolean noteTabEh) {
         View customView = LayoutInflater.from(getContext()).inflate(R.layout.tab_icon, null);
 
         ImageView icon = (ImageView) customView.findViewById(R.id.tab_icon);
@@ -51,7 +51,7 @@ public class WPMainTabLayout extends TabLayout {
         icon.setContentDescription(getResources().getText(contentDescriptionId));
 
         // each tab has a badge icon, but we only care about the one on the notifications tab
-        if (isNoteTab) {
+        if (noteTabEh) {
             mNoteBadge = customView.findViewById(R.id.tab_badge);
         }
         addTab(newTab().setCustomView(customView));
@@ -64,8 +64,8 @@ public class WPMainTabLayout extends TabLayout {
     void showNoteBadge(boolean showBadge) {
         if (mNoteBadge == null) return;
 
-        boolean isBadged = (mNoteBadge.getVisibility() == View.VISIBLE);
-        if (showBadge == isBadged) {
+        boolean badgedEh = (mNoteBadge.getVisibility() == View.VISIBLE);
+        if (showBadge == badgedEh) {
             return;
         }
 
@@ -99,12 +99,12 @@ public class WPMainTabLayout extends TabLayout {
         animScale.start();
     }
 
-    private boolean isValidPosition(int position) {
+    private boolean validPositionEh(int position) {
         return (position >=0 && position < getTabCount());
     }
 
     public void setSelectedTabPosition(int position) {
-        if (!isValidPosition(position) || getSelectedTabPosition() == position) {
+        if (!validPositionEh(position) || getSelectedTabPosition() == position) {
             return;
         }
         Tab tab = getTabAt(position);

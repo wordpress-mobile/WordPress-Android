@@ -45,7 +45,7 @@ public class InsightsLatestPostModel extends BaseStatsModel {
         }
     }
 
-    public boolean isLatestPostAvailable() {
+    public boolean latestPostAvailableEh() {
         return mPostsFound > 0;
     }
 

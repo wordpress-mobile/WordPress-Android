@@ -25,12 +25,12 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     private ClicksModel mClicks;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mClicks != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mClicks);
         }
     }
@@ -70,7 +70,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasClicks()) {
+        if (clicksEh()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), mClicks.getClickGroups());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -79,19 +79,19 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasClicks() {
+    private boolean clicksEh() {
         return mClicks != null
                 && mClicks.getClickGroups() != null
                 && mClicks.getClickGroups().size() > 0;
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        return (hasClicks() && mClicks.getClickGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
+    protected boolean viewAllOptionAvailableEh() {
+        return (clicksEh() && mClicks.getClickGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return true;
     }
 
@@ -142,7 +142,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition,
-                                 boolean isLastChild, View convertView, ViewGroup parent) {
+                                 boolean lastChildEh, View convertView, ViewGroup parent) {
 
             final SingleItemModel children = (SingleItemModel) getChild(groupPosition, childPosition);
 
@@ -200,7 +200,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded,
+        public View getGroupView(int groupPosition, boolean expandedEh,
                                  View convertView, ViewGroup parent) {
 
             final StatsViewHolder holder;
@@ -248,12 +248,12 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public boolean hasStableIds() {
+        public boolean stableIdsEh() {
             return false;
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
+        public boolean childSelectableEh(int groupPosition, int childPosition) {
             return false;
         }
 

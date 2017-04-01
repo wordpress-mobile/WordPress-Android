@@ -24,7 +24,7 @@ public class MediaFile {
     protected String mimeType = "";
     protected String videoPressShortCode = null;
     protected boolean featured = false;
-    protected boolean isVideo = false;
+    protected boolean videoEh = false;
     protected boolean featuredInPost;
     protected String fileURL = null; // url of the file to download
     protected String thumbnailURL = null;  // url of the thumbnail to download
@@ -35,7 +35,7 @@ public class MediaFile {
 
     public static String VIDEOPRESS_SHORTCODE_ID = "videopress_shortcode";
 
-    public MediaFile(String blogId, Map<?, ?> resultMap, boolean isDotCom) {
+    public MediaFile(String blogId, Map<?, ?> resultMap, boolean dotComEh) {
         setBlogId(blogId);
         setMediaId(MapUtils.getMapStr(resultMap, "attachment_id"));
         setPostID(MapUtils.getMapLong(resultMap, "parent"));
@@ -55,14 +55,14 @@ public class MediaFile {
         // make the file urls be https://... so that we can get these images with oauth when the blogs are private
         // assume no https for images in self-hosted blogs
         String fileUrl = MapUtils.getMapStr(resultMap, "link");
-        if (isDotCom) {
+        if (dotComEh) {
             fileUrl = fileUrl.replace("http:", "https:");
         }
         setFileURL(fileUrl);
 
         String thumbnailURL = MapUtils.getMapStr(resultMap, "thumbnail");
         if (thumbnailURL.startsWith("http")) {
-            if (isDotCom) {
+            if (dotComEh) {
                 thumbnailURL = thumbnailURL.replace("http:", "https:");
             }
             setThumbnailURL(thumbnailURL);
@@ -100,7 +100,7 @@ public class MediaFile {
         this.mimeType = mediaFile.mimeType;
         this.videoPressShortCode = mediaFile.videoPressShortCode;
         this.featured = mediaFile.featured;
-        this.isVideo = mediaFile.isVideo;
+        this.videoEh = mediaFile.videoEh;
         this.featuredInPost = mediaFile.featuredInPost;
         this.fileURL = mediaFile.fileURL;
         this.thumbnailURL = mediaFile.thumbnailURL;
@@ -126,7 +126,7 @@ public class MediaFile {
         mediaId = id;
     }
 
-    public boolean isFeatured() {
+    public boolean featuredEh() {
         return featured;
     }
 
@@ -190,7 +190,7 @@ public class MediaFile {
         this.thumbnailURL = thumbnailURL;
     }
 
-    public boolean isVerticalAlignmentOnTop() {
+    public boolean verticalAlignmentOnTopEh() {
         return verticalAligment;
     }
 
@@ -246,15 +246,15 @@ public class MediaFile {
         this.horizontalAlignment = horizontalAlignment;
     }
 
-    public boolean isVideo() {
-        return isVideo;
+    public boolean videoEh() {
+        return videoEh;
     }
 
-    public void setVideo(boolean isVideo) {
-        this.isVideo = isVideo;
+    public void setVideo(boolean videoEh) {
+        this.videoEh = videoEh;
     }
 
-    public boolean isFeaturedInPost() {
+    public boolean featuredInPostEh() {
         return featuredInPost;
     }
 

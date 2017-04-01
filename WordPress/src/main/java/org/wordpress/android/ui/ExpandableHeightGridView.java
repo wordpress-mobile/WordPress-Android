@@ -27,7 +27,7 @@ public class ExpandableHeightGridView extends GridView
         super(context, attrs, defStyle);
     }
 
-    public boolean isExpanded()
+    public boolean expandedEh()
     {
         return expanded;
     }
@@ -35,7 +35,7 @@ public class ExpandableHeightGridView extends GridView
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
     {
-        if (isExpanded())
+        if (expandedEh())
         {
             // Calculate entire height by providing a very large height hint.
             // View.MEASURED_SIZE_MASK represents the largest height possible.

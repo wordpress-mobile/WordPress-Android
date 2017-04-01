@@ -49,7 +49,7 @@ public class FollowerModel implements Serializable {
     }
 
     private boolean setURL(String URL) {
-        if (!TextUtils.isEmpty(URL) && UrlUtils.isValidUrlAndHostNotNull(URL)) {
+        if (!TextUtils.isEmpty(URL) && UrlUtils.validUrlAndHostNotNullEh(URL)) {
             this.mUrl = URL;
             return true;
         }

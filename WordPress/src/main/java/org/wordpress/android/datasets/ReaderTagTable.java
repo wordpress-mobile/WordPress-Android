@@ -165,7 +165,7 @@ public class ReaderTagTable {
                 args);
     }
 
-    public static boolean isFollowedTagName(String tagSlug) {
+    public static boolean followedTagNameEh(String tagSlug) {
         return tagExistsOfType(tagSlug, ReaderTagType.FOLLOWED);
     }
 

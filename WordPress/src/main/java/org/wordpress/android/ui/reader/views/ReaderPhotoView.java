@@ -45,7 +45,7 @@ public class ReaderPhotoView extends RelativeLayout {
     private final ImageView mImageView;
     private final ProgressBar mProgress;
     private final TextView mTxtError;
-    private boolean mIsInitialLayout = true;
+    private boolean mInitialLayoutEh = true;
 
     public ReaderPhotoView(Context context) {
         this(context, null);
@@ -69,36 +69,36 @@ public class ReaderPhotoView extends RelativeLayout {
     /**
      * @param imageUrl the url of the image to load
      * @param hiResWidth maximum width of the full-size image
-     * @param isPrivate whether this is an image from a private blog
+     * @param privateEh whether this is an image from a private blog
      * @param listener listener for taps on this view
      */
     public void setImageUrl(String imageUrl,
                             int hiResWidth,
-                            boolean isPrivate,
+                            boolean privateEh,
                             PhotoViewListener listener) {
         int loResWidth = (int) (hiResWidth * 0.10f);
-        mLoResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, loResWidth, 0, isPrivate, PhotonUtils.Quality.LOW);
-        mHiResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, hiResWidth, 0, isPrivate, PhotonUtils.Quality.MEDIUM);
+        mLoResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, loResWidth, 0, privateEh, PhotonUtils.Quality.LOW);
+        mHiResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, hiResWidth, 0, privateEh, PhotonUtils.Quality.MEDIUM);
 
         mPhotoViewListener = listener;
         loadLoResImage();
     }
 
-    private boolean isRequestingUrl(ImageContainer container, String url) {
+    private boolean requestingUrlEh(ImageContainer container, String url) {
         return (container != null
              && container.getRequestUrl() != null
              && container.getRequestUrl().equals(url));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean hasLayout() {
+    private boolean layoutEh() {
         // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
         // view, hold off on loading the image.
         if (getWidth() == 0 && getHeight() == 0) {
-            boolean isFullyWrapContent = getLayoutParams() != null
+            boolean fullyWrapContentEh = getLayoutParams() != null
                     && getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT
                     && getLayoutParams().width == ViewGroup.LayoutParams.WRAP_CONTENT;
-            if (!isFullyWrapContent) {
+            if (!fullyWrapContentEh) {
                 return false;
             }
         }
@@ -107,12 +107,12 @@ public class ReaderPhotoView extends RelativeLayout {
     }
 
     private void loadLoResImage() {
-        if (!hasLayout() || TextUtils.isEmpty(mLoResImageUrl)) {
+        if (!layoutEh() || TextUtils.isEmpty(mLoResImageUrl)) {
             return;
         }
 
         // skip if this same image url is already being loaded
-        if (isRequestingUrl(mLoResContainer, mLoResImageUrl)) {
+        if (requestingUrlEh(mLoResContainer, mLoResImageUrl)) {
             AppLog.d(AppLog.T.READER, "reader photo > already requesting lo-res");
             return;
         }
@@ -132,7 +132,7 @@ public class ReaderPhotoView extends RelativeLayout {
                     }
 
                     @Override
-                    public void onResponse(final ImageContainer response, boolean isImmediate) {
+                    public void onResponse(final ImageContainer response, boolean immediateEh) {
                         post(new Runnable() {
                             @Override
                             public void run() {
@@ -144,11 +144,11 @@ public class ReaderPhotoView extends RelativeLayout {
     }
 
     private void loadHiResImage() {
-        if (!hasLayout() || TextUtils.isEmpty(mHiResImageUrl)) {
+        if (!layoutEh() || TextUtils.isEmpty(mHiResImageUrl)) {
             return;
         }
 
-        if (isRequestingUrl(mHiResContainer, mHiResImageUrl)) {
+        if (requestingUrlEh(mHiResContainer, mHiResImageUrl)) {
             AppLog.d(AppLog.T.READER, "reader photo > already requesting hi-res");
             return;
         }
@@ -164,7 +164,7 @@ public class ReaderPhotoView extends RelativeLayout {
                     }
 
                     @Override
-                    public void onResponse(final ImageContainer response, boolean isImmediate) {
+                    public void onResponse(final ImageContainer response, boolean immediateEh) {
                         post(new Runnable() {
                             @Override
                             public void run() {
@@ -175,7 +175,7 @@ public class ReaderPhotoView extends RelativeLayout {
                 }, maxSize, maxSize);
     }
 
-    private void handleResponse(Bitmap bitmap, boolean isLoRes) {
+    private void handleResponse(Bitmap bitmap, boolean loResEh) {
         if (bitmap != null) {
             hideProgress();
 
@@ -184,7 +184,7 @@ public class ReaderPhotoView extends RelativeLayout {
             setAttacher();
 
             // load hi-res image if this was the lo-res one
-            if (isLoRes && !mLoResImageUrl.equals(mHiResImageUrl)) {
+            if (loResEh && !mLoResImageUrl.equals(mHiResImageUrl)) {
                 loadHiResImage();
             }
         }
@@ -233,8 +233,8 @@ public class ReaderPhotoView extends RelativeLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!isInEditMode()) {
-            if (mIsInitialLayout) {
-                mIsInitialLayout = false;
+            if (mInitialLayoutEh) {
+                mInitialLayoutEh = false;
                 AppLog.d(AppLog.T.READER, "reader photo > initial layout");
                 post(new Runnable() {
                     @Override
@@ -259,7 +259,7 @@ public class ReaderPhotoView extends RelativeLayout {
             mHiResContainer.cancelRequest();
             mHiResContainer = null;
         }
-        mIsInitialLayout = true;
+        mInitialLayoutEh = true;
         super.onDetachedFromWindow();
     }
 

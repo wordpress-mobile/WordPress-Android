@@ -78,8 +78,8 @@ public class PostsListFragment extends Fragment
     private ImageView mEmptyViewImage;
 
     private boolean mCanLoadMorePosts = true;
-    private boolean mIsPage;
-    private boolean mIsFetchingPosts;
+    private boolean mPageEh;
+    private boolean mFetchingPostsEh;
     private boolean mShouldCancelPendingDraftNotification = false;
     private int mPostIdForPostToBeDeleted = 0;
 
@@ -112,7 +112,7 @@ public class PostsListFragment extends Fragment
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
             if (extras != null) {
-                mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+                mPageEh = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
         }
     }
@@ -158,7 +158,7 @@ public class PostsListFragment extends Fragment
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
+        int spacingVertical = mPageEh ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
@@ -183,17 +183,17 @@ public class PostsListFragment extends Fragment
     public void handleEditPostResult(int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && data != null && isAdded()) {
 
-            boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+            boolean changesEh = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
             final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
-            boolean isPublishable = post != null && PostUtils.isPublishable(post);
+            boolean publishableEh = post != null && PostUtils.publishableEh(post);
             boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
 
-            if (hasChanges) {
-                if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
+            if (changesEh) {
+                if (savedLocally && !NetworkUtils.networkAvailableEh(getActivity())) {
                     ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
                             ToastUtils.Duration.SHORT);
                 } else {
-                    if (isPublishable) {
+                    if (publishableEh) {
                         if (savedLocally) {
                             Snackbar.make(getActivity().findViewById(R.id.coordinator),
                                     R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
@@ -248,7 +248,7 @@ public class PostsListFragment extends Fragment
 
     private @Nullable PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mPageEh);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -258,7 +258,7 @@ public class PostsListFragment extends Fragment
         return mPostsListAdapter;
     }
 
-    private boolean isPostAdapterEmpty() {
+    private boolean postAdapterEmptyEh() {
         return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
     }
 
@@ -283,7 +283,7 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (!isAdded()) return;
-        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage);
+        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mPageEh);
     }
 
     public void onResume() {
@@ -310,8 +310,8 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    public boolean isRefreshing() {
-        return mSwipeToRefreshHelper.isRefreshing();
+    public boolean refreshingEh() {
+        return mSwipeToRefreshHelper.refreshingEh();
     }
 
     private void setRefreshing(boolean refreshing) {
@@ -319,11 +319,11 @@ public class PostsListFragment extends Fragment
     }
 
     private void requestPosts(boolean loadMore) {
-        if (!isAdded() || mIsFetchingPosts) {
+        if (!isAdded() || mFetchingPostsEh) {
             return;
         }
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             return;
         }
@@ -332,14 +332,14 @@ public class PostsListFragment extends Fragment
             updateEmptyView(EmptyViewMessageType.LOADING);
         }
 
-        mIsFetchingPosts = true;
+        mFetchingPostsEh = true;
         if (loadMore) {
             showLoadMoreProgress();
         }
 
         FetchPostsPayload payload = new FetchPostsPayload(mSite, loadMore);
 
-        if (mIsPage) {
+        if (mPageEh) {
             mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
         } else {
             mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
@@ -383,20 +383,20 @@ public class PostsListFragment extends Fragment
         int stringId;
         switch (emptyViewMessageType) {
             case LOADING:
-                stringId = mIsPage ? R.string.pages_fetching : R.string.posts_fetching;
+                stringId = mPageEh ? R.string.pages_fetching : R.string.posts_fetching;
                 break;
             case NO_CONTENT:
-                stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
+                stringId = mPageEh ? R.string.pages_empty_list : R.string.posts_empty_list;
                 break;
             case NETWORK_ERROR:
                 stringId = R.string.no_network_message;
                 break;
             case PERMISSION_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
+                stringId = mPageEh ? R.string.error_refresh_unauthorized_pages :
                         R.string.error_refresh_unauthorized_posts;
                 break;
             case GENERIC_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
+                stringId = mPageEh ? R.string.error_refresh_pages : R.string.error_refresh_posts;
                 break;
             default:
                 return;
@@ -405,7 +405,7 @@ public class PostsListFragment extends Fragment
         mEmptyViewTitle.setText(getText(stringId));
         mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE :
                 View.GONE);
-        mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(postAdapterEmptyEh() ? View.VISIBLE : View.GONE);
     }
 
     private void hideEmptyView() {
@@ -434,8 +434,8 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        if (postCount == 0 && !mIsFetchingPosts) {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (postCount == 0 && !mFetchingPostsEh) {
+            if (NetworkUtils.networkAvailableEh(getActivity())) {
                 updateEmptyView(EmptyViewMessageType.NO_CONTENT);
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
@@ -450,7 +450,7 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onLoadMore() {
-        if (mCanLoadMorePosts && !mIsFetchingPosts) {
+        if (mCanLoadMorePosts && !mFetchingPostsEh) {
             requestPosts(true);
         }
     }
@@ -482,15 +482,15 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_PREVIEW:
-                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post, mIsPage);
+                ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post, mPageEh);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mPageEh);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 // prevent deleting post while it's being uploaded
-                if (!PostUploadService.isPostUploading(post)) {
+                if (!PostUploadService.postUploadingEh(post)) {
                     trashPost(post);
                 }
                 break;
@@ -498,14 +498,14 @@ public class PostsListFragment extends Fragment
     }
 
     private void publishPost(final PostModel post) {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
                     ToastUtils.Duration.SHORT);
             return;
         }
 
         // If the post is empty, don't publish
-        if (!PostUtils.isPublishable(post)) {
+        if (!PostUtils.publishableEh(post)) {
             ToastUtils.showToast(getActivity(), R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
             return;
         }
@@ -524,7 +524,7 @@ public class PostsListFragment extends Fragment
     private void trashPost(final PostModel post) {
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
-        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
+        if (!isAdded() || (!post.localDraftEh() && !NetworkUtils.checkConnection(getActivity()))
             || getPostListAdapter() == null) {
             return;
         }
@@ -550,10 +550,10 @@ public class PostsListFragment extends Fragment
 
         // different undo text if this is a local draft since it will be deleted rather than trashed
         String text;
-        if (post.isLocalDraft()) {
-            text = mIsPage ? getString(R.string.page_deleted) : getString(R.string.post_deleted);
+        if (post.localDraftEh()) {
+            text = mPageEh ? getString(R.string.page_deleted) : getString(R.string.post_deleted);
         } else {
-            text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
+            text = mPageEh ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         }
 
         Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
@@ -576,7 +576,7 @@ public class PostsListFragment extends Fragment
                 // https://code.google.com/p/android/issues/detail?id=190529
                 mTrashedPosts.remove(post);
 
-                if (post.isLocalDraft()) {
+                if (post.localDraftEh()) {
                     mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(post));
 
                     // delete the pending draft notification if available
@@ -606,14 +606,14 @@ public class PostsListFragment extends Fragment
         switch (event.causeOfChange) {
             case FETCH_POSTS:
             case FETCH_PAGES:
-                mIsFetchingPosts = false;
+                mFetchingPostsEh = false;
                 if (!isAdded()) {
                     return;
                 }
 
                 setRefreshing(false);
                 hideLoadMoreProgress();
-                if (!event.isError()) {
+                if (!event.errorEh()) {
                     mCanLoadMorePosts = event.canLoadMore;
                     loadPosts(LoadMode.IF_CHANGED);
                 } else {
@@ -629,9 +629,9 @@ public class PostsListFragment extends Fragment
                 }
                 break;
             case DELETE_POST:
-                if (event.isError()) {
+                if (event.errorEh()) {
                     String message = String.format(getText(R.string.error_delete_post).toString(),
-                            mIsPage ? "page" : "post");
+                            mPageEh ? "page" : "post");
                     ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                     loadPosts(LoadMode.IF_CHANGED);
                 }

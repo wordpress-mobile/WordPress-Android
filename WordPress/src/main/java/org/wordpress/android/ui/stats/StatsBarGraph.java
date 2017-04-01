@@ -127,8 +127,8 @@ class StatsBarGraph extends GraphView {
             private NumberFormat numberFormatter;
 
             @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
+            public String formatLabel(double value, boolean valueXEh) {
+                if (valueXEh) {
                     return null;
                 }
                 if (numberFormatter == null) {
@@ -228,7 +228,7 @@ class StatsBarGraph extends GraphView {
         for (List<BarChartRect> currentSerieChartRects : mSeriesRectsDrawedOnScreen) {
             int i = 0;
             for (BarChartRect barChartRect : currentSerieChartRects) {
-                if (barChartRect.isPointInside(lastBarChartTouchedPoint[0], lastBarChartTouchedPoint[1])) {
+                if (barChartRect.pointInsideEh(lastBarChartTouchedPoint[0], lastBarChartTouchedPoint[1])) {
                     return i;
                 }
                 i++;
@@ -320,7 +320,7 @@ class StatsBarGraph extends GraphView {
          * @return true if the tap point falls within the bar for the X coordinate, and within the full canvas
          * height for the Y coordinate. This is a fix to make very small bars tappable.
          */
-        public boolean isPointInside(float x, float y) {
+        public boolean pointInsideEh(float x, float y) {
             return x >= this.mLeft
                     && x <= this.mRight;
         }

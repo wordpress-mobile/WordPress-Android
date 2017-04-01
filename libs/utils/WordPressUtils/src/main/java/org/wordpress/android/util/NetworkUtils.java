@@ -36,7 +36,7 @@ public class NetworkUtils {
      */
     private static int getActiveNetworkType(Context context) {
         NetworkInfo info = getActiveNetworkInfo(context);
-        if (info == null || !info.isConnected()) {
+        if (info == null || !info.connectedEh()) {
             return TYPE_UNKNOWN;
         }
         return info.getType();
@@ -45,22 +45,22 @@ public class NetworkUtils {
     /**
      * returns true if a network connection is available
      */
-    public static boolean isNetworkAvailable(Context context) {
+    public static boolean networkAvailableEh(Context context) {
         NetworkInfo info = getActiveNetworkInfo(context);
-        return (info != null && info.isConnected());
+        return (info != null && info.connectedEh());
     }
 
     /**
      * returns true if the user is connected to WiFi
      */
-    public static boolean isWiFiConnected(Context context) {
+    public static boolean wiFiConnectedEh(Context context) {
         return (getActiveNetworkType(context) == ConnectivityManager.TYPE_WIFI);
     }
 
     /**
      * returns true if the user is connected with the mobile data connection
      */
-    public static boolean isMobileConnected(Context context) {
+    public static boolean mobileConnectedEh(Context context) {
         int networkType = getActiveNetworkType(context);
         return (networkType == ConnectivityManager.TYPE_MOBILE ||
                 networkType == ConnectivityManager.TYPE_MOBILE_DUN);
@@ -71,7 +71,7 @@ public class NetworkUtils {
      */
     @TargetApi(VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressWarnings("deprecation")
-    public static boolean isAirplaneModeOn(Context context) {
+    public static boolean airplaneModeOnEh(Context context) {
         // prior to JellyBean 4.2 this was Settings.System.AIRPLANE_MODE_ON, JellyBean 4.2
         // moved it to Settings.Global
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -89,7 +89,7 @@ public class NetworkUtils {
         if (context == null) {
             return false;
         }
-        if (isNetworkAvailable(context)) {
+        if (networkAvailableEh(context)) {
             return true;
         }
         ToastUtils.showToast(context, R.string.no_network_message);

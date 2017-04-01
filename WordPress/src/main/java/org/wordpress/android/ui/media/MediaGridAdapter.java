@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
     private MediaGridAdapterCallback mCallback;
-    private boolean mHasRetrievedAll;
+    private boolean mRetrievedAllEh;
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
@@ -99,7 +99,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        if (isSameList(mediaList)) {
+        if (sameListEh(mediaList)) {
             AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
             return;
         }
@@ -117,7 +117,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
-        if (!isValidPosition(position)) {
+        if (!validPositionEh(position)) {
             return;
         }
 
@@ -127,19 +127,19 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         String strState = media.getUploadState();
         MediaUploadState state = MediaUploadState.fromString(strState);
 
-        boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(media.getFilePath());
-        boolean isSelected = isItemSelected(media.getId());
-        boolean isImage = media.getMimeType().startsWith("image/");
+        boolean localFileEh = MediaUtils.localFileEh(strState) && !TextUtils.isEmpty(media.getFilePath());
+        boolean selectedEh = itemSelectedEh(media.getId());
+        boolean imageEh = media.getMimeType().startsWith("image/");
 
-        if (isImage) {
+        if (imageEh) {
             holder.fileContainer.setVisibility(View.GONE);
-            if (isLocalFile) {
+            if (localFileEh) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
                 // if this isn't a private site use Photon to request the image at the exact size,
                 // otherwise append the standard wp query params to request the desired size
                 String thumbUrl;
-                if (SiteUtils.isPhotonCapable(mSite)) {
+                if (SiteUtils.photonCapableEh(mSite)) {
                     thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
                 } else {
                     thumbUrl = UrlUtils.removeQuery(media.getUrl()) + "?w=" + mThumbWidth + "&h=" + mThumbHeight;
@@ -160,14 +160,14 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         // show selection count when selected
-        holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-        if (isSelected) {
+        holder.selectionCountTextView.setVisibility(selectedEh ? View.VISIBLE : View.GONE);
+        if (selectedEh) {
             int count = mSelectedItems.indexOf(media.getId()) + 1;
             holder.selectionCountTextView.setText(Integer.toString(count));
         }
 
         // make sure the thumbnail scale reflects its selection state
-        float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
+        float scale = selectedEh ? SCALE_SELECTED : SCALE_NORMAL;
         if (holder.imageView.getScaleX() != scale) {
             holder.imageView.setScaleX(scale);
             holder.imageView.setScaleY(scale);
@@ -251,7 +251,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if (isInMultiSelect()) {
+                    if (inMultiSelectEh()) {
                         if (canSelectPosition(position)) {
                             toggleItemSelected(GridViewHolder.this, position);
                         }
@@ -266,7 +266,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
                     if (canSelectPosition(position)) {
-                        if (isInMultiSelect()) {
+                        if (inMultiSelectEh()) {
                             toggleItemSelected(GridViewHolder.this, position);
                         } else if (mAllowMultiselect) {
                             setInMultiSelect(true);
@@ -283,7 +283,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if (isInMultiSelect()) {
+                    if (inMultiSelectEh()) {
                         if (canSelectPosition(position)) {
                             toggleItemSelected(GridViewHolder.this, position);
                         }
@@ -310,7 +310,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mAllowMultiselect = allow;
     }
 
-    public boolean isInMultiSelect() {
+    public boolean inMultiSelectEh() {
         return mInMultiSelect;
     }
 
@@ -321,12 +321,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
-    private boolean isValidPosition(int position) {
+    private boolean validPositionEh(int position) {
         return position >= 0 && position < getItemCount();
     }
 
     public int getLocalMediaIdAtPosition(int position) {
-        if (isValidPosition(position)) {
+        if (validPositionEh(position)) {
             return mMediaList.get(position).getId();
         }
         return INVALID_POSITION;
@@ -337,7 +337,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
      * for deleted items since the whole purpose of multiselect is to delete multiple items
      */
     private boolean canSelectPosition(int position) {
-        if (!mAllowMultiselect || !isValidPosition(position)) {
+        if (!mAllowMultiselect || !validPositionEh(position)) {
             return false;
         }
         MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
@@ -385,7 +385,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setHasRetrievedAll(boolean b) {
-        mHasRetrievedAll = b;
+        mRetrievedAllEh = b;
     }
 
     public void clearSelection() {
@@ -395,12 +395,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
-    public boolean isItemSelected(int localMediaId) {
+    public boolean itemSelectedEh(int localMediaId) {
         return mSelectedItems.contains(localMediaId);
     }
 
     public void removeSelectionByLocalId(int localMediaId) {
-        if (isItemSelected(localMediaId)) {
+        if (itemSelectedEh(localMediaId)) {
             mSelectedItems.remove(Integer.valueOf(localMediaId));
             if (mCallback != null) {
                 mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
@@ -410,7 +410,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
-        if (!isValidPosition(position)) {
+        if (!validPositionEh(position)) {
             return;
         }
 
@@ -451,12 +451,12 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private void toggleItemSelected(GridViewHolder holder, int position) {
-        if (!isValidPosition(position)) {
+        if (!validPositionEh(position)) {
             return;
         }
         int localMediaId = mMediaList.get(position).getId();
-        boolean isSelected = mSelectedItems.contains(localMediaId);
-        setItemSelectedByPosition(holder, position, !isSelected);
+        boolean selectedEh = mSelectedItems.contains(localMediaId);
+        setItemSelectedByPosition(holder, position, !selectedEh);
     }
 
     public void setSelectedItems(ArrayList<Integer> selectedItems) {
@@ -471,7 +471,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     /*
      * returns true if the passed list is the same as the existing one
      */
-    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
+    private boolean sameListEh(@NonNull List<MediaModel> mediaList) {
         if (mediaList.size() != mMediaList.size()) {
             return false;
         }

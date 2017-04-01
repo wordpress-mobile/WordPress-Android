@@ -20,12 +20,12 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
     private InsightsPopularModel mInsightsPopularModel;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mInsightsPopularModel != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mInsightsPopularModel);
         }
     }
@@ -59,7 +59,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
     protected void updateUI() {
         super.updateUI();
 
-        if (!isAdded() || !hasDataAvailable()) {
+        if (!isAdded() || !dataAvailableEh()) {
             return;
         }
 

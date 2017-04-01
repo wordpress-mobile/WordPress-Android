@@ -169,14 +169,14 @@ public class DateTimeUtils {
         return Math.abs(dt1.getTime() - dt2.getTime());
     }
 
-    public static boolean isSameYear(Date dt1, Date dt2) {
+    public static boolean sameYearEh(Date dt1, Date dt2) {
         if (dt1 == null || dt2 == null) {
             return false;
         }
         return dt1.getYear() == dt2.getYear();
     }
 
-    public static boolean isSameMonthAndYear(Date dt1, Date dt2) {
+    public static boolean sameMonthAndYearEh(Date dt1, Date dt2) {
         if (dt1 == null || dt2 == null) {
             return false;
         }

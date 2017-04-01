@@ -28,7 +28,7 @@ public class WPLaunchActivity extends AppCompatActivity {
 
         ProfilingUtils.split("WPLaunchActivity.onCreate");
 
-        if (WordPress.sIsMigrationInProgress) {
+        if (WordPress.sMigrationInProgressEh) {
             mMigrationProgressDialog = new ProgressDialog(this);
             mMigrationProgressDialog.setMessage(this.getResources().getString(R.string.migration_message));
             mMigrationProgressDialog.setCancelable(false);

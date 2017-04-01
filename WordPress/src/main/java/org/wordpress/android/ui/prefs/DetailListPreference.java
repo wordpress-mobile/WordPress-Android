@@ -167,7 +167,7 @@ public class DetailListPreference extends ListPreference
     }
 
     @Override
-    public boolean hasHint() {
+    public boolean hintEh() {
         return !TextUtils.isEmpty(mHint);
     }
 
@@ -200,7 +200,7 @@ public class DetailListPreference extends ListPreference
             Resources res = getContext().getResources();
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
             //noinspection deprecation
-            view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
+            view.setTextColor(res.getColor(enabledEh() ? enabledColorRes : disabledColorRes));
         }
     }
 

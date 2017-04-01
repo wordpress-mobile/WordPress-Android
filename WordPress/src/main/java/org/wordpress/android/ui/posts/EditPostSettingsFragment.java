@@ -121,7 +121,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String mCustomPubDate = "";
-    private boolean mIsCustomPubDate;
+    private boolean mCustomPubDateEh;
 
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
@@ -176,7 +176,7 @@ public class EditPostSettingsFragment extends Fragment
 
         // Update post formats and categories, in case anything changed.
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
-        if (!mPost.isPage()) {
+        if (!mPost.pageEh()) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
         }
     }
@@ -235,7 +235,7 @@ public class EditPostSettingsFragment extends Fragment
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
         mFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
 
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+        if (AppPrefs.visualEditorEnabledEh() || AppPrefs.aztecEditorEnabledEh()) {
             registerForContextMenu(mFeaturedImageView);
             mFeaturedImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -256,7 +256,7 @@ public class EditPostSettingsFragment extends Fragment
             mFeaturedImageButton.setVisibility(View.GONE);
         }
 
-        if (mPost.isPage()) { // remove post specific views
+        if (mPost.pageEh()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
@@ -416,7 +416,7 @@ public class EditPostSettingsFragment extends Fragment
             mTagsEditText.setText(tags);
         }
 
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+        if (AppPrefs.visualEditorEnabledEh() || AppPrefs.aztecEditorEnabledEh()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
         }
     }
@@ -568,7 +568,7 @@ public class EditPostSettingsFragment extends Fragment
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
                 new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mIsCustomPubDate = true;
+                mCustomPubDateEh = true;
                 mPubDateText.setText(R.string.immediately);
                 updatePostSettingsAndSaveButton();
             }
@@ -601,7 +601,7 @@ public class EditPostSettingsFragment extends Fragment
                     String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, flags);
                     mCustomPubDate = DateTimeUtils.iso8601FromDate(javaDate);
                     mPubDateText.setText(formattedDate);
-                    mIsCustomPubDate = true;
+                    mCustomPubDateEh = true;
 
                     updatePostSettingsAndSaveButton();
                 } catch (RuntimeException e) {
@@ -626,10 +626,10 @@ public class EditPostSettingsFragment extends Fragment
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
-        if (mIsCustomPubDate && publishImmediately && !post.isLocalDraft()) {
+        if (mCustomPubDateEh && publishImmediately && !post.localDraftEh()) {
             publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
         } else if (!publishImmediately) {
-            if (mIsCustomPubDate) {
+            if (mCustomPubDateEh) {
                 publicationDateIso8601 = mCustomPubDate;
             } else if (StringUtils.isNotEmpty(post.getDateCreated())) {
                 publicationDateIso8601 = post.getDateCreated();
@@ -639,7 +639,7 @@ public class EditPostSettingsFragment extends Fragment
         post.setDateCreated(publicationDateIso8601);
 
         String tags = "", postFormat = "";
-        if (!post.isPage()) {
+        if (!post.pageEh()) {
             tags = EditTextUtils.getText(mTagsEditText);
             // since mTagsEditText is a `textMultiLine` field, we should replace "\n" with space
             tags = tags.replace("\n", " ");
@@ -674,7 +674,7 @@ public class EditPostSettingsFragment extends Fragment
             post.setCategoryIdList(categoryIds);
         }
 
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+        if (AppPrefs.visualEditorEnabledEh() || AppPrefs.aztecEditorEnabledEh()) {
             post.setFeaturedImageId(mFeaturedImageId);
         }
 

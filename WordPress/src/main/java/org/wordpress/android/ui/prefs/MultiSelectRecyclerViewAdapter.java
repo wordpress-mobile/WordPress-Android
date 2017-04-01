@@ -51,7 +51,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
         String item = getItem(holder.getAdapterPosition());
         holder.text.setText(item);
         holder.container.setBackgroundColor(
-                isItemSelected(position) ?
+                itemSelectedEh(position) ?
                 mSelectedColor :
                 mUnselectedColor
         );
@@ -70,7 +70,7 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
         return mItemsSelected;
     }
 
-    private boolean isItemSelected(int position) {
+    private boolean itemSelectedEh(int position) {
         String item = getItem(position);
         return item != null && mItemsSelected.get(position);
     }

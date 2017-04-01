@@ -83,7 +83,7 @@ public class WPImageGetter implements Html.ImageGetter {
             }
 
             @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+            public void onResponse(ImageLoader.ImageContainer response, boolean immediateEh) {
                 if (response.getBitmap() == null) {
                     AppLog.w(T.UTILS, "WPImageGetter null bitmap");
                 }
@@ -105,7 +105,7 @@ public class WPImageGetter implements Html.ImageGetter {
                 // force textView to resize correctly if image isn't cached by resetting the content
                 // to itself - this way the textView will use the cached image, and resizing to
                 // accommodate the image isn't necessary
-                if (!isImmediate) {
+                if (!immediateEh) {
                     view.setText(view.getText());
                 }
             }

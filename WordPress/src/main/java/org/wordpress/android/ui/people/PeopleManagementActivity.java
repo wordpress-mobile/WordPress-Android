@@ -63,10 +63,10 @@ public class PeopleManagementActivity extends AppCompatActivity
     private boolean mViewersEndOfListReached;
 
     // We only allow the lists to be refreshed once to avoid syncing and jumping animation issues
-    private boolean mHasRefreshedUsers;
-    private boolean mHasRefreshedFollowers;
-    private boolean mHasRefreshedEmailFollowers;
-    private boolean mHasRefreshedViewers;
+    private boolean mRefreshedUsersEh;
+    private boolean mRefreshedFollowersEh;
+    private boolean mRefreshedEmailFollowersEh;
+    private boolean mRefreshedViewersEh;
 
     // If we are currently making a request for a certain filter
     private boolean mUsersFetchRequestInProgress;
@@ -114,7 +114,7 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
-            if (NetworkUtils.isNetworkAvailable(this)) {
+            if (NetworkUtils.networkAvailableEh(this)) {
                 PeopleTable.deletePeopleExceptForFirstPage(mSite.getId());
             }
 
@@ -131,10 +131,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             mEmailFollowersEndOfListReached = false;
             mViewersEndOfListReached = false;
 
-            mHasRefreshedUsers = false;
-            mHasRefreshedFollowers = false;
-            mHasRefreshedEmailFollowers = false;
-            mHasRefreshedViewers = false;
+            mRefreshedUsersEh = false;
+            mRefreshedFollowersEh = false;
+            mRefreshedEmailFollowersEh = false;
+            mRefreshedViewersEh = false;
 
             mUsersFetchRequestInProgress = false;
             mFollowersFetchRequestInProgress = false;
@@ -153,10 +153,10 @@ public class PeopleManagementActivity extends AppCompatActivity
             mEmailFollowersEndOfListReached = savedInstanceState.getBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED);
             mViewersEndOfListReached = savedInstanceState.getBoolean(KEY_VIEWERS_END_OF_LIST_REACHED);
 
-            mHasRefreshedUsers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_USERS);
-            mHasRefreshedFollowers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_FOLLOWERS);
-            mHasRefreshedEmailFollowers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS);
-            mHasRefreshedViewers = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_VIEWERS);
+            mRefreshedUsersEh = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_USERS);
+            mRefreshedFollowersEh = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_FOLLOWERS);
+            mRefreshedEmailFollowersEh = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS);
+            mRefreshedViewersEh = savedInstanceState.getBoolean(KEY_HAS_REFRESHED_VIEWERS);
 
             mUsersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS);
             mFollowersFetchRequestInProgress = savedInstanceState.getBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS);
@@ -189,10 +189,10 @@ public class PeopleManagementActivity extends AppCompatActivity
         outState.putBoolean(KEY_EMAIL_FOLLOWERS_END_OF_LIST_REACHED, mEmailFollowersEndOfListReached);
         outState.putBoolean(KEY_VIEWERS_END_OF_LIST_REACHED, mViewersEndOfListReached);
 
-        outState.putBoolean(KEY_HAS_REFRESHED_USERS, mHasRefreshedUsers);
-        outState.putBoolean(KEY_HAS_REFRESHED_FOLLOWERS, mHasRefreshedFollowers);
-        outState.putBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS, mHasRefreshedEmailFollowers);
-        outState.putBoolean(KEY_HAS_REFRESHED_VIEWERS, mHasRefreshedViewers);
+        outState.putBoolean(KEY_HAS_REFRESHED_USERS, mRefreshedUsersEh);
+        outState.putBoolean(KEY_HAS_REFRESHED_FOLLOWERS, mRefreshedFollowersEh);
+        outState.putBoolean(KEY_HAS_REFRESHED_EMAIL_FOLLOWERS, mRefreshedEmailFollowersEh);
+        outState.putBoolean(KEY_HAS_REFRESHED_VIEWERS, mRefreshedViewersEh);
 
         outState.putBoolean(KEY_USERS_FETCH_REQUEST_IN_PROGRESS, mUsersFetchRequestInProgress);
         outState.putBoolean(KEY_FOLLOWERS_FETCH_REQUEST_IN_PROGRESS, mFollowersFetchRequestInProgress);
@@ -267,15 +267,15 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         PeopleUtils.fetchUsers(site, offset, new PeopleUtils.FetchUsersCallback() {
             @Override
-            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
-                boolean isFreshList = (offset == 0);
-                mHasRefreshedUsers = true;
-                mUsersEndOfListReached = isEndOfList;
-                PeopleTable.saveUsers(peopleList, site.getId(), isFreshList);
+            public void onSuccess(List<Person> peopleList, boolean endOfListEh) {
+                boolean freshListEh = (offset == 0);
+                mRefreshedUsersEh = true;
+                mUsersEndOfListReached = endOfListEh;
+                PeopleTable.saveUsers(peopleList, site.getId(), freshListEh);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFreshList, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, freshListEh, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -286,8 +286,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             public void onError() {
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    boolean isFirstPage = offset == 0;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, isFirstPage, false);
+                    boolean firstPageEh = offset == 0;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.TEAM, firstPageEh, false);
                 }
                 mUsersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
@@ -308,16 +308,16 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         PeopleUtils.fetchFollowers(site, page, new PeopleUtils.FetchFollowersCallback() {
             @Override
-            public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
-                boolean isFreshList = (page == 1);
-                mHasRefreshedFollowers = true;
+            public void onSuccess(List<Person> peopleList, int pageFetched, boolean endOfListEh) {
+                boolean freshListEh = (page == 1);
+                mRefreshedFollowersEh = true;
                 mFollowersLastFetchedPage = pageFetched;
-                mFollowersEndOfListReached = isEndOfList;
-                PeopleTable.saveFollowers(peopleList, site.getId(), isFreshList);
+                mFollowersEndOfListReached = endOfListEh;
+                PeopleTable.saveFollowers(peopleList, site.getId(), freshListEh);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFreshList, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, freshListEh, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -328,8 +328,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             public void onError() {
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage, false);
+                    boolean firstPageEh = page == 1;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, firstPageEh, false);
                 }
                 mFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
@@ -350,16 +350,16 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         PeopleUtils.fetchEmailFollowers(site, page, new PeopleUtils.FetchFollowersCallback() {
             @Override
-            public void onSuccess(List<Person> peopleList, int pageFetched, boolean isEndOfList) {
-                boolean isFreshList = (page == 1);
-                mHasRefreshedEmailFollowers = true;
+            public void onSuccess(List<Person> peopleList, int pageFetched, boolean endOfListEh) {
+                boolean freshListEh = (page == 1);
+                mRefreshedEmailFollowersEh = true;
                 mEmailFollowersLastFetchedPage = pageFetched;
-                mEmailFollowersEndOfListReached = isEndOfList;
-                PeopleTable.saveEmailFollowers(peopleList, site.getId(), isFreshList);
+                mEmailFollowersEndOfListReached = endOfListEh;
+                PeopleTable.saveEmailFollowers(peopleList, site.getId(), freshListEh);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFreshList, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, freshListEh, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -370,8 +370,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             public void onError() {
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFirstPage, false);
+                    boolean firstPageEh = page == 1;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, firstPageEh, false);
                 }
                 mEmailFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
@@ -392,15 +392,15 @@ public class PeopleManagementActivity extends AppCompatActivity
 
         PeopleUtils.fetchViewers(site, offset, new PeopleUtils.FetchViewersCallback() {
             @Override
-            public void onSuccess(List<Person> peopleList, boolean isEndOfList) {
-                boolean isFreshList = (offset == 0);
-                mHasRefreshedViewers = true;
-                mViewersEndOfListReached = isEndOfList;
-                PeopleTable.saveViewers(peopleList, site.getId(), isFreshList);
+            public void onSuccess(List<Person> peopleList, boolean endOfListEh) {
+                boolean freshListEh = (offset == 0);
+                mRefreshedViewersEh = true;
+                mViewersEndOfListReached = endOfListEh;
+                PeopleTable.saveViewers(peopleList, site.getId(), freshListEh);
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, isFreshList, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, freshListEh, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -411,8 +411,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             public void onError() {
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    boolean isFirstPage = offset == 0;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, isFirstPage, false);
+                    boolean firstPageEh = offset == 0;
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.VIEWERS, firstPageEh, false);
                 }
                 mViewersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
@@ -620,13 +620,13 @@ public class PeopleManagementActivity extends AppCompatActivity
 
     @Override
     public boolean onFetchFirstPage(PeopleListFilter filter) {
-        if (filter == PeopleListFilter.TEAM && !mHasRefreshedUsers) {
+        if (filter == PeopleListFilter.TEAM && !mRefreshedUsersEh) {
             return fetchUsersList(mSite, 0);
-        } else if (filter == PeopleListFilter.FOLLOWERS && !mHasRefreshedFollowers) {
+        } else if (filter == PeopleListFilter.FOLLOWERS && !mRefreshedFollowersEh) {
             return fetchFollowersList(mSite, 1);
-        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mHasRefreshedEmailFollowers) {
+        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mRefreshedEmailFollowersEh) {
             return fetchEmailFollowersList(mSite, 1);
-        } else if (filter == PeopleListFilter.VIEWERS && !mHasRefreshedViewers) {
+        } else if (filter == PeopleListFilter.VIEWERS && !mRefreshedViewersEh) {
             return fetchViewersList(mSite, 0);
         }
         return false;

@@ -225,12 +225,12 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
         // get title and content and draft switch
         String title = getIntent().getStringExtra(TITLE_PARAM);
         String content = getIntent().getStringExtra(CONTENT_PARAM);
-        boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
+        boolean localDraftEh = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         mEditorFragment.setTitle(title);
         mEditorFragment.setContent(content);
         mEditorFragment.setTitlePlaceholder(getIntent().getStringExtra(TITLE_PLACEHOLDER_PARAM));
         mEditorFragment.setContentPlaceholder(getIntent().getStringExtra(CONTENT_PLACEHOLDER_PARAM));
-        mEditorFragment.setLocalDraft(isLocalDraft);
+        mEditorFragment.setLocalDraft(localDraftEh);
     }
 
     @Override

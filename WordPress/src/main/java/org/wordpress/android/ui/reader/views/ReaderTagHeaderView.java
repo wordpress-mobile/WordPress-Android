@@ -57,9 +57,9 @@ public class ReaderTagHeaderView extends RelativeLayout {
     public void setCurrentTag(final ReaderTag tag) {
         if (tag == null) return;
 
-        boolean isTagChanged = !ReaderTag.isSameTag(tag, mCurrentTag);
+        boolean tagChangedEh = !ReaderTag.sameTagEh(tag, mCurrentTag);
 
-        if (isTagChanged) {
+        if (tagChangedEh) {
             mTxtAttribution.setText(null);
             mImageView.resetImage();
             mCurrentTag = tag;
@@ -69,9 +69,9 @@ public class ReaderTagHeaderView extends RelativeLayout {
         txtTagName.setText(tag.getLabel());
 
         // use cached info if it's available, otherwise request it if the tag has changed
-        if (mTagInfoCache.hasInfoForTag(tag)) {
+        if (mTagInfoCache.infoForTagEh(tag)) {
             setTagHeaderInfo(mTagInfoCache.getInfoForTag(tag));
-        } else if (isTagChanged) {
+        } else if (tagChangedEh) {
             getTagHeaderInfo();
         }
     }
@@ -83,14 +83,14 @@ public class ReaderTagHeaderView extends RelativeLayout {
         mImageView.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
 
         // show attribution line - author name when available, otherwise blog name or nothing
-        if (info.hasAuthorName()) {
+        if (info.authorNameEh()) {
             mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, info.getAuthorName()));
-        } else if (info.hasBlogName()) {
+        } else if (info.blogNameEh()) {
             mTxtAttribution.setText(getContext().getString(R.string.reader_photo_by, info.getBlogName()));
         }
 
         // show the source post when the attribution line is clicked
-        if (info.hasSourcePost()) {
+        if (info.sourcePostEh()) {
             mTxtAttribution.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -149,7 +149,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
         public ReaderTagHeaderInfo getInfoForTag(ReaderTag tag) {
             return this.get(getKeyForTag(tag));
         }
-        public boolean hasInfoForTag(ReaderTag tag) {
+        public boolean infoForTagEh(ReaderTag tag) {
             return this.containsKey(getKeyForTag(tag));
         }
         public void setInfoForTag(ReaderTag tag, ReaderTagHeaderInfo info) {

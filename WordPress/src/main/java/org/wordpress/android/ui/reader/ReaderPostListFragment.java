@@ -112,12 +112,12 @@ public class ReaderPostListFragment extends Fragment
 
     private int mRestorePosition;
 
-    private boolean mIsUpdating;
-    private boolean mWasPaused;
-    private boolean mHasUpdatedPosts;
-    private boolean mIsAnimatingOutNewPostsBar;
+    private boolean mUpdatingEh;
+    private boolean mPausedEh;
+    private boolean mUpdatedPostsEh;
+    private boolean mAnimatingOutNewPostsBarEh;
 
-    private static boolean mHasPurgedReaderDb;
+    private static boolean mPurgedReaderDbEh;
     private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
@@ -217,7 +217,7 @@ public class ReaderPostListFragment extends Fragment
             mCurrentFeedId = args.getLong(ReaderConstants.ARG_FEED_ID);
             mCurrentSearchQuery = args.getString(ReaderConstants.ARG_SEARCH_QUERY);
 
-            if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
+            if (getPostListType() == ReaderPostListType.TAG_PREVIEW && currentTagEh()) {
                 mTagPreviewHistory.push(getCurrentTagName());
             }
         }
@@ -249,8 +249,8 @@ public class ReaderPostListFragment extends Fragment
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
-            mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
-            mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
+            mPausedEh = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
+            mUpdatedPostsEh = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
         }
     }
@@ -258,7 +258,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
-        mWasPaused = true;
+        mPausedEh = true;
     }
 
     @Override
@@ -266,9 +266,9 @@ public class ReaderPostListFragment extends Fragment
         super.onResume();
         checkPostAdapter();
 
-        if (mWasPaused) {
+        if (mPausedEh) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
-            mWasPaused = false;
+            mPausedEh = false;
             if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                 resumeFollowedTag();
             } else {
@@ -315,7 +315,7 @@ public class ReaderPostListFragment extends Fragment
 
         // purge database and update followed tags/blog if necessary - note that we don't purge unless
         // there's a connection to avoid removing posts the user would expect to see offline
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.networkAvailableEh(getActivity())) {
             purgeDatabaseIfNeeded();
             updateFollowedTagsAndBlogsIfNeeded();
         }
@@ -334,9 +334,9 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
 
-            if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
-                mHasUpdatedPosts = true;
-                if (getPostListType().isTagType()) {
+            if (!mUpdatedPostsEh && NetworkUtils.networkAvailableEh(getActivity())) {
+                mUpdatedPostsEh = true;
+                if (getPostListType().tagTypeEh()) {
                     updateCurrentTagIfTime();
                 } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                     updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_NEWER);
@@ -353,7 +353,7 @@ public class ReaderPostListFragment extends Fragment
         mPostAdapter = null;
         mRecyclerView.setAdapter(null);
         mRecyclerView.setAdapter(getPostAdapter());
-        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
+        mRecyclerView.setSwipeToRefreshEnabled(swipeToRefreshSupportedEh());
     }
 
     @SuppressWarnings("unused")
@@ -364,7 +364,7 @@ public class ReaderPostListFragment extends Fragment
 
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
-            if (isPostAdapterEmpty()) {
+            if (postAdapterEmptyEh()) {
                 updateCurrentTag();
             }
         }
@@ -374,8 +374,8 @@ public class ReaderPostListFragment extends Fragment
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
         // refresh posts if user is viewing "Followed Sites"
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                && hasCurrentTag()
-                && getCurrentTag().isFollowedSites()) {
+                && currentTagEh()
+                && getCurrentTag().followedSitesEh()) {
             refreshPosts();
         }
     }
@@ -394,8 +394,8 @@ public class ReaderPostListFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putLong(ReaderConstants.ARG_FEED_ID, mCurrentFeedId);
         outState.putString(ReaderConstants.ARG_SEARCH_QUERY, mCurrentSearchQuery);
-        outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
-        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
+        outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mPausedEh);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mUpdatedPostsEh);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
@@ -404,7 +404,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private int getCurrentPosition() {
-        if (mRecyclerView != null && hasPostAdapter()) {
+        if (mRecyclerView != null && postAdapterEh()) {
             return mRecyclerView.getCurrentPosition();
         } else {
             return -1;
@@ -477,7 +477,7 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public FilterCriteria onRecallSelection() {
-                if (hasCurrentTag()) {
+                if (currentTagEh()) {
                     return getCurrentTag();
                 } else {
                     AppLog.w(T.READER, "reader post list > no current tag in onRecallSelection");
@@ -521,7 +521,7 @@ public class ReaderPostListFragment extends Fragment
             setupRecyclerToolbar();
         }
 
-        mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
+        mRecyclerView.setSwipeToRefreshEnabled(swipeToRefreshSupportedEh());
 
         // bar that appears at top after new posts are loaded
         mNewPostsBar = rootView.findViewById(R.id.layout_new_posts);
@@ -713,11 +713,11 @@ public class ReaderPostListFragment extends Fragment
     /*
      * is the search input showing?
      */
-    private boolean isSearchViewExpanded() {
+    private boolean searchViewExpandedEh() {
         return mSearchView != null && !mSearchView.isIconified();
     }
 
-    private boolean isSearchViewEmpty() {
+    private boolean searchViewEmptyEh() {
         return mSearchView != null && mSearchView.getQuery().length() == 0;
     }
 
@@ -752,26 +752,26 @@ public class ReaderPostListFragment extends Fragment
      */
     private void toggleFollowStatusForPost(final ReaderPost post) {
         if (post == null
-                || !hasPostAdapter()
+                || !postAdapterEh()
                 || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(post);
+        final boolean askingToFollowEh = !ReaderPostTable.postFollowedEh(post);
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (isAdded() && !succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    int resId = (askingToFollowEh ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
-                    getPostAdapter().setFollowStatusForBlog(post.blogId, !isAskingToFollow);
+                    getPostAdapter().setFollowStatusForBlog(post.blogId, !askingToFollowEh);
                 }
             }
         };
 
-        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
-            getPostAdapter().setFollowStatusForBlog(post.blogId, isAskingToFollow);
+        if (ReaderBlogActions.followBlogForPost(post, askingToFollowEh, actionListener)) {
+            getPostAdapter().setFollowStatusForBlog(post.blogId, askingToFollowEh);
         }
     }
 
@@ -782,7 +782,7 @@ public class ReaderPostListFragment extends Fragment
     private void blockBlogForPost(final ReaderPost post) {
         if (post == null
                 || !isAdded()
-                || !hasPostAdapter()
+                || !postAdapterEh()
                 || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -821,7 +821,7 @@ public class ReaderPostListFragment extends Fragment
      * box/pages animation that appears when loading an empty list
      */
     private boolean shouldShowBoxAndPagesAnimation() {
-        return getPostListType().isTagType();
+        return getPostListType().tagTypeEh();
     }
 
     private void startBoxAndPagesAnimation() {
@@ -842,26 +842,26 @@ public class ReaderPostListFragment extends Fragment
         String title;
         String description = null;
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             title = getString(R.string.reader_empty_posts_no_connection);
         } else if (requestFailed) {
             title = getString(R.string.reader_empty_posts_request_failed);
-        } else if (isUpdating() && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+        } else if (updatingEh() && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             title = getString(R.string.reader_empty_posts_in_tag_updating);
         } else {
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
-                    if (getCurrentTag().isFollowedSites()) {
-                        if (ReaderBlogTable.hasFollowedBlogs()) {
+                    if (getCurrentTag().followedSitesEh()) {
+                        if (ReaderBlogTable.followedBlogsEh()) {
                             title = getString(R.string.reader_empty_followed_blogs_no_recent_posts_title);
                             description = getString(R.string.reader_empty_followed_blogs_no_recent_posts_description);
                         } else {
                             title = getString(R.string.reader_empty_followed_blogs_title);
                             description = getString(R.string.reader_empty_followed_blogs_description);
                         }
-                    } else if (getCurrentTag().isPostsILike()) {
+                    } else if (getCurrentTag().postsILikeEh()) {
                         title = getString(R.string.reader_empty_posts_liked);
-                    } else if (getCurrentTag().isListTopic()) {
+                    } else if (getCurrentTag().listTopicEh()) {
                         title = getString(R.string.reader_empty_posts_in_custom_list);
                     } else {
                         title = getString(R.string.reader_empty_posts_in_tag);
@@ -873,9 +873,9 @@ public class ReaderPostListFragment extends Fragment
                     break;
 
                 case SEARCH_RESULTS:
-                    if (isSearchViewEmpty() || TextUtils.isEmpty(mCurrentSearchQuery)) {
+                    if (searchViewEmptyEh() || TextUtils.isEmpty(mCurrentSearchQuery)) {
                         title = getString(R.string.reader_label_post_search_explainer);
-                    } else if (isUpdating()) {
+                    } else if (updatingEh()) {
                         title = getString(R.string.reader_label_post_search_running);
                     } else {
                         title = getString(R.string.reader_empty_posts_in_search_title);
@@ -960,7 +960,7 @@ public class ReaderPostListFragment extends Fragment
         @Override
         public void onRequestData() {
             // skip if update is already in progress
-            if (isUpdating()) {
+            if (updatingEh()) {
                 return;
             }
 
@@ -1012,7 +1012,7 @@ public class ReaderPostListFragment extends Fragment
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
-            if (getPostListType().isTagType()) {
+            if (getPostListType().tagTypeEh()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
@@ -1024,18 +1024,18 @@ public class ReaderPostListFragment extends Fragment
         return mPostAdapter;
     }
 
-    private boolean hasPostAdapter() {
+    private boolean postAdapterEh() {
         return (mPostAdapter != null);
     }
 
-    private boolean isPostAdapterEmpty() {
+    private boolean postAdapterEmptyEh() {
         return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
-    private boolean isCurrentTag(final ReaderTag tag) {
-        return ReaderTag.isSameTag(tag, mCurrentTag);
+    private boolean currentTagEh(final ReaderTag tag) {
+        return ReaderTag.sameTagEh(tag, mCurrentTag);
     }
-    private boolean isCurrentTagName(String tagName) {
+    private boolean currentTagNameEh(String tagName) {
         return (tagName != null && tagName.equalsIgnoreCase(getCurrentTagName()));
     }
 
@@ -1047,7 +1047,7 @@ public class ReaderPostListFragment extends Fragment
         return (mCurrentTag != null ? mCurrentTag.getTagSlug() : "");
     }
 
-    private boolean hasCurrentTag() {
+    private boolean currentTagEh() {
         return mCurrentTag != null;
     }
 
@@ -1057,9 +1057,9 @@ public class ReaderPostListFragment extends Fragment
         }
 
         // skip if this is already the current tag and the post adapter is already showing it
-        if (isCurrentTag(tag)
-                && hasPostAdapter()
-                && getPostAdapter().isCurrentTag(tag)) {
+        if (currentTagEh(tag)
+                && postAdapterEh()
+                && getPostAdapter().currentTagEh(tag)) {
             return;
         }
 
@@ -1088,7 +1088,7 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public boolean onActivityBackPressed() {
-        if (isSearchViewExpanded()) {
+        if (searchViewExpandedEh()) {
             mSearchMenuItem.collapseActionView();
             return true;
         } else if (goBackInTagHistory()) {
@@ -1109,7 +1109,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         String tagName = mTagPreviewHistory.pop();
-        if (isCurrentTagName(tagName)) {
+        if (currentTagNameEh(tagName)) {
             if (mTagPreviewHistory.empty()) {
                 return false;
             }
@@ -1134,7 +1134,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void refreshPosts() {
         hideNewPostsBar();
-        if (hasPostAdapter()) {
+        if (postAdapterEh()) {
             getPostAdapter().refresh();
         }
     }
@@ -1144,7 +1144,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void reloadPosts() {
         hideNewPostsBar();
-        if (hasPostAdapter()) {
+        if (postAdapterEh()) {
             getPostAdapter().reload();
         }
     }
@@ -1162,7 +1162,7 @@ public class ReaderPostListFragment extends Fragment
      * get posts for the current blog from the server
      */
     private void updatePostsInCurrentBlogOrFeed(final UpdateAction updateAction) {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled blog update");
             return;
         }
@@ -1186,13 +1186,13 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded()) return;
 
         setIsUpdating(false, event.getAction());
-        if (event.getReaderTag() != null && !isCurrentTag(event.getReaderTag())) {
+        if (event.getReaderTag() != null && !currentTagEh(event.getReaderTag())) {
             return;
         }
 
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
-        if (isSearchViewExpanded()
+        if (searchViewExpandedEh()
                 || getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
@@ -1204,10 +1204,10 @@ public class ReaderPostListFragment extends Fragment
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
                 && event.getAction() == UpdateAction.REQUEST_NEWER
                 && getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                && !isPostAdapterEmpty()
-                && (!isAdded() || !mRecyclerView.isFirstItemVisible())) {
+                && !postAdapterEmptyEh()
+                && (!isAdded() || !mRecyclerView.firstItemVisibleEh())) {
             showNewPostsBar();
-        } else if (event.getResult().isNewOrChanged()) {
+        } else if (event.getResult().newOrChangedEh()) {
             refreshPosts();
         } else {
             boolean requestFailed = (event.getResult() == ReaderActions.UpdateResult.FAILED);
@@ -1227,7 +1227,7 @@ public class ReaderPostListFragment extends Fragment
     private void updatePostsWithTag(ReaderTag tag, UpdateAction updateAction) {
         if (!isAdded()) return;
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
             return;
         }
@@ -1249,7 +1249,7 @@ public class ReaderPostListFragment extends Fragment
      * resumed, which on slower devices can result in a janky experience
      */
     private void updateCurrentTagIfTime() {
-        if (!isAdded() || !hasCurrentTag()) {
+        if (!isAdded() || !currentTagEh()) {
             return;
         }
         new Thread() {
@@ -1267,8 +1267,8 @@ public class ReaderPostListFragment extends Fragment
         }.start();
     }
 
-    private boolean isUpdating() {
-        return mIsUpdating;
+    private boolean updatingEh() {
+        return mUpdatingEh;
     }
 
     /*
@@ -1285,27 +1285,27 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private void setIsUpdating(boolean isUpdating, UpdateAction updateAction) {
-        if (!isAdded() || mIsUpdating == isUpdating) {
+    private void setIsUpdating(boolean updatingEh, UpdateAction updateAction) {
+        if (!isAdded() || mUpdatingEh == updatingEh) {
             return;
         }
 
         if (updateAction == UpdateAction.REQUEST_OLDER) {
             // show/hide progress bar at bottom if these are older posts
-            showLoadingProgress(isUpdating);
-        } else if (isUpdating && isPostAdapterEmpty()) {
+            showLoadingProgress(updatingEh);
+        } else if (updatingEh && postAdapterEmptyEh()) {
             // show swipe-to-refresh if update started and no posts are showing
             mRecyclerView.setRefreshing(true);
-        } else if (!isUpdating) {
+        } else if (!updatingEh) {
             // hide swipe-to-refresh progress if update is complete
             mRecyclerView.setRefreshing(false);
         }
-        mIsUpdating = isUpdating;
+        mUpdatingEh = updatingEh;
 
         // if swipe-to-refresh isn't active, keep it disabled during an update - this prevents
         // doing a refresh while another update is already in progress
-        if (mRecyclerView != null && !mRecyclerView.isRefreshing()) {
-            mRecyclerView.setSwipeToRefreshEnabled(!isUpdating && isSwipeToRefreshSupported());
+        if (mRecyclerView != null && !mRecyclerView.refreshingEh()) {
+            mRecyclerView.setSwipeToRefreshEnabled(!updatingEh && swipeToRefreshSupportedEh());
         }
     }
 
@@ -1313,14 +1313,14 @@ public class ReaderPostListFragment extends Fragment
      * swipe-to-refresh isn't supported for search results since they're really brief snapshots
      * and are unlikely to show new posts due to the way they're sorted
      */
-    private boolean isSwipeToRefreshSupported() {
+    private boolean swipeToRefreshSupportedEh() {
         return getPostListType() != ReaderPostListType.SEARCH_RESULTS;
     }
 
     /*
      * bar that appears at the top when new posts have been retrieved
      */
-    private boolean isNewPostsBarShowing() {
+    private boolean newPostsBarShowingEh() {
         return (mNewPostsBar != null && mNewPostsBar.getVisibility() == View.VISIBLE);
     }
 
@@ -1337,7 +1337,7 @@ public class ReaderPostListFragment extends Fragment
     };
 
     private void showNewPostsBar() {
-        if (!isAdded() || isNewPostsBarShowing()) {
+        if (!isAdded() || newPostsBarShowingEh()) {
             return;
         }
 
@@ -1350,7 +1350,7 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isAdded() && isNewPostsBarShowing()) {
+                if (isAdded() && newPostsBarShowingEh()) {
                     mRecyclerView.addOnScrollListener(mOnScrollListener);
                 }
             }
@@ -1361,11 +1361,11 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void hideNewPostsBar() {
-        if (!isAdded() || !isNewPostsBarShowing() || mIsAnimatingOutNewPostsBar) {
+        if (!isAdded() || !newPostsBarShowingEh() || mAnimatingOutNewPostsBarEh) {
             return;
         }
 
-        mIsAnimatingOutNewPostsBar = true;
+        mAnimatingOutNewPostsBarEh = true;
 
         // remove the onScrollListener assigned in showNewPostsBar()
         mRecyclerView.removeOnScrollListener(mOnScrollListener);
@@ -1377,7 +1377,7 @@ public class ReaderPostListFragment extends Fragment
             public void onAnimationEnd(Animation animation) {
                 if (isAdded()) {
                     mNewPostsBar.setVisibility(View.GONE);
-                    mIsAnimatingOutNewPostsBar = false;
+                    mAnimatingOutNewPostsBarEh = false;
                 }
             }
             @Override
@@ -1402,7 +1402,7 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded() || post == null) return;
 
         // "discover" posts that highlight another post should open the original (source) post when tapped
-        if (post.isDiscoverPost()) {
+        if (post.discoverPostEh()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
             if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
                 if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
@@ -1411,7 +1411,7 @@ public class ReaderPostListFragment extends Fragment
                             discoverData.getBlogId(),
                             discoverData.getPostId());
                     return;
-                } else if (discoverData.hasPermalink()) {
+                } else if (discoverData.permalinkEh()) {
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
                     ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
@@ -1421,7 +1421,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         // if this is a cross-post, we want to show the original post
-        if (post.isXpost()) {
+        if (post.xpostEh()) {
             ReaderActivityLauncher.showReaderPostDetail(getActivity(), post.xpostBlogId, post.xpostPostId);
             return;
         }
@@ -1455,7 +1455,7 @@ public class ReaderPostListFragment extends Fragment
      * called when user selects a tag from the tag toolbar
      */
     private void onTagChanged(ReaderTag tag) {
-        if (!isAdded() || isCurrentTag(tag)) return;
+        if (!isAdded() || currentTagEh(tag)) return;
 
         trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
@@ -1465,11 +1465,11 @@ public class ReaderPostListFragment extends Fragment
     private void trackTagLoaded(ReaderTag tag) {
         AnalyticsTracker.Stat stat = null;
 
-        if (tag.isDiscover()) {
+        if (tag.discoverEh()) {
             stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
-        } else if (tag.isTagTopic()) {
+        } else if (tag.tagTopicEh()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
-        } else if (tag.isListTopic()) {
+        } else if (tag.listTopicEh()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
         }
 
@@ -1495,8 +1495,8 @@ public class ReaderPostListFragment extends Fragment
         listPopup.setModal(true);
 
         List<Integer> menuItems = new ArrayList<>();
-        boolean isFollowed = ReaderPostTable.isPostFollowed(post);
-        if (isFollowed) {
+        boolean followedEh = ReaderPostTable.postFollowedEh(post);
+        if (followedEh) {
             menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
         } else {
             menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
@@ -1529,9 +1529,9 @@ public class ReaderPostListFragment extends Fragment
      * purge reader db if it hasn't been done yet
      */
     private void purgeDatabaseIfNeeded() {
-        if (!mHasPurgedReaderDb) {
+        if (!mPurgedReaderDbEh) {
             AppLog.d(T.READER, "reader post list > purging database");
-            mHasPurgedReaderDb = true;
+            mPurgedReaderDbEh = true;
             ReaderDatabase.purgeAsync();
         }
     }
@@ -1582,7 +1582,7 @@ public class ReaderPostListFragment extends Fragment
 
         @Override
         protected void onPostExecute(ReaderTagList tagList) {
-            if (tagList != null && !tagList.isSameList(mTags)) {
+            if (tagList != null && !tagList.sameListEh(mTags)) {
                 mTags.clear();
                 mTags.addAll(tagList);
                 if (mFilterCriteriaLoaderListener != null)

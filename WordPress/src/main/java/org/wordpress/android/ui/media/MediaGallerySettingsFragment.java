@@ -39,7 +39,7 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
 
     private GalleryType mType;
     private int mNumColumns;
-    private boolean mIsRandomOrder;
+    private boolean mRandomOrderEh;
 
     private View mNumColumnsContainer;
     private View mHeader;
@@ -109,7 +109,7 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
         mAllowCheckChanged = true;
         mType = GalleryType.DEFAULT;
         mNumColumns = DEFAULT_THUMBNAIL_COLUMN_COUNT;
-        mIsRandomOrder = false;
+        mRandomOrderEh = false;
 
         restoreState(savedInstanceState);
 
@@ -149,7 +149,7 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
         mSlideshowCheckbox.setOnCheckedChangeListener(this);
 
         mRandomOrderCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_random_checkbox);
-        mRandomOrderCheckbox.setChecked(mIsRandomOrder);
+        mRandomOrderCheckbox.setChecked(mRandomOrderEh);
         mRandomOrderCheckbox.setOnCheckedChangeListener(this);
 
         Button reverseButton = (Button) view.findViewById(R.id.media_gallery_settings_reverse_button);
@@ -170,14 +170,14 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
         mNumColumns = savedInstanceState.getInt(STATE_NUM_COLUMNS);
         int galleryTypeOrdinal = savedInstanceState.getInt(STATE_GALLERY_TYPE_ORD);
         mType = GalleryType.values()[galleryTypeOrdinal];
-        mIsRandomOrder = savedInstanceState.getBoolean(STATE_RANDOM_ORDER);
+        mRandomOrderEh = savedInstanceState.getBoolean(STATE_RANDOM_ORDER);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_NUM_COLUMNS, mNumColumns);
-        outState.putBoolean(STATE_RANDOM_ORDER, mIsRandomOrder);
+        outState.putBoolean(STATE_RANDOM_ORDER, mRandomOrderEh);
         outState.putInt(STATE_GALLERY_TYPE_ORD, mType.ordinal());
     }
 
@@ -232,7 +232,7 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
             mSlideshowCheckbox.setChecked(true);
         } else if (i == R.id.media_gallery_random_checkbox) {
             numColumnsContainerVisible = mNumColumnsContainer.getVisibility();
-            mIsRandomOrder = checked;
+            mRandomOrderEh = checked;
         }
 
         mNumColumnsContainer.setVisibility(numColumnsContainerVisible);
@@ -325,12 +325,12 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
     }
 
     public void setRandom(boolean random) {
-        mIsRandomOrder = random;
-        mRandomOrderCheckbox.setChecked(mIsRandomOrder);
+        mRandomOrderEh = random;
+        mRandomOrderCheckbox.setChecked(mRandomOrderEh);
     }
 
-    public boolean isRandom() {
-        return mIsRandomOrder;
+    public boolean randomEh() {
+        return mRandomOrderEh;
     }
 
     public void setType(String type) {

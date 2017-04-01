@@ -41,14 +41,14 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     public static void openTheme(Activity activity, SiteModel site, String themeId, ThemeWebActivityType type,
-                                 boolean isCurrentTheme) {
+                                 boolean currentThemeEh) {
         Theme currentTheme = WordPress.wpDB.getTheme(String.valueOf(site.getSiteId()), themeId);
         if (currentTheme == null) {
             ToastUtils.showToast(activity, R.string.could_not_load_theme);
             return;
         }
 
-        String url = getUrl(site, currentTheme, type, currentTheme.isPremium());
+        String url = getUrl(site, currentTheme, type, currentTheme.premiumEh());
 
         if (type == ThemeWebActivityType.PREVIEW) {
             // Do not open the Customizer with the in-app browser.
@@ -57,7 +57,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/4934
             ActivityLauncher.openUrlExternal(activity, url);
         } else {
-            openWPCOMURL(activity, url, currentTheme, site, isCurrentTheme);
+            openWPCOMURL(activity, url, currentTheme, site, currentThemeEh);
         }
     }
 
@@ -100,7 +100,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     private static void openWPCOMURL(Activity activity, String url, Theme currentTheme, SiteModel site, Boolean
-            isCurrentTheme) {
+            currentThemeEh) {
         if (activity == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -119,18 +119,18 @@ public class ThemeWebActivity extends WPWebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.USE_GLOBAL_WPCOM_USER, true);
-        intent.putExtra(IS_PREMIUM_THEME, currentTheme.isPremium());
-        intent.putExtra(IS_CURRENT_THEME, isCurrentTheme);
+        intent.putExtra(IS_PREMIUM_THEME, currentTheme.premiumEh());
+        intent.putExtra(IS_CURRENT_THEME, currentThemeEh);
         intent.putExtra(THEME_NAME, currentTheme.getName());
         intent.putExtra(ThemeBrowserActivity.THEME_ID, currentTheme.getId());
 
         activity.startActivityForResult(intent, ThemeBrowserActivity.ACTIVATE_THEME);
     }
 
-    public static String getUrl(SiteModel site, Theme theme, ThemeWebActivityType type, boolean isPremium) {
+    public static String getUrl(SiteModel site, Theme theme, ThemeWebActivityType type, boolean premiumEh) {
         String url = "";
         String homeURL = site.getUrl();
-        String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
+        String domain = premiumEh ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
 
         switch (type) {
             case PREVIEW:
@@ -163,9 +163,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.theme_web, menu);
         Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
-        Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
+        Boolean currentThemeEh = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);
 
-        if (isPremiumTheme || isCurrentTheme) {
+        if (isPremiumTheme || currentThemeEh) {
             menu.findItem(R.id.action_activate).setVisible(false);
         }
 

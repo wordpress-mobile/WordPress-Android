@@ -63,9 +63,9 @@ public class UserNoteBlock extends NoteBlock {
 
 
         String linkedText = null;
-        if (hasUserUrlAndTitle()) {
+        if (userUrlAndTitleEh()) {
             linkedText = getUserBlogTitle();
-        } else if (hasUserUrl()) {
+        } else if (userUrlEh()) {
             linkedText = getUserUrl();
         }
 
@@ -76,14 +76,14 @@ public class UserNoteBlock extends NoteBlock {
             noteBlockHolder.urlTextView.setVisibility(View.GONE);
         }
 
-        if (hasUserBlogTagline()) {
+        if (userBlogTaglineEh()) {
             noteBlockHolder.taglineTextView.setText(getUserBlogTagline());
             noteBlockHolder.taglineTextView.setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.taglineTextView.setVisibility(View.GONE);
         }
 
-        if (hasImageMediaItem()) {
+        if (imageMediaItemEh()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
@@ -143,15 +143,15 @@ public class UserNoteBlock extends NoteBlock {
         return JSONUtils.queryJSON(getNoteData(), "meta.titles.tagline", "");
     }
 
-    private boolean hasUserUrl() {
+    private boolean userUrlEh() {
         return !TextUtils.isEmpty(getUserUrl());
     }
 
-    private boolean hasUserUrlAndTitle() {
-        return hasUserUrl() && !TextUtils.isEmpty(getUserBlogTitle());
+    private boolean userUrlAndTitleEh() {
+        return userUrlEh() && !TextUtils.isEmpty(getUserBlogTitle());
     }
 
-    private boolean hasUserBlogTagline() {
+    private boolean userBlogTaglineEh() {
         return !TextUtils.isEmpty(getUserBlogTagline());
     }
 

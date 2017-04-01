@@ -117,7 +117,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         // if this is a YouTube video we can determine the thumbnail url from the passed url,
         // otherwise check if we've already cached the thumbnail url for this video
         String thumbnailUrl;
-        if (ReaderVideoUtils.isYouTubeVideoLink(videoUrl)) {
+        if (ReaderVideoUtils.youTubeVideoLinkEh(videoUrl)) {
             thumbnailUrl = ReaderVideoUtils.getYouTubeThumbnailUrl(videoUrl);
         } else {
             thumbnailUrl = ReaderThumbnailTable.getThumbnailUrl(videoUrl);
@@ -127,9 +127,9 @@ public class WPNetworkImageView extends AppCompatImageView {
             return;
         }
 
-        if (MediaUtils.isValidImage(videoUrl)) {
+        if (MediaUtils.validImageEh(videoUrl)) {
             setImageUrl(videoUrl, ImageType.VIDEO);
-        } else if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
+        } else if (ReaderVideoUtils.vimeoLinkEh(videoUrl)) {
             // vimeo videos require network request to get thumbnail
             showDefaultImage();
             ReaderVideoUtils.requestVimeoThumbnail(videoUrl, new ReaderVideoUtils.VideoThumbnailListener() {
@@ -149,9 +149,9 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     /**
      * Loads the image for the view if it isn't already loaded.
-     * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
+     * @param inLayoutPassEh True if this was invoked from a layout pass, false otherwise.
      */
-    private void loadImageIfNecessary(final boolean isInLayoutPass,
+    private void loadImageIfNecessary(final boolean inLayoutPassEh,
                                       final ImageLoadListener imageLoadListener) {
         // do nothing if image type hasn't been set yet
         if (mImageType == ImageType.NONE) {
@@ -195,7 +195,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(mUrl,
-                new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), 0, 0, getScaleType());
+                new WPNetworkImageLoaderListener(mUrl, inLayoutPassEh, imageLoadListener), 0, 0, getScaleType());
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
     }
@@ -212,13 +212,13 @@ public class WPNetworkImageView extends AppCompatImageView {
     private class WPNetworkImageLoaderListener implements ImageLoader.ImageListener {
         private final String mRequestedURL;
         private final ImageLoadListener mImageLoadListener;
-        private final boolean mIsInLayoutPass;
+        private final boolean mInLayoutPassEh;
 
         WPNetworkImageLoaderListener(final String requestedURL,
-                                     final boolean isInLayoutPass,
+                                     final boolean inLayoutPassEh,
                                      final ImageLoadListener imageLoadListener) {
             mRequestedURL = requestedURL;
-            mIsInLayoutPass = isInLayoutPass;
+            mInLayoutPassEh = inLayoutPassEh;
             mImageLoadListener = imageLoadListener;
         }
 
@@ -242,7 +242,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
 
         @Override
-        public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
+        public void onResponse(final ImageLoader.ImageContainer response, boolean immediateEh) {
             if (mUrl == null || !mUrl.equals(mRequestedURL)) {
                 AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > request no longer valid: " + mRequestedURL);
                 return;
@@ -251,7 +251,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             // pass do not set the image immediately as it will trigger a requestLayout
             // inside of a layout. Instead, defer setting the image by posting back to
             // the main thread.
-            if (isImmediate && mIsInLayoutPass) {
+            if (immediateEh && mInLayoutPassEh) {
                 post(new Runnable() {
                     @Override
                     public void run() {
@@ -260,7 +260,7 @@ public class WPNetworkImageView extends AppCompatImageView {
                 });
                 return;
             }
-            handleResponse(response, isImmediate, mImageLoadListener);
+            handleResponse(response, immediateEh, mImageLoadListener);
         }
     }
 
@@ -269,7 +269,7 @@ public class WPNetworkImageView extends AppCompatImageView {
                 || imageType == ImageType.VIDEO;
     }
 
-    private void handleResponse(ImageLoader.ImageContainer response, boolean isCached, ImageLoadListener
+    private void handleResponse(ImageLoader.ImageContainer response, boolean cachedEh, ImageLoadListener
             imageLoadListener) {
         if (response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
@@ -295,7 +295,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             setImageBitmap(bitmap);
 
             // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
-            if (!isCached && canFadeInImageType(mImageType)) {
+            if (!cachedEh && canFadeInImageType(mImageType)) {
                 fadeIn();
             }
         } else {

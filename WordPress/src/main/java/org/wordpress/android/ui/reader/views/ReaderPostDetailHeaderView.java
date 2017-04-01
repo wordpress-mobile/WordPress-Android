@@ -49,16 +49,16 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         mFollowButton = (ReaderFollowButton) view.findViewById(R.id.header_follow_button);
     }
 
-    public void setPost(@NonNull ReaderPost post, boolean isSignedInWPCom) {
+    public void setPost(@NonNull ReaderPost post, boolean signedInWPComEh) {
         mPost = post;
 
         TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
         TextView txtSubtitle = (TextView) findViewById(R.id.text_header_subtitle);
 
-        boolean hasBlogName = mPost.hasBlogName();
-        boolean hasAuthorName = mPost.hasAuthorName();
+        boolean blogNameEh = mPost.blogNameEh();
+        boolean authorNameEh = mPost.authorNameEh();
 
-        if (hasBlogName && hasAuthorName) {
+        if (blogNameEh && authorNameEh) {
             // don't show author name if it's the same as the blog name
             if (mPost.getAuthorName().equals(mPost.getBlogName())) {
                 txtTitle.setText(mPost.getAuthorName());
@@ -67,10 +67,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 txtTitle.setText(mPost.getAuthorName());
                 txtSubtitle.setText(mPost.getBlogName());
             }
-        } else if (hasBlogName) {
+        } else if (blogNameEh) {
             txtTitle.setText(mPost.getBlogName());
             txtSubtitle.setVisibility(View.GONE);
-        } else if (hasAuthorName) {
+        } else if (authorNameEh) {
             txtTitle.setText(mPost.getAuthorName());
             txtSubtitle.setVisibility(View.GONE);
         } else {
@@ -87,9 +87,9 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             txtSubtitle.setTextColor(color);
         }
 
-        if (isSignedInWPCom) {
+        if (signedInWPComEh) {
             mFollowButton.setVisibility(View.VISIBLE);
-            mFollowButton.setIsFollowed(mPost.isFollowedByCurrentUser);
+            mFollowButton.setIsFollowed(mPost.followedByCurrentUserEh);
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,8 +104,8 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     }
 
     private void showBlavatarAndAvatar(String blavatarUrl, String avatarUrl) {
-        boolean hasBlavatar = !TextUtils.isEmpty(blavatarUrl);
-        boolean hasAvatar = !TextUtils.isEmpty(avatarUrl);
+        boolean blavatarEh = !TextUtils.isEmpty(blavatarUrl);
+        boolean avatarEh = !TextUtils.isEmpty(avatarUrl);
 
         AppLog.w(AppLog.T.READER, avatarUrl);
 
@@ -121,7 +121,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
          *  - if there's only an avatar, show it the full size of the parent frame and hide the blavatar
          *  - if there's neither a blavatar nor an avatar, hide them both
          */
-        if (hasBlavatar && hasAvatar) {
+        if (blavatarEh && avatarEh) {
             int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
             imgBlavatar.getLayoutParams().height = blavatarSz;
             imgBlavatar.getLayoutParams().width = blavatarSz;
@@ -137,7 +137,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                     GravatarUtils.fixGravatarUrl(avatarUrl, avatarSz),
                     WPNetworkImageView.ImageType.AVATAR);
             imgAvatar.setVisibility(View.VISIBLE);
-        } else if (hasBlavatar) {
+        } else if (blavatarEh) {
             imgBlavatar.getLayoutParams().height = frameSize;
             imgBlavatar.getLayoutParams().width = frameSize;
             imgBlavatar.setImageUrl(
@@ -146,7 +146,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             imgBlavatar.setVisibility(View.VISIBLE);
 
             imgAvatar.setVisibility(View.GONE);
-        } else if (hasAvatar) {
+        } else if (avatarEh) {
             imgBlavatar.setVisibility(View.GONE);
 
             imgAvatar.getLayoutParams().height = frameSize;
@@ -161,7 +161,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         }
 
         // hide the frame if there's neither a blavatar nor an avatar
-        avatarFrame.setVisibility(hasAvatar || hasBlavatar ? View.VISIBLE : View.GONE);
+        avatarFrame.setVisibility(avatarEh || blavatarEh ? View.VISIBLE : View.GONE);
 
         if (mEnableBlogPreview) {
             imgBlavatar.setOnClickListener(mClickListener);
@@ -184,7 +184,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     private void toggleFollowStatus() {
         if (!NetworkUtils.checkConnection(getContext())) return;
 
-        final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
+        final boolean askingToFollowEh = !mPost.followedByCurrentUserEh;
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
@@ -193,11 +193,11 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
                 mFollowButton.setEnabled(true);
                 if (succeeded) {
-                    mPost.isFollowedByCurrentUser = isAskingToFollow;
+                    mPost.followedByCurrentUserEh = askingToFollowEh;
                 } else {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    int errResId = askingToFollowEh ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
-                    mFollowButton.setIsFollowed(!isAskingToFollow);
+                    mFollowButton.setIsFollowed(!askingToFollowEh);
                 }
             }
         };
@@ -206,14 +206,14 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         mFollowButton.setEnabled(false);
 
         boolean result;
-        if (mPost.isExternal) {
-            result = ReaderBlogActions.followFeedById(mPost.feedId, isAskingToFollow, listener);
+        if (mPost.externalEh) {
+            result = ReaderBlogActions.followFeedById(mPost.feedId, askingToFollowEh, listener);
         } else {
-            result = ReaderBlogActions.followBlogById(mPost.blogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(mPost.blogId, askingToFollowEh, listener);
         }
 
         if (result) {
-            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+            mFollowButton.setIsFollowedAnimated(askingToFollowEh);
         }
     }
 }

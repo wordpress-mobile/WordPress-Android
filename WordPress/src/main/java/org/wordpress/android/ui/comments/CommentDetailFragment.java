@@ -129,7 +129,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnTrashCommentText;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
-    private boolean mIsUsersBlog = false;
+    private boolean mUsersBlogEh = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
     private long mCommentIdToFetch;
@@ -140,7 +140,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
 
-    private boolean mIsSubmittingReply = false;
+    private boolean mSubmittingReplyEh = false;
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
     private OnCommentChangeListener mOnCommentChangeListener;
     private OnPostClickListener mOnPostClickListener;
@@ -379,7 +379,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded() || mSite == null || !SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (!isAdded() || mSite == null || !SiteUtils.accessibleViaWPComAPIEh(mSite)) {
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
@@ -413,7 +413,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
-        mIsUsersBlog = (comment != null && site != null);
+        mUsersBlogEh = (comment != null && site != null);
 
         if (isAdded()) {
             showComment();
@@ -688,7 +688,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * displays the passed post title for the current comment, updates stored title if one doesn't exist
      */
-    private void setPostTitle(TextView txtTitle, String postTitle, boolean isHyperlink) {
+    private void setPostTitle(TextView txtTitle, String postTitle, boolean hyperlinkEh) {
         if (txtTitle == null || !isAdded()) {
             return;
         }
@@ -704,7 +704,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // display "on [Post Title]..."
-        if (isHyperlink) {
+        if (hyperlinkEh) {
             String html = getString(R.string.on)
                     + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.reader_hyperlink) + ">"
                     + postTitle.trim()
@@ -730,23 +730,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
-        boolean canRequestPost = SiteUtils.isAccessibleViaWPComAPI(site) && mAccountStore.hasAccessToken();
+        boolean canRequestPost = SiteUtils.accessibleViaWPComAPIEh(site) && mAccountStore.hasAccessToken();
 
         final String title;
-        final boolean hasTitle;
+        final boolean titleEh;
         if (mComment.getPostTitle() != null) {
             // use comment's stored post title if available
             title = mComment.getPostTitle();
-            hasTitle = true;
+            titleEh = true;
         } else if (postExists) {
             // use title from post if available
             title = ReaderPostTable.getPostTitle(site.getSiteId(), postId);
-            hasTitle = !TextUtils.isEmpty(title);
+            titleEh = !TextUtils.isEmpty(title);
         } else {
             title = null;
-            hasTitle = false;
+            titleEh = false;
         }
-        if (hasTitle) {
+        if (titleEh) {
             setPostTitle(txtPostTitle, title, canRequestPost);
         } else if (canRequestPost) {
             txtPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
@@ -765,7 +765,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         if (!isAdded()) return;
 
                         // update title if it wasn't set above
-                        if (!hasTitle) {
+                        if (!titleEh) {
                             String postTitle = ReaderPostTable.getPostTitle(site.getSiteId(), postId);
                             if (!TextUtils.isEmpty(postTitle)) {
                                 setPostTitle(txtPostTitle, postTitle, true);
@@ -857,7 +857,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * post comment box text as a reply to the current comment
      */
     private void submitReply() {
-        if (mComment == null || !isAdded() || mIsSubmittingReply)
+        if (mComment == null || !isAdded() || mSubmittingReplyEh)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
@@ -874,7 +874,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
 
-        mIsSubmittingReply = true;
+        mSubmittingReplyEh = true;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
 
@@ -925,13 +925,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mComment != null) {
                 toggleLikeButton(mComment.getILike());
             } else if (mNote != null) {
-                mNote.hasLikedComment();
+                mNote.likedCommentEh();
             }
         }
 
         // comment status is only shown if this comment is from one of this user's blogs and the
         // comment hasn't been CommentStatus.APPROVED
-        if (mIsUsersBlog && commentStatus != CommentStatus.APPROVED) {
+        if (mUsersBlogEh && commentStatus != CommentStatus.APPROVED) {
             mTxtStatus.setText(getString(statusTextResId).toUpperCase());
             mTxtStatus.setTextColor(statusColor);
             if (mTxtStatus.getVisibility() != View.VISIBLE) {
@@ -1136,8 +1136,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 new RemoteLikeCommentPayload(mSite, mComment, mBtnLikeComment.isActivated())));
     }
 
-    private void toggleLikeButton(boolean isLiked) {
-        if (isLiked) {
+    private void toggleLikeButton(boolean likedEh) {
+        if (likedEh) {
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_jazzy));
             mBtnLikeIcon.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_star_orange_jazzy_24dp));
@@ -1161,7 +1161,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void onCommentModerated(OnCommentChanged event) {
         if (!isAdded()) return;
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             mComment.setStatus(mPreviousStatus);
             updateStatusViews();
             ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
@@ -1171,13 +1171,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentCreated(OnCommentChanged event) {
-        mIsSubmittingReply = false;
+        mSubmittingReplyEh = false;
         mEditReply.setEnabled(true);
         mSubmitReplyBtn.setVisibility(View.VISIBLE);
         getView().findViewById(R.id.progress_submit_comment).setVisibility(View.GONE);
         updateStatusViews();
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             if (isAdded()) {
                 String strUnEscapeHTML = StringEscapeUtils.unescapeHtml4(event.error.message);
                 ToastUtils.showToast(getActivity(), strUnEscapeHTML, ToastUtils.Duration.LONG);
@@ -1204,7 +1204,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void onCommentLiked(OnCommentChanged event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             // Revert button state in case of an error
             toggleLikeButton(!mBtnLikeComment.isActivated());
         }
@@ -1236,7 +1236,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.i(T.TESTS, "event error type: " + event.error.type + " - message: " + event.error.message);
             if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
                 ToastUtils.showToast(getActivity(), event.error.message);

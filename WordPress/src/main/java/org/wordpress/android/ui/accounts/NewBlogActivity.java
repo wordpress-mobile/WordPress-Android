@@ -36,7 +36,7 @@ public class NewBlogActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mNewBlogFragment.isSignoutOnCancelMode()) {
+        if (mNewBlogFragment.signoutOnCancelModeEh()) {
             mNewBlogFragment.onBackPressed();
         } else {
             super.onBackPressed();

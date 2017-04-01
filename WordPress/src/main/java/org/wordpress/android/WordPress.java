@@ -137,8 +137,8 @@ public class WordPress extends MultiDexApplication {
     }
 
     // FluxC migration - drop the migration code after wpandroid 7.8
-    public static boolean sIsMigrationInProgress;
-    public static boolean sIsMigrationError;
+    public static boolean sMigrationInProgressEh;
+    public static boolean sMigrationErrorEh;
     private static MigrationListener sMigrationListener;
     private int mRemainingSelfHostedSitesToFetch;
 
@@ -232,7 +232,7 @@ public class WordPress extends MultiDexApplication {
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        if (!PackageUtils.isDebugBuild()) {
+        if (!PackageUtils.debugBuildEh()) {
             Fabric.with(this, new Crashlytics());
         }
 
@@ -299,17 +299,17 @@ public class WordPress extends MultiDexApplication {
 
     private void runFluxCMigration() {
         // If the migration was not done and if we have something to migrate
-        if ((!AppPrefs.wasAccessTokenMigrated() || !AppPrefs.wereSelfHostedSitesMigratedToFluxC()
-                || !AppPrefs.wereDraftsMigratedToFluxC())
-                && (WPLegacyMigrationUtils.hasSelfHostedSiteToMigrate(this)
+        if ((!AppPrefs.accessTokenMigratedEh() || !AppPrefs.selfHostedSitesMigratedToFluxCEh()
+                || !AppPrefs.draftsMigratedToFluxCEh())
+                && (WPLegacyMigrationUtils.selfHostedSiteToMigrateEh(this)
                 || WPLegacyMigrationUtils.getLatestDeprecatedAccessToken(this) != null
-                || WPLegacyMigrationUtils.hasDraftsToMigrate(this))) {
-            sIsMigrationInProgress = true;
+                || WPLegacyMigrationUtils.draftsToMigrateEh(this))) {
+            sMigrationInProgressEh = true;
 
             // No connection? Then exit and ask the user to come back.
-            if (!NetworkUtils.isNetworkAvailable(this)) {
+            if (!NetworkUtils.networkAvailableEh(this)) {
                 AppLog.i(T.DB, "No connection - aborting migration");
-                sIsMigrationError = true;
+                sMigrationErrorEh = true;
                 new Handler().postDelayed(sShutdown, 3500);
                 return;
             }
@@ -320,7 +320,7 @@ public class WordPress extends MultiDexApplication {
 
     private void migrateAccessToken() {
         // Migrate access token AccountStore
-        if (!AppPrefs.wasAccessTokenMigrated() && !mAccountStore.hasAccessToken()) {
+        if (!AppPrefs.accessTokenMigratedEh() && !mAccountStore.hasAccessToken()) {
             AppLog.i(T.DB, "No access token found in FluxC - attempting to migrate existing one");
             // It will take some time to update the access token in the AccountStore if it was migrated
             // so it will be set to the migrated token
@@ -342,7 +342,7 @@ public class WordPress extends MultiDexApplication {
     }
 
     private void migrateSelfHostedSites() {
-        if (!AppPrefs.wereSelfHostedSitesMigratedToFluxC()) {
+        if (!AppPrefs.selfHostedSitesMigratedToFluxCEh()) {
             List<SiteModel> siteList = WPLegacyMigrationUtils.migrateSelfHostedSitesFromDeprecatedDB(this, mDispatcher);
             if (siteList != null && !siteList.isEmpty()) {
                 AppLog.i(T.DB, "Finished migrating " + siteList.size() + " self-hosted sites - fetching site info");
@@ -365,7 +365,7 @@ public class WordPress extends MultiDexApplication {
 
     private void migrateDrafts() {
         // Migrate drafts to FluxC
-        if (!AppPrefs.wereDraftsMigratedToFluxC()) {
+        if (!AppPrefs.draftsMigratedToFluxCEh()) {
             WPLegacyMigrationUtils.migrateDraftsFromDeprecatedDB(this, mDispatcher, mSiteStore);
             AppPrefs.setDraftsMigratedToFluxC(true);
         }
@@ -376,7 +376,7 @@ public class WordPress extends MultiDexApplication {
 
     private void endMigration() {
         AppLog.i(T.DB, "Ending migration to FluxC");
-        sIsMigrationInProgress = false;
+        sMigrationInProgressEh = false;
         if (sMigrationListener != null) {
             sMigrationListener.onCompletion();
             sMigrationListener = null;
@@ -385,7 +385,7 @@ public class WordPress extends MultiDexApplication {
 
     public static void registerMigrationListener(MigrationListener listener) {
         sMigrationListener = listener;
-        if (sIsMigrationError) {
+        if (sMigrationErrorEh) {
             sMigrationListener.onError();
         }
     }
@@ -426,14 +426,14 @@ public class WordPress extends MultiDexApplication {
     public void deferredInit(Activity activity) {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        if (isGooglePlayServicesAvailable(activity)) {
+        if (googlePlayServicesAvailableEh(activity)) {
             // Register for Cloud messaging
             startService(new Intent(this, GCMRegistrationIntentService.class));
         }
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
-            if (!sIsMigrationInProgress) {
+            if (!sMigrationInProgressEh) {
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
                 mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
             }
@@ -503,7 +503,7 @@ public class WordPress extends MultiDexApplication {
         return sRestClientUtilsVersion0;
     }
 
-    public boolean isGooglePlayServicesAvailable(Activity activity) {
+    public boolean googlePlayServicesAvailableEh(Activity activity) {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
         switch (connectionResult) {
@@ -540,7 +540,7 @@ public class WordPress extends MultiDexApplication {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
             flushHttpCache();
 
             // Analytics resets
@@ -558,11 +558,11 @@ public class WordPress extends MultiDexApplication {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (event.isError() && event.error.type == SiteErrorType.DUPLICATE_SITE) {
+        if (event.errorEh() && event.error.type == SiteErrorType.DUPLICATE_SITE) {
             CrashlyticsUtils.logException(new DuplicateSiteException(), T.MAIN, "Duplicate site detected");
         }
 
-        if (!sIsMigrationInProgress) {
+        if (!sMigrationInProgressEh) {
             return;
         }
 
@@ -737,7 +737,7 @@ public class WordPress extends MultiDexApplication {
         private Timer mActivityTransitionTimer;
         private TimerTask mActivityTransitionTimerTask;
         private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
-        boolean mIsInBackground = true;
+        boolean mInBackgroundEh = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -769,7 +769,7 @@ public class WordPress extends MultiDexApplication {
             }
         }
 
-        private boolean isPushNotificationPingNeeded() {
+        private boolean pushNotificationPingNeededEh() {
             if (mLastPingDate == null) {
                 // first startup
                 return false;
@@ -789,7 +789,7 @@ public class WordPress extends MultiDexApplication {
          */
         private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (isPushNotificationPingNeeded() && mAccountStore.hasAccessToken()) {
+            if (pushNotificationPingNeededEh() && mAccountStore.hasAccessToken()) {
                 // Register for Cloud messaging
                 startService(new Intent(getContext(), GCMRegistrationIntentService.class));
             }
@@ -805,7 +805,7 @@ public class WordPress extends MultiDexApplication {
          * So when the user is simply navigating between the activities, the onActivityPaused() calls `startActivityTransitionTimer`
          * and starts the timer, but almost immediately the new activity being entered, the ApplicationLifecycleMonitor cancels the timer
          * in its onActivityResumed method, that in order calls `stopActivityTransitionTimer`.
-         * And so mIsInBackground would be false.
+         * And so mInBackgroundEh would be false.
          *
          * In the case the app is sent to background, the TimerTask is instead executed, and the code that handles all the background logic is run.
          */
@@ -815,7 +815,7 @@ public class WordPress extends MultiDexApplication {
                 public void run() {
                     AppLog.i(T.UTILS, "App goes to background");
                     // We're in the Background
-                    mIsInBackground = true;
+                    mInBackgroundEh = true;
                     String lastActivityString = AppPrefs.getLastActivityStr();
                     ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                     Map<String, Object> properties = new HashMap<String, Object>();
@@ -844,7 +844,7 @@ public class WordPress extends MultiDexApplication {
                 this.mActivityTransitionTimer.cancel();
             }
 
-            mIsInBackground = false;
+            mInBackgroundEh = false;
         }
 
         /**
@@ -861,7 +861,7 @@ public class WordPress extends MultiDexApplication {
             properties.put("pin_lock_enabled", AppLockManager.getInstance().getAppLock() != null
                     && AppLockManager.getInstance().getAppLock().isPasswordLocked());
             AnalyticsTracker.track(Stat.APPLICATION_OPENED, properties);
-            if (NetworkUtils.isNetworkAvailable(mContext)) {
+            if (NetworkUtils.networkAvailableEh(mContext)) {
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {
                     Intent intent = activity.getIntent();
@@ -877,7 +877,7 @@ public class WordPress extends MultiDexApplication {
                 updatePushNotificationTokenIfNotLimited();
 
                 // Don't update sites or delete expired stats if migration is in progress
-                if (sIsMigrationInProgress) {
+                if (sMigrationInProgressEh) {
                     return;
                 }
 
@@ -902,13 +902,13 @@ public class WordPress extends MultiDexApplication {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (mIsInBackground) {
+            if (mInBackgroundEh) {
                 // was in background before
                 onAppComesFromBackground(activity);
             }
             stopActivityTransitionTimer();
 
-            mIsInBackground = false;
+            mInBackgroundEh = false;
             if (mFirstActivityResumed) {
                 deferredInit(activity);
             }

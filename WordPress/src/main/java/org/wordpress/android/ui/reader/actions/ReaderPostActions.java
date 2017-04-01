@@ -55,27 +55,27 @@ public class ReaderPostActions {
      * like/unlike the passed post
      */
     public static boolean performLikeAction(final ReaderPost post,
-                                            final boolean isAskingToLike,
+                                            final boolean askingToLikeEh,
                                             final long wpComUserId) {
         // do nothing if post's like state is same as passed
-        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
-        if (isCurrentlyLiked == isAskingToLike) {
+        boolean currentlyLikedEh = ReaderPostTable.postLikedByCurrentUserEh(post);
+        if (currentlyLikedEh == askingToLikeEh) {
             AppLog.w(T.READER, "post like unchanged");
             return false;
         }
 
         // update like status and like count in local db
         int numCurrentLikes = ReaderPostTable.getNumLikesForPost(post.blogId, post.postId);
-        int newNumLikes = (isAskingToLike ? numCurrentLikes + 1 : numCurrentLikes - 1);
+        int newNumLikes = (askingToLikeEh ? numCurrentLikes + 1 : numCurrentLikes - 1);
         if (newNumLikes < 0) {
             newNumLikes = 0;
         }
-        ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
-        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike, wpComUserId);
+        ReaderPostTable.setLikesForPost(post, newNumLikes, askingToLikeEh);
+        ReaderLikeTable.setCurrentUserLikesPost(post, askingToLikeEh, wpComUserId);
 
-        final String actionName = isAskingToLike ? "like" : "unlike";
+        final String actionName = askingToLikeEh ? "like" : "unlike";
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
-        if (isAskingToLike) {
+        if (askingToLikeEh) {
             path += "new";
         } else {
             path += "mine/delete";
@@ -98,8 +98,8 @@ public class ReaderPostActions {
                     AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
                 }
                 AppLog.e(T.READER, volleyError);
-                ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
-                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser, wpComUserId);
+                ReaderPostTable.setLikesForPost(post, post.numLikes, post.likedByCurrentUserEh);
+                ReaderLikeTable.setCurrentUserLikesPost(post, post.likedByCurrentUserEh, wpComUserId);
             }
         };
 
@@ -154,7 +154,7 @@ public class ReaderPostActions {
                 // TODO: this temporary fix was added 25-Apr-2016 as a workaround for the fact that
                 // the read/sites/{blogId}/posts/{postId} endpoint doesn't contain the feedId or
                 // feedItemId of the post. because of this, we need to copy them from the local post
-                // before calling isSamePost (since the difference in those IDs causes it to return false)
+                // before calling samePostEh (since the difference in those IDs causes it to return false)
                 if (serverPost.feedId == 0 && localPost.feedId != 0) {
                     serverPost.feedId = localPost.feedId;
                 }
@@ -163,9 +163,9 @@ public class ReaderPostActions {
                     serverPost.feedItemId = localPost.feedItemId;
                 }
 
-                boolean hasChanges = !serverPost.isSamePost(localPost);
+                boolean changesEh = !serverPost.samePostEh(localPost);
 
-                if (hasChanges) {
+                if (changesEh) {
                     AppLog.d(T.READER, "post updated");
                     // copy changes over to the local post - this is done instead of simply overwriting
                     // the local post with the server post because the server post was retrieved using
@@ -173,9 +173,9 @@ public class ReaderPostActions {
                     // https://github.com/wordpress-mobile/WordPress-Android/issues/3164
                     localPost.numReplies = serverPost.numReplies;
                     localPost.numLikes = serverPost.numLikes;
-                    localPost.isFollowedByCurrentUser = serverPost.isFollowedByCurrentUser;
-                    localPost.isLikedByCurrentUser = serverPost.isLikedByCurrentUser;
-                    localPost.isCommentsOpen = serverPost.isCommentsOpen;
+                    localPost.followedByCurrentUserEh = serverPost.followedByCurrentUserEh;
+                    localPost.likedByCurrentUserEh = serverPost.likedByCurrentUserEh;
+                    localPost.commentsOpenEh = serverPost.commentsOpenEh;
                     localPost.setTitle(serverPost.getTitle());
                     localPost.setText(serverPost.getText());
                     ReaderPostTable.addOrUpdatePost(localPost);
@@ -184,11 +184,11 @@ public class ReaderPostActions {
                 // always update liking users regardless of whether changes were detected - this
                 // ensures that the liking avatars are immediately available to post detail
                 if (handlePostLikes(serverPost, jsonObject)) {
-                    hasChanges = true;
+                    changesEh = true;
                 }
 
                 if (resultListener != null) {
-                    final UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
+                    final UpdateResult result = (changesEh ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
                     handler.post(new Runnable() {
                         public void run() {
                             resultListener.onUpdateResult(result);
@@ -217,7 +217,7 @@ public class ReaderPostActions {
         ReaderUserIdList likingUserIds = likingUsers.getUserIds();
 
         ReaderUserIdList existingIds = ReaderLikeTable.getLikesForPost(post);
-        if (likingUserIds.isSameList(existingIds)) {
+        if (likingUserIds.sameListEh(existingIds)) {
             return false;
         }
 
@@ -315,7 +315,7 @@ public class ReaderPostActions {
         // this is a private post since we count views for private posts from owner or member
         SiteModel site = siteStore.getSiteBySiteId(post.blogId);
         // site will be null here if the user is not the owner or a member of the site
-        if (site != null && !post.isPrivate) {
+        if (site != null && !post.privateEh) {
             AppLog.d(T.READER, "skipped bump page view - user is admin");
             return;
         }

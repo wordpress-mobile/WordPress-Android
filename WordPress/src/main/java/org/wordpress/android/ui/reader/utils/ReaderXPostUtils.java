@@ -36,11 +36,11 @@ public class ReaderXPostUtils {
      * ex: "Nick commented on +blog1, cross-posted to +blog2"
      */
     public static Spanned getXPostSubtitleHtml(@NonNull ReaderPost post) {
-        boolean isCommentXPost = post.getExcerpt().startsWith("X-comment");
+        boolean commentXPostEh = post.getExcerpt().startsWith("X-comment");
 
-        String name = post.hasAuthorFirstName() ? post.getAuthorFirstName() : post.getAuthorName();
+        String name = post.authorFirstNameEh() ? post.getAuthorFirstName() : post.getAuthorName();
         String subtitle = String.format(
-                isCommentXPost ? FMT_COMMENT_XPOST : FMT_SITE_XPOST,
+                commentXPostEh ? FMT_COMMENT_XPOST : FMT_SITE_XPOST,
                 "<strong>" + name + "</strong>",
                 getFromSiteName(post),
                 getToSiteName(post));

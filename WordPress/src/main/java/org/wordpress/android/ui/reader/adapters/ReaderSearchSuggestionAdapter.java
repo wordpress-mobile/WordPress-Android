@@ -40,7 +40,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
 
     public void setFilter(String filter) {
         // skip if unchanged
-        if (isCurrentFilter(filter) && getCursor() != null) {
+        if (currentFilterEh(filter) && getCursor() != null) {
             return;
         }
 
@@ -70,7 +70,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     /*
-     * forces setFilter() to always repopulate by skipping the isCurrentFilter() check
+     * forces setFilter() to always repopulate by skipping the currentFilterEh() check
      */
     private void reload() {
         String newFilter = mCurrentFilter;
@@ -78,7 +78,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         setFilter(newFilter);
     }
 
-    private boolean isCurrentFilter(String filter) {
+    private boolean currentFilterEh(String filter) {
         if (TextUtils.isEmpty(filter) && TextUtils.isEmpty(mCurrentFilter)) {
             return true;
         }

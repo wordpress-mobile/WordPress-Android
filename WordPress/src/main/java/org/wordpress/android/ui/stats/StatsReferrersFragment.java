@@ -27,12 +27,12 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private ReferrersModel mReferrers;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mReferrers != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mReferrers);
         }
     }
@@ -72,7 +72,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (hasReferrers()) {
+        if (referrersEh()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getReferrersGroups());
             StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -81,26 +81,26 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         }
     }
 
-    private boolean hasReferrers() {
+    private boolean referrersEh() {
         return mReferrers != null
                 && mReferrers.getGroups() != null
                 && mReferrers.getGroups().size() > 0;
     }
 
     private List<ReferrerGroupModel> getReferrersGroups() {
-        if (!hasReferrers()) {
+        if (!referrersEh()) {
             return new ArrayList<ReferrerGroupModel>(0);
         }
         return mReferrers.getGroups();
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        return hasReferrers() && getReferrersGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
+    protected boolean viewAllOptionAvailableEh() {
+        return referrersEh() && getReferrersGroups().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return true;
     }
 
@@ -195,7 +195,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition,
-                                 boolean isLastChild, View convertView, ViewGroup parent) {
+                                 boolean lastChildEh, View convertView, ViewGroup parent) {
 
             final MyChildModel currentChild = (MyChildModel) getChild(groupPosition, childPosition);
 
@@ -259,7 +259,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public View getGroupView(final int groupPosition, boolean isExpanded,
+        public View getGroupView(final int groupPosition, boolean expandedEh,
                                  View convertView, ViewGroup parent) {
 
             final StatsViewHolder holder;
@@ -303,7 +303,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             }
 
             // Setup the spam button
-            if (ReferrerSpamHelper.isSpamActionAvailable(group)) {
+            if (ReferrerSpamHelper.spamActionAvailableEh(group)) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -322,12 +322,12 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public boolean hasStableIds() {
+        public boolean stableIdsEh() {
             return false;
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
+        public boolean childSelectableEh(int groupPosition, int childPosition) {
             return false;
         }
 

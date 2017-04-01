@@ -116,23 +116,23 @@ public class ReaderPostDiscoverData {
         return StringUtils.notNullStr(permaLink);
     }
 
-    public boolean hasBlogUrl() {
+    public boolean blogUrlEh() {
         return !TextUtils.isEmpty(blogUrl);
     }
 
-    public boolean hasBlogName() {
+    public boolean blogNameEh() {
         return !TextUtils.isEmpty(blogName);
     }
 
-    private boolean hasAuthorName() {
+    private boolean authorNameEh() {
         return !TextUtils.isEmpty(authorName);
     }
 
-    public boolean hasPermalink() {
+    public boolean permalinkEh() {
         return !TextUtils.isEmpty(permaLink);
     }
 
-    public boolean hasAvatarUrl() {
+    public boolean avatarUrlEh() {
         return !TextUtils.isEmpty(avatarUrl);
     }
 
@@ -153,13 +153,13 @@ public class ReaderPostDiscoverData {
 
             switch (getDiscoverType()) {
                 case EDITOR_PICK:
-                    if (hasBlogName() && hasAuthorName()) {
+                    if (blogNameEh() && authorNameEh()) {
                         // "Originally posted by [AuthorName] on [BlogName]"
                         html = String.format(context.getString(R.string.reader_discover_attribution_author_and_blog), author, blog);
-                    } else if (hasBlogName()) {
+                    } else if (blogNameEh()) {
                         // "Originally posted on [BlogName]"
                         html = String.format(context.getString(R.string.reader_discover_attribution_blog), blog);
-                    } else if (hasAuthorName()) {
+                    } else if (authorNameEh()) {
                         // "Originally posted by [AuthorName]"
                         html = String.format(context.getString(R.string.reader_discover_attribution_author), author);
                     } else {
@@ -168,7 +168,7 @@ public class ReaderPostDiscoverData {
                     break;
 
                 case SITE_PICK:
-                    if (blogId != 0 && hasBlogName()) {
+                    if (blogId != 0 && blogNameEh()) {
                         // "Visit [BlogName]" - opens blog preview when tapped
                         html = String.format(context.getString(R.string.reader_discover_visit_blog), blog);
                     } else {

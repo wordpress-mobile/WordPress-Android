@@ -56,7 +56,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private EditText mWidthText;
     private CheckBox mFeaturedCheckBox;
 
-    private boolean mIsFeatured;
+    private boolean mFeaturedEh;
 
     private Map<String, String> mHttpHeaders;
 
@@ -109,8 +109,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 Intent intent = new Intent();
                 intent.putExtra("imageMeta", mImageMeta.toString());
 
-                mIsFeatured = mFeaturedCheckBox.isChecked();
-                intent.putExtra("isFeatured", mIsFeatured);
+                mFeaturedEh = mFeaturedCheckBox.checkedEh();
+                intent.putExtra("featuredEh", mFeaturedEh);
 
                 if (!imageRemoteId.isEmpty()) {
                     intent.putExtra("imageRemoteId", Integer.parseInt(imageRemoteId));
@@ -173,8 +173,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 boolean featuredImageSupported = bundle.getBoolean("featuredImageSupported");
                 if (featuredImageSupported) {
                     mFeaturedCheckBox.setVisibility(View.VISIBLE);
-                    mIsFeatured = bundle.getBoolean("isFeatured", false);
-                    mFeaturedCheckBox.setChecked(mIsFeatured);
+                    mFeaturedEh = bundle.getBoolean("featuredEh", false);
+                    mFeaturedCheckBox.setChecked(mFeaturedEh);
                 }
             } catch (JSONException e1) {
                 AppLog.d(AppLog.T.EDITOR, "Missing JSON properties");
@@ -239,7 +239,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 }
             }
 
-            if (mFeaturedCheckBox.isChecked() != mIsFeatured) {
+            if (mFeaturedCheckBox.checkedEh() != mFeaturedEh) {
                 // Featured image status has changed
                 showDiscardChangesDialog();
                 return;
@@ -367,8 +367,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
         widthText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+            public void onFocusChange(View v, boolean focusEh) {
+                if (focusEh) {
                     widthText.setText("");
                 }
             }

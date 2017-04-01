@@ -79,7 +79,7 @@ public class PeopleListFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        final boolean isPrivate =  mSite != null && mSite.isPrivate();
+        final boolean privateEh =  mSite != null && mSite.privateEh();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
         mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
@@ -100,7 +100,7 @@ public class PeopleListFragment extends Fragment {
                 ArrayList<FilterCriteria> list = new ArrayList<>();
                 Collections.addAll(list, PeopleListFilter.values());
                 // Only a private blog can have viewers
-                if (!isPrivate) {
+                if (!privateEh) {
                     list.remove(PeopleListFilter.VIEWERS);
                 }
                 return list;
@@ -116,7 +116,7 @@ public class PeopleListFragment extends Fragment {
                 mPeopleListFilter = AppPrefs.getPeopleListFilter();
 
                 // if viewers is not available for this blog, set the filter to TEAM
-                if (mPeopleListFilter == PeopleListFilter.VIEWERS && !isPrivate) {
+                if (mPeopleListFilter == PeopleListFilter.VIEWERS && !privateEh) {
                     mPeopleListFilter = PeopleListFilter.TEAM;
                     AppPrefs.setPeopleListFilter(mPeopleListFilter);
                 }
@@ -197,7 +197,7 @@ public class PeopleListFragment extends Fragment {
     }
 
     private void updatePeople(boolean loadMore) {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             mFilteredRecyclerView.setRefreshing(false);
             return;
@@ -205,24 +205,24 @@ public class PeopleListFragment extends Fragment {
 
         if (mOnFetchPeopleListener != null) {
             if (loadMore) {
-                boolean isFetching = mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
-                if (isFetching) {
+                boolean fetchingEh = mOnFetchPeopleListener.onFetchMorePeople(mPeopleListFilter);
+                if (fetchingEh) {
                     mFilteredRecyclerView.showLoadingProgress();
                 }
             } else {
-                boolean isFetching = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
-                if (isFetching) {
+                boolean fetchingEh = mOnFetchPeopleListener.onFetchFirstPage(mPeopleListFilter);
+                if (fetchingEh) {
                     mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.LOADING);
                 } else {
                     mFilteredRecyclerView.hideEmptyView();
                     mFilteredRecyclerView.setRefreshing(false);
                 }
-                refreshPeopleList(isFetching);
+                refreshPeopleList(fetchingEh);
             }
         }
     }
 
-    public void refreshPeopleList(boolean isFetching) {
+    public void refreshPeopleList(boolean fetchingEh) {
         if (!isAdded()) return;
 
         List<Person> peopleList;
@@ -254,17 +254,17 @@ public class PeopleListFragment extends Fragment {
         if (!peopleList.isEmpty()) {
             // if the list is not empty, don't show any message
             mFilteredRecyclerView.hideEmptyView();
-        } else if (!isFetching) {
+        } else if (!fetchingEh) {
             // if we are not fetching and list is empty, show no content message
             mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         }
     }
 
-    public void fetchingRequestFinished(PeopleListFilter filter, boolean isFirstPage, boolean isSuccessful) {
+    public void fetchingRequestFinished(PeopleListFilter filter, boolean firstPageEh, boolean successfulEh) {
         if (mPeopleListFilter == filter) {
-            if (isFirstPage) {
+            if (firstPageEh) {
                 mFilteredRecyclerView.setRefreshing(false);
-                if (!isSuccessful) {
+                if (!successfulEh) {
                     mFilteredRecyclerView.updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
                 }
             } else {

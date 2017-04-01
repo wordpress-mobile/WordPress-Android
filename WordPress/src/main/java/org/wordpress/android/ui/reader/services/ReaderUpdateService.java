@@ -160,7 +160,7 @@ public class ReaderUpdateService extends Service {
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
 
-                if (!localTopics.isSameList(serverTopics)) {
+                if (!localTopics.sameListEh(serverTopics)) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
                     // if any local topics have been removed from the server, make sure to delete
                     // them locally (including their posts)
@@ -175,7 +175,7 @@ public class ReaderUpdateService extends Service {
                 if (mAccountStore.hasAccessToken()) {
                     ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
                     ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
-                    if (!serverRecommended.isSameList(localRecommended)) {
+                    if (!serverRecommended.sameListEh(localRecommended)) {
                         AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
                         ReaderTagTable.setRecommendedTags(serverRecommended);
                         EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
@@ -274,14 +274,14 @@ public class ReaderUpdateService extends Service {
                 ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
                 ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
-                if (!localBlogs.isSameList(serverBlogs)) {
+                if (!localBlogs.sameListEh(serverBlogs)) {
                     // always update the list of followed blogs if there are *any* changes between
                     // server and local (including subscription count, description, etc.)
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     // ...but only update the follow status and alert that followed blogs have
                     // changed if the server list doesn't have the same blogs as the local list
                     // (ie: a blog has been followed/unfollowed since local was last updated)
-                    if (!localBlogs.hasSameBlogs(serverBlogs)) {
+                    if (!localBlogs.sameBlogsEh(serverBlogs)) {
                         ReaderPostTable.updateFollowedStatus();
                         AppLog.i(AppLog.T.READER, "reader blogs service > followed blogs changed");
                         EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
@@ -324,7 +324,7 @@ public class ReaderUpdateService extends Service {
                 ReaderRecommendBlogList serverBlogs = ReaderRecommendBlogList.fromJson(jsonObject);
                 ReaderRecommendBlogList localBlogs = ReaderBlogTable.getRecommendedBlogs();
 
-                if (!localBlogs.isSameList(serverBlogs)) {
+                if (!localBlogs.sameListEh(serverBlogs)) {
                     ReaderBlogTable.setRecommendedBlogs(serverBlogs);
                     EventBus.getDefault().post(new ReaderEvents.RecommendedBlogsChanged());
                 }

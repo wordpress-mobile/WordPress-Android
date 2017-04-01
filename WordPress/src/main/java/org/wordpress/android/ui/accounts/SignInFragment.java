@@ -132,7 +132,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected LinearLayout mTwoStepFooter;
 
     protected boolean mSelfHosted;
-    protected boolean mIsSelfHostedForced;
+    protected boolean mSelfHostedForcedEh;
     protected boolean mEmailAutoCorrected;
     protected boolean mShouldSendTwoStepSMS;
     protected int mErroneousLogInCount;
@@ -168,9 +168,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private OnMagicLinkRequestInteraction mListener;
     private String mToken = "";
     private boolean mSmartLockEnabled = true;
-    private boolean mIsActivityFinishing;
+    private boolean mActivityFinishingEh;
     private boolean mInhibitMagicLogin; // Prevent showing magic links as that is only applicable for initial sign in
-    private boolean mIsMagicLinksEnabled = true;
+    private boolean mMagicLinksEnabledEh = true;
 
     private JetpackCallbacks mJetpackCallbacks;
 
@@ -189,7 +189,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         mInhibitMagicLogin = getActivity() != null
                 && (getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false)
-                || !WPActivityUtils.isEmailClientAvailable(getActivity()));
+                || !WPActivityUtils.emailClientAvailableEh(getActivity()));
 
         AnalyticsTracker.track(Stat.LOGIN_ACCESSED);
     }
@@ -233,8 +233,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
         mForgotPassword.setOnClickListener(mForgotPasswordListener);
         mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+            public void onFocusChange(View v, boolean focusEh) {
+                if (!focusEh) {
                     autocorrectUsername();
 
                     // Show the self-hosted sign-in form if the user entered a username that can't be for WordPress.com
@@ -313,7 +313,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && mIsMagicLinksEnabled) {
+                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event)) && mMagicLinksEnabledEh) {
                     signIn();
                     return true;
                 } else {
@@ -362,7 +362,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         } else {
             mSmartLockEnabled = true;
         }
-        if (!mIsMagicLinksEnabled) {
+        if (!mMagicLinksEnabledEh) {
             showPasswordFieldAndFocus();
         } else if (mInhibitMagicLogin) {
             showPasswordField(false);
@@ -384,7 +384,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mUrlEditText.setText(prefillUrl);
         }
         mSelfHosted = true;
-        mIsSelfHostedForced = true;
+        mSelfHostedForcedEh = true;
     }
 
     private void showPasswordFieldAndFocus() {
@@ -406,7 +406,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private void showPasswordField() {
         if (isAdded()) {
-            mIsMagicLinksEnabled = false;
+            mMagicLinksEnabledEh = false;
             mPasswordLayout.setVisibility(View.VISIBLE);
             mForgotPassword.setVisibility(View.VISIBLE);
             if (!mSelfHosted) {
@@ -422,7 +422,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             if (mInhibitMagicLogin) {
                 showDotComSignInForm();
             } else {
-                mIsMagicLinksEnabled = true;
+                mMagicLinksEnabledEh = true;
                 configureMagicLinkUI();
             }
         } else {
@@ -489,7 +489,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     public void setIsMagicLinkEnabled(boolean isMagicLinksEnabled) {
-        mIsMagicLinksEnabled = isMagicLinksEnabled;
+        mMagicLinksEnabledEh = isMagicLinksEnabled;
     }
 
     private void initInfoButtons(View rootView) {
@@ -501,7 +501,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 intent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 intent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
                 intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
-                        (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
+                        (mJetpackCallbacks.jetpackAuthEh(), wPComLoginEh() && !mSelfHosted));
                 startActivity(intent);
             }
         };
@@ -616,10 +616,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    private boolean isWPComLogin() {
+    private boolean wPComLoginEh() {
         String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
         return !mSelfHosted || TextUtils.isEmpty(selfHostedUrl) ||
-                WPUrlUtils.isWordPressCom(UrlUtils.addUrlSchemeIfNeeded(selfHostedUrl, false));
+                WPUrlUtils.wordPressComEh(UrlUtils.addUrlSchemeIfNeeded(selfHostedUrl, false));
     }
 
     private void configureMagicLinkUI() {
@@ -630,7 +630,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSignInButton.setText(getString(R.string.button_next));
     }
 
-    private boolean isJetpackAuth() {
+    private boolean jetpackAuthEh() {
         return mJetpackSite != null;
     }
 
@@ -671,7 +671,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private String getForgotPasswordURL() {
         String baseUrl = DOT_COM_BASE_URL;
-        if (!isWPComLogin()) {
+        if (!wPComLoginEh()) {
             baseUrl = EditTextUtils.getText(mUrlEditText).trim();
             String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
             if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
@@ -712,9 +712,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void trackAnalyticsSignIn() {
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
         Map<String, Boolean> properties = new HashMap<>();
-        properties.put("dotcom_user", isWPComLogin());
+        properties.put("dotcom_user", wPComLoginEh());
         AnalyticsTracker.track(Stat.SIGNED_IN, properties);
-        if (!isWPComLogin()) {
+        if (!wPComLoginEh()) {
             AnalyticsTracker.track(Stat.ADDED_SELF_HOSTED_SITE);
         }
     }
@@ -730,14 +730,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void finishCurrentActivity() {
-        if (mIsActivityFinishing) {
+        if (mActivityFinishingEh) {
             return;
         }
 
         // Clear persisted text from in the URL field
         mUrlEditText.setText("");
 
-        mIsActivityFinishing = true;
+        mActivityFinishingEh = true;
         saveCredentialsInSmartLock();
         if (getActivity() == null) {
             return;
@@ -751,7 +751,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // move on the the main activity
             Intent intent = new Intent(getActivity(), WPMainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(SignInActivity.MAGIC_LOGIN, mIsMagicLinksEnabled);
+            intent.putExtra(SignInActivity.MAGIC_LOGIN, mMagicLinksEnabledEh);
             getActivity().startActivity(intent);
         }
     }
@@ -816,13 +816,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void showSoftKeyboard() {
-        if (isAdded() && !hasHardwareKeyboard()) {
+        if (isAdded() && !hardwareKeyboardEh()) {
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
-    private boolean hasHardwareKeyboard() {
+    private boolean hardwareKeyboardEh() {
         return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
@@ -842,7 +842,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private boolean checkNetworkConnectivity() {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             SignInDialogFragment nuxAlert;
             nuxAlert = SignInDialogFragment.newInstance(getString(R.string.no_network_title),
@@ -874,8 +874,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     protected void signIn() {
-        if (mSelfHosted || !mIsMagicLinksEnabled) {
-            if (!isUserDataValid()) {
+        if (mSelfHosted || !mMagicLinksEnabledEh) {
+            if (!userDataValidEh()) {
                 return;
             }
 
@@ -886,7 +886,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mUsername = EditTextUtils.getText(mUsernameEditText).trim().toLowerCase();
             mPassword = EditTextUtils.getText(mPasswordEditText).trim();
             mTwoStepCode = EditTextUtils.getText(mTwoStepEditText).trim();
-            if (isWPComLogin()) {
+            if (wPComLoginEh()) {
                 // If the user is already logged in a wordpress.com account, bail out
                 if (checkIfUserIsAlreadyLoggedIn()) {
                     return;
@@ -900,10 +900,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 signInAndFetchBlogListWPOrg();
             }
         } else {
-            if (isUsernameEmail()) {
+            if (usernameEmailEh()) {
                 startProgress(getActivity().getString(R.string.checking_email));
                 mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(mUsername));
-            } else if (isWPComDomain(mUsername)) {
+            } else if (wPComDomainEh(mUsername)) {
                 // If a wpcom domain was entered, check if the subdomain matches an existing username.
                 String maybeUsername = UrlUtils.extractSubDomain(mUsername);
                 if (maybeUsername.length() > 0) {
@@ -928,12 +928,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * @param string The string to check
      * @return True if the string contains a wpcom subdomain, else false.
      */
-    private boolean isWPComDomain(String string) {
+    private boolean wPComDomainEh(String string) {
         Matcher matcher = WPCOM_DOMAIN.matcher(string);
         return matcher.find();
     }
 
-    private boolean isUsernameEmail() {
+    private boolean usernameEmailEh() {
         mUsername = EditTextUtils.getText(mUsernameEditText).trim();
         Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(mUsername);
@@ -984,7 +984,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                && (mTwoStepLayout.getVisibility() == View.GONE || EditTextUtils.getText(mTwoStepEditText).trim().length() > 0);
     }
 
-    protected boolean isUserDataValid() {
+    protected boolean userDataValidEh() {
         final String username = EditTextUtils.getText(mUsernameEditText).trim();
         final String password = EditTextUtils.getText(mPasswordEditText).trim();
         final String url = EditTextUtils.getText(mUrlEditText).trim();
@@ -1002,7 +1002,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             retValue = false;
         }
 
-        if (mIsSelfHostedForced && TextUtils.isEmpty(url)) {
+        if (mSelfHostedForcedEh && TextUtils.isEmpty(url)) {
             mUrlEditText.setError(getString(R.string.required_field));
             mUrlEditText.requestFocus();
             retValue = false;
@@ -1112,7 +1112,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
         bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
         bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
-                (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
+                (mJetpackCallbacks.jetpackAuthEh(), wPComLoginEh() && !mSelfHosted));
         nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
@@ -1154,7 +1154,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 faqAction, faqId, faqSection);
         Bundle bundle = nuxAlert.getArguments();
         bundle.putSerializable(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
-                (mJetpackCallbacks.isJetpackAuth(), isWPComLogin() && !mSelfHosted));
+                (mJetpackCallbacks.jetpackAuthEh(), wPComLoginEh() && !mSelfHosted));
         nuxAlert.setArguments(bundle);
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
@@ -1202,7 +1202,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.e(T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
             showAccountError(event.error.type, event.error.message);
             endProgress();
@@ -1224,7 +1224,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
             AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.type.toString(), event.error.message);
 
@@ -1243,7 +1243,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onSiteChanged(OnSiteChanged event) {
         AppLog.i(T.NUX, "onSiteChanged: " + event.toString());
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.e(T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
             endProgress();
             if (!isAdded()) {
@@ -1270,7 +1270,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mSitesFetched = true;
 
         // Finish activity if account settings have been fetched or if it's a wporg site
-        if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
+        if ((mAccountSettingsFetched && mAccountFetched) || !wPComLoginEh()) {
             finishCurrentActivity();
         }
     }
@@ -1278,7 +1278,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onDiscoverySucceeded(OnDiscoveryResponse event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
             handleDiscoveryError(event.error, event.failedEndpoint);
             AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.name(), event.error.toString());
@@ -1295,7 +1295,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAvailabilityChecked(OnAvailabilityChecked event) {
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }
 
@@ -1322,7 +1322,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.type != IsAvailable.EMAIL) {
             return;
         }
-        if (!event.isAvailable) {
+        if (!event.availableEh) {
             // Email address exists in WordPress.com
             if (mListener != null) {
                 mListener.onMagicLinkRequestSuccess(mUsername);
@@ -1346,7 +1346,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.type != IsAvailable.USERNAME ) {
             return;
         }
-        if (event.isAvailable) {
+        if (event.availableEh) {
             // Username doesn't exist in WordPress.com, show just show an error.
             showUsernameError(R.string.username_invalid);
             return;

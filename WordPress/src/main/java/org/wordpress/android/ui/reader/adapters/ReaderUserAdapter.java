@@ -54,13 +54,13 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
         final ReaderUser user = mUsers.get(position);
 
         holder.txtName.setText(user.getDisplayName());
-        if (user.hasUrl()) {
+        if (user.urlEh()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
             holder.txtUrl.setText(user.getUrlDomain());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (user.hasBlogId()) {
+                    if (user.blogIdEh()) {
                         ReaderActivityLauncher.showReaderBlogPreview(
                                 v.getContext(),
                                 user.blogId);
@@ -72,7 +72,7 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
             holder.itemView.setOnClickListener(null);
         }
 
-        if (user.hasAvatarUrl()) {
+        if (user.avatarUrlEh()) {
             holder.imgAvatar.setImageUrl(
                     GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz),
                     WPNetworkImageView.ImageType.AVATAR);

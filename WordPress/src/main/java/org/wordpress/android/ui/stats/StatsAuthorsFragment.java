@@ -26,12 +26,12 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     private AuthorsModel mAuthors;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mAuthors != null;
     }
     @Override
     protected void saveStatsData(Bundle outState) {
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             outState.putSerializable(ARG_REST_RESPONSE, mAuthors);
         }
     }
@@ -71,7 +71,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (!hasAuthors()) {
+        if (!authorsEh()) {
             showHideNoResultsUI(true);
             return;
         }
@@ -81,7 +81,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         showHideNoResultsUI(false);
     }
 
-    private boolean hasAuthors() {
+    private boolean authorsEh() {
         return mAuthors != null
                 && mAuthors.getAuthors() != null
                 && mAuthors.getAuthors().size() > 0;
@@ -89,13 +89,13 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        return (hasAuthors()
+    protected boolean viewAllOptionAvailableEh() {
+        return (authorsEh()
                 && mAuthors.getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return true;
     }
 
@@ -148,7 +148,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition,
-                                 boolean isLastChild, View convertView, ViewGroup parent) {
+                                 boolean lastChildEh, View convertView, ViewGroup parent) {
 
             final StatsPostModel children = (StatsPostModel) getChild(groupPosition, childPosition);
 
@@ -208,7 +208,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded,
+        public View getGroupView(int groupPosition, boolean expandedEh,
                                  View convertView, ViewGroup parent) {
 
             if (convertView == null) {
@@ -264,12 +264,12 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         }
 
         @Override
-        public boolean hasStableIds() {
+        public boolean stableIdsEh() {
             return false;
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
+        public boolean childSelectableEh(int groupPosition, int childPosition) {
             return false;
         }
 

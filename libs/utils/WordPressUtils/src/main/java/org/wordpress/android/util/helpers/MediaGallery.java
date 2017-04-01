@@ -14,13 +14,13 @@ public class MediaGallery implements Serializable {
     private static final long serialVersionUID = 2359176987182027508L;
 
     private long uniqueId;
-    private boolean isRandom;
+    private boolean randomEh;
     private String type;
     private int numColumns;
     private ArrayList<Long> ids;
 
-    public MediaGallery(boolean isRandom, String type, int numColumns, ArrayList<Long> ids) {
-        this.isRandom = isRandom;
+    public MediaGallery(boolean randomEh, String type, int numColumns, ArrayList<Long> ids) {
+        this.randomEh = randomEh;
         this.type = type;
         this.numColumns = numColumns;
         this.ids = ids;
@@ -28,19 +28,19 @@ public class MediaGallery implements Serializable {
     }
 
     public MediaGallery() {
-        isRandom = false;
+        randomEh = false;
         type = "";
         numColumns = 3;
         ids = new ArrayList<>();
         this.uniqueId = System.currentTimeMillis();
     }
 
-    public boolean isRandom() {
-        return isRandom;
+    public boolean randomEh() {
+        return randomEh;
     }
 
-    public void setRandom(boolean isRandom) {
-        this.isRandom = isRandom;
+    public void setRandom(boolean randomEh) {
+        this.randomEh = randomEh;
     }
 
     public String getType() {

@@ -289,7 +289,7 @@ public class StatsUtils {
         AppLog.e(T.STATS, "Volley Error Message: " + volleyError.getMessage(), volleyError);
     }
 
-    public static synchronized boolean isRESTDisabledError(final Serializable error) {
+    public static synchronized boolean rESTDisabledErrorEh(final Serializable error) {
         if (error == null || !(error instanceof com.android.volley.AuthFailureError)) {
             return false;
         }

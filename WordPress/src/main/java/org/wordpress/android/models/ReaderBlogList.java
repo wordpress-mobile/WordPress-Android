@@ -28,7 +28,7 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
                 // make sure blog is valid before adding to the list - this can happen if user
                 // added a URL that isn't a feed or a blog since as of 29-May-2014 the API
                 // will let you follow any URL regardless if it's valid
-                if (blog.hasName() || blog.hasDescription() || blog.hasUrl()) {
+                if (blog.nameEh() || blog.descriptionEh() || blog.urlEh()) {
                     blogs.add(blog);
                 }
             }
@@ -46,7 +46,7 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
         return -1;
     }
 
-    public boolean isSameList(ReaderBlogList blogs) {
+    public boolean sameListEh(ReaderBlogList blogs) {
         if (blogs == null || blogs.size() != this.size()) {
             return false;
         }
@@ -57,7 +57,7 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
                 return false;
             }
             ReaderBlog thisInfo = this.get(index);
-            if (!thisInfo.isSameAs(blogInfo)) {
+            if (!thisInfo.sameAsEh(blogInfo)) {
                 return false;
             }
         }
@@ -67,11 +67,11 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
 
     /*
      * returns true if the passed blog list has the same blogs that are in this list - differs
-     * from isSameList() in that isSameList() checks for *any* changes (subscription count, etc.)
+     * from sameListEh() in that sameListEh() checks for *any* changes (subscription count, etc.)
      * whereas this only checks if the passed list has any blogs that are not in this list, or
      * this list has any blogs that are not in the passed list
      */
-    public boolean hasSameBlogs(@NonNull ReaderBlogList blogs) {
+    public boolean sameBlogsEh(@NonNull ReaderBlogList blogs) {
         if (blogs.size() != this.size()) {
             return false;
         }

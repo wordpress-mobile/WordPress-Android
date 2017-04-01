@@ -78,9 +78,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private View mSubmitReplyBtn;
     private ViewGroup mCommentBox;
 
-    private boolean mIsUpdatingComments;
-    private boolean mHasUpdatedComments;
-    private boolean mIsSubmittingComment;
+    private boolean mUpdatingCommentsEh;
+    private boolean mUpdatedCommentsEh;
+    private boolean mSubmittingCommentEh;
     private DirectOperation mDirectOperation;
     private long mReplyToCommentId;
     private long mCommentId;
@@ -118,7 +118,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
-            mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
+            mUpdatedCommentsEh = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -130,7 +130,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             // we need to re-request comments every time this activity is shown in order to
             // correctly reflect deletions and nesting changes - skipped when there's no
             // connection so we can show existing comments while offline
-            if (NetworkUtils.isNetworkAvailable(this)) {
+            if (NetworkUtils.networkAvailableEh(this)) {
                 ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
             }
         }
@@ -171,7 +171,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
         mSuggestionAdapter = SuggestionUtils.setupSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
-                mPost.isWP());
+                mPost.wPEh());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
@@ -198,7 +198,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (result.isNewOrChanged()) {
+                if (result.newOrChangedEh()) {
                     getCommentAdapter().setPost(mPost); //pass updated post to the adapter
                     ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId); //clear all the previous comments
                     updateComments(false, false); //load first page of comments
@@ -215,8 +215,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         if (mBackFromLogin) {
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                // purge and reload the comments since logged in changes some info (example: isLikedByCurrentUser)
+            if (NetworkUtils.networkAvailableEh(this)) {
+                // purge and reload the comments since logged in changes some info (example: likedByCurrentUserEh)
                 ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
                 updatePostAndComments();
             }
@@ -252,12 +252,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mEditComment.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    final boolean isFocusableInTouchMode = mEditComment.isFocusableInTouchMode();
+                    final boolean focusableInTouchModeEh = mEditComment.focusableInTouchModeEh();
 
                     mEditComment.setFocusableInTouchMode(true);
                     EditTextUtils.showSoftInput(mEditComment);
 
-                    mEditComment.setFocusableInTouchMode(isFocusableInTouchMode);
+                    mEditComment.setFocusableInTouchMode(focusableInTouchModeEh);
 
                     setupReplyToComment();
                 }
@@ -302,7 +302,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
-        outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
+        outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mUpdatedCommentsEh);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
         super.onSaveInstanceState(outState);
@@ -325,7 +325,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         if (!mAccountStore.hasAccessToken()) {
             mCommentBox.setVisibility(View.GONE);
             showCommentsClosedMessage(false);
-        } else if (mPost.isCommentsOpen) {
+        } else if (mPost.commentsOpenEh) {
             mCommentBox.setVisibility(View.VISIBLE);
             showCommentsClosedMessage(false);
 
@@ -362,7 +362,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private boolean hasCommentAdapter() {
+    private boolean commentAdapterEh() {
         return (mCommentAdapter != null);
     }
 
@@ -388,7 +388,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
-                        if (isEmpty || !mHasUpdatedComments) {
+                        if (isEmpty || !mUpdatedCommentsEh) {
                             updateComments(isEmpty, false);
                         } else if (mCommentId > 0 || mDirectOperation != null) {
                             if (mCommentId > 0) {
@@ -411,7 +411,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             mCommentAdapter.setDataRequestedListener(new ReaderActions.DataRequestedListener() {
                 @Override
                 public void onRequestData() {
-                    if (!mIsUpdatingComments) {
+                    if (!mUpdatingCommentsEh) {
                         AppLog.i(T.READER, "reader comments > requesting next page of comments");
                         updateComments(true, true);
                     }
@@ -451,7 +451,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                         if (comment == null) {
                             ToastUtils.showToast(ReaderCommentListActivity.this,
                                     R.string.reader_toast_err_comment_not_found);
-                        } else if (comment.isLikedByCurrentUser) {
+                        } else if (comment.likedByCurrentUserEh) {
                             ToastUtils.showToast(ReaderCommentListActivity.this,
                                     R.string.reader_toast_err_already_liked);
 
@@ -502,18 +502,18 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.UpdateCommentsStarted event) {
-        mIsUpdatingComments = true;
+        mUpdatingCommentsEh = true;
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.UpdateCommentsEnded event) {
         if (isFinishing()) return;
 
-        mIsUpdatingComments = false;
-        mHasUpdatedComments = true;
+        mUpdatingCommentsEh = false;
+        mUpdatedCommentsEh = true;
         hideProgress();
 
-        if (event.getResult().isNewOrChanged()) {
+        if (event.getResult().newOrChangedEh()) {
             mRestorePosition = getCurrentPosition();
             refreshComments();
         } else {
@@ -527,12 +527,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
      * request comments for this post
      */
     private void updateComments(boolean showProgress, boolean requestNextPage) {
-        if (mIsUpdatingComments) {
+        if (mUpdatingCommentsEh) {
             AppLog.w(T.READER, "reader comments > already updating comments");
             setRefreshing(false);
             return;
         }
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.networkAvailableEh(this)) {
             AppLog.w(T.READER, "reader comments > no connection, update canceled");
             setRefreshing(false);
             return;
@@ -548,13 +548,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
         if (txtEmpty == null) return;
 
-        boolean isEmpty = hasCommentAdapter()
+        boolean isEmpty = commentAdapterEh()
                 && getCommentAdapter().isEmpty()
-                && !mIsSubmittingComment;
-        if (isEmpty && !NetworkUtils.isNetworkAvailable(this)) {
+                && !mSubmittingCommentEh;
+        if (isEmpty && !NetworkUtils.networkAvailableEh(this)) {
             txtEmpty.setText(R.string.no_network_message);
             txtEmpty.setVisibility(View.VISIBLE);
-        } else if (isEmpty && mHasUpdatedComments) {
+        } else if (isEmpty && mUpdatedCommentsEh) {
             txtEmpty.setText(R.string.reader_empty_comments);
             txtEmpty.setVisibility(View.VISIBLE);
         } else {
@@ -608,7 +608,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         mSubmitReplyBtn.setEnabled(false);
         mEditComment.setEnabled(false);
-        mIsSubmittingComment = true;
+        mSubmittingCommentEh = true;
 
         // generate a "fake" comment id to assign to the new comment so we can add it to the db
         // and reflect it in the adapter before the API call returns
@@ -620,7 +620,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 if (isFinishing()) {
                     return;
                 }
-                mIsSubmittingComment = false;
+                mSubmittingCommentEh = false;
                 mSubmitReplyBtn.setEnabled(true);
                 mEditComment.setEnabled(true);
                 if (succeeded) {
@@ -661,7 +661,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     }
 
     private int getCurrentPosition() {
-        if (mRecyclerView != null && hasCommentAdapter()) {
+        if (mRecyclerView != null && commentAdapterEh()) {
             return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else {
             return 0;

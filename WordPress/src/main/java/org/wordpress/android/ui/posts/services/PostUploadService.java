@@ -111,7 +111,7 @@ public class PostUploadService extends Service {
     /**
      * Returns true if the passed post is either uploading or waiting to be uploaded.
      */
-    public static boolean isPostUploading(PostModel post) {
+    public static boolean postUploadingEh(PostModel post) {
         // first check the currently uploading post
         if (mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId()) {
             return true;
@@ -196,18 +196,18 @@ public class PostUploadService extends Service {
         private SiteModel mSite;
 
         private String mErrorMessage = "";
-        private boolean mIsMediaError = false;
+        private boolean mMediaErrorEh = false;
         private long featuredImageID = -1;
 
         // Used for analytics
-        private boolean mHasImage, mHasVideo, mHasCategory;
+        private boolean mImageEh, mHasVideo, mHasCategory;
 
         @Override
         protected void onPostExecute(Boolean pushActionWasDispatched) {
             if (!pushActionWasDispatched) {
                 // This block only runs if the PUSH_POST action was never dispatched - if it was dispatched, any error
                 // will be handled in OnPostChanged instead of here
-                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage, mIsMediaError);
+                mPostUploadNotifier.updateNotificationError(mPost, mSite, mErrorMessage, mMediaErrorEh);
                 finishUpload();
             }
         }
@@ -220,7 +220,7 @@ public class PostUploadService extends Service {
             String uploadingPostTitle = String.format(getString(R.string.posting_post), postTitle);
             String uploadingPostMessage = String.format(
                     getString(R.string.sending_content),
-                    mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
+                    mPost.pageEh() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
             );
 
             mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostTitle, uploadingPostMessage);
@@ -247,7 +247,7 @@ public class PostUploadService extends Service {
             mPost.setContent(content);
 
             // If media file upload failed, let's stop here and prompt the user
-            if (mIsMediaError) {
+            if (mMediaErrorEh) {
                 return false;
             }
 
@@ -273,7 +273,7 @@ public class PostUploadService extends Service {
             return true;
         }
 
-        private boolean hasGallery() {
+        private boolean galleryEh() {
             Pattern galleryTester = Pattern.compile("\\[.*?gallery.*?\\]");
             Matcher matcher = galleryTester.matcher(mPost.getContent());
             return matcher.find();
@@ -284,10 +284,10 @@ public class PostUploadService extends Service {
             Map<String, Object> properties = new HashMap<>();
             properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
-            if (hasGallery()) {
+            if (galleryEh()) {
                 properties.put("with_galleries", true);
             }
-            if (mHasImage) {
+            if (mImageEh) {
                 properties.put("with_photos", true);
             }
             if (mHasVideo) {
@@ -299,7 +299,7 @@ public class PostUploadService extends Service {
             if (!mPost.getTagNameList().isEmpty()) {
                 properties.put("with_tags", true);
             }
-            properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
+            properties.put("via_new_editor", AppPrefs.visualEditorEnabledEh());
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST, mSite, properties);
         }
 
@@ -329,7 +329,7 @@ public class PostUploadService extends Service {
                     if (!imageUri.equals("")) {
                         MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost.getId(), imageUri);
                         if (mediaModel == null) {
-                            mIsMediaError = true;
+                            mMediaErrorEh = true;
                             continue;
                         }
                         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
@@ -352,11 +352,11 @@ public class PostUploadService extends Service {
                             mPostUploadNotifier.updateNotificationIcon(mPost, imageIcon);
 
                             String mediaUploadOutput;
-                            if (mediaFile.isVideo()) {
+                            if (mediaFile.videoEh()) {
                                 mHasVideo = true;
                                 mediaUploadOutput = uploadVideo(mediaFile);
                             } else {
-                                mHasImage = true;
+                                mImageEh = true;
                                 mediaUploadOutput = uploadImage(mediaFile);
                             }
 
@@ -364,7 +364,7 @@ public class PostUploadService extends Service {
                                 postContent = postContent.replace(tag, mediaUploadOutput);
                             } else {
                                 postContent = postContent.replace(tag, "");
-                                mIsMediaError = true;
+                                mMediaErrorEh = true;
                             }
                         }
                     }
@@ -491,13 +491,13 @@ public class PostUploadService extends Service {
                 countDownLatch.await();
             } catch (InterruptedException e) {
                 AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
-                mIsMediaError = true;
+                mMediaErrorEh = true;
             }
 
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
             if (finishedMedia == null || finishedMedia.getUploadState() == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
-                mIsMediaError = true;
+                mMediaErrorEh = true;
                 return null;
             }
 
@@ -520,21 +520,21 @@ public class PostUploadService extends Service {
                 countDownLatch.await();
             } catch (InterruptedException e) {
                 AppLog.e(T.POSTS, "CountDownLatch await interrupted for media file: " + mediaFile.getId() + " - " + e);
-                mIsMediaError = true;
+                mMediaErrorEh = true;
             }
 
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
             if (finishedMedia == null || finishedMedia.getUploadState() == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
-                mIsMediaError = true;
+                mMediaErrorEh = true;
                 return null;
             }
 
             String pictureURL = finishedMedia.getUrl();
 
-            if (mediaFile.isFeatured()) {
+            if (mediaFile.featuredEh()) {
                 featuredImageID = finishedMedia.getMediaId();
-                if (!mediaFile.isFeaturedInPost()) {
+                if (!mediaFile.featuredInPostEh()) {
                     return "";
                 }
             }
@@ -553,7 +553,7 @@ public class PostUploadService extends Service {
             case UNKNOWN_POST_TYPE:
                 return getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? getString(R.string.error_refresh_unauthorized_pages) :
+                return post.pageEh() ? getString(R.string.error_refresh_unauthorized_pages) :
                         getString(R.string.error_refresh_unauthorized_posts);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
@@ -578,7 +578,7 @@ public class PostUploadService extends Service {
     }
 
     private @NonNull String getErrorMessage(PostModel post, String specificMessage) {
-        String postType = getString(post.isPage() ? R.string.page : R.string.post).toLowerCase();
+        String postType = getString(post.pageEh() ? R.string.page : R.string.post).toLowerCase();
         return String.format(mContext.getResources().getText(R.string.error_upload_params).toString(), postType,
                 specificMessage);
     }
@@ -588,15 +588,15 @@ public class PostUploadService extends Service {
     public void onPostUploaded(OnPostUploaded event) {
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.e(T.POSTS, "Post upload failed. " + event.error.type + ": " + event.error.message);
             String message = getErrorMessage(event.post, getErrorMessageFromPostError(event.post, event.error));
             mPostUploadNotifier.updateNotificationError(event.post, site, message, false);
             mFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.cancelNotification(event.post);
-            boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
-            mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
+            boolean firstTimePublishEh = mFirstPublishPosts.remove(event.post.getId());
+            mPostUploadNotifier.updateNotificationSuccess(event.post, site, firstTimePublishEh);
         }
 
         finishUpload();
@@ -611,7 +611,7 @@ public class PostUploadService extends Service {
             return;
         }
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             AppLog.e(T.MEDIA, "Media upload failed. " + event.error.type + ": " + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(mCurrentUploadingPost.getLocalSiteId());
             String message = getErrorMessage(mCurrentUploadingPost, getErrorMessageFromMediaError(event.error));

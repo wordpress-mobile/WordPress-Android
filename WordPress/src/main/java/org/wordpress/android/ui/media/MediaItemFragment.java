@@ -67,7 +67,7 @@ public class MediaItemFragment extends Fragment {
     private TextView mFileTypeView;
     private MediaItemFragmentCallback mCallback;
 
-    private boolean mIsLocal;
+    private boolean mLocalEh;
     private String mImageUri;
 
     private SiteModel mSite;
@@ -190,8 +190,8 @@ public class MediaItemFragment extends Fragment {
         }
 
         // check whether or not to show the edit button
-        mIsLocal = MediaUtils.isLocalFile(mediaModel.getUploadState());
-        if (mIsLocal && getActivity() != null) {
+        mLocalEh = MediaUtils.localFileEh(mediaModel.getUploadState());
+        if (mLocalEh && getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
 
@@ -215,7 +215,7 @@ public class MediaItemFragment extends Fragment {
         if (getView() != null) {
             TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
             txtDateLabel.setText(
-                    mIsLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
+                    mLocalEh ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
         }
 
         String fileURL = mediaModel.getUrl();
@@ -223,7 +223,7 @@ public class MediaItemFragment extends Fragment {
         mImageUri = TextUtils.isEmpty(fileURL)
                 ? mediaModel.getFilePath()
                 : fileURL;
-        boolean isValidImage = MediaUtils.isValidImage(mImageUri);
+        boolean validImageEh = MediaUtils.validImageEh(mImageUri);
 
         mFileNameView.setText(fileName);
 
@@ -231,28 +231,28 @@ public class MediaItemFragment extends Fragment {
         float mediaHeight = mediaModel.getHeight();
 
         // image and dimensions
-        if (isValidImage) {
+        if (validImageEh) {
             int screenWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
             int screenHeight = DisplayUtils.getDisplayPixelHeight(getActivity());
 
             // determine size for display
             int imageWidth;
             int imageHeight;
-            boolean isFullWidth;
+            boolean fullWidthEh;
             if (mediaWidth == 0 || mediaHeight == 0) {
                 imageWidth = screenWidth;
                 imageHeight = screenHeight / 2;
-                isFullWidth = true;
+                fullWidthEh = true;
             } else if (mediaWidth > mediaHeight) {
                 float ratio = mediaHeight / mediaWidth;
                 imageWidth = Math.min(screenWidth, (int) mediaWidth);
                 imageHeight = (int) (imageWidth * ratio);
-                isFullWidth = (imageWidth == screenWidth);
+                fullWidthEh = (imageWidth == screenWidth);
             } else {
                 float ratio = mediaWidth / mediaHeight;
                 imageHeight = Math.min(screenHeight / 2, (int) mediaHeight);
                 imageWidth = (int) (imageHeight * ratio);
-                isFullWidth = false;
+                fullWidthEh = false;
             }
 
             // set the imageView's parent height to match the image so it takes up space while
@@ -262,19 +262,19 @@ public class MediaItemFragment extends Fragment {
                     new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, imageHeight));
 
             // add padding to the frame if the image isn't full-width
-            if (!isFullWidth) {
+            if (!fullWidthEh) {
                 int hpadding = getResources().getDimensionPixelSize(R.dimen.content_margin);
                 int vpadding = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
                 frameView.setPadding(hpadding, vpadding, hpadding, vpadding);
             }
 
-            if (mIsLocal) {
+            if (mLocalEh) {
                 final String filePath = mediaModel.getFilePath();
                 loadLocalImage(mImageView, filePath, imageWidth, imageHeight);
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 String thumbnailURL;
-                if (SiteUtils.isPhotonCapable(mSite)) {
+                if (SiteUtils.photonCapableEh(mSite)) {
                     thumbnailURL = StringUtils.getPhotonUrl(mImageUri, imageWidth);
                 } else {
                     thumbnailURL = UrlUtils.removeQuery(mImageUri) + "?w=" + imageWidth;
@@ -293,12 +293,12 @@ public class MediaItemFragment extends Fragment {
                 (mediaWidth > 0 && mediaHeight > 0) ? (int) mediaWidth + " x " + (int) mediaHeight : null;
         String fileExt =
                 TextUtils.isEmpty(fileURL) ? null : fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-        boolean hasDimens = !TextUtils.isEmpty(dimens);
-        boolean hasExt = !TextUtils.isEmpty(fileExt);
-        if (hasDimens & hasExt) {
+        boolean dimensEh = !TextUtils.isEmpty(dimens);
+        boolean extEh = !TextUtils.isEmpty(fileExt);
+        if (dimensEh & extEh) {
             mFileTypeView.setText(fileExt + ", " + dimens);
             mFileTypeView.setVisibility(View.VISIBLE);
-        } else if (hasExt) {
+        } else if (extEh) {
             mFileTypeView.setText(fileExt);
             mFileTypeView.setVisibility(View.VISIBLE);
         } else {
@@ -306,12 +306,12 @@ public class MediaItemFragment extends Fragment {
         }
 
         // enable fullscreen photo for non-local
-        if (!mIsLocal && isValidImage) {
+        if (!mLocalEh && validImageEh) {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
-                    if (mSite.isPrivate()) {
+                    if (mSite.privateEh()) {
                         imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
                     }
                     ReaderActivityLauncher.showReaderPhotoViewer(
@@ -322,7 +322,7 @@ public class MediaItemFragment extends Fragment {
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
-        if (MediaUtils.isValidImage(filePath)) {
+        if (MediaUtils.validImageEh(filePath)) {
             imageView.setTag(filePath);
 
             Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
@@ -350,8 +350,8 @@ public class MediaItemFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.menu_new_media).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(false);
-        menu.findItem(R.id.menu_edit_media).setVisible(!mIsLocal);
-        menu.findItem(R.id.menu_copy_media_url).setVisible(!mIsLocal && !TextUtils.isEmpty(mImageUri));
+        menu.findItem(R.id.menu_edit_media).setVisible(!mLocalEh);
+        menu.findItem(R.id.menu_copy_media_url).setVisible(!mLocalEh && !TextUtils.isEmpty(mImageUri));
     }
 
     @Override

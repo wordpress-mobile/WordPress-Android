@@ -119,7 +119,7 @@ public class WPLegacyMigrationUtils {
         return token;
     }
 
-    public static boolean hasSelfHostedSiteToMigrate(Context context) {
+    public static boolean selfHostedSiteToMigrateEh(Context context) {
         try {
             SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
             String[] fields = new String[]{"username", "password", "url", "homeURL", "blogId", "api_blogid"};
@@ -209,7 +209,7 @@ public class WPLegacyMigrationUtils {
         return siteList;
     }
 
-    public static boolean hasDraftsToMigrate(Context context) {
+    public static boolean draftsToMigrateEh(Context context) {
         try {
             SQLiteDatabase db = context.openOrCreateDatabase(DEPRECATED_DATABASE_NAME, 0, null);
 
@@ -313,7 +313,7 @@ public class WPLegacyMigrationUtils {
                 postModel.setStatus(c.getString(c.getColumnIndex("post_status")));
                 postModel.setPassword(c.getString(c.getColumnIndex("wp_password")));
                 postModel.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
-                postModel.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
+                postModel.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("pageEh"))));
 
                 int latColumnIndex = c.getColumnIndex("latitude");
                 int lngColumnIndex = c.getColumnIndex("longitude");

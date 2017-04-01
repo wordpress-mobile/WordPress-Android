@@ -82,7 +82,7 @@ public class LearnMorePreference extends Preference
     }
 
     @Override
-    public boolean hasHint() {
+    public boolean hintEh() {
         return !TextUtils.isEmpty(mHint);
     }
 

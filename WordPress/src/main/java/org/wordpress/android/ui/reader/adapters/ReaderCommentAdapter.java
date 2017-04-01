@@ -56,8 +56,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private long mHighlightCommentId = 0;
     private long mAnimateLikeCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
-    private final boolean mIsPrivatePost;
-    private boolean mIsHeaderClickEnabled;
+    private final boolean mPrivatePostEh;
+    private boolean mHeaderClickEnabledEh;
 
     private final int mColorAuthor;
     private final int mColorNotAuthor;
@@ -113,7 +113,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             countLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
 
             txtText.setLinksClickable(true);
-            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
+            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mPrivatePostEh));
         }
     }
 
@@ -129,7 +129,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     public ReaderCommentAdapter(Context context, ReaderPost post) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mPost = post;
-        mIsPrivatePost = (post != null && post.isPrivate);
+        mPrivatePostEh = (post != null && post.privateEh);
 
         mIndentPerLevel = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
@@ -161,7 +161,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void enableHeaderClicks() {
-        mIsHeaderClickEnabled = true;
+        mHeaderClickEnabledEh = true;
     }
 
     @Override
@@ -170,7 +170,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void refreshComments() {
-        if (mIsTaskRunning) {
+        if (mTaskRunningEh) {
             AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
         }
         new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -203,7 +203,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (holder instanceof PostHeaderHolder) {
             PostHeaderHolder headerHolder = (PostHeaderHolder) holder;
             headerHolder.mHeaderView.setPost(mPost);
-            if (mIsHeaderClickEnabled) {
+            if (mHeaderClickEnabledEh) {
                 headerHolder.mHeaderView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -225,7 +225,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         java.util.Date dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
         commentHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished, WordPress.getContext()));
 
-        if (comment.hasAuthorAvatar()) {
+        if (comment.authorAvatarEh()) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);
             commentHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
@@ -233,7 +233,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         // tapping avatar or author name opens blog preview
-        if (comment.hasAuthorBlogId()) {
+        if (comment.authorBlogIdEh()) {
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -337,7 +337,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         if (mPost.canLikePost()) {
             holder.countLikes.setVisibility(View.VISIBLE);
-            holder.countLikes.setSelected(comment.isLikedByCurrentUser);
+            holder.countLikes.setSelected(comment.likedByCurrentUserEh);
             holder.countLikes.setCount(comment.numLikes);
 
             if (!mAccountStore.hasAccessToken()) {
@@ -369,10 +369,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
 
-        boolean isAskingToLike = !comment.isLikedByCurrentUser;
-        ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
+        boolean askingToLikeEh = !comment.likedByCurrentUserEh;
+        ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), askingToLikeEh);
 
-        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike, mAccountStore.getAccount().getUserId())) {
+        if (!ReaderCommentActions.performLikeAction(comment, askingToLikeEh, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
@@ -383,7 +383,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             showLikeStatus(holder, position);
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED :
+        AnalyticsUtils.trackWithReaderPostDetails(askingToLikeEh ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED :
                 AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
     }
 
@@ -482,7 +482,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     /*
      * AsyncTask to load comments for this post
      */
-    private boolean mIsTaskRunning = false;
+    private boolean mTaskRunningEh = false;
 
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderCommentList tmpComments;
@@ -490,12 +490,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @Override
         protected void onPreExecute() {
-            mIsTaskRunning = true;
+            mTaskRunningEh = true;
         }
 
         @Override
         protected void onCancelled() {
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
         }
 
         @Override
@@ -512,7 +512,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             tmpMoreCommentsExist = (numServerComments > numLocalComments);
 
             tmpComments = ReaderCommentTable.getCommentsForPost(mPost);
-            return !mComments.isSameList(tmpComments);
+            return !mComments.sameListEh(tmpComments);
         }
 
         @Override
@@ -527,7 +527,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
             }
-            mIsTaskRunning = false;
+            mTaskRunningEh = false;
         }
     }
 

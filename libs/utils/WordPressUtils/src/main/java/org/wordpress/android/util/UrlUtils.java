@@ -169,15 +169,15 @@ public class UrlUtils {
     /**
      * returns true if passed url is https:
      */
-    public static boolean isHttps(final String urlString) {
+    public static boolean httpsEh(final String urlString) {
         return (urlString != null && urlString.startsWith("https:"));
     }
 
-    public static boolean isHttps(URL url) {
+    public static boolean httpsEh(URL url) {
         return url != null && "https".equals(url.getProtocol());
     }
 
-    public static boolean isHttps(URI uri) {
+    public static boolean httpsEh(URI uri) {
         if (uri == null) return false;
 
         String protocol = uri.getScheme();
@@ -219,7 +219,7 @@ public class UrlUtils {
     /**
      * returns false if the url is not valid or if the url host is null, else true
      */
-    public static boolean isValidUrlAndHostNotNull(String url) {
+    public static boolean validUrlAndHostNotNullEh(String url) {
         try {
             URI uri = URI.create(url);
             if (uri.getHost() == null) {
@@ -232,7 +232,7 @@ public class UrlUtils {
     }
 
     // returns true if the passed url is for an image
-    public static boolean isImageUrl(String url) {
+    public static boolean imageUrlEh(String url) {
         if (TextUtils.isEmpty(url)) return false;
 
         String cleanedUrl = removeQuery(url.toLowerCase());

@@ -36,14 +36,14 @@ public class ReaderRecommendBlogList extends ArrayList<ReaderRecommendedBlog> {
         return -1;
     }
 
-    public boolean isSameList(ReaderRecommendBlogList blogs) {
+    public boolean sameListEh(ReaderRecommendBlogList blogs) {
         if (blogs == null || blogs.size() != this.size()) {
             return false;
         }
 
         for (ReaderRecommendedBlog blog: blogs) {
             int index = indexOfBlogId(blog.blogId);
-            if (index == -1 || !this.get(index).isSameAs(blog)) {
+            if (index == -1 || !this.get(index).sameAsEh(blog)) {
                 return false;
             }
         }

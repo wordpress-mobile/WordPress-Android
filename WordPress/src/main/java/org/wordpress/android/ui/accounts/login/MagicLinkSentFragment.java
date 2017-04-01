@@ -74,7 +74,7 @@ public class MagicLinkSentFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
                 intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
-                        (mJetpackCallbacks.isJetpackAuth(), true));
+                        (mJetpackCallbacks.jetpackAuthEh(), true));
                 startActivity(intent);
             }
         };

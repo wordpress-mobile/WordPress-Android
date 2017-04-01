@@ -82,20 +82,20 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         final String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
         final String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
         final String themeId = cursor.getString(cursor.getColumnIndex(Theme.ID));
-        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) == 1;
-        final boolean isPremium = !price.isEmpty();
+        final boolean currentEh = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) == 1;
+        final boolean premiumEh = !price.isEmpty();
 
         themeViewHolder.nameView.setText(name);
         themeViewHolder.priceView.setText(price);
 
-        configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
-        configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
-        configureCardView(context, themeViewHolder, isCurrent);
+        configureImageView(themeViewHolder, screenshotURL, themeId, currentEh);
+        configureImageButton(context, themeViewHolder, themeId, premiumEh, currentEh);
+        configureCardView(context, themeViewHolder, currentEh);
     }
 
-    private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean isCurrent) {
+    private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean currentEh) {
         Resources resources = context.getResources();
-        if (isCurrent) {
+        if (currentEh) {
             themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.blue_wordpress));
             themeViewHolder.nameView.setTextColor(resources.getColor(R.color.white));
             themeViewHolder.activeView.setVisibility(View.VISIBLE);
@@ -110,7 +110,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean isCurrent) {
+    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean currentEh) {
         String requestURL = (String) themeViewHolder.imageView.getTag();
         if (requestURL == null) {
             requestURL = screenshotURL;
@@ -126,7 +126,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isCurrent) {
+                if (currentEh) {
                     mCallback.onTryAndCustomizeSelected(themeId);
                 } else {
                     mCallback.onViewSelected(themeId);
@@ -135,18 +135,18 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         });
     }
 
-    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
+    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean premiumEh, boolean currentEh) {
         final PopupMenu popupMenu = new PopupMenu(context, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
 
-        configureMenuForTheme(popupMenu.getMenu(), isCurrent);
+        configureMenuForTheme(popupMenu.getMenu(), currentEh);
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
                 if (i == R.id.menu_activate) {
-                    if (isPremium) {
+                    if (premiumEh) {
                         mCallback.onDetailsSelected(themeId);
                     } else {
                         mCallback.onActivateSelected(themeId);
@@ -172,23 +172,23 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         });
     }
 
-    private void configureMenuForTheme(Menu menu, boolean isCurrent) {
+    private void configureMenuForTheme(Menu menu, boolean currentEh) {
         MenuItem activate = menu.findItem(R.id.menu_activate);
         MenuItem customize = menu.findItem(R.id.menu_try_and_customize);
         MenuItem view = menu.findItem(R.id.menu_view);
 
         if (activate != null) {
-            activate.setVisible(!isCurrent);
+            activate.setVisible(!currentEh);
         }
         if (customize != null) {
-            if (isCurrent) {
+            if (currentEh) {
                 customize.setTitle(R.string.customize);
             } else {
                 customize.setTitle(R.string.theme_try_and_customize);
             }
         }
         if (view != null) {
-            view.setVisible(!isCurrent);
+            view.setVisible(!currentEh);
         }
     }
 

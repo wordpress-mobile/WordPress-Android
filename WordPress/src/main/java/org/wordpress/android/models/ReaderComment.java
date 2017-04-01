@@ -27,7 +27,7 @@ public class ReaderComment {
     public long authorBlogId;
 
     public int numLikes;
-    public boolean isLikedByCurrentUser;
+    public boolean likedByCurrentUserEh;
 
     public int pageNumber;
 
@@ -75,7 +75,7 @@ public class ReaderComment {
         JSONObject jsonLikes = JSONUtils.getJSONChild(json, "meta/data/likes");
         if (jsonLikes != null) {
             comment.numLikes = jsonLikes.optInt("found");
-            comment.isLikedByCurrentUser = JSONUtils.getBool(jsonLikes, "i_like");
+            comment.likedByCurrentUserEh = JSONUtils.getBool(jsonLikes, "i_like");
         }
 
         return comment;
@@ -124,15 +124,15 @@ public class ReaderComment {
         this.published = StringUtils.notNullStr(published);
     }
 
-    public boolean hasAuthorUrl() {
+    public boolean authorUrlEh() {
         return !TextUtils.isEmpty(authorUrl);
     }
 
-    public boolean hasAuthorBlogId() {
+    public boolean authorBlogIdEh() {
         return (authorBlogId != 0);
     }
 
-    public boolean hasAuthorAvatar() {
+    public boolean authorAvatarEh() {
         return !TextUtils.isEmpty(authorAvatar);
     }
 
@@ -157,7 +157,7 @@ public class ReaderComment {
                 && authorId == otherComment.authorId
                 && authorBlogId == otherComment.authorBlogId
                 && numLikes == otherComment.numLikes
-                && isLikedByCurrentUser == otherComment.isLikedByCurrentUser
+                && likedByCurrentUserEh == otherComment.isLikedByCurrentUser
                 && pageNumber == otherComment.pageNumber;
     }
 }

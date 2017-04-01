@@ -120,9 +120,9 @@ public class ReaderBlogTable {
         blogInfo.setFeedUrl(c.getString(c.getColumnIndex("feed_url")));
         blogInfo.setName(c.getString(c.getColumnIndex("name")));
         blogInfo.setDescription(c.getString(c.getColumnIndex("description")));
-        blogInfo.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
-        blogInfo.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
-        blogInfo.isFollowing = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_following")));
+        blogInfo.privateEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
+        blogInfo.jetpackEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
+        blogInfo.followingEh = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_following")));
         blogInfo.numSubscribers = c.getInt(c.getColumnIndex("num_followers"));
 
         return blogInfo;
@@ -144,9 +144,9 @@ public class ReaderBlogTable {
             stmt.bindString(5, blogInfo.getFeedUrl());
             stmt.bindString(6, blogInfo.getName());
             stmt.bindString(7, blogInfo.getDescription());
-            stmt.bindLong  (8, SqlUtils.boolToSql(blogInfo.isPrivate));
-            stmt.bindLong  (9, SqlUtils.boolToSql(blogInfo.isJetpack));
-            stmt.bindLong  (10, SqlUtils.boolToSql(blogInfo.isFollowing));
+            stmt.bindLong  (8, SqlUtils.boolToSql(blogInfo.privateEh));
+            stmt.bindLong  (9, SqlUtils.boolToSql(blogInfo.jetpackEh));
+            stmt.bindLong  (10, SqlUtils.boolToSql(blogInfo.followingEh));
             stmt.bindLong  (11, blogInfo.numSubscribers);
             stmt.bindString(12, DateTimeUtils.iso8601FromDate(new Date()));
             stmt.execute();
@@ -221,28 +221,28 @@ public class ReaderBlogTable {
     /*
      * sets the follow state for passed blog without creating a record for it if it doesn't exist
      */
-    public static void setIsFollowedBlogId(long blogId, boolean isFollowed) {
+    public static void setIsFollowedBlogId(long blogId, boolean followedEh) {
         ReaderDatabase.getWritableDb().execSQL(
                 "UPDATE tbl_blog_info SET is_following="
-                        + SqlUtils.boolToSql(isFollowed)
+                        + SqlUtils.boolToSql(followedEh)
                         + " WHERE blog_id=?",
                 new String[]{Long.toString(blogId)});
     }
 
-    public static void setIsFollowedFeedId(long feedId, boolean isFollowed) {
+    public static void setIsFollowedFeedId(long feedId, boolean followedEh) {
         ReaderDatabase.getWritableDb().execSQL(
                 "UPDATE tbl_blog_info SET is_following="
-                        + SqlUtils.boolToSql(isFollowed)
+                        + SqlUtils.boolToSql(followedEh)
                         + " WHERE feed_id=?",
                 new String[]{Long.toString(feedId)});
     }
 
-    public static boolean hasFollowedBlogs() {
+    public static boolean followedBlogsEh() {
         String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 LIMIT 1";
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, null);
     }
 
-    public static boolean isFollowedBlogUrl(String blogUrl) {
+    public static boolean followedBlogUrlEh(String blogUrl) {
         if (TextUtils.isEmpty(blogUrl)) {
             return false;
         }
@@ -251,13 +251,13 @@ public class ReaderBlogTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
-    public static boolean isFollowedBlog(long blogId) {
+    public static boolean followedBlogEh(long blogId) {
         String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_id=?";
         String[] args = {Long.toString(blogId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
-    public static boolean isFollowedFeedUrl(String feedUrl) {
+    public static boolean followedFeedUrlEh(String feedUrl) {
         if (TextUtils.isEmpty(feedUrl)) {
             return false;
         }
@@ -266,7 +266,7 @@ public class ReaderBlogTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
-    public static boolean isFollowedFeed(long feedId) {
+    public static boolean followedFeedEh(long feedId) {
         String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND feed_id=?";
         String[] args = {Long.toString(feedId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
@@ -356,7 +356,7 @@ public class ReaderBlogTable {
     /*
      * determine whether the passed blog info should be updated based on when it was last updated
      */
-    public static boolean isTimeToUpdateBlogInfo(ReaderBlog blogInfo) {
+    public static boolean timeToUpdateBlogInfoEh(ReaderBlog blogInfo) {
         int minutes = minutesSinceLastUpdate(blogInfo);
         if (minutes == NEVER_UPDATED) {
             return true;

@@ -79,7 +79,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
 
         // load image
         String uploadState = cursor.getString(cursor.getColumnIndex(MediaModelTable.UPLOAD_STATE));
-        if (!MediaUtils.isLocalFile(uploadState)) {
+        if (!MediaUtils.localFileEh(uploadState)) {
             loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
 
@@ -97,7 +97,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
 
         // dimensions
         if (holder.dimensionView != null) {
-            if( MediaUtils.isValidImage(filePath)) {
+            if( MediaUtils.validImageEh(filePath)) {
                 int width = cursor.getInt(cursor.getColumnIndex(MediaModelTable.WIDTH));
                 int height = cursor.getInt(cursor.getColumnIndex(MediaModelTable.HEIGHT));
 
@@ -122,7 +122,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         }
 
         Uri uri = Uri.parse(thumbnailURL);
-        if (uri != null && MediaUtils.isValidImage(uri.getLastPathSegment())) {
+        if (uri != null && MediaUtils.validImageEh(uri.getLastPathSegment())) {
             imageView.setTag(thumbnailURL);
             imageView.setImageUrl(thumbnailURL, mImageLoader);
         } else {

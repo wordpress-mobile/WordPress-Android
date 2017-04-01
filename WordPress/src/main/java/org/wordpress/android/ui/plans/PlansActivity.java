@@ -265,12 +265,12 @@ public class PlansActivity extends AppCompatActivity {
     private void selectCurrentPlan() {
         int position = -1;
         for (Plan currentSitePlan : mAvailablePlans) {
-            if (currentSitePlan.isCurrentPlan()) {
+            if (currentSitePlan.currentPlanEh()) {
                 position = getPageAdapter().getPositionOfPlan(currentSitePlan.getProductID());
                 break;
             }
         }
-        if (getPageAdapter().isValidPosition(position)) {
+        if (getPageAdapter().validPositionEh(position)) {
             mViewPager.setCurrentItem(position);
         }
     }

@@ -15,7 +15,7 @@ public class Theme {
     public static final String STYLESHEET = "stylesheet";
     public static final String PRICE = "price";
     public static final String BLOG_ID = "blogId";
-    public static final String IS_CURRENT = "isCurrent";
+    public static final String IS_CURRENT = "currentEh";
 
     public static final String PREVIEW_URL = "preview_url";
     public static final String COST = "cost";
@@ -30,7 +30,7 @@ public class Theme {
     private String mStylesheet;
     private String mPrice;
     private String mBlogId;
-    private boolean mIsCurrent;
+    private boolean mCurrentEh;
 
     public static Theme fromJSONV1_1(JSONObject object, SiteModel site) throws JSONException {
         if (object == null) {
@@ -80,7 +80,7 @@ public class Theme {
     }
 
     public Theme(String id, String author, String screenshot, String authorURI, String demoURI, String name,
-                 String stylesheet, String price, String blogId, boolean isCurrent) {
+                 String stylesheet, String price, String blogId, boolean currentEh) {
         setId(id);
         setAuthor(author);
         setScreenshot(screenshot);
@@ -90,7 +90,7 @@ public class Theme {
         setStylesheet(stylesheet);
         setPrice(price);
         setBlogId(blogId);
-        setIsCurrent(isCurrent);
+        setIsCurrent(currentEh);
     }
 
     public void setId(String id) {
@@ -166,14 +166,14 @@ public class Theme {
     }
 
     public boolean getIsCurrent() {
-        return mIsCurrent;
+        return mCurrentEh;
     }
 
-    public void setIsCurrent(boolean isCurrent) {
-        mIsCurrent = isCurrent;
+    public void setIsCurrent(boolean currentEh) {
+        mCurrentEh = currentEh;
     }
 
-    public boolean isPremium() {
+    public boolean premiumEh() {
         return !mPrice.equals("");
     }
 

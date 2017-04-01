@@ -128,7 +128,7 @@ public class AniUtils {
 
     private static void animateBar(View view,
                                    boolean show,
-                                   boolean isTopBar,
+                                   boolean topBarEh,
                                    Duration duration) {
         int newVisibility = (show ? View.VISIBLE : View.GONE);
         if (view == null || view.getVisibility() == newVisibility) {
@@ -137,7 +137,7 @@ public class AniUtils {
 
         float fromY;
         float toY;
-        if (isTopBar) {
+        if (topBarEh) {
             fromY = (show ? -1f : 0f);
             toY   = (show ? 0f : -1f);
         } else {

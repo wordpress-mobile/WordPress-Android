@@ -52,17 +52,17 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private static final String ALERT_TAB = "alert";
 
     private boolean mFetchingThemes = false;
-    private boolean mIsRunning;
+    private boolean mRunningEh;
     private ThemeBrowserFragment mThemeBrowserFragment;
     private ThemeSearchFragment mThemeSearchFragment;
     private Theme mCurrentTheme;
-    private boolean mIsInSearchMode;
+    private boolean mInSearchModeEh;
 
     private SiteModel mSite;
 
-    public static boolean isAccessible(SiteModel site) {
+    public static boolean accessibleEh(SiteModel site) {
         // themes are only accessible to admin wordpress.com users
-        // TODO: Support themes for Jetpack and AT sites (and use SiteUtils.isAccessibleViaWPComAPI(site))
+        // TODO: Support themes for Jetpack and AT sites (and use SiteUtils.accessibleViaWPComAPIEh(site))
         return site != null && site.isWPCom() && site.getHasCapabilityEditThemeOptions();
     }
 
@@ -103,7 +103,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onResume() {
         super.onResume();
         showCorrectToolbar();
-        mIsRunning = true;
+        mRunningEh = true;
         ActivityId.trackLastActivity(ActivityId.THEMES);
 
         fetchThemesIfNoneAvailable();
@@ -113,19 +113,19 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @Override
     protected void onPause() {
         super.onPause();
-        mIsRunning = false;
+        mRunningEh = false;
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mIsInSearchMode = savedInstanceState.getBoolean(IS_IN_SEARCH_MODE);
+        mInSearchModeEh = savedInstanceState.getBoolean(IS_IN_SEARCH_MODE);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(IS_IN_SEARCH_MODE, mIsInSearchMode);
+        outState.putBoolean(IS_IN_SEARCH_MODE, mInSearchModeEh);
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
@@ -160,8 +160,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    public void setIsInSearchMode(boolean isInSearchMode) {
-        mIsInSearchMode = isInSearchMode;
+    public void setIsInSearchMode(boolean inSearchModeEh) {
+        mInSearchModeEh = inSearchModeEh;
     }
 
     public void fetchThemes() {
@@ -185,7 +185,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             String errorTitle = getString(R.string.theme_auth_error_title);
                             String errorMsg = getString(R.string.theme_auth_error_message);
 
-                            if (mIsRunning) {
+                            if (mRunningEh) {
                                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                                 WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
                                         errorTitle);
@@ -224,7 +224,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                             String errorTitle = getString(R.string.theme_auth_error_title);
                             String errorMsg = getString(R.string.theme_auth_error_message);
 
-                            if (mIsRunning) {
+                            if (mRunningEh) {
                                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                                 WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
                                         errorTitle);
@@ -293,18 +293,18 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void fetchThemesIfNoneAvailable() {
-        if (NetworkUtils.isNetworkAvailable(this)
+        if (NetworkUtils.networkAvailableEh(this)
                 && WordPress.wpDB.getThemeCount(String.valueOf(mSite.getSiteId())) == 0) {
             fetchThemes();
             //do not interact with theme browser fragment if we are in search mode
-            if (!mIsInSearchMode) {
+            if (!mInSearchModeEh) {
                 mThemeBrowserFragment.setRefreshing(true);
             }
         }
     }
 
     private void fetchPurchasedThemes() {
-        if (NetworkUtils.isNetworkAvailable(this)) {
+        if (NetworkUtils.networkAvailableEh(this)) {
             WordPress.getRestClientUtilsV1_1().getPurchasedThemes(mSite.getSiteId(), new Listener() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -318,7 +318,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             });
 
             //do not interact with theme browser fragment if we are in search mode
-            if (!mIsInSearchMode) {
+            if (!mInSearchModeEh) {
                 mThemeBrowserFragment.setRefreshing(true);
             }
         }
@@ -337,7 +337,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void showCorrectToolbar() {
-        if (mIsInSearchMode) {
+        if (mInSearchModeEh) {
             showSearchToolbar();
         } else {
             hideSearchToolbar();
@@ -428,9 +428,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
         String toastText = getString(R.string.no_network_message);
 
-        if (NetworkUtils.isNetworkAvailable(this)) {
+        if (NetworkUtils.networkAvailableEh(this)) {
             if (mCurrentTheme != null && !TextUtils.isEmpty(themeId)) {
-                boolean isCurrentTheme = mCurrentTheme.getId().equals(themeId);
+                boolean currentThemeEh = mCurrentTheme.getId().equals(themeId);
                 Map<String, Object> themeProperties = new HashMap<>();
                 themeProperties.put(THEME_ID, themeId);
 
@@ -452,7 +452,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
                                 mSite, themeProperties);
                         break;
                 }
-                ThemeWebActivity.openTheme(this, mSite, themeId, type, isCurrentTheme);
+                ThemeWebActivity.openTheme(this, mSite, themeId, type, currentThemeEh);
                 return;
             } else {
                 toastText = getString(R.string.could_not_load_theme);
@@ -489,7 +489,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onSearchClicked() {
-        mIsInSearchMode = true;
+        mInSearchModeEh = true;
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
         addSearchFragment();
     }

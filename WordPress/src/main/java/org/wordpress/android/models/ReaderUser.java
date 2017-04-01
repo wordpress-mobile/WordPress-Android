@@ -74,15 +74,15 @@ public class ReaderUser {
         this.avatarUrl = StringUtils.notNullStr(avatarUrl);
     }
 
-    public boolean hasUrl() {
+    public boolean urlEh() {
         return !TextUtils.isEmpty(url);
     }
 
-    public boolean hasAvatarUrl() {
+    public boolean avatarUrlEh() {
         return !TextUtils.isEmpty(avatarUrl);
     }
 
-    public boolean hasBlogId() {
+    public boolean blogIdEh() {
         return (blogId != 0);
     }
 
@@ -92,7 +92,7 @@ public class ReaderUser {
     private transient String urlDomain;
     public String getUrlDomain() {
         if (urlDomain == null) {
-            if (hasUrl()) {
+            if (urlEh()) {
                 urlDomain = UrlUtils.getHost(getUrl());
             } else {
                 urlDomain = "";
@@ -101,7 +101,7 @@ public class ReaderUser {
         return urlDomain;
     }
 
-    public boolean isSameUser(ReaderUser user) {
+    public boolean sameUserEh(ReaderUser user) {
         if (user == null)
             return false;
         if (this.userId != user.userId)

@@ -48,7 +48,7 @@ public class PostUtils {
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
             shortCode = m.group(2);
-            if (isKnownShortcode(shortCode)) {
+            if (knownShortcodeEh(shortCode)) {
                 m.appendReplacement(sb, "[" + shortCode + "]");
             } else {
                 AppLog.d(AppLog.T.POSTS, "unknown shortcode - " + shortCode);
@@ -59,7 +59,7 @@ public class PostUtils {
         return sb.toString();
     }
 
-    private static boolean isKnownShortcode(String shortCode) {
+    private static boolean knownShortcodeEh(String shortCode) {
         if (shortCode == null) return false;
 
         // populate on first use
@@ -106,14 +106,14 @@ public class PostUtils {
         PostStatus status = PostStatus.fromPost(post);
         switch (status) {
             case PUBLISHED:
-                if (!post.isLocalDraft()) {
+                if (!post.localDraftEh()) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
                 }
                 break;
             case SCHEDULED:
-                if (!post.isLocalDraft()) {
+                if (!post.localDraftEh()) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
                 } else {
                     Map<String, Object> properties = new HashMap<>();
@@ -143,11 +143,11 @@ public class PostUtils {
         }
     }
 
-    public static boolean isPublishable(PostModel post) {
+    public static boolean publishableEh(PostModel post) {
         return !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
     }
 
-    public static boolean hasEmptyContentFields(PostModel post) {
+    public static boolean emptyContentFieldsEh(PostModel post) {
         return TextUtils.isEmpty(post.getTitle()) && TextUtils.isEmpty(post.getContent());
     }
 

@@ -69,8 +69,8 @@ public class NumberPickerDialog extends DialogFragment
                 mSwitch.setText(args.getString(SWITCH_TITLE_KEY, ""));
                 mSwitch.setChecked(args.getBoolean(SWITCH_ENABLED_KEY, false));
                 final View toggleContainer = view.findViewById(R.id.number_picker_toggleable);
-                toggleContainer.setEnabled(mSwitch.isChecked());
-                mNumberPicker.setEnabled(mSwitch.isChecked());
+                toggleContainer.setEnabled(mSwitch.checkedEh());
+                mNumberPicker.setEnabled(mSwitch.checkedEh());
             } else {
                 mSwitch.setVisibility(View.GONE);
             }
@@ -123,9 +123,9 @@ public class NumberPickerDialog extends DialogFragment
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mNumberPicker.setEnabled(isChecked);
-        mHeaderText.setEnabled(isChecked);
+    public void onCheckedChanged(CompoundButton buttonView, boolean checkedEh) {
+        mNumberPicker.setEnabled(checkedEh);
+        mHeaderText.setEnabled(checkedEh);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class NumberPickerDialog extends DialogFragment
     private Intent getResultIntent() {
         if (mConfirmed) {
             return new Intent()
-                    .putExtra(SWITCH_ENABLED_KEY, mSwitch.isChecked())
+                    .putExtra(SWITCH_ENABLED_KEY, mSwitch.checkedEh())
                     .putExtra(CUR_VALUE_KEY, mNumberPicker.getValue());
         }
 

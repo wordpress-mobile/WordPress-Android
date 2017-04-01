@@ -54,13 +54,13 @@ public class ReaderPost {
     public int numReplies;        // includes comments, trackbacks & pingbacks
     public int numLikes;
 
-    public boolean isLikedByCurrentUser;
-    public boolean isFollowedByCurrentUser;
-    public boolean isCommentsOpen;
-    public boolean isExternal;
-    public boolean isPrivate;
-    public boolean isVideoPress;
-    public boolean isJetpack;
+    public boolean likedByCurrentUserEh;
+    public boolean followedByCurrentUserEh;
+    public boolean commentsOpenEh;
+    public boolean externalEh;
+    public boolean privateEh;
+    public boolean videoPressEh;
+    public boolean jetpackEh;
 
     private String attachmentsJson;
     private String discoverJson;
@@ -101,18 +101,18 @@ public class ReaderPost {
         post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
 
         post.numLikes = json.optInt("like_count");
-        post.isLikedByCurrentUser = JSONUtils.getBool(json, "i_like");
-        post.isFollowedByCurrentUser = JSONUtils.getBool(json, "is_following");
-        post.isExternal = JSONUtils.getBool(json, "is_external");
-        post.isPrivate = JSONUtils.getBool(json, "site_is_private");
-        post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
+        post.likedByCurrentUserEh = JSONUtils.getBool(json, "i_like");
+        post.followedByCurrentUserEh = JSONUtils.getBool(json, "is_following");
+        post.externalEh = JSONUtils.getBool(json, "is_external");
+        post.privateEh = JSONUtils.getBool(json, "site_is_private");
+        post.jetpackEh = JSONUtils.getBool(json, "is_jetpack");
 
         JSONObject jsonDiscussion = json.optJSONObject("discussion");
         if (jsonDiscussion != null) {
-            post.isCommentsOpen = JSONUtils.getBool(jsonDiscussion, "comments_open");
+            post.commentsOpenEh = JSONUtils.getBool(jsonDiscussion, "comments_open");
             post.numReplies = jsonDiscussion.optInt("comment_count");
         } else {
-            post.isCommentsOpen = JSONUtils.getBool(json, "comments_open");
+            post.commentsOpenEh = JSONUtils.getBool(json, "comments_open");
             post.numReplies = json.optInt("comment_count");
         }
 
@@ -130,12 +130,12 @@ public class ReaderPost {
         post.score = json.optDouble("score");
 
         // if the post is untitled, make up a title from the excerpt
-        if (!post.hasTitle() && post.hasExcerpt()) {
+        if (!post.titleEh() && post.excerptEh()) {
             post.title = extractTitle(post.excerpt, 50);
         }
 
         // remove html from title (rare, but does happen)
-        if (post.hasTitle() && post.title.contains("<") && post.title.contains(">")) {
+        if (post.titleEh() && post.title.contains("<") && post.title.contains(">")) {
             post.title = HtmlUtils.stripHtml(post.title);
         }
 
@@ -154,13 +154,13 @@ public class ReaderPost {
             post.blogId = jsonSite.optInt("ID");
             post.blogName = JSONUtils.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtils.getString(jsonSite, "URL"));
-            post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
+            post.privateEh = JSONUtils.getBool(jsonSite, "is_private");
             JSONObject jsonSiteIcon = jsonSite.optJSONObject("icon");
             if (jsonSiteIcon != null) {
                 post.blogImageUrl = JSONUtils.getString(jsonSiteIcon, "img");
             }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
-            post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
+            post.jetpackEh = JSONUtils.getBool(jsonSite, "jetpack");
         }
 
         // "discover" posts
@@ -174,15 +174,15 @@ public class ReaderPost {
 
         // if the post doesn't have a featured image but it contains an IMG tag, check whether
         // we can find a suitable image from the content
-        if (!post.hasFeaturedImage() && post.hasImages()) {
-            post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
+        if (!post.featuredImageEh() && post.imagesEh()) {
+            post.featuredImage = new ReaderImageScanner(post.text, post.privateEh)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
 
         // if there's no featured image or featured video and the post contains an iframe, scan
         // the content for a suitable featured video
-        if (!post.hasFeaturedImage()
-                && !post.hasFeaturedVideo()
+        if (!post.featuredImageEh()
+                && !post.featuredVideoEh()
                 && post.getText().contains("<iframe")) {
             post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
@@ -200,8 +200,8 @@ public class ReaderPost {
         return post;
     }
 
-    public boolean hasImages() {
-        return hasText() && text.contains("<img ");
+    public boolean imagesEh() {
+        return textEh() && text.contains("<img ");
     }
 
     /*
@@ -247,13 +247,13 @@ public class ReaderPost {
         // v1.2 endpoint contains a "has_avatar" boolean which tells us whether the author
         // has a valid avatar - if this field exists and is set to false, skip setting
         // the avatar URL
-        boolean hasAvatar;
+        boolean avatarEh;
         if (jsonAuthor.has("has_avatar")) {
-            hasAvatar = jsonAuthor.optBoolean("has_avatar");
+            avatarEh = jsonAuthor.optBoolean("has_avatar");
         } else {
-            hasAvatar = true;
+            avatarEh = true;
         }
-        if (hasAvatar) {
+        if (avatarEh) {
             post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         }
 
@@ -299,7 +299,7 @@ public class ReaderPost {
         }
 
         // don't set primary tag if one is already set
-        if (!post.hasPrimaryTag()) {
+        if (!post.primaryTagEh()) {
             post.setPrimaryTag(mostPopularTag);
         }
         post.setSecondaryTag(nextMostPopularTag);
@@ -381,7 +381,7 @@ public class ReaderPost {
         this.format = StringUtils.notNullStr(format);
     }
 
-    public boolean isGallery() {
+    public boolean galleryEh() {
         return format != null && format.equals("gallery");
     }
 
@@ -399,7 +399,7 @@ public class ReaderPost {
     public void setShortUrl(String url) {
         this.shortUrl = StringUtils.notNullStr(url);
     }
-    public boolean hasShortUrl() {
+    public boolean shortUrlEh() {
         return !TextUtils.isEmpty(shortUrl);
     }
 
@@ -478,11 +478,11 @@ public class ReaderPost {
     }
     public void setPrimaryTag(String tagName) {
         // this is a bit of a hack to avoid setting the primary tag to one of the defaults
-        if (!ReaderTag.isDefaultTagTitle(tagName)) {
+        if (!ReaderTag.defaultTagTitleEh(tagName)) {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
     }
-    public boolean hasPrimaryTag() {
+    public boolean primaryTagEh() {
         return !TextUtils.isEmpty(primaryTag);
     }
 
@@ -490,11 +490,11 @@ public class ReaderPost {
         return StringUtils.notNullStr(secondaryTag);
     }
     public void setSecondaryTag(String tagName) {
-        if (!ReaderTag.isDefaultTagTitle(tagName)) {
+        if (!ReaderTag.defaultTagTitleEh(tagName)) {
             this.secondaryTag = StringUtils.notNullStr(tagName);
         }
     }
-    public boolean hasSecondaryTag() {
+    public boolean secondaryTagEh() {
         return !TextUtils.isEmpty(secondaryTag);
     }
 
@@ -508,7 +508,7 @@ public class ReaderPost {
     public void setAttachmentsJson(String json) {
         attachmentsJson = StringUtils.notNullStr(json);
     }
-    public boolean hasAttachments() {
+    public boolean attachmentsEh() {
         return !TextUtils.isEmpty(attachmentsJson);
     }
 
@@ -521,7 +521,7 @@ public class ReaderPost {
     public void setDiscoverJson(String json) {
         discoverJson = StringUtils.notNullStr(json);
     }
-    public boolean isDiscoverPost() {
+    public boolean discoverPostEh() {
         return !TextUtils.isEmpty(discoverJson);
     }
 
@@ -537,65 +537,65 @@ public class ReaderPost {
         return discoverData;
     }
 
-    public boolean hasText() {
+    public boolean textEh() {
         return !TextUtils.isEmpty(text);
     }
 
-    public boolean hasUrl() {
+    public boolean urlEh() {
         return !TextUtils.isEmpty(url);
     }
 
-    public boolean hasExcerpt() {
+    public boolean excerptEh() {
         return !TextUtils.isEmpty(excerpt);
     }
 
-    public boolean hasFeaturedImage() {
+    public boolean featuredImageEh() {
         return !TextUtils.isEmpty(featuredImage);
     }
 
-    public boolean hasFeaturedVideo() {
+    public boolean featuredVideoEh() {
         return !TextUtils.isEmpty(featuredVideo);
     }
 
-    public boolean hasPostAvatar() {
+    public boolean postAvatarEh() {
         return !TextUtils.isEmpty(postAvatar);
     }
 
-    public boolean hasBlogName() {
+    public boolean blogNameEh() {
         return !TextUtils.isEmpty(blogName);
     }
 
-    public boolean hasAuthorName() {
+    public boolean authorNameEh() {
         return !TextUtils.isEmpty(authorName);
     }
 
-    public boolean hasAuthorFirstName() {
+    public boolean authorFirstNameEh() {
         return !TextUtils.isEmpty(authorFirstName);
     }
 
-    public boolean hasTitle() {
+    public boolean titleEh() {
         return !TextUtils.isEmpty(title);
     }
 
-    public boolean hasBlogUrl() {
+    public boolean blogUrlEh() {
         return !TextUtils.isEmpty(blogUrl);
     }
 
-    public boolean hasBlogImageUrl() {
+    public boolean blogImageUrlEh() {
         return !TextUtils.isEmpty(blogImageUrl);
     }
 
     /*
      * returns true if this post is from a WordPress blog
      */
-    public boolean isWP() {
-        return !isExternal;
+    public boolean wPEh() {
+        return !externalEh;
     }
 
     /*
      * returns true if this is a cross-post
      */
-    public boolean isXpost() {
+    public boolean xpostEh() {
         return xpostBlogId != 0 && xpostPostId != 0;
     }
 
@@ -603,7 +603,7 @@ public class ReaderPost {
      * returns true if the passed post appears to be the same as this one - used when posts are
      * retrieved to determine which ones are new/changed/unchanged
      */
-    public boolean isSamePost(ReaderPost post) {
+    public boolean samePostEh(ReaderPost post) {
         return post != null
                 && post.blogId == this.blogId
                 && post.postId == this.postId
@@ -611,15 +611,15 @@ public class ReaderPost {
                 && post.feedItemId == this.feedItemId
                 && post.numLikes == this.numLikes
                 && post.numReplies == this.numReplies
-                && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
-                && post.isLikedByCurrentUser == this.isLikedByCurrentUser
-                && post.isCommentsOpen == this.isCommentsOpen
+                && post.followedByCurrentUserEh == this.isFollowedByCurrentUser
+                && post.likedByCurrentUserEh == this.isLikedByCurrentUser
+                && post.commentsOpenEh == this.isCommentsOpen
                 && post.getTitle().equals(this.getTitle())
                 && post.getExcerpt().equals(this.getExcerpt())
                 && post.getText().equals(this.getText());
     }
 
-    public boolean hasIds(ReaderBlogIdPostId ids) {
+    public boolean idsEh(ReaderBlogIdPostId ids) {
         return ids != null
                 && ids.getBlogId() == this.blogId
                 && ids.getPostId() == this.postId;
@@ -629,7 +629,7 @@ public class ReaderPost {
      * liking is enabled for all wp.com and jp posts with the exception of discover posts
      */
     public boolean canLikePost() {
-        return (isWP() || isJetpack) && (!isDiscoverPost());
+        return (wPEh() || jetpackEh) && (!discoverPostEh());
     }
 
 
@@ -639,7 +639,7 @@ public class ReaderPost {
     public void setRailcarJson(String jsonRailcar) {
         this.railcarJson = StringUtils.notNullStr(jsonRailcar);
     }
-    public boolean hasRailcar() {
+    public boolean railcarEh() {
         return !TextUtils.isEmpty(railcarJson);
     }
 
@@ -662,10 +662,10 @@ public class ReaderPost {
     private transient String featuredImageForDisplay;
     public String getFeaturedImageForDisplay(int width, int height) {
         if (featuredImageForDisplay == null) {
-            if (!hasFeaturedImage()) {
+            if (!featuredImageEh()) {
                 featuredImageForDisplay = "";
             } else {
-                featuredImageForDisplay = ReaderUtils.getResizedImageUrl(featuredImage, width, height, isPrivate);
+                featuredImageForDisplay = ReaderUtils.getResizedImageUrl(featuredImage, width, height, privateEh);
             }
         }
         return featuredImageForDisplay;
@@ -677,7 +677,7 @@ public class ReaderPost {
     private transient String avatarForDisplay;
     public String getPostAvatarForDisplay(int size) {
         if (avatarForDisplay == null) {
-            if (!hasPostAvatar()) {
+            if (!postAvatarEh()) {
                 return "";
             }
             avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, size);
@@ -691,7 +691,7 @@ public class ReaderPost {
     private transient String blavatarForDisplay;
     public String getPostBlavatarForDisplay(int size) {
         if (blavatarForDisplay == null) {
-            if (!hasBlogUrl()) {
+            if (!blogUrlEh()) {
                 return "";
             }
             blavatarForDisplay = GravatarUtils.blavatarFromUrl(getBlogUrl(), size);
@@ -711,7 +711,7 @@ public class ReaderPost {
     }
 
     /*
-     * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
+     * used when a unique numeric id is required by an adapter (when stableIdsEh() = true)
      */
     private transient long stableId;
     public long getStableId() {

@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 public class SearchTermModel extends SingleItemModel implements Serializable {
 
-    private final boolean mIsEncriptedTerms;
+    private final boolean mEncriptedTermsEh;
 
-    public SearchTermModel(long blogId, String date, String title, int totals, boolean isEncriptedTerms) {
+    public SearchTermModel(long blogId, String date, String title, int totals, boolean encriptedTermsEh) {
         super(blogId, date, null, title, totals, null, null);
-        this.mIsEncriptedTerms = isEncriptedTerms;
+        this.mEncriptedTermsEh = encriptedTermsEh;
     }
 
-    public boolean isEncriptedTerms() {
-        return mIsEncriptedTerms;
+    public boolean encriptedTermsEh() {
+        return mEncriptedTermsEh;
     }
 
 }

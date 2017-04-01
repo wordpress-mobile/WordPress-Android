@@ -99,7 +99,7 @@ public class WPPrefUtils {
      * Styles a {@link TextView} to display medium sized text as a header with sub-elements.
      */
     public static void layoutAsSubhead(TextView view) {
-        int color = view.isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10;
+        int color = view.enabledEh() ? R.color.grey_dark : R.color.grey_lighten_10;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
         setTextViewAttributes(view, size, color);
     }
@@ -108,7 +108,7 @@ public class WPPrefUtils {
      * Styles a {@link TextView} to display smaller text.
      */
     public static void layoutAsBody1(TextView view) {
-        int color = view.isEnabled() ? R.color.grey_darken_10 : R.color.grey_lighten_10;
+        int color = view.enabledEh() ? R.color.grey_darken_10 : R.color.grey_lighten_10;
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
         setTextViewAttributes(view, size, color);
     }

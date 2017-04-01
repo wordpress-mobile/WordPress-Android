@@ -81,7 +81,7 @@ public class PostUploadNotifier {
         mNotificationManager.cancel(mPostIdToNotificationData.get(post.getId()).notificationId);
     }
 
-    public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
+    public void updateNotificationSuccess(PostModel post, SiteModel site, boolean firstTimePublishEh) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
 
         NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
@@ -94,10 +94,10 @@ public class PostUploadNotifier {
 
         // Notification builder
         Notification.Builder notificationBuilder = new Notification.Builder(mContext.getApplicationContext());
-        String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
+        String notificationTitle = (String) (post.pageEh() ? mContext.getResources().getText(R.string
                 .page_published) : mContext.getResources().getText(R.string.post_published));
-        if (!isFirstTimePublish) {
-            notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
+        if (!firstTimePublishEh) {
+            notificationTitle = (String) (post.pageEh() ? mContext.getResources().getText(R.string
                     .page_updated) : mContext.getResources().getText(R.string.post_updated));
         }
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
@@ -117,7 +117,7 @@ public class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.pageEh());
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationBuilder.setContentIntent(pendingIntentPost);
@@ -144,31 +144,31 @@ public class PostUploadNotifier {
         return post.getLocalSiteId() + remotePostId;
     }
 
-    public void updateNotificationError(PostModel post, SiteModel site, String errorMessage, boolean isMediaError) {
+    public void updateNotificationError(PostModel post, SiteModel site, String errorMessage, boolean mediaErrorEh) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
         Notification.Builder notificationBuilder = new Notification.Builder(mContext.getApplicationContext());
-        String postOrPage = (String) (post.isPage() ? mContext.getResources().getText(R.string.page_id)
+        String postOrPage = (String) (post.pageEh() ? mContext.getResources().getText(R.string.page_id)
                 : mContext.getResources().getText(R.string.post_id));
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.pageEh());
         notificationIntent.putExtra(PostsListActivity.EXTRA_ERROR_MSG, errorMessage);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
-        if (isMediaError) {
+        if (mediaErrorEh) {
             errorText = mContext.getResources().getText(R.string.media) + " "
                     + mContext.getResources().getText(R.string.error);
         }
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-        notificationBuilder.setContentTitle((isMediaError) ? errorText :
+        notificationBuilder.setContentTitle((mediaErrorEh) ? errorText :
                 mContext.getResources().getText(R.string.upload_failed));
-        notificationBuilder.setContentText((isMediaError) ? errorMessage : postOrPage + " " + errorText
+        notificationBuilder.setContentText((mediaErrorEh) ? errorMessage : postOrPage + " " + errorText
                 + ": " + errorMessage);
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);

@@ -95,7 +95,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     @Override
     public void onResume() {
         super.onResume();
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (NetworkUtils.networkAvailableEh(getActivity())) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
@@ -231,7 +231,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     public void onAccountChanged(OnAccountChanged event) {
         if (!isAdded()) return;
 
-        if (event.isError()) {
+        if (event.errorEh()) {
             switch (event.error.type) {
                 case SETTINGS_FETCH_ERROR:
                     ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);

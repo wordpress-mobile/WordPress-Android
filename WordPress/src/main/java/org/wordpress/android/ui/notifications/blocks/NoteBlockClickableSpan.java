@@ -27,7 +27,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int[] mIndices;
     private boolean mPressed;
     private boolean mShouldLink;
-    private boolean mIsFooter;
+    private boolean mFooterEh;
 
     private int mTextColor;
     private int mBackgroundColor;
@@ -36,10 +36,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     private final JSONObject mBlockData;
 
-    public NoteBlockClickableSpan(Context context, JSONObject blockData, boolean shouldLink, boolean isFooter) {
+    public NoteBlockClickableSpan(Context context, JSONObject blockData, boolean shouldLink, boolean footerEh) {
         mBlockData = blockData;
         mShouldLink = shouldLink;
-        mIsFooter = isFooter;
+        mFooterEh = footerEh;
 
         // Text/background colors
         mTextColor = context.getResources().getColor(R.color.grey_dark);
@@ -63,7 +63,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             mShouldLink = shouldLinkRangeType();
 
             // Apply grey color to some types
-            if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
+            if (mFooterEh || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
                 mTextColor = mLightTextColor;
             }
         }
@@ -80,20 +80,20 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     @Override
     public void updateDrawState(@NonNull TextPaint textPaint) {
         // Set background color
-        textPaint.bgColor = mShouldLink && mPressed && !isBlockquoteType() ?
+        textPaint.bgColor = mShouldLink && mPressed && !blockquoteTypeEh() ?
                 mBackgroundColor : Color.TRANSPARENT;
-        textPaint.setColor(mShouldLink && !mIsFooter ? mLinkColor : mTextColor);
+        textPaint.setColor(mShouldLink && !mFooterEh ? mLinkColor : mTextColor);
         // No underlines
-        textPaint.setUnderlineText(mIsFooter);
+        textPaint.setUnderlineText(mFooterEh);
     }
 
-    private boolean isBlockquoteType() {
+    private boolean blockquoteTypeEh() {
         return getRangeType() == NoteBlockRangeType.BLOCKQUOTE;
     }
 
     // return the desired style for this id type
     public int getSpanStyle() {
-        if (mIsFooter) {
+        if (mFooterEh) {
             return Typeface.BOLD;
         }
 

@@ -35,7 +35,7 @@ public class NotificationsUpdateService extends Service {
 
     private boolean running = false;
     private String mNoteId;
-    private boolean isStartedByTappingOnNotification = false;
+    private boolean startedByTappingOnNotificationEh = false;
 
     public static void startService(Context context) {
         if (context == null) {
@@ -76,7 +76,7 @@ public class NotificationsUpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             mNoteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
-            isStartedByTappingOnNotification = intent.getBooleanExtra(IS_TAPPED_ON_NOTIFICATION, false);
+            startedByTappingOnNotificationEh = intent.getBooleanExtra(IS_TAPPED_ON_NOTIFICATION, false);
             performRefresh();
         }
         return START_NOT_STICKY;
@@ -112,7 +112,7 @@ public class NotificationsUpdateService extends Service {
                     notes = NotificationsActions.parseNotes(response);
                     // if we have a note id, we were started from NotificationsDetailActivity.
                     // That means we need to re-set the *read* flag on this note.
-                    if (isStartedByTappingOnNotification && mNoteId != null) {
+                    if (startedByTappingOnNotificationEh && mNoteId != null) {
                         setNoteRead(mNoteId, notes);
                     }
                     NotificationsTable.saveNotes(notes, true);

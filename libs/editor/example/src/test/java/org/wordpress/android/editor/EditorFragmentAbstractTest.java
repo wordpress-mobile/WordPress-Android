@@ -75,17 +75,17 @@ public class EditorFragmentAbstractTest {
         }
 
         @Override
-        public boolean isUploadingMedia() {
+        public boolean uploadingMediaEh() {
             return false;
         }
 
         @Override
-        public boolean isActionInProgress() {
+        public boolean actionInProgressEh() {
             return false;
         }
 
         @Override
-        public boolean hasFailedMediaUploads() {
+        public boolean failedMediaUploadsEh() {
             return false;
         }
 

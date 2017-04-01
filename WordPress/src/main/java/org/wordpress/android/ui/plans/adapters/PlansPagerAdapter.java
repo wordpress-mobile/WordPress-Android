@@ -32,12 +32,12 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (isValidPosition(position)) {
+        if (validPositionEh(position)) {
             Plan planDetails = mSitePlans[position];
             if (planDetails == null) {
                 AppLog.w(AppLog.T.PLANS, "plans pager > empty plan details in getPageTitle");
                 return "";
-            } else if (mSitePlans[position].isCurrentPlan()) {
+            } else if (mSitePlans[position].currentPlanEh()) {
                 return UNICODE_CHECKMARK + " " + planDetails.getProductNameShort();
             } else {
                 return planDetails.getProductNameShort();
@@ -46,7 +46,7 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
         return super.getPageTitle(position);
     }
 
-    public boolean isValidPosition(int position) {
+    public boolean validPositionEh(int position) {
         return (position >= 0 && position < getCount());
     }
 

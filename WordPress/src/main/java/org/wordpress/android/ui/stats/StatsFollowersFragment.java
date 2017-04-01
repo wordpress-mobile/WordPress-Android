@@ -84,7 +84,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     private FollowersModel mFollowersEmail;
 
     @Override
-    protected boolean hasDataAvailable() {
+    protected boolean dataAvailableEh() {
         return mFollowersWPCOM != null || mFollowersEmail != null;
     }
     @Override
@@ -143,7 +143,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (!hasDataAvailable()) {
+        if (!dataAvailableEh()) {
             showHideNoResultsUI(true);
             mTotalsLabel.setText(getTotalFollowersLabel(0));
             return;
@@ -165,7 +165,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 mTotalsLabel.setText(getTotalFollowersLabel(followersModel.getTotalEmail()));
             }
 
-            if (isSingleView()) {
+            if (singleViewEh()) {
                 if (followersModel.getPages() > 1) {
                     mBottomPaginationContainer.setVisibility(View.VISIBLE);
                     mTopPaginationContainer.setVisibility(View.VISIBLE);
@@ -266,8 +266,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected boolean isViewAllOptionAvailable() {
-        if (!hasDataAvailable()) {
+    protected boolean viewAllOptionAvailableEh() {
+        if (!dataAvailableEh()) {
             return false;
         }
         FollowersModel followersModel = getCurrentDataModel();
@@ -289,7 +289,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected boolean isExpandableList() {
+    protected boolean expandableListEh() {
         return false;
     }
 

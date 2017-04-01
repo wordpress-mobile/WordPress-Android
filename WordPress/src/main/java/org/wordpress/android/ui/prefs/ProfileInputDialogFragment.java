@@ -26,7 +26,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
     public static ProfileInputDialogFragment newInstance(String title,
                                                          String initialText,
                                                          String hint,
-                                                         boolean isMultiline,
+                                                         boolean multilineEh,
                                                          int callbackId) {
 
         ProfileInputDialogFragment profileInputDialogFragment = new ProfileInputDialogFragment();
@@ -35,7 +35,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         args.putString(TITLE_TAG, title);
         args.putString(INITIAL_TEXT_TAG, initialText);
         args.putString(HINT_TAG, hint);
-        args.putBoolean(IS_MULTILINE_TAG, isMultiline);
+        args.putBoolean(IS_MULTILINE_TAG, multilineEh);
         args.putInt(CALLBACK_ID_TAG, callbackId);
 
         profileInputDialogFragment.setArguments(args);
@@ -56,7 +56,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         Bundle args = getArguments();
         String title = args.getString(TITLE_TAG);
         String hint  = args.getString(HINT_TAG);
-        Boolean isMultiline = args.getBoolean(IS_MULTILINE_TAG);
+        Boolean multilineEh = args.getBoolean(IS_MULTILINE_TAG);
         String initialText = args.getString(INITIAL_TEXT_TAG);
         final int callbackId = args.getInt(CALLBACK_ID_TAG);
 
@@ -67,7 +67,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
             hintView.setVisibility(View.GONE);
         }
 
-        if (!isMultiline) {
+        if (!multilineEh) {
             editText.setMaxLines(1);
         }
         if (!TextUtils.isEmpty(initialText)) {

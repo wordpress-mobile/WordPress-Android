@@ -76,10 +76,10 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(currentPlan.getBillPeriod(), -1);
                 assertEquals(currentPlan.getRawPrice(), 0);
                 assertEquals(currentPlan.getCost(), 0);
-                assertEquals(currentPlan.isAvailable(), true);
+                assertEquals(currentPlan.availableEh(), true);
 
                 currentPlan = plans.get(1);
-                assertEquals(currentPlan.isFreeTrial(), false);
+                assertEquals(currentPlan.freeTrialEh(), false);
                 assertEquals(currentPlan.getBundleSubscriptionID(), "5683566");
                 assertEquals(currentPlan.getExpiry(), "2017-03-07");
                 assertEquals(currentPlan.getUserFacingExpiry(), "2017-03-04");
@@ -92,7 +92,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(currentPlan.getBillPeriod(), 365);
                 assertEquals(currentPlan.getRawPrice(), 199);
                 assertEquals(currentPlan.getCost(), 199);
-                assertEquals(currentPlan.isAvailable(), true);
+                assertEquals(currentPlan.availableEh(), true);
             }
         };
 
@@ -131,7 +131,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals("Your own space to create posts and pages with basic customization.",
                         currentFeatures.getDescriptionForPlan(1008L));
 
-                assertEquals(false, currentFeatures.isNotPartOfFreeTrial());
+                assertEquals(false, currentFeatures.notPartOfFreeTrialEh());
 
                 // Test the latest object in the response
                 currentFeatures = features.get(15);
@@ -146,7 +146,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                         currentFeatures.getDescriptionForPlan(2001L));
                 assertEquals("Priority security support",
                         currentFeatures.getTitleForPlan(2001L));
-                assertEquals(false, currentFeatures.isNotPartOfFreeTrial());
+                assertEquals(false, currentFeatures.notPartOfFreeTrialEh());
             }
         };
 

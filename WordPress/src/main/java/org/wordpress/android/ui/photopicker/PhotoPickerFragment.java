@@ -104,18 +104,18 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showBottomBar() {
-        if (!isBottomBarShowing()) {
+        if (!bottomBarShowingEh()) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
     private void hideBottomBar() {
-        if (isBottomBarShowing()) {
+        if (bottomBarShowingEh()) {
             AniUtils.animateBottomBar(mBottomBar, false);
         }
     }
 
-    private boolean isBottomBarShowing() {
+    private boolean bottomBarShowingEh() {
         return mBottomBar.getVisibility() == View.VISIBLE;
     }
 
@@ -171,10 +171,10 @@ public class PhotoPickerFragment extends Fragment {
      * shows full-screen preview of the passed media
      */
     private void showPreview(View sourceView, Uri mediaUri) {
-        boolean isVideo = getAdapter().isVideoUri(mediaUri);
+        boolean videoEh = getAdapter().videoUriEh(mediaUri);
         Intent intent = new Intent(getActivity(), PhotoPickerPreviewActivity.class);
         intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, videoEh);
 
         int startWidth = sourceView.getWidth();
         int startHeight = sourceView.getHeight();

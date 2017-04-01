@@ -91,9 +91,9 @@ public class PersonDetailFragment extends Fragment {
         mSubscribedDateTitleView = (TextView) rootView.findViewById(R.id.subscribed_date_title);
         mSubscribedDateTextView = (TextView) rootView.findViewById(R.id.subscribed_date_text);
 
-        boolean isCurrentUser = mCurrentUserId == mPersonId;
+        boolean currentUserEh = mCurrentUserId == mPersonId;
         SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
-        if (!isCurrentUser && site != null && site.getHasCapabilityRemoveUsers()) {
+        if (!currentUserEh && site != null && site.getHasCapabilityRemoveUsers()) {
             setHasOptionsMenu(true);
         }
 
@@ -165,8 +165,8 @@ public class PersonDetailFragment extends Fragment {
     // Checks current user's capabilities to decide whether she can change the role or not
     private void setupRoleContainerForCapability() {
         SiteModel site = mSiteStore.getSiteByLocalId(mLocalTableBlogId);
-        boolean isCurrentUser = mCurrentUserId == mPersonId;
-        boolean canChangeRole = (site != null) && !isCurrentUser && site.getHasCapabilityPromoteUsers();
+        boolean currentUserEh = mCurrentUserId == mPersonId;
+        boolean canChangeRole = (site != null) && !currentUserEh && site.getHasCapabilityPromoteUsers();
         if (canChangeRole) {
             mRoleContainer.setOnClickListener(new View.OnClickListener() {
                 @Override

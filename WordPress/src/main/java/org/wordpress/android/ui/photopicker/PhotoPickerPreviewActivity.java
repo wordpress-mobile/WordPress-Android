@@ -27,7 +27,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     public static final String ARG_IS_VIDEO = "is_video";
 
     private Uri mMediaUri;
-    private boolean mIsVideo;
+    private boolean mVideoEh;
     private ImageView mImageView;
     private VideoView mVideoView;
 
@@ -42,18 +42,18 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         String uriString;
         if (savedInstanceState != null) {
             uriString = savedInstanceState.getString(ARG_MEDIA_URI);
-            mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
+            mVideoEh = savedInstanceState.getBoolean(ARG_IS_VIDEO);
         } else {
             uriString = getIntent().getStringExtra(ARG_MEDIA_URI);
-            mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
+            mVideoEh = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
         }
 
         mMediaUri = Uri.parse(uriString);
 
-        mImageView.setVisibility(mIsVideo ? View.GONE : View.VISIBLE);
-        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        mImageView.setVisibility(mVideoEh ? View.GONE : View.VISIBLE);
+        mVideoView.setVisibility(mVideoEh ? View.VISIBLE : View.GONE);
 
-        if (mIsVideo) {
+        if (mVideoEh) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo();
         } else {
@@ -65,7 +65,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ARG_MEDIA_URI, mMediaUri.toString());
-        outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
+        outState.putBoolean(ARG_IS_VIDEO, mVideoEh);
     }
 
     private void delayedFinish() {

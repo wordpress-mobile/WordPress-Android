@@ -190,7 +190,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private boolean mEditingEnabled = true;
 
     // Reference to the state of the fragment
-    private boolean mIsFragmentPaused = false;
+    private boolean mFragmentPausedEh = false;
 
     // Hold for Moderation and Blacklist settings
     private Dialog mDialog;
@@ -247,7 +247,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSite != null) {
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
         }
-        mIsFragmentPaused = true;
+        mFragmentPausedEh = true;
     }
 
     @Override
@@ -256,7 +256,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // Fragment#onResume() is called after FragmentActivity#onPostResume().
         // The latter is the most secure way of keeping track of the activity's state, and avoid calls to commitAllowingStateLoss.
-        mIsFragmentPaused = false;
+        mFragmentPausedEh = false;
 
         // always load cached settings
         mSiteSettings.init(false);
@@ -545,7 +545,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 return longListener.onLongClick(view);
             } else if (obj instanceof PreferenceHint) {
                 PreferenceHint hintObj = (PreferenceHint) obj;
-                if (hintObj.hasHint()) {
+                if (hintObj.hintEh()) {
                     HashMap<String, Object> properties = new HashMap<>();
                     properties.put("hint_shown", hintObj.getHint());
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_HINT_TOAST_SHOWN, mSite,
@@ -655,10 +655,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         sortLanguages();
 
-        boolean isAccessibleViaWPComAPI = SiteUtils.isAccessibleViaWPComAPI(mSite);
+        boolean accessibleViaWPComAPIEh = SiteUtils.accessibleViaWPComAPIEh(mSite);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
-        if (!isAccessibleViaWPComAPI) {
+        if (!accessibleViaWPComAPIEh) {
             // self-hosted, non-jetpack site
             removeNonSelfHostedPreferences();
         } else if (mSite.isJetpackConnected()) {
@@ -670,8 +670,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide Admin options depending of capabilities on this site
-        if ((!isAccessibleViaWPComAPI && !mSite.isSelfHostedAdmin())
-            || (isAccessibleViaWPComAPI && !mSite.getHasCapabilityManageOptions())) {
+        if ((!accessibleViaWPComAPIEh && !mSite.isSelfHostedAdmin())
+            || (accessibleViaWPComAPIEh && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
 
@@ -808,7 +808,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showPurchasesOrDeleteSiteDialog(JSONObject response, final SiteModel site) {
         try {
             JSONArray purchases = response.getJSONArray(PURCHASE_ORIGINAL_RESPONSE_KEY);
-            if (hasActivePurchases(purchases)) {
+            if (activePurchasesEh(purchases)) {
                 showPurchasesDialog(site);
             } else {
                 showDeleteSiteDialog();
@@ -840,7 +840,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_PURCHASES_SHOWN, mSite);
     }
 
-    private boolean hasActivePurchases(JSONArray purchases) throws JSONException {
+    private boolean activePurchasesEh(JSONArray purchases) throws JSONException {
         for (int i = 0; i < purchases.length(); i++) {
             JSONObject purchase = purchases.getJSONObject(i);
             int active = purchase.getInt(PURCHASE_ACTIVE_KEY);
@@ -854,7 +854,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showDeleteSiteDialog() {
-        if (mIsFragmentPaused) return; // Do not show the DeleteSiteDialogFragment if the fragment was paused.
+        if (mFragmentPausedEh) return; // Do not show the DeleteSiteDialogFragment if the fragment was paused.
         // DialogFragment internally uses commit(), and not commitAllowingStateLoss, crashing the app in case like that.
         Bundle args = new Bundle();
         args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getHost(mSite.getUrl()));
@@ -928,7 +928,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setCategories() {
         // Ignore if there are no changes
-        if (mSiteSettings.isSameCategoryList(mCategoryPref.getEntryValues())) {
+        if (mSiteSettings.sameCategoryListEh(mCategoryPref.getEntryValues())) {
             mCategoryPref.setValue(String.valueOf(mSiteSettings.getDefaultCategory()));
             mCategoryPref.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
             return;
@@ -960,7 +960,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setPostFormats() {
         // Ignore if there are no changes
-        if (mSiteSettings.isSameFormatList(mFormatPref.getEntryValues())) {
+        if (mSiteSettings.sameFormatListEh(mFormatPref.getEntryValues())) {
             mFormatPref.setValue(String.valueOf(mSiteSettings.getDefaultPostFormat()));
             mFormatPref.setSummary(mSiteSettings.getDefaultPostFormatDisplay());
             return;

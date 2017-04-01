@@ -25,20 +25,20 @@ public enum ReaderCardType {
         }
 
         // posts with a featured image and little or no text get the photo card treatment
-        if (post.hasFeaturedImage() && hasMinContent(post)) {
+        if (post.featuredImageEh() && minContentEh(post)) {
             return PHOTO;
         }
 
         // posts that have a featured video show an embedded video card
-        if (post.hasFeaturedVideo()) {
+        if (post.featuredVideoEh()) {
             return VIDEO;
         }
 
         // if this post has enough usable images to fill the stream's thumbnail strip, treat it
         // as a gallery
-        if (post.hasImages()
-                && new ReaderImageScanner(post.getText(), post.isPrivate)
-                    .hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
+        if (post.imagesEh()
+                && new ReaderImageScanner(post.getText(), post.privateEh)
+                    .usableImageCountEh(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
             return GALLERY;
         }
 
@@ -48,7 +48,7 @@ public enum ReaderCardType {
     /*
      * returns true if the post's content is 100 characters or less
      */
-    private static boolean hasMinContent(@NonNull ReaderPost post) {
+    private static boolean minContentEh(@NonNull ReaderPost post) {
         if (post.getExcerpt().length() > MIN_CONTENT_CHARS) {
             return false;
         }

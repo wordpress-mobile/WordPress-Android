@@ -27,7 +27,7 @@ public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
     }
 
     @Override
-    public boolean hasStableIds() {
+    public boolean stableIdsEh() {
         return true;
     }
 

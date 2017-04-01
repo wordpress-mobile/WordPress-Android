@@ -49,7 +49,7 @@ public abstract class StatsAbstractFragment extends Fragment {
      * Wheter or not previous data is available.
      * @return True if previous data is already available in the fragment
      */
-    protected abstract boolean hasDataAvailable();
+    protected abstract boolean dataAvailableEh();
 
     /**
      * Called in onSaveIstance. Fragments should persist data here.
@@ -93,7 +93,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         }
 
         // Check credentials for jetpack blogs first
-        if (!SiteUtils.isAccessibleViaWPComAPI(site) && !mAccountStore.hasAccessToken()) {
+        if (!SiteUtils.accessibleViaWPComAPIEh(site) && !mAccountStore.hasAccessToken()) {
             AppLog.w(AppLog.T.STATS, "Current blog is accessible via .com API without valid .com credentials");
             return;
         }
@@ -114,7 +114,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         intent.putExtra(StatsService.ARG_BLOG_ID, siteId);
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
-        if (isSingleView()) {
+        if (singleViewEh()) {
             // Single Item screen: request 20 items per page on paged requests. Default to the first 100 items otherwise.
             int maxElementsToRetrieve = pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
             intent.putExtra(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);
@@ -165,7 +165,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         super.onResume();
 
         // Init the UI
-        if (hasDataAvailable()) {
+        if (dataAvailableEh()) {
             updateUI();
         } else {
             showPlaceholderUI();
@@ -194,7 +194,7 @@ public abstract class StatsAbstractFragment extends Fragment {
             return false;
         }
 
-        if (!isSameBlog(event)) {
+        if (!sameBlogEh(event)) {
             return false;
         }
 
@@ -205,7 +205,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         return true;
     }
 
-    boolean isSameBlog(StatsEvents.SectionUpdatedAbstract event) {
+    boolean sameBlogEh(StatsEvents.SectionUpdatedAbstract event) {
         SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
         if (site != null) {
             return event.mRequestBlogId == site.getSiteId();
@@ -224,7 +224,7 @@ public abstract class StatsAbstractFragment extends Fragment {
             label += "<br/>" + getString(R.string.no_network_message);
         }
 
-        if (StatsUtils.isRESTDisabledError(error)) {
+        if (StatsUtils.rESTDisabledErrorEh(error)) {
             label += "<br/>" + getString(R.string.stats_enable_rest_api_in_jetpack);
         }
 
@@ -353,7 +353,7 @@ public abstract class StatsAbstractFragment extends Fragment {
         return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_SITE_ID);
     }
 
-    boolean isSingleView() {
+    boolean singleViewEh() {
         return getArguments().getBoolean(ARGS_IS_SINGLE_VIEW, false);
     }
 

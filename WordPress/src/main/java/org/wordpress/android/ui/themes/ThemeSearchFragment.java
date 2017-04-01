@@ -160,7 +160,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
 
-        if (NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
+        if (NetworkUtils.networkAvailableEh(mThemeBrowserActivity)) {
             mThemeBrowserActivity.searchThemes(searchTerm);
         } else {
             refreshView(getSpinnerPosition());

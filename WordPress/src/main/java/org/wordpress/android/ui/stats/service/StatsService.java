@@ -309,7 +309,7 @@ public class StatsService extends Service {
 
     // A fast way to disable caching during develop or when we want to disable it
     // under some circumstances. Always true for now.
-    private boolean isCacheEnabled() {
+    private boolean cacheEnabledEh() {
         return true;
     }
 
@@ -317,7 +317,7 @@ public class StatsService extends Service {
     private String getCachedStats(final long siteId, final StatsTimeframe timeframe, final String date,
                                   final StatsEndpointsEnum sectionToUpdate, final int maxResultsRequested,
                                   final int pageRequested) {
-        if (!isCacheEnabled()) {
+        if (!cacheEnabledEh()) {
             return null;
         }
         return StatsTable.getStats(this, siteId, timeframe, date, sectionToUpdate, maxResultsRequested, pageRequested);
@@ -489,7 +489,7 @@ public class StatsService extends Service {
             return;
         }
 
-        if (!StatsWidgetProvider.isBlogDisplayedInWidget(siteId)) {
+        if (!StatsWidgetProvider.blogDisplayedInWidgetEh(siteId)) {
             AppLog.d(AppLog.T.STATS, "The blog with remoteID " + siteId
                     + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
             return;
@@ -540,7 +540,7 @@ public class StatsService extends Service {
                     if (response != null) {
                         try {
                             mResponseObjectModel = StatsUtils.parseResponse(mEndpointName, mRequestBlogId, response);
-                            if (isCacheEnabled()) {
+                            if (cacheEnabledEh()) {
                                 StatsTable.insertStats(StatsService.this, mRequestBlogId, mTimeframe, mDate, mEndpointName,
                                         mMaxResultsRequested, mPageRequested,
                                         response.toString(), System.currentTimeMillis());
@@ -596,8 +596,8 @@ public class StatsService extends Service {
             if (req != null) {
                 mStatsNetworkRequests.remove(req);
             }
-            boolean isStillWorking = mStatsNetworkRequests.size() > 0 || singleThreadNetworkHandler.getQueue().size() > 0;
-            EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(isStillWorking));
+            boolean stillWorkingEh = mStatsNetworkRequests.size() > 0 || singleThreadNetworkHandler.getQueue().size() > 0;
+            EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(stillWorkingEh));
         }
     }
 }

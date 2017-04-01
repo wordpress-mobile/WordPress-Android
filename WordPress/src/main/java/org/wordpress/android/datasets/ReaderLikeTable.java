@@ -79,11 +79,11 @@ public class ReaderLikeTable {
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
     }
 
-    public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked, long wpComUserId) {
+    public static void setCurrentUserLikesPost(ReaderPost post, boolean likedEh, long wpComUserId) {
         if (post == null) {
             return;
         }
-        if (isLiked) {
+        if (likedEh) {
             ContentValues values = new ContentValues();
             values.put("blog_id", post.blogId);
             values.put("post_id", post.postId);
@@ -164,12 +164,12 @@ public class ReaderLikeTable {
                 "SELECT count(*) FROM tbl_comment_likes WHERE blog_id=? AND comment_id=?", args);
     }
 
-    public static void setCurrentUserLikesComment(ReaderComment comment, boolean isLiked, long wpComUserId) {
+    public static void setCurrentUserLikesComment(ReaderComment comment, boolean likedEh, long wpComUserId) {
         if (comment == null) {
             return;
         }
 
-        if (isLiked) {
+        if (likedEh) {
             ContentValues values = new ContentValues();
             values.put("blog_id", comment.blogId);
             values.put("comment_id", comment.commentId);

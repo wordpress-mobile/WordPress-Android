@@ -275,7 +275,7 @@ public class Note {
     /**
      * The inverse of isRead
      */
-    public Boolean isUnread() {
+    public Boolean unreadEh() {
         return !isRead();
     }
 
@@ -413,7 +413,7 @@ public class Note {
         comment.setPostTitle(getTitle()); // unavailable in note model
         comment.setAuthorEmail(""); // unavailable in note model
         comment.setAuthorProfileImageUrl(getIconURL());
-        comment.setILike(hasLikedComment());
+        comment.setILike(likedCommentEh());
         return comment;
     }
 
@@ -467,7 +467,7 @@ public class Note {
         return CommentStatus.ALL;
     }
 
-    public boolean hasLikedComment() {
+    public boolean likedCommentEh() {
         JSONObject jsonActions = getCommentActions();
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
     }

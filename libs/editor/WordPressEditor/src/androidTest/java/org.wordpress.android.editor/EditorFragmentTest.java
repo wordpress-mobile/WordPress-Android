@@ -62,21 +62,21 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
         ToggleButton strikethroughButton = (ToggleButton) view.findViewById(R.id.format_bar_button_strikethrough);
 
-        assertFalse(mediaButton.isEnabled());
-        assertFalse(boldButton.isEnabled());
-        assertFalse(italicButton.isEnabled());
-        assertFalse(quoteButton.isEnabled());
-        assertFalse(ulButton.isEnabled());
-        assertFalse(olButton.isEnabled());
-        assertFalse(linkButton.isEnabled());
+        assertFalse(mediaButton.enabledEh());
+        assertFalse(boldButton.enabledEh());
+        assertFalse(italicButton.enabledEh());
+        assertFalse(quoteButton.enabledEh());
+        assertFalse(ulButton.enabledEh());
+        assertFalse(olButton.enabledEh());
+        assertFalse(linkButton.enabledEh());
 
         if (strikethroughButton != null) {
-            assertFalse(strikethroughButton.isEnabled());
+            assertFalse(strikethroughButton.enabledEh());
         }
 
         // The HTML button should always be enabled
         ToggleButton htmlButton = (ToggleButton) view.findViewById(R.id.format_bar_button_html);
-        assertTrue(htmlButton.isEnabled());
+        assertTrue(htmlButton.enabledEh());
 
         selectionArgs.clear();
         selectionArgs.put("id", "zss_field_content");
@@ -85,20 +85,20 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         waitFor(500);
 
         // The formatting buttons should be enabled while the content field is selected
-        assertTrue(mediaButton.isEnabled());
-        assertTrue(boldButton.isEnabled());
-        assertTrue(italicButton.isEnabled());
-        assertTrue(quoteButton.isEnabled());
-        assertTrue(ulButton.isEnabled());
-        assertTrue(olButton.isEnabled());
-        assertTrue(linkButton.isEnabled());
+        assertTrue(mediaButton.enabledEh());
+        assertTrue(boldButton.enabledEh());
+        assertTrue(italicButton.enabledEh());
+        assertTrue(quoteButton.enabledEh());
+        assertTrue(ulButton.enabledEh());
+        assertTrue(olButton.enabledEh());
+        assertTrue(linkButton.enabledEh());
 
         if (strikethroughButton != null) {
-            assertTrue(strikethroughButton.isEnabled());
+            assertTrue(strikethroughButton.enabledEh());
         }
 
         // The HTML button should always be enabled
-        assertTrue(htmlButton.isEnabled());
+        assertTrue(htmlButton.enabledEh());
     }
 
     public void testHtmlModeToggleTextTransfer() throws InterruptedException, IllegalEditorStateException {

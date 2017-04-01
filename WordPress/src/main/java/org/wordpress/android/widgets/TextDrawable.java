@@ -371,12 +371,12 @@ public class TextDrawable extends Drawable {
     }
 
     @Override
-    public boolean isStateful() {
+    public boolean statefulEh() {
         /*
          * The drawable's ability to represent state is based on
          * the text color list set
          */
-        return mTextColors.isStateful();
+        return mTextColors.statefulEh();
     }
 
     @Override

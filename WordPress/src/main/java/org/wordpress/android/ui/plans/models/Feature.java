@@ -50,7 +50,7 @@ public class Feature {
     private String mTitle;
     private String mIcon;
     private String mDescription;
-    private boolean mIsNotPartOfFreeTrial;
+    private boolean mNotPartOfFreeTrialEh;
     private final JSONObject mPlanIDToDescription;
 
     public Feature(JSONObject featureJSONObject) throws JSONException {
@@ -63,7 +63,7 @@ public class Feature {
         if (featureJSONObject.has("not_part_of_free_trial") &&
                 JSONUtils.getBool(featureJSONObject, "not_part_of_free_trial")) {
             // not part of free trial
-            mIsNotPartOfFreeTrial = true;
+            mNotPartOfFreeTrialEh = true;
         }
     }
 
@@ -79,8 +79,8 @@ public class Feature {
         return StringUtils.notNullStr(mDescription);
     }
 
-    public boolean isNotPartOfFreeTrial() {
-        return mIsNotPartOfFreeTrial;
+    public boolean notPartOfFreeTrialEh() {
+        return mNotPartOfFreeTrialEh;
     }
 
     /**

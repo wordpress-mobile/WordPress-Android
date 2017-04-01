@@ -64,7 +64,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private static final String ARG_PREV_NUMBER_OF_BARS = "ARG_PREV_NUMBER_OF_BARS";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
-    private boolean mIsUpdatingStats;
+    private boolean mUpdatingStatsEh;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ScrollViewExt mOuterScrollView;
 
@@ -281,7 +281,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        mIsUpdatingStats = false;
+        mUpdatingStatsEh = false;
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
@@ -298,7 +298,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
     private void refreshStats() {
 
-        if (mIsUpdatingStats) {
+        if (mUpdatingStatsEh) {
             AppLog.w(AppLog.T.STATS, "stats details are already updating for the following postID "
                     + mRemoteItemID + ", refresh cancelled.");
             return;
@@ -321,7 +321,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         RestBatchCallListener vListener = new RestBatchCallListener(this);
         restClientUtils.get(singlePostRestPath, vListener, vListener);
 
-        mIsUpdatingStats = true;
+        mUpdatingStatsEh = true;
         mSwipeToRefreshHelper.setRefreshing(true);
     }
 
@@ -529,7 +529,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public View getChildView(int groupPosition, final int childPosition,
-                                 boolean isLastChild, View convertView, ViewGroup parent) {
+                                 boolean lastChildEh, View convertView, ViewGroup parent) {
 
             final PostViewsModel.Day currentDay = (PostViewsModel.Day) getChild(groupPosition, childPosition);
 
@@ -593,7 +593,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         @Override
-        public View getGroupView(final int groupPosition, boolean isExpanded,
+        public View getGroupView(final int groupPosition, boolean expandedEh,
                                  View convertView, ViewGroup parent) {
 
             final StatsViewHolder holder;
@@ -652,12 +652,12 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         @Override
-        public boolean hasStableIds() {
+        public boolean stableIdsEh() {
             return false;
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
+        public boolean childSelectableEh(int groupPosition, int childPosition) {
             return false;
         }
 
@@ -688,7 +688,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public View getChildView(int groupPosition, final int childPosition,
-                                 boolean isLastChild, View convertView, ViewGroup parent) {
+                                 boolean lastChildEh, View convertView, ViewGroup parent) {
 
             final PostViewsModel.Month currentMonth = (PostViewsModel.Month) getChild(groupPosition, childPosition);
 
@@ -752,7 +752,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         @Override
-        public View getGroupView(final int groupPosition, boolean isExpanded,
+        public View getGroupView(final int groupPosition, boolean expandedEh,
                                  View convertView, ViewGroup parent) {
 
             final StatsViewHolder holder;
@@ -803,12 +803,12 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         }
 
         @Override
-        public boolean hasStableIds() {
+        public boolean stableIdsEh() {
             return false;
         }
 
         @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
+        public boolean childSelectableEh(int groupPosition, int childPosition) {
             return false;
         }
 
@@ -828,7 +828,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
-            mIsUpdatingStats = false;
+            mUpdatingStatsEh = false;
             mSwipeToRefreshHelper.setRefreshing(false);
             // single background thread used to parse the response in BG.
             ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
@@ -869,7 +869,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             }
 
             ToastUtils.showToast(mActivityRef.get(), label, ToastUtils.Duration.LONG);
-            mIsUpdatingStats = false;
+            mUpdatingStatsEh = false;
             mSwipeToRefreshHelper.setRefreshing(false);
 
             // Update the UI

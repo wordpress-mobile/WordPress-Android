@@ -55,9 +55,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     private ActionMode mActionMode;
 
     private ArrayList<Long> mFilteredItems;
-    private boolean mIsSelectOneItem;
-    private boolean mIsFetching;
-    private boolean mHasRetrievedAllMedia;
+    private boolean mSelectOneItemEh;
+    private boolean mFetchingEh;
+    private boolean mRetrievedAllMediaEh;
 
     private SiteModel mSite;
 
@@ -71,7 +71,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         ((WordPress) getApplication()).component().inject(this);
 
         ArrayList<Integer> selectedItems = new ArrayList<>();
-        mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
+        mSelectOneItemEh = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
 
         ArrayList<Integer> prevSelectedItems = ListUtils.fromIntArray(getIntent().getIntArrayExtra(PARAM_SELECTED_IDS));
         if (prevSelectedItems != null) {
@@ -80,7 +80,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mIsSelectOneItem = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+            mSelectOneItemEh = savedInstanceState.getBoolean(STATE_IS_SELECT_ONE_ITEM, mSelectOneItemEh);
             if (savedInstanceState.containsKey(STATE_SELECTED_ITEMS)) {
                 ArrayList<Integer> list = ListUtils.fromIntArray(savedInstanceState.getIntArray(STATE_SELECTED_ITEMS));
                 selectedItems.addAll(list);
@@ -110,7 +110,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
         mRecycler.setAdapter(mGridAdapter);
 
-        if (mIsSelectOneItem) {
+        if (mSelectOneItemEh) {
             mGridAdapter.setAllowMultiselect(false);
             setTitle(R.string.select_from_media_library);
             ActionBar actionBar = getSupportActionBar();
@@ -156,15 +156,15 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putIntArray(STATE_SELECTED_ITEMS, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
         outState.putLongArray(STATE_FILTERED_ITEMS, ListUtils.toLongArray(mFilteredItems));
-        outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+        outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mSelectOneItemEh);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
-        mIsFetching = false;
-        if (event.isError()) {
-            mHasRetrievedAllMedia = true;
+        mFetchingEh = false;
+        if (event.errorEh()) {
+            mRetrievedAllMediaEh = true;
             mGridAdapter.setHasRetrievedAll(true);
             String message = null;
             switch (event.error.type) {
@@ -177,9 +177,9 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         } else {
-            mHasRetrievedAllMedia = !event.canLoadMore;
-            mGridAdapter.setHasRetrievedAll(mHasRetrievedAllMedia);
-            if (mMediaStore.getSiteMediaCount(mSite) == 0 && mHasRetrievedAllMedia) {
+            mRetrievedAllMediaEh = !event.canLoadMore;
+            mGridAdapter.setHasRetrievedAll(mRetrievedAllMediaEh);
+            if (mMediaStore.getSiteMediaCount(mSite) == 0 && mRetrievedAllMediaEh) {
                 // There is no media at all
                 noMediaFinish();
             }
@@ -199,7 +199,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onAdapterFetchMoreData() {
-        if (!mHasRetrievedAllMedia) {
+        if (!mRetrievedAllMediaEh) {
             refreshMediaFromServer(true);
         }
     }
@@ -210,7 +210,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onAdapterItemSelected(int position) {
-        if (mIsSelectOneItem) {
+        if (mSelectOneItemEh) {
             // Single select, just finish the activity once an item is selected
             Intent intent = new Intent();
             int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
@@ -256,8 +256,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     private void refreshMediaFromServer(boolean loadMore) {
-        if (!mIsFetching) {
-            mIsFetching = true;
+        if (!mFetchingEh) {
+            mFetchingEh = true;
 
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));

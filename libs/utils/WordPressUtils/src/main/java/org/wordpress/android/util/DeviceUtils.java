@@ -13,10 +13,10 @@ import java.util.Properties;
 
 public class DeviceUtils {
     private static DeviceUtils instance;
-    private boolean isKindleFire = false;
+    private boolean kindleFireEh = false;
 
-    public boolean isKindleFire() {
-        return isKindleFire;
+    public boolean kindleFireEh() {
+        return kindleFireEh;
     }
 
     public static DeviceUtils getInstance() {
@@ -27,7 +27,7 @@ public class DeviceUtils {
     }
 
     private DeviceUtils() {
-        isKindleFire = android.os.Build.MODEL.equalsIgnoreCase("kindle fire") ? true: false;
+        kindleFireEh = android.os.Build.MODEL.equalsIgnoreCase("kindle fire") ? true: false;
     }
 
     /**
@@ -40,7 +40,7 @@ public class DeviceUtils {
      * @param context The context.
      * @return Whether camera is available.
      */
-    public boolean hasCamera(Context context) {
+    public boolean cameraEh(Context context) {
         final PackageManager pm = context.getPackageManager();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
@@ -83,7 +83,7 @@ public class DeviceUtils {
         return model;
     }
 
-    public boolean isDeviceLocked(Context context) {
+    public boolean deviceLockedEh(Context context) {
         KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         return myKM.inKeyguardRestrictedInputMode();
     }

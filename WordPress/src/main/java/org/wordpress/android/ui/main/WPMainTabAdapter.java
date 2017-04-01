@@ -45,7 +45,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
         return NUM_TABS;
     }
 
-    public boolean isValidPosition(int position) {
+    public boolean validPositionEh(int position) {
         return (position >= 0 && position < getCount());
     }
 
@@ -81,7 +81,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
     }
 
     public Fragment getFragment(int position) {
-        if (isValidPosition(position)) {
+        if (validPositionEh(position)) {
             if (mFragments.get(position) == null) {
                 return getItem(position);
             }

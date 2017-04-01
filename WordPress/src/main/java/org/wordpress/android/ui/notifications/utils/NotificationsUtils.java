@@ -168,12 +168,12 @@ public class NotificationsUtils {
      * @param blockObject the JSON data
      * @param textView the TextView that will display the spannnable
      * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
-     * @param isFooter - Set if spannable should apply special formatting
+     * @param footerEh - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
     public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
                                                          final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                                         boolean isFooter) {
+                                                         boolean footerEh) {
         if (blockObject == null) {
             return new SpannableStringBuilder();
         }
@@ -196,7 +196,7 @@ public class NotificationsUtils {
                 }
 
                 NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
-                        shouldLink, isFooter) {
+                        shouldLink, footerEh) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
@@ -403,7 +403,7 @@ public class NotificationsUtils {
     // See: https://code.google.com/p/android/issues/detail?id=38482#c15
     @SuppressWarnings("unchecked")
     @TargetApi(19)
-    public static boolean isNotificationsEnabled(Context context) {
+    public static boolean notificationsEnabledEh(Context context) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
             ApplicationInfo appInfo = context.getApplicationInfo();

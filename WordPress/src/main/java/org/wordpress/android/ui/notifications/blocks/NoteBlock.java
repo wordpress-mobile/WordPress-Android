@@ -40,8 +40,8 @@ public class NoteBlock {
     private final JSONObject mNoteData;
     private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     private JSONObject mMediaItem;
-    private boolean mIsBadge;
-    private boolean mHasAnimatedBadge;
+    private boolean mBadgeEh;
+    private boolean mAnimatedBadgeEh;
     private int mBackgroundColor;
 
     public interface OnNoteBlockTextClickListener {
@@ -94,7 +94,7 @@ public class NoteBlock {
     }
 
     public void setIsBadge() {
-        mIsBadge = true;
+        mBadgeEh = true;
     }
 
     public void setBackgroundColor(int backgroundColor) {
@@ -105,19 +105,19 @@ public class NoteBlock {
         return R.layout.note_block_basic;
     }
 
-    private boolean hasMediaArray() {
+    private boolean mediaArrayEh() {
         return mNoteData.has("media");
     }
 
-    boolean hasImageMediaItem() {
+    boolean imageMediaItemEh() {
         String mediaType = getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "");
-        return hasMediaArray() &&
+        return mediaArrayEh() &&
                 (mediaType.startsWith("image") || mediaType.equals("badge")) &&
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
-    private boolean hasVideoMediaItem() {
-        return hasMediaArray() &&
+    private boolean videoMediaItemEh() {
+        return mediaArrayEh() &&
                 getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video") &&
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
@@ -142,14 +142,14 @@ public class NoteBlock {
         final BasicNoteBlockHolder noteBlockHolder = (BasicNoteBlockHolder)view.getTag();
 
         // Note image
-        if (hasImageMediaItem()) {
+        if (imageMediaItemEh()) {
             // Request image, and animate it when loaded
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
             WordPress.sImageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
                 @Override
-                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (!mHasAnimatedBadge && response.getBitmap() != null && view.getContext() != null) {
-                        mHasAnimatedBadge = true;
+                public void onResponse(ImageLoader.ImageContainer response, boolean immediateEh) {
+                    if (!mAnimatedBadgeEh && response.getBitmap() != null && view.getContext() != null) {
+                        mAnimatedBadgeEh = true;
                         noteBlockHolder.getImageView().setImageBitmap(response.getBitmap());
                         Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
                         noteBlockHolder.getImageView().startAnimation(pop);
@@ -167,7 +167,7 @@ public class NoteBlock {
         }
 
         // Note video
-        if (hasVideoMediaItem()) {
+        if (videoMediaItemEh()) {
             noteBlockHolder.getVideoView().setVideoURI(Uri.parse(getNoteMediaItem().optString("url", "")));
             noteBlockHolder.getVideoView().setVisibility(View.VISIBLE);
         } else {
@@ -176,7 +176,7 @@ public class NoteBlock {
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
-            if (mIsBadge) {
+            if (mBadgeEh) {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
                 params.gravity = Gravity.CENTER_HORIZONTAL;
                 noteBlockHolder.getTextView().setLayoutParams(params);

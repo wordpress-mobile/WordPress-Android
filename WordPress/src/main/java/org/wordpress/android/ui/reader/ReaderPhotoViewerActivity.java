@@ -30,13 +30,13 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         implements PhotoViewListener {
 
     private String mInitialImageUrl;
-    private boolean mIsPrivate;
-    private boolean mIsGallery;
+    private boolean mPrivateEh;
+    private boolean mGalleryEh;
     private String mContent;
     private WPViewPager mViewPager;
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
-    private boolean mIsTitleVisible;
+    private boolean mTitleVisibleEh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +51,13 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
 
         if (savedInstanceState != null) {
             mInitialImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
-            mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
-            mIsGallery = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_GALLERY);
+            mPrivateEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+            mGalleryEh = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_GALLERY);
             mContent = savedInstanceState.getString(ReaderConstants.ARG_CONTENT);
         } else if (getIntent() != null) {
             mInitialImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
-            mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
-            mIsGallery = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_GALLERY, false);
+            mPrivateEh = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
+            mGalleryEh = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_GALLERY, false);
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
 
@@ -78,14 +78,14 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         // so parse images from it
         final ReaderImageList imageList;
         if (TextUtils.isEmpty(mContent)) {
-            imageList = new ReaderImageList(mIsPrivate);
+            imageList = new ReaderImageList(mPrivateEh);
         } else {
-            int minImageWidth = mIsGallery ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
-            imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList(0, minImageWidth);
+            int minImageWidth = mGalleryEh ? ReaderConstants.MIN_GALLERY_IMAGE_WIDTH : 0;
+            imageList = new ReaderImageScanner(mContent, mPrivateEh).getImageList(0, minImageWidth);
         }
 
         // make sure initial image is in the list
-        if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
+        if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.imageUrlEh(mInitialImageUrl)) {
             imageList.addImageUrl(0, mInitialImageUrl);
         }
 
@@ -99,26 +99,26 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         return mAdapter;
     }
 
-    private boolean hasAdapter() {
+    private boolean adapterEh() {
         return (mAdapter != null);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (hasAdapter()) {
+        if (adapterEh()) {
             String imageUrl = getAdapter().getImageUrl(mViewPager.getCurrentItem());
             outState.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
         }
 
-        outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
-        outState.putBoolean(ReaderConstants.ARG_IS_GALLERY, mIsGallery);
+        outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mPrivateEh);
+        outState.putBoolean(ReaderConstants.ARG_IS_GALLERY, mGalleryEh);
         outState.putString(ReaderConstants.ARG_CONTENT, mContent);
 
         super.onSaveInstanceState(outState);
     }
 
     private int getImageCount() {
-        if (hasAdapter()) {
+        if (adapterEh()) {
             return getAdapter().getCount();
         } else {
             return 0;
@@ -152,12 +152,12 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         }
 
         mTxtTitle.clearAnimation();
-        if (mIsTitleVisible) {
+        if (mTitleVisibleEh) {
             AniUtils.fadeOut(mTxtTitle, AniUtils.Duration.SHORT);
         } else {
             AniUtils.fadeIn(mTxtTitle, AniUtils.Duration.SHORT);
         }
-        mIsTitleVisible = !mIsTitleVisible;
+        mTitleVisibleEh = !mTitleVisibleEh;
     }
 
     @Override
@@ -177,14 +177,14 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             notifyDataSetChanged();
 
             int position = indexOfImageUrl(initialImageUrl);
-            if (isValidPosition(position)) {
+            if (validPositionEh(position)) {
                 mViewPager.setCurrentItem(position);
                 if (canShowTitle()) {
                     mTxtTitle.setVisibility(View.VISIBLE);
-                    mIsTitleVisible = true;
+                    mTitleVisibleEh = true;
                     updateTitle(position);
                 } else {
-                    mIsTitleVisible = false;
+                    mTitleVisibleEh = false;
                 }
             }
         }
@@ -205,7 +205,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             return ReaderPhotoViewerFragment.newInstance(
                     mImageList.get(position),
-                    mImageList.isPrivate());
+                    mImageList.privateEh());
         }
 
         @Override
@@ -220,14 +220,14 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
             return mImageList.indexOfImageUrl(imageUrl);
         }
 
-        private boolean isValidPosition(int position) {
+        private boolean validPositionEh(int position) {
             return (mImageList != null
                     && position >= 0
                     && position < getCount());
         }
 
         private String getImageUrl(int position) {
-            if (isValidPosition(position)) {
+            if (validPositionEh(position)) {
                 return mImageList.get(position);
             } else {
                 return null;

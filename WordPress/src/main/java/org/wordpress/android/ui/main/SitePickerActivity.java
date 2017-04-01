@@ -224,18 +224,18 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void restoreSavedInstanceState(Bundle savedInstanceState) {
-        boolean isInSearchMode = false;
+        boolean inSearchModeEh = false;
         String lastSearch = "";
 
         if (savedInstanceState != null) {
             mCurrentLocalId = savedInstanceState.getInt(KEY_LOCAL_ID);
-            isInSearchMode = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
+            inSearchModeEh = savedInstanceState.getBoolean(KEY_IS_IN_SEARCH_MODE);
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
         }
 
-        setNewAdapter(lastSearch, isInSearchMode);
+        setNewAdapter(lastSearch, inSearchModeEh);
     }
 
     private void setupActionBar() {
@@ -248,9 +248,9 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    private void setIsInSearchModeAndSetNewAdapter(boolean isInSearchMode) {
+    private void setIsInSearchModeAndSetNewAdapter(boolean inSearchModeEh) {
         String lastSearch = getAdapter().getLastSearch();
-        setNewAdapter(lastSearch, isInSearchMode);
+        setNewAdapter(lastSearch, inSearchModeEh);
     }
 
     private SitePickerAdapter getAdapter() {
@@ -260,12 +260,12 @@ public class SitePickerActivity extends AppCompatActivity
         return mAdapter;
     }
 
-    private void setNewAdapter(String lastSearch, boolean isInSearchMode) {
+    private void setNewAdapter(String lastSearch, boolean inSearchModeEh) {
         mAdapter = new SitePickerAdapter(
                 this,
                 mCurrentLocalId,
                 lastSearch,
-                isInSearchMode,
+                inSearchModeEh,
                 new SitePickerAdapter.OnDataLoadedListener() {
             @Override
             public void onBeforeLoad(boolean isEmpty) {
@@ -406,19 +406,19 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void hideSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
+        if (!hardwareKeyboardEh()) {
             WPActivityUtils.hideKeyboard(mSearchView);
         }
     }
 
     private void showSoftKeyboard() {
-        if (!hasHardwareKeyboard()) {
+        if (!hardwareKeyboardEh()) {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
-    private boolean hasHardwareKeyboard() {
+    private boolean hardwareKeyboardEh() {
         return (getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS);
     }
 
@@ -438,8 +438,8 @@ public class SitePickerActivity extends AppCompatActivity
             setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
             mDidUserSelectSite = true;
             // If the site is hidden, make sure to make it visible
-            if (siteRecord.isHidden) {
-                siteRecord.isHidden = false;
+            if (siteRecord.hiddenEh) {
+                siteRecord.hiddenEh = false;
                 saveSiteVisibility(siteRecord);
             }
             finish();
@@ -464,13 +464,13 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
-        private boolean mHasChanges;
+        private boolean mChangesEh;
         private Set<SiteRecord> mChangeSet;
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
-            mHasChanges = false;
+            mChangesEh = false;
             mChangeSet = new HashSet<>();
             updateActionModeTitle();
             actionMode.getMenuInflater().inflate(R.menu.site_picker_action_mode, menu);
@@ -500,12 +500,12 @@ public class SitePickerActivity extends AppCompatActivity
             if (itemId == R.id.menu_show) {
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(true);
                 mChangeSet.addAll(changeSet);
-                mHasChanges = true;
+                mChangesEh = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_hide) {
                 Set<SiteRecord> changeSet = getAdapter().setVisibilityForSelectedSites(false);
                 mChangeSet.addAll(changeSet);
-                mHasChanges = true;
+                mChangesEh = true;
                 mActionMode.finish();
             } else if (itemId == R.id.menu_select_all) {
                 getAdapter().selectAll();
@@ -517,7 +517,7 @@ public class SitePickerActivity extends AppCompatActivity
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            if (mHasChanges) {
+            if (mChangesEh) {
                 saveSitesVisibility(mChangeSet);
             }
             getAdapter().setEnableEditMode(false);
@@ -525,10 +525,10 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    public static void addSite(Activity activity, boolean isSignedInWpCom) {
+    public static void addSite(Activity activity, boolean signedInWpComEh) {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
-        if (isSignedInWpCom) {
+        if (signedInWpComEh) {
             DialogFragment dialog = new AddSiteDialog();
             dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {

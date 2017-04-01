@@ -93,8 +93,8 @@ public class SiteSettingsModel {
                     BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
                     ");";
 
-    public boolean isInLocalTable;
-    public boolean hasVerifiedCredentials;
+    public boolean inLocalTableEh;
+    public boolean verifiedCredentialsEh;
     public long localTableId;
     public String address;
     public String username;
@@ -175,8 +175,8 @@ public class SiteSettingsModel {
     public void copyFrom(SiteSettingsModel other) {
         if (other == null) return;
 
-        isInLocalTable = other.isInLocalTable;
-        hasVerifiedCredentials = other.hasVerifiedCredentials;
+        inLocalTableEh = other.inLocalTableEh;
+        verifiedCredentialsEh = other.verifiedCredentialsEh;
         localTableId = other.localTableId;
         address = other.address;
         username = other.username;
@@ -236,7 +236,7 @@ public class SiteSettingsModel {
         defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
         location = getBooleanFromCursor(cursor, LOCATION_COLUMN_NAME);
         optimizedImage = getBooleanFromCursor(cursor, OPTIMIZED_IMAGE_COLUMN_NAME);
-        hasVerifiedCredentials = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
+        verifiedCredentialsEh = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
         allowComments = getBooleanFromCursor(cursor, ALLOW_COMMENTS_COLUMN_NAME);
         sendPingbacks = getBooleanFromCursor(cursor, SEND_PINGBACKS_COLUMN_NAME);
         receivePingbacks = getBooleanFromCursor(cursor, RECEIVE_PINGBACKS_COLUMN_NAME);
@@ -289,7 +289,7 @@ public class SiteSettingsModel {
             setRelatedPostsFlags(cachedRelatedPosts);
         }
 
-        isInLocalTable = true;
+        inLocalTableEh = true;
     }
 
     /**
@@ -311,7 +311,7 @@ public class SiteSettingsModel {
         values.put(CATEGORIES_COLUMN_NAME, categoryIdList(categories));
         values.put(DEF_POST_FORMAT_COLUMN_NAME, defaultPostFormat);
         values.put(POST_FORMATS_COLUMN_NAME, postFormatList(postFormats));
-        values.put(CREDS_VERIFIED_COLUMN_NAME, hasVerifiedCredentials);
+        values.put(CREDS_VERIFIED_COLUMN_NAME, verifiedCredentialsEh);
         values.put(RELATED_POSTS_COLUMN_NAME, getRelatedPostsFlags());
         values.put(ALLOW_COMMENTS_COLUMN_NAME, allowComments);
         values.put(SEND_PINGBACKS_COLUMN_NAME, sendPingbacks);

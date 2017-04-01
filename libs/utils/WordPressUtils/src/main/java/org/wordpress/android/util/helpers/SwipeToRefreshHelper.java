@@ -50,8 +50,8 @@ public class SwipeToRefreshHelper implements OnRefreshListener {
         }
     }
 
-    public boolean isRefreshing() {
-        return mSwipeRefreshLayout.isRefreshing();
+    public boolean refreshingEh() {
+        return mSwipeRefreshLayout.refreshingEh();
     }
 
     @Override

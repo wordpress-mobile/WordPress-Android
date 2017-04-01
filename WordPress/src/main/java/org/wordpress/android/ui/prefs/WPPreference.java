@@ -40,16 +40,16 @@ public class WPPreference extends Preference implements PreferenceHint {
         TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
         if (titleView != null) {
             titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(isEnabled() ? R.color.grey_dark : R.color.grey_lighten_10));
+            titleView.setTextColor(res.getColor(enabledEh() ? R.color.grey_dark : R.color.grey_lighten_10));
         }
         if (summaryView != null) {
             summaryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_medium));
-            summaryView.setTextColor(res.getColor(isEnabled() ? R.color.grey_darken_10 : R.color.grey_lighten_10));
+            summaryView.setTextColor(res.getColor(enabledEh() ? R.color.grey_darken_10 : R.color.grey_lighten_10));
         }
     }
 
     @Override
-    public boolean hasHint() {
+    public boolean hintEh() {
         return !TextUtils.isEmpty(mHint);
     }
 

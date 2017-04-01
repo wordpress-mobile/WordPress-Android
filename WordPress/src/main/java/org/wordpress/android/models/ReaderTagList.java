@@ -24,7 +24,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         }
 
         for (int i = 0; i < this.size(); i++) {
-            if (ReaderTag.isSameTag(tag, this.get(i))) {
+            if (ReaderTag.sameTagEh(tag, this.get(i))) {
                 return i;
             }
         }
@@ -32,7 +32,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         return -1;
     }
 
-    public boolean isSameList(ReaderTagList otherList) {
+    public boolean sameListEh(ReaderTagList otherList) {
         if (otherList == null || otherList.size() != this.size()) {
             return false;
         }

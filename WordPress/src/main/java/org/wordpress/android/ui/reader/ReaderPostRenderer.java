@@ -75,16 +75,16 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                final boolean hasTiledGallery = hasTiledGallery(mRenderBuilder.toString());
+                final boolean tiledGalleryEh = tiledGalleryEh(mRenderBuilder.toString());
 
-                if (!(hasTiledGallery && mResourceVars.isWideDisplay)) {
+                if (!(tiledGalleryEh && mResourceVars.wideDisplayEh)) {
                     resizeImages();
                 }
 
                 resizeIframes();
 
-                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), hasTiledGallery,
-                        mResourceVars.isWideDisplay);
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString(), tiledGalleryEh,
+                        mResourceVars.wideDisplayEh);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -96,7 +96,7 @@ class ReaderPostRenderer {
         }.start();
     }
 
-    public static boolean hasTiledGallery(String text) {
+    public static boolean tiledGalleryEh(String text) {
         // determine whether a tiled-gallery exists in the content
         return Pattern.compile("tiled-gallery[\\s\"']").matcher(text).find();
     }
@@ -113,7 +113,7 @@ class ReaderPostRenderer {
                 }
             }
         };
-        ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
+        ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.privateEh);
         scanner.beginScan(imageListener);
     }
 
@@ -139,7 +139,7 @@ class ReaderPostRenderer {
 
         // make sure webView is still valid (containing fragment may have been detached)
         ReaderWebView webView = mWeakWebView.get();
-        if (webView == null || webView.getContext() == null || webView.isDestroyed()) {
+        if (webView == null || webView.getContext() == null || webView.destroyedEh()) {
             AppLog.w(AppLog.T.READER, "reader renderer > webView invalid");
             return;
         }
@@ -158,18 +158,18 @@ class ReaderPostRenderer {
      */
     private void replaceImageTag(final String imageTag, final String imageUrl) {
         ImageSize origSize = getImageSize(imageTag, imageUrl);
-        boolean hasWidth = (origSize != null && origSize.width > 0);
-        boolean isFullSize = hasWidth && (origSize.width >= mMinFullSizeWidthDp);
-        boolean isMidSize = hasWidth
+        boolean widthEh = (origSize != null && origSize.width > 0);
+        boolean fullSizeEh = widthEh && (origSize.width >= mMinFullSizeWidthDp);
+        boolean midSizeEh = hasWidth
                 && (origSize.width >= mMinMidSizeWidthDp)
                 && (origSize.width < mMinFullSizeWidthDp);
 
         final String newImageTag;
-        if (isFullSize) {
+        if (fullSizeEh) {
             newImageTag = makeFullSizeImageTag(imageUrl, origSize.width, origSize.height);
-        } else if (isMidSize) {
+        } else if (midSizeEh) {
             newImageTag = makeImageTag(imageUrl, origSize.width, origSize.height, "size-medium");
-        } else if (hasWidth) {
+        } else if (widthEh) {
             newImageTag = makeImageTag(imageUrl, origSize.width, origSize.height, "size-none");
         } else {
             newImageTag = "<img class='size-none' src='" + imageUrl + "' />";
@@ -185,7 +185,7 @@ class ReaderPostRenderer {
     }
 
     private String makeImageTag(final String imageUrl, int width, int height, final String imageClass) {
-        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate);
+        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.privateEh);
         if (height > 0) {
             return "<img class='" + imageClass + "'" +
                     " src='" + newImageUrl + "'" +
@@ -226,9 +226,9 @@ class ReaderPostRenderer {
      * the top of the content
      */
     private boolean shouldAddFeaturedImage() {
-        return mPost.hasFeaturedImage()
+        return mPost.featuredImageEh()
             && !mPost.getText().contains("<img")
-            && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
+            && !PhotonUtils.mshotsUrlEh(mPost.getFeaturedImage());
     }
 
     /*
@@ -245,9 +245,9 @@ class ReaderPostRenderer {
         }
 
         // if this is a Discover post, add a link which shows the blog preview
-        if (mPost.isDiscoverPost()) {
+        if (mPost.discoverPostEh()) {
             ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
-            if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
+            if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.blogNameEh()) {
                 String label = String.format(
                         WordPress.getContext().getString(R.string.reader_discover_visit_blog), discoverData.getBlogName());
                 String url = ReaderUtils.makeBlogPreviewUrl(discoverData.getBlogId());
@@ -277,7 +277,7 @@ class ReaderPostRenderer {
                 mPost.getFeaturedImage(),
                 mResourceVars.fullSizeImageWidthPx,
                 mResourceVars.featuredImageHeightPx,
-                mPost.isPrivate);
+                mPost.privateEh);
 
         return "<img class='size-full' src='" + imageUrl + "'/>";
     }
@@ -317,8 +317,8 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(final String content, boolean hasTiledGallery, boolean isWideDisplay) {
-        final boolean renderAsTiledGallery = hasTiledGallery && isWideDisplay;
+    private String formatPostContentForWebView(final String content, boolean tiledGalleryEh, boolean wideDisplayEh) {
+        final boolean renderAsTiledGallery = tiledGalleryEh && wideDisplayEh;
 
         // unique CSS class assigned to the gallery elements for easy selection
         final String galleryOnlyClass = "gallery-only-class" + new Random().nextInt(1000);
@@ -382,7 +382,7 @@ class ReaderPostRenderer {
         .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
         .append("     margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }");
 
-        if (isWideDisplay) {
+        if (wideDisplayEh) {
             sbHtml
             .append(".alignleft {")
             .append("    max-width: 100%;")

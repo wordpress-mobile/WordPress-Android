@@ -124,7 +124,7 @@ public class PostPreviewFragment extends Fragment {
 
         // if this is a local draft, remove src="null" from image tags then replace the "android-uri"
         // tag added for local image with a valid "src" tag so local images can be viewed
-        if (post.isLocalDraft()) {
+        if (post.localDraftEh()) {
             postContent = postContent.replace("src=\"null\"", "").replace("android-uri=", "src=");
         }
 

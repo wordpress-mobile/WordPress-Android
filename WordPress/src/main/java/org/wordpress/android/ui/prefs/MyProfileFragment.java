@@ -53,7 +53,7 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         super.onResume();
 
         refreshDetails();
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (NetworkUtils.networkAvailableEh(getActivity())) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         }
     }
@@ -135,12 +135,12 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     private View.OnClickListener createOnClickListener(final String dialogTitle,
                                                        final String hint,
                                                        final WPTextView textView,
-                                                       final boolean isMultiline) {
+                                                       final boolean multilineEh) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
-                        textView.getText().toString(), hint, isMultiline, textView.getId());
+                        textView.getText().toString(), hint, multilineEh, textView.getId());
                 inputDialog.setTargetFragment(MyProfileFragment.this, 0);
                 inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
@@ -173,7 +173,7 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         View rootView = getView();
         if (rootView == null) return;
 
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.networkAvailableEh(getActivity())) {
             ToastUtils.showToast(getActivity(), R.string.error_post_my_profile_no_connection);
             return;
         }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class AnalyticsTracker {
-    private static boolean mHasUserOptedOut;
+    private static boolean mUserOptedOutEh;
 
     public static final String READER_DETAIL_TYPE_KEY = "post_detail_type";
     public static final String READER_DETAIL_TYPE_NORMAL = "normal";
@@ -248,9 +248,9 @@ public final class AnalyticsTracker {
 
     public static void loadPrefHasUserOptedOut(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
-        if (hasUserOptedOut != mHasUserOptedOut) {
-            mHasUserOptedOut = hasUserOptedOut;
+        boolean userOptedOutEh = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (userOptedOutEh != mUserOptedOutEh) {
+            mUserOptedOutEh = userOptedOutEh;
         }
     }
 
@@ -261,7 +261,7 @@ public final class AnalyticsTracker {
     }
 
     public static void track(Stat stat) {
-        if (mHasUserOptedOut) {
+        if (mUserOptedOutEh) {
             return;
         }
         for (Tracker tracker : TRACKERS) {
@@ -270,7 +270,7 @@ public final class AnalyticsTracker {
     }
 
     public static void track(Stat stat, Map<String, ?> properties) {
-        if (mHasUserOptedOut) {
+        if (mUserOptedOutEh) {
             return;
         }
         for (Tracker tracker : TRACKERS) {
@@ -294,7 +294,7 @@ public final class AnalyticsTracker {
     }
 
     public static void flush() {
-        if (mHasUserOptedOut) {
+        if (mUserOptedOutEh) {
             return;
         }
         for (Tracker tracker : TRACKERS) {
@@ -303,7 +303,7 @@ public final class AnalyticsTracker {
     }
 
     public static void endSession(boolean force) {
-        if (mHasUserOptedOut && !force) {
+        if (mUserOptedOutEh && !force) {
             return;
         }
         for (Tracker tracker : TRACKERS) {
@@ -312,7 +312,7 @@ public final class AnalyticsTracker {
     }
 
     public static void registerPushNotificationToken(String regId) {
-        if (mHasUserOptedOut) {
+        if (mUserOptedOutEh) {
             return;
         }
         for (Tracker tracker : TRACKERS) {

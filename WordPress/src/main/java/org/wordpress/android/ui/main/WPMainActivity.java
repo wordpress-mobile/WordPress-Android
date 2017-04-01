@@ -213,7 +213,7 @@ public class WPMainActivity extends AppCompatActivity {
 
 
         if (savedInstanceState == null) {
-            if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            if (FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -228,7 +228,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 } else {
                     int position = AppPrefs.getMainTabIndex();
-                    if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
+                    if (mTabAdapter.validPositionEh(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
                     checkMagicLinkSignIn();
@@ -259,7 +259,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void showVisualEditorPromoDialogIfNeeded() {
-        if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
+        if (AppPrefs.visualEditorPromoRequiredEh() && AppPrefs.visualEditorEnabledEh()) {
             DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
                     R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
                     R.string.new_editor_promo_button_label);
@@ -362,7 +362,7 @@ public class WPMainActivity extends AppCompatActivity {
      * called from an internal pending draft notification, so the user can land in the local draft and take action
      * such as finish editing and publish, or delete the post, etc.
      */
-    private void launchWithPostId(int postId, boolean isPage) {
+    private void launchWithPostId(int postId, boolean pageEh) {
         if (isFinishing() || getIntent() == null) return;
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
@@ -371,7 +371,7 @@ public class WPMainActivity extends AppCompatActivity {
         // if no specific post id passed, show the list
         if (postId == 0 ) {
             // show list
-            if (isPage) {
+            if (pageEh) {
                 ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
             } else {
                 ActivityLauncher.viewCurrentBlogPosts(this, getSelectedSite());
@@ -524,7 +524,7 @@ public class WPMainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mTabAdapter);
 
         // restore previous position
-        if (mTabAdapter.isValidPosition(position)) {
+        if (mTabAdapter.validPositionEh(position)) {
             mViewPager.setCurrentItem(position);
         }
     }
@@ -544,7 +544,7 @@ public class WPMainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startWithNewAccount();
-                } else if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+                } else if (!FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
                     // can't do anything if user isn't signed in (either to wp.com or self-hosted)
                     finish();
                 }
@@ -615,7 +615,7 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError() && mSelectedSite != null) {
+        if (event.errorEh() && mSelectedSite != null) {
             AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
         }
     }
@@ -623,7 +623,7 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
             // User signed out
             resetFragments();
             ActivityLauncher.showSignInForResult(this);
@@ -633,33 +633,33 @@ public class WPMainActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        mTabLayout.showNoteBadge(event.hasUnseenNotes);
+        mTabLayout.showNoteBadge(event.unseenNotesEh);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsUnseenStatus event) {
-        mTabLayout.showNoteBadge(event.hasUnseenNotes);
+        mTabLayout.showNoteBadge(event.unseenNotesEh);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
-        updateConnectionBar(event.isConnected());
+        updateConnectionBar(event.connectedEh());
     }
 
     private void checkConnection() {
-        updateConnectionBar(NetworkUtils.isNetworkAvailable(this));
+        updateConnectionBar(NetworkUtils.networkAvailableEh(this));
     }
 
-    private void updateConnectionBar(boolean isConnected) {
-        if (isConnected && mConnectionBar.getVisibility() == View.VISIBLE) {
+    private void updateConnectionBar(boolean connectedEh) {
+        if (connectedEh && mConnectionBar.getVisibility() == View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, false);
-        } else if (!isConnected && mConnectionBar.getVisibility() != View.VISIBLE) {
+        } else if (!connectedEh && mConnectionBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mConnectionBar, true);
         }
     }
 
     private void handleBlogRemoved() {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
             SiteModel site = getSelectedSite();

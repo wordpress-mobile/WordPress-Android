@@ -36,8 +36,8 @@ public class StatsViewAllActivity extends AppCompatActivity {
     public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
-    private boolean mIsInFront;
-    private boolean mIsUpdatingStats;
+    private boolean mInFrontEh;
+    private boolean mUpdatingStatsEh;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ScrollViewExt mOuterScrollView;
 
@@ -72,11 +72,11 @@ public class StatsViewAllActivity extends AppCompatActivity {
                     public void onRefreshStarted() {
                         if (!NetworkUtils.checkConnection(getBaseContext())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
-                            mIsUpdatingStats = false;
+                            mUpdatingStatsEh = false;
                             return;
                         }
 
-                        if (mIsUpdatingStats) {
+                        if (mUpdatingStatsEh) {
                             AppLog.w(AppLog.T.STATS, "stats are already updating, refresh cancelled");
                             return;
                         }
@@ -172,11 +172,11 @@ public class StatsViewAllActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.UpdateStatusChanged event) {
-        if (isFinishing() || !mIsInFront) {
+        if (isFinishing() || !mInFrontEh) {
             return;
         }
         mSwipeToRefreshHelper.setRefreshing(event.mUpdating);
-        mIsUpdatingStats = event.mUpdating;
+        mUpdatingStatsEh = event.mUpdating;
     }
 
     private String getDateForDisplayInLabels(String date, StatsTimeframe timeframe) {
@@ -276,7 +276,7 @@ public class StatsViewAllActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mIsInFront = true;
+        mInFrontEh = true;
         NetworkUtils.checkConnection(this); // show the error toast if the network is offline
         ActivityId.trackLastActivity(ActivityId.STATS_VIEW_ALL);
     }
@@ -284,8 +284,8 @@ public class StatsViewAllActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        mIsInFront = false;
-        mIsUpdatingStats = false;
+        mInFrontEh = false;
+        mUpdatingStatsEh = false;
         mSwipeToRefreshHelper.setRefreshing(false);
     }
 
@@ -301,10 +301,10 @@ public class StatsViewAllActivity extends AppCompatActivity {
     }
 
     private void refreshStats() {
-        if (mIsUpdatingStats) {
+        if (mUpdatingStatsEh) {
             return;
         }
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.networkAvailableEh(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
             AppLog.w(AppLog.T.STATS, "ViewAll on "+ mFragment.getTag() + " > no connection, update canceled");
             return;

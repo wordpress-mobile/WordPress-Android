@@ -80,7 +80,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         // then get from server if doesn't exist locally or is time to update it
-        if (localBlogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(localBlogInfo)) {
+        if (localBlogInfo == null || ReaderBlogTable.timeToUpdateBlogInfoEh(localBlogInfo)) {
             ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
                 @Override
                 public void onResult(ReaderBlog serverBlogInfo) {
@@ -97,7 +97,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private void showBlogInfo(ReaderBlog blogInfo) {
         // do nothing if unchanged
-        if (blogInfo == null || blogInfo.isSameAs(mBlogInfo)) {
+        if (blogInfo == null || blogInfo.sameAsEh(mBlogInfo)) {
             return;
         }
 
@@ -109,20 +109,20 @@ public class ReaderSiteHeaderView extends LinearLayout {
         TextView txtDescription = (TextView) layoutInfo.findViewById(R.id.text_blog_description);
         TextView txtFollowCount = (TextView) layoutInfo.findViewById(R.id.text_blog_follow_count);
 
-        if (blogInfo.hasName()) {
+        if (blogInfo.nameEh()) {
             txtBlogName.setText(blogInfo.getName());
         } else {
             txtBlogName.setText(R.string.reader_untitled_post);
         }
 
-        if (blogInfo.hasUrl()) {
+        if (blogInfo.urlEh()) {
             txtDomain.setText(UrlUtils.getHost(blogInfo.getUrl()));
             txtDomain.setVisibility(View.VISIBLE);
         } else {
             txtDomain.setVisibility(View.GONE);
         }
 
-        if (blogInfo.hasDescription()) {
+        if (blogInfo.descriptionEh()) {
             txtDescription.setText(blogInfo.getDescription());
             txtDescription.setVisibility(View.VISIBLE);
         } else {
@@ -135,7 +135,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             mFollowButton.setVisibility(View.GONE);
         } else {
             mFollowButton.setVisibility(View.VISIBLE);
-            mFollowButton.setIsFollowed(blogInfo.isFollowing);
+            mFollowButton.setIsFollowed(blogInfo.followingEh);
             mFollowButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -158,11 +158,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
             return;
         }
 
-        final boolean isAskingToFollow;
+        final boolean askingToFollowEh;
         if (mFeedId != 0) {
-            isAskingToFollow = !ReaderBlogTable.isFollowedFeed(mFeedId);
+            askingToFollowEh = !ReaderBlogTable.followedFeedEh(mFeedId);
         } else {
-            isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mBlogId);
+            askingToFollowEh = !ReaderBlogTable.followedBlogEh(mBlogId);
         }
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
@@ -173,9 +173,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 }
                 mFollowButton.setEnabled(true);
                 if (!succeeded) {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    int errResId = askingToFollowEh ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
-                    mFollowButton.setIsFollowed(!isAskingToFollow);
+                    mFollowButton.setIsFollowed(!askingToFollowEh);
                 }
             }
         };
@@ -185,13 +185,13 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         boolean result;
         if (mFeedId != 0) {
-            result = ReaderBlogActions.followFeedById(mFeedId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followFeedById(mFeedId, askingToFollowEh, listener);
         } else {
-            result = ReaderBlogActions.followBlogById(mBlogId, isAskingToFollow, listener);
+            result = ReaderBlogActions.followBlogById(mBlogId, askingToFollowEh, listener);
         }
 
         if (result) {
-            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+            mFollowButton.setIsFollowedAnimated(askingToFollowEh);
         }
     }
 }

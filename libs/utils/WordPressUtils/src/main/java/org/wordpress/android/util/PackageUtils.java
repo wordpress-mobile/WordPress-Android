@@ -8,7 +8,7 @@ public class PackageUtils {
     /**
      * Return true if Debug build. false otherwise.
      */
-    public static boolean isDebugBuild() {
+    public static boolean debugBuildEh() {
         return BuildConfig.DEBUG;
     }
 

@@ -9,16 +9,16 @@ import java.util.regex.Pattern;
 
 public class ReaderImageScanner {
     private final String mContent;
-    private final boolean mIsPrivate;
+    private final boolean mPrivateEh;
     private final boolean mContentContainsImages;
 
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
             "<img(\\s+.*?)(?:src\\s*=\\s*(?:'|\")(.*?)(?:'|\"))(.*?)>",
             Pattern.DOTALL| Pattern.CASE_INSENSITIVE);
 
-    public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
+    public ReaderImageScanner(String contentOfPost, boolean privateEh) {
         mContent = contentOfPost;
-        mIsPrivate = isPrivate;
+        mPrivateEh = privateEh;
         mContentContainsImages = mContent != null && mContent.contains("<img");
     }
 
@@ -49,7 +49,7 @@ public class ReaderImageScanner {
      * to include all images regardless of size
      */
     public ReaderImageList getImageList(int maxImageCount, int minImageWidth) {
-        ReaderImageList imageList = new ReaderImageList(mIsPrivate);
+        ReaderImageList imageList = new ReaderImageList(mPrivateEh);
 
         if (!mContentContainsImages) {
             return imageList;
@@ -80,7 +80,7 @@ public class ReaderImageScanner {
      * returns true if there at least `minImageCount` images in the post content that are at
      * least `minImageWidth` in size
      */
-    public boolean hasUsableImageCount(int minImageCount, int minImageWidth) {
+    public boolean usableImageCountEh(int minImageCount, int minImageWidth) {
         return getImageList(minImageCount, minImageWidth).size() == minImageCount;
     }
 

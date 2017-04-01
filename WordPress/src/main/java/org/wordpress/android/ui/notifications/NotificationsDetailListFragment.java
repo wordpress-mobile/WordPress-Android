@@ -288,7 +288,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     };
 
-    private boolean hasNoteBlockAdapter() {
+    private boolean noteBlockAdapterEh() {
         return mNoteBlockAdapter != null;
     }
 
@@ -296,7 +296,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     // Loop through the 'body' items in this note, and create blocks for each.
     private class LoadNoteBlocksTask extends AsyncTask<Void, Boolean, List<NoteBlock>> {
 
-        private boolean mIsBadgeView;
+        private boolean mBadgeViewEh;
 
         @Override
         protected List<NoteBlock> doInBackground(Void... params) {
@@ -366,7 +366,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         mOnGravatarClickedListener
                                 );
                             }
-                        } else if (isFooterBlock(noteObject)) {
+                        } else if (footerBlockEh(noteObject)) {
                             noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
                             ((FooterNoteBlock)noteBlock).setClickableSpan(
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
@@ -378,11 +378,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
                         // Badge notifications apply different colors and formatting
                         if (isAdded() && noteBlock.containsBadgeMediaType()) {
-                            mIsBadgeView = true;
+                            mBadgeViewEh = true;
                             mBackgroundColor = getActivity().getResources().getColor(R.color.transparent);
                         }
 
-                        if (mIsBadgeView) {
+                        if (mBadgeViewEh) {
                             noteBlock.setIsBadge();
                         }
 
@@ -400,11 +400,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         protected void onPostExecute(List<NoteBlock> noteList) {
             if (!isAdded() || noteList == null) return;
 
-            if (mIsBadgeView) {
+            if (mBadgeViewEh) {
                 mRootLayout.setGravity(Gravity.CENTER_VERTICAL);
             }
 
-            if (!hasNoteBlockAdapter()) {
+            if (!noteBlockAdapterEh()) {
                 mNoteBlockAdapter = new NoteBlockAdapter(getActivity(), noteList, mBackgroundColor);
                 setListAdapter(mNoteBlockAdapter);
             } else {
@@ -418,7 +418,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     }
 
-    private boolean isFooterBlock(JSONObject blockObject) {
+    private boolean footerBlockEh(JSONObject blockObject) {
         if (mNote == null || blockObject == null) return false;
 
         if (mNote.isCommentType()) {

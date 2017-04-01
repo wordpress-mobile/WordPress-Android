@@ -105,9 +105,9 @@ public class MeFragment extends Fragment {
     private String mMediaCapturePath;
 
     // setUserVisibleHint is not available so we need to manually handle the UserVisibleHint state
-    private boolean mIsUserVisible;
+    private boolean mUserVisibleEh;
 
-    private boolean mIsUpdatingGravatar;
+    private boolean mUpdatingGravatarEh;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -124,7 +124,7 @@ public class MeFragment extends Fragment {
 
         if (savedInstanceState != null) {
             mMediaCapturePath = savedInstanceState.getString(MEDIA_CAPTURE_PATH);
-            mIsUpdatingGravatar = savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR);
+            mUpdatingGravatarEh = savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR);
         }
     }
 
@@ -132,7 +132,7 @@ public class MeFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        mIsUserVisible = isVisibleToUser;
+        mUserVisibleEh = isVisibleToUser;
 
         if (isResumed()) {
             showGravatarTooltipIfNeeded();
@@ -140,8 +140,8 @@ public class MeFragment extends Fragment {
     }
 
     private void showGravatarTooltipIfNeeded() {
-        if (!isAdded() || !mAccountStore.hasAccessToken() || !AppPrefs.isGravatarChangePromoRequired() ||
-                !mIsUserVisible || mGravatarToolTipView != null) {
+        if (!isAdded() || !mAccountStore.hasAccessToken() || !AppPrefs.gravatarChangePromoRequiredEh() ||
+                !mUserVisibleEh || mGravatarToolTipView != null) {
             return;
         }
 
@@ -288,7 +288,7 @@ public class MeFragment extends Fragment {
             outState.putString(MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
 
-        outState.putBoolean(IS_UPDATING_GRAVATAR, mIsUpdatingGravatar);
+        outState.putBoolean(IS_UPDATING_GRAVATAR, mUpdatingGravatarEh);
 
         super.onSaveInstanceState(outState);
     }
@@ -341,7 +341,7 @@ public class MeFragment extends Fragment {
     }
 
     private void refreshAccountDetails() {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.signedInWPComOrHasWPOrgSiteEh(mAccountStore, mSiteStore)) {
             return;
         }
         // we only want to show user details for WordPress.com users
@@ -380,9 +380,9 @@ public class MeFragment extends Fragment {
         }
     }
 
-    private void showGravatarProgressBar(boolean isUpdating) {
-        mProgressBar.setVisibility(isUpdating ? View.VISIBLE : View.GONE);
-        mIsUpdatingGravatar = isUpdating;
+    private void showGravatarProgressBar(boolean updatingEh) {
+        mProgressBar.setVisibility(updatingEh ? View.VISIBLE : View.GONE);
+        mUpdatingGravatarEh = updatingEh;
     }
 
     private String constructGravatarUrl(AccountModel account) {
@@ -557,7 +557,7 @@ public class MeFragment extends Fragment {
     }
 
     private void fetchMedia(Uri mediaUri) {
-        if (!MediaUtils.isInMediaStore(mediaUri)) {
+        if (!MediaUtils.inMediaStoreEh(mediaUri)) {
             // Create an AsyncTask to download the file
             new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
@@ -679,7 +679,7 @@ public class MeFragment extends Fragment {
     }
 
     public void onEventMainThread(GravatarLoadFinished event) {
-        if (!event.success && mIsUpdatingGravatar) {
+        if (!event.success && mUpdatingGravatarEh) {
             Toast.makeText(getActivity(), getString(R.string.error_refreshing_gravatar), Toast.LENGTH_SHORT).show();
         }
         showGravatarProgressBar(false);

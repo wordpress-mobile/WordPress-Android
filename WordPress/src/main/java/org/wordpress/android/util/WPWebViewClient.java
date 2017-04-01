@@ -70,7 +70,7 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String stringUrl) {
         URL imageUrl  = null;
-        if (mSite != null && mSite.isPrivate() && UrlUtils.isImageUrl(stringUrl)) {
+        if (mSite != null && mSite.privateEh() && UrlUtils.imageUrlEh(stringUrl)) {
             try {
                 imageUrl = new URL(UrlUtils.makeHttps(stringUrl));
             } catch (MalformedURLException e) {

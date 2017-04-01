@@ -77,14 +77,14 @@ public class ReaderBlogFragment extends Fragment
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
         if (emptyView == null) return;
 
-        boolean isEmpty = hasBlogAdapter() && getBlogAdapter().isEmpty();
+        boolean isEmpty = blogAdapterEh() && getBlogAdapter().isEmpty();
         if (isEmpty) {
             switch (getBlogType()) {
                 case RECOMMENDED:
                     emptyView.setText(R.string.reader_empty_recommended_blogs);
                     break;
                 case FOLLOWED:
-                    if (getBlogAdapter().hasSearchFilter()) {
+                    if (getBlogAdapter().searchFilterEh()) {
                         emptyView.setText(R.string.reader_empty_followed_blogs_search_title);
                     } else {
                         emptyView.setText(R.string.reader_empty_followed_blogs_title);
@@ -104,7 +104,7 @@ public class ReaderBlogFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
-        if (getBlogAdapter().hasSearchFilter()) {
+        if (getBlogAdapter().searchFilterEh()) {
             outState.putString(KEY_SEARCH_FILTER, getBlogAdapter().getSearchFilter());
         }
         super.onSaveInstanceState(outState);
@@ -180,7 +180,7 @@ public class ReaderBlogFragment extends Fragment
     }
 
     void refresh() {
-        if (hasBlogAdapter()) {
+        if (blogAdapterEh()) {
             AppLog.d(AppLog.T.READER, "reader subs > refreshing blog fragment " + getBlogType().name());
             getBlogAdapter().refresh();
         }
@@ -191,7 +191,7 @@ public class ReaderBlogFragment extends Fragment
         getBlogAdapter().setSearchFilter(constraint);
     }
 
-    private boolean hasBlogAdapter() {
+    private boolean blogAdapterEh() {
         return (mAdapter != null);
     }
 

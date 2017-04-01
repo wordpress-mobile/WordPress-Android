@@ -96,7 +96,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mDeviceId = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_SERVER_ID, "");
 
-        if (hasNotificationsSettings()) {
+        if (notificationsSettingsEh()) {
             loadNotificationsAndUpdateUI(true);
         }
 
@@ -111,7 +111,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         super.onResume();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        mNotificationsEnabled = NotificationsUtils.isNotificationsEnabled(getActivity());
+        mNotificationsEnabled = NotificationsUtils.notificationsEnabledEh(getActivity());
         refreshSettings();
     }
 
@@ -184,11 +184,11 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
     }
 
     private void refreshSettings() {
-        if (!hasNotificationsSettings()) {
+        if (!notificationsSettingsEh()) {
             EventBus.getDefault().post(new NotificationEvents.NotificationsSettingsStatusChanged(getString(R.string.loading)));
         }
 
-        if (hasNotificationsSettings()) {
+        if (notificationsSettingsEh()) {
             updateUIForNotificationsEnabledState();
         }
 
@@ -202,7 +202,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                 AppLog.d(T.NOTIFS, "Get settings action succeeded");
                 if (!isAdded()) return;
 
-                boolean settingsExisted = hasNotificationsSettings();
+                boolean settingsExisted = notificationsSettingsEh();
                 if (!settingsExisted) {
                     EventBus.getDefault().post(new NotificationEvents.NotificationsSettingsStatusChanged(null));
                 }
@@ -221,7 +221,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                 if (!isAdded()) return;
                 AppLog.e(T.NOTIFS, "Get settings action failed", error);
 
-                if (!hasNotificationsSettings()) {
+                if (!notificationsSettingsEh()) {
                     EventBus.getDefault().post(new NotificationEvents.NotificationsSettingsStatusChanged(getString(R.string.error_loading_notifications)));
                 }
             }
@@ -258,7 +258,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         }
     }
 
-    private boolean hasNotificationsSettings() {
+    private boolean notificationsSettingsEh() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         return sharedPreferences.contains(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
