@@ -118,6 +118,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -477,6 +478,30 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private String getSaveButtonText() {
+        if (!mSite.getHasCapabilityPublishPosts()) {
+            return getString(R.string.submit_for_review);
+        }
+
+        switch (PostStatus.fromPost(mPost)) {
+            case SCHEDULED:
+                return getString(R.string.schedule_verb);
+            case PUBLISHED:
+            case UNKNOWN:
+                if (mPost.isLocalDraft()) {
+                    return getString(R.string.publish_post);
+                } else {
+                    return getString(R.string.update_verb);
+                }
+            default:
+                if (mPost.isLocalDraft()) {
+                    return getString(R.string.save);
+                } else {
+                    return getString(R.string.update_verb);
+                }
+        }
+    }
+
     private boolean isPhotoChooserShowing() {
         return mPhotoChooserContainer != null
                 && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
@@ -520,7 +545,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // size the chooser before creating the fragment to avoid having it load media now
         resizePhotoChooser();
 
-        mPhotoChooserFragment = PhotoChooserFragment.newInstance();
+        mPhotoChooserFragment = PhotoChooserFragment.newInstance(this);
 
         getFragmentManager()
                 .beginTransaction()
@@ -650,25 +675,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             if (saveMenuItem != null) {
-                switch (PostStatus.fromPost(mPost)) {
-                    case SCHEDULED:
-                        saveMenuItem.setTitle(getString(R.string.schedule_verb));
-                        break;
-                    case PUBLISHED:
-                    case UNKNOWN:
-                        if (mPost.isLocalDraft()) {
-                            saveMenuItem.setTitle(R.string.publish_post);
-                        } else {
-                            saveMenuItem.setTitle(R.string.update_verb);
-                        }
-                        break;
-                    default:
-                        if (mPost.isLocalDraft()) {
-                            saveMenuItem.setTitle(R.string.save);
-                        } else {
-                            saveMenuItem.setTitle(R.string.update_verb);
-                        }
-                }
+                saveMenuItem.setTitle(getSaveButtonText());
             }
         }
 
@@ -969,6 +976,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         switch (error.type) {
             case AUTHORIZATION_REQUIRED:
                 errorMessage = getString(R.string.media_error_no_permission_upload);
+                break;
+            case REQUEST_TOO_LARGE:
+                errorMessage = getString(R.string.media_error_too_large_upload);
                 break;
             case GENERIC_ERROR:
             default:
@@ -1634,16 +1644,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * Analytics about new media
      *
      * @param isVideo Whether is a video or not
+     * @param isOptimized Whether the media was "optimized" device side
      * @param uri The URI of the media on the device, or null
      * @param path The path of the media on the device, or null
      */
-    private void trackAddMediaFromDeviceEvents(boolean isVideo, Uri uri, String path) {
+    private void trackAddMediaFromDeviceEvents(boolean isVideo, boolean isOptimized, Uri uri, String path) {
         if (TextUtils.isEmpty(path) && uri == null) {
             AppLog.e(T.MEDIA, "Cannot track new media events if both path and mediaURI are null!!");
             return;
         }
 
         Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, path);
+        properties.put("optimized", isOptimized);
 
         if (isVideo) {
             AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY, properties);
@@ -1690,22 +1702,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private String getPathFromContentUri(Uri imageUri) {
-        String path = null;
-        String[] projection = new String[]{android.provider.MediaStore.Images.Media.DATA};
-        Cursor cur = getContentResolver().query(imageUri, projection, null, null, null);
-        if (cur != null && cur.moveToFirst()) {
-            int dataColumn = cur.getColumnIndex(android.provider.MediaStore.Images.Media.DATA);
-            path = cur.getString(dataColumn);
-        }
-        SqlUtils.closeCursor(cur);
-        return path;
-    }
-
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
         String path;
         if (uri.toString().contains("content:")) {
-            path = getPathFromContentUri(uri);
+            path = MediaUtils.getPath(this, uri);
         } else {
             // File is not in media library
             path = uri.toString().replace("file://", "");
@@ -1716,32 +1716,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        if (!NetworkUtils.isWiFiConnected(this) && !isVideo) {
-            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mSite, null);
-            // Site Settings are implemented on .com/Jetpack sites only
-            if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
-                // Not on WiFi and optimize image is set to ON
-                // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
-                String optimizedPath = ImageUtils.optimizeImage(this, path, 3000, 85);
-
-                if (optimizedPath == null) {
-                    AppLog.e(T.EDITOR, "Optimized picture was null!");
-                    // TODO: track analytics here
-                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO_ERROR);
-                } else {
-                    // TODO: track analytics here
-                    // AnalyticsTracker.track(Stat.EDITOR_RESIZED_PHOTO);
-                    Uri optimizedImageUri = Uri.parse(optimizedPath);
-                    if (optimizedImageUri != null) {
-                        uri = optimizedImageUri;
-                    }
-                }
-            }
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
+        boolean isOptimized = optimizedMedia != null;
+        if (optimizedMedia != null) {
+            uri = optimizedMedia;
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
         MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-        trackAddMediaFromDeviceEvents(isVideo, null, path);
+        trackAddMediaFromDeviceEvents(isVideo, isOptimized, null, path);
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
@@ -1750,7 +1733,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        trackAddMediaFromDeviceEvents(isVideo, mediaUri, null);
+        trackAddMediaFromDeviceEvents(isVideo, false, mediaUri, null);
 
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
         if (isVideo) {
@@ -1945,8 +1928,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     errorMessage = getString(R.string.error_media_unauthorized);
                     break;
                 case PARSE_ERROR:
-                    String errorFormat = getString(R.string.error_media_parse_format);
-                    errorMessage = String.format(errorFormat, event.cause.toString());
+                    errorMessage = getString(R.string.error_media_parse_error);
                     break;
                 case MALFORMED_MEDIA_ARG:
                 case NULL_MEDIA_ARG:

@@ -64,7 +64,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:tint="@color/white"
-            app:srcCompat="@drawable/nux_icon_wp" />
+            app:srcCompat="@drawable/ic_my_sites_white_50dp" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -283,7 +283,7 @@
                 android:summary="@string/start_over_text"
                 android:widgetLayout="@layout/start_over_preference_button"
                 android:layout="@layout/start_over_preference"
-                app:preficon="@drawable/gridicons_history"
+                app:preficon="@drawable/ic_history_black_24dp"
                 app:longClickHint="@string/site_settings_start_over_hint"
                 app:buttonText="@string/contact_support"
                 app:buttonTextColor="@color/grey_dark"

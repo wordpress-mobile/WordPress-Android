@@ -17,10 +17,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -89,7 +89,7 @@ public class PeopleListFragment extends Fragment {
         // the following will change the look and feel of the toolbar to match the current design
         mFilteredRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
         mFilteredRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(getActivity(), R.color.white));
-        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.arrow);
+        mFilteredRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_blue_light_24dp);
         mFilteredRecyclerView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));

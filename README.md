@@ -59,7 +59,7 @@ but this isn't used for mobile apps. Just use "https://localhost".
 
 Once you've created your application in the [applications manager][5], you'll
 need to edit the `./WordPress/gradle.properties` file and change the
-`WP.OAUTH.APP.ID` and `WP.OAUTH.APP.SECRET` fields. Then you can compile and
+`WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
 account.
 

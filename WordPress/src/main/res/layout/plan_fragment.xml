@@ -21,7 +21,7 @@
             android:layout_height="@dimen/plan_icon_size"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/margin_extra_large"
-            tools:background="@drawable/penandink" />
+            tools:background="@drawable/penandink_223dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_product_name"

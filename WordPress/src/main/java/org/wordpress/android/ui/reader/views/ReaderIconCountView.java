@@ -68,7 +68,7 @@ public class ReaderIconCountView extends LinearLayout {
         // move the comment icon down a bit so it aligns with the text baseline
         if (mIconType == ICON_COMMENT) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
-            int margin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+            int margin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_small);
             params.topMargin = margin;
         }
 
