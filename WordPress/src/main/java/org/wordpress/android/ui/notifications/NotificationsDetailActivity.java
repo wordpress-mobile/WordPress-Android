@@ -41,11 +41,8 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
-import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -76,8 +73,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private WPViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,22 +96,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
         }
 
-        mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
-                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (!NetworkUtils.checkConnection(NotificationsDetailActivity.this)) {
-                            mSwipeToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-
-                        // try to obtain the item from the local db, otherwise trigger the service
-                        // update and wait
-                        updateUIAndNote(true);
-                    }
-                });
-
         //set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
@@ -139,7 +118,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         if (doRefresh) {
             // here start the service and wait for it
-            mSwipeToRefreshHelper.setRefreshing(true);
             NotificationsUpdateService.startService(this, mNoteId);
             return;
         }
@@ -171,8 +149,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Map<String, String> properties = new HashMap<>();
         properties.put("notification_type", note.getType());
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
-        mSwipeToRefreshHelper.setRefreshing(false);
     }
 
     private void resetOnPageChangeListener() {
@@ -181,11 +157,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         } else {
             mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onPageScrolled( int position, float v, int i1 ) {
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
                 }
 
                 @Override
-                public void onPageSelected( int position ) {
+                public void onPageSelected(int position) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
                     AppPrefs.setNotificationsSwipeToNavigateShown(true);
                     //change the action bar title for the current note
@@ -197,11 +174,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 }
 
                 @Override
-                public void onPageScrollStateChanged( int state ) {
-                    // we'e doing this to prevent the swipe down/ left/ right gesture confusion
-                    if (mSwipeToRefreshHelper != null) {
-                        mSwipeToRefreshHelper.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
-                    }
+                public void onPageScrollStateChanged(int state) {
+
                 }
             };
         }
@@ -418,14 +392,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
-        mSwipeToRefreshHelper.setRefreshing(false);
         updateUIAndNote(false);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
         ToastUtils.showToast(this, getString(R.string.error_refresh_notification));
-        mSwipeToRefreshHelper.setRefreshing(false);
     }
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
