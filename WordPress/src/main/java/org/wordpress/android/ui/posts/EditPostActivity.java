@@ -2126,6 +2126,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
+        if (TextUtils.isEmpty(mediaId)) {
+            AppLog.e(T.MEDIA, "Invalid media id passed to onMediaRetryClicked");
+            return;
+        }
         MediaModel media = mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
@@ -2156,6 +2160,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId));
         } else {
             // Passed mediaId is incorrect: cancel all uploads
+            ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
             EventBus.getDefault().post(new PostEvents.PostMediaCanceled(true));
         }
     }
