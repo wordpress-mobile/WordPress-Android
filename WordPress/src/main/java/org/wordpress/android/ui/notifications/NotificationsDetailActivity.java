@@ -12,7 +12,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -117,6 +119,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (doRefresh) {
+            setProgressVisible(true);
             // here start the service and wait for it
             NotificationsUpdateService.startService(this, mNoteId);
             return;
@@ -149,6 +152,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         Map<String, String> properties = new HashMap<>();
         properties.put("notification_type", note.getType());
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+        setProgressVisible(false);
     }
 
     private void resetOnPageChangeListener() {
@@ -380,6 +385,14 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
     }
 
+    private void setProgressVisible(boolean visible) {
+        final ProgressBar progress =
+                (ProgressBar) findViewById(R.id.progress_loading);
+        if (progress != null) {
+            progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+    }
+
     @Override
     public void onModerateCommentForNote(Note note, CommentStatus newStatus) {
         Intent resultIntent = new Intent();
@@ -392,11 +405,13 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
+        setProgressVisible(false);
         updateUIAndNote(false);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
+        setProgressVisible(false);
         ToastUtils.showToast(this, getString(R.string.error_refresh_notification));
     }
 
@@ -448,6 +463,5 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             else
                 return null;
         }
-
     }
 }
