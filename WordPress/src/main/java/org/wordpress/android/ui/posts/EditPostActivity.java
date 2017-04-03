@@ -2127,11 +2127,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onMediaRetryClicked(String mediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId));
-        // Note: we should actually check if this is a local media file (ie. not uploaded yet) that matches the
-        // given media id, because we don't want to retry a successful upload. In case this method is called
-        // and the media id is not a local media, we should update the post (replace the local uri by the remote uri).
+        if (media == null) {
+            AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
+            return;
+        }
 
-        if (media != null) {
+        if (UploadState.valueOf(media.getUploadState()) == UploadState.UPLOADED) {
+            // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
+            // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
+            if (mEditorMediaUploadListener != null) {
+                mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                        FluxCUtils.mediaFileFromMediaModel(media));
+            }
+        } else {
             media.setUploadState(UploadState.QUEUED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
