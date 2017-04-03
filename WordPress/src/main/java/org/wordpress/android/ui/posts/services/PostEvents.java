@@ -27,4 +27,7 @@ public class PostEvents {
             return StringUtils.notNullStr(mMediaUrl);
         }
     }
+
+    public static class PostMediaCanceled {
+    }
 }

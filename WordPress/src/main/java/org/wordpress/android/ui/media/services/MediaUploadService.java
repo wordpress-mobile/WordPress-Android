@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Started with explicit list of media to upload.
@@ -58,15 +61,15 @@ public class MediaUploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > created");
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
         mCurrentUpload = null;
     }
 
     @Override
     public void onDestroy() {
-        if (mCurrentUpload != null) {
-            cancelUpload();
-        }
+        cancelCurrentUpload();
         mDispatcher.unregister(this);
+        EventBus.getDefault().unregister(this);
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > destroyed");
         super.onDestroy();
     }
@@ -223,10 +226,17 @@ public class MediaUploadService extends Service {
         return mCurrentUpload != null && media.getLocalSiteId() == mCurrentUpload.getLocalSiteId();
     }
 
-    private void cancelUpload() {
+    private void cancelCurrentUpload() {
         if (mCurrentUpload != null) {
             dispatchCancelAction(mCurrentUpload);
+            mCurrentUpload = null;
         }
+    }
+
+    private void cancelAllUploads() {
+        mQueue.clear();
+        mCompletedItems.clear();
+        cancelCurrentUpload();
     }
 
     private void dispatchUploadAction(@NonNull final MediaModel media) {
@@ -252,6 +262,13 @@ public class MediaUploadService extends Service {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
+    }
+
+    // App events
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostMediaCanceled event) {
+        cancelAllUploads();
     }
 
     // FluxC events
