@@ -728,6 +728,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
                     if (media != null) {
                         imageUrl = media.getUrl();
+                    } else {
+                        // Reset the current `imageUrl` so it doesn't contain the previous post's image
+                        imageUrl = null;
                     }
                     // If the imageUrl isn't found it means the featured image info hasn't been added to
                     // the local media library yet, so add to the list of media IDs to request info for
