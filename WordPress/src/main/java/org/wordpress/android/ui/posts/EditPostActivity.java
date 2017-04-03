@@ -2122,15 +2122,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        MediaModel media = null;
-
-        List<MediaModel> localMediaList = mMediaStore.getLocalSiteMedia(mSite);
-        for (MediaModel localMedia : localMediaList) {
-            if (String.valueOf(localMedia.getId()).equals(mediaId)) {
-                media = localMedia;
-                break;
-            }
-        }
+        MediaModel media = mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId));
+        // Note: we should actually check if this is a local media file (ie. not uploaded yet) that matches the
+        // given media id, because we don't want to retry a successful upload. In case this method is called
+        // and the media id is not a local media, we should update the post (replace the local uri by the remote uri).
 
         if (media != null) {
             media.setUploadState(UploadState.QUEUED.name());
