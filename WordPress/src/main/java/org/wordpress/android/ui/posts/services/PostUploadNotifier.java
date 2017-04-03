@@ -78,7 +78,10 @@ public class PostUploadNotifier {
     }
 
     public void cancelNotification(PostModel post) {
-        mNotificationManager.cancel(mPostIdToNotificationData.get(post.getId()).notificationId);
+        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        if (notificationData != null) {
+            mNotificationManager.cancel(notificationData.notificationId);
+        }
     }
 
     public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
