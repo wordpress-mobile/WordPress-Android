@@ -29,5 +29,15 @@ public class PostEvents {
     }
 
     public static class PostMediaCanceled {
+        public int localMediaId;
+        public boolean all;
+
+        public PostMediaCanceled(int localMediaId) {
+            this.localMediaId = localMediaId;
+            this.all = false;
+        }
+        public PostMediaCanceled(boolean all) {
+            this.all = all;
+        }
     }
 }

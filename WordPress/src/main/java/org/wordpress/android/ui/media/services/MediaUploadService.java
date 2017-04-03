@@ -23,6 +23,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -239,6 +240,20 @@ public class MediaUploadService extends Service {
         cancelCurrentUpload();
     }
 
+    private void cancelUpload(int localMediaId) {
+        // Cancel if it's currently uploading
+        if (mCurrentUpload != null && mCurrentUpload.getId() == localMediaId) {
+            cancelCurrentUpload();
+        }
+        // Remove from the queue
+        for(Iterator<MediaModel> i = mQueue.iterator(); i.hasNext();) {
+            MediaModel mediaModel = i.next();
+            if (mediaModel.getId() == localMediaId) {
+                i.remove();
+            }
+        }
+    }
+
     private void dispatchUploadAction(@NonNull final MediaModel media) {
         AppLog.i(AppLog.T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
@@ -268,7 +283,11 @@ public class MediaUploadService extends Service {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostMediaCanceled event) {
-        cancelAllUploads();
+        if (event.all) {
+            cancelAllUploads();
+            return;
+        }
+        cancelUpload(event.localMediaId);
     }
 
     // FluxC events

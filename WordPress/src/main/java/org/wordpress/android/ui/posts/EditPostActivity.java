@@ -2143,7 +2143,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
-        EventBus.getDefault().post(new PostEvents.PostMediaCanceled());
+        if (!TextUtils.isEmpty(mediaId)) {
+            int localMediaId = Integer.valueOf(mediaId);
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId));
+        } else {
+            // Passed mediaId is incorrect: cancel all uploads
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(true));
+        }
     }
 
     @Override
