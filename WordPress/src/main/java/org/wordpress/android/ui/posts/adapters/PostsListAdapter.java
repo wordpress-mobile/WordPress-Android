@@ -661,11 +661,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * and set its featured image url to the passed url
      */
     public void mediaChanged(MediaModel mediaModel) {
-        int position = PostUtils.indexOfFeaturedMediaIdInList(mediaModel.getMediaId(), mPosts);
-        if (isValidPostPosition(position)) {
-            int postId = mPosts.get(position).getId();
-            mFeaturedImageUrls.put(postId, mediaModel.getUrl());
-            notifyItemChanged(position);
+        // Multiple posts could have the same featured image
+        List<Integer> indexList = PostUtils.indexesOfFeaturedMediaIdInList(mediaModel.getMediaId(), mPosts);
+        for (int position : indexList) {
+            if (isValidPostPosition(position)) {
+                int postId = mPosts.get(position).getId();
+                mFeaturedImageUrls.put(postId, mediaModel.getUrl());
+                notifyItemChanged(position);
+            }
         }
     }
 
