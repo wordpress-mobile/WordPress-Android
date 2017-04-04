@@ -631,6 +631,10 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    /*
+     * Media info for a post's featured image has been downloaded, tell
+     * the adapter so it can show the featured image now that we have its URL
+     */
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
