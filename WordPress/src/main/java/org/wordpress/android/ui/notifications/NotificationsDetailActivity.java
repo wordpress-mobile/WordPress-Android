@@ -417,7 +417,17 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
         setProgressVisible(false);
-        showErrorToastAndFinish();
+        if (mNoteId == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+
+        Note note = NotificationsTable.getNoteById(mNoteId);
+        if (note == null) {
+            // no note found
+            showErrorToastAndFinish();
+            return;
+        }
     }
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
