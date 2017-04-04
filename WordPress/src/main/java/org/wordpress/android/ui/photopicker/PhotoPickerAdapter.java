@@ -1,12 +1,15 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +40,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
      */
     protected interface PhotoPickerAdapterListener {
         void onItemTapped(Uri mediaUri);
-        void onItemDoubleTapped(View view, Uri mediaUri);
         void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
     }
@@ -320,11 +322,34 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
                         Uri uri = getItemAtPosition(position).uri;
-                        mListener.onItemDoubleTapped(itemView, uri);
+                        showPreview(imgThumbnail, uri);
                     }
                 }
             });
         }
+    }
+
+    /*
+     * shows full-screen preview of the passed media
+     */
+    private void showPreview(View sourceView, Uri mediaUri) {
+        boolean isVideo = isVideoUri(mediaUri);
+        Intent intent = new Intent(mContext, PhotoPickerPreviewActivity.class);
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
+
+        int startWidth = sourceView.getWidth();
+        int startHeight = sourceView.getHeight();
+        int startX = startWidth / 2;
+        int startY = startHeight / 2;
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
+                sourceView,
+                startX,
+                startY,
+                startWidth,
+                startHeight);
+        ActivityCompat.startActivity(mContext, intent, options.toBundle());
     }
 
     /*
