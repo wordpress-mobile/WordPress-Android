@@ -67,7 +67,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     private int mThumbWidth;
     private int mThumbHeight;
 
+    private boolean mAllowMultiSelect;
     private boolean mIsMultiSelectEnabled;
+    private boolean mPhotosOnly;
 
     private final ThumbnailLoader mThumbnailLoader;
     private final PhotoPickerAdapterListener mListener;
@@ -170,6 +172,14 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     boolean isVideoUri(Uri uri) {
         int index = indexOfUri(uri);
         return index > -1 && getItemAtPosition(index).isVideo;
+    }
+
+    void setAllowMultiSelect(boolean allow) {
+        mAllowMultiSelect = allow;
+    }
+
+    void setShowPhotosOnly(boolean value) {
+        mPhotosOnly = value;
     }
 
     void setMultiSelectEnabled(boolean enabled) {
@@ -302,7 +312,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 @Override
                 public void onLongPress(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position)) {
+                    if (isValidPosition(position) && mAllowMultiSelect) {
                         if (!mIsMultiSelectEnabled) {
                             setMultiSelectEnabled(true);
                         }
@@ -340,7 +350,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
             // videos
-            addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
+            if (!mPhotosOnly) {
+                addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
+            }
 
             // sort by id in reverse (newest first)
             Collections.sort(tmpList, new Comparator<PhotoPickerItem>() {
