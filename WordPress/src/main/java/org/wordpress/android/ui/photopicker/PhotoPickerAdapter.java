@@ -8,9 +8,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -275,7 +273,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final TextView txtSelectionCount;
         private final View videoOverlay;
         private final View btnPreview;
-        private final GestureDetector detector;
 
         public ThumbnailViewHolder(View view) {
             super(view);
@@ -288,9 +285,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
 
-            detector = new GestureDetector(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
+            imgThumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onSingleTapConfirmed(MotionEvent e) {
+                public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
                         if (mIsMultiSelectEnabled) {
@@ -300,10 +297,12 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                             mListener.onItemTapped(uri);
                         }
                     }
-                    return true;
                 }
+            });
+
+            imgThumbnail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onLongPress(MotionEvent e) {
+                public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position) && mAllowMultiSelect) {
                         if (!mIsMultiSelectEnabled) {
@@ -311,13 +310,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         }
                         toggleSelection(ThumbnailViewHolder.this, position);
                     }
-                }
-            });
-
-            imgThumbnail.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    detector.onTouchEvent(event);
                     return true;
                 }
             });
