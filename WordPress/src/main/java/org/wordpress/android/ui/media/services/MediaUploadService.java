@@ -18,13 +18,17 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Started with explicit list of media to upload.
@@ -36,8 +40,7 @@ public class MediaUploadService extends Service {
     private SiteModel mSite;
     private MediaModel mCurrentUpload;
 
-    private List<MediaModel> mQueue;
-    private List<MediaModel> mCompletedItems;
+    private List<MediaModel> mUploadQueue = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -58,15 +61,15 @@ public class MediaUploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > created");
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
         mCurrentUpload = null;
     }
 
     @Override
     public void onDestroy() {
-        if (mCurrentUpload != null) {
-            cancelUpload();
-        }
+        cancelCurrentUpload();
         mDispatcher.unregister(this);
+        EventBus.getDefault().unregister(this);
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > destroyed");
         super.onDestroy();
     }
@@ -75,7 +78,6 @@ public class MediaUploadService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -89,22 +91,6 @@ public class MediaUploadService extends Service {
         uploadNextInQueue();
 
         return START_REDELIVER_INTENT;
-    }
-
-    @NonNull
-    private List<MediaModel> getUploadQueue() {
-        if (mQueue == null) {
-            mQueue = new ArrayList<>();
-        }
-        return mQueue;
-    }
-
-    @NonNull
-    private List<MediaModel> getCompletedItems() {
-        if (mCompletedItems == null) {
-            mCompletedItems = new ArrayList<>();
-        }
-        return mCompletedItems;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -164,21 +150,20 @@ public class MediaUploadService extends Service {
 
     private void completeCurrentUpload() {
         if (mCurrentUpload != null) {
-            getCompletedItems().add(mCurrentUpload);
-            getUploadQueue().remove(mCurrentUpload);
+            mUploadQueue.remove(mCurrentUpload);
             mCurrentUpload = null;
         }
     }
 
     private MediaModel getNextMediaToUpload() {
-        if (!getUploadQueue().isEmpty()) {
-            return getUploadQueue().get(0);
+        if (!mUploadQueue.isEmpty()) {
+            return mUploadQueue.get(0);
         }
         return null;
     }
 
     private void addUniqueMediaToQueue(MediaModel media) {
-        for (MediaModel queuedMedia : getUploadQueue()) {
+        for (MediaModel queuedMedia : mUploadQueue) {
             if (queuedMedia.getLocalSiteId() == media.getLocalSiteId() &&
                     StringUtils.equals(queuedMedia.getFilePath(), media.getFilePath())) {
                 return;
@@ -186,7 +171,7 @@ public class MediaUploadService extends Service {
         }
 
         // no match found in queue
-        getUploadQueue().add(media);
+        mUploadQueue.add(media);
     }
 
     private void unpackIntent(@NonNull Intent intent) {
@@ -204,8 +189,6 @@ public class MediaUploadService extends Service {
 
                 if (MediaUploadState.QUEUED.name().equals(mediaItem.getUploadState())) {
                     addUniqueMediaToQueue(mediaItem);
-                } else if (MediaUploadState.FAILED.name().equals(mediaItem.getUploadState())) {
-                    getCompletedItems().add(mediaItem);
                 }
             }
         }
@@ -224,9 +207,29 @@ public class MediaUploadService extends Service {
         return mCurrentUpload != null && media.getLocalSiteId() == mCurrentUpload.getLocalSiteId();
     }
 
-    private void cancelUpload() {
+    private void cancelCurrentUpload() {
         if (mCurrentUpload != null) {
             dispatchCancelAction(mCurrentUpload);
+            mCurrentUpload = null;
+        }
+    }
+
+    private void cancelAllUploads() {
+        mUploadQueue.clear();
+        cancelCurrentUpload();
+    }
+
+    private void cancelUpload(int localMediaId) {
+        // Cancel if it's currently uploading
+        if (mCurrentUpload != null && mCurrentUpload.getId() == localMediaId) {
+            cancelCurrentUpload();
+        }
+        // Remove from the queue
+        for(Iterator<MediaModel> i = mUploadQueue.iterator(); i.hasNext();) {
+            MediaModel mediaModel = i.next();
+            if (mediaModel.getId() == localMediaId) {
+                i.remove();
+            }
         }
     }
 
@@ -249,10 +252,21 @@ public class MediaUploadService extends Service {
 
     private void stopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
-        if (getUploadQueue().size() == 0) {
+        if (mUploadQueue.size() == 0) {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
+    }
+
+    // App events
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostMediaCanceled event) {
+        if (event.all) {
+            cancelAllUploads();
+            return;
+        }
+        cancelUpload(event.localMediaId);
     }
 
     // FluxC events
