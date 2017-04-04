@@ -75,6 +75,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private WPViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
+    private boolean mIsReaderSwipeToNavigateShown;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+
+        mIsReaderSwipeToNavigateShown = AppPrefs.isReaderSwipeToNavigateShown();
 
         Note note = NotificationsTable.getNoteById(mNoteId);
         updateUIAndNote(note == null);
@@ -169,7 +172,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                 @Override
                 public void onPageSelected(int position) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
-                    AppPrefs.setNotificationsSwipeToNavigateShown(true);
+                    if (!mIsReaderSwipeToNavigateShown) {
+                        AppPrefs.setNotificationsSwipeToNavigateShown(true);
+                    }
                     //change the action bar title for the current note
                     Note currentNote = mAdapter.getNoteAtPosition(position);
                     if (currentNote != null) {
