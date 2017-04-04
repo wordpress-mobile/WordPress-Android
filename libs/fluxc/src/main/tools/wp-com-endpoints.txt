@@ -1,6 +1,7 @@
 /me/
 /me/settings/
 /me/sites/
+/me/send-verification-email/
 
 /sites/
 /sites/new/
