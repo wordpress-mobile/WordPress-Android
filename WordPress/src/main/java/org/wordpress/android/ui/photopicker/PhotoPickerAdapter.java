@@ -274,6 +274,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
         private final View videoOverlay;
+        private final View btnPreview;
         private final GestureDetector detector;
 
         public ThumbnailViewHolder(View view) {
@@ -282,6 +283,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = view.findViewById(R.id.image_video_overlay);
+            btnPreview = view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
@@ -297,15 +299,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                             Uri uri = getItemAtPosition(position).uri;
                             mListener.onItemTapped(uri);
                         }
-                    }
-                    return true;
-                }
-                @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    int position = getAdapterPosition();
-                    if (isValidPosition(position) && mListener != null) {
-                        Uri uri = getItemAtPosition(position).uri;
-                        mListener.onItemDoubleTapped(itemView, uri);
                     }
                     return true;
                 }
@@ -326,6 +319,17 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 public boolean onTouch(View v, MotionEvent event) {
                     detector.onTouchEvent(event);
                     return true;
+                }
+            });
+
+            btnPreview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (isValidPosition(position)) {
+                        Uri uri = getItemAtPosition(position).uri;
+                        mListener.onItemDoubleTapped(itemView, uri);
+                    }
                 }
             });
         }
