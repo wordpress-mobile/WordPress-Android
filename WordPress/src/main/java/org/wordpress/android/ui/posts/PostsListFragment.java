@@ -637,7 +637,7 @@ public class PostsListFragment extends Fragment
         if (isAdded() && !event.isError() && getPostListAdapter() != null) {
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);
-                getPostListAdapter().mediaUpdated(mediaModel);
+                getPostListAdapter().mediaChanged(mediaModel);
             }
         }
     }

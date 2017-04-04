@@ -660,7 +660,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
      * called after the media (featured image) for a post has been downloaded - locate the post
      * and set its featured image url to the passed url
      */
-    public void mediaUpdated(MediaModel mediaModel) {
+    public void mediaChanged(MediaModel mediaModel) {
         int position = PostUtils.indexOfFeaturedMediaIdInList(mediaModel.getMediaId(), mPosts);
         if (isValidPostPosition(position)) {
             int postId = mPosts.get(position).getId();
