@@ -60,7 +60,7 @@ public class WPTextView extends AppCompatTextView {
     private void readCustomAttrs(Context context, AttributeSet attrs) {
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
         if (array != null) {
-            mFixWidowWordEnabled = array.getBoolean(R.styleable.WPTextView_fixWidowWords, false);
+            setFixWidowWord(array.getBoolean(R.styleable.WPTextView_fixWidowWords, false));
             if (mFixWidowWordEnabled) {
                 // Force text update
                 setText(getText());
