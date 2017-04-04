@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sectionLocationView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/locationText"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/sectionLocationView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/locationText"
+              android:layout_marginLeft="8dp"
+              android:layout_marginRight="8dp"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/locationText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selectable_background_wordpress"
-        android:drawableLeft="@drawable/ic_location_searching_black_40_32dp"
+        app:drawableLeftCompat="@drawable/ic_location_searching_black_40_32dp"
         android:gravity="center_vertical"
         android:paddingBottom="4dp"
         android:paddingRight="4dp"

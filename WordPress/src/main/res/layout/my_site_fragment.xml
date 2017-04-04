@@ -74,7 +74,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_large"
                             android:background="?android:attr/selectableItemBackground"
-                            android:drawableLeft="@drawable/ic_arrow_left_grey_16dp"
+                            app:drawableLeftCompat="@drawable/ic_arrow_left_grey_16dp"
                             android:drawablePadding="@dimen/margin_small"
                             android:gravity="center_vertical"
                             android:minHeight="0dp"
