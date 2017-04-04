@@ -169,11 +169,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return position >= 0 && position < mMediaList.size();
     }
 
-    boolean isVideoUri(Uri uri) {
-        int index = indexOfUri(uri);
-        return index > -1 && getItemAtPosition(index).isVideo;
-    }
-
     void setAllowMultiSelect(boolean allow) {
         mAllowMultiSelect = allow;
     }
@@ -249,15 +244,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return mIsMultiSelectEnabled ? mSelectedUris.size() : 0;
     }
 
-    private int indexOfUri(Uri uri) {
-        for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).uri.equals(uri)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     /*
      * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
      * prevent unnecessary flicker when changing existing items
@@ -320,23 +306,24 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position)) {
-                        Uri uri = getItemAtPosition(position).uri;
-                        showPreview(imgThumbnail, uri);
-                    }
+                    showPreview(imgThumbnail, position);
                 }
             });
         }
     }
 
     /*
-     * shows full-screen preview of the passed media
+     * show full-screen preview of the item and the passed position
      */
-    private void showPreview(View sourceView, Uri mediaUri) {
-        boolean isVideo = isVideoUri(mediaUri);
+    private void showPreview(View sourceView, int position) {
+        PhotoPickerItem item = getItemAtPosition(position);
+        if (item == null) {
+            return;
+        }
+
         Intent intent = new Intent(mContext, PhotoPickerPreviewActivity.class);
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, item.uri.toString());
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, item.isVideo);
 
         int startWidth = sourceView.getWidth();
         int startHeight = sourceView.getHeight();
