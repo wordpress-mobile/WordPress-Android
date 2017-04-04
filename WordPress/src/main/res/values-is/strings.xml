@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-01 18:35:07+0000
+Translation-Revision-Date: 2017-03-21 19:30:13+0000
 Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
 Generator: GlotPress/2.4.0-alpha
 Language: is
 -->
 <resources>
+	<string name="role_subscriber">Áskrifandi</string>
+	<string name="tell_me_more">Segðu mér meira</string>
+	<string name="duplicate_site_detected">Fleiri en eitt eintak af vef fannst.</string>
+	<string name="cannot_add_duplicate_site">Þessi vefur er nú þegar til í forritinu, þú getur ekki bætt honum við.</string>
+	<string name="already_logged_in_wpcom_same_username">Þú ert nú þegar innskráð(ur) í WordPress.com aðganginn þinn. Vefurinn þinn ætti að birtast í vali, gakktu úr skugga um að hann sé ekki falinn.</string>
+	<string name="already_logged_in_wpcom">Þú ert nú þegar innskráð(ur) í WordPress.com aðganginn þinn, þú getur ekki bætt við WordPress.com vef sem er tengdur öðrum aðgang.</string>
+	<string name="migration_error_not_connected">Flutningsferli mistókst: reyndu að kveikja á forritinu þegar þú ert með\n        netsamband.</string>
+	<string name="migration_message">Uppfæri WordPress forritið...</string>
+	<string name="checking_username">Athuga notandanafn</string>
+	<string name="jetpack_different_com_account">Jetpack vefir sem tilheyra öðrum WordPress.com aðgöngum eru ekki studdir</string>
+	<string name="jetpack_use_com_account">Til þess að bæta Jetpack vefnum þínum við, skráðu þig inn í WordPress.com aðganginn sem þú notaðir til þess að tengja Jetpack.</string>
+	<string name="jetpack_message">Jetpack viðbótin verður að vera uppsett og virk. Viltu setja upp eða virkja Jetpack?</string>
+	<string name="error_media_load">Get ekki hlaðið skrá</string>
+	<string name="error_media_refresh_no_connection">Tenging þarf að vera til staðar til að endurfríska safn</string>
+	<string name="error_media_parse_format">Gat ekki unnið úr svari við %s skrá</string>
+	<string name="error_media_unauthorized">Þú hefur ekki heimild til þess að skoða eða breyta skrá</string>
+	<string name="error_media_not_found">Skrá fannst ekki</string>
+	<string name="error_media_insufficient_fs_permissions">Lestrarheimildar krafist á skrá</string>
+	<string name="site_settings_optimize_images_hint">Virkjaðu til þess að spara bandvídd á farsímatengingum</string>
+	<string name="site_settings_optimize_images">Hagræða myndum</string>
+	<string name="no_site_error">Gat ekki tengst WordPress vef. Það er enginn gildur WordPress vefur á þessari\n        vefslóð. Skoðaðu vefslóðina sem þú slóst inn.</string>
+	<string name="media_generic_error">Skráarvilla</string>
+	<string name="media_upload_error">Skráarvilla kom upp</string>
+	<string name="retry">Reyna aftur</string>
+	<string name="confirm">Staðfesta</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Gat ekki tengst. Við fengum 403 villu þegar við reyndum að tengjast\n       XMLRPC endapunkti vefsins þíns. Forritið þarfnast hans til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess\n        að leysa úr þessu vandamáli.</string>
+	<string name="xmlrpc_post_blocked_error">Gat ekki tengst. Vefþjónninn þinn lokar á POST fyrirspurnir og forritið þarfnast þeirra\n        til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess að leysa úr þessu vandamáli.</string>
 	<string name="reader_liked_default_tag">Færslur sem mér líkar við</string>
 	<string name="reader_discover_default_tag">Uppgötva</string>
 	<string name="reader_followed_default_tag">Vefir sem ég fylgi</string>
@@ -392,11 +419,9 @@ Language: is
 	<string name="site_settings_discussion_hint">Skoða og breyta umræðustillingum fyrir vefinn þinn</string>
 	<string name="site_settings_more_hint">Skoða allar umræðustillingar sem eru í boði</string>
 	<string name="site_settings_related_posts_hint">Birta eða fela tengdar færslur í lesara</string>
-	<string name="site_settings_upload_and_link_image_hint">Ávallt leyfa upphleðslu á mynd í fullri stærð</string>
 	<string name="site_settings_image_width_hint">Breyta stærð mynda í færslum yfir í þessa breidd</string>
 	<string name="site_settings_format_hint">Skilgreina nýtt færslusnið</string>
 	<string name="site_settings_category_hint">Skilgreinir nýjan færsluflokk</string>
-	<string name="site_settings_location_hint">Bæta sjálfkrafa við upplýsingum um staðsetningu við hverja færslu</string>
 	<string name="site_settings_password_hint">Breyttu lykilorðinu þínu</string>
 	<string name="site_settings_username_hint">Núverandi notandaaðgangur</string>
 	<string name="site_settings_language_hint">Tungumálið sem þetta blogg er aðallega skrifað á</string>
@@ -425,7 +450,6 @@ Language: is
 	<string name="site_settings_allow_comments_title">Leyfa athugasemdir</string>
 	<string name="site_settings_default_format_title">Sjálfgefið snið</string>
 	<string name="site_settings_default_category_title">Sjálfgefinn flokkur.</string>
-	<string name="site_settings_location_title">Virkja staðsetningu</string>
 	<string name="site_settings_address_title">Heimilisfang</string>
 	<string name="site_settings_tagline_title">Kjörorð</string>
 	<string name="site_settings_title_title">Titill vefs</string>
@@ -622,35 +646,12 @@ Language: is
 	<string name="select_all">Velja allar</string>
 	<string name="deselect_all">Afvelja allt</string>
 	<string name="sign_out_wpcom_confirm">Með því að skrá þig út úr aðgangnum þínum fjarlægir þú öll WordPress.com gögn @%s úr þessu tæki, þar með talið staðvær drög og breytingar.</string>
-	<string name="select_from_new_picker">Veldu fleiri en eitt atriði með nýjum valmöguleika</string>
-	<string name="error_loading_videos">Villa við að hlaða myndbönd</string>
-	<string name="loading_blog_images">Sæki myndir</string>
-	<string name="loading_blog_videos">Sæki myndbönd</string>
-	<string name="error_loading_images">Villa við að hlaða myndum</string>
-	<string name="no_device_images">Engar myndir</string>
-	<string name="error_loading_blog_images">Gat ekki sótt myndir</string>
-	<string name="error_loading_blog_videos">Gat ekki sótt myndbönd</string>
-	<string name="no_blog_images">Engar myndir</string>
-	<string name="no_blog_videos">Engin myndbönd</string>
-	<string name="no_device_videos">Engin myndbönd</string>
-	<string name="no_media_sources">Gat ekki sótt skrá</string>
 	<string name="stats_generic_error">Ekki var hægt að hlaða inn nauðsynlega tölfræði</string>
-	<string name="no_media">Engar skrár</string>
-	<string name="loading_videos">Hleð myndbönd</string>
-	<string name="loading_images">Hleð myndir</string>
 	<string name="verify">Staðfesta</string>
-	<string name="tab_title_site_videos">Myndbönd á vef</string>
-	<string name="tab_title_device_videos">Myndbönd á tæki</string>
-	<string name="tab_title_site_images">Myndir á vef</string>
-	<string name="take_video">Taka myndband</string>
-	<string name="tab_title_device_images">Myndir á tæki</string>
 	<string name="language">Tungumál</string>
-	<string name="media_picker_title">Velja skrár</string>
-	<string name="take_photo">Taka mynd</string>
 	<string name="device">Tæki</string>
 	<string name="two_step_sms_sent">Leitaðu í smáskilaboðum eftir staðfestingarkóða.</string>
 	<string name="error_publish_no_network">Get ekki birt þegar engin tenging er til staðar. Vista sem drög.</string>
-	<string name="add_to_post">Bæta í færslu</string>
 	<string name="media_details_label_file_type">Skráartegund</string>
 	<string name="media_details_label_file_name">Skráarnafn</string>
 	<string name="auth_required">Skráðu þig aftur inn til að halda áfram.</string>
@@ -791,7 +792,6 @@ Language: is
 	<string name="reader_empty_posts_in_tag">Engar færslur með þetta merki</string>
 	<string name="reader_empty_posts_liked">Þú hefur ekki líkað við neinar færslur</string>
 	<string name="uploading_total">Hleð upp %1$d af %2$d</string>
-	<string name="media_empty_list_custom_date">Engar skrár á þessu tímabili</string>
 	<string name="stats_no_blog">Ekki var hægt að hlaða tölfræði fyrir bloggið</string>
 	<string name="nux_help_description">Kíktu í hjálparmiðstöðina til þess að fá svör við algengum spurningum eða farðu á spjallborðin til þess að spyrja nýjar</string>
 	<string name="reader_menu_block_blog">Banna þetta blogg</string>
@@ -838,7 +838,6 @@ Language: is
 	<string name="notifications_empty_list">Engar tilkynningar</string>
 	<string name="username_must_be_at_least_four_characters">Notandanafn þarf að vera minnst 4 stafir</string>
 	<string name="error_load_comment">Gat ekki hlaðið athugasemd</string>
-	<string name="no_site_error">Gat ekki tengst WordPress vefnum</string>
 	<string name="sdcard_message">Tengds SD minniskorts er krafist til þess að hlaða inn skrám</string>
 	<string name="error_upload">Villa kom upp við upphleðslu á %s</string>
 	<string name="error_edit_comment">Villa kom upp við að breyta ummælunum</string>
@@ -928,7 +927,6 @@ Language: is
 	<string name="category_desc">Lýsing á flokki (valkvæmt)</string>
 	<string name="category_parent">Yfirflokkur (valkvæmt):</string>
 	<string name="category_name">Heiti flokks</string>
-	<string name="category_slug">Vefslóð flokks (valkvæmt)</string>
 	<string name="add_new_category">Bæta við nýjum flokki</string>
 	<string name="mnu_comment_approve">Samþykkja</string>
 	<string name="dlg_approving_comments">Samþykki</string>
@@ -992,7 +990,6 @@ Language: is
 	<string name="reader_toast_err_add_tag">Gat ekki bætt þessu merki við</string>
 	<string name="site_address">Vefslóð sjálfhýsta vefsins þíns (URL)</string>
 	<string name="file_error_create">Gat ekki búið til tímabundna skrá fyrir skráarupphal. Vinsamlegast gakktu úr skugga um að það sé nægilegt geymslupláss eftir á tækinu þínu.</string>
-	<string name="jetpack_message_not_admin">Jetpack viðbótin er nauðsynleg fyrir tölfræði. Hafðu samband við vefstjóra.</string>
 	<string name="scaled_image_error">Sláðu inn gilt gildi minnkunar</string>
 	<string name="theme_current_theme">Núverandi þema</string>
 	<string name="theme_premium_theme">Keypt þema</string>
@@ -1001,6 +998,7 @@ Language: is
 	<string name="media_error_no_permission">Þú hefur ekki heimild til þess að skoða skráarsafnið</string>
 	<string name="media_gallery_type_thumbnail_grid">Þumlur á grind</string>
 	<string name="invalid_site_url_message">Athugaðu að innslegið veffang sé gilt</string>
+	<string name="jetpack_message_not_admin">Jetpack viðbótin er nauðsynleg. Hafðu samband við vefstjóra.</string>
 	<string name="deleting_page">Eyði síðu</string>
 	<string name="deleting_post">Eyði færslu</string>
 	<string name="share_link">Deila tengli</string>
@@ -1060,7 +1058,6 @@ Language: is
 	<string name="reader_share_subject">Deilt frá %s</string>
 	<string name="reader_empty_followed_tags">Þú fylgir engum merkjum</string>
 	<string name="reader_toast_err_comment_failed">Gat ekki birt athugasemdina þína</string>
-	<string name="jetpack_message">Jetpack viðbótin er nauðsynleg fyrir tölfræði. Viltu setja Jetpack upp?</string>
 	<string name="username_invalid">Ógilt notandanafn</string>
 	<string name="limit_reached">Mörkum náð. Þú getur reynt aftur eftir 1 mínútu. Með því að reyna aftur fyrr en það mun auka biðtímann áður en bannið er fjarlægt. Ef þú heldur að þetta er villa, hafðu samband við notendaþjónustu.</string>
 	<string name="stats_view_referrers">Referrers</string>
@@ -1104,7 +1101,6 @@ Language: is
 	<string name="theme_activate_button">Virkja</string>
 	<string name="all">Allt</string>
 	<string name="media_gallery_type_squares">Kassar</string>
-	<string name="custom_date">Sérsniðin dagsetning</string>
 	<string name="media_edit_failure">Uppfærsla mistókst</string>
 	<string name="passcode_enter_old_passcode">Sláðu inn gamla PIN númerið þitt</string>
 	<string name="passcode_enter_passcode">Sláðu inn PIN númer</string>

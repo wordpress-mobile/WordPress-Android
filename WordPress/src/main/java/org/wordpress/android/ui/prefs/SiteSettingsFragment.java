@@ -505,6 +505,9 @@ public class SiteSettingsFragment extends PreferenceFragment
             changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
         } else if (preference == mOptimizedImage) {
             mSiteSettings.setOptimizedImage((Boolean) newValue);
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("enabled", newValue);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, properties);
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,

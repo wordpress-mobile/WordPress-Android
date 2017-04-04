@@ -389,11 +389,9 @@ Language: it
 	<string name="site_settings_discussion_hint">Visualizza e modifica le impostazioni di discussione del sito</string>
 	<string name="site_settings_more_hint">Visualizza tutte le impostazioni di discussione disponibili</string>
 	<string name="site_settings_related_posts_hint">Mostra o nascondi gli articoli correlati nel lettore</string>
-	<string name="site_settings_upload_and_link_image_hint">Consenti sempre di caricare l\'immagine completa</string>
 	<string name="site_settings_image_width_hint">Ridimensiona le immagini negli articoli secondo questa larghezza</string>
 	<string name="site_settings_format_hint">Imposta nuovo formato articolo</string>
 	<string name="site_settings_category_hint">Imposta nuova categoria articolo</string>
-	<string name="site_settings_location_hint">Aggiungi automaticamente i dati sulla posizione agli articoli</string>
 	<string name="site_settings_password_hint">Modifica la password</string>
 	<string name="site_settings_username_hint">Account utente attuale</string>
 	<string name="site_settings_language_hint">Lingua in cui questo blog è scritto prevalentemente</string>
@@ -422,7 +420,6 @@ Language: it
 	<string name="site_settings_allow_comments_title">Consenti commenti</string>
 	<string name="site_settings_default_format_title">Formato predefinito</string>
 	<string name="site_settings_default_category_title">Categoria predefinita</string>
-	<string name="site_settings_location_title">Abilita posizione</string>
 	<string name="site_settings_address_title">Indirizzo</string>
 	<string name="site_settings_tagline_title">Tagline</string>
 	<string name="site_settings_title_title">Titolo sito</string>
@@ -619,22 +616,7 @@ Language: it
 	<string name="hide">Nascondi</string>
 	<string name="show">Mostra</string>
 	<string name="deselect_all">Deseleziona tutto</string>
-	<string name="select_from_new_picker">Scegli più voci con il nuovo selezionatore</string>
-	<string name="no_media_sources">Impossibile recuperare elementi media</string>
-	<string name="loading_blog_videos">Recupero video</string>
-	<string name="loading_blog_images">Recupero immagini</string>
-	<string name="error_loading_videos">Errore nel caricamento dei video</string>
-	<string name="error_loading_images">Errore nel caricamento delle immagini</string>
-	<string name="error_loading_blog_videos">Impossibile recuperare i video</string>
-	<string name="error_loading_blog_images">Impossibile recuperare le immagini</string>
-	<string name="no_device_images">Nessuna immagine</string>
-	<string name="no_blog_videos">Nessun video</string>
-	<string name="no_blog_images">Nessuna immagine</string>
-	<string name="no_device_videos">Nessun video</string>
 	<string name="stats_generic_error">Le statistiche richieste non possono venir caricate</string>
-	<string name="no_media">Nessun elemento media</string>
-	<string name="loading_images">Caricamento immagini</string>
-	<string name="loading_videos">Caricamento video</string>
 	<string name="auth_required">Accedi di nuovo per continuare.</string>
 	<string name="sign_in_jetpack">Accedi al tuo account WordPress.com  per connetterti a Jetpack.</string>
 	<string name="two_step_sms_sent">Verifica i messaggi di testo per il codice di verifica.</string>
@@ -647,14 +629,6 @@ Language: it
 	<string name="error_publish_no_network">Impossibile pubblicare perchè non c\'è una connessione. Salva come bozza.</string>
 	<string name="media_details_label_file_type">Tipo file</string>
 	<string name="media_details_label_file_name">Nome file</string>
-	<string name="tab_title_site_videos">Video sito</string>
-	<string name="tab_title_site_images">Immagini sito</string>
-	<string name="tab_title_device_videos">Video dispositivo</string>
-	<string name="tab_title_device_images">Immagini dispositivo</string>
-	<string name="take_video">Fai un video</string>
-	<string name="take_photo">Fai una foto</string>
-	<string name="media_picker_title">Seleziona media</string>
-	<string name="add_to_post">Aggiungi ad articolo</string>
 	<string name="language">Lingua</string>
 	<string name="device">Dispositivo</string>
 	<string name="media_fetching">Recupero file multimediali in corso…</string>
@@ -754,7 +728,6 @@ Language: it
 	<string name="delete_sure_post">Cancella questo articolo</string>
 	<string name="signing_out">Disconnessione in corso...</string>
 	<string name="posting_post">Pubblicazione di "%s"</string>
-	<string name="media_empty_list_custom_date">Nessun elemento media in questo intervallo di tempo</string>
 	<string name="pages_empty_list">Ancora nessuna pagina. Perché non crearne una?</string>
 	<string name="comment_reply_to_user">Replica a %s</string>
 	<string name="posts_empty_list">Ancora nessun articolo. Perché non crearne uno?</string>
@@ -883,7 +856,6 @@ Language: it
 	<string name="cat_name_required">Il campo Nome categoria è obbligatorio</string>
 	<string name="adding_cat_success">Categoria aggiunta correttamente</string>
 	<string name="adding_cat_failed">Impossibile aggiungere la categoria</string>
-	<string name="no_site_error">Impossibile connettersi al sito WordPress</string>
 	<string name="mnu_comment_unspam">Non spam</string>
 	<string name="comments_empty_list">Nessun commento</string>
 	<string name="theme_auth_error_message">Assicurati di disporre dei privilegi per impostare i temi</string>
@@ -907,7 +879,6 @@ Language: it
 	<string name="reader_toast_err_add_tag">Impossibile aggiungere questo tag</string>
 	<string name="reader_share_link">Condividi il link</string>
 	<string name="reader_title_applog">Registro applicazione</string>
-	<string name="jetpack_message_not_admin">Il plugin Jetpack è richiesto per le statistiche. Contatta l\'amministratore del sito.</string>
 	<string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
 	<string name="error_blog_hidden">Questo blog è nascosto e non può essere caricato. Abilitalo nuovamente nelle impostazioni e riprova.</string>
 	<string name="wordpress_blog">Blog di WordPress</string>
@@ -931,7 +902,6 @@ Language: it
 	<string name="share_action_post">Nuovo articolo</string>
 	<string name="category_parent">Categoria padre (opzionale)</string>
 	<string name="category_desc">Descrizione categoria (opzionale)</string>
-	<string name="category_slug">Abbreviazione categoria (opzionale)</string>
 	<string name="category_name">Nome categoria</string>
 	<string name="add_new_category">Aggiungi nuova categoria</string>
 	<string name="view_in_browser">Visualizza nel browser</string>
@@ -1055,7 +1025,6 @@ Language: it
 	<string name="reader_share_subject">Condividi da %s</string>
 	<string name="reader_untitled_post">(Senza titolo)</string>
 	<string name="jetpack_not_found">Il plugin Jetpack non è stato trovato</string>
-	<string name="jetpack_message">Il plugin Jetpack è necessario per accedere alle statistiche. Vuoi installare Jetpack?</string>
 	<string name="select_from_media_library">Seleziona dalla libreria multimediale</string>
 	<string name="empty_list_default">Questo elenco è vuoto</string>
 	<string name="media_add_new_media_gallery">Crea una galleria</string>
@@ -1113,7 +1082,6 @@ Language: it
 	<string name="media_gallery_image_order_random">Casuale</string>
 	<string name="media_add_popup_capture_video">Registra un video</string>
 	<string name="media_add_popup_capture_photo">Scatta una foto</string>
-	<string name="custom_date">Data personalizzata</string>
 	<string name="unattached">Non allegato</string>
 	<string name="images">Immagini</string>
 	<string name="all">Tutto</string>

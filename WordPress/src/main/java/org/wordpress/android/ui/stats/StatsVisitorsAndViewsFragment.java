@@ -171,14 +171,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         private Drawable getTabIcon() {
             switch (labelItem) {
                 case VISITORS:
-                    return getResources().getDrawable(R.drawable.stats_icon_visitors);
+                    return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
                 case COMMENTS:
-                    return getResources().getDrawable(R.drawable.stats_icon_comments);
+                    return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
                 case LIKES:
-                    return getResources().getDrawable(R.drawable.stats_icon_likes);
+                    return getResources().getDrawable(R.drawable.ic_star_grey_dark_12dp);
                 default:
                     // Views and when no prev match
-                    return getResources().getDrawable(R.drawable.stats_icon_views);
+                    return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
             }
         }
 
@@ -440,7 +440,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
         mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
-        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.translucent_grey_lighten_30);
+        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.grey_lighten_30_translucent_50);
         mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
         mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);

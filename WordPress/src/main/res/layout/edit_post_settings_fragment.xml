@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_sz_large"
                 android:hint="@string/tags_separate_with_commas"
-                android:inputType="textAutoCorrect" />
+                android:inputType="textMultiLine" />
         </LinearLayout>
 
         <EditText

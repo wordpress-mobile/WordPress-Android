@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 
@@ -83,19 +84,19 @@ public class CommentList extends ArrayList<CommentModel> {
                 return false;
             }
             final CommentModel thisComment = this.get(index);
-            if (!thisComment.getStatus().equals(comment.getStatus())) {
+            if (!StringUtils.equals(thisComment.getStatus(), comment.getStatus())) {
                 return false;
             }
-            if (!thisComment.getContent().equals(comment.getContent())) {
+            if (!StringUtils.equals(thisComment.getContent(), comment.getContent())) {
                 return false;
             }
-            if (!thisComment.getAuthorName().equals(comment.getAuthorName())) {
+            if (!StringUtils.equals(thisComment.getAuthorName(), comment.getAuthorName())) {
                 return false;
             }
-            if (!thisComment.getAuthorEmail().equals(comment.getAuthorEmail())) {
+            if (!StringUtils.equals(thisComment.getAuthorEmail(), comment.getAuthorEmail())) {
                 return false;
             }
-            if (!thisComment.getAuthorUrl().equals(comment.getAuthorUrl())) {
+            if (!StringUtils.equals(thisComment.getAuthorUrl(), comment.getAuthorUrl())) {
                 return false;
             }
         }

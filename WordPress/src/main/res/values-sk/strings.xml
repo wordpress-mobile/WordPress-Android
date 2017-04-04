@@ -390,22 +390,7 @@ Language: sk
 	<string name="hide">Skryť</string>
 	<string name="show">Zobraziť</string>
 	<string name="deselect_all">Odznačiť všetky</string>
-	<string name="select_from_new_picker">Viacnásobný výber v novej možnosti výberu</string>
-	<string name="no_media_sources">Nie je možné načítať súbory</string>
-	<string name="loading_blog_videos">Načítavajú sa videá</string>
-	<string name="loading_blog_images">Načítavajú sa obrázky</string>
-	<string name="error_loading_videos">Nie je možné načítať videá</string>
-	<string name="error_loading_images">Pri načítavaní videa sa vyskytla chyba</string>
-	<string name="error_loading_blog_videos">Nie je možné načítať videá</string>
-	<string name="error_loading_blog_images">Nie je možné načítať obrázky</string>
-	<string name="no_device_images">Žiadne obrázky</string>
-	<string name="no_blog_videos">Žiadne videá</string>
-	<string name="no_blog_images">Žiadne obrázky</string>
-	<string name="no_device_videos">Žiadne videá</string>
 	<string name="stats_generic_error">Požadované štatistiky nemohli byť načítané</string>
-	<string name="no_media">Žiadne súbory</string>
-	<string name="loading_images">Nahrávajú sa obrázky</string>
-	<string name="loading_videos">Nahrávajú sa videá</string>
 	<string name="two_step_sms_sent">Vložte overovací kód z SMS správy.</string>
 	<string name="two_step_footer_button">Odoslanie kódu textovou správou.</string>
 	<string name="two_step_footer_label">Vložte kód z aplikácie Authenticator.</string>
@@ -416,14 +401,6 @@ Language: sk
 	<string name="error_publish_no_network">Nedá sa publikovať, nefunguje pripojenie. Uložené ako koncept.</string>
 	<string name="media_details_label_file_type">Typ súboru</string>
 	<string name="media_details_label_file_name">Názov súboru</string>
-	<string name="tab_title_site_videos">Videá na stánke</string>
-	<string name="tab_title_site_images">Obrázky na stránke</string>
-	<string name="tab_title_device_videos">Videá v zariadení</string>
-	<string name="tab_title_device_images">Obrázky v zariadení</string>
-	<string name="take_video">Nahrať video</string>
-	<string name="take_photo">Spraviť fotku</string>
-	<string name="media_picker_title">Vybrať súbory</string>
-	<string name="add_to_post">Pridať k príspevku</string>
 	<string name="language">Jazyk</string>
 	<string name="device">Zariadenie</string>
 	<string name="media_fetching">Načítavajú sa súbory...</string>
@@ -522,7 +499,6 @@ Language: sk
 	<string name="delete_sure">Vymazať tento koncept</string>
 	<string name="delete_sure_post">Vymazať tento príspevok</string>
 	<string name="posting_post">Publikuje sa "%s"</string>
-	<string name="media_empty_list_custom_date">Žiadne súbory v tomto časovom intervale</string>
 	<string name="pages_empty_list">Zatiaľ nemáte žiadnu stránku. Želáte si nejakú vytvoriť?</string>
 	<string name="comment_reply_to_user">Odpovedať užívateľovi %s</string>
 	<string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
@@ -649,7 +625,6 @@ Language: sk
 	<string name="cat_name_required">Vložte názov kategórie</string>
 	<string name="adding_cat_success">Kategória bola úspešne pridaná</string>
 	<string name="adding_cat_failed">Chyba pri pridávaní kategórie</string>
-	<string name="no_site_error">Nie je možné pripojiť sa na WordPress stránku</string>
 	<string name="mnu_comment_unspam">Žiadny spam</string>
 	<string name="comments_empty_list">Žiadne komentáre</string>
 	<string name="theme_auth_error_message">Uistite sa, či máte prava nastaviť tému</string>
@@ -673,7 +648,6 @@ Language: sk
 	<string name="reader_toast_err_add_tag">Túto značku nie je možné pridať</string>
 	<string name="reader_share_link">Zdieľať odkaz</string>
 	<string name="reader_title_applog">Záznamy aplikácie</string>
-	<string name="jetpack_message_not_admin">Pre zobrazenie štatistík sa vyžaduje plugin Jetpack. Kontaktujte administrátora stránky.</string>
 	<string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
 	<string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
 	<string name="wordpress_blog">WordPress blog</string>
@@ -696,7 +670,6 @@ Language: sk
 	<string name="share_action_post">Nový príspevok</string>
 	<string name="category_parent">Nadradená kategória (voliteľné):</string>
 	<string name="category_desc">Popis kategórie (voliteľné)</string>
-	<string name="category_slug">Slug kategórie (voliteľné)</string>
 	<string name="category_name">Názov kategórie</string>
 	<string name="add_new_category">Pridať novú kategóriu</string>
 	<string name="view_in_browser">Pozrieť v prehliadači</string>
@@ -816,7 +789,6 @@ Language: sk
 	<string name="reader_share_subject">Zdieľané z %s</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
 	<string name="jetpack_not_found">Modul Jetpack nebol nájdený</string>
-	<string name="jetpack_message">Pre štatistiky je potrebný modul Jetpack. Chcete nainštalovať Jetpack?</string>
 	<string name="select_from_media_library">Vybrať z knižnice súborov</string>
 	<string name="empty_list_default">Tento zoznam je prázdny</string>
 	<string name="media_add_new_media_gallery">Vytvoriť galériu</string>
@@ -874,7 +846,6 @@ Language: sk
 	<string name="media_gallery_image_order_random">Náhodné</string>
 	<string name="media_add_popup_capture_video">Natočiť video</string>
 	<string name="media_add_popup_capture_photo">Spraviť fotku</string>
-	<string name="custom_date">Rozsah dátumov</string>
 	<string name="unattached">Nepriložené</string>
 	<string name="images">Obrázky</string>
 	<string name="all">Všetko</string>

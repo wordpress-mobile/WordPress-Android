@@ -39,7 +39,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
@@ -278,14 +277,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void refreshSpinnerAdapter() {
         updateFilterText();
         updateSpinnerAdapter();
-        setFilter(mFilter);
     }
 
     public void refreshMediaFromDB() {
+        if (!isAdded()) return;
+
         setFilter(mFilter);
         updateFilterText();
         updateSpinnerAdapter();
-        if (isAdded() && mGridAdapter.getItemCount() == 0) {
+        if (mGridAdapter.getItemCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
                     fetchMediaList(false);
@@ -469,8 +469,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                 if (mActionMode != null) {
                                     mActionMode.finish();
                                 }
-                                refreshMediaFromDB();
-                                refreshSpinnerAdapter();
                             }
                         }).setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();

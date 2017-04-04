@@ -54,7 +54,6 @@ Language: th
 	<string name="site_settings_discussion_hint">ดูและเปลี่ยนการตั้งค่าการสนทนาเว็บของคุณ</string>
 	<string name="site_settings_more_hint">ดูการตั้งค่าการสนทนาทั้งหมดที่มีอยู่</string>
 	<string name="site_settings_related_posts_hint">แสดงหรือซ่อนเรื่องในตัวอ่าน</string>
-	<string name="site_settings_upload_and_link_image_hint">เปิดการใช้งานอัปโหลดรูปภาพแบบเต็มขนาดเสมอ</string>
 	<string name="site_settings_image_width_hint">เปลี่ยนขนาดรูปภาพในเรื่องมาที่ขนาดความกว้างนี้</string>
 	<string name="site_settings_format_hint">ตั้งค่ารูปแบบเรื่องใหม่</string>
 	<string name="site_settings_category_hint">ตั้งค่าหมวดหมู่เรื่องใหม่</string>
@@ -80,7 +79,6 @@ Language: th
 	<string name="site_settings_allow_comments_title">อนุมัติความเห็น</string>
 	<string name="site_settings_default_format_title">รูปแบบค่าเริ่มต้น</string>
 	<string name="site_settings_default_category_title">หมวดหมู่ค่าเริ่มต้น</string>
-	<string name="site_settings_location_title">เปิดใช้งานบอกที่อยู่</string>
 	<string name="site_settings_address_title">ที่อยู่</string>
 	<string name="site_settings_title_title">หัวข้อเว็บ</string>
 	<string name="site_settings_tagline_title">คำอธิบาย</string>
@@ -277,22 +275,7 @@ Language: th
 	<string name="show">แสดง</string>
 	<string name="deselect_all">ไม่เลือกทั้งหมด</string>
 	<string name="sign_out_wpcom_confirm">ตัดการเชื่อมต่อบัญชีของคุณจะลบข้อมูลทั้งหมดของ @%s’s WordPress.com ออกจากอุปกรณ์นี้  รวมถึงฉบับร่างและการเปลี่ยนแปลงในเครื่องด้วย</string>
-	<string name="select_from_new_picker">การเลือกหลายสิ่งด้วยตัวเลือกแบบใหม่</string>
-	<string name="no_blog_videos">ไม่มีวีดีโอ</string>
-	<string name="no_media_sources">ไม่สามารถดึงข้อมูลไฟล์สื่อ</string>
-	<string name="loading_blog_videos">กำลังดึงข้อมูลวีดีโอ</string>
-	<string name="loading_blog_images">กำลังดึงข้อมูลรูปภาพ</string>
-	<string name="error_loading_videos">ผิดพลาดในการโหลดวีดีโอ</string>
-	<string name="error_loading_images">ผิดพลาดในการโหลดรูปภาพ</string>
-	<string name="error_loading_blog_images">ไม่สามารถดึงข้อมูลรูปภาพ</string>
-	<string name="error_loading_blog_videos">ไม่สามารถดึงข้อมูลวีดีโอ</string>
-	<string name="no_device_images">ไม่มีรูปภาพ</string>
-	<string name="no_blog_images">ไม่มีรูปภาพ</string>
-	<string name="no_device_videos">ไม่มีวีดีโอ</string>
 	<string name="stats_generic_error">สถิติที่ต้องการไม่สามารถแสดงผลได้</string>
-	<string name="no_media">ไม่มีไฟล์สื่อ</string>
-	<string name="loading_images">กำลังโหลดรูปภาพ</string>
-	<string name="loading_videos">กำลังโหลดวีดีโอ</string>
 	<string name="invalid_verification_code">โค้ดยืนยันไม่ถูกต้อง</string>
 	<string name="verification_code">โค้ดยืนยัน</string>
 	<string name="editor_toast_invalid_path">ที่อยู่ไฟล์ไม่ถูกต้อง</string>
@@ -300,15 +283,7 @@ Language: th
 	<string name="two_step_footer_label">ใส่โค้ดจากแอพยืนยันตัวตนของคุณ</string>
 	<string name="verify">ยืนยัน</string>
 	<string name="two_step_sms_sent">ตรวจสอบข้อความของคุณสำหรับโค้ดยืนยัน</string>
-	<string name="tab_title_site_videos">วีดีโอเว็บไซต์</string>
 	<string name="two_step_footer_button">ส่งโค้ดผ่านทางข้อความ</string>
-	<string name="tab_title_site_images">รูปภาพเว็บไซต์</string>
-	<string name="tab_title_device_images">รูปภาพอุปกรณ์</string>
-	<string name="tab_title_device_videos">วีดีโออุปกรณ์</string>
-	<string name="take_video">ถ่ายวีดีโอ</string>
-	<string name="take_photo">ถ่ายรูป</string>
-	<string name="media_picker_title">เลือกไฟล์สื่อ</string>
-	<string name="add_to_post">เพิ่มไปยังเรื่อง</string>
 	<string name="device">อุปกรณ์</string>
 	<string name="language">ภาษา</string>
 	<string name="media_details_label_file_type">ประเภทไฟล์</string>
@@ -412,7 +387,6 @@ Language: th
 	<string name="confirm_delete_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
 	<string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
 	<string name="pages_empty_list">ยังไม่มีหน้า ทำไมไม่สร้างสักหนึ่งหน้า?</string>
-	<string name="media_empty_list_custom_date">ไม่มีไฟล์สื่อในช่วงเวลานี้</string>
 	<string name="posting_post">กำลังส่งเรื่อง "%s"</string>
 	<string name="older_two_days">เก่ากว่า 2 วัน</string>
 	<string name="older_last_week">เก่ากว่าหนึ่งอาทิตย์</string>
@@ -495,7 +469,6 @@ Language: th
 	<string name="username_exists">ผู้ใช้ชื่อนั้นมีอยู่แล้ว</string>
 	<string name="out_of_memory">อุปกรณ์ใช้ความจำหมดแล้ว</string>
 	<string name="mnu_comment_unspam">ไม่ใช่สแปม</string>
-	<string name="no_site_error">ไม่สามารถเชื่อมต่อกับเว็บเวิร์ดเพรส</string>
 	<string name="adding_cat_failed">การเพิ่มหมวดหมู่ล้มเหลว</string>
 	<string name="adding_cat_success">เพิ่มหมวดหมู่สำเร็จแล้ว</string>
 	<string name="cat_name_required">ต้องใส่ชื่อหมวดหมู่</string>
@@ -568,7 +541,6 @@ Language: th
 	<string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
 	<string name="error_blog_hidden">บล็อกนี้ถูกซ่อนและไม่สามารถโหลดได้  ให้เปิดใช้งานมันอีกครั้งในการตั้งค่าและลองดูอีกครั้ง</string>
 	<string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
-	<string name="jetpack_message_not_admin">ต้องการปลั๊กอิน Jetpack สำหรับการใช้งานสถิติ  ติดต่อผู้ควบคุมเว็บ</string>
 	<string name="pending_review">รอคอยการตรวจสอบ</string>
 	<string name="post_format">รูปแบบเรื่อง</string>
 	<string name="new_post">เรื่องใหม่</string>
@@ -641,7 +613,6 @@ Language: th
 	<string name="location_not_found">ไม่ทราบที่อยู่</string>
 	<string name="open_source_licenses">ลิขสิทธิ์โอเพ่นซอร์ส</string>
 	<string name="dlg_unapproving_comments">ไม่อนุมัติ</string>
-	<string name="category_slug">หมวดหมู่ slug (ตัวเลือก)</string>
 	<string name="category_desc">คำอธิบายหมวดหมู่ (ตัวเลือก)</string>
 	<string name="file_error_create">ไม่สามารถสร้างไฟล์ชั่วคราวสำหรับการอัปโหลดไฟล์สื่อ โปรดตรวจสอบว่าอุปกรณ์ของคุณมีพื้นที่ว่างเพียงพอสำหรับการอัปโหลด</string>
 	<string name="local_changes">การเปลี่ยนแปลงบนอุปกรณ์</string>
@@ -705,7 +676,6 @@ Language: th
 	<string name="reader_btn_share">แบ่งปัน</string>
 	<string name="reader_btn_follow">ติดตาม</string>
 	<string name="reader_btn_unfollow">กำลังติดตาม</string>
-	<string name="jetpack_message">การใช้งานสถิติต้องใช้ปลั๊กอิน Jetpack  คุณต้องการติดตั้ง Jetpack หรือไม่</string>
 	<string name="jetpack_not_found">ไม่พบปลั๊กอิน Jetpack</string>
 	<string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
 	<string name="reader_share_subject">แบ่งปันจาก %s แล้ว</string>
@@ -721,7 +691,6 @@ Language: th
 	<string name="all">ทั้งหมด</string>
 	<string name="images">รูปภาพ</string>
 	<string name="unattached">ยังไม่ได้แนบ</string>
-	<string name="custom_date">วันที่ปรับแต่ง</string>
 	<string name="stats_entry_country">ประเทศ</string>
 	<string name="stats_entry_posts_and_pages">หัวข้อ</string>
 	<string name="stats_entry_tags_and_categories">กระทู้</string>

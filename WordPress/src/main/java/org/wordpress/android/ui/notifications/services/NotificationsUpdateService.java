@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.text.TextUtils;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;

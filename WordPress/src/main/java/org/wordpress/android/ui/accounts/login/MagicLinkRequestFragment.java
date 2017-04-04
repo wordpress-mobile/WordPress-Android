@@ -150,7 +150,9 @@ public class MagicLinkRequestFragment extends Fragment {
                 HashMap<String, String> errorProperties = new HashMap<>();
                 errorProperties.put(ERROR_KEY, error.getMessage());
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
-                Snackbar.make(getView(), R.string.magic_link_unavailable_error_message, Snackbar.LENGTH_SHORT);
+                if (getView() != null) {
+                    Snackbar.make(getView(), R.string.magic_link_unavailable_error_message, Snackbar.LENGTH_SHORT);
+                }
                 if (mListener != null) {
                     mListener.onEnterPasswordRequested();
                 }

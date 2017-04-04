@@ -316,11 +316,9 @@ Language: zh_CN
 	<string name="site_settings_discussion_hint">查看并更改您的站点讨论设置</string>
 	<string name="site_settings_more_hint">查看所有可用的讨论设置</string>
 	<string name="site_settings_related_posts_hint">在阅读器中显示或隐藏相关文章</string>
-	<string name="site_settings_upload_and_link_image_hint">启用以始终上传完整大小的图片</string>
 	<string name="site_settings_image_width_hint">将文章中的图片大小调整至此宽度</string>
 	<string name="site_settings_format_hint">设置新的文章格式</string>
 	<string name="site_settings_category_hint">设置新的文章类别</string>
-	<string name="site_settings_location_hint">自动为文章添加位置数据</string>
 	<string name="site_settings_password_hint">更改您的密码</string>
 	<string name="site_settings_username_hint">当前用户帐户</string>
 	<string name="site_settings_language_hint">此博客的主要撰写语言</string>
@@ -348,7 +346,6 @@ Language: zh_CN
 	<string name="site_settings_allow_comments_title">允许评论</string>
 	<string name="site_settings_default_format_title">默认格式</string>
 	<string name="site_settings_default_category_title">默认类别</string>
-	<string name="site_settings_location_title">启用位置</string>
 	<string name="site_settings_address_title">地址</string>
 	<string name="site_settings_tagline_title">标语</string>
 	<string name="site_settings_title_title">站点标题</string>
@@ -539,22 +536,7 @@ Language: zh_CN
 	<string name="hide">隐藏</string>
 	<string name="show">显示</string>
 	<string name="deselect_all">全部不选</string>
-	<string name="select_from_new_picker">使用全新选择器进行多选</string>
-	<string name="no_media_sources">无法获取媒体</string>
-	<string name="loading_blog_videos">正在获取视频</string>
-	<string name="loading_blog_images">正在获取图片</string>
-	<string name="error_loading_videos">加载视频时出错</string>
-	<string name="error_loading_images">加载图片时出错</string>
-	<string name="error_loading_blog_videos">无法获取视频</string>
-	<string name="error_loading_blog_images">无法获取图片</string>
-	<string name="no_device_images">无任何图片</string>
-	<string name="no_blog_videos">无任何视频</string>
-	<string name="no_blog_images">无任何图片</string>
-	<string name="no_device_videos">无任何视频</string>
 	<string name="stats_generic_error">无法加载所需统计</string>
-	<string name="no_media">无任何媒体</string>
-	<string name="loading_images">正在加载图片</string>
-	<string name="loading_videos">正在加载视频</string>
 	<string name="two_step_sms_sent">查收短信查看验证码。</string>
 	<string name="two_step_footer_button">通过短信发送代码</string>
 	<string name="two_step_footer_label">输入您验证器应用程中的代码。</string>
@@ -565,14 +547,6 @@ Language: zh_CN
 	<string name="error_publish_no_network">未连接网络时无法发布。保存为草稿。</string>
 	<string name="media_details_label_file_type">文件类型</string>
 	<string name="media_details_label_file_name">文件名</string>
-	<string name="tab_title_site_videos">站点视频</string>
-	<string name="tab_title_site_images">站点图片</string>
-	<string name="tab_title_device_videos">设备视频</string>
-	<string name="tab_title_device_images">设备图片</string>
-	<string name="take_video">拍摄视频</string>
-	<string name="take_photo">拍照</string>
-	<string name="media_picker_title">选择媒体</string>
-	<string name="add_to_post">添加到文章</string>
 	<string name="language">语言</string>
 	<string name="device">设备</string>
 	<string name="media_fetching">正在获取媒体…</string>
@@ -671,7 +645,6 @@ Language: zh_CN
 	<string name="delete_sure">删除此草稿</string>
 	<string name="delete_sure_post">删除此文章</string>
 	<string name="posting_post">正在发布“%s”</string>
-	<string name="media_empty_list_custom_date">此事件段内没有媒体</string>
 	<string name="pages_empty_list">还没有页面。为何不创建一个？</string>
 	<string name="comment_reply_to_user">回复 %s</string>
 	<string name="posts_empty_list">尚无文章。为何不创建一个？</string>
@@ -799,7 +772,6 @@ Language: zh_CN
 	<string name="cat_name_required">“分类名称”必填</string>
 	<string name="adding_cat_success">分类添加成功</string>
 	<string name="adding_cat_failed">添加分类失败</string>
-	<string name="no_site_error">无法连接到 WordPress 网站</string>
 	<string name="mnu_comment_unspam">不是垃圾评论</string>
 	<string name="comments_empty_list">没有评论</string>
 	<string name="theme_auth_error_message">确保您有权限设置主题</string>
@@ -823,7 +795,6 @@ Language: zh_CN
 	<string name="reader_toast_err_add_tag">不能增加这个标签</string>
 	<string name="reader_share_link">分享链接</string>
 	<string name="reader_title_applog">程序日志</string>
-	<string name="jetpack_message_not_admin">统计需要安装Jetpack插件,请联系网站管理员.</string>
 	<string name="fatal_db_error">创建程序数据库时出错，请重新安装程序.</string>
 	<string name="error_blog_hidden">这个博客是隐藏的，无法加载。在设置中重新启用它并再次尝试。</string>
 	<string name="wordpress_blog">WordPress 博客</string>
@@ -847,7 +818,6 @@ Language: zh_CN
 	<string name="share_action_post">新文章</string>
 	<string name="category_parent">上级分类 (可选)</string>
 	<string name="category_desc">分类描述 (可选)</string>
-	<string name="category_slug">分类代号 (可选)</string>
 	<string name="category_name">分类名称</string>
 	<string name="add_new_category">添加新分类</string>
 	<string name="view_in_browser">在浏览器中查看</string>
@@ -968,7 +938,6 @@ Language: zh_CN
 	<string name="reader_share_subject">从 %s 共享</string>
 	<string name="reader_untitled_post">(未命名)</string>
 	<string name="jetpack_not_found">没有找到Jetpack插件</string>
-	<string name="jetpack_message">统计需要Jetpack插件，您希望安装Jetpack吗？</string>
 	<string name="select_from_media_library">从媒体库选择</string>
 	<string name="empty_list_default">这个列表是空的</string>
 	<string name="media_add_new_media_gallery">创建相册</string>
@@ -1026,7 +995,6 @@ Language: zh_CN
 	<string name="media_gallery_image_order_random">随机</string>
 	<string name="media_add_popup_capture_video">捕获视频</string>
 	<string name="media_add_popup_capture_photo">捕获照片</string>
-	<string name="custom_date">自定义日期</string>
 	<string name="unattached">独立的</string>
 	<string name="images">图像</string>
 	<string name="all">所有</string>

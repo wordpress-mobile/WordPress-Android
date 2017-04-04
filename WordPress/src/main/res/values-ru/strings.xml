@@ -327,11 +327,9 @@ Language: ru
 	<string name="site_settings_discussion_hint">Просмотр и изменение настроек ваших сайтов в разделе «Обсуждение»</string>
 	<string name="site_settings_more_hint">Показывать все настройки в разделе «Обсуждение»</string>
 	<string name="site_settings_related_posts_hint">Отображение похожих записей в приложении «Чтиво»</string>
-	<string name="site_settings_upload_and_link_image_hint">Загружать полноразмерные изображения по умолчанию</string>
 	<string name="site_settings_image_width_hint">Изменение ширины изображений в записи</string>
 	<string name="site_settings_format_hint">Добавление нового формата записи</string>
 	<string name="site_settings_category_hint">Добавление новой рубрики для записей</string>
-	<string name="site_settings_location_hint">Автоматически добавлять к записям данные о местоположении</string>
 	<string name="site_settings_password_hint">Изменить пароль</string>
 	<string name="site_settings_username_hint">Использующаяся учетная запись</string>
 	<string name="site_settings_language_hint">Язык, который используется в блоге в первую очередь</string>
@@ -359,7 +357,6 @@ Language: ru
 	<string name="site_settings_allow_comments_title">Разрешить комментарии</string>
 	<string name="site_settings_default_format_title">Основной формат</string>
 	<string name="site_settings_default_category_title">Основная рубрика</string>
-	<string name="site_settings_location_title">Вкл. определение местоположения</string>
 	<string name="site_settings_address_title">Адрес</string>
 	<string name="site_settings_tagline_title">Ключевая фраза</string>
 	<string name="site_settings_title_title">Название сайта</string>
@@ -663,7 +660,6 @@ Language: ru
 	<string name="delete_sure_post">Удалить запись</string>
 	<string name="signing_out">Выход из системы...</string>
 	<string name="posting_post">Публикуется материал "%s"</string>
-	<string name="media_empty_list_custom_date">За этот период нет медиафайлов.</string>
 	<string name="pages_empty_list">Пока нет страниц. Создайте первую!</string>
 	<string name="comment_reply_to_user">Ответить автору %s</string>
 	<string name="posts_empty_list">Пока нет записей. Создайте первую!</string>
@@ -791,7 +787,6 @@ Language: ru
 	<string name="cat_name_required">Поле "название категории" является обязательным</string>
 	<string name="adding_cat_success">Категория успешно добавлена</string>
 	<string name="adding_cat_failed">Добавление категории не удалось</string>
-	<string name="no_site_error">Невозможно присоединиться к сайту WordPress</string>
 	<string name="mnu_comment_unspam">Нет спама</string>
 	<string name="comments_empty_list">Нет комментариев</string>
 	<string name="theme_auth_error_message">Убедитесь, что у вас достаточно прав для установки темы</string>
@@ -815,7 +810,6 @@ Language: ru
 	<string name="reader_toast_err_add_tag">Не удается добавить эту метку</string>
 	<string name="reader_share_link">Поделиться ссылкой</string>
 	<string name="reader_title_applog">Лог приложения</string>
-	<string name="jetpack_message_not_admin">Для статистики нужен плагин Jetpack- свяжитесь с администрацией сайта.</string>
 	<string name="fatal_db_error">Произошла ошибка при создании базы данных приложения- попробуйте его переустановить.</string>
 	<string name="error_blog_hidden">Этот блог является скрытым и не может быть загружен. Откройте его через настройки и попробуйте снова.</string>
 	<string name="wordpress_blog">Блог WordPress</string>
@@ -839,7 +833,6 @@ Language: ru
 	<string name="share_action_post">Новая запись</string>
 	<string name="category_parent">Родительская категория(необязательно)</string>
 	<string name="category_desc">Описание категории(необязательно)</string>
-	<string name="category_slug">Короткая категория(необязательно)</string>
 	<string name="category_name">Имя категории</string>
 	<string name="add_new_category">Добавить категорию</string>
 	<string name="view_in_browser">Открыть в браузере</string>
@@ -961,7 +954,6 @@ Language: ru
 	<string name="reader_share_subject">Поделиться через %s</string>
 	<string name="reader_untitled_post">(Без названия)</string>
 	<string name="jetpack_not_found">Плагин Jetpack не найден</string>
-	<string name="jetpack_message">Для статистики нужен плагин Jetpack. Хотите установить его?</string>
 	<string name="select_from_media_library">Выбрать из медиа-библиотеки</string>
 	<string name="empty_list_default">Этот список пуст</string>
 	<string name="media_add_new_media_gallery">Создать галерею</string>
@@ -1019,7 +1011,6 @@ Language: ru
 	<string name="media_gallery_image_order_random">Случайный</string>
 	<string name="media_add_popup_capture_video">Добавить видео</string>
 	<string name="media_add_popup_capture_photo">Добавить фото</string>
-	<string name="custom_date">Пользовательская дата</string>
 	<string name="unattached">Неприкреплено</string>
 	<string name="images">Изображения</string>
 	<string name="all">Всё</string>

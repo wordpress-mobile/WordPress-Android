@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -70,7 +69,7 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/customize"
-                        app:srcCompat="@drawable/ic_theme_customize" />
+                        card_view:srcCompat="@drawable/ic_customize_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -101,7 +100,7 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/details"
-                        app:srcCompat="@drawable/ic_theme_details" />
+                        card_view:srcCompat="@drawable/ic_info_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -132,7 +131,7 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/support"
-                        app:srcCompat="@drawable/ic_theme_support" />
+                        card_view:srcCompat="@drawable/ic_help_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"

@@ -16,7 +16,7 @@ public class SiteUtils {
     public static String getHomeURLOrHostName(SiteModel site) {
         String homeURL = UrlUtils.removeScheme(site.getUrl());
         homeURL = StringUtils.removeTrailingSlash(homeURL);
-        if (homeURL.length() == 0) {
+        if (TextUtils.isEmpty(homeURL)) {
             return UrlUtils.getHost(site.getXmlRpcUrl());
         }
         return homeURL;

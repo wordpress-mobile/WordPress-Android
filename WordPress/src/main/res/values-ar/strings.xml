@@ -331,11 +331,9 @@ Language: ar
 	<string name="site_settings_discussion_hint">عرض إعدادات المناقشة على موقعك وتغييرها</string>
 	<string name="site_settings_more_hint">عرض جميع إعدادات المناقشة المتوفرة</string>
 	<string name="site_settings_related_posts_hint">إظهار المقالات ذات الصلة أو إخفاؤها في القارئ</string>
-	<string name="site_settings_upload_and_link_image_hint">التمكين لرفع صورة بالحجم الكامل دائمًا</string>
 	<string name="site_settings_image_width_hint">تغيير حجم الصور في المقالات إلى هذا العرض</string>
 	<string name="site_settings_format_hint">يُعيّن تنسيق مقالة جديدة</string>
 	<string name="site_settings_category_hint">تعيين فئة مقالة جديدة</string>
-	<string name="site_settings_location_hint">إضافة بيانات الموقع إلى مقالاتك تلقائيًا</string>
 	<string name="site_settings_password_hint">تغيير كلمة مرورك</string>
 	<string name="site_settings_username_hint">حساب المستخدم الحالي</string>
 	<string name="site_settings_language_hint">اللغة التي تُكتب بها هذه المدونة في الأصل.</string>
@@ -363,7 +361,6 @@ Language: ar
 	<string name="site_settings_allow_comments_title">السماح بالتعليقات</string>
 	<string name="site_settings_default_format_title">التنسيق الافتراضي</string>
 	<string name="site_settings_default_category_title">الفئة الافتراضية</string>
-	<string name="site_settings_location_title">تمكين الموقع</string>
 	<string name="site_settings_address_title">العنوان</string>
 	<string name="site_settings_title_title">عنوان الموقع</string>
 	<string name="site_settings_tagline_title">الشعار</string>
@@ -554,28 +551,7 @@ Language: ar
 	<string name="show">إظهار</string>
 	<string name="hide">إخفاء</string>
 	<string name="deselect_all">إلغاء تحديد الكل</string>
-	<string name="select_from_new_picker">تحديد متعدد بأداة الانتقاء الجديدة</string>
-	<string name="no_media_sources">تعذر إحضار الوسائط</string>
-	<string name="loading_blog_images">جارٍ إحضار الصور</string>
-	<string name="loading_blog_videos">جارٍ إحضار مقاطع الفيديو</string>
-	<string name="error_loading_images">حدث خطأ أثناء تحميل الصور</string>
-	<string name="error_loading_videos">حدث خطأ أثناء تحميل مقاطع الفيديو</string>
-	<string name="no_blog_images">لا توجد صور</string>
-	<string name="no_blog_videos">لا توجد مقاطع فيديو</string>
-	<string name="no_device_images">لا توجد صور</string>
-	<string name="error_loading_blog_images">يتعذر إحضار الصور</string>
-	<string name="error_loading_blog_videos">يتعذر إحضار مقاطع الفيديو</string>
 	<string name="stats_generic_error">تعذر تحميل الإحصاءات المطلوبة</string>
-	<string name="no_device_videos">لا توجد مقاطع فيديو</string>
-	<string name="no_media">لا توجد وسائط</string>
-	<string name="loading_images">جارٍ تحميل الصور</string>
-	<string name="loading_videos">جارٍ تحميل مقاطع الفيديو</string>
-	<string name="media_picker_title">تحديد الوسائط</string>
-	<string name="take_video">التقاط فيديو</string>
-	<string name="tab_title_device_images">صور الأجهزة</string>
-	<string name="tab_title_device_videos">مقاطع فيديو للأجهزة</string>
-	<string name="tab_title_site_images">صور المواقع</string>
-	<string name="tab_title_site_videos">مقاطع فيديو للمواقع</string>
 	<string name="error_publish_no_network">لا يمكن النشر في حالة عدم وجود اتصال. تم الحفظ كمسودة.</string>
 	<string name="editor_toast_invalid_path">مسار الملف غير صالح</string>
 	<string name="verification_code">رمز التحقق</string>
@@ -585,8 +561,6 @@ Language: ar
 	<string name="language">اللغة</string>
 	<string name="verify">تحقق</string>
 	<string name="two_step_footer_button">إرسال الكود عن طريق رسالة نصية</string>
-	<string name="add_to_post">إضافة مقالة</string>
-	<string name="take_photo">خذ صورة</string>
 	<string name="device">جهاز</string>
 	<string name="media_details_label_file_name">اسم الملف</string>
 	<string name="media_details_label_file_type">نوع الملف</string>
@@ -719,7 +693,6 @@ Language: ar
 	<string name="posts_empty_list">لا توجد مقالات حتى الآن. لماذا لا تبادر بإنشاء واحدة؟</string>
 	<string name="comment_reply_to_user">رد على %s</string>
 	<string name="pages_empty_list">لا توجد صفحات حتى الآن. لماذا لا تبادر بإنشاء واحدة؟</string>
-	<string name="media_empty_list_custom_date">لا توجد وسائط في هذا الفاصل الزمني</string>
 	<string name="posting_post">نشر "%s"</string>
 	<string name="reader_empty_followed_blogs_title">لم تتابع أي مواقع حتى الآن</string>
 	<string name="reader_menu_block_blog">حظر هذه المدونة</string>
@@ -764,7 +737,6 @@ Language: ar
 	<string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
 	<string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
 	<string name="could_not_remove_account">تعذر إزالة الموقع</string>
-	<string name="no_site_error">غير قادر على الاتصال بموقع الووردبريس</string>
 	<string name="no_account">لم يتم العثور على حساب ووردبريس، أضف حسابًا وحاول من جديد</string>
 	<string name="error_generic">حدث خطأ</string>
 	<string name="blog_name_reserved">هذا الموقع محجوز</string>
@@ -891,7 +863,6 @@ Language: ar
 	<string name="delete_draft">حذف المسودة</string>
 	<string name="post_not_published">حالة المقالة لم تنشر </string>
 	<string name="page_not_published">حالة الصفحة لم تنشر</string>
-	<string name="category_slug">لقب التصنيف ( اختياري )</string>
 	<string name="category_desc">وصف التصنيف ( اختياري )</string>
 	<string name="category_parent">التصنيف الأصل ( اختياري )</string>
 	<string name="file_error_create">تعذر إنشاء ملف مؤقت لرفع الوسائط. تأكد من وجود مساحة حرة كافية على الجهاز.</string>
@@ -912,7 +883,6 @@ Language: ar
 	<string name="http_authorization_required">مطلوب ترخيص</string>
 	<string name="error_blog_hidden">هذه المدونة مخفية و لايمكن تحميلها . قم بتفعيلها مرة اخرى من الإعدادات وأعد المحاولة.</string>
 	<string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
-	<string name="jetpack_message_not_admin">اضافة Jetpack مطلوبة للإحصائيات. اتصل بمسؤول الموقع.</string>
 	<string name="pending_review">بانتظار المراجعة</string>
 	<string name="http_credentials">تفويضات HTTP  (إختياري)</string>
 	<string name="horizontal_alignment">المحاذاة الأفقية</string>
@@ -983,7 +953,6 @@ Language: ar
 	<string name="reader_toast_err_share_intent">لايمكن المشاركة</string>
 	<string name="reader_toast_err_tag_invalid">هذا الوسم غير صالح</string>
 	<string name="jetpack_not_found">اضافة Jetpack غير موجودة</string>
-	<string name="jetpack_message">مطلوب اضافة الـ Jetpack للإحصائيات , هل تريد تثبيت الـ Jetpack ؟</string>
 	<string name="limit_reached">وصلت للحد المسموح , يمكنك المحاولة مرة أخرى خلال 1 دقيقة. المحاولة مرة أخرى قبل ذلك ستؤدي لزيادة الوقت الواجب انتظاره قبل أن يتم رفع الحظر. إذا كنت تعتقد أن هذا هو الخطأ، اتصل بالدعم.</string>
 	<string name="nux_tutorial_get_started_title">ابدأ!</string>
 	<string name="reader_hint_comment_on_comment">رد على التعليق...</string>
@@ -1006,7 +975,6 @@ Language: ar
 	<string name="stats_entry_country">الدولة</string>
 	<string name="stats_totals_clicks">النقرات</string>
 	<string name="unattached">غير مرفق</string>
-	<string name="custom_date">تاريخ مخصص</string>
 	<string name="media_add_popup_capture_photo">التقط صورة</string>
 	<string name="media_gallery_image_order_reverse">عكس</string>
 	<string name="media_edit_description_hint">أدخل الوصف هنا</string>

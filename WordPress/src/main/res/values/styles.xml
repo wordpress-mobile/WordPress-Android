@@ -392,11 +392,6 @@
         <item name="android:background">@color/me_divider</item>
     </style>
 
-    <style name="fab_menu_label_style">
-        <item name="android:background">@drawable/fab_menu_label_background</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
     <!-- Used in Notifications and Site settings to animate nested preference screens -->
     <style name="DialogAnimations">
         <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>

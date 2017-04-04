@@ -86,7 +86,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    app:srcCompat="@drawable/stats_icon_info"
+                    app:srcCompat="@drawable/ic_info_grey_800_32dp"
                     android:paddingEnd="@dimen/margin_medium"
                     android:paddingRight="@dimen/margin_medium"/>
                 <TextView

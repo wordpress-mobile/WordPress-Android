@@ -34,7 +34,7 @@
                 android:layout_height="@dimen/notifications_avatar_sz"
                 android:background="@drawable/shape_oval_blue"
                 android:padding="@dimen/margin_medium"
-                app:srcCompat="@drawable/ic_check_white_24dp"
+                app:srcCompat="@drawable/ic_checkmark_white_24dp"
                 android:visibility="gone" />
 
         </FrameLayout>

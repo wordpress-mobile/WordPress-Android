@@ -40,7 +40,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -408,7 +408,7 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String tags = TextUtils.join(",", mPost.getTagNameList());
-        if (!tags.equals("")) {
+        if (!tags.equals("") && mTagsEditText != null) {
             mTagsEditText.setText(tags);
         }
 
@@ -657,6 +657,8 @@ public class EditPostSettingsFragment extends Fragment
         String tags = "", postFormat = "";
         if (!post.isPage()) {
             tags = EditTextUtils.getText(mTagsEditText);
+            // since mTagsEditText is a `textMultiLine` field, we should replace "\n" with space
+            tags = tags.replace("\n", " ");
 
             // post format
             if (mPostFormatKeys != null && mPostFormatSpinner != null &&
@@ -997,13 +999,13 @@ public class EditPostSettingsFragment extends Fragment
         final int drawableId;
         switch (status) {
             case FOUND:
-                drawableId = R.drawable.ic_action_location_found;
+                drawableId = R.drawable.ic_location_found_black_translucent_40_32dp;
                 break;
             case NOT_FOUND:
-                drawableId = R.drawable.ic_action_location_off;
+                drawableId = R.drawable.ic_location_off_black_translucent_40_32dp;
                 break;
             case SEARCHING:
-                drawableId = R.drawable.ic_action_location_searching;
+                drawableId = R.drawable.ic_location_searching_black_40_32dp;
                 break;
             case NONE:
                 drawableId = 0;

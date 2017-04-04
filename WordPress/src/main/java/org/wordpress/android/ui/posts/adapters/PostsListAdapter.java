@@ -21,7 +21,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -204,7 +205,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             PostViewHolder postHolder = (PostViewHolder) holder;
 
             if (StringUtils.isNotEmpty(post.getTitle())) {
-                postHolder.txtTitle.setText(post.getTitle());
+                // Unescape HTML
+                String cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.getTitle());
+                postHolder.txtTitle.setText(cleanPostTitle);
             } else {
                 postHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
             }
@@ -213,7 +216,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             if (StringUtils.isNotEmpty(cleanPostExcerpt)) {
                 postHolder.txtExcerpt.setVisibility(View.VISIBLE);
-                postHolder.txtExcerpt.setText(PostUtils.collapseShortcodes(cleanPostExcerpt));
+                // Unescape HTML
+                cleanPostExcerpt = StringEscapeUtils.unescapeHtml4(cleanPostExcerpt);
+                // Collapse shortcodes: [gallery ids="1206,1205,1191"] -> [gallery]
+                cleanPostExcerpt = PostUtils.collapseShortcodes(cleanPostExcerpt);
+                postHolder.txtExcerpt.setText(cleanPostExcerpt);
             } else {
                 postHolder.txtExcerpt.setVisibility(View.GONE);
             }
@@ -373,17 +380,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocalDraft()) {
                 statusTextResId = R.string.local_draft;
-                statusIconResId = R.drawable.noticon_scheduled;
+                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocallyChanged()) {
                 statusTextResId = R.string.local_changes;
-                statusIconResId = R.drawable.noticon_scheduled;
+                statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                 statusColorResId = R.color.alert_yellow;
             } else {
                 switch (PostStatus.fromPost(post)) {
                     case DRAFT:
                         statusTextResId = R.string.draft;
-                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case PRIVATE:
@@ -391,17 +398,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                     case PENDING:
                         statusTextResId = R.string.pending_review;
-                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case SCHEDULED:
                         statusTextResId = R.string.scheduled;
-                        statusIconResId = R.drawable.noticon_scheduled;
+                        statusIconResId = R.drawable.noticon_scheduled_alert_yellow_16dp;
                         statusColorResId = R.color.alert_yellow;
                         break;
                     case TRASHED:
                         statusTextResId = R.string.trashed;
-                        statusIconResId = R.drawable.noticon_trashed;
+                        statusIconResId = R.drawable.ic_pages_alert_red_16dp;
                         statusColorResId = R.color.alert_red;
                         break;
                 }
@@ -443,6 +450,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnTrash.setVisibility(View.VISIBLE);
             holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
             holder.btnPublish.setVisibility(canShowPublishButton ? View.VISIBLE : View.GONE);
+            if (!mSite.getHasCapabilityPublishPosts()) {
+                // Users with roles that lack permission to publish show Submit
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
+            }
         } else {
             holder.btnMore.setVisibility(View.VISIBLE);
             holder.btnBack.setVisibility(View.GONE);
