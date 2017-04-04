@@ -521,4 +521,25 @@ public class StatsUtils {
 
         return "";
     }
+
+    /**
+     * Transform a 2 characters country code into a 2 characters emoji flag.
+     * Emoji letter A starts at: 0x1F1E6 thus,
+     * 0x1F1E6 + 5  = 0x1F1EB represents the letter F
+     * 0x1F1E6 + 17 = 0x1F1F7 represents the letter R
+     *
+     * FR: 0x1F1EB 0x1F1F7 is the french flag: 🇫🇷
+     * More infos on https://apps.timwhitlock.info/emoji/tables/iso3166
+     *
+     * @param countryCode - iso3166 country code (2chars)
+     * @return emoji string representing the flag
+     */
+    public static String countryCodeToEmoji(String countryCode) {
+        if (TextUtils.isEmpty(countryCode) || countryCode.length() != 2) {
+            return "";
+        }
+        int char1 = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+        int char2 = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        return new String(Character.toChars(char1)) + new String(Character.toChars(char2));
+    }
 }

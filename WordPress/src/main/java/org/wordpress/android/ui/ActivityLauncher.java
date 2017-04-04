@@ -28,6 +28,7 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -66,6 +67,11 @@ public class ActivityLauncher {
                 R.anim.activity_slide_in_from_left,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
+    }
+
+    public static void showPhotoPickerForResult(Activity activity) {
+        Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {

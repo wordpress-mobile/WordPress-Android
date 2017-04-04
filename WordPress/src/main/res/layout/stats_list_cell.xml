@@ -44,6 +44,17 @@
             android:layout_marginEnd="@dimen/margin_large"
             android:visibility="gone" />
 
+        <!-- Alternative to the Network image view above, can be used to display emojis (flags for instance) -->
+        <TextView
+            android:id="@+id/stats_list_cell_image_alt"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:textSize="@dimen/avatar_sz_extra_small"
+            android:textColor="@color/black"
+            android:visibility="gone" />
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_cell_entry"
             android:layout_weight="1"

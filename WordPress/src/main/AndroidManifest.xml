@@ -161,7 +161,7 @@
             android:label="@string/add_new_category"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
-            android:name=".ui.posts.photochooser.PhotoChooserPreviewActivity"
+            android:name=".ui.photopicker.PhotoPickerPreviewActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".editor.legacy.EditLinkActivity"
@@ -391,6 +391,11 @@
             android:name=".ui.main.SitePickerActivity"
             android:label="@string/site_picker_title"
             android:theme="@style/CalypsoTheme" />
+
+        <activity
+            android:name=".ui.photopicker.PhotoPickerActivity"
+            android:label="@string/photo_picker_title"
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Notifications activities -->
         <activity

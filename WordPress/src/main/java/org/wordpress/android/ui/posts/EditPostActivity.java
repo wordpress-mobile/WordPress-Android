@@ -94,9 +94,11 @@ import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
-import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
+import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -134,6 +136,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -143,9 +146,11 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
+
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        PhotoChooserFragment.PhotoChooserListener {
+        PhotoPickerFragment.PhotoPickerListener {
     public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -168,7 +173,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
     public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
-    public static final int PHOTO_CHOOSER_PERMISSION_REQUEST_CODE = 4;
+    public static final int PHOTO_PICKER_PERMISSION_REQUEST_CODE = 4;
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -176,7 +181,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 60000;
 
-    private static final String PHOTO_CHOOSER_TAG = "photo_chooser";
+    private static final String PHOTO_PICKER_TAG = "photo_picker";
 
     private Handler mHandler;
     private boolean mShowAztecEditor;
@@ -213,9 +218,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean mIsPage;
     private boolean mHasSetPostContent;
 
-    private View mPhotoChooserContainer;
-    private PhotoChooserFragment mPhotoChooserFragment;
-    private int mPhotoChooserOrientation = Configuration.ORIENTATION_UNDEFINED;
+    private View mPhotoPickerContainer;
+    private PhotoPickerFragment mPhotoPickerFragment;
+    private int mPhotoPickerOrientation = Configuration.ORIENTATION_UNDEFINED;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -379,10 +384,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
-                    hidePhotoChooser();
+                    hidePhotoPicker();
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
-                    hidePhotoChooser();
+                    hidePhotoPicker();
                     savePostAsync(new AfterSavePostListener() {
                         @Override
                         public void onPostSave() {
@@ -474,10 +479,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        // resize the photo chooser if the user rotated the device
+        // resize the photo picker if the user rotated the device
         int orientation = newConfig.orientation;
-        if (orientation != mPhotoChooserOrientation) {
-            resizePhotoChooser();
+        if (orientation != mPhotoPickerOrientation) {
+            resizePhotoPicker();
         }
     }
 
@@ -505,69 +510,71 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean isPhotoChooserShowing() {
-        return mPhotoChooserContainer != null
-                && mPhotoChooserContainer.getVisibility() == View.VISIBLE;
+    private boolean isPhotoPickerShowing() {
+        return mPhotoPickerContainer != null
+                && mPhotoPickerContainer.getVisibility() == View.VISIBLE;
     }
 
     /*
-     * native photo chooser is only enabled for the Aztec editor
+     * native photo picker is only enabled for the Aztec editor
      */
-    private boolean enablePhotoChooser() {
+    private boolean enablePhotoPicker() {
         return mShowAztecEditor;
     }
 
     /*
-     * resizes the photo chooser based on device orientation - full height in landscape, half
+     * resizes the photo picker based on device orientation - full height in landscape, half
      * height in portrait
      */
-    private void resizePhotoChooser() {
-        if (mPhotoChooserContainer == null) return;
+    private void resizePhotoPicker() {
+        if (mPhotoPickerContainer == null) return;
 
         if (DisplayUtils.isLandscape(this)) {
-            mPhotoChooserOrientation = Configuration.ORIENTATION_LANDSCAPE;
-            mPhotoChooserContainer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            mPhotoPickerOrientation = Configuration.ORIENTATION_LANDSCAPE;
+            mPhotoPickerContainer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         } else {
-            mPhotoChooserOrientation = Configuration.ORIENTATION_PORTRAIT;
+            mPhotoPickerOrientation = Configuration.ORIENTATION_PORTRAIT;
             int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
             int containerHeight = (int) (displayHeight * 0.5f);
-            mPhotoChooserContainer.getLayoutParams().height = containerHeight;
+            mPhotoPickerContainer.getLayoutParams().height = containerHeight;
         }
 
-        if (mPhotoChooserFragment != null) {
-            mPhotoChooserFragment.reload();
+        if (mPhotoPickerFragment != null) {
+            mPhotoPickerFragment.reload();
         }
     }
 
     /*
-     * loads the photo chooser fragment, which is hidden until the user taps the media icon
+     * loads the photo picker fragment, which is hidden until the user taps the media icon
      */
-    private void initPhotoChooser() {
-        mPhotoChooserContainer = findViewById(R.id.photo_fragment_container);
+    private void initPhotoPicker() {
+        mPhotoPickerContainer = findViewById(R.id.photo_fragment_container);
 
-        // size the chooser before creating the fragment to avoid having it load media now
-        resizePhotoChooser();
+        // size the picker before creating the fragment to avoid having it load media now
+        resizePhotoPicker();
 
-        mPhotoChooserFragment = PhotoChooserFragment.newInstance(this);
+        EnumSet<PhotoPickerOption> options =
+                EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT);
+        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, options);
 
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.photo_fragment_container, mPhotoChooserFragment, PHOTO_CHOOSER_TAG)
+                .add(R.id.photo_fragment_container, mPhotoPickerFragment, PHOTO_PICKER_TAG)
                 .commit();
     }
 
     /*
-     * user has requested to show the photo chooser
+     * user has requested to show the photo picker
      */
-    void showPhotoChooser() {
+    void showPhotoPicker() {
         // request permissions if we don't already have them
-        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_CHOOSER_PERMISSION_REQUEST_CODE)) {
+        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
             return;
         }
 
-        // make sure we initialized the photo chooser
-        if (mPhotoChooserFragment == null) {
-            initPhotoChooser();
+        // make sure we initialized the photo picker
+        if (mPhotoPickerFragment == null) {
+            initPhotoPicker();
         }
 
         // hide soft keyboard
@@ -577,14 +584,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
 
-        // slide in the photo chooser
-        if (!isPhotoChooserShowing()) {
-            AniUtils.animateBottomBar(mPhotoChooserContainer, true, AniUtils.Duration.MEDIUM);
-            mPhotoChooserFragment.refresh();
+        // slide in the photo picker
+        if (!isPhotoPickerShowing()) {
+            AniUtils.animateBottomBar(mPhotoPickerContainer, true, AniUtils.Duration.MEDIUM);
+            mPhotoPickerFragment.refresh();
         }
 
         // fade in the overlay atop the editor, which effectively disables the editor
-        // until the chooser is closed
+        // until the picker is closed
         View overlay = findViewById(R.id.view_overlay);
         if (overlay.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(overlay, AniUtils.Duration.MEDIUM);
@@ -595,10 +602,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public void hidePhotoChooser() {
-        if (isPhotoChooserShowing()) {
-            mPhotoChooserFragment.finishActionMode();
-            AniUtils.animateBottomBar(mPhotoChooserContainer, false);
+    public void hidePhotoPicker() {
+        if (isPhotoPickerShowing()) {
+            mPhotoPickerFragment.finishActionMode();
+            AniUtils.animateBottomBar(mPhotoPickerContainer, false);
         }
 
         View overlay = findViewById(R.id.view_overlay);
@@ -612,23 +619,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /*
-     * called by PhotoChooserFragment when media is selected - may be a single item or a list of items
+     * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
-    public void onPhotoChooserMediaChosen(@NonNull List<Uri> uriList) {
-        hidePhotoChooser();
+    public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
+        hidePhotoPicker();
         for (Uri uri: uriList) {
             addMedia(uri);
         }
     }
 
     /*
-     * called by PhotoChooserFragment when user clicks an icon to launch the camera, native
+     * called by PhotoPickerFragment when user clicks an icon to launch the camera, native
      * picker, or WP media picker
      */
     @Override
-    public void onPhotoChooserIconClicked(@NonNull PhotoChooserIcon icon) {
-        hidePhotoChooser();
+    public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon) {
+        hidePhotoPicker();
         switch (icon) {
             case ANDROID_CAMERA:
                 launchCamera();
@@ -738,24 +745,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
                 break;
-            case PHOTO_CHOOSER_PERMISSION_REQUEST_CODE:
-                boolean canShowPhotoChooser = true;
+            case PHOTO_PICKER_PERMISSION_REQUEST_CODE:
+                boolean canShowPhotoPicker = true;
                 for (int i = 0; i < grantResults.length; ++i) {
                     switch (permissions[i]) {
                         case Manifest.permission.CAMERA:
                             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                canShowPhotoChooser = false;
+                                canShowPhotoPicker = false;
                             }
                             break;
                         case Manifest.permission.WRITE_EXTERNAL_STORAGE:
                             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                canShowPhotoChooser = false;
+                                canShowPhotoPicker = false;
                             }
                             break;
                     }
                 }
-                if (canShowPhotoChooser) {
-                    showPhotoChooser();
+                if (canShowPhotoPicker) {
+                    showPhotoPicker();
                 } else {
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
@@ -849,9 +856,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void openContextMenu(View view) {
-        // if we're using the native photo chooser, ignore the request - if we're not using
-        // the photo chooser, then this will show the "seven item menu monstrosity"
-        if (enablePhotoChooser()) {
+        // if we're using the native photo picker, ignore the request - if we're not using
+        // the photo picker, then this will show the "seven item menu monstrosity"
+        if (enablePhotoPicker()) {
             return;
         }
         if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
@@ -1065,8 +1072,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onBackPressed() {
-        if (isPhotoChooserShowing()) {
-            hidePhotoChooser();
+        if (isPhotoPickerShowing()) {
+            hidePhotoPicker();
             return;
         }
 
@@ -2176,11 +2183,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        if (enablePhotoChooser()) {
-            if (!isPhotoChooserShowing()) {
-                showPhotoChooser();
+        if (enablePhotoPicker()) {
+            if (!isPhotoPickerShowing()) {
+                showPhotoPicker();
             } else {
-                hidePhotoChooser();
+                hidePhotoPicker();
             }
         }
     }
@@ -2208,17 +2215,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        MediaModel media = null;
-
-        List<MediaModel> localMediaList = mMediaStore.getLocalSiteMedia(mSite);
-        for (MediaModel localMedia : localMediaList) {
-            if (String.valueOf(localMedia.getId()).equals(mediaId)) {
-                media = localMedia;
-                break;
-            }
+        if (TextUtils.isEmpty(mediaId)) {
+            AppLog.e(T.MEDIA, "Invalid media id passed to onMediaRetryClicked");
+            return;
+        }
+        MediaModel media = mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId));
+        if (media == null) {
+            AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
+            return;
         }
 
-        if (media != null) {
+        if (UploadState.valueOf(media.getUploadState()) == UploadState.UPLOADED) {
+            // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
+            // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
+            if (mEditorMediaUploadListener != null) {
+                mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                        FluxCUtils.mediaFileFromMediaModel(media));
+            }
+        } else {
             media.setUploadState(UploadState.QUEUED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
@@ -2230,10 +2244,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
-        MediaModel media = new MediaModel();
-        media.setMediaId(Long.valueOf(mediaId));
-        MediaPayload payload = new MediaPayload(mSite, media);
-        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        if (!TextUtils.isEmpty(mediaId)) {
+            int localMediaId = Integer.valueOf(mediaId);
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId));
+        } else {
+            // Passed mediaId is incorrect: cancel all uploads
+            ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(true));
+        }
     }
 
     @Override

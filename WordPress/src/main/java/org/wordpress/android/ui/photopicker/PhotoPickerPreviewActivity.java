@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photochooser;
+package org.wordpress.android.ui.photopicker;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -21,7 +21,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class PhotoChooserPreviewActivity extends AppCompatActivity {
+public class PhotoPickerPreviewActivity extends AppCompatActivity {
 
     public static final String ARG_MEDIA_URI = "media_uri";
     public static final String ARG_IS_VIDEO = "is_video";
@@ -35,7 +35,7 @@ public class PhotoChooserPreviewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.photo_chooser_preview_activity);
+        setContentView(R.layout.photo_picker_preview_activity);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
 

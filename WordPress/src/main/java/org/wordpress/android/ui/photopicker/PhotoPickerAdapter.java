@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.photochooser;
+package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -27,9 +27,9 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
-import static org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.NUM_COLUMNS;
+import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
 
-class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.ThumbnailViewHolder> {
+class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
 
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .85f;
@@ -37,14 +37,14 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     /*
      * used by this adapter to communicate with the owning fragment
      */
-    protected interface PhotoChooserAdapterListener {
+    protected interface PhotoPickerAdapterListener {
         void onItemTapped(Uri mediaUri);
         void onItemDoubleTapped(View view, Uri mediaUri);
         void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
     }
 
-    private class PhotoChooserItem {
+    private class PhotoPickerItem {
         private long _id;
         private Uri uri;
         private boolean isVideo;
@@ -67,15 +67,17 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     private int mThumbWidth;
     private int mThumbHeight;
 
+    private boolean mAllowMultiSelect;
     private boolean mIsMultiSelectEnabled;
+    private boolean mPhotosOnly;
 
     private final ThumbnailLoader mThumbnailLoader;
-    private final PhotoChooserAdapterListener mListener;
+    private final PhotoPickerAdapterListener mListener;
     private final LayoutInflater mInflater;
-    private final ArrayList<PhotoChooserItem> mMediaList = new ArrayList<>();
+    private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
 
-    public PhotoChooserAdapter(Context context,
-                               PhotoChooserAdapterListener listener) {
+    public PhotoPickerAdapter(Context context,
+                              PhotoPickerAdapterListener listener) {
         super();
         mContext = context;
         mListener = listener;
@@ -125,13 +127,13 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
 
     @Override
     public ThumbnailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.photo_chooser_thumbnail, parent, false);
+        View view = mInflater.inflate(R.layout.photo_picker_thumbnail, parent, false);
         return new ThumbnailViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
-        PhotoChooserItem item = getItemAtPosition(position);
+        PhotoPickerItem item = getItemAtPosition(position);
         if (item == null) {
             return;
         }
@@ -155,9 +157,9 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
         mThumbnailLoader.loadThumbnail(holder.imgThumbnail, item._id, item.isVideo);
     }
 
-    private PhotoChooserItem getItemAtPosition(int position) {
+    private PhotoPickerItem getItemAtPosition(int position) {
         if (!isValidPosition(position)) {
-            AppLog.w(AppLog.T.POSTS, "photo chooser > invalid position in getItemAtPosition");
+            AppLog.w(AppLog.T.POSTS, "photo picker > invalid position in getItemAtPosition");
             return null;
         }
         return mMediaList.get(position);
@@ -170,6 +172,14 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
     boolean isVideoUri(Uri uri) {
         int index = indexOfUri(uri);
         return index > -1 && getItemAtPosition(index).isVideo;
+    }
+
+    void setAllowMultiSelect(boolean allow) {
+        mAllowMultiSelect = allow;
+    }
+
+    void setShowPhotosOnly(boolean value) {
+        mPhotosOnly = value;
     }
 
     void setMultiSelectEnabled(boolean enabled) {
@@ -187,7 +197,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
      * toggles the selection state of the item at the passed position
      */
     private void toggleSelection(ThumbnailViewHolder holder, int position) {
-        PhotoChooserItem item = getItemAtPosition(position);
+        PhotoPickerItem item = getItemAtPosition(position);
         if (item == null) {
             return;
         }
@@ -302,7 +312,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
                 @Override
                 public void onLongPress(MotionEvent e) {
                     int position = getAdapterPosition();
-                    if (isValidPosition(position)) {
+                    if (isValidPosition(position) && mAllowMultiSelect) {
                         if (!mIsMultiSelectEnabled) {
                             setMultiSelectEnabled(true);
                         }
@@ -325,7 +335,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
      * builds the list of media items from the device
      */
     private class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
-        private final ArrayList<PhotoChooserItem> tmpList = new ArrayList<>();
+        private final ArrayList<PhotoPickerItem> tmpList = new ArrayList<>();
         private final boolean reload;
         private static final String ID_COL = MediaStore.Images.Media._ID;
 
@@ -340,12 +350,14 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
 
             // videos
-            addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
+            if (!mPhotosOnly) {
+                addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
+            }
 
             // sort by id in reverse (newest first)
-            Collections.sort(tmpList, new Comparator<PhotoChooserItem>() {
+            Collections.sort(tmpList, new Comparator<PhotoPickerItem>() {
                 @Override
-                public int compare(PhotoChooserItem o1, PhotoChooserItem o2) {
+                public int compare(PhotoPickerItem o1, PhotoPickerItem o2) {
                     long id1 = o1._id;
                     long id2 = o2._id;
                     return (id2 < id1) ? -1 : ((id1 == id2) ? 0 : 1);
@@ -372,7 +384,7 @@ class PhotoChooserAdapter extends RecyclerView.Adapter<PhotoChooserAdapter.Thumb
             try {
                 int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
                 while (cursor.moveToNext()) {
-                    PhotoChooserItem item = new PhotoChooserItem();
+                    PhotoPickerItem item = new PhotoPickerItem();
                     item._id = cursor.getLong(idIndex);
                     item.uri = Uri.withAppendedPath(baseUri, "" + item._id);
                     item.isVideo = isVideo;
