@@ -12,7 +12,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -30,6 +32,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -70,7 +73,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private String mNoteId;
 
     private WPViewPager mViewPager;
+    private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
+    private boolean mIsReaderSwipeToNavigateShown;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,52 +99,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
         }
 
-        if (mNoteId == null) {
-            showErrorToastAndFinish();
-            return;
-        }
-
-        final Note note = NotificationsTable.getNoteById(mNoteId);
-        if (note == null) {
-            showErrorToastAndFinish();
-            return;
-        }
-
-        // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
-        NotificationsActions.updateSeenTimestamp(note);
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("notification_type", note.getType());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
-
         //set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
-        NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
-        if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
-            filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
-        }
-        mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
+        mIsReaderSwipeToNavigateShown = AppPrefs.isReaderSwipeToNavigateShown();
 
-        //set title
-        setActionBarTitleForNote(note);
-        markNoteAsRead(note);
-
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
-                AppPrefs.setNotificationsSwipeToNavigateShown(true);
-                //change the action bar title for the current note
-                Note currentNote = mAdapter.getNoteAtPosition(position);
-                if (currentNote != null) {
-                    setActionBarTitleForNote(currentNote);
-                    markNoteAsRead(currentNote);
-                }
-            }
-        });
+        Note note = NotificationsTable.getNoteById(mNoteId);
+        updateUIAndNote(note == null);
 
         // Hide the keyboard, unless we arrived here from the 'Reply' action in a push notification
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
@@ -147,6 +115,82 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
     }
 
+    private void updateUIAndNote(boolean doRefresh) {
+        if (mNoteId == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+
+        if (doRefresh) {
+            setProgressVisible(true);
+            // here start the service and wait for it
+            NotificationsUpdateService.startService(this, mNoteId);
+            return;
+        }
+
+        Note note = NotificationsTable.getNoteById(mNoteId);
+        if (note == null) {
+            // no note found
+            showErrorToastAndFinish();
+            return;
+        }
+
+        NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
+        if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
+            filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
+        }
+
+        mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
+
+        resetOnPageChangeListener();
+
+        //set title
+        setActionBarTitleForNote(note);
+        markNoteAsRead(note);
+
+        // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
+        NotificationsActions.updateSeenTimestamp(note);
+
+        // analytics tracking
+        Map<String, String> properties = new HashMap<>();
+        properties.put("notification_type", note.getType());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
+
+        setProgressVisible(false);
+    }
+
+    private void resetOnPageChangeListener() {
+        if (mOnPageChangeListener != null) {
+            mViewPager.removeOnPageChangeListener(mOnPageChangeListener);
+        } else {
+            mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
+                    if (!mIsReaderSwipeToNavigateShown) {
+                        AppPrefs.setNotificationsSwipeToNavigateShown(true);
+                    }
+                    //change the action bar title for the current note
+                    Note currentNote = mAdapter.getNoteAtPosition(position);
+                    if (currentNote != null) {
+                        setActionBarTitleForNote(currentNote);
+                        markNoteAsRead(currentNote);
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            };
+        }
+        mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -170,11 +214,18 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        EventBus.getDefault().registerSticky(this);
         //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
         //using swipe on the ViewPager
         if (!AppPrefs.isNotificationsSwipeToNavigateShown() && (mAdapter.getCount() > 1)) {
             WPSwipeSnackbar.show(mViewPager);
         }
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     private void showErrorToastAndFinish() {
@@ -301,7 +352,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         showStatsActivityForSite(site, rangeType);
     }
 
-    public void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
+    private void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
         if (isFinishing()) return;
 
         if (rangeType == NoteBlockRangeType.FOLLOW) {
@@ -339,6 +390,14 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
     }
 
+    private void setProgressVisible(boolean visible) {
+        final ProgressBar progress =
+                (ProgressBar) findViewById(R.id.progress_loading);
+        if (progress != null) {
+            progress.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
+    }
+
     @Override
     public void onModerateCommentForNote(Note note, CommentStatus newStatus) {
         Intent resultIntent = new Intent();
@@ -349,9 +408,31 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         finish();
     }
 
+    @SuppressWarnings("unused")
+    public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
+        setProgressVisible(false);
+        updateUIAndNote(false);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
+        setProgressVisible(false);
+        if (mNoteId == null) {
+            showErrorToastAndFinish();
+            return;
+        }
+
+        Note note = NotificationsTable.getNoteById(mNoteId);
+        if (note == null) {
+            // no note found
+            showErrorToastAndFinish();
+            return;
+        }
+    }
+
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
-        private ArrayList<Note> mNoteList;
+        final private ArrayList<Note> mNoteList;
 
         NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
             super(fm);
@@ -397,6 +478,5 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             else
                 return null;
         }
-
     }
 }
