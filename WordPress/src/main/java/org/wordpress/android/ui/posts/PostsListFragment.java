@@ -175,13 +175,19 @@ public class PostsListFragment extends Fragment
             }
         });
 
+        if (savedInstanceState == null) {
+            requestPosts(false);
+        }
+
+        initSwipeToRefreshHelper(view);
+
         return view;
     }
 
-    private void initSwipeToRefreshHelper() {
+    private void initSwipeToRefreshHelper(View view) {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
-                (CustomSwipeRefreshLayout) getView().findViewById(R.id.ptr_layout),
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -217,19 +223,6 @@ public class PostsListFragment extends Fragment
     private void loadPosts(LoadMode mode) {
         if (getPostListAdapter() != null) {
             getPostListAdapter().loadPosts(mode);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
-
-        initSwipeToRefreshHelper();
-
-        // since setRetainInstance(true) is used, we only need to request latest
-        // posts the first time this is called (ie: not after device rotation)
-        if (bundle == null && NetworkUtils.checkConnection(getActivity())) {
-            requestPosts(false);
         }
     }
 

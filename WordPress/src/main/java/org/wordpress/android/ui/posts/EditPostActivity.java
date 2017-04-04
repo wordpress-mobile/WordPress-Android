@@ -94,9 +94,11 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment;
 import org.wordpress.android.ui.posts.photochooser.PhotoChooserFragment.PhotoChooserIcon;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
+import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.stats.StatsEvents;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -140,6 +142,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
@@ -2104,17 +2108,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaRetryClicked(String mediaId) {
-        MediaModel media = null;
-
-        List<MediaModel> localMediaList = mMediaStore.getLocalSiteMedia(mSite);
-        for (MediaModel localMedia : localMediaList) {
-            if (String.valueOf(localMedia.getId()).equals(mediaId)) {
-                media = localMedia;
-                break;
-            }
+        if (TextUtils.isEmpty(mediaId)) {
+            AppLog.e(T.MEDIA, "Invalid media id passed to onMediaRetryClicked");
+            return;
+        }
+        MediaModel media = mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId));
+        if (media == null) {
+            AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
+            return;
         }
 
-        if (media != null) {
+        if (UploadState.valueOf(media.getUploadState()) == UploadState.UPLOADED) {
+            // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
+            // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
+            if (mEditorMediaUploadListener != null) {
+                mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                        FluxCUtils.mediaFileFromMediaModel(media));
+            }
+        } else {
             media.setUploadState(UploadState.QUEUED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
@@ -2126,10 +2137,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
-        MediaModel media = new MediaModel();
-        media.setMediaId(Long.valueOf(mediaId));
-        MediaPayload payload = new MediaPayload(mSite, media);
-        mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+        if (!TextUtils.isEmpty(mediaId)) {
+            int localMediaId = Integer.valueOf(mediaId);
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId));
+        } else {
+            // Passed mediaId is incorrect: cancel all uploads
+            ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(true));
+        }
     }
 
     @Override

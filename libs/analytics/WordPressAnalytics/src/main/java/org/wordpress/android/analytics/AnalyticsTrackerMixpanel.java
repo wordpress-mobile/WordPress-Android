@@ -191,7 +191,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
-            if (getAnonID() != null) {
+            if (getAnonID() != null && getWordPressComUserName() != null) {
                 mMixpanel.alias(getWordPressComUserName(), getAnonID());
                 clearAnonID();
             } else {
