@@ -43,6 +43,6 @@
         android:layout_alignParentBottom="true"
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_medium"
-        android:src="@drawable/ic_zoom_in_24px" />
+        app:srcCompat="@drawable/ic_zoom_in_24px" />
 
 </RelativeLayout>
