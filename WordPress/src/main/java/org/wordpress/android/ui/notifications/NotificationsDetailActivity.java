@@ -412,7 +412,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     public void onEventMainThread(NotificationEvents.NotificationsRefreshError error) {
         setProgressVisible(false);
-        ToastUtils.showToast(this, getString(R.string.error_refresh_notification));
+        showErrorToastAndFinish();
     }
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
