@@ -39,6 +39,11 @@
     -->
     <declare-styleable name="WPTextView">
         <attr name="fixWidowWords" format="boolean"/>
+        <!-- http://stackoverflow.com/questions/35761636/is-it-possible-to-use-vectordrawable-in-buttons-and-textviews-using-androiddraw -->
+        <attr name="drawableLeftCompat" format="reference"/>
+        <attr name="drawableRightCompat" format="reference"/>
+        <attr name="drawableTopCompat" format="reference"/>
+        <attr name="drawableBottomCompat" format="reference"/>
     </declare-styleable>
 
     <!--
