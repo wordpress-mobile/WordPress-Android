@@ -4,7 +4,6 @@
     included by ReaderPostDetailFragment
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_post_detail_footer"
     android:layout_width="match_parent"
