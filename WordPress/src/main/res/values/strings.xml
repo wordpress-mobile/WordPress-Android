@@ -1573,6 +1573,7 @@
     <string name="delete_site_progress">Deleting site…</string>
     <string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
     <string name="premium_upgrades_title">Premium Upgrades</string>
+    <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
 
