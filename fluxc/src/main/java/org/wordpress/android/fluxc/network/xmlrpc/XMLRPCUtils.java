@@ -43,7 +43,7 @@ public class XMLRPCUtils {
         return defaultValue;
     }
 
-    public static <T> T safeGetMap(@NonNull Map<?, ?> map, String key, T defaultValue) {
+    public static <T> T safeGetNestedMapValue(@NonNull Map<?, ?> map, String key, T defaultValue) {
         if (!map.containsKey(key)) {
             return defaultValue;
         }
