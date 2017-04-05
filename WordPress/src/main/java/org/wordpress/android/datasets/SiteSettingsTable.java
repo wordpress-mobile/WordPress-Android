@@ -39,9 +39,10 @@ public final class SiteSettingsTable {
         }
     }
 
-    public static void addImageResizeWidthToSiteSettingsTable(SQLiteDatabase db) {
+    public static void addImageResizeWidthAndQualityToSiteSettingsTable(SQLiteDatabase db) {
         if (db != null) {
             db.execSQL(SiteSettingsModel.ADD_IMAGE_RESIZE_WIDTH);
+            db.execSQL(SiteSettingsModel.ADD_IMAGE_COMPRESSION_QUALITY);
         }
     }
 

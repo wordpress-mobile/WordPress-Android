@@ -182,6 +182,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
     private DetailListPreference mImageWidthPref;
+    private DetailListPreference mImageQualityPref;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -515,6 +516,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mImageWidthPref,
                     mSiteSettings.getMaxImageWidth(),
                     mSiteSettings.getMaxImageWidth());
+        } else if (preference == mImageQualityPref) {
+            mSiteSettings.setImageQuality(Integer.parseInt(newValue.toString()));
+            setDetailListPreferenceValue(mImageQualityPref,
+                    newValue.toString(),
+                    newValue.toString());
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -657,6 +663,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
         mOptimizedImage = (WPSwitchPreference) getChangePref(R.string.pref_key_optimize_image);
         mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
+        mImageQualityPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_quality);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
@@ -688,6 +695,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mImageWidthPref,
                 mSiteSettings.getMaxImageWidth(),
                 mSiteSettings.getMaxImageWidth());
+        setDetailListPreferenceValue(mImageQualityPref,
+                String.valueOf(mSiteSettings.getImageQuality()),
+                String.valueOf(mSiteSettings.getImageQuality()));
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -906,6 +916,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mImageWidthPref,
                 mSiteSettings.getMaxImageWidth(),
                 mSiteSettings.getMaxImageWidth());
+        setDetailListPreferenceValue(mImageQualityPref,
+                String.valueOf(mSiteSettings.getImageQuality()),
+                String.valueOf(mSiteSettings.getImageQuality()));
 
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());

@@ -284,6 +284,10 @@ public abstract class SiteSettingsInterface {
         return resizeWidth;
     }
 
+    public int getImageQuality() {
+        return mSettings.imageQualitySetting > 1 ? mSettings.imageQualitySetting : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
+    }
+
     public @NonNull Map<String, String> getFormats() {
         mSettings.postFormats = new HashMap<>();
         String[] postFormatDisplayNames = mActivity.getResources().getStringArray(R.array.post_format_display_names);
@@ -567,6 +571,10 @@ public abstract class SiteSettingsInterface {
         mSettings.maxImageWidth = width;
     }
 
+    public void setImageQuality(int quality) {
+        mSettings.imageQualitySetting = quality;
+    }
+
     public void setAllowComments(boolean allowComments) {
         mSettings.allowComments = allowComments;
     }
@@ -783,6 +791,7 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.languageId = mSettings.languageId;
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
             mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
+            mRemoteSettings.imageQualitySetting = mSettings.imageQualitySetting;
             localSettings.close();
             notifyUpdatedOnUiThread(null);
         } else {

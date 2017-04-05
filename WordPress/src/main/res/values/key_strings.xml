@@ -46,6 +46,7 @@
     <string name="pref_key_site_this_device" translatable="false">wp_pref_site_default_this_device</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
+    <string name="pref_key_site_image_quality" translatable="false">wp_pref_site_default_image_quality</string>
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
     <string name="pref_key_site_allow_comments_nested" translatable="false">wp_pref_site_allow_comments_nested</string>
@@ -284,6 +285,15 @@
         <item>2000</item>
         <item>2500</item>
         <item>3000</item>
+    </string-array>
+
+    <string-array name="site_settings_image_quality_values_and_entries" translatable="false">
+        <item>70</item>
+        <item>75</item>
+        <item>80</item>
+        <item>85</item>
+        <item>90</item>
+        <item>95</item>
     </string-array>
 
 </resources>

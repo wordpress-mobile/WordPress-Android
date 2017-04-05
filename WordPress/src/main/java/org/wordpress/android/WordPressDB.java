@@ -205,7 +205,7 @@ public class WordPressDB {
                 clearEmptyCacheFiles(ctx);
                 currentVersion++;
             case 54:
-                SiteSettingsTable.addImageResizeWidthToSiteSettingsTable(db);
+                SiteSettingsTable.addImageResizeWidthAndQualityToSiteSettingsTable(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
