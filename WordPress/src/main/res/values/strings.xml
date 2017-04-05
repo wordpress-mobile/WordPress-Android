@@ -1568,12 +1568,11 @@
     <string name="export_site_hint">Export your site to an XML file</string>
     <string name="are_you_sure">Are You Sure?</string>
     <string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
-    <string name="delete_site_warning">All your posts, images, and data will be deleted. And this site’s address (%s) will be lost.\nBe careful! Once a site is deleted, it cannot be recovered. Please be sure before you proceed.</string>
+    <string name="delete_site_warning">All your posts, images, and data will be deleted. And this site’s address (%1$s%2$s%3$s) will be lost.\n%4$sBe careful! Once a site is deleted, it cannot be recovered. Please be sure before you proceed.%5$s</string>
     <string name="delete_site_hint">Delete site</string>
     <string name="delete_site_progress">Deleting site…</string>
     <string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
     <string name="premium_upgrades_title">Premium Upgrades</string>
-    <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
 

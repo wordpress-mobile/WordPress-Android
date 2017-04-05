@@ -58,6 +58,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -857,7 +858,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!isAdded() || mIsFragmentPaused) return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(getString(R.string.delete_site_warning, UrlUtils.getHost(mSite.getUrl())));
+        String text = getString(R.string.delete_site_warning,
+                "<b>", UrlUtils.getHost(mSite.getUrl()), "</b>", "<i>", "</i>");
+        builder.setMessage(HtmlUtils.fromHtml(text));
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
