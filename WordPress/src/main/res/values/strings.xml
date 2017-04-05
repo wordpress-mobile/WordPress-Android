@@ -501,6 +501,7 @@
     <string name="site_settings_whitelist_all_summary">Comments from all users</string>
     <string name="site_settings_whitelist_known_summary">Comments from known users</string>
     <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
+    <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
 
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
@@ -558,7 +559,6 @@
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
-    <string name="site_settings_optimize_images_hint">Enable to save bandwidth on mobile connections</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>

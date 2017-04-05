@@ -181,6 +181,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
+    private DetailListPreference mImageWidthPref;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -505,9 +506,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
         } else if (preference == mOptimizedImage) {
             mSiteSettings.setOptimizedImage((Boolean) newValue);
+            mImageWidthPref.setEnabled((Boolean) newValue);
             Map<String, Object> properties = new HashMap<>();
             properties.put("enabled", newValue);
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, properties);
+        } else if (preference == mImageWidthPref) {
+            mSiteSettings.setImageResizeWidth(newValue.toString());
+            setDetailListPreferenceValue(mImageWidthPref,
+                    mSiteSettings.getMaxImageWidth(),
+                    mSiteSettings.getMaxImageWidth());
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -649,6 +656,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
         mOptimizedImage = (WPSwitchPreference) getChangePref(R.string.pref_key_optimize_image);
+        mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
@@ -677,6 +685,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // Set Local settings
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
+        setDetailListPreferenceValue(mImageWidthPref,
+                mSiteSettings.getMaxImageWidth(),
+                mSiteSettings.getMaxImageWidth());
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -688,7 +699,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mOptimizedImage, mDeleteSitePref
+                mDeleteSitePref
         };
 
         for (Preference preference : editablePreference) {
@@ -890,7 +901,12 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setPreferencesFromSiteSettings() {
-        mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
+        boolean isOptimizeImagesEnable = mSiteSettings.getOptimizedImage();
+        mOptimizedImage.setChecked(isOptimizeImagesEnable);
+        setDetailListPreferenceValue(mImageWidthPref,
+                mSiteSettings.getMaxImageWidth(),
+                mSiteSettings.getMaxImageWidth());
+
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
         changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());

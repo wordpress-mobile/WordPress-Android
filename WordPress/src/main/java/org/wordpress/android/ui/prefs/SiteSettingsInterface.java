@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -22,9 +23,12 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
@@ -270,6 +274,14 @@ public abstract class SiteSettingsInterface {
 
     public boolean getOptimizedImage() {
         return mSettings.optimizedImage;
+    }
+
+    public String getMaxImageWidth() {
+        String resizeWidth = mSettings.maxImageWidth;
+        if (TextUtils.isEmpty(resizeWidth)) {
+            resizeWidth = String.valueOf(WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH);
+        }
+        return resizeWidth;
     }
 
     public @NonNull Map<String, String> getFormats() {
@@ -551,6 +563,10 @@ public abstract class SiteSettingsInterface {
         mSettings.optimizedImage = optimizeImage;
     }
 
+    public void setImageResizeWidth(String width) {
+        mSettings.maxImageWidth = width;
+    }
+
     public void setAllowComments(boolean allowComments) {
         mSettings.allowComments = allowComments;
     }
@@ -766,6 +782,7 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
+            mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
             localSettings.close();
             notifyUpdatedOnUiThread(null);
         } else {
