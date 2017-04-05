@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:visibility="gone">
-                <CheckBox
+                <org.wordpress.android.widgets.WPCheckBox
                     android:id="@+id/stats_checkbox_visitors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
