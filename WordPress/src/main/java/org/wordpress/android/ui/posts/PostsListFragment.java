@@ -25,9 +25,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
@@ -352,17 +354,6 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * PostMediaService has downloaded the media info for a post's featured image, tell
-     * the adapter so it can show the featured image now that we have its URL
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        if (isAdded() && getPostListAdapter() != null) {
-            getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
-        }
-    }
-
-    /*
      * upload start, reload so correct status on uploading post appears
      */
     @SuppressWarnings("unused")
@@ -637,6 +628,21 @@ public class PostsListFragment extends Fragment
     public void onPostUploaded(OnPostUploaded event) {
         if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
+        }
+    }
+
+    /*
+     * Media info for a post's featured image has been downloaded, tell
+     * the adapter so it can show the featured image now that we have its URL
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (isAdded() && !event.isError() && mPostsListAdapter != null) {
+            if (event.mediaList != null && event.mediaList.size() > 0) {
+                MediaModel mediaModel = event.mediaList.get(0);
+                mPostsListAdapter.mediaChanged(mediaModel);
+            }
         }
     }
 }
