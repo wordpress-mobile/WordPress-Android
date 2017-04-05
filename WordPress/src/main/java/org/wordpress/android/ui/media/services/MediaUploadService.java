@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -45,6 +46,7 @@ public class MediaUploadService extends Service {
     private MediaModel mCurrentUpload;
 
     private List<MediaModel> mUploadQueue = new ArrayList<>();
+    private SparseArray<Long> mUploadQueueTime = new SparseArray<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -123,12 +125,12 @@ public class MediaUploadService extends Service {
         // TODO: Don't update the state here, it needs to be done in FluxC
         mCurrentUpload.setUploadState(UploadState.FAILED.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentUpload));
-        completeCurrentUpload();
         // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
         // event.media, event.error
         Map<String, Object> properties = new HashMap<>();
         properties.put("error_type", event.error.type.name());
         trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, mCurrentUpload, properties);
+        completeCurrentUpload();
         uploadNextInQueue();
     }
 
@@ -226,6 +228,7 @@ public class MediaUploadService extends Service {
 
     private void cancelAllUploads() {
         mUploadQueue.clear();
+        mUploadQueueTime.clear();
         cancelCurrentUpload();
     }
 
@@ -307,10 +310,20 @@ public class MediaUploadService extends Service {
             AppLog.e(AppLog.T.MEDIA, "Cannot track media upload service events if the original media is null!!");
             return;
         }
+
         Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
         if (properties != null) {
             mediaProperties.putAll(properties);
         }
+
+        long currentTime = System.currentTimeMillis();
+        if (stat == AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED) {
+            mUploadQueueTime.put(media.getId(), currentTime);
+        } else if(stat == AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS || stat == AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR) {
+            mediaProperties.put("upload_time_ms", currentTime - mUploadQueueTime.get(media.getId(), currentTime));
+            mUploadQueueTime.remove(media.getId());
+        }
+
         AnalyticsTracker.track(stat, mediaProperties);
     }
 }

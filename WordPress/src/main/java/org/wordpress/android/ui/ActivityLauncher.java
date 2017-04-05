@@ -139,13 +139,15 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
-    public static void viewCurrentSite(Context context, SiteModel site) {
+    public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
         if (site == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE, site);
+        AnalyticsTracker.Stat stat = openFromHeader ? AnalyticsTracker.Stat.OPENED_VIEW_SITE_FROM_HEADER
+                : AnalyticsTracker.Stat.OPENED_VIEW_SITE;
+        AnalyticsUtils.trackWithSiteDetails(stat, site);
         openUrlExternal(context, site.getUrl());
     }
 
