@@ -142,6 +142,7 @@ public final class AnalyticsTracker {
         OPENED_PAGES,
         OPENED_COMMENTS,
         OPENED_VIEW_SITE,
+        OPENED_VIEW_SITE_FROM_HEADER,
         OPENED_VIEW_ADMIN,
         OPENED_MEDIA_LIBRARY,
         OPENED_BLOG_SETTINGS,
