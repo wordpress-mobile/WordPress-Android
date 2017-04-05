@@ -638,10 +638,10 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        if (isAdded() && !event.isError() && getPostListAdapter() != null) {
+        if (isAdded() && !event.isError() && mPostsListAdapter != null) {
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);
-                getPostListAdapter().mediaChanged(mediaModel);
+                mPostsListAdapter.mediaChanged(mediaModel);
             }
         }
     }
