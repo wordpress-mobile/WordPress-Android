@@ -299,7 +299,7 @@ public class MediaUploadService extends Service {
 
     private void stopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
-        if (mUploadQueue == 0) {
+        if (mUploadQueue.size() == 0) {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
