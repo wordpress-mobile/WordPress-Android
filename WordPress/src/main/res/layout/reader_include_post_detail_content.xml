@@ -28,7 +28,7 @@
 
     <View
         android:id="@+id/layout_liking_users_divider"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/reader_webview_width"
         android:layout_height="1dp"
         android:layout_below="@id/reader_webview"
         android:layout_marginTop="@dimen/margin_medium"
@@ -54,7 +54,7 @@
     <!-- liking avatars are inserted into this view at runtime -->
     <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
         android:id="@+id/layout_liking_users_view"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/reader_webview_width"
         android:layout_height="@dimen/avatar_sz_small"
         android:layout_below="@id/text_liking_users_label"
         android:layout_marginBottom="@dimen/margin_medium"
