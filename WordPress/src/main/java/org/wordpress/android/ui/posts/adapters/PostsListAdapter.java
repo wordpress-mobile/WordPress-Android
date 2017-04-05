@@ -664,9 +664,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // Multiple posts could have the same featured image
         List<Integer> indexList = PostUtils.indexesOfFeaturedMediaIdInList(mediaModel.getMediaId(), mPosts);
         for (int position : indexList) {
-            if (isValidPostPosition(position)) {
-                int postId = mPosts.get(position).getId();
-                mFeaturedImageUrls.put(postId, mediaModel.getUrl());
+            PostModel post = getItem(position);
+            if (post != null) {
+                mFeaturedImageUrls.put(post.getId(), mediaModel.getUrl());
                 notifyItemChanged(position);
             }
         }
