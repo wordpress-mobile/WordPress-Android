@@ -43,7 +43,7 @@ import javax.inject.Inject;
 public class MediaUploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
-    private List<MediaModel> mQueue;
+    private List<MediaModel> mUploadQueue = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -71,8 +71,7 @@ public class MediaUploadService extends Service {
 
     @Override
     public void onDestroy() {
-        List<MediaModel> queue = getUploadQueue();
-        for (MediaModel oneUpload : queue) {
+        for (MediaModel oneUpload : mUploadQueue) {
             cancelUpload(oneUpload);
         }
         mDispatcher.unregister(this);
@@ -99,14 +98,6 @@ public class MediaUploadService extends Service {
         uploadNextInQueue();
 
         return START_REDELIVER_INTENT;
-    }
-
-    @NonNull
-    private List<MediaModel> getUploadQueue() {
-        if (mQueue == null) {
-            mQueue = new ArrayList<>();
-        }
-        return mQueue;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -205,14 +196,13 @@ public class MediaUploadService extends Service {
     private void completeUploadWithId(int id) {
         MediaModel media = getMediaFromQueueById(id);
         if (media != null) {
-            getUploadQueue().remove(media);
+            mUploadQueue.remove(media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
 
     private MediaModel getMediaFromQueueById(int id) {
-        List<MediaModel> queue = getUploadQueue();
-        for (MediaModel media : queue) {
+        for (MediaModel media : mUploadQueue) {
             if (media.getId() == id)
                 return media;
         }
@@ -220,15 +210,15 @@ public class MediaUploadService extends Service {
     }
 
     private MediaModel getNextMediaToUpload() {
-        if (!getUploadQueue().isEmpty()) {
-            return getUploadQueue().get(0);
+        if (!mUploadQueue.isEmpty()) {
+            return mUploadQueue.get(0);
         }
         return null;
     }
 
     private void addUniqueMediaToQueue(MediaModel media) {
         if (media != null) {
-            for (MediaModel queuedMedia : getUploadQueue()) {
+            for (MediaModel queuedMedia : mUploadQueue) {
                 if (queuedMedia.getLocalSiteId() == media.getLocalSiteId() &&
                         StringUtils.equals(queuedMedia.getFilePath(), media.getFilePath())) {
                     return;
@@ -236,7 +226,7 @@ public class MediaUploadService extends Service {
             }
 
             // no match found in queue
-            getUploadQueue().add(media);
+            mUploadQueue.add(media);
         }
     }
 
@@ -309,7 +299,7 @@ public class MediaUploadService extends Service {
 
     private void stopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
-        if (getUploadQueue().size() == 0) {
+        if (mUploadQueue == 0) {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
