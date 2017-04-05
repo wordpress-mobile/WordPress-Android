@@ -561,6 +561,12 @@ public class ImageUtils {
             // Can't read the src dimensions.
             return path;
         }
+
+        // do not optimize if original-size and 100% quality are set.
+        if (maxImageWidth == Integer.MAX_VALUE && quality == 100) {
+            return path;
+        }
+
         if (selectedWidth > maxImageWidth) {
             selectedWidth = maxImageWidth;
         }

@@ -21,6 +21,12 @@ public class WPMediaUtils {
         // Site Settings are implemented on .com/Jetpack sites only
         if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
             Integer resizeWidth = MediaUtils.getImageWidthSettingFromString(siteSettings.getMaxImageWidth());
+
+            // do not optimize if original-size and 100% quality are set.
+            if (resizeWidth == Integer.MAX_VALUE && OPTIMIZE_IMAGE_ENCODER_QUALITY == 100) {
+                return null;
+            }
+
             String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, OPTIMIZE_IMAGE_ENCODER_QUALITY);
             if (optimizedPath == null) {
                 AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
