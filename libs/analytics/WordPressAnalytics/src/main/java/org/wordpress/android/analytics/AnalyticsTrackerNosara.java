@@ -109,6 +109,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_VIEW_SITE:
                 predefinedEventProperties.put("menu_item", "view_site");
                 break;
+            case OPENED_VIEW_SITE_FROM_HEADER:
+                predefinedEventProperties.put("menu_item", "view_site_from_header");
+                break;
             case OPENED_VIEW_ADMIN:
                 predefinedEventProperties.put("menu_item", "view_admin");
                 break;
@@ -433,6 +436,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_COMMENTS:
                 return "site_menu_opened";
             case OPENED_VIEW_SITE:
+                return "site_menu_opened";
+            case OPENED_VIEW_SITE_FROM_HEADER:
                 return "site_menu_opened";
             case OPENED_VIEW_ADMIN:
                 return "site_menu_opened";

@@ -25,9 +25,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
@@ -177,6 +179,12 @@ public class PostsListFragment extends Fragment
             }
         });
 
+        if (savedInstanceState == null) {
+            requestPosts(false);
+        }
+
+        initSwipeToRefreshHelper(view);
+
         return view;
     }
 
@@ -226,10 +234,10 @@ public class PostsListFragment extends Fragment
 
     }
 
-    private void initSwipeToRefreshHelper() {
+    private void initSwipeToRefreshHelper(View view) {
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(
                 getActivity(),
-                (CustomSwipeRefreshLayout) getView().findViewById(R.id.ptr_layout),
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
@@ -265,19 +273,6 @@ public class PostsListFragment extends Fragment
     private void loadPosts(LoadMode mode) {
         if (getPostListAdapter() != null) {
             getPostListAdapter().loadPosts(mode);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
-
-        initSwipeToRefreshHelper();
-
-        // since setRetainInstance(true) is used, we only need to request latest
-        // posts the first time this is called (ie: not after device rotation)
-        if (bundle == null && NetworkUtils.checkConnection(getActivity())) {
-            requestPosts(false);
         }
     }
 
@@ -355,17 +350,6 @@ public class PostsListFragment extends Fragment
     private void hideLoadMoreProgress() {
         if (mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.GONE);
-        }
-    }
-
-    /*
-     * PostMediaService has downloaded the media info for a post's featured image, tell
-     * the adapter so it can show the featured image now that we have its URL
-     */
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostMediaInfoUpdated event) {
-        if (isAdded() && getPostListAdapter() != null) {
-            getPostListAdapter().mediaUpdated(event.getMediaId(), event.getMediaUrl());
         }
     }
 
@@ -644,6 +628,21 @@ public class PostsListFragment extends Fragment
     public void onPostUploaded(OnPostUploaded event) {
         if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
+        }
+    }
+
+    /*
+     * Media info for a post's featured image has been downloaded, tell
+     * the adapter so it can show the featured image now that we have its URL
+     */
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (isAdded() && !event.isError() && mPostsListAdapter != null) {
+            if (event.mediaList != null && event.mediaList.size() > 0) {
+                MediaModel mediaModel = event.mediaList.get(0);
+                mPostsListAdapter.mediaChanged(mediaModel);
+            }
         }
     }
 }

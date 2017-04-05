@@ -191,7 +191,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
-            if (getAnonID() != null) {
+            if (getAnonID() != null && getWordPressComUserName() != null) {
                 mMixpanel.alias(getWordPressComUserName(), getAnonID());
                 clearAnonID();
             } else {
@@ -788,6 +788,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case OPENED_VIEW_SITE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened View Site");
+                break;
+            case OPENED_VIEW_SITE_FROM_HEADER:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Site Menu - Opened View Site From Header");
                 break;
             case OPENED_VIEW_ADMIN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

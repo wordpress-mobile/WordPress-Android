@@ -458,8 +458,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void initInfoButton(View rootView) {
-        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
-        infoBUtton.setOnClickListener(new OnClickListener() {
+        ImageView infoButton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
@@ -470,21 +470,16 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
+    public void onDestroy() {
         mDispatcher.unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mDispatcher.register(this);
     }
 
     @Override
