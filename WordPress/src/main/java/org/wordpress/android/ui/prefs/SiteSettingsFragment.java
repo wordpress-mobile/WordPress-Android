@@ -811,7 +811,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (hasActivePurchases(purchases)) {
                 showPurchasesDialog(site);
             } else {
-                showDeleteSiteDialog();
+                showDeleteSiteWarningDialog();
             }
         } catch (JSONException e) {
             AppLog.e(AppLog.T.API, "Error occurred while trying to delete site: " + e.toString());
@@ -851,6 +851,21 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return false;
+    }
+
+    private void showDeleteSiteWarningDialog() {
+        if (!isAdded() || mIsFragmentPaused) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getString(R.string.delete_site_warning, UrlUtils.getHost(mSite.getUrl())));
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                showDeleteSiteDialog();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 
     private void showDeleteSiteDialog() {
