@@ -1566,7 +1566,7 @@
     <string name="keep_your_content">Keep Your Content</string>
     <string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future.</string>
     <string name="export_site_hint">Export your site to an XML file</string>
-    <string name="are_you_sure">Are You Sure?</string>
+    <string name="delete_site_warning_title">Delete site?</string>
     <string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
     <string name="delete_site_warning">All your posts, images, and data will be deleted. And this site’s address (%1$s%2$s%3$s) will be lost.\n%4$sBe careful! Once a site is deleted, it cannot be recovered. Please be sure before you proceed.%5$s</string>
     <string name="delete_site_hint">Delete site</string>
