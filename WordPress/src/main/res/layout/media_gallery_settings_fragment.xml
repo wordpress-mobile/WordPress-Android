@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/media_gallery_bg"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@color/media_gallery_bg"
+              android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/media_gallery_settings_header"
@@ -97,33 +98,33 @@
                 android:orientation="horizontal"
                 android:weightSum="3" >
 
-                <CheckBox
+                <org.wordpress.android.widgets.WPCheckBox
                     android:id="@+id/media_gallery_type_thumbnail_grid"
                     style="@style/MediaGalleryTypeCheckbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_grid_selector"
+                    app:drawableTopCompat="@drawable/ic_gallery_grid_selector"
                     android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_thumbnail_grid" />
 
-                <CheckBox
+                <org.wordpress.android.widgets.WPCheckBox
                     android:id="@+id/media_gallery_type_tiled"
                     style="@style/MediaGalleryTypeCheckbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_tiled_selector"
+                    app:drawableTopCompat="@drawable/ic_gallery_tiled_selector"
                     android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_tiled" />
 
-                <CheckBox
+                <org.wordpress.android.widgets.WPCheckBox
                     android:id="@+id/media_gallery_type_squares"
                     style="@style/MediaGalleryTypeCheckbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_squares_selector"
+                    app:drawableTopCompat="@drawable/ic_gallery_squares_selector"
                     android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_squares" />
             </LinearLayout>
@@ -134,23 +135,23 @@
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal" >
 
-                <CheckBox
+                <org.wordpress.android.widgets.WPCheckBox
                     android:id="@+id/media_gallery_type_circles"
                     style="@style/MediaGalleryTypeCheckbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_circles_selector"
+                    app:drawableTopCompat="@drawable/ic_gallery_circles_selector"
                     android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_circles" />
 
-                <CheckBox
+                <org.wordpress.android.widgets.WPCheckBox
                     android:id="@+id/media_gallery_type_slideshow"
                     style="@style/MediaGalleryTypeCheckbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_slideshow_selector"
+                    app:drawableTopCompat="@drawable/ic_gallery_slideshow_selector"
                     android:paddingLeft="0dp"
                     android:text="@string/media_gallery_type_slideshow" />
 
