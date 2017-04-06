@@ -355,6 +355,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         if (!from.jetpack) {
             site.setIsWPCom(true);
         }
+        site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         return site;
     }
 
