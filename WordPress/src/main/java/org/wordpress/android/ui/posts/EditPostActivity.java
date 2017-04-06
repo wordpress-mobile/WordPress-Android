@@ -72,6 +72,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -1179,15 +1180,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void publishPost() {
+        AccountModel account = mAccountStore.getAccount();
         // prompt user to verify e-mail before publishing
-        if (!mAccountStore.getAccount().getEmailVerified()) {
+        if (!account.getEmailVerified()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                     .setMessage(R.string.editor_confirm_email_prompt_message)
                     .setPositiveButton(R.string.editor_confirm_email_prompt_positive,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    ToastUtils.showToast(EditPostActivity.this, "Saving post as draft");
+                                    ToastUtils.showToast(EditPostActivity.this, getString(R.string.toast_saving_post_as_draft));
                                     savePostAndFinish();
                                 }
                             })
@@ -2015,10 +2017,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onAccountChanged(OnAccountChanged event) {
         if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL) {
             if (event.accountInfosChanged) {
-                ToastUtils.showToast(this, "Verification email sent, check your inbox.");
+                ToastUtils.showToast(this, getString(R.string.toast_verification_email_sent));
             } else {
                 // TODO
-                ToastUtils.showToast(this, "Error sending verification email. Are you already verified?");
+                ToastUtils.showToast(this, getString(R.string.toast_verification_email_send_error));
             }
         }
     }
