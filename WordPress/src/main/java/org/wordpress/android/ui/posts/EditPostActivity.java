@@ -2020,7 +2020,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL) {
-            if (event.accountInfosChanged) {
+            if (!event.isError()) {
                 ToastUtils.showToast(this, getString(R.string.toast_verification_email_sent));
             } else {
                 ToastUtils.showToast(this, getString(R.string.toast_verification_email_send_error));
