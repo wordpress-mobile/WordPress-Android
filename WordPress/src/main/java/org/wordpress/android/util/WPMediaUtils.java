@@ -23,12 +23,11 @@ public class WPMediaUtils {
             int resizeWidth = MediaUtils.getImageWidthSettingFromString(siteSettings.getMaxImageWidth());
             int quality = siteSettings.getImageQuality();
             // do not optimize if original-size and 100% quality are set.
-            // this should never happen though.
             if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
                 return null;
             }
 
-            String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, OPTIMIZE_IMAGE_ENCODER_QUALITY);
+            String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
             if (optimizedPath == null) {
                 AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
                 AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);

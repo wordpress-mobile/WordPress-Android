@@ -287,13 +287,24 @@
         <item>3000</item>
     </string-array>
 
-    <string-array name="site_settings_image_quality_values_and_entries" translatable="false">
+    <string-array name="site_settings_image_quality_entries" translatable="false">
+        <item>@string/media_encoder_quality_70</item>
+        <item>@string/media_encoder_quality_75</item>
+        <item>@string/media_encoder_quality_80</item>
+        <item>@string/media_encoder_quality_85</item>
+        <item>@string/media_encoder_quality_90</item>
+        <item>@string/media_encoder_quality_95</item>
+        <item>@string/media_encoder_quality_100</item>
+    </string-array>
+
+    <string-array name="site_settings_image_quality_values" translatable="false">
         <item>70</item>
         <item>75</item>
         <item>80</item>
         <item>85</item>
         <item>90</item>
         <item>95</item>
+        <item>100</item>
     </string-array>
 
 </resources>

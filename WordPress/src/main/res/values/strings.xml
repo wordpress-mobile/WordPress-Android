@@ -117,7 +117,7 @@
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
 
-    <!-- Media Gallery -->
+    <!-- Media  -->
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
@@ -156,6 +156,14 @@
     <string name="media_upload_state_deleted">Deleted</string>
     <string name="media_upload_state_failed">Failed</string>
     <string name="media_upload_state_uploaded">Uploaded</string>
+
+    <string name="media_encoder_quality_70">70</string>
+    <string name="media_encoder_quality_75">75</string>
+    <string name="media_encoder_quality_80">80</string>
+    <string name="media_encoder_quality_85">85</string>
+    <string name="media_encoder_quality_90">90</string>
+    <string name="media_encoder_quality_95">95</string>
+    <string name="media_encoder_quality_100">100</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
@@ -561,7 +569,7 @@
     <string name="site_settings_category_hint">Sets new post category</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
-    <string name="site_settings_image_quality_hint">Quality of the picture. Higher values mean better quality pictures.</string>
+    <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>
