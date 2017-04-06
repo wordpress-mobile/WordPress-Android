@@ -26,7 +26,7 @@ import java.io.OutputStream;
 public class WordPressDB {
     private static final String COLUMN_NAME_ID = "_id";
 
-    private static final int DATABASE_VERSION = 54;
+    private static final int DATABASE_VERSION = 55;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -203,6 +203,9 @@ public class WordPressDB {
             case 53:
                 // Clean up empty cache files caused by #5417
                 clearEmptyCacheFiles(ctx);
+                currentVersion++;
+            case 54:
+                SiteSettingsTable.addImageResizeWidthAndQualityToSiteSettingsTable(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
