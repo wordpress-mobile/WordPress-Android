@@ -1183,9 +1183,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         AccountModel account = mAccountStore.getAccount();
         // prompt user to verify e-mail before publishing
         if (!account.getEmailVerified()) {
+            String message = TextUtils.isEmpty(account.getEmail())
+                    ? getString(R.string.editor_confirm_email_prompt_message)
+                    : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email), account.getEmail());
+
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
-                    .setMessage(R.string.editor_confirm_email_prompt_message)
+                    .setMessage(message)
                     .setPositiveButton(R.string.editor_confirm_email_prompt_positive,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
