@@ -516,12 +516,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setImageResizeWidth(newWidth);
             setDetailListPreferenceValue(mImageWidthPref,
                     newValue.toString(),
-                    getLabelForMaxWidthValue(mSiteSettings.getMaxImageWidth()));
+                    getLabelForImageMaxWidthValue(mSiteSettings.getMaxImageWidth()));
         } else if (preference == mImageQualityPref) {
             mSiteSettings.setImageQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
                     newValue.toString(),
-                    getLabelForQualityValue(mSiteSettings.getImageQuality()));
+                    getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -695,10 +695,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         setDetailListPreferenceValue(mImageWidthPref,
                 String.valueOf(mSiteSettings.getMaxImageWidth()),
-                getLabelForMaxWidthValue(mSiteSettings.getMaxImageWidth()));
+                getLabelForImageMaxWidthValue(mSiteSettings.getMaxImageWidth()));
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(mSiteSettings.getImageQuality()),
-                getLabelForQualityValue(mSiteSettings.getImageQuality()));
+                getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -721,7 +721,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
 
-    private String getLabelForMaxWidthValue(int newValue) {
+    private String getLabelForImageMaxWidthValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_width_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_width_entries);
         for (int i = 0; i < values.length ; i++) {
@@ -733,7 +733,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         return entries[0];
     }
 
-    private String getLabelForQualityValue(int newValue) {
+    private String getLabelForImageQualityValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_entries);
         for (int i = 0; i < values.length ; i++) {
@@ -940,10 +940,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         setDetailListPreferenceValue(mImageWidthPref,
                 String.valueOf(mSiteSettings.getMaxImageWidth()),
-                getLabelForMaxWidthValue(mSiteSettings.getMaxImageWidth()));
+                getLabelForImageMaxWidthValue(mSiteSettings.getMaxImageWidth()));
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(mSiteSettings.getImageQuality()),
-                getLabelForQualityValue(mSiteSettings.getImageQuality()));
+                getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
 
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
