@@ -1653,10 +1653,6 @@
     <string name="image_thumbnail">Image thumbnail</string>
 
     <!-- Editor: Errors -->
-    <string name="editor_confirm_email_prompt_title">Please confirm your email address</string>
-    <string name="editor_confirm_email_prompt_message">We sent you an email when you first signed up. Please open the message and click the blue button.</string>
-    <string name="editor_confirm_email_prompt_positive" translatable="false">@string/ok</string>
-    <string name="editor_confirm_email_prompt_negative">Resend Email</string>
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode
         in this state. Remove all failed uploads and continue?</string>
     <string name="editor_toast_invalid_path">Invalid file path</string>
@@ -1668,5 +1664,15 @@
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
+
+    <!-- E-mail verification reminder dialog -->
+    <string name="toast_saving_post_as_draft">Saving post as draft</string>
+    <string name="toast_verification_email_sent">Verification email sent, check your inbox</string>
+    <string name="toast_verification_email_send_error">Error sending verification email. Are you already verified?</string>
+    <string name="editor_confirm_email_prompt_title">Please confirm your email address</string>
+    <string name="editor_confirm_email_prompt_message">We sent you an email when you first signed up. Please open the message and click the blue button to enable publishing.</string>
+    <string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
+    <string name="editor_confirm_email_prompt_positive" translatable="false">@string/ok</string>
+    <string name="editor_confirm_email_prompt_negative">Resend Email</string>
 
 </resources>
