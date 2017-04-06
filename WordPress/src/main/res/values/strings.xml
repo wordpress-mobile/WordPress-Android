@@ -157,13 +157,13 @@
     <string name="media_upload_state_failed">Failed</string>
     <string name="media_upload_state_uploaded">Uploaded</string>
 
-    <string name="media_encoder_quality_70">70</string>
-    <string name="media_encoder_quality_75">75</string>
-    <string name="media_encoder_quality_80">80</string>
-    <string name="media_encoder_quality_85">85</string>
-    <string name="media_encoder_quality_90">90</string>
-    <string name="media_encoder_quality_95">95</string>
-    <string name="media_encoder_quality_100">100</string>
+    <string name="media_encoder_quality_70">70%</string>
+    <string name="media_encoder_quality_75">75%</string>
+    <string name="media_encoder_quality_80">80%</string>
+    <string name="media_encoder_quality_85">85%</string>
+    <string name="media_encoder_quality_90">90%</string>
+    <string name="media_encoder_quality_95">95%</string>
+    <string name="media_encoder_quality_100">100%</string>
 
     <!-- Upload Media -->
     <string name="image_added">Image added</string>
