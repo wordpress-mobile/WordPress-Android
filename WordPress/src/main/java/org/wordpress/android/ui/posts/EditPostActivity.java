@@ -2023,7 +2023,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             if (event.accountInfosChanged) {
                 ToastUtils.showToast(this, getString(R.string.toast_verification_email_sent));
             } else {
-                // TODO
                 ToastUtils.showToast(this, getString(R.string.toast_verification_email_send_error));
             }
         }
