@@ -19,6 +19,11 @@ public class SiteUtils {
         example.setSiteId(remoteId);
         example.setIsWPCom(isWPCom);
         example.setIsVisible(isVisible);
+        if (isWPCom) {
+            example.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
+        } else {
+            example.setOrigin(SiteModel.ORIGIN_XMLRPC);
+        }
         return example;
     }
 
@@ -30,6 +35,7 @@ public class SiteUtils {
         example.setIsJetpackConnected(false);
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://some.url/xmlrpc.php");
+        example.setOrigin(SiteModel.ORIGIN_XMLRPC);
         return example;
     }
 
@@ -41,7 +47,10 @@ public class SiteUtils {
         example.setIsJetpackInstalled(true);
         example.setIsJetpackConnected(true);
         example.setIsVisible(true);
+        example.setUsername("ponyuser");
+        example.setPassword("ponypass");
         example.setXmlRpcUrl("http://jetpack.url/xmlrpc.php");
+        example.setOrigin(SiteModel.ORIGIN_XMLRPC);
         return example;
     }
 
@@ -53,6 +62,7 @@ public class SiteUtils {
         example.setIsJetpackConnected(true);
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
+        example.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         return example;
     }
 
@@ -64,6 +74,7 @@ public class SiteUtils {
         example.setIsJetpackConnected(false);
         example.setIsVisible(true);
         example.setXmlRpcUrl("http://jetpack2.url/xmlrpc.php");
+        example.setOrigin(SiteModel.ORIGIN_XMLRPC);
         return example;
     }
 
