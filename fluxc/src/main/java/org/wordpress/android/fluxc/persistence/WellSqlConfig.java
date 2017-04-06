@@ -42,7 +42,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 4;
+        return 5;
     }
 
     @Override
@@ -75,6 +75,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 3:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table AccountModel add EMAIL_VERIFIED boolean;");
+                oldVersion++;
+            case 4:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add ORIGIN integer;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
