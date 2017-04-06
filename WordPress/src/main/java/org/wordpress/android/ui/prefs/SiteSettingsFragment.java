@@ -512,15 +512,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             properties.put("enabled", newValue);
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, properties);
         } else if (preference == mImageWidthPref) {
-            mSiteSettings.setImageResizeWidth(newValue.toString());
+            int newWidth = Integer.parseInt(newValue.toString());
+            mSiteSettings.setImageResizeWidth(newWidth);
             setDetailListPreferenceValue(mImageWidthPref,
-                    mSiteSettings.getMaxImageWidth(),
-                    mSiteSettings.getMaxImageWidth());
+                    newValue.toString(),
+                    getLabelForMaxWidthValue(mSiteSettings.getMaxImageWidth()));
         } else if (preference == mImageQualityPref) {
             mSiteSettings.setImageQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
                     newValue.toString(),
-                    newValue.toString());
+                    getLabelForQualityValue(mSiteSettings.getImageQuality()));
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -693,11 +694,11 @@ public class SiteSettingsFragment extends PreferenceFragment
         // Set Local settings
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         setDetailListPreferenceValue(mImageWidthPref,
-                mSiteSettings.getMaxImageWidth(),
-                mSiteSettings.getMaxImageWidth());
+                String.valueOf(mSiteSettings.getMaxImageWidth()),
+                getLabelForMaxWidthValue(mSiteSettings.getMaxImageWidth()));
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(mSiteSettings.getImageQuality()),
-                String.valueOf(mSiteSettings.getImageQuality()));
+                getLabelForQualityValue(mSiteSettings.getImageQuality()));
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -717,6 +718,31 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         mEditingEnabled = enabled;
+    }
+
+
+    private String getLabelForMaxWidthValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_width_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_width_entries);
+        for (int i = 0; i < values.length ; i++) {
+           if (values[i].equals(String.valueOf(newValue))) {
+               return entries[i];
+           }
+        }
+
+        return entries[0];
+    }
+
+    private String getLabelForQualityValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
     }
 
     private void showRelatedPostsDialog() {
@@ -913,11 +939,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void setPreferencesFromSiteSettings() {
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         setDetailListPreferenceValue(mImageWidthPref,
-                mSiteSettings.getMaxImageWidth(),
-                mSiteSettings.getMaxImageWidth());
+                String.valueOf(mSiteSettings.getMaxImageWidth()),
+                getLabelForMaxWidthValue(mSiteSettings.getMaxImageWidth()));
         setDetailListPreferenceValue(mImageQualityPref,
                 String.valueOf(mSiteSettings.getImageQuality()),
-                String.valueOf(mSiteSettings.getImageQuality()));
+                getLabelForQualityValue(mSiteSettings.getImageQuality()));
 
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());

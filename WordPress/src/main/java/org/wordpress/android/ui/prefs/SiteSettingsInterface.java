@@ -273,11 +273,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.optimizedImage;
     }
 
-    public String getMaxImageWidth() {
-        String resizeWidth = mSettings.maxImageWidth;
-        if (TextUtils.isEmpty(resizeWidth)) {
-            resizeWidth = String.valueOf(WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH);
-        }
+    public int getMaxImageWidth() {
+        int resizeWidth = mSettings.maxImageWidth;
         return resizeWidth;
     }
 
@@ -564,7 +561,7 @@ public abstract class SiteSettingsInterface {
         mSettings.optimizedImage = optimizeImage;
     }
 
-    public void setImageResizeWidth(String width) {
+    public void setImageResizeWidth(int width) {
         mSettings.maxImageWidth = width;
     }
 

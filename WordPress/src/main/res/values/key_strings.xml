@@ -237,59 +237,21 @@
     <!-- Preference Entries -->
     <string-array name="site_settings_image_width_entries" translatable="false">
         <item>@string/site_settings_image_original_size</item>
-        <item>100</item>
-        <item>200</item>
-        <item>300</item>
-        <item>400</item>
-        <item>500</item>
-        <item>600</item>
-        <item>700</item>
-        <item>800</item>
-        <item>900</item>
         <item>1000</item>
-        <item>1100</item>
-        <item>1200</item>
-        <item>1300</item>
-        <item>1400</item>
-        <item>1500</item>
-        <item>1600</item>
-        <item>1700</item>
-        <item>1800</item>
-        <item>1900</item>
         <item>2000</item>
         <item>2500</item>
         <item>3000</item>
     </string-array>
 
     <string-array name="site_settings_image_width_values" translatable="false">
-        <item>@string/site_settings_image_original_size</item>
-        <item>100</item>
-        <item>200</item>
-        <item>300</item>
-        <item>400</item>
-        <item>500</item>
-        <item>600</item>
-        <item>700</item>
-        <item>800</item>
-        <item>900</item>
+        <item>0</item>
         <item>1000</item>
-        <item>1100</item>
-        <item>1200</item>
-        <item>1300</item>
-        <item>1400</item>
-        <item>1500</item>
-        <item>1600</item>
-        <item>1700</item>
-        <item>1800</item>
-        <item>1900</item>
         <item>2000</item>
         <item>2500</item>
         <item>3000</item>
     </string-array>
 
     <string-array name="site_settings_image_quality_entries" translatable="false">
-        <item>@string/media_encoder_quality_70</item>
-        <item>@string/media_encoder_quality_75</item>
         <item>@string/media_encoder_quality_80</item>
         <item>@string/media_encoder_quality_85</item>
         <item>@string/media_encoder_quality_90</item>
@@ -298,8 +260,6 @@
     </string-array>
 
     <string-array name="site_settings_image_quality_values" translatable="false">
-        <item>70</item>
-        <item>75</item>
         <item>80</item>
         <item>85</item>
         <item>90</item>

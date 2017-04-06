@@ -20,7 +20,7 @@ public class WPMediaUtils {
         SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
         // Site Settings are implemented on .com/Jetpack sites only
         if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
-            int resizeWidth = MediaUtils.getImageWidthSettingFromString(siteSettings.getMaxImageWidth());
+            int resizeWidth = siteSettings.getMaxImageWidth() > 0 ? siteSettings.getMaxImageWidth() : Integer.MAX_VALUE;
             int quality = siteSettings.getImageQuality();
             // do not optimize if original-size and 100% quality are set.
             if (resizeWidth == Integer.MAX_VALUE && quality == 100) {

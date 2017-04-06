@@ -59,7 +59,7 @@ public class SiteSettingsModel {
     public static final String ADD_OPTIMIZED_IMAGE = "alter table " + SETTINGS_TABLE_NAME +
             " add " + OPTIMIZED_IMAGE_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_IMAGE_RESIZE_WIDTH = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + MAX_IMAGE_WIDTH_COLUMN_NAME + " TEXT;";
+            " add " + MAX_IMAGE_WIDTH_COLUMN_NAME + " INTEGER;";
     public static final String ADD_IMAGE_COMPRESSION_QUALITY = "alter table " + SETTINGS_TABLE_NAME +
             " add " + IMAGE_ENCODER_QUALITY_COLUMN_NAME + " INTEGER;";
     public static final String CREATE_SETTINGS_TABLE_SQL =
@@ -112,7 +112,7 @@ public class SiteSettingsModel {
     public int privacy;
     public boolean location;
     public boolean optimizedImage;
-    public String maxImageWidth;
+    public int maxImageWidth;
     public int imageQualitySetting;
     public int defaultCategory;
     public CategoryModel[] categories;
@@ -156,7 +156,7 @@ public class SiteSettingsModel {
                 location == otherModel.location &&
                 optimizedImage == otherModel.optimizedImage &&
                 imageQualitySetting == otherModel.imageQualitySetting &&
-                equals(maxImageWidth, otherModel.maxImageWidth) &&
+                maxImageWidth == otherModel.maxImageWidth &&
                 defaultCategory == otherModel.defaultCategory &&
                 showRelatedPosts == otherModel.showRelatedPosts &&
                 showRelatedPostHeader == otherModel.showRelatedPostHeader &&
@@ -248,7 +248,7 @@ public class SiteSettingsModel {
         defaultPostFormat = getStringFromCursor(cursor, DEF_POST_FORMAT_COLUMN_NAME);
         location = getBooleanFromCursor(cursor, LOCATION_COLUMN_NAME);
         optimizedImage = getBooleanFromCursor(cursor, OPTIMIZED_IMAGE_COLUMN_NAME);
-        maxImageWidth = getStringFromCursor(cursor, MAX_IMAGE_WIDTH_COLUMN_NAME);
+        maxImageWidth = getIntFromCursor(cursor, MAX_IMAGE_WIDTH_COLUMN_NAME);
         imageQualitySetting = getIntFromCursor(cursor, IMAGE_ENCODER_QUALITY_COLUMN_NAME);
         hasVerifiedCredentials = getBooleanFromCursor(cursor, CREDS_VERIFIED_COLUMN_NAME);
         allowComments = getBooleanFromCursor(cursor, ALLOW_COMMENTS_COLUMN_NAME);

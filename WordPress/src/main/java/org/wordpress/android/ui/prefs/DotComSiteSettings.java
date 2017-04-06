@@ -142,7 +142,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             // Local settings
                             boolean location = mSettings.location;
                             boolean optimizedImage = mSettings.optimizedImage;
-                            String maxImageWidth = mSettings.maxImageWidth;
+                            int maxImageWidth = mSettings.maxImageWidth;
                             int imageQualitySetting = mSettings.imageQualitySetting;
 
                             mSettings.copyFrom(mRemoteSettings);
