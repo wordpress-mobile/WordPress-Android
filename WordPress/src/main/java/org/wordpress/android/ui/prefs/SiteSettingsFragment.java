@@ -911,8 +911,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setPreferencesFromSiteSettings() {
-        boolean isOptimizeImagesEnable = mSiteSettings.getOptimizedImage();
-        mOptimizedImage.setChecked(isOptimizeImagesEnable);
+        mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         setDetailListPreferenceValue(mImageWidthPref,
                 mSiteSettings.getMaxImageWidth(),
                 mSiteSettings.getMaxImageWidth());
