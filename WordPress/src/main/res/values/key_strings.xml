@@ -236,19 +236,19 @@
 
     <!-- Preference Entries -->
     <string-array name="site_settings_image_width_entries" translatable="false">
+        <item>1000 px</item>
+        <item>2000 px</item>
+        <item>2500 px</item>
+        <item>3000 px</item>
         <item>@string/site_settings_image_original_size</item>
-        <item>1000</item>
-        <item>2000</item>
-        <item>2500</item>
-        <item>3000</item>
     </string-array>
 
     <string-array name="site_settings_image_width_values" translatable="false">
-        <item>0</item>
         <item>1000</item>
         <item>2000</item>
         <item>2500</item>
         <item>3000</item>
+        <item>0</item>
     </string-array>
 
     <string-array name="site_settings_image_quality_entries" translatable="false">
