@@ -39,6 +39,8 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
 
     private final String mPrependString;
     private long mMediaSize;
+    private long mContentSize = -1;
+
 
     private long mMediaBytesWritten = 0;
 
@@ -73,7 +75,10 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
 
     @Override
     public long contentLength() throws IOException {
-        return getMediaBase64EncodedSize() + mPrependString.length() + APPEND_XML.length();
+        if (mContentSize == -1) {
+            mContentSize = getMediaBase64EncodedSize() + mPrependString.length() + APPEND_XML.length();
+        }
+        return mContentSize;
     }
 
     private long getMediaBase64EncodedSize() throws IOException {
