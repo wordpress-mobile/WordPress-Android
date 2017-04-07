@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -39,7 +40,10 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
 
     private String mMediaUri;
     private boolean mIsVideo;
-    private NetworkImageView mImageView;
+    private boolean mIsRemote;
+
+    private ImageView mImageView;
+    private NetworkImageView mNetworkImageView;
     private VideoView mVideoView;
 
     @Inject FluxCImageLoader mImageLoader;
@@ -75,7 +79,8 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.photo_picker_preview_activity);
-        mImageView = (NetworkImageView) findViewById(R.id.image_preview);
+        mImageView = (ImageView) findViewById(R.id.image_preview);
+        mNetworkImageView = (NetworkImageView) findViewById(R.id.network_image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
 
         if (savedInstanceState != null) {
@@ -92,8 +97,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
             return;
         }
 
-        mImageView.setVisibility(mIsVideo ? View.GONE : View.VISIBLE);
-        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        mIsRemote = mMediaUri.startsWith("http");
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -120,32 +124,32 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     }
 
     private void loadImage() {
-        boolean isRemote = mMediaUri.startsWith("http");
+        int width = DisplayUtils.getDisplayPixelWidth(this);
+        int height = DisplayUtils.getDisplayPixelHeight(this);
 
-        int maxWidth = DisplayUtils.getDisplayPixelWidth(this);
+        if (mIsRemote) {
+            String url = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
+            mNetworkImageView.setVisibility(View.VISIBLE);
+            mNetworkImageView.setImageUrl(url, mImageLoader);
+        } else {
+            // load a scaled version of the image to prevent OOM exception
+            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
+            if (bytes == null) {
+                ToastUtils.showToast(this, R.string.error_media_load);
+                delayedFinish();
+                return;
+            }
 
-        if (isRemote) {
-            String url = PhotonUtils.getPhotonImageUrl(mMediaUri, maxWidth, 0);
-            mImageView.setImageUrl(url, mImageLoader);
-            return;
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            if (bmp == null) {
+                ToastUtils.showToast(this, R.string.error_media_load);
+                delayedFinish();
+                return;
+            }
+
+            mImageView.setVisibility(View.VISIBLE);
+            mImageView.setImageBitmap(bmp);
         }
-
-        // load a scaled version of the image to prevent OOM exception
-        byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), maxWidth, null, 0);
-        if (bytes == null) {
-            ToastUtils.showToast(this, R.string.error_media_load);
-            delayedFinish();
-            return;
-        }
-
-        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        if (bmp == null) {
-            ToastUtils.showToast(this, R.string.error_media_load);
-            delayedFinish();
-            return;
-        }
-
-        mImageView.setImageBitmap(bmp);
 
         // attach the photo zoomer
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
@@ -183,6 +187,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
             }
         });
 
+        mVideoView.setVisibility(View.VISIBLE);
         mVideoView.setVideoURI(Uri.parse(mMediaUri));
         mVideoView.requestFocus();
     }
