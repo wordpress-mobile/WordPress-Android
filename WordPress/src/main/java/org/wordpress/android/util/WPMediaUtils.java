@@ -17,6 +17,7 @@ public class WPMediaUtils {
         if (isVideo) {
             return null;
         }
+        // TODO implement site settings for .org sites
         SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
         // Site Settings are implemented on .com/Jetpack sites only
         if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
@@ -26,6 +27,7 @@ public class WPMediaUtils {
             if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
                 return null;
             }
+
             String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
             if (optimizedPath == null) {
                 AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
