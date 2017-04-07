@@ -315,6 +315,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.fromHtml(text.toString());
         updateFailedMediaList();
         overlayFailedMedia();
+
+        // TODO here get the current uploads from the service and check if an of them belong to this
+        // post. If any of them do, add them to our mUploadingMedia queue so to be able to match
+        // FluxC progress updates with our visual entities
+
+
     }
 
     /**
