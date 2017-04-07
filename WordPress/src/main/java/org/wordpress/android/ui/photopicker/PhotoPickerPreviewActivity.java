@@ -21,6 +21,7 @@ import android.widget.VideoView;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -71,6 +72,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.photo_picker_preview_activity);
         mImageView = (NetworkImageView) findViewById(R.id.image_preview);
