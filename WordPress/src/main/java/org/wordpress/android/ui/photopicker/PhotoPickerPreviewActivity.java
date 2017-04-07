@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.photopicker;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -24,13 +28,35 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PhotoPickerPreviewActivity extends AppCompatActivity {
 
-    public static final String ARG_MEDIA_URI = "media_uri";
-    public static final String ARG_IS_VIDEO = "is_video";
+    private static final String ARG_MEDIA_URI = "media_uri";
+    private static final String ARG_IS_VIDEO = "is_video";
 
     private String mMediaUri;
     private boolean mIsVideo;
     private ImageView mImageView;
     private VideoView mVideoView;
+
+    /*
+     * shows full-screen preview of the passed media
+     */
+    public static void showPreview(Context context, View sourceView, Uri mediaUri, boolean isVideo) {
+        Intent intent = new Intent(context, PhotoPickerPreviewActivity.class);
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
+
+        int startWidth = sourceView.getWidth();
+        int startHeight = sourceView.getHeight();
+        int startX = startWidth / 2;
+        int startY = startHeight / 2;
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
+                sourceView,
+                startX,
+                startY,
+                startWidth,
+                startHeight);
+        ActivityCompat.startActivity(context, intent, options.toBundle());
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
