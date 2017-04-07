@@ -794,6 +794,7 @@ public abstract class SiteSettingsInterface {
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());
             setTitle(mSite.getName());
+            setOptimizedImage(true); // Default to true
         }
     }
 
