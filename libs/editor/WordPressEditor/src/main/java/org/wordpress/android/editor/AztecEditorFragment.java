@@ -214,15 +214,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onDetach() {
-        // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMedia) {
-            mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
-        }
-        super.onDetach();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putCharSequence(KEY_TITLE, getTitle());
         outState.putCharSequence(KEY_CONTENT, getContent());

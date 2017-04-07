@@ -406,15 +406,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onDetach() {
-        // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMedia.keySet()) {
-            mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
-        }
-        super.onDetach();
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (mDomHasLoaded) {
             mWebView.notifyVisibilityChanged(isVisibleToUser);
