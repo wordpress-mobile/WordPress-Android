@@ -308,7 +308,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         PhotoPickerPreviewActivity.showPreview(
                                 mContext,
                                 imgThumbnail,
-                                item.uri,
+                                item.uri.toString(),
                                 item.isVideo);
                     }
                 }

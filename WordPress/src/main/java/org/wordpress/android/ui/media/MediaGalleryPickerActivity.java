@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -209,7 +210,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onAdapterItemSelected(int position) {
+    public void onAdapterItemSelected(View sourceView, int position) {
         if (mIsSelectOneItem) {
             // Single select, just finish the activity once an item is selected
             Intent intent = new Intent();

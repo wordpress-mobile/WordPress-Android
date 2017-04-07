@@ -15,14 +15,19 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -33,15 +38,20 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
 
     private String mMediaUri;
     private boolean mIsVideo;
-    private ImageView mImageView;
+    private NetworkImageView mImageView;
     private VideoView mVideoView;
+
+    @Inject FluxCImageLoader mImageLoader;
 
     /*
      * shows full-screen preview of the passed media
      */
-    public static void showPreview(Context context, View sourceView, Uri mediaUri, boolean isVideo) {
+    public static void showPreview(Context context,
+                                   View sourceView,
+                                   String mediaUri,
+                                   boolean isVideo) {
         Intent intent = new Intent(context, PhotoPickerPreviewActivity.class);
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri);
         intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
 
         int startWidth = sourceView.getWidth();
@@ -63,7 +73,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.photo_picker_preview_activity);
-        mImageView = (ImageView) findViewById(R.id.image_preview);
+        mImageView = (NetworkImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
 
         if (savedInstanceState != null) {
@@ -108,8 +118,17 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     }
 
     private void loadImage() {
-        // load a scaled version of the image to prevent OOM exception
+        boolean isRemote = mMediaUri.startsWith("http");
+
         int maxWidth = DisplayUtils.getDisplayPixelWidth(this);
+
+        if (isRemote) {
+            String url = PhotonUtils.getPhotonImageUrl(mMediaUri, maxWidth, 0);
+            mImageView.setImageUrl(url, mImageLoader);
+            return;
+        }
+
+        // load a scaled version of the image to prevent OOM exception
         byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), maxWidth, null, 0);
         if (bytes == null) {
             ToastUtils.showToast(this, R.string.error_media_load);

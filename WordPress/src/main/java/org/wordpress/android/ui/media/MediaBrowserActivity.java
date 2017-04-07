@@ -67,6 +67,7 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.photopicker.PhotoPickerPreviewActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -487,8 +488,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(int localMediaId) {
-        final String tempQuery = mQuery;
+    public void onMediaItemSelected(View sourceView, int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        PhotoPickerPreviewActivity.showPreview(
+                this,
+                sourceView,
+                media.getUrl(),
+                media.isVideo());
+
+        /*final String tempQuery = mQuery;
 
         if (mSearchView != null) {
             mSearchView.clearFocus();
@@ -510,7 +518,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             ft.commitAllowingStateLoss();
 
             mQuery = tempQuery;
-        }
+        }*/
     }
 
     @Override

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
