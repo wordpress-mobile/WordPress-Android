@@ -38,6 +38,8 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.os.Environment.isExternalStorageRemovable;
+
 public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
     private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
@@ -201,24 +203,20 @@ public class MediaUtils {
         }
     }
 
+    public static File getDiskCacheDir(Context context) {
+        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
+        // otherwise use internal cache dir
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
+                !isExternalStorageRemovable() ? context.getApplicationContext().getExternalCacheDir() :
+                context.getCacheDir();
+    }
+
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
         }
-        File cacheDir = null;
-
         String mimeType = context.getContentResolver().getType(imageUri);
-        boolean isVideo = (mimeType != null && mimeType.contains("video"));
-
-        // If the device has an SD card
-        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            String mediaFolder = isVideo ? "video" : "images";
-            cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/" + mediaFolder);
-        } else {
-            if (context.getApplicationContext() != null) {
-                cacheDir = context.getApplicationContext().getCacheDir();
-            }
-        }
+        File cacheDir = getDiskCacheDir(context);
 
         if (cacheDir != null && !cacheDir.exists()) {
             cacheDir.mkdirs();

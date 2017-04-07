@@ -259,9 +259,28 @@
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
+            android:layout="@layout/preference_layout"
             android:key="@string/pref_key_optimize_image"
             android:title="@string/site_settings_optimize_images"
-            app:longClickHint="@string/site_settings_optimize_images_hint" />
+            android:summary="@string/site_settings_optimize_images_summary"/>
+
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_default_image_width"
+            android:key="@string/pref_key_site_image_width"
+            android:title="@string/site_settings_default_image_width_title"
+            android:entries="@array/site_settings_image_width_entries"
+            android:entryValues="@array/site_settings_image_width_values"
+            android:dependency="@string/pref_key_optimize_image"
+            app:longClickHint="@string/site_settings_image_width_hint" />
+
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_default_image_quality"
+            android:key="@string/pref_key_site_image_quality"
+            android:title="@string/site_settings_default_image_quality_title"
+            android:entries="@array/site_settings_image_quality_entries"
+            android:entryValues="@array/site_settings_image_quality_values"
+            android:dependency="@string/pref_key_optimize_image"
+            app:longClickHint="@string/site_settings_image_quality_hint" />
 
     </PreferenceCategory>
 
