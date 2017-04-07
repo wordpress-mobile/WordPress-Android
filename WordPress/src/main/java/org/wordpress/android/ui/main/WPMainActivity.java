@@ -740,7 +740,8 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        // "Reload" selected site from the db
+        // It would be better if the OnSiteChanged provided the list of changed sites.
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
             setSelectedSite(mSiteStore.getSites().get(0));
         }
@@ -750,24 +751,6 @@ public class WPMainActivity extends AppCompatActivity {
 
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
-            if (site.isJetpackConnected() && !TextUtils.isEmpty(site.getPassword())) {
-                // The user added a Jetpack-connected site as a self-hosted site - this isn't supported
-                if (!mAccountStore.hasAccessToken()) {
-                    // Ask user to sign in to WordPress.com to access their Jetpack site
-                    Intent signInIntent = new Intent(this, SignInActivity.class);
-                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, site.getId());
-                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
-                            getString(R.string.jetpack_use_com_account)
-                    );
-                    startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
-                    finish();
-                } else {
-                    // Remove the site and send the user back to the site list
-                    ToastUtils.showToast(this, R.string.jetpack_different_com_account, ToastUtils.Duration.LONG);
-                    mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
-                }
-                return;
-            }
             mSelectedSite = site;
         }
     }
