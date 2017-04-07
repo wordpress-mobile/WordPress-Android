@@ -180,11 +180,6 @@ public class PhotoPickerFragment extends Fragment {
         return mBottomBar.getVisibility() == View.VISIBLE;
     }
 
-    /*
-     *   - single tap adds the photo to post or selects it if multi-select is enabled
-     *   - double tap previews the photo
-     *   - long press enables multi-select
-     */
     private final PhotoPickerAdapterListener mAdapterListener = new PhotoPickerAdapterListener() {
         @Override
         public void onItemTapped(Uri mediaUri) {
