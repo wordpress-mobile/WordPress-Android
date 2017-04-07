@@ -18,28 +18,21 @@ public class WPMediaUtils {
             return null;
         }
         SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
-        if (siteSettings == null) {
-            // Site Settings are NOT implemented for self hosted site.
-            // TODO implement site settings!!!
-            return null;
-            // optimizedPath = ImageUtils.optimizeImage(activity, path, OPTIMIZE_IMAGE_MAX_WIDTH, OPTIMIZE_IMAGE_ENCODER_QUALITY);
-        } else {
-            // Site Settings are implemented on .com/Jetpack sites only
-            if (siteSettings.init(false).getOptimizedImage()) {
-                int resizeWidth = siteSettings.getMaxImageWidth() > 0 ? siteSettings.getMaxImageWidth() : Integer.MAX_VALUE;
-                int quality = siteSettings.getImageQuality();
-                // do not optimize if original-size and 100% quality are set.
-                if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
-                    return null;
-                }
-                String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
-                if (optimizedPath == null) {
-                    AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
-                } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
-                    return Uri.parse(optimizedPath);
-                }
+        // Site Settings are implemented on .com/Jetpack sites only
+        if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {
+            int resizeWidth = siteSettings.getMaxImageWidth() > 0 ? siteSettings.getMaxImageWidth() : Integer.MAX_VALUE;
+            int quality = siteSettings.getImageQuality();
+            // do not optimize if original-size and 100% quality are set.
+            if (resizeWidth == Integer.MAX_VALUE && quality == 100) {
+                return null;
+            }
+            String optimizedPath = ImageUtils.optimizeImage(activity, path, resizeWidth, quality);
+            if (optimizedPath == null) {
+                AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
+            } else {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
+                return Uri.parse(optimizedPath);
             }
         }
         return null;
