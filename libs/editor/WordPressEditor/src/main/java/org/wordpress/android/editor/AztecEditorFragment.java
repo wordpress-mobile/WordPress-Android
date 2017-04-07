@@ -396,7 +396,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void updateUploadingMediaList() {
-        AztecText.AttributePredicate failedPredicate = new AztecText.AttributePredicate() {
+        AztecText.AttributePredicate uploadingPredicate = new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NonNull Attributes attrs) {
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
@@ -406,8 +406,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mUploadingMedia.clear();
 
-        for (Attributes attrs : content.getAllMediaAttributes(failedPredicate)) {
-            mUploadingMedia.add(attrs.getValue("data-wpid"));
+        for (Attributes attrs : content.getAllMediaAttributes(uploadingPredicate)) {
+            safeAddMediaIdToSet(mUploadingMedia, attrs.getValue("data-wpid"));
+        }
+    }
+
+    private void safeAddMediaIdToSet(Set<String> setToAddTo, String wpId){
+        if (!TextUtils.isEmpty(wpId)) {
+            setToAddTo.add(wpId);
         }
     }
 
@@ -423,7 +429,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mFailedMediaIds.clear();
 
         for (Attributes attrs : content.getAllMediaAttributes(failedPredicate)) {
-            mFailedMediaIds.add(attrs.getValue("data-wpid"));
+            safeAddMediaIdToSet(mFailedMediaIds, attrs.getValue("data-wpid"));
         }
     }
 
