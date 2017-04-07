@@ -1118,7 +1118,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+    public void onMediaUploadSucceeded(final String localMediaId, final MediaType mediaType, final MediaFile mediaFile) {
         if(!isAdded()) {
             return;
         }
@@ -1153,21 +1153,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return;
         }
 
-        final MediaType mediaType = mUploadingMedia.get(mediaId);
-        if (mediaType != null) {
-            mWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    String progressString = String.format(Locale.US, "%.1f", progress);
-                    mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnMedia(" + mediaId + ", " +
-                            progressString + ");");
-                }
-            });
-        }
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                String progressString = String.format(Locale.US, "%.1f", progress);
+                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnMedia(" + mediaId + ", " +
+                        progressString + ");");
+            }
+        });
     }
 
     @Override
-    public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
+    public void onMediaUploadFailed(final String mediaId, final EditorFragmentAbstract.MediaType
+            mediaType, final String errorMessage) {
         if(!isAdded()) {
             return;
         }

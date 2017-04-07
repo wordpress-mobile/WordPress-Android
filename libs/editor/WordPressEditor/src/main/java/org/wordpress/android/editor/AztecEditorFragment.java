@@ -100,7 +100,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
 
-    private Map<String, MediaType> mUploadingMedia;
+    private Set<String> mUploadingMedia;
     private Set<String> mFailedMediaIds;
 
     private long mActionStartedAt = -1;
@@ -126,7 +126,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
-        mUploadingMedia = new HashMap<>();
+        mUploadingMedia = new HashSet<>();
         mFailedMediaIds = new HashSet<>();
 
         title = (AztecText) view.findViewById(R.id.title);
@@ -216,7 +216,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onDetach() {
         // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMedia.keySet()) {
+        for (String mediaId : mUploadingMedia) {
             mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
         }
         super.onDetach();
@@ -319,8 +319,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // TODO here get the current uploads from the service and check if an of them belong to this
         // post. If any of them do, add them to our mUploadingMedia queue so to be able to match
         // FluxC progress updates with our visual entities
-
-
+        updateUploadingMediaList();
     }
 
     /**
@@ -394,6 +393,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
+    }
+
+    private void updateUploadingMediaList() {
+        AztecText.AttributePredicate failedPredicate = new AztecText.AttributePredicate() {
+            @Override
+            public boolean matches(@NonNull Attributes attrs) {
+                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                return attributesWithClass.hasClass("uploading");
+            }
+        };
+
+        mUploadingMedia.clear();
+
+        for (Attributes attrs : content.getAllMediaAttributes(failedPredicate)) {
+            mUploadingMedia.add(attrs.getValue("data-wpid"));
+        }
     }
 
     private void updateFailedMediaList() {
@@ -493,7 +508,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 content.refreshText();
 
-                mUploadingMedia.put(localMediaId, MediaType.IMAGE);
+                mUploadingMedia.add(localMediaId);
             }
         }
     }
@@ -541,11 +556,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
+    public void onMediaUploadSucceeded(final String localMediaId, final MediaType mediaType, final MediaFile mediaFile) {
         if(!isAdded()) {
             return;
         }
-        final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
 
@@ -591,26 +605,24 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        if(!isAdded()) {
+        if(!isAdded() || content == null) {
             return;
         }
-        final MediaType mediaType = mUploadingMedia.get(localMediaId);
-        if (mediaType != null) {
-            AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
-            attributesWithClass.addClass("uploading");
-            content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(localMediaId), 1, (int)(progress * 10000),
-                    attributesWithClass.getAttributesIml());
-            content.refreshText();
-        }
+
+        AttributesWithClass attributesWithClass = new AttributesWithClass(
+                content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
+        attributesWithClass.addClass("uploading");
+        content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(localMediaId), 1, (int)(progress * 10000),
+                attributesWithClass.getAttributesIml());
+        content.refreshText();
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
+    public void onMediaUploadFailed(final String localMediaId, final EditorFragmentAbstract.MediaType
+            mediaType, final String errorMessage) {
         if(!isAdded()) {
             return;
         }
-        MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
@@ -1068,7 +1080,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         // TODO: unmark video failed
                 }
                 mFailedMediaIds.remove(localMediaId);
-                mUploadingMedia.put(localMediaId, mediaType);
+                mUploadingMedia.add(localMediaId);
                 break;
             default:
                 if (!mediaType.equals(MediaType.IMAGE)) {

@@ -252,7 +252,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                     while (count < 1.1) {
                         sleep(500);
 
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, count);
+                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, false, count);
 
                         count += 0.1;
                     }
@@ -284,12 +284,12 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                     while (count < 0.6) {
                         sleep(500);
 
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, count);
+                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, false, count);
 
                         count += 0.1;
                     }
 
-                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId,
+                    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadFailed(mediaId, EditorFragmentAbstract.MediaType.IMAGE,
                             getString(R.string.tap_to_try_again));
 
                     mFailedUploads.put(mediaId, mediaUrl);
@@ -312,7 +312,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
                     while (count < 1.1) {
                         sleep(2000);
 
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, count);
+                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, false, count);
 
                         count += 0.1;
                     }
