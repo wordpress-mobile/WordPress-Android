@@ -93,6 +93,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private AztecText title;
     private AztecText content;
+    private boolean mContentSet;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter imageLoader;
@@ -304,6 +305,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void setContent(CharSequence text) {
         content.fromHtml(text.toString());
+        mContentSet = true;
         updateFailedMediaList();
         overlayFailedMedia();
 
@@ -554,7 +556,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaType mediaType, final MediaFile mediaFile) {
-        if(!isAdded() || content == null) {
+        if(!isAdded() || content == null || !mContentSet) {
             return;
         }
         if (mediaType != null) {
@@ -602,7 +604,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        if(!isAdded() || content == null) {
+        if(!isAdded() || content == null || !mContentSet) {
             return;
         }
 
