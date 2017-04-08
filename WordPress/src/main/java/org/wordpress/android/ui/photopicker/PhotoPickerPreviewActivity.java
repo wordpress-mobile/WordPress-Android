@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -19,11 +20,13 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -43,7 +46,6 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     private boolean mIsRemote;
 
     private ImageView mImageView;
-    private NetworkImageView mNetworkImageView;
     private VideoView mVideoView;
 
     @Inject FluxCImageLoader mImageLoader;
@@ -80,7 +82,6 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
 
         setContentView(R.layout.photo_picker_preview_activity);
         mImageView = (ImageView) findViewById(R.id.image_preview);
-        mNetworkImageView = (NetworkImageView) findViewById(R.id.network_image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
 
         if (savedInstanceState != null) {
@@ -123,16 +124,28 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         }, 1500);
     }
 
-    private void loadImage() {
+    private void loadRemoteImage() {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
+        String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
 
+        mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                showImageBitmap(response.getBitmap());
+            }
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.e(AppLog.T.MEDIA, error);
+            }
+        });
+    }
+
+    private void loadImage() {
         if (mIsRemote) {
-            String url = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
-            mNetworkImageView.setVisibility(View.VISIBLE);
-            mNetworkImageView.setImageUrl(url, mImageLoader);
+            loadRemoteImage();
         } else {
-            // load a scaled version of the image to prevent OOM exception
+            int width = DisplayUtils.getDisplayPixelWidth(this);
             byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
             if (bytes == null) {
                 ToastUtils.showToast(this, R.string.error_media_load);
@@ -141,17 +154,20 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
             }
 
             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            if (bmp == null) {
+            if (bmp != null) {
+                showImageBitmap(bmp);
+            } else {
                 ToastUtils.showToast(this, R.string.error_media_load);
                 delayedFinish();
-                return;
             }
 
-            mImageView.setVisibility(View.VISIBLE);
-            mImageView.setImageBitmap(bmp);
         }
+    }
 
-        // attach the photo zoomer
+    private void showImageBitmap(@NonNull Bitmap bitmap) {
+        mImageView.setVisibility(View.VISIBLE);
+        mImageView.setImageBitmap(bitmap);
+
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
         attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override

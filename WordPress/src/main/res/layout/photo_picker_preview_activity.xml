@@ -9,16 +9,7 @@
     <ImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/network_image_preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:layout_height="match_parent" />
 
     <VideoView
         android:id="@+id/video_preview"
