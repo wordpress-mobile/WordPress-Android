@@ -43,7 +43,6 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
 
     private String mMediaUri;
     private boolean mIsVideo;
-    private boolean mIsRemote;
 
     private ImageView mImageView;
     private VideoView mVideoView;
@@ -98,13 +97,16 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
             return;
         }
 
-        mIsRemote = mMediaUri.startsWith("http");
+        mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
+        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo();
+        } else if (mMediaUri.startsWith("http")) {
+            loadRemoteImage();
         } else {
-            loadImage();
+            loadLocalImage();
         }
     }
 
@@ -127,45 +129,47 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     private void loadRemoteImage() {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
-        String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
+        String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, 0);
+
+        showProgress(true);
 
         mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                showImageBitmap(response.getBitmap());
+                if (response.getBitmap() != null) {
+                    showProgress(false);
+                    showImageBitmap(response.getBitmap());
+                }
             }
             @Override
             public void onErrorResponse(VolleyError error) {
                 AppLog.e(AppLog.T.MEDIA, error);
+                showProgress(false);
+                ToastUtils.showToast(PhotoPickerPreviewActivity.this, R.string.error_media_load);
+                delayedFinish();
             }
         });
     }
 
-    private void loadImage() {
-        if (mIsRemote) {
-            loadRemoteImage();
+    private void loadLocalImage() {
+        int width = DisplayUtils.getDisplayPixelWidth(this);
+        byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
+        if (bytes == null) {
+            ToastUtils.showToast(this, R.string.error_media_load);
+            delayedFinish();
+            return;
+        }
+
+        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        if (bmp != null) {
+            showImageBitmap(bmp);
         } else {
-            int width = DisplayUtils.getDisplayPixelWidth(this);
-            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
-            if (bytes == null) {
-                ToastUtils.showToast(this, R.string.error_media_load);
-                delayedFinish();
-                return;
-            }
-
-            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            if (bmp != null) {
-                showImageBitmap(bmp);
-            } else {
-                ToastUtils.showToast(this, R.string.error_media_load);
-                delayedFinish();
-            }
-
+            ToastUtils.showToast(this, R.string.error_media_load);
+            delayedFinish();
         }
     }
 
     private void showImageBitmap(@NonNull Bitmap bitmap) {
-        mImageView.setVisibility(View.VISIBLE);
         mImageView.setImageBitmap(bitmap);
 
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
@@ -181,6 +185,10 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void showProgress(boolean show) {
+        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void playVideo() {
@@ -203,7 +211,6 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
             }
         });
 
-        mVideoView.setVisibility(View.VISIBLE);
         mVideoView.setVideoURI(Uri.parse(mMediaUri));
         mVideoView.requestFocus();
     }
