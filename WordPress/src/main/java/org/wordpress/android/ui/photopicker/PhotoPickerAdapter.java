@@ -305,7 +305,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                     int position = getAdapterPosition();
                     PhotoPickerItem item = getItemAtPosition(position);
                     if (item != null) {
-                        PhotoPickerPreviewActivity.showPreview(
+                        MediaPreviewActivity.showPreview(
                                 mContext,
                                 imgThumbnail,
                                 item.uri.toString(),

@@ -35,7 +35,7 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class PhotoPickerPreviewActivity extends AppCompatActivity {
+public class MediaPreviewActivity extends AppCompatActivity {
 
     private static final String ARG_MEDIA_URI = "media_uri";
     private static final String ARG_IS_VIDEO = "is_video";
@@ -47,12 +47,6 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     private VideoView mVideoView;
 
     @Inject FluxCImageLoader mImageLoader;
-
-    /*
-     * shows full-screen preview of the passed media Uri, which can be either local or remote.
-     * TODO: for now it's assumed that the media is either an image or a video
-     */
-
 
     /**
      * Shows full-screen preview of passed media
@@ -68,7 +62,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
                                    View sourceView,
                                    String mediaUri,
                                    boolean isVideo) {
-        Intent intent = new Intent(context, PhotoPickerPreviewActivity.class);
+        Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_URI, mediaUri);
         intent.putExtra(ARG_IS_VIDEO, isVideo);
 
@@ -96,7 +90,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        setContentView(R.layout.photo_picker_preview_activity);
+        setContentView(R.layout.media_preview_activity);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
 

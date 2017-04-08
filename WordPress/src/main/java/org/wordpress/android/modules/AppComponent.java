@@ -43,7 +43,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
-import org.wordpress.android.ui.photopicker.PhotoPickerPreviewActivity;
+import org.wordpress.android.ui.photopicker.MediaPreviewActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.AddCategoryActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -149,7 +149,7 @@ public interface AppComponent {
     void inject(MediaEditFragment object);
     void inject(MediaGalleryEditFragment object);
     void inject(MediaGalleryPickerActivity object);
-    void inject(PhotoPickerPreviewActivity object);
+    void inject(MediaPreviewActivity object);
 
     void inject(EditPostActivity object);
     void inject(EditPostSettingsFragment object);
