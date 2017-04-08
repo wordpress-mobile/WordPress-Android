@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker;
+package org.wordpress.android.ui.media;
 
 import android.content.Context;
 import android.content.Intent;
@@ -51,10 +51,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
     /**
      * Shows full-screen preview of passed media
      *
-     * @param context     self-explanatory
+     * @param context     self explanatory
      * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
      * @param mediaUri    Uri of media - can be local content:// or remote http(s)://
-     * @param isVideo     whether the passed media is a video - assumed to be image otherwise
+     * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      *
      * TODO: handle audio and other file types
      */

@@ -43,7 +43,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
-import org.wordpress.android.ui.photopicker.MediaPreviewActivity;
+import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.AddCategoryActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
