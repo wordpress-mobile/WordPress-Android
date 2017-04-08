@@ -92,8 +92,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(mMediaUri)) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-            finish();
+            delayedFinish(true);
             return;
         }
 
@@ -117,7 +116,10 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
     }
 
-    private void delayedFinish() {
+    private void delayedFinish(boolean showError) {
+        if (showError) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -145,8 +147,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 AppLog.e(AppLog.T.MEDIA, error);
                 showProgress(false);
-                ToastUtils.showToast(PhotoPickerPreviewActivity.this, R.string.error_media_load);
-                delayedFinish();
+                delayedFinish(true);
             }
         }, width, height);
     }
@@ -155,8 +156,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
         if (bytes == null) {
-            ToastUtils.showToast(this, R.string.error_media_load);
-            delayedFinish();
+            delayedFinish(true);
             return;
         }
 
@@ -164,8 +164,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         if (bmp != null) {
             showImageBitmap(bmp);
         } else {
-            ToastUtils.showToast(this, R.string.error_media_load);
-            delayedFinish();
+            delayedFinish(true);
         }
     }
 
@@ -198,7 +197,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                delayedFinish();
+                delayedFinish(false);
                 return false;
             }
         });
