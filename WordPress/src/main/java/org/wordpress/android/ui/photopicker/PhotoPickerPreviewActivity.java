@@ -9,7 +9,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -50,27 +49,45 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     @Inject FluxCImageLoader mImageLoader;
 
     /*
-     * shows full-screen preview of the passed media
+     * shows full-screen preview of the passed media Uri, which can be either local or remote.
+     * TODO: for now it's assumed that the media is either an image or a video
+     */
+
+
+    /**
+     * Shows full-screen preview of passed media
+     *
+     * @param context     self-explanatory
+     * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
+     * @param mediaUri    Uri of media - can be local content:// or remote http(s)://
+     * @param isVideo     whether the passed media is a video - assumed to be image otherwise
+     *
+     * TODO: handle audio and other file types
      */
     public static void showPreview(Context context,
                                    View sourceView,
                                    String mediaUri,
                                    boolean isVideo) {
         Intent intent = new Intent(context, PhotoPickerPreviewActivity.class);
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri);
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
+        intent.putExtra(ARG_MEDIA_URI, mediaUri);
+        intent.putExtra(ARG_IS_VIDEO, isVideo);
 
-        int startWidth = sourceView.getWidth();
-        int startHeight = sourceView.getHeight();
-        int startX = startWidth / 2;
-        int startY = startHeight / 2;
+        ActivityOptionsCompat options;
+        if (sourceView != null) {
+            int startWidth = sourceView.getWidth();
+            int startHeight = sourceView.getHeight();
+            int startX = startWidth / 2;
+            int startY = startHeight / 2;
 
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
-                sourceView,
-                startX,
-                startY,
-                startWidth,
-                startHeight);
+            options = ActivityOptionsCompat.makeScaleUpAnimation(
+                    sourceView,
+                    startX,
+                    startY,
+                    startWidth,
+                    startHeight);
+        } else {
+            options = ActivityOptionsCompat.makeBasic();
+        }
         ActivityCompat.startActivity(context, intent, options.toBundle());
     }
 
@@ -102,10 +119,8 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo();
-        } else if (mMediaUri.startsWith("http")) {
-            loadRemoteImage();
         } else {
-            loadLocalImage();
+            loadImage();
         }
     }
 
@@ -128,49 +143,51 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         }, 1500);
     }
 
-    private void loadRemoteImage() {
+    private void showProgress(boolean show) {
+        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    /*
+     * loads and displays a remote or local image
+     */
+    private void loadImage() {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
-        String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
 
-        showProgress(true);
-
-        mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null) {
-                    showProgress(false);
-                    showImageBitmap(response.getBitmap());
+        if (mMediaUri.startsWith("http")) {
+            showProgress(true);
+            String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
+            mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    if (response.getBitmap() != null) {
+                        showProgress(false);
+                        mImageView.setImageBitmap(response.getBitmap());
+                    }
                 }
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    AppLog.e(AppLog.T.MEDIA, error);
+                    showProgress(false);
+                    delayedFinish(true);
+                }
+            }, width, height);
+        } else {
+            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
+            if (bytes == null) {
+                delayedFinish(true);
+                return;
             }
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                AppLog.e(AppLog.T.MEDIA, error);
-                showProgress(false);
+
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            if (bmp != null) {
+                mImageView.setImageBitmap(bmp);
+            } else {
                 delayedFinish(true);
             }
-        }, width, height);
-    }
-
-    private void loadLocalImage() {
-        int width = DisplayUtils.getDisplayPixelWidth(this);
-        byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
-        if (bytes == null) {
-            delayedFinish(true);
-            return;
         }
 
-        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        if (bmp != null) {
-            showImageBitmap(bmp);
-        } else {
-            delayedFinish(true);
-        }
-    }
-
-    private void showImageBitmap(@NonNull Bitmap bitmap) {
-        mImageView.setImageBitmap(bitmap);
-
+        // assign the photo attacher to enable pinch/zoom
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
         attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
@@ -186,10 +203,9 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         });
     }
 
-    private void showProgress(boolean show) {
-        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
+    /*
+     * loads and plays a remote or local video
+     */
     private void playVideo() {
         final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
