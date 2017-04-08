@@ -488,14 +488,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onMediaItemSelected(View sourceView, int localMediaId) {
-        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-        MediaPreviewActivity.showPreview(
-                this,
-                sourceView,
-                media.getUrl(),
-                media.isVideo());
-
-        /*final String tempQuery = mQuery;
+        final String tempQuery = mQuery;
 
         if (mSearchView != null) {
             mSearchView.clearFocus();
@@ -517,7 +510,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             ft.commitAllowingStateLoss();
 
             mQuery = tempQuery;
-        }*/
+        }
     }
 
     @Override
