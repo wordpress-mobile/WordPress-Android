@@ -129,7 +129,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     private void loadRemoteImage() {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
-        String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, 0);
+        String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
 
         showProgress(true);
 
@@ -148,7 +148,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
                 ToastUtils.showToast(PhotoPickerPreviewActivity.this, R.string.error_media_load);
                 delayedFinish();
             }
-        });
+        }, width, height);
     }
 
     private void loadLocalImage() {
