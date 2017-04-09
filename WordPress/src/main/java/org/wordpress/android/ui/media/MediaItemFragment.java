@@ -29,7 +29,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -40,7 +43,10 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -181,7 +187,7 @@ public class MediaItemFragment extends Fragment {
         refreshViews(mediaModel);
     }
 
-    private void refreshViews(final MediaModel mediaModel) {
+    private void refreshViews(MediaModel mediaModel) {
         if (!isAdded() || mediaModel == null) {
             return;
         }
@@ -208,7 +214,8 @@ public class MediaItemFragment extends Fragment {
             mDescriptionView.setVisibility(View.VISIBLE);
         }
 
-        mDateView.setText(mediaModel.getUploadDate());
+        mDateView.setText(getDisplayDate(mediaModel.getUploadDate()));
+
         if (getView() != null) {
             TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
             txtDateLabel.setText(
@@ -302,19 +309,34 @@ public class MediaItemFragment extends Fragment {
             mFileTypeView.setVisibility(View.GONE);
         }
 
-        // enable fullscreen preview
-        if (isValidImage) {
+        // enable fullscreen photo for non-local
+        if (!mIsLocal && isValidImage) {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaPreviewActivity.showPreview(
-                            getActivity(),
-                            v,
-                            mediaModel.getUrl(),
-                            mediaModel.isVideo());
+                    EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
+                    if (mSite.isPrivate()) {
+                        imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
+                    }
+                    ReaderActivityLauncher.showReaderPhotoViewer(
+                            v.getContext(), mImageUri, imageOptions);
                 }
             });
         }
+    }
+
+    /*
+     * returns the passed string formatted as a short date if it's valid ISO 8601 date,
+     * otherwise returns the passed string
+     */
+    private String getDisplayDate(String dateString) {
+        if (dateString != null) {
+            Date date = DateTimeUtils.dateFromIso8601(dateString);
+            if (date != null) {
+                return SimpleDateFormat.getDateInstance().format(date);
+            }
+        }
+        return dateString;
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
