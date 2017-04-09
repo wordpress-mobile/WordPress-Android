@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
@@ -42,7 +43,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -211,7 +214,12 @@ public class MediaItemFragment extends Fragment {
             mDescriptionView.setVisibility(View.VISIBLE);
         }
 
-        mDateView.setText(mediaModel.getUploadDate());
+        Date date = DateTimeUtils.dateFromIso8601(mediaModel.getUploadDate());
+        if (date != null) {
+            mDateView.setText(SimpleDateFormat.getDateInstance().format(date));
+        } else {
+            mDateView.setText(mediaModel.getUploadDate());
+        }
         if (getView() != null) {
             TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
             txtDateLabel.setText(
