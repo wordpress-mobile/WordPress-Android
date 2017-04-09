@@ -214,12 +214,8 @@ public class MediaItemFragment extends Fragment {
             mDescriptionView.setVisibility(View.VISIBLE);
         }
 
-        Date date = DateTimeUtils.dateFromIso8601(mediaModel.getUploadDate());
-        if (date != null) {
-            mDateView.setText(SimpleDateFormat.getDateInstance().format(date));
-        } else {
-            mDateView.setText(mediaModel.getUploadDate());
-        }
+        mDateView.setText(getDisplayDate(mediaModel.getUploadDate()));
+
         if (getView() != null) {
             TextView txtDateLabel = (TextView) getView().findViewById(R.id.media_listitem_details_date_label);
             txtDateLabel.setText(
@@ -327,6 +323,20 @@ public class MediaItemFragment extends Fragment {
                 }
             });
         }
+    }
+
+    /*
+     * returns the passed string formatted as a short date if it's valid ISO 8601 date,
+     * otherwise returns the passed string
+     */
+    private String getDisplayDate(String dateString) {
+        if (dateString != null) {
+            Date date = DateTimeUtils.dateFromIso8601(dateString);
+            if (date != null) {
+                return SimpleDateFormat.getDateInstance().format(date);
+            }
+        }
+        return dateString;
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
