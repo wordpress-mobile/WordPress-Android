@@ -164,6 +164,10 @@ public abstract class BaseRequest<T> extends Request<T> {
         mHeaders.put(USER_AGENT_HEADER, userAgent);
     }
 
+    public void addHeader(String header, String value) {
+        mHeaders.put(header, value);
+    }
+
     /**
      * Convenience method for setting a {@link com.android.volley.RetryPolicy} with no retries.
      */
