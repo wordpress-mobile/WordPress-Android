@@ -296,7 +296,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void fetchTerm(RemoteTermPayload payload) {
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerm(payload.term, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -306,7 +306,7 @@ public class TaxonomyStore extends Store {
 
     private void fetchTerms(SiteModel site, String taxonomyName) {
         // TODO: Support large number of terms (currently pulling 100 from REST, and ? from XML-RPC) - pagination?
-        if (site.isWPCom() || site.isJetpackConnected()) {
+        if (site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.fetchTerms(site, taxonomyName);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
@@ -381,7 +381,7 @@ public class TaxonomyStore extends Store {
             onTermUploaded.error = payload.error;
             emitChange(onTermUploaded);
         } else {
-            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+            if (payload.site.isUsingWpComRestApi()) {
                 // The WP.COM REST API response contains the modified term, so we're already in sync with the server
                 // All we need to do is store it and emit OnTaxonomyChanged
                 updateTerm(payload.term);
@@ -396,7 +396,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void pushTerm(RemoteTermPayload payload) {
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mTaxonomyRestClient.pushTerm(payload.term, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here

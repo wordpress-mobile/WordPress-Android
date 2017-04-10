@@ -493,7 +493,7 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.pushMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
@@ -513,7 +513,7 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.uploadMedia(payload.site, payload.media);
@@ -527,7 +527,7 @@ public class MediaStore extends Store {
             list.add(UploadState.UPLOADED.toString());
             offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
         }
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(payload.site, offset);
         } else {
             mMediaXmlrpcClient.fetchMediaList(payload.site, offset);
@@ -541,7 +541,7 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.fetchMedia(payload.site, payload.media);
@@ -554,7 +554,7 @@ public class MediaStore extends Store {
             return;
         }
 
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.deleteMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
@@ -563,7 +563,7 @@ public class MediaStore extends Store {
 
     private void performCancelUpload(@NonNull MediaPayload payload) {
         if (payload.media != null) {
-            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+            if (payload.site.isUsingWpComRestApi()) {
                 mMediaRestClient.cancelUpload(payload.media);
             } else {
                 mMediaXmlrpcClient.cancelUpload(payload.media);
