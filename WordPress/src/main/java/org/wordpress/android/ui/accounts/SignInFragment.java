@@ -645,7 +645,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mJetpackAuthLabel.setVisibility(View.VISIBLE);
             mAddSelfHostedButton.setVisibility(View.GONE);
             mCreateAccountButton.setVisibility(View.GONE);
-            mUsernameEditText.setText("");
         }
     }
 
