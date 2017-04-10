@@ -322,6 +322,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                 }
             }
             site.setPlanShortName(from.plan.product_name_short);
+            site.setHasPaidPlan(!from.plan.is_free);
         }
         if (from.capabilities != null) {
             site.setHasCapabilityEditPages(from.capabilities.edit_pages);
