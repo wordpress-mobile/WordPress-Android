@@ -740,7 +740,6 @@ Language: vi_VN
 	<string name="passcode_wrong_passcode">Sai mã PIN</string>
 	<string name="error_downloading_image">Lỗi tải ảnh về</string>
 	<string name="error_load_comment">Không thể tải bình luận</string>
-	<string name="error_upload">Một lỗi đã xảy ra trong khi tải lên %s</string>
 	<string name="error_edit_comment">Một lỗi đã xảy ra trong khi sửa bình luận</string>
 	<string name="error_moderate_comment">Có lỗi xảy ra trong khi cách kiểm duyệt</string>
 	<string name="error_generic">Một lỗi đã xảy ra</string>

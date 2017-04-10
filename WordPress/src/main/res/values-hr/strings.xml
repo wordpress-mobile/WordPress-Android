@@ -539,7 +539,6 @@ Language: hr
 	<string name="error_generic">Dogodila se greška</string>
 	<string name="error_moderate_comment">Dogodila se greška tijekom moderiranja</string>
 	<string name="error_edit_comment">Dogodila se greška tijekom uređivanja komentara</string>
-	<string name="error_upload">Dogodila se greška tijekom prijenosa %s</string>
 	<string name="error_load_comment">Nije moguće učitati komentar</string>
 	<string name="error_downloading_image">Greška pri preuzimanju slike</string>
 	<string name="reply_failed">Neuspjeli odgovor</string>
