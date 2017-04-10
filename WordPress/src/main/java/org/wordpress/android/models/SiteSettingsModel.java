@@ -111,7 +111,7 @@ public class SiteSettingsModel {
     public int languageId;
     public int privacy;
     public boolean location;
-    public boolean optimizedImage = true; // Default to true
+    public boolean optimizedImage;
     public int maxImageWidth;
     public int imageQualitySetting;
     public int defaultCategory;
