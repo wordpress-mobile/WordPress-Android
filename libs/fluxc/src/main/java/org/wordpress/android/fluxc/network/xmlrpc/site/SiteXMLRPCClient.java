@@ -143,6 +143,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
             site.setIsWPCom(false);
             site.setUsername(username);
             site.setPassword(password);
+            site.setOrigin(SiteModel.ORIGIN_XMLRPC);
             siteArray.add(site);
         }
 
