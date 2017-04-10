@@ -318,7 +318,6 @@ Language: sr_RS
 	<string name="passcode_wrong_passcode">Погрешан ПИН</string>
 	<string name="error_downloading_image">Грешка приликом преузимања слике</string>
 	<string name="error_load_comment">Није могуће учитати коментар</string>
-	<string name="error_upload">Дошло је до грешке током отпремања %s</string>
 	<string name="error_edit_comment">Дошло је до грешке током уређивања коментара</string>
 	<string name="error_moderate_comment">Дошло је до грешке током уређивања</string>
 	<string name="error_refresh_stats">Статистике тренутно не могу бити освежене</string>

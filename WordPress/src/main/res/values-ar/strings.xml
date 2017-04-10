@@ -775,7 +775,6 @@ Language: ar
 	<string name="error_refresh_stats">الإحصائيات لا يمكن تحديثها في هذا الوقت</string>
 	<string name="error_moderate_comment">حدث خطأ أثناء الإدارة</string>
 	<string name="error_edit_comment">حدث خطأ أثناء تعديل التعليق </string>
-	<string name="error_upload">حدث خطأ أثناء رفع ال %s</string>
 	<string name="username_only_lowercase_letters_and_numbers">اسم المستخدم يمكن أن يحتوي على أحرف صغيرة فقط ( a - z ) وأرقام</string>
 	<string name="username_must_be_at_least_four_characters">يجب ألا يقل اسم المستخدم عن 4 أحرف</string>
 	<string name="username_contains_invalid_characters">لا يمكن أن يحتوي اسم المستخدم على الحرف  "_"</string>

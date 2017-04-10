@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:layout_marginTop="5dp"
-                app:drawableRightCompat="@drawable/ic_dropdown_blue_light_24dp"
+                android:drawableRight="@drawable/ic_dropdown_blue_light_24dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="1"
