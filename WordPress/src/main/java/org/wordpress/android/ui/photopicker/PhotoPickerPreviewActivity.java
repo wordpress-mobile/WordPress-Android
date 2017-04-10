@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -26,7 +27,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     public static final String ARG_MEDIA_URI = "media_uri";
     public static final String ARG_IS_VIDEO = "is_video";
 
-    private Uri mMediaUri;
+    private String mMediaUri;
     private boolean mIsVideo;
     private ImageView mImageView;
     private VideoView mVideoView;
@@ -39,16 +40,19 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
 
-        String uriString;
         if (savedInstanceState != null) {
-            uriString = savedInstanceState.getString(ARG_MEDIA_URI);
+            mMediaUri = savedInstanceState.getString(ARG_MEDIA_URI);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
         } else {
-            uriString = getIntent().getStringExtra(ARG_MEDIA_URI);
+            mMediaUri = getIntent().getStringExtra(ARG_MEDIA_URI);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
         }
 
-        mMediaUri = Uri.parse(uriString);
+        if (TextUtils.isEmpty(mMediaUri)) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+            finish();
+            return;
+        }
 
         mImageView.setVisibility(mIsVideo ? View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
@@ -64,7 +68,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(ARG_MEDIA_URI, mMediaUri.toString());
+        outState.putString(ARG_MEDIA_URI, mMediaUri);
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
     }
 
@@ -80,7 +84,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
     private void loadImage() {
         // load a scaled version of the image to prevent OOM exception
         int maxWidth = DisplayUtils.getDisplayPixelWidth(this);
-        byte[] bytes = ImageUtils.createThumbnailFromUri(this, mMediaUri, maxWidth, null, 0);
+        byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), maxWidth, null, 0);
         if (bytes == null) {
             ToastUtils.showToast(this, R.string.error_media_load);
             delayedFinish();
@@ -132,7 +136,7 @@ public class PhotoPickerPreviewActivity extends AppCompatActivity {
             }
         });
 
-        mVideoView.setVideoURI(mMediaUri);
+        mVideoView.setVideoURI(Uri.parse(mMediaUri));
         mVideoView.requestFocus();
     }
 }

@@ -1,16 +1,17 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -39,7 +40,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
      */
     protected interface PhotoPickerAdapterListener {
         void onItemTapped(Uri mediaUri);
-        void onItemDoubleTapped(View view, Uri mediaUri);
         void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
     }
@@ -169,11 +169,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return position >= 0 && position < mMediaList.size();
     }
 
-    boolean isVideoUri(Uri uri) {
-        int index = indexOfUri(uri);
-        return index > -1 && getItemAtPosition(index).isVideo;
-    }
-
     void setAllowMultiSelect(boolean allow) {
         mAllowMultiSelect = allow;
     }
@@ -249,15 +244,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return mIsMultiSelectEnabled ? mSelectedUris.size() : 0;
     }
 
-    private int indexOfUri(Uri uri) {
-        for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).uri.equals(uri)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     /*
      * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
      * prevent unnecessary flicker when changing existing items
@@ -274,7 +260,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
         private final View videoOverlay;
-        private final GestureDetector detector;
+        private final View btnPreview;
 
         public ThumbnailViewHolder(View view) {
             super(view);
@@ -282,13 +268,14 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = view.findViewById(R.id.image_video_overlay);
+            btnPreview = view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
 
-            detector = new GestureDetector(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
+            imgThumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onSingleTapConfirmed(MotionEvent e) {
+                public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
                         if (mIsMultiSelectEnabled) {
@@ -298,19 +285,12 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                             mListener.onItemTapped(uri);
                         }
                     }
-                    return true;
                 }
+            });
+
+            imgThumbnail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    int position = getAdapterPosition();
-                    if (isValidPosition(position) && mListener != null) {
-                        Uri uri = getItemAtPosition(position).uri;
-                        mListener.onItemDoubleTapped(itemView, uri);
-                    }
-                    return true;
-                }
-                @Override
-                public void onLongPress(MotionEvent e) {
+                public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position) && mAllowMultiSelect) {
                         if (!mIsMultiSelectEnabled) {
@@ -318,17 +298,45 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         }
                         toggleSelection(ThumbnailViewHolder.this, position);
                     }
-                }
-            });
-
-            imgThumbnail.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    detector.onTouchEvent(event);
                     return true;
                 }
             });
+
+            btnPreview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    showPreview(imgThumbnail, position);
+                }
+            });
         }
+    }
+
+    /*
+     * show full-screen preview of the item and the passed position
+     */
+    private void showPreview(View sourceView, int position) {
+        PhotoPickerItem item = getItemAtPosition(position);
+        if (item == null) {
+            return;
+        }
+
+        Intent intent = new Intent(mContext, PhotoPickerPreviewActivity.class);
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, item.uri.toString());
+        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, item.isVideo);
+
+        int startWidth = sourceView.getWidth();
+        int startHeight = sourceView.getHeight();
+        int startX = startWidth / 2;
+        int startY = startHeight / 2;
+
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
+                sourceView,
+                startX,
+                startY,
+                startWidth,
+                startHeight);
+        ActivityCompat.startActivity(mContext, intent, options.toBundle());
     }
 
     /*
