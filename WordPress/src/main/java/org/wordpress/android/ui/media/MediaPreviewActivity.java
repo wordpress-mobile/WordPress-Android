@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -24,6 +25,8 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -37,35 +40,55 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MediaPreviewActivity extends AppCompatActivity {
 
-    private static final String ARG_MEDIA_URI = "media_uri";
+    private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
+    private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_IS_VIDEO = "is_video";
 
-    private String mMediaUri;
+    private String mContentUri;
+    private int mMediaId;
     private boolean mIsVideo;
 
     private ImageView mImageView;
     private VideoView mVideoView;
 
+    @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
 
     /**
-     * Shows full-screen preview of passed media
-     *
      * @param context     self explanatory
      * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
-     * @param mediaUri    Uri of media - can be local content:// or remote http(s)://
+     * @param contentUri  local content:// uri of media
      * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
      *
-     * TODO: handle audio and other file types
      */
     public static void showPreview(Context context,
                                    View sourceView,
-                                   String mediaUri,
+                                   String contentUri,
                                    boolean isVideo) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
-        intent.putExtra(ARG_MEDIA_URI, mediaUri);
+        intent.putExtra(ARG_MEDIA_CONTENT_URI, contentUri);
         intent.putExtra(ARG_IS_VIDEO, isVideo);
+        showPreviewIntent(context, sourceView, intent);
+    }
 
+    /**
+     * @param context     self explanatory
+     * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
+     * @param mediaId     local ID in site's media library
+     * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
+     *
+     */
+    public static void showPreview(Context context,
+                                   View sourceView,
+                                   int mediaId,
+                                   boolean isVideo) {
+        Intent intent = new Intent(context, MediaPreviewActivity.class);
+        intent.putExtra(ARG_MEDIA_LOCAL_ID, mediaId);
+        intent.putExtra(ARG_IS_VIDEO, isVideo);
+        showPreviewIntent(context, sourceView, intent);
+    }
+
+    private static void showPreviewIntent(Context context, View sourceView, Intent intent) {
         ActivityOptionsCompat options;
         if (sourceView != null) {
             int startWidth = sourceView.getWidth();
@@ -95,33 +118,46 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mVideoView = (VideoView) findViewById(R.id.video_preview);
 
         if (savedInstanceState != null) {
-            mMediaUri = savedInstanceState.getString(ARG_MEDIA_URI);
+            mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
+            mMediaId = savedInstanceState.getInt(ARG_MEDIA_LOCAL_ID);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
         } else {
-            mMediaUri = getIntent().getStringExtra(ARG_MEDIA_URI);
+            mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
+            mMediaId = getIntent().getIntExtra(ARG_MEDIA_LOCAL_ID, 0);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
-        }
-
-        if (TextUtils.isEmpty(mMediaUri)) {
-            delayedFinish(true);
-            return;
         }
 
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
+        String mediaUri;
+        if (!TextUtils.isEmpty(mContentUri)) {
+            mediaUri = mContentUri;
+        } else if (mMediaId != 0) {
+            MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+            if (media == null) {
+                delayedFinish(true);
+                return;
+            }
+            mediaUri = media.getUrl();
+        } else {
+            delayedFinish(true);
+            return;
+        }
+
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            playVideo();
+            playVideo(mediaUri);
         } else {
-            loadImage();
+            loadImage(mediaUri);
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(ARG_MEDIA_URI, mMediaUri);
+        outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
+        outState.putInt(ARG_MEDIA_LOCAL_ID, mMediaId);
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
     }
 
@@ -144,13 +180,13 @@ public class MediaPreviewActivity extends AppCompatActivity {
     /*
      * loads and displays a remote or local image
      */
-    private void loadImage() {
+    private void loadImage(@NonNull String mediaUri) {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
 
-        if (mMediaUri.startsWith("http")) {
+        if (mediaUri.startsWith("http")) {
             showProgress(true);
-            String imageUrl = PhotonUtils.getPhotonImageUrl(mMediaUri, width, height);
+            String imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, width, height);
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -167,7 +203,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 }
             }, width, height);
         } else {
-            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mMediaUri), width, null, 0);
+            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mediaUri), width, null, 0);
             if (bytes == null) {
                 delayedFinish(true);
                 return;
@@ -200,7 +236,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     /*
      * loads and plays a remote or local video
      */
-    private void playVideo() {
+    private void playVideo(@NonNull String mediaUri) {
         final MediaController controls = new MediaController(this);
         mVideoView.setMediaController(controls);
 
@@ -220,7 +256,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
             }
         });
 
-        mVideoView.setVideoURI(Uri.parse(mMediaUri));
+        mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
     }
 }
