@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.model;
 
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.yarolegovich.wellsql.core.Identifiable;
@@ -13,12 +14,22 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.Serializable;
+import java.lang.annotation.Retention;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
 public class SiteModel extends Payload implements Identifiable, Serializable {
+    @Retention(SOURCE)
+    @IntDef({ORIGIN_UNKNOWN, ORIGIN_WPCOM_REST, ORIGIN_XMLRPC})
+    public @interface SiteOrigin {}
+    public static final int ORIGIN_UNKNOWN = 0;
+    public static final int ORIGIN_WPCOM_REST = 1;
+    public static final int ORIGIN_XMLRPC = 2;
+
     public static final long VIP_PLAN_ID = 31337;
 
     @PrimaryKey
@@ -35,6 +46,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
     @Column private String mFrameNonce; // only wpcom and Jetpack sites
+    @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
 
     // Self hosted specifics
     // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
@@ -58,6 +70,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private long mPlanId;
     @Column private String mPlanShortName;
     @Column private String mIconUrl;
+    @Column private boolean mHasFreePlan;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -426,6 +439,14 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
         mIconUrl = iconUrl;
     }
 
+    public boolean getHasFreePlan() {
+        return mHasFreePlan;
+    }
+
+    public void setHasFreePlan(boolean hasFreePlan) {
+        mHasFreePlan = hasFreePlan;
+    }
+
     public boolean isJetpackInstalled() {
         return mIsJetpackInstalled;
     }
@@ -448,5 +469,18 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setIsAutomatedTransfer(boolean automatedTransfer) {
         mIsAutomatedTransfer = automatedTransfer;
+    }
+
+    @SiteOrigin
+    public int getOrigin() {
+        return mOrigin;
+    }
+
+    public void setOrigin(@SiteOrigin int origin) {
+        mOrigin = origin;
+    }
+
+    public boolean isUsingWpComRestApi() {
+        return isWPCom() || (isJetpackConnected() && getOrigin() == ORIGIN_WPCOM_REST);
     }
 }

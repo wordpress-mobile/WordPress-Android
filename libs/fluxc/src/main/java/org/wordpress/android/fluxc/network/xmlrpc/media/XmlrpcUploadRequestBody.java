@@ -2,12 +2,12 @@ package org.wordpress.android.fluxc.network.xmlrpc.media;
 
 import android.util.Base64;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,19 +38,29 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
             "</base64></value></member></struct></value></param></params></methodCall>";
 
     private final String mPrependString;
-    private final long mMediaSize;
+    private long mMediaSize;
+    private long mContentSize = -1;
+
 
     private long mMediaBytesWritten = 0;
 
     public XmlrpcUploadRequestBody(MediaModel media, ProgressListener listener, SiteModel site) {
         super(media, listener);
 
-        File mediaFile = new File(media.getFilePath());
-        mMediaSize = mediaFile.length();
-
+        // TODO: we should use the XMLRPCSerializer instead of doing this
         mPrependString = String.format(Locale.ENGLISH, PREPEND_XML_FORMAT,
-                site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
-                media.getFileName(), media.getMimeType());
+                site.getSelfHostedSiteId(),
+                StringEscapeUtils.escapeXml(site.getUsername()),
+                StringEscapeUtils.escapeXml(site.getPassword()),
+                StringEscapeUtils.escapeXml(media.getFileName()),
+                StringEscapeUtils.escapeXml(media.getMimeType()));
+
+        try {
+            mMediaSize = contentLength();
+        } catch (IOException e) {
+            // Default to 1 (to avoid divide by zero errors)
+            mMediaSize = 1;
+        }
     }
 
     @Override
@@ -61,6 +71,25 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     @Override
     public MediaType contentType() {
         return MEDIA_TYPE;
+    }
+
+    @Override
+    public long contentLength() throws IOException {
+        if (mContentSize == -1) {
+            mContentSize = getMediaBase64EncodedSize() + mPrependString.length() + APPEND_XML.length();
+        }
+        return mContentSize;
+    }
+
+    private long getMediaBase64EncodedSize() throws IOException {
+        InputStream is = new DataInputStream(new FileInputStream(getMedia().getFilePath()));
+        byte[] buffer = new byte[3600];
+        int length;
+        int totalSize = 0;
+        while ((length = is.read(buffer)) > 0) {
+            totalSize += Base64.encodeToString(buffer, 0, length, Base64.DEFAULT).length();
+        }
+        return totalSize;
     }
 
     @Override
