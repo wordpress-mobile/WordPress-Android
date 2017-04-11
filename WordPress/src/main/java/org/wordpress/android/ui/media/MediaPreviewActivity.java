@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -56,6 +58,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     private ImageView mImageView;
     private VideoView mVideoView;
+    private ViewGroup mMetadataView;
 
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
@@ -117,6 +120,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         setContentView(R.layout.media_preview_activity);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
+        mMetadataView = (ViewGroup) findViewById(R.id.layout_metadata);
 
         if (savedInstanceState != null) {
             mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
@@ -224,18 +228,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         // assign the photo attacher to enable pinch/zoom
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float v, float v2) {
-                finish();
-            }
-        });
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float v, float v2) {
-                finish();
-            }
-        });
     }
 
     /*
@@ -268,14 +260,11 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void showMetaData(@NonNull MediaModel media) {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
 
-        View view = findViewById(R.id.layout_metadata);
-        view.setVisibility(View.VISIBLE);
-
-        TextView captionView = (TextView) view.findViewById(R.id.media_details_caption);
-        TextView cescriptionView = (TextView) view.findViewById(R.id.media_details_description);
-        TextView dateView = (TextView) view.findViewById(R.id.media_details_date);
-        TextView fileNameView = (TextView) view.findViewById(R.id.media_details_file_name);
-        TextView fileTypeView = (TextView) view.findViewById(R.id.media_details_file_type);
+        TextView captionView = (TextView) mMetadataView.findViewById(R.id.media_details_caption);
+        TextView cescriptionView = (TextView) mMetadataView.findViewById(R.id.media_details_description);
+        TextView dateView = (TextView) mMetadataView.findViewById(R.id.media_details_date);
+        TextView fileNameView = (TextView) mMetadataView.findViewById(R.id.media_details_file_name);
+        TextView fileTypeView = (TextView) mMetadataView.findViewById(R.id.media_details_file_type);
 
         if (TextUtils.isEmpty(media.getCaption())) {
             captionView.setVisibility(View.GONE);
@@ -293,7 +282,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         dateView.setText(getDisplayDate(media.getUploadDate()));
 
-        TextView txtDateLabel = (TextView) view.findViewById(R.id.media_details_date_label);
+        TextView txtDateLabel = (TextView) mMetadataView.findViewById(R.id.media_details_date_label);
         txtDateLabel.setText(isLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
 
         String fileURL = media.getUrl();
@@ -322,6 +311,40 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             fileTypeView.setVisibility(View.GONE);
         }
+
+        fadeInMetadata();
+
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fadeInMetadata();
+            }
+        };
+        mMetadataView.setOnClickListener(clickListener);
+        mImageView.setOnClickListener(clickListener);
+    }
+
+    private Runnable fadeOutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mMetadataView.getVisibility() == View.VISIBLE) {
+                AniUtils.fadeOut(mMetadataView, AniUtils.Duration.LONG);
+            }
+        }
+    };
+
+    private Runnable fadeInRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mMetadataView.getVisibility() != View.VISIBLE) {
+                AniUtils.fadeIn(mMetadataView, AniUtils.Duration.LONG);
+                mMetadataView.postDelayed(fadeOutRunnable, 3000);
+            }
+        }
+    };
+
+    private void fadeInMetadata() {
+        mMetadataView.post(fadeInRunnable);
     }
 
     /*
