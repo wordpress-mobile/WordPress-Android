@@ -695,7 +695,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchSite(SiteModel site) {
-        if (site.isWPCom() || site.isJetpackConnected()) {
+        if (site.isUsingWpComRestApi()) {
             mSiteRestClient.fetchSite(site);
         } else {
             mSiteXMLRPCClient.fetchSite(site);
@@ -707,7 +707,7 @@ public class SiteStore extends Store {
     }
 
     private void fetchPostFormats(SiteModel site) {
-        if (site.isWPCom() || site.isJetpackConnected()) {
+        if (site.isUsingWpComRestApi()) {
             mSiteRestClient.fetchPostFormats(site);
         } else {
             mSiteXMLRPCClient.fetchPostFormats(site);
