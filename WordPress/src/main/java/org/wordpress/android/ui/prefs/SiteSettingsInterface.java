@@ -803,7 +803,9 @@ public abstract class SiteSettingsInterface {
             setPassword(mSite.getPassword());
         }
 
-        localSettings.close();
+        if (localSettings != null) {
+            localSettings.close();
+        }
     }
 
     /**
