@@ -64,7 +64,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
 
-    private static final long FADE_DELAY_MS = 3000;
+    private static final long FADE_DELAY_MS = 4000;
     private final Handler mFadeHandler = new Handler();
 
     /**
