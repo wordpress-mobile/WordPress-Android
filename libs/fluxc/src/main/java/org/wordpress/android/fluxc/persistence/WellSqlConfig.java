@@ -82,7 +82,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 5:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table SiteModel add HAS_PAID_PLAN boolean;");
+                db.execSQL("alter table SiteModel add HAS_FREE_PLAN boolean;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
