@@ -64,6 +64,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
 
+    private static final long FADE_DELAY_MS = 3000;
+    private final Handler mFadeHandler = new Handler();
+
     /**
      * @param context     self explanatory
      * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
@@ -327,27 +330,29 @@ public class MediaPreviewActivity extends AppCompatActivity {
         fadeInMetadata();
     }
 
-    private Runnable fadeOutRunnable = new Runnable() {
+    private final Runnable fadeOutRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mMetadataView.getVisibility() == View.VISIBLE) {
+            if (!isFinishing() && mMetadataView.getVisibility() == View.VISIBLE) {
                 AniUtils.fadeOut(mMetadataView, AniUtils.Duration.LONG);
             }
         }
     };
 
-    private Runnable fadeInRunnable = new Runnable() {
+    private final Runnable fadeInRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mMetadataView.getVisibility() != View.VISIBLE) {
+            if (!isFinishing() && mMetadataView.getVisibility() != View.VISIBLE) {
                 AniUtils.fadeIn(mMetadataView, AniUtils.Duration.LONG);
-                mMetadataView.postDelayed(fadeOutRunnable, 3000);
+                mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
             }
         }
     };
 
     private void fadeInMetadata() {
-        mMetadataView.post(fadeInRunnable);
+        mFadeHandler.removeCallbacks(fadeInRunnable);
+        mFadeHandler.removeCallbacks(fadeOutRunnable);
+        mFadeHandler.post(fadeInRunnable);
     }
 
     /*
