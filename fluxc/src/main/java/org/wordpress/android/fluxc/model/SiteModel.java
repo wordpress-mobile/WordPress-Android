@@ -70,7 +70,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private long mPlanId;
     @Column private String mPlanShortName;
     @Column private String mIconUrl;
-    @Column private boolean mHasPaidPlan;
+    @Column private boolean mHasFreePlan;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -439,12 +439,12 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
         mIconUrl = iconUrl;
     }
 
-    public boolean getHasPaidPlan() {
-        return  mHasPaidPlan;
+    public boolean getHasFreePlan() {
+        return mHasFreePlan;
     }
 
-    public void setHasPaidPlan(boolean hasPaidPlan) {
-        mHasPaidPlan = hasPaidPlan;
+    public void setHasFreePlan(boolean hasFreePlan) {
+        mHasFreePlan = hasFreePlan;
     }
 
     public boolean isJetpackInstalled() {
