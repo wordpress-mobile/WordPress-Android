@@ -190,7 +190,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (response.getBitmap() != null) {
+                    if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
                         mImageView.setImageBitmap(response.getBitmap());
                     }
@@ -198,8 +198,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     AppLog.e(AppLog.T.MEDIA, error);
-                    showProgress(false);
-                    delayedFinish(true);
+                    if (!isFinishing()) {
+                        showProgress(false);
+                        delayedFinish(true);
+                    }
                 }
             }, width, height);
         } else {
