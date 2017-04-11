@@ -29,8 +29,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -46,7 +44,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -187,7 +184,7 @@ public class MediaItemFragment extends Fragment {
         refreshViews(mediaModel);
     }
 
-    private void refreshViews(MediaModel mediaModel) {
+    private void refreshViews(final MediaModel mediaModel) {
         if (!isAdded() || mediaModel == null) {
             return;
         }
@@ -309,17 +306,16 @@ public class MediaItemFragment extends Fragment {
             mFileTypeView.setVisibility(View.GONE);
         }
 
-        // enable fullscreen photo for non-local
-        if (!mIsLocal && isValidImage) {
+        // enable fullscreen preview
+        if (isValidImage) {
             mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EnumSet<PhotoViewerOption> imageOptions = EnumSet.noneOf(PhotoViewerOption.class);
-                    if (mSite.isPrivate()) {
-                        imageOptions.add(PhotoViewerOption.IS_PRIVATE_IMAGE);
-                    }
-                    ReaderActivityLauncher.showReaderPhotoViewer(
-                            v.getContext(), mImageUri, imageOptions);
+                    MediaPreviewActivity.showPreview(
+                            getActivity(),
+                            v,
+                            mediaModel.getId(),
+                            mediaModel.isVideo());
                 }
             });
         }
