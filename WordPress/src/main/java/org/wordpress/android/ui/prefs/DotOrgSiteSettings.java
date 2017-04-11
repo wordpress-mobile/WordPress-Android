@@ -19,6 +19,7 @@ class DotOrgSiteSettings extends SiteSettingsInterface {
      */
     @Override
     protected void fetchRemoteData() {
+        // TODO - Call the XML-RPC endpoint  
         SiteSettingsTable.saveSettings(mSettings);
     }
 
