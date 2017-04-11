@@ -419,10 +419,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
         } else if (preference == mStartOverPref) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED,
-                    mSite);
-            HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                    HelpshiftHelper.Tag.ORIGIN_START_OVER, mAccountStore.getAccount().getUserName());
+            handleStartOver();
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
         } else if (preference == mPagingPref) {
@@ -1121,6 +1118,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mWhitelistPref,
                 String.valueOf(val),
                 getWhitelistSummary(val));
+    }
+
+    private void handleStartOver() {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED,
+                mSite);
+        if (mSite == null || mSite.getHasFreePlan()) {
+            // free plan, redirect to website
+        } else {
+            // paid plan, send email
+        }
     }
 
     private void showListEditorDialog(int titleRes, int headerRes) {
