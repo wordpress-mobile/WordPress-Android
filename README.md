@@ -12,9 +12,9 @@ You first need to generate the `local.properties` (replace YOUR_SDK_DIR with
 your actual android SDK directory) file and create the `gradle.properties` file:
 
     $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
-    $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
+    $ cp ./gradle.properties-example ./gradle.properties
 
-Note: this is the default `./WordPress/gradle.properties` file. If you
+Note: this is the default `./gradle.properties` file. If you
 want to use WordPress.com features (login to a WordPress.com account,
 access the Reader and Stats for example), you'll have to get a WordPress.com
 OAuth2 ID and secret. Please read the
@@ -33,9 +33,9 @@ You can use [Android Studio][3] by importing the project as a Gradle project.
 
     |-- libs                    # dependencies used to build debug variants
     |-- tools                   # script collection
+    |-- gradle.properties       # properties imported by the build script
     `-- WordPress
         |-- build.gradle        # main build script
-        |-- gradle.properties   # properties imported by the build script
         `-- src                 # android specific Java code
             |-- androidTest     # test assets, resources and code
             |-- main            #
@@ -58,7 +58,7 @@ application type. The applications manager currently requires a "redirect URL",
 but this isn't used for mobile apps. Just use "https://localhost".
 
 Once you've created your application in the [applications manager][5], you'll
-need to edit the `./WordPress/gradle.properties` file and change the
+need to edit the `./gradle.properties` file and change the
 `WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
 account.

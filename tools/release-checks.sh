@@ -29,7 +29,7 @@ function pFail() {
 
 function checkENStrings() {
   if [[ -n $(git status --porcelain|grep "M res") ]]; then
-    /bin/echo -n "Unstagged changes detected in $RESDIR/ - can't continue..."
+    /bin/echo -n "Unstagged changes detected in $RESDIR - can't continue..."
     pFail
     exit 3
   fi
@@ -75,8 +75,8 @@ function printVersion() {
 }
 
 function checkGradleProperties() {
-  /bin/echo -n "Check WordPress/gradle.properties..."
-  checksum=`cat WordPress/gradle.properties | grep -v "^wp.debug." | grep "^wp."|tr "[A-Z]" "[a-z]" | sed "s/ //g" | sort | sha1sum | cut -d- -f1 | sed "s/ //g"`
+  /bin/echo -n "Check gradle.properties..."
+  checksum=`cat gradle.properties | grep -v "^wp.debug." | grep "^wp."|tr "[A-Z]" "[a-z]" | sed "s/ //g" | sort | sha1sum | cut -d- -f1 | sed "s/ //g"`
   known_checksum="4058cdf3d784e4b79f63514d4780e92c28b5ab78"
   if [ x$checksum != x$known_checksum ]; then
     pFail
@@ -86,7 +86,7 @@ function checkGradleProperties() {
 }
 
 function checkKeystore() {
-  keystore=`cat WordPress/gradle.properties | grep storeFile | cut -d= -f 2`
+  keystore=`cat gradle.properties | grep storeFile | cut -d= -f 2`
   /bin/echo -n "Check keystore file in $keystore..."
   checksum=`cd WordPress && sha1sum $keystore | cut -d" " -f1`
   known_checksum="7b20577a43b217b668fa875693c006d693679c0c"
