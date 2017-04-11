@@ -298,14 +298,14 @@ public class CommentStore extends Store {
     private void createNewComment(RemoteCreateCommentPayload payload) {
         if (payload.reply == null) {
             // Create a new comment on a specific Post
-            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+            if (payload.site.isUsingWpComRestApi()) {
                 mCommentRestClient.createNewComment(payload.site, payload.post, payload.comment);
             } else {
                 mCommentXMLRPCClient.createNewComment(payload.site, payload.post, payload.comment);
             }
         } else {
             // Create a new reply to a specific Comment
-            if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+            if (payload.site.isUsingWpComRestApi()) {
                 mCommentRestClient.createNewReply(payload.site, payload.comment, payload.reply);
             } else {
                 mCommentXMLRPCClient.createNewReply(payload.site, payload.comment, payload.reply);
@@ -369,7 +369,7 @@ public class CommentStore extends Store {
         if (payload.comment == null) {
             getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
         }
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mCommentRestClient.deleteComment(payload.site, payload.remoteCommentId, comment);
         } else {
             mCommentXMLRPCClient.deleteComment(payload.site, payload.remoteCommentId, comment);
@@ -398,7 +398,7 @@ public class CommentStore extends Store {
     }
 
     private void fetchComments(FetchCommentsPayload payload) {
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mCommentRestClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
         } else {
             mCommentXMLRPCClient.fetchComments(payload.site, payload.number, payload.offset, payload.status);
@@ -433,7 +433,7 @@ public class CommentStore extends Store {
             emitChange(event);
             return;
         }
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mCommentRestClient.pushComment(payload.site, payload.comment);
         } else {
             mCommentXMLRPCClient.pushComment(payload.site, payload.comment);
@@ -455,7 +455,7 @@ public class CommentStore extends Store {
     }
 
     private void fetchComment(RemoteCommentPayload payload) {
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mCommentRestClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
         } else {
             mCommentXMLRPCClient.fetchComment(payload.site, payload.remoteCommentId, payload.comment);
@@ -483,7 +483,7 @@ public class CommentStore extends Store {
         if (payload.comment == null) {
             getCommentBySiteAndRemoteId(payload.site, payload.remoteCommentId);
         }
-        if (payload.site.isWPCom() || payload.site.isJetpackConnected()) {
+        if (payload.site.isUsingWpComRestApi()) {
             mCommentRestClient.likeComment(payload.site, payload.remoteCommentId, comment, payload.like);
         } else {
             OnCommentChanged event = new OnCommentChanged(0);

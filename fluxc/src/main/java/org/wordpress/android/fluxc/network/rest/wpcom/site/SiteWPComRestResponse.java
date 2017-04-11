@@ -23,6 +23,7 @@ public class SiteWPComRestResponse extends Payload implements Response {
     public class Plan {
         public String product_id;
         public String product_name_short;
+        public boolean is_free;
     }
 
     public class Capabilities {

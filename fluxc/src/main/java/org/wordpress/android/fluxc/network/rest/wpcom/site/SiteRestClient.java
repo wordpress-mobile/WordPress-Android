@@ -322,6 +322,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                 }
             }
             site.setPlanShortName(from.plan.product_name_short);
+            site.setHasFreePlan(from.plan.is_free);
         }
         if (from.capabilities != null) {
             site.setHasCapabilityEditPages(from.capabilities.edit_pages);
@@ -355,6 +356,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         if (!from.jetpack) {
             site.setIsWPCom(true);
         }
+        site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         return site;
     }
 
