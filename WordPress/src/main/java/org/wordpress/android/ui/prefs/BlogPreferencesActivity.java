@@ -68,58 +68,23 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             return;
         }
 
-        if (SiteUtils.isAccessibleViaWPComAPI(mSite)) {
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setHomeButtonEnabled(true);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
-            }
-
-            FragmentManager fragmentManager = getFragmentManager();
-            Fragment siteSettingsFragment = fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
-
-            if (siteSettingsFragment == null) {
-                siteSettingsFragment = new SiteSettingsFragment();
-                siteSettingsFragment.setArguments(getIntent().getExtras());
-                fragmentManager.beginTransaction()
-                        .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
-                        .commit();
-            }
-        } else {
-            setContentView(R.layout.blog_preferences);
-
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-
-            mUsernameET = (EditText) findViewById(R.id.username);
-            mPasswordET = (EditText) findViewById(R.id.password);
-            Button removeBlogButton = (Button) findViewById(R.id.remove_account);
-            removeBlogButton.setVisibility(View.VISIBLE);
-            removeBlogButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    removeBlogWithConfirmation();
-                }
-            });
-
-            loadSettingsForBlog();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        if (SiteUtils.isAccessibleViaWPComAPI(mSite) || mBlogDeleted) {
-            return;
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
 
-        mSite.setUsername(mUsernameET.getText().toString());
-        mSite.setPassword(mPasswordET.getText().toString());
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment siteSettingsFragment = fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
+
+        if (siteSettingsFragment == null) {
+            siteSettingsFragment = new SiteSettingsFragment();
+            siteSettingsFragment.setArguments(getIntent().getExtras());
+            fragmentManager.beginTransaction()
+                    .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
+                    .commit();
+        }
     }
 
     @Override
@@ -190,11 +155,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             setResult(RESULT_BLOG_REMOVED);
             finish();
         }
-    }
-
-    private void loadSettingsForBlog() {
-        mUsernameET.setText(mSite.getUsername());
-        mPasswordET.setText(mSite.getPassword());
     }
 
     /**

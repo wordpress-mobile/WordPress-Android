@@ -1,0 +1,31 @@
+package org.wordpress.android.ui.prefs;
+
+import android.app.Activity;
+
+import org.wordpress.android.datasets.SiteSettingsTable;
+import org.wordpress.android.fluxc.model.SiteModel;
+
+class DotOrgSiteSettings extends SiteSettingsInterface {
+
+    /**
+     * Only instantiated by {@link SiteSettingsInterface}.
+     */
+    DotOrgSiteSettings(Activity host, SiteModel site, SiteSettingsListener listener) {
+        super(host, site, listener);
+    }
+
+    /**
+     * Request remote site data via the WordPress XML-RPC API.
+     */
+    @Override
+    protected void fetchRemoteData() {
+        SiteSettingsTable.saveSettings(mSettings);
+    }
+
+    @Override
+    public void saveSettings() {
+        super.saveSettings();
+        mSite.setUsername(mSettings.username);
+        mSite.setPassword(mSettings.password);
+    }
+}
