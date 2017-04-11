@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -105,7 +104,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private SiteModel mSite;
 
     private MediaGridFragment mMediaGridFragment;
-    private MediaItemFragment mMediaItemFragment;
     private MediaEditFragment mMediaEditFragment;
     private PopupWindow mAddMediaPopup;
 
@@ -155,17 +153,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-        mMediaItemFragment = (MediaItemFragment) fm.findFragmentByTag(MediaItemFragment.TAG);
         mMediaEditFragment = (MediaEditFragment) fm.findFragmentByTag(MediaEditFragment.TAG);
-
-        FragmentTransaction ft = fm.beginTransaction();
-        if (mMediaItemFragment != null) {
-            ft.hide(mMediaGridFragment);
-        }
-        if (mMediaEditFragment != null && !mMediaEditFragment.isInLayout()) {
-            ft.hide(mMediaItemFragment);
-        }
-        ft.commitAllowingStateLoss();
 
         setupAddMenuPopup();
 
@@ -401,7 +389,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 return true;
             case R.id.menu_edit_media:
-                int localMediaId = mMediaItemFragment.getLocalMediaId();
+                // TODO
+                /*int localMediaId = mMediaItemFragment.getLocalMediaId();
 
                 if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
                     // phone layout: hide item details, show and update edit fragment
@@ -424,7 +413,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mSearchView.clearFocus();
                 }
 
-                return true;
+                return true;*/
         }
 
         return super.onOptionsItemSelected(item);
@@ -488,29 +477,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onMediaItemSelected(View sourceView, int localMediaId) {
-        final String tempQuery = mQuery;
-
-        if (mSearchView != null) {
-            mSearchView.clearFocus();
-        }
-
-        if (mSearchMenuItem != null) {
-            MenuItemCompat.collapseActionView(mSearchMenuItem);
-        }
-
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() == 0) {
-            mMediaGridFragment.clearSelectedItems();
-            mMediaItemFragment = MediaItemFragment.newInstance(mSite, localMediaId);
-
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.hide(mMediaGridFragment);
-            ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
-            ft.addToBackStack(null);
-            ft.commitAllowingStateLoss();
-
-            mQuery = tempQuery;
-        }
+        MediaPreviewActivity.showPreview(this, sourceView, localMediaId);
     }
 
     @Override
@@ -616,11 +583,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onSavedEdit(int localMediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             doPopBackStack(getFragmentManager());
-
-            // refresh media item details (phone-only)
-            if (mMediaItemFragment != null)
-                mMediaItemFragment.loadMedia(localMediaId);
-
             // refresh grid
             mMediaGridFragment.refreshMediaFromDB();
         }

@@ -314,8 +314,7 @@ public class MediaItemFragment extends Fragment {
                     MediaPreviewActivity.showPreview(
                             getActivity(),
                             v,
-                            mediaModel.getId(),
-                            mediaModel.isVideo());
+                            mediaModel.getId());
                 }
             });
         }

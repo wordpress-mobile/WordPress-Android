@@ -65,7 +65,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
      * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
      * @param contentUri  local content:// uri of media
      * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
-     *
      */
     public static void showPreview(Context context,
                                    View sourceView,
@@ -81,16 +80,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
      * @param context     self explanatory
      * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
      * @param mediaId     local ID in site's media library
-     * @param isVideo     whether the passed media is a video - assumed to be an image otherwise
-     *
      */
     public static void showPreview(Context context,
                                    View sourceView,
-                                   int mediaId,
-                                   boolean isVideo) {
+                                   int mediaId) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_LOCAL_ID, mediaId);
-        intent.putExtra(ARG_IS_VIDEO, isVideo);
         showPreviewIntent(context, sourceView, intent);
     }
 
@@ -133,9 +128,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
         }
 
-        mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
-        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
-
         String mediaUri;
         if (!TextUtils.isEmpty(mContentUri)) {
             mediaUri = mContentUri;
@@ -145,12 +137,16 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 delayedFinish(true);
                 return;
             }
+            mIsVideo = media.isVideo();
             mediaUri = media.getUrl();
             showMetaData(media);
         } else {
             delayedFinish(true);
             return;
         }
+
+        mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
+        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
