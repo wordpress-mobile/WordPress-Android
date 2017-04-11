@@ -276,7 +276,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
 
         TextView captionView = (TextView) mMetadataView.findViewById(R.id.media_details_caption);
-        TextView cescriptionView = (TextView) mMetadataView.findViewById(R.id.media_details_description);
+        TextView descriptionView = (TextView) mMetadataView.findViewById(R.id.media_details_description);
         TextView dateView = (TextView) mMetadataView.findViewById(R.id.media_details_date);
         TextView fileNameView = (TextView) mMetadataView.findViewById(R.id.media_details_file_name);
         TextView fileTypeView = (TextView) mMetadataView.findViewById(R.id.media_details_file_type);
@@ -289,10 +289,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(media.getDescription())) {
-            cescriptionView.setVisibility(View.GONE);
+            descriptionView.setVisibility(View.GONE);
         } else {
-            cescriptionView.setText(media.getDescription());
-            cescriptionView.setVisibility(View.VISIBLE);
+            descriptionView.setText(media.getDescription());
+            descriptionView.setVisibility(View.VISIBLE);
         }
 
         dateView.setText(getDisplayDate(media.getUploadDate()));
@@ -303,7 +303,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         String fileURL = media.getUrl();
         String fileName = media.getFileName();
         String imageUri = TextUtils.isEmpty(fileURL) ? media.getFilePath() : fileURL;
-        boolean isValidImage = MediaUtils.isValidImage(imageUri);
 
         fileNameView.setText(fileName);
 
@@ -339,20 +338,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
     };
 
-    private final Runnable fadeInRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (!isFinishing() && mMetadataView.getVisibility() != View.VISIBLE) {
-                AniUtils.fadeIn(mMetadataView, AniUtils.Duration.LONG);
-                mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
-            }
-        }
-    };
-
     private void fadeInMetadata() {
-        mFadeHandler.removeCallbacks(fadeInRunnable);
-        mFadeHandler.removeCallbacks(fadeOutRunnable);
-        mFadeHandler.post(fadeInRunnable);
+        if (!isFinishing() && mMetadataView.getVisibility() != View.VISIBLE) {
+            mFadeHandler.removeCallbacks(fadeOutRunnable);
+            AniUtils.fadeIn(mMetadataView, AniUtils.Duration.LONG);
+            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+        }
     }
 
     /*
