@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.android.volley.VolleyError;
@@ -29,10 +30,15 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -140,6 +146,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 return;
             }
             mediaUri = media.getUrl();
+            showMetaData(media);
         } else {
             delayedFinish(true);
             return;
@@ -260,5 +267,78 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
+    }
+    
+    private void showMetaData(@NonNull MediaModel media) {
+        boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
+
+        View view = findViewById(R.id.layout_metadata);
+        view.setVisibility(View.VISIBLE);
+
+        TextView captionView = (TextView) view.findViewById(R.id.media_details_caption);
+        TextView cescriptionView = (TextView) view.findViewById(R.id.media_details_description);
+        TextView dateView = (TextView) view.findViewById(R.id.media_details_date);
+        TextView fileNameView = (TextView) view.findViewById(R.id.media_details_file_name);
+        TextView fileTypeView = (TextView) view.findViewById(R.id.media_details_file_type);
+
+        if (TextUtils.isEmpty(media.getCaption())) {
+            captionView.setVisibility(View.GONE);
+        } else {
+            captionView.setText(media.getCaption());
+            captionView.setVisibility(View.VISIBLE);
+        }
+
+        if (TextUtils.isEmpty(media.getDescription())) {
+            cescriptionView.setVisibility(View.GONE);
+        } else {
+            cescriptionView.setText(media.getDescription());
+            cescriptionView.setVisibility(View.VISIBLE);
+        }
+
+        dateView.setText(getDisplayDate(media.getUploadDate()));
+
+        TextView txtDateLabel = (TextView) view.findViewById(R.id.media_details_date_label);
+        txtDateLabel.setText(isLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
+
+        String fileURL = media.getUrl();
+        String fileName = media.getFileName();
+        String imageUri = TextUtils.isEmpty(fileURL) ? media.getFilePath() : fileURL;
+        boolean isValidImage = MediaUtils.isValidImage(imageUri);
+
+        fileNameView.setText(fileName);
+
+        float mediaWidth = media.getWidth();
+        float mediaHeight = media.getHeight();
+
+        // show dimens & file ext together
+        String dimens =
+                (mediaWidth > 0 && mediaHeight > 0) ? (int) mediaWidth + " x " + (int) mediaHeight : null;
+        String fileExt =
+                TextUtils.isEmpty(fileURL) ? null : fileURL.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
+        boolean hasDimens = !TextUtils.isEmpty(dimens);
+        boolean hasExt = !TextUtils.isEmpty(fileExt);
+        if (hasDimens & hasExt) {
+            fileTypeView.setText(fileExt + ", " + dimens);
+            fileTypeView.setVisibility(View.VISIBLE);
+        } else if (hasExt) {
+            fileTypeView.setText(fileExt);
+            fileTypeView.setVisibility(View.VISIBLE);
+        } else {
+            fileTypeView.setVisibility(View.GONE);
+        }
+    }
+
+    /*
+     * returns the passed string formatted as a short date if it's valid ISO 8601 date,
+     * otherwise returns the passed string
+     */
+    private String getDisplayDate(String dateString) {
+        if (dateString != null) {
+            Date date = DateTimeUtils.dateFromIso8601(dateString);
+            if (date != null) {
+                return SimpleDateFormat.getDateInstance().format(date);
+            }
+        }
+        return dateString;
     }
 }
