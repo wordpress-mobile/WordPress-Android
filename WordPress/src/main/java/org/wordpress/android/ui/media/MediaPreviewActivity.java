@@ -326,6 +326,14 @@ public class MediaPreviewActivity extends AppCompatActivity {
             fileTypeView.setVisibility(View.GONE);
         }
 
+        View editBtn = mMetadataView.findViewById(R.id.image_edit);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+            }
+        });
+
         fadeInMetadata();
     }
 
