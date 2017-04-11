@@ -106,25 +106,28 @@ public class PostUtils {
 
     public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
+        Map<String, Object> properties = new HashMap<>();
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
+                    properties.put("post_id", post.getRemotePostId());
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
                 }
                 break;
             case SCHEDULED:
                 if (!post.isLocalDraft()) {
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
+                    properties.put("post_id", post.getRemotePostId());
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
-                    Map<String, Object> properties = new HashMap<>();
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                             properties);
                 }
                 break;
             case DRAFT:
+                properties.put("post_id", post.getRemotePostId());
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT, site);
                 break;
             default:
