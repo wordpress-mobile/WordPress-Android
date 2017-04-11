@@ -55,6 +55,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private String mContentUri;
     private int mMediaId;
     private boolean mIsVideo;
+    private boolean mEnableMetadata;
 
     private ImageView mImageView;
     private VideoView mVideoView;
@@ -142,6 +143,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 return;
             }
             mIsVideo = media.isVideo();
+            mEnableMetadata = true;
             mediaUri = media.getUrl();
             showMetaData(media);
         } else {
@@ -228,6 +230,16 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         // assign the photo attacher to enable pinch/zoom
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+
+        // fade in metadata when tapped
+        if (mEnableMetadata) {
+            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    fadeInMetadata();
+                }
+            });
+        }
     }
 
     /*
@@ -313,15 +325,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         fadeInMetadata();
-
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fadeInMetadata();
-            }
-        };
-        mMetadataView.setOnClickListener(clickListener);
-        mImageView.setOnClickListener(clickListener);
     }
 
     private Runnable fadeOutRunnable = new Runnable() {
