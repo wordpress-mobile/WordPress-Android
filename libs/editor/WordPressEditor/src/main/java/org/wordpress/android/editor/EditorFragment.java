@@ -1343,7 +1343,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
-                builder.setPositiveButton(R.string.stop_upload_button, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
 
