@@ -2,14 +2,11 @@ package org.wordpress.android.ui.media;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -61,7 +58,6 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
@@ -73,7 +69,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -91,7 +86,7 @@ import javax.inject.Inject;
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
-        MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback {
+        WordPressMediaUtils.LaunchCameraCallback {
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -103,7 +98,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private SiteModel mSite;
 
     private MediaGridFragment mMediaGridFragment;
-    private MediaEditFragment mMediaEditFragment;
     private PopupWindow mAddMediaPopup;
 
     // Views
@@ -152,8 +146,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-        mMediaEditFragment = (MediaEditFragment) fm.findFragmentByTag(MediaEditFragment.TAG);
-
         setupAddMenuPopup();
 
         // if media was shared add it to the library
@@ -179,20 +171,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onEditFragmentPause(Fragment fragment) {
-        invalidateOptionsMenu();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         startMediaDeleteService(null);
         ActivityId.trackLastActivity(ActivityId.MEDIA);
-    }
-
-    @Override
-    public void onEditFragmentResume(Fragment fragment) {
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -226,35 +208,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
-    }
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
-                // alert the user that there are unsaved changes
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.confirm_discard_changes)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // make sure the keyboard is dismissed
-                                WPActivityUtils.hideKeyboard(getCurrentFocus());
-
-                                // pop the edit fragment
-                                doPopBackStack(getFragmentManager());
-                            }})
-                        .setNegativeButton(R.string.cancel, null)
-                        .create()
-                        .show();
-            } else {
-                doPopBackStack(fm);
-            }
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -387,32 +340,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     mSearchView.setQuery(mQuery, true);
                 }
                 return true;
-            case R.id.menu_edit_media:
-                // TODO
-                /*int localMediaId = mMediaItemFragment.getLocalMediaId();
-
-                if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
-                    // phone layout: hide item details, show and update edit fragment
-                    FragmentManager fm = getFragmentManager();
-                    mMediaEditFragment = MediaEditFragment.newInstance(mSite, localMediaId);
-
-                    FragmentTransaction ft = fm.beginTransaction();
-                    if (mMediaItemFragment.isVisible()) {
-                        ft.hide(mMediaItemFragment);
-                    }
-                    ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
-                    ft.addToBackStack(null);
-                    ft.commitAllowingStateLoss();
-                } else {
-                    // tablet layout: update edit fragment
-                    mMediaEditFragment.loadMedia(localMediaId);
-                }
-
-                if (mSearchView != null) {
-                    mSearchView.clearFocus();
-                }
-
-                return true;*/
         }
 
         return super.onOptionsItemSelected(item);
@@ -470,11 +397,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void setLookClosable() {
-        mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-    }
-
-    @Override
     public void onMediaItemSelected(View sourceView, int localMediaId) {
         MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
     }
@@ -520,20 +442,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     break;
                 }
 
-                // If the media was deleted, remove it from multi select (if it was selected) and hide it from the
-                // detail view (if it was the one displayed)
+                // If the media was deleted, remove it from multi select if it was selected
                 for (MediaModel mediaModel : event.mediaList) {
                     int localMediaId = mediaModel.getId();
                     mMediaGridFragment.removeFromMultiSelect(localMediaId);
-                    if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
-                            && localMediaId == mMediaEditFragment.getLocalMediaId()) {
-                        updateOnMediaChanged(localMediaId);
-                        if (mMediaEditFragment.isInLayout()) {
-                            mMediaEditFragment.loadMedia(MediaEditFragment.MISSING_MEDIA_ID);
-                        } else {
-                            getFragmentManager().popBackStack();
-                        }
-                    }
                 }
                 break;
         }
@@ -579,31 +491,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    public void onEditFragmentSaved(int localMediaId, boolean result) {
-        if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
-            doPopBackStack(getFragmentManager());
-            // refresh grid
-            mMediaGridFragment.refreshMediaFromDB();
-        }
-    }
-
     private void updateOnMediaChanged(int localMediaId) {
         if (localMediaId == -1) {
             return;
         }
 
-        // If the media was deleted, remove it from multi select (if it was selected) and hide it from the the detail
-        // view (if it was the one displayed)
+        // If the media was deleted, remove it from multi select if it was selected
         if (mMediaStore.getMediaWithLocalId(localMediaId) == null) {
             mMediaGridFragment.removeFromMultiSelect(localMediaId);
-            if (mMediaEditFragment != null && mMediaEditFragment.isVisible()
-                    && localMediaId == mMediaEditFragment.getLocalMediaId()) {
-                if (mMediaEditFragment.isInLayout()) {
-                    mMediaEditFragment.loadMedia(MediaEditFragment.MISSING_MEDIA_ID);
-                } else {
-                    doPopBackStack(getFragmentManager());
-                }
-            }
         }
         updateViews();
     }

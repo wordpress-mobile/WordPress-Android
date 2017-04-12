@@ -73,8 +73,6 @@ public class MediaEditFragment extends Fragment {
     private MediaModel mMediaModel;
 
     public interface MediaEditFragmentCallback {
-        void onEditFragmentResume(Fragment fragment);
-        void onEditFragmentPause(Fragment fragment);
         void onEditFragmentSaved(int localMediaId, boolean result);
         void setLookClosable();
     }
@@ -153,16 +151,7 @@ public class MediaEditFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (hasCallback()) {
-            mCallback.onEditFragmentResume(this);
             mCallback.setLookClosable();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (hasCallback()) {
-            mCallback.onEditFragmentPause(this);
         }
     }
 

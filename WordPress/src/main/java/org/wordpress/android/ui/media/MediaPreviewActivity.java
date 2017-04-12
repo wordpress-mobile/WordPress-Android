@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.media;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -42,6 +44,7 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,6 +66,7 @@ public class MediaPreviewActivity extends AppCompatActivity
     private boolean mEnableMetadata;
 
     private SiteModel mSite;
+    private MediaEditFragment mMediaEditFragment;
 
     private ImageView mImageView;
     private VideoView mVideoView;
@@ -169,6 +173,8 @@ public class MediaPreviewActivity extends AppCompatActivity
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
+        mMediaEditFragment = (MediaEditFragment) getFragmentManager().findFragmentByTag(MediaEditFragment.TAG);
+
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo(mediaUri);
@@ -199,6 +205,34 @@ public class MediaPreviewActivity extends AppCompatActivity
 
     private void showProgress(boolean show) {
         findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
+                // alert the user that there are unsaved changes
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.confirm_discard_changes)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // make sure the keyboard is dismissed
+                                WPActivityUtils.hideKeyboard(getCurrentFocus());
+
+                                // pop the edit fragment
+                                getFragmentManager().popBackStack();
+                            }})
+                        .setNegativeButton(R.string.cancel, null)
+                        .create()
+                        .show();
+            } else {
+                getFragmentManager().popBackStack();
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /*
@@ -415,21 +449,11 @@ public class MediaPreviewActivity extends AppCompatActivity
     }
 
     @Override
-    public void onEditFragmentResume(Fragment fragment) {
-
-    }
-
-    @Override
     public void setLookClosable() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         }
-    }
-
-    @Override
-    public void onEditFragmentPause(Fragment fragment) {
-
     }
 
     @Override
