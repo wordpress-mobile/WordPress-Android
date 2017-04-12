@@ -169,7 +169,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mEnableMetadata = true;
             mediaUri = media.getUrl();
             showMetaData(media);
-            fadeInMetadata();
         } else {
             delayedFinish(true);
             return;
@@ -206,6 +205,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
         outState.putString(ARG_MEDIA_CONTENT_URI, mContentUri);
         outState.putInt(ARG_MEDIA_LOCAL_ID, mMediaId);
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
+        if (mSite != null) {
+            outState.putSerializable(WordPress.SITE, mSite);
+        }
     }
 
     @Override
@@ -406,6 +408,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             editBtn.setVisibility(View.GONE);
         }
+
+        fadeInMetadata();
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {
