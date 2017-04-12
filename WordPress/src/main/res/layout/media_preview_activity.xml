@@ -106,15 +106,6 @@
                 tools:text="media_details_file_type" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_details_date_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:text="@string/media_details_label_date_uploaded"
-                android:textColor="@color/blue_medium"
-                android:textSize="@dimen/text_sz_large" />
-
-            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_details_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

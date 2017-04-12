@@ -401,10 +401,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
             descriptionView.setVisibility(View.VISIBLE);
         }
 
-        dateView.setText(getDisplayDate(media.getUploadDate()));
-
-        TextView txtDateLabel = (TextView) mMetadataView.findViewById(R.id.media_details_date_label);
-        txtDateLabel.setText(isLocal ? R.string.media_details_label_date_added : R.string.media_details_label_date_uploaded);
+        String datePrefix = isLocal ?
+                getString(R.string.media_details_label_date_added) :
+                getString(R.string.media_details_label_date_uploaded);
+        dateView.setText(datePrefix + " " + getDisplayDate(media.getUploadDate()));
 
         String fileURL = media.getUrl();
         String fileName = media.getFileName();
