@@ -233,6 +233,7 @@
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.media.MediaPreviewActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".ui.media.MediaGalleryActivity" />
         <activity android:name=".ui.media.MediaGalleryPickerActivity" />
