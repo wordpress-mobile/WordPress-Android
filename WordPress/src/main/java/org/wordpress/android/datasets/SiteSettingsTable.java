@@ -39,6 +39,13 @@ public final class SiteSettingsTable {
         }
     }
 
+    public static void addImageResizeWidthAndQualityToSiteSettingsTable(SQLiteDatabase db) {
+        if (db != null) {
+            db.execSQL(SiteSettingsModel.ADD_IMAGE_RESIZE_WIDTH);
+            db.execSQL(SiteSettingsModel.ADD_IMAGE_COMPRESSION_QUALITY);
+        }
+    }
+
     public static Map<Integer, CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);

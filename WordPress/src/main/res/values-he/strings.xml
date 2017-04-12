@@ -820,7 +820,6 @@ Language: he_IL
 	<string name="error_generic">אירעה שגיאה</string>
 	<string name="error_moderate_comment">אירעה שגיאה בזמן בדיקת התגובות</string>
 	<string name="error_edit_comment">אירעה שגיאה בזמן עריכת התגובה</string>
-	<string name="error_upload">אירעה שגיאה בזמן העלאת ה-%s</string>
 	<string name="error_load_comment">לא ניתן היה להעלות את התגובה</string>
 	<string name="error_downloading_image">שגיאה בזמן הורדת תמונה</string>
 	<string name="passcode_wrong_passcode">PIN שגוי</string>

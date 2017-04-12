@@ -737,7 +737,6 @@ Language: zh_TW
 	<string name="error_generic">發生錯誤</string>
 	<string name="error_moderate_comment">審核時發生錯誤</string>
 	<string name="error_edit_comment">編輯回應時發生錯誤</string>
-	<string name="error_upload">上傳 %s 時發生錯誤</string>
 	<string name="error_load_comment">無法載入回應</string>
 	<string name="error_downloading_image">下載圖片時發生錯誤</string>
 	<string name="passcode_wrong_passcode">錯誤的 PIN</string>

@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-14 09:05:59+0000
+Translation-Revision-Date: 2017-04-08 08:52:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="role_subscriber">Abonnee</string>
+	<string name="tell_me_more">Meer informatie</string>
+	<string name="duplicate_site_detected">Er is een dubbele site gevonden.</string>
+	<string name="cannot_add_duplicate_site">De site komt al voor in de app. Je kunt deze dus niet toevoegen.</string>
+	<string name="already_logged_in_wpcom_same_username">Je bent al aangemeld bij je WordPress.com-account. Je site moet voorkomen in de sitekiezer. Controleer of de site niet verborgen is.</string>
+	<string name="already_logged_in_wpcom">Je bent al aangemeld bij een WordPress.com-account. Je kunt geen WordPress.com-site toevoegen die is gekoppeld aan een ander account.</string>
+	<string name="migration_error_not_connected">Het migratieproces is mislukt: probeer de app te starten wanneer je een\n netwerkverbinding hebt.</string>
+	<string name="migration_message">De WordPress-app bijwerken…</string>
+	<string name="checking_username">Gebruikersnaam controleren</string>
+	<string name="jetpack_different_com_account">Jetpack-sites die behoren tot verschillende WordPress.com-accounts, worden niet ondersteund</string>
+	<string name="jetpack_use_com_account">Log in op de WordPress.com-account die je gebruikte om verbinding te maken met Jetpack om je Jetpack-site toe te voegen.</string>
+	<string name="jetpack_message">De Jetpack-plugin moet worden geïnstalleerd en geactiveerd. Wil je Jetpack installeren of activeren?</string>
+	<string name="error_media_load">Kan media niet laden.</string>
+	<string name="error_media_refresh_no_connection">Een verbinding is vereist om de bibliotheek te vernieuwen</string>
+	<string name="error_media_unauthorized">Je bent niet gemachtigd media weer te geven of te bewerken</string>
+	<string name="error_media_not_found">Kan media niet vinden</string>
+	<string name="error_media_insufficient_fs_permissions">Leesrechten zijn vereist voor mediabestand</string>
+	<string name="site_settings_optimize_images_hint">Inschakelen om bandbreedte uit te sparen bij mobiele verbindingen</string>
+	<string name="site_settings_optimize_images">Afbeeldingen optimaliseren</string>
+	<string name="no_site_error">Kan geen verbinding maken met de WordPress-site. Er is geen geldige WordPress-site op dit\n adres. Controleer of je het goede websiteadres (URL) hebt opgegeven.</string>
+	<string name="media_generic_error">Er is een mediafout opgetreden</string>
+	<string name="media_upload_error">Er is een uploadfout opgetreden</string>
+	<string name="retry">Opnieuw proberen</string>
+	<string name="confirm">Bevestigen</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Kan geen verbinding maken. Er is een 403-fout opgetreden tijdens onze poging om het XMLRPC-eindpunt van je\n site te openen. De app heeft dat nodig om met je site te communiceren. Neem contact op met je host voor een oplossing voor\n dit probleem.</string>
+	<string name="xmlrpc_post_blocked_error">Kan geen verbinding maken. Je host blokkeert POST-aanvragen en de app heeft\n dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
 	<string name="reader_liked_default_tag">Berichten die ik leuk vind</string>
 	<string name="reader_discover_default_tag">Ontdek</string>
 	<string name="reader_followed_default_tag">Gevolgde sites</string>
@@ -838,7 +864,6 @@ Language: nl
 	<string name="passcode_wrong_passcode">Verkeerde PIN</string>
 	<string name="error_downloading_image">Fout bij downloaden van afbeelding</string>
 	<string name="error_load_comment">Kan de reactie niet laden</string>
-	<string name="error_upload">Er heeft zich een fout voorgedaan bij het uploaden van %s</string>
 	<string name="error_edit_comment">Er heeft zich een fout voorgedaan tijdens het bewerken van de reactie</string>
 	<string name="error_moderate_comment">Er heeft zich een fout voorgedaan tijdens het modereren</string>
 	<string name="error_generic">Er heeft zich een fout voorgedaan</string>
@@ -882,6 +907,7 @@ Language: nl
 	<string name="reader_toast_err_add_tag">Deze tag kan niet worden toegevoegd</string>
 	<string name="reader_share_link">Link delen</string>
 	<string name="reader_title_applog">Applicatielogboek</string>
+	<string name="jetpack_message_not_admin">De Jetpack-plugin is vereist. Neem contact op met de sitebeheerder.</string>
 	<string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
 	<string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
 	<string name="wordpress_blog">WordPress-blog</string>

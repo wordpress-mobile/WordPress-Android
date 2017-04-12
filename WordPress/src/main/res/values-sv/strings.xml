@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-20 17:17:31+0000
+Translation-Revision-Date: 2017-04-04 10:50:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="error_all_media_upload_canceled">Alla mediauppladdningar har avbrutits på grund av ett okänt fel. Försök ladda upp igen</string>
+	<string name="error_unknown_post_type">Okänt inläggsformat</string>
+	<string name="error_unknown_post">Okänt inlägg, Den lokala kopian av detta inlägg skiljer sig eventuellt från versionen på servern</string>
+	<string name="error_fetch_site_after_creation">Webbplatsen har skapats, du kan behöva uppdatera din webbplatslista i listan för val av webbplats.</string>
+	<string name="error_media_request_too_large">Mediafilen för stor, går inte att ladda upp</string>
+	<string name="error_media_parse_error">Det gick inte att tolka svaret efter uppladdning av media</string>
+	<string name="error_upload_params">Fel vid uppladdning av %1$s: %2$s</string>
+	<string name="submit_for_review">Skicka</string>
+	<string name="media_error_too_large_upload">Filen är för stor. Kontakta webbhotellet för att lösa problemet</string>
 	<string name="role_subscriber">Prenumerant</string>
 	<string name="tell_me_more">Jag vill veta mer</string>
 	<string name="duplicate_site_detected">En dublett-webbplats har hittats.</string>
@@ -20,7 +29,6 @@ Language: sv_SE
 	<string name="jetpack_message">Tillägget Jetpack behöver bara installerat och aktiverat. Vill du installera eller aktivera Jetpack?</string>
 	<string name="error_media_load">Det går inte att läsa in media</string>
 	<string name="error_media_refresh_no_connection">Anslutning krävs för uppdatering av biblioteket</string>
-	<string name="error_media_parse_format">Det gick inte att svaret för media %s</string>
 	<string name="error_media_unauthorized">Du saknar behörighet att se eller redigera aktuellt media</string>
 	<string name="error_media_not_found">Media-filen hittades inte</string>
 	<string name="error_media_insufficient_fs_permissions">Det krävs läsrättigheter för mediafilen</string>
@@ -865,7 +873,6 @@ Language: sv_SE
 	<string name="passcode_wrong_passcode">Fel PIN</string>
 	<string name="error_downloading_image">Fel vid nedladdning av bild</string>
 	<string name="error_load_comment">Kunde inte ladda kommentaren</string>
-	<string name="error_upload">Ett fel uppstod vid uppladdning av %s</string>
 	<string name="error_edit_comment">Ett fel uppstod under redigeringen av kommentaren</string>
 	<string name="error_moderate_comment">Ett fel uppstod under modereringen</string>
 	<string name="error_generic">Ett fel uppstod</string>

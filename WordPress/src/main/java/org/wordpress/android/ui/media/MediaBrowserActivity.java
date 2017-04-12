@@ -487,7 +487,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onMediaItemSelected(int localMediaId) {
+    public void onMediaItemSelected(View sourceView, int localMediaId) {
         final String tempQuery = mQuery;
 
         if (mSearchView != null) {

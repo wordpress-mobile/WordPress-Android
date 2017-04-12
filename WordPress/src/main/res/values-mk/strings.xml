@@ -193,7 +193,6 @@ Language: mk
 	<string name="username_not_allowed">Корисничкото име е не дозоволено</string>
 	<string name="username_must_be_at_least_four_characters">Корисничкото име мора да има барем 4 знака</string>
 	<string name="username_contains_invalid_characters">Корсисничкото име не треба да содржи “_”</string>
-	<string name="error_upload">Се појави грешка додека се испраќаше %s</string>
 	<string name="username_only_lowercase_letters_and_numbers">Корисничкото име може да содржи само мали буви (a-z) или бројки</string>
 	<string name="reply_failed">Не успешен одговор</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>

@@ -645,7 +645,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mJetpackAuthLabel.setVisibility(View.VISIBLE);
             mAddSelfHostedButton.setVisibility(View.GONE);
             mCreateAccountButton.setVisibility(View.GONE);
-            mUsernameEditText.setText("");
         }
     }
 
@@ -1241,8 +1240,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        AppLog.i(T.NUX, "onSiteChanged: " + event.toString());
-
         if (event.isError()) {
             AppLog.e(T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
             endProgress();
