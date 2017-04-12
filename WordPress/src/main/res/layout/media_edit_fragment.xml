@@ -2,12 +2,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/media_edit_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/black_translucent_50"
         android:orientation="vertical"
         android:padding="@dimen/margin_extra_large"
         android:visibility="invisible"

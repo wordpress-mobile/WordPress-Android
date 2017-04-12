@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -67,6 +68,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private int mMediaId;
     private boolean mIsVideo;
     private boolean mEnableMetadata;
+    private boolean mShowEditMenuItem;
 
     private SiteModel mSite;
 
@@ -190,7 +192,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
-        setLookClosable(hasEditFragment());
+        boolean hasEditFragment = hasEditFragment();
+        mShowEditMenuItem = mEnableMetadata && mSite != null && !hasEditFragment;
+        setLookClosable(hasEditFragment);
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -241,13 +245,14 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (hasEditFragment()) {
+        MediaEditFragment fragment = getEditFragment();
+        if (fragment != null) {
             ActivityUtils.hideKeyboard(this);
-            getEditFragment().saveChanges();
+            fragment.saveChanges();
         }
 
         setLookClosable(false);
-        invalidateOptionsMenu();
+        showEditMenuItem(true);
 
         super.onBackPressed();
     }
@@ -263,11 +268,16 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = menu.findItem(R.id.menu_edit);
-        if (item != null) {
-            item.setVisible(!hasEditFragment());
+        MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
+        if (mnuEdit != null) {
+            mnuEdit.setVisible(mShowEditMenuItem);
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void showEditMenuItem(boolean show) {
+        mShowEditMenuItem = show;
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -284,8 +294,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
     }
 
     /*
-         * loads and displays a remote or local image
-         */
+     * loads and displays a remote or local image
+     */
     private void loadImage(@NonNull String mediaUri) {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
@@ -482,23 +492,20 @@ public class MediaPreviewActivity extends AppCompatActivity {
             fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaEditFragment.TAG)
                 .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commitAllowingStateLoss();
         } else {
             fragment.loadMedia(localMediaId);
         }
 
         setLookClosable(true);
-        invalidateOptionsMenu();
+        showEditMenuItem(false);
         fadeOutMetadata();
     }
 
-    public void setLookClosable(boolean lookClosable) {
+    private void setLookClosable(boolean lookClosable) {
         if (mToolbar != null) {
-            if (lookClosable) {
-                mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-            } else {
-                mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
-            }
+            mToolbar.setNavigationIcon(lookClosable ? R.drawable.ic_close_white_24dp : R.drawable.ic_arrow_left_white_24dp);
         }
     }
 
