@@ -1190,7 +1190,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                     .setMessage(message)
-                    .setPositiveButton(R.string.editor_confirm_email_prompt_positive,
+                    .setPositiveButton(android.R.string.ok,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     ToastUtils.showToast(EditPostActivity.this, getString(R.string.toast_saving_post_as_draft));

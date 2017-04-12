@@ -1680,7 +1680,6 @@
     <string name="editor_confirm_email_prompt_title">Please confirm your email address</string>
     <string name="editor_confirm_email_prompt_message">We sent you an email when you first signed up. Please open the message and click the blue button to enable publishing.</string>
     <string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
-    <string name="editor_confirm_email_prompt_positive" translatable="false">@string/ok</string>
     <string name="editor_confirm_email_prompt_negative">Resend Email</string>
 
 </resources>
