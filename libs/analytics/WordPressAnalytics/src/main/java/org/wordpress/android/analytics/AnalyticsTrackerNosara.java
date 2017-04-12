@@ -160,6 +160,16 @@ public class AnalyticsTrackerNosara extends Tracker {
             userType = TracksClient.NosaraUserType.ANON;
         }
 
+        // It seems that we're tracking some events with user = null. Make sure we're catching the error here.
+        if (user == null) {
+            try {
+                throw new AnalyticsException("Trying to track analytics with an null user!");
+                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+            } catch (AnalyticsException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+            return;
+        }
 
         // create the merged JSON Object of properties
         // Properties defined by the user have precedence over the default ones pre-defined at "event level"
