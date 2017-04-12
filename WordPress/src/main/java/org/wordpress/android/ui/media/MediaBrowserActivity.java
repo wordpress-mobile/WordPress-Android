@@ -494,9 +494,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void deleteMedia(final ArrayList<Integer> ids) {
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
-        // phone layout: pop the item fragment if it's visible
-        doPopBackStack(getFragmentManager());
-
         final ArrayList<MediaModel> mediaToDelete = new ArrayList<>();
         // Make sure there are no media in "uploading"
         for (int currentId : ids) {
@@ -769,13 +766,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             startService(intent);
         }
-    }
-
-    private void doPopBackStack(FragmentManager fm) {
-        fm.popBackStack();
-
-        // reset the button to "back" as it may have been altered by a fragment
-        mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
     }
 
     private String getRealPathFromURI(Uri uri) {

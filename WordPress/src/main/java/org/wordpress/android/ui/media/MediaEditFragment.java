@@ -38,7 +38,7 @@ public class MediaEditFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
     // also appears in the layouts, from the strings.xml
     public static final String TAG = "MediaEditFragment";
-    public static final int MISSING_MEDIA_ID = -1;
+    private static final int MISSING_MEDIA_ID = -1;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -62,7 +62,6 @@ public class MediaEditFragment extends Fragment {
 
     public interface MediaEditFragmentCallback {
         void onEditFragmentSaved(int localMediaId, boolean result);
-        void setLookClosable();
     }
 
     public static MediaEditFragment newInstance(SiteModel site, int localMediaId) {
@@ -135,15 +134,7 @@ public class MediaEditFragment extends Fragment {
         return (mCallback != null);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (hasCallback()) {
-            mCallback.setLookClosable();
-        }
-    }
-
-    public int getLocalMediaId() {
+    private int getLocalMediaId() {
         if (mLocalMediaId != MISSING_MEDIA_ID) {
             return mLocalMediaId;
         } else if (getArguments() != null) {
@@ -184,7 +175,7 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
-    void saveMedia() {
+    private void saveMedia() {
         ActivityUtils.hideKeyboard(getActivity());
         mMediaModel.setTitle(mTitleView.getText().toString());
         mMediaModel.setDescription(mDescriptionView.getText().toString());

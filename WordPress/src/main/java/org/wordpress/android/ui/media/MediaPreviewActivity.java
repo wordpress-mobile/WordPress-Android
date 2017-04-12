@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -189,6 +190,7 @@ public class MediaPreviewActivity extends AppCompatActivity
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         mMediaEditFragment = (MediaEditFragment) getFragmentManager().findFragmentByTag(MediaEditFragment.TAG);
+        setLookClosable(mMediaEditFragment != null);
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -233,11 +235,9 @@ public class MediaPreviewActivity extends AppCompatActivity
                         .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // make sure the keyboard is dismissed
                                 WPActivityUtils.hideKeyboard(getCurrentFocus());
-
-                                // pop the edit fragment
                                 getFragmentManager().popBackStack();
+                                setLookClosable(false);
                             }})
                         .setNegativeButton(R.string.cancel, null)
                         .create()
@@ -246,7 +246,18 @@ public class MediaPreviewActivity extends AppCompatActivity
             }
         }
 
+        setLookClosable(false);
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /*
@@ -449,6 +460,7 @@ public class MediaPreviewActivity extends AppCompatActivity
     }
 
     private void showEditFragment(int localMediaId) {
+        setLookClosable(true);
         MediaEditFragment fragment = getEditFragment();
         if (fragment == null) {
             fragment = MediaEditFragment.newInstance(mSite, localMediaId);
@@ -462,10 +474,13 @@ public class MediaPreviewActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void setLookClosable() {
+    public void setLookClosable(boolean lookClosable) {
         if (mToolbar != null) {
-            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            if (lookClosable) {
+                mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+            } else {
+                mToolbar.setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
+            }
         }
     }
 
