@@ -11,7 +11,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.wordpress.android.editor.R;
-import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
 
 public class WPEditImageSpan extends WPImageSpan {

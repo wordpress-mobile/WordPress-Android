@@ -568,7 +568,7 @@ public class WPMainActivity extends AppCompatActivity {
                 break;
             case RequestCodes.SITE_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
-                    handleBlogRemoved();
+                    handleSiteRemoved();
                 }
                 break;
             case RequestCodes.APP_SETTINGS:
@@ -580,6 +580,12 @@ public class WPMainActivity extends AppCompatActivity {
                 if (getNotificationsListFragment() != null) {
                     getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
                 }
+                break;
+            case RequestCodes.PHOTO_PICKER:
+                if (getMeFragment() != null) {
+                    getMeFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
     }
 
@@ -595,6 +601,17 @@ public class WPMainActivity extends AppCompatActivity {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
+        }
+        return null;
+    }
+
+    /*
+     * returns the "me" fragment from the sites tab
+     */
+    private MeFragment getMeFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_ME);
+        if (fragment instanceof MeFragment) {
+            return (MeFragment) fragment;
         }
         return null;
     }
@@ -658,7 +675,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleBlogRemoved() {
+    private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
@@ -758,6 +775,6 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
-        handleBlogRemoved();
+        handleSiteRemoved();
     }
 }

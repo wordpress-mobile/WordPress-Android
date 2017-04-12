@@ -153,6 +153,13 @@ public class MySiteFragment extends Fragment
             mFabView.setVisibility(View.INVISIBLE);
         }
 
+        rootView.findViewById(R.id.card_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), true);
+            }
+        });
+
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +177,7 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite());
+                ActivityLauncher.viewCurrentSite(getActivity(), getSelectedSite(), false);
             }
         });
 
