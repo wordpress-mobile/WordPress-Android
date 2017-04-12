@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/photo_chooser_item_padding">
+    android:layout_margin="@dimen/photo_picker_item_padding">
 
     <ImageView
         android:id="@+id/image_thumbnail"
@@ -16,8 +16,8 @@
 
     <ImageView
         android:id="@+id/image_video_overlay"
-        android:layout_width="@dimen/photo_chooser_video_overlay"
-        android:layout_height="@dimen/photo_chooser_video_overlay"
+        android:layout_width="@dimen/photo_picker_video_overlay"
+        android:layout_height="@dimen/photo_picker_video_overlay"
         android:layout_centerInParent="true"
         android:src="@drawable/reader_video_overlay"
         android:visibility="gone"
@@ -27,7 +27,7 @@
         android:id="@+id/text_selection_count"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
         android:background="@drawable/shape_oval_blue"
         android:gravity="center"
         android:textColor="@color/white"
@@ -35,5 +35,14 @@
         android:visibility="gone"
         tools:text="5"
         tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/image_preview"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="?android:selectableItemBackground"
+        android:padding="@dimen/margin_medium"
+        app:srcCompat="@drawable/ic_zoom_in_24px" />
 
 </RelativeLayout>

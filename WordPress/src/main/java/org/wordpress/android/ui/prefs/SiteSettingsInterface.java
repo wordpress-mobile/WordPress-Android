@@ -25,6 +25,7 @@ import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
@@ -270,6 +271,15 @@ public abstract class SiteSettingsInterface {
 
     public boolean getOptimizedImage() {
         return mSettings.optimizedImage;
+    }
+
+    public int getMaxImageWidth() {
+        int resizeWidth = mSettings.maxImageWidth;
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
+    }
+
+    public int getImageQuality() {
+        return mSettings.imageQualitySetting > 1 ? mSettings.imageQualitySetting : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
     }
 
     public @NonNull Map<String, String> getFormats() {
@@ -551,6 +561,14 @@ public abstract class SiteSettingsInterface {
         mSettings.optimizedImage = optimizeImage;
     }
 
+    public void setImageResizeWidth(int width) {
+        mSettings.maxImageWidth = width;
+    }
+
+    public void setImageQuality(int quality) {
+        mSettings.imageQualitySetting = quality;
+    }
+
     public void setAllowComments(boolean allowComments) {
         mSettings.allowComments = allowComments;
     }
@@ -766,6 +784,8 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
+            mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
+            mRemoteSettings.imageQualitySetting = mSettings.imageQualitySetting;
             localSettings.close();
             notifyUpdatedOnUiThread(null);
         } else {

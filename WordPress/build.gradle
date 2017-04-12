@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "7.1-rc-4"
-        versionCode 377
+        versionName "7.2-rc-1"
+        versionCode 381
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -131,7 +131,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:30d1884fe3e7171f19f48dd1ff9286a376614347') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:cdc724bfc8e14166f0b79441a4924c96ca0fb1d3') {
         exclude group: "com.android.volley";
     }
 

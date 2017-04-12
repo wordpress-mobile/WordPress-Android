@@ -268,7 +268,6 @@ Language: da_DK
 	<string name="username_or_password_incorrect">Brugernavnet eller adgangskoden, du indtastede, er forkert</string>
 	<string name="error_moderate_comment">Kunne ikke moderere</string>
 	<string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
-	<string name="error_upload">Kunne ikke overføre %s</string>
 	<string name="error_load_comment">Kunne ikke loade kommentaren</string>
 	<string name="error_downloading_image">Kunne ikke downloade billede</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Webstedsadresse må kun indeholde små bogstaver (a-z) og tal</string>

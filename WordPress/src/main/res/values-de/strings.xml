@@ -7,8 +7,8 @@ Language: de
 -->
 <resources>
 	<string name="reader_liked_default_tag">Beiträge, die mir gefallen</string>
-	<string name="reader_discover_default_tag">Entdecken</string>
 	<string name="reader_followed_default_tag">Websites, denen ich folge</string>
+	<string name="reader_discover_default_tag">Entdecken</string>
 	<string name="reader_empty_followed_blogs_search_title">Keine entsprechenden Websites gefunden</string>
 	<string name="reader_hint_search_followed_sites">Abonnierte Websites durchsuchen</string>
 	<string name="visual_editor_disabled">Visueller Editor deaktiviert</string>
@@ -838,7 +838,6 @@ Language: de
 	<string name="passcode_wrong_passcode">Falsche PIN</string>
 	<string name="error_downloading_image">Fehler beim Herunterladen des Bildes</string>
 	<string name="error_load_comment">Kommentar konnte nicht geladen werden</string>
-	<string name="error_upload">Beim Upload von %s ist ein Fehler aufgetreten</string>
 	<string name="error_edit_comment">Beim Bearbeiten des Kommentars ist ein Fehler aufgetreten</string>
 	<string name="error_moderate_comment">Bei der Moderation trat ein Fehler auf</string>
 	<string name="error_generic">Es ist ein Fehler aufgetreten</string>

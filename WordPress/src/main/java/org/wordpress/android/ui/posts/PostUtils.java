@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -14,8 +17,10 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -124,6 +129,19 @@ public class PostUtils {
                 break;
             default:
                 // No-op
+        }
+    }
+
+    public static void showCustomDialog(Activity activity, String title, String message,
+                                        String positiveButton, String negativeButton, String tag) {
+        FragmentManager fm = activity.getFragmentManager();
+        WPAlertDialogFragment saveDialog = (WPAlertDialogFragment) fm.findFragmentByTag(tag);
+        if (saveDialog == null) {
+
+            saveDialog = WPAlertDialogFragment.newCustomDialog(title, message, positiveButton, negativeButton);
+        }
+        if (!saveDialog.isAdded()) {
+            saveDialog.show(fm, tag);
         }
     }
 
@@ -250,15 +268,16 @@ public class PostUtils {
         return -1;
     }
 
-    public static int indexOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+    public static @NotNull List<Integer> indexesOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+        List<Integer> list = new ArrayList<>();
         if (mediaId == 0) {
-            return -1;
+            return list;
         }
         for (int i = 0; i < posts.size(); i++) {
             if (posts.get(i).getFeaturedImageId() == mediaId) {
-                return i;
+                list.add(i);
             }
         }
-        return -1;
+        return list;
     }
 }

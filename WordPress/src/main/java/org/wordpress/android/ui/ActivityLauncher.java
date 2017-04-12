@@ -28,6 +28,7 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -66,6 +67,11 @@ public class ActivityLauncher {
                 R.anim.activity_slide_in_from_left,
                 R.anim.do_nothing);
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
+    }
+
+    public static void showPhotoPickerForResult(Activity activity) {
+        Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
@@ -133,13 +139,15 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
-    public static void viewCurrentSite(Context context, SiteModel site) {
+    public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
         if (site == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_VIEW_SITE, site);
+        AnalyticsTracker.Stat stat = openFromHeader ? AnalyticsTracker.Stat.OPENED_VIEW_SITE_FROM_HEADER
+                : AnalyticsTracker.Stat.OPENED_VIEW_SITE;
+        AnalyticsUtils.trackWithSiteDetails(stat, site);
         openUrlExternal(context, site.getUrl());
     }
 
@@ -197,10 +205,12 @@ public class ActivityLauncher {
 
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
+        String shareableUrl = post.getLink();
+        String shareSubject = post.getTitle();
         if (site.isWPCom()) {
-            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
+            WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
         } else if (site.isJetpackConnected()) {
-            WPWebViewActivity.openJetpackBlogPostPreview(context, url, site.getFrameNonce());
+            WPWebViewActivity.openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"

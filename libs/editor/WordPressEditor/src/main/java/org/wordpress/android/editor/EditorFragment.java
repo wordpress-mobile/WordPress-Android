@@ -1199,9 +1199,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
-            // TODO: media IDs are Long's; should we update to use ArrayList<Long>?
-            ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
-            mediaIds.add(String.valueOf(remoteMediaId));
+            ArrayList<Long> mediaIds = mUploadingMediaGallery.getIds();
+            mediaIds.add(remoteMediaId);
             mUploadingMediaGallery.setIds(mediaIds);
 
             if (remaining == 0) {

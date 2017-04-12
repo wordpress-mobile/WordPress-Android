@@ -810,7 +810,6 @@ Language: bg
 	<string name="username_must_include_letters">Потребителското име трябва да съдържа поне 1 латинска буква (a-z)</string>
 	<string name="username_contains_invalid_characters">Потребителското име не трябва да съдържа символа "_"</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Адреса на уебсайта може да съдържа само малки латински букви (a-z) и числа</string>
-	<string name="error_upload">Възникна грешка при качването на %s</string>
 	<string name="username_reserved_but_may_be_available">Това потребителско име е резервирано в момента, но може да бъде налично в близките дни</string>
 	<string name="blog_not_found">Възникна грешка при достъпване на този блог</string>
 	<string name="error_edit_comment">Възникна грешка при редактирането на коментара</string>

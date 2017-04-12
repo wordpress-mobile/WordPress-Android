@@ -39,7 +39,6 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -51,7 +50,8 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -84,7 +84,6 @@ import de.greenrobot.event.EventBus;
 public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
-    private static final String MEDIA_CAPTURE_PATH = "MEDIA_CAPTURE_PATH";
 
     private static final int CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
@@ -102,7 +101,6 @@ public class MeFragment extends Fragment {
     private View mNotificationsView;
     private View mNotificationsDividerView;
     private ProgressDialog mDisconnectProgressDialog;
-    private String mMediaCapturePath;
 
     // setUserVisibleHint is not available so we need to manually handle the UserVisibleHint state
     private boolean mIsUserVisible;
@@ -123,7 +121,6 @@ public class MeFragment extends Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mMediaCapturePath = savedInstanceState.getString(MEDIA_CAPTURE_PATH);
             mIsUpdatingGravatar = savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR);
         }
     }
@@ -213,7 +210,7 @@ public class MeFragment extends Fragment {
 
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
-                    askForCameraOrGallery();
+                    showPhotoPickerForGravatar();
                 } else {
                     AppLockManager.getInstance().setExtendedTimeout();
                 }
@@ -283,11 +280,6 @@ public class MeFragment extends Fragment {
         if (mDisconnectProgressDialog != null) {
             outState.putBoolean(IS_DISCONNECTING, true);
         }
-
-        if (mMediaCapturePath != null) {
-            outState.putString(MEDIA_CAPTURE_PATH, mMediaCapturePath);
-        }
-
         outState.putBoolean(IS_UPDATING_GRAVATAR, mIsUpdatingGravatar);
 
         super.onSaveInstanceState(outState);
@@ -470,7 +462,7 @@ public class MeFragment extends Fragment {
 
                     if (denied.size() == 0) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_ACCEPTED);
-                        askForCameraOrGallery();
+                        showPhotoPickerForGravatar();
                     } else {
                         ToastUtils.showToast(this.getActivity(), getString(R.string
                                 .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
@@ -490,24 +482,22 @@ public class MeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RequestCodes.PICTURE_LIBRARY_OR_CAPTURE:
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri imageUri;
-
-                    if (data == null || data.getData() == null) {
-                        // image is from a capture
-                        imageUri = Uri.fromFile(new File(mMediaCapturePath));
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW);
-                    } else {
-                        imageUri = data.getData();
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED);
-                    }
-
-                    if (imageUri != null) {
-                        startCropActivity(imageUri);
-                    } else {
+            case RequestCodes.PHOTO_PICKER:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
+                    if (strMediaUri == null) {
                         AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
+                        return;
                     }
+                    PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
+                            data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
+                    AnalyticsTracker.Stat stat =
+                            source == PhotoPickerMediaSource.ANDROID_CAMERA
+                                    ? AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW
+                                    : AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED;
+                    AnalyticsTracker.track(stat);
+                    Uri imageUri = Uri.parse(strMediaUri);
+                    startCropActivity(imageUri);
                 }
                 break;
             case UCrop.REQUEST_CROP:
@@ -525,15 +515,8 @@ public class MeFragment extends Fragment {
         }
     }
 
-    private void askForCameraOrGallery() {
-        WordPressMediaUtils
-                .launchPictureLibraryOrCapture(MeFragment.this, BuildConfig.APPLICATION_ID,
-                        new WordPressMediaUtils.LaunchCameraCallback() {
-                            @Override
-                            public void onMediaCapturePathReady(String mediaCapturePath) {
-                                mMediaCapturePath = mediaCapturePath;
-                            }
-                        });
+    private void showPhotoPickerForGravatar() {
+        ActivityLauncher.showPhotoPickerForResult(getActivity());
     }
 
     private void startCropActivity(Uri uri) {
@@ -547,7 +530,7 @@ public class MeFragment extends Fragment {
         options.setShowCropGrid(false);
         options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar_tint));
         options.setToolbarColor(ContextCompat.getColor(context, R.color.color_primary));
-        options.setAllowedGestures(UCropActivity.ALL, UCropActivity.ALL, UCropActivity.ALL);
+        options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
         options.setHideBottomControls(true);
 
         UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))

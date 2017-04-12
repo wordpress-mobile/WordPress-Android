@@ -511,7 +511,6 @@ Language: th
 	<string name="error_generic">มีความผิดพลาดเกิดขึ้น</string>
 	<string name="error_moderate_comment">มีความผิดพลาดเกิดขึ้นขณะทำการตรวจสอบความเห็น</string>
 	<string name="error_edit_comment">มีความผิดพลาดเกิดขึ้นขณะแก้ไขความเห็น</string>
-	<string name="error_upload">มีความผิดพลาดเกิดขึ้นขณะกำลังอัปโหลด  %s</string>
 	<string name="error_load_comment">ไม่สามารถโหลดความเห็น</string>
 	<string name="error_downloading_image">การดาวน์โหลดรูปภาพผิดพลาด</string>
 	<string name="no_network_message">ไม่มีเครือข่ายที่ใช้งานได้ตอนนี้</string>

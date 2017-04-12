@@ -835,7 +835,6 @@ Language: gl_ES
 	<string name="reply_failed">Fallou a resposta</string>
 	<string name="error_moderate_comment">Houbo un erro durante a moderación</string>
 	<string name="error_edit_comment">Houbo un erro durante a edición do comentario</string>
-	<string name="error_upload">Houbo un erro mentres se cargaba o %s</string>
 	<string name="error_downloading_image">Erro na descarga da imaxe</string>
 	<string name="theme_fetch_failed">Fallou a procura de temas</string>
 	<string name="theme_set_failed">Fallou a activación do tema</string>

@@ -575,7 +575,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         @Override
         public boolean matches(@NotNull Attributes attrs) {
-            return attrs.getIndex(mAttributeName) > -1 && attrs.getValue("data-wpid").equals(mId);
+            return attrs.getIndex(mAttributeName) > -1 && attrs.getValue(mAttributeName).equals(mId);
         }
     }
 

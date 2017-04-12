@@ -25,6 +25,7 @@ public class StatsViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
     public final WPNetworkImageView networkImageView;
+    public final TextView alternativeImage;
     public final ImageView chevronImageView;
     public final ImageView linkImageView;
     public final ImageView imgMore;
@@ -37,7 +38,7 @@ public class StatsViewHolder {
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
         linkImageView = (ImageView) view.findViewById(R.id.stats_list_cell_link);
         networkImageView = (WPNetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-
+        alternativeImage = (TextView) view.findViewById(R.id.stats_list_cell_image_alt);
         imgMore = (ImageView) view.findViewById(R.id.image_more);
     }
 
