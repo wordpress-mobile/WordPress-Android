@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/media_edit_linear_layout"
@@ -17,7 +17,6 @@
             android:id="@+id/media_edit_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_large"
             android:text="@string/media_edit_title_text"
             android:textSize="@dimen/text_sz_large" />
 
@@ -32,7 +31,6 @@
             android:id="@+id/media_edit_caption_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             android:text="@string/media_edit_caption_text"
             android:textSize="@dimen/text_sz_large" />
@@ -49,7 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:paddingLeft="@dimen/margin_large"
             android:text="@string/media_edit_description_text"
             android:textSize="@dimen/text_sz_large" />
 
@@ -61,20 +58,6 @@
             android:hint="@string/media_edit_description_hint"
             android:inputType="textCapSentences|textAutoCorrect"
             android:lines="3" />
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large">
-
-            <include
-                android:id="@+id/media_edit_fragment_image_local"
-                layout="@layout/media_grid_image_local" />
-
-            <include
-                android:id="@+id/media_edit_fragment_image_network"
-                layout="@layout/media_grid_image_network" />
-        </FrameLayout>
     </LinearLayout>
 
 </ScrollView>

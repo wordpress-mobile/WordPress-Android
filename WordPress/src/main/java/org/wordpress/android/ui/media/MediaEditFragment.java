@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,14 +9,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
-
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -30,10 +24,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
-import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -51,10 +42,7 @@ public class MediaEditFragment extends Fragment {
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
-    @Inject FluxCImageLoader mImageLoader;
 
-    private NetworkImageView mNetworkImageView;
-    private ImageView mLocalImageView;
     private EditText mTitleView;
     private EditText mCaptionView;
     private EditText mDescriptionView;
@@ -174,8 +162,6 @@ public class MediaEditFragment extends Fragment {
         mTitleView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_title);
         mCaptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_caption);
         mDescriptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_description);
-        mLocalImageView = (ImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_local);
-        mNetworkImageView = (NetworkImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_network);
 
         loadMedia(getLocalMediaId());
 
@@ -206,45 +192,6 @@ public class MediaEditFragment extends Fragment {
         mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, mMediaModel)));
     }
 
-    private void refreshImageView(MediaModel mediaModel, boolean isLocal) {
-        final String imageUri;
-        if (isLocal) {
-            imageUri = mediaModel.getFilePath();
-        } else {
-            imageUri = mediaModel.getUrl();
-        }
-        if (MediaUtils.isValidImage(imageUri)) {
-            int width = mediaModel.getWidth();
-            int height = mediaModel.getHeight();
-
-            // differentiating between tablet and phone
-            float screenWidth;
-            if (this.isInLayout()) {
-                screenWidth = mLinearLayout.getMeasuredWidth();
-            } else {
-                screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
-            }
-            float screenHeight = getActivity().getResources().getDisplayMetrics().heightPixels;
-
-            if (width > screenWidth) {
-                height = (int) (height / (width / screenWidth));
-            } else if (height > screenHeight) {
-                width = (int) (width / (height / screenHeight));
-            }
-
-            if (isLocal) {
-                loadLocalImage(mLocalImageView, imageUri, width, height);
-                mLocalImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
-            } else {
-                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);
-                mNetworkImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
-            }
-        } else {
-            mNetworkImageView.setVisibility(View.GONE);
-            mLocalImageView.setVisibility(View.GONE);
-        }
-    }
-
     private void refreshViews(MediaModel mediaModel) {
         if (mediaModel == null) {
             mLinearLayout.setVisibility(View.GONE);
@@ -252,17 +199,9 @@ public class MediaEditFragment extends Fragment {
         }
 
         mLinearLayout.setVisibility(View.VISIBLE);
-
         mScrollView.scrollTo(0, 0);
 
         boolean isLocal = MediaUtils.isLocalFile(mediaModel.getUploadState());
-        if (isLocal) {
-            mNetworkImageView.setVisibility(View.GONE);
-            mLocalImageView.setVisibility(View.VISIBLE);
-        } else {
-            mNetworkImageView.setVisibility(View.VISIBLE);
-            mLocalImageView.setVisibility(View.GONE);
-        }
 
         // user can't edit local files
         mTitleView.setEnabled(!isLocal);
@@ -278,8 +217,6 @@ public class MediaEditFragment extends Fragment {
         mTitleView.setSelection(mTitleView.getText().length());
         mCaptionView.setText(mediaModel.getCaption());
         mDescriptionView.setText(mediaModel.getDescription());
-
-        refreshImageView(mediaModel, isLocal);
     }
 
     @Override
@@ -290,43 +227,12 @@ public class MediaEditFragment extends Fragment {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        if (!isInLayout()) {
-            menu.findItem(R.id.menu_new_media).setVisible(false);
-            menu.findItem(R.id.menu_search).setVisible(false);
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.menu_save_media) {
+        if (item.getItemId() == R.id.menu_save_media) {
             item.setActionView(R.layout.progressbar);
             saveMedia();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
-        if (MediaUtils.isValidImage(filePath)) {
-            imageView.setTag(filePath);
-
-            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
-                    @Override
-                    public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
-                        if (imageView != null) {
-                            imageView.setImageBitmap(bitmap);
-                        }
-                        WordPress.getBitmapCache().put(path, bitmap);
-                    }
-                });
-                task.execute(filePath);
-            }
-        }
     }
 
     public boolean isDirty() {
@@ -337,7 +243,6 @@ public class MediaEditFragment extends Fragment {
     }
 
     // FluxC events
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {

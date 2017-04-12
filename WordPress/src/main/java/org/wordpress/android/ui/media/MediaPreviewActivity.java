@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -71,6 +72,7 @@ public class MediaPreviewActivity extends AppCompatActivity
     private ImageView mImageView;
     private VideoView mVideoView;
     private ViewGroup mMetadataView;
+    private Toolbar mToolbar;
 
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
@@ -139,6 +141,7 @@ public class MediaPreviewActivity extends AppCompatActivity
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
         mMetadataView = (ViewGroup) findViewById(R.id.layout_metadata);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
@@ -168,6 +171,18 @@ public class MediaPreviewActivity extends AppCompatActivity
         } else {
             delayedFinish(true);
             return;
+        }
+
+        if (mEnableMetadata) {
+            setSupportActionBar(mToolbar);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setTitle(R.string.media);
+            }
+        } else {
+            mToolbar.setVisibility(View.GONE);
         }
 
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
@@ -450,9 +465,8 @@ public class MediaPreviewActivity extends AppCompatActivity
 
     @Override
     public void setLookClosable() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+        if (mToolbar != null) {
+            mToolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         }
     }
 
