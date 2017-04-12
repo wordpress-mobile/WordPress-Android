@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.media;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -32,8 +30,11 @@ import android.widget.VideoView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -55,8 +56,7 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class MediaPreviewActivity extends AppCompatActivity
-        implements MediaEditFragment.MediaEditFragmentCallback {
+public class MediaPreviewActivity extends AppCompatActivity {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
@@ -77,6 +77,7 @@ public class MediaPreviewActivity extends AppCompatActivity
 
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
+    @Inject Dispatcher mDispatcher;
 
     private static final long FADE_DELAY_MS = 4000;
     private final Handler mFadeHandler = new Handler();
@@ -208,6 +209,18 @@ public class MediaPreviewActivity extends AppCompatActivity
         outState.putBoolean(ARG_IS_VIDEO, mIsVideo);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
     private void delayedFinish(boolean showError) {
         if (showError) {
             ToastUtils.showToast(this, R.string.error_media_not_found);
@@ -226,24 +239,9 @@ public class MediaPreviewActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && mMediaEditFragment.isDirty()) {
-                // alert the user that there are unsaved changes
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.confirm_discard_changes)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.discard, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                WPActivityUtils.hideKeyboard(getCurrentFocus());
-                                getFragmentManager().popBackStack();
-                                setLookClosable(false);
-                            }})
-                        .setNegativeButton(R.string.cancel, null)
-                        .create()
-                        .show();
-                return;
-            }
+        if (mMediaEditFragment != null) {
+            mMediaEditFragment.saveMedia();
+            getFragmentManager().popBackStack();
         }
 
         setLookClosable(false);
@@ -341,6 +339,13 @@ public class MediaPreviewActivity extends AppCompatActivity
 
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
+    }
+
+    private void updateMetadata() {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media != null) {
+            showMetaData(media);
+        }
     }
     
     private void showMetaData(@NonNull final MediaModel media) {
@@ -446,10 +451,6 @@ public class MediaPreviewActivity extends AppCompatActivity
         return dateString;
     }
 
-    private boolean hasEditFragment() {
-        return getEditFragment() != null;
-    }
-
     private MediaEditFragment getEditFragment() {
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentByTag(MediaEditFragment.TAG);
@@ -484,11 +485,9 @@ public class MediaPreviewActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onEditFragmentSaved(int localMediaId, boolean result) {
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-        if (media != null) {
-            showMetaData(media);
-        }
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        updateMetadata();
     }
 }

@@ -1,17 +1,12 @@
 package org.wordpress.android.ui.media;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -51,18 +46,12 @@ public class MediaEditFragment extends Fragment {
     private String mDescriptionOriginal;
     private String mCaptionOriginal;
 
-    private MediaEditFragmentCallback mCallback;
-
     private int mLocalMediaId = MISSING_MEDIA_ID;
     private ScrollView mScrollView;
     private View mLinearLayout;
 
     private SiteModel mSite;
     private MediaModel mMediaModel;
-
-    public interface MediaEditFragmentCallback {
-        void onEditFragmentSaved(int localMediaId, boolean result);
-    }
 
     public static MediaEditFragment newInstance(SiteModel site, int localMediaId) {
         MediaEditFragment fragment = new MediaEditFragment();
@@ -100,18 +89,6 @@ public class MediaEditFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            mCallback = (MediaEditFragmentCallback) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement "
-                                         + MediaEditFragmentCallback.class.getSimpleName());
-        }
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
@@ -121,17 +98,6 @@ public class MediaEditFragment extends Fragment {
     public void onStop() {
         mDispatcher.unregister(this);
         super.onStop();
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        // set callback to null so we don't accidentally leak the activity instance
-        mCallback = null;
-    }
-
-    private boolean hasCallback() {
-        return (mCallback != null);
     }
 
     private int getLocalMediaId() {
@@ -175,12 +141,14 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
-    private void saveMedia() {
+    public void saveMedia() {
         ActivityUtils.hideKeyboard(getActivity());
-        mMediaModel.setTitle(mTitleView.getText().toString());
-        mMediaModel.setDescription(mDescriptionView.getText().toString());
-        mMediaModel.setCaption(mCaptionView.getText().toString());
-        mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, mMediaModel)));
+        if (isDirty()) {
+            mMediaModel.setTitle(mTitleView.getText().toString());
+            mMediaModel.setDescription(mDescriptionView.getText().toString());
+            mMediaModel.setCaption(mCaptionView.getText().toString());
+            mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, mMediaModel)));
+        }
     }
 
     private void refreshViews(MediaModel mediaModel) {
@@ -210,22 +178,6 @@ public class MediaEditFragment extends Fragment {
         mDescriptionView.setText(mediaModel.getDescription());
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!isInLayout()) {
-            inflater.inflate(R.menu.media_edit, menu);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_save_media) {
-            item.setActionView(R.layout.progressbar);
-            saveMedia();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public boolean isDirty() {
         return mLocalMediaId != MISSING_MEDIA_ID &&
                 (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
@@ -237,13 +189,11 @@ public class MediaEditFragment extends Fragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
-        if (getActivity() != null) {
+        if (isAdded()) {
             getActivity().invalidateOptionsMenu();
-            Toast.makeText(getActivity(), event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
-                    Toast.LENGTH_LONG).show();
-        }
-        if (hasCallback()) {
-            mCallback.onEditFragmentSaved(mLocalMediaId, !event.isError());
+            ToastUtils.showToast(getActivity(),
+                    event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
+                    ToastUtils.Duration.LONG);
         }
     }
 }
