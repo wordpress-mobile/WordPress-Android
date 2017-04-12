@@ -41,6 +41,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        if (!isValidEvent(stat)) {
+            return;
+        }
+
         String eventName = getEventNameForStat(stat);
         if (eventName == null) {
             AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
@@ -251,6 +255,10 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
+        if (!isValidEvent(stat)) {
+            return null;
+        }
+
         switch (stat) {
             case APPLICATION_OPENED:
                 return "application_opened";
