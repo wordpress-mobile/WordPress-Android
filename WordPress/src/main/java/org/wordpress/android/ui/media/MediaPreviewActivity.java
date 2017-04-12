@@ -472,6 +472,9 @@ public class MediaPreviewActivity extends AppCompatActivity
 
     @Override
     public void onEditFragmentSaved(int localMediaId, boolean result) {
-
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media != null) {
+            showMetaData(media);
+        }
     }
 }

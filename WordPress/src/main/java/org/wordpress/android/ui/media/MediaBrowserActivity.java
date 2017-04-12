@@ -491,18 +491,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void updateOnMediaChanged(int localMediaId) {
-        if (localMediaId == -1) {
-            return;
-        }
-
-        // If the media was deleted, remove it from multi select if it was selected
-        if (mMediaStore.getMediaWithLocalId(localMediaId) == null) {
-            mMediaGridFragment.removeFromMultiSelect(localMediaId);
-        }
-        updateViews();
-    }
-
     public void deleteMedia(final ArrayList<Integer> ids) {
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
