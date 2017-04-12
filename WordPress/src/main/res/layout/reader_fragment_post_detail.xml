@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/layout_post_detail_container"
@@ -111,7 +112,7 @@
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
         android:drawablePadding="@dimen/margin_small"
-        android:drawableTop="@drawable/ic_notice_48dp"
+        app:drawableTopCompat="@drawable/ic_notice_48dp"
         android:gravity="center"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_extra_large"

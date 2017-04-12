@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/reader_tag_header_image_height"
-    android:layout_marginBottom="@dimen/margin_extra_small">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/reader_tag_header_image_height"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginBottom="@dimen/margin_extra_small">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_tag_header"
@@ -23,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:drawableLeft="@drawable/ic_tag_white_24dp"
+        app:drawableLeftCompat="@drawable/ic_tag_white_24dp"
         android:drawablePadding="@dimen/margin_small"
         android:ellipsize="end"
         android:gravity="center_vertical"
