@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.media;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -28,6 +30,7 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
@@ -46,7 +49,8 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class MediaPreviewActivity extends AppCompatActivity {
+public class MediaPreviewActivity extends AppCompatActivity
+        implements MediaEditFragment.MediaEditFragmentCallback {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
@@ -56,6 +60,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private int mMediaId;
     private boolean mIsVideo;
     private boolean mEnableMetadata;
+
+    private SiteModel mSite;
 
     private ImageView mImageView;
     private VideoView mVideoView;
@@ -86,13 +92,16 @@ public class MediaPreviewActivity extends AppCompatActivity {
     /**
      * @param context     self explanatory
      * @param sourceView  optional imageView on calling activity which shows thumbnail of same media
+     * @param site        site which contains this media item
      * @param mediaId     local ID in site's media library
      */
     public static void showPreview(Context context,
                                    View sourceView,
+                                   SiteModel site,
                                    int mediaId) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
         intent.putExtra(ARG_MEDIA_LOCAL_ID, mediaId);
+        intent.putExtra(WordPress.SITE, site);
         showPreviewIntent(context, sourceView, intent);
     }
 
@@ -127,10 +136,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mMetadataView = (ViewGroup) findViewById(R.id.layout_metadata);
 
         if (savedInstanceState != null) {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mContentUri = savedInstanceState.getString(ARG_MEDIA_CONTENT_URI);
             mMediaId = savedInstanceState.getInt(ARG_MEDIA_LOCAL_ID);
             mIsVideo = savedInstanceState.getBoolean(ARG_IS_VIDEO);
         } else {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mContentUri = getIntent().getStringExtra(ARG_MEDIA_CONTENT_URI);
             mMediaId = getIntent().getIntExtra(ARG_MEDIA_LOCAL_ID, 0);
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
@@ -272,7 +283,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mVideoView.requestFocus();
     }
     
-    private void showMetaData(@NonNull MediaModel media) {
+    private void showMetaData(@NonNull final MediaModel media) {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
 
         TextView captionView = (TextView) mMetadataView.findViewById(R.id.media_details_caption);
@@ -330,7 +341,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
+                showEditFragment(media.getId());
             }
         });
 
@@ -347,9 +358,11 @@ public class MediaPreviewActivity extends AppCompatActivity {
     };
 
     private void fadeInMetadata() {
-        if (!isFinishing() && mMetadataView.getVisibility() != View.VISIBLE) {
+        if (!isFinishing()) {
             mFadeHandler.removeCallbacks(fadeOutRunnable);
-            AniUtils.fadeIn(mMetadataView, AniUtils.Duration.LONG);
+            if (mMetadataView.getVisibility() != View.VISIBLE) {
+                AniUtils.fadeIn(mMetadataView, AniUtils.Duration.LONG);
+            }
             mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
         }
     }
@@ -366,5 +379,52 @@ public class MediaPreviewActivity extends AppCompatActivity {
             }
         }
         return dateString;
+    }
+
+    private boolean hasEditFragment() {
+        return getEditFragment() != null;
+    }
+
+    private MediaEditFragment getEditFragment() {
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(MediaEditFragment.TAG);
+        if (fragment != null) {
+            return (MediaEditFragment) fragment;
+        }
+        return null;
+    }
+
+    private void showEditFragment(int localMediaId) {
+        MediaEditFragment fragment = getEditFragment();
+        if (fragment == null) {
+            fragment = MediaEditFragment.newInstance(mSite, localMediaId);
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction()
+                .replace(R.id.fragment_container, fragment, MediaEditFragment.TAG)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+        } else {
+            fragment.loadMedia(localMediaId);
+        }
+    }
+
+    @Override
+    public void onEditFragmentResume(Fragment fragment) {
+
+    }
+
+    @Override
+    public void setLookClosable() {
+
+    }
+
+    @Override
+    public void onEditFragmentPause(Fragment fragment) {
+
+    }
+
+    @Override
+    public void onEditFragmentSaved(int localMediaId, boolean result) {
+
     }
 }

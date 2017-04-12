@@ -425,7 +425,7 @@ public class WPMainActivity extends AppCompatActivity {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
         }
 
-        ProfilingUtils.split("WPMainActivity.onResume");
+        ProfilingUtils.split("WPMainActivity.onEditFragmentResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
     }

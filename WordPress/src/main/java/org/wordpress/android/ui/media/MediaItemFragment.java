@@ -314,6 +314,7 @@ public class MediaItemFragment extends Fragment {
                     MediaPreviewActivity.showPreview(
                             getActivity(),
                             v,
+                            mSite,
                             mediaModel.getId());
                 }
             });

@@ -75,7 +75,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
-            // The note will be set in onResume()
+            // The note will be set in onEditFragmentResume()
             // See WordPress.deferredInit()
             mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             mRestoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0);

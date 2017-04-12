@@ -73,10 +73,10 @@ public class MediaEditFragment extends Fragment {
     private MediaModel mMediaModel;
 
     public interface MediaEditFragmentCallback {
-        void onResume(Fragment fragment);
+        void onEditFragmentResume(Fragment fragment);
+        void onEditFragmentPause(Fragment fragment);
+        void onEditFragmentSaved(int localMediaId, boolean result);
         void setLookClosable();
-        void onPause(Fragment fragment);
-        void onSavedEdit(int localMediaId, boolean result);
     }
 
     public static MediaEditFragment newInstance(SiteModel site, int localMediaId) {
@@ -153,7 +153,7 @@ public class MediaEditFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (hasCallback()) {
-            mCallback.onResume(this);
+            mCallback.onEditFragmentResume(this);
             mCallback.setLookClosable();
         }
     }
@@ -162,7 +162,7 @@ public class MediaEditFragment extends Fragment {
     public void onPause() {
         super.onPause();
         if (hasCallback()) {
-            mCallback.onPause(this);
+            mCallback.onEditFragmentPause(this);
         }
     }
 
@@ -358,7 +358,7 @@ public class MediaEditFragment extends Fragment {
                     Toast.LENGTH_LONG).show();
         }
         if (hasCallback()) {
-            mCallback.onSavedEdit(mLocalMediaId, !event.isError());
+            mCallback.onEditFragmentSaved(mLocalMediaId, !event.isError());
         }
     }
 }

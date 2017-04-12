@@ -63,7 +63,6 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallback;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
-import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
@@ -91,7 +90,7 @@ import javax.inject.Inject;
  * The main activity in which the user can browse their media.
  */
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
-        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener,
+        OnQueryTextListener, OnActionExpandListener,
         MediaEditFragmentCallback, WordPressMediaUtils.LaunchCameraCallback {
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
@@ -180,7 +179,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onPause(Fragment fragment) {
+    public void onEditFragmentPause(Fragment fragment) {
         invalidateOptionsMenu();
     }
 
@@ -192,7 +191,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onResume(Fragment fragment) {
+    public void onEditFragmentResume(Fragment fragment) {
         invalidateOptionsMenu();
     }
 
@@ -477,7 +476,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onMediaItemSelected(View sourceView, int localMediaId) {
-        MediaPreviewActivity.showPreview(this, sourceView, localMediaId);
+        MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
     }
 
     @Override
@@ -580,7 +579,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    public void onSavedEdit(int localMediaId, boolean result) {
+    public void onEditFragmentSaved(int localMediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
             doPopBackStack(getFragmentManager());
             // refresh grid
