@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,7 +248,27 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         setLookClosable(false);
+        invalidateOptionsMenu();
+
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // enable editing metadata if we have a valid site
+        if (mEnableMetadata && mSite != null) {
+            getMenuInflater().inflate(R.menu.media_edit, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.menu_edit);
+        if (item != null) {
+            item.setVisible(getEditFragment() == null);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -255,14 +276,17 @@ public class MediaPreviewActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (item.getItemId() == R.id.menu_edit) {
+            showEditFragment(mMediaId);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     /*
-     * loads and displays a remote or local image
-     */
+         * loads and displays a remote or local image
+         */
     private void loadImage(@NonNull String mediaUri) {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
@@ -396,19 +420,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
             fileTypeView.setVisibility(View.GONE);
         }
 
-        // enable editing metadata if we have a valid site
-        View editBtn = mMetadataView.findViewById(R.id.image_edit);
-        if (mSite != null) {
-            editBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showEditFragment(media.getId());
-                }
-            });
-        } else {
-            editBtn.setVisibility(View.GONE);
-        }
-
         fadeInMetadata();
     }
 
@@ -467,6 +478,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             fragment.loadMedia(localMediaId);
         }
+        invalidateOptionsMenu();
     }
 
     public void setLookClosable(boolean lookClosable) {

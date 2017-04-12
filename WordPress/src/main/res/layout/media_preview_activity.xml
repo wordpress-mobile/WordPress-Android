@@ -13,12 +13,14 @@
     <ImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar" />
 
     <VideoView
         android:id="@+id/video_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -122,15 +124,6 @@
                 tools:text="media_details_date" />
 
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/image_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:layout_marginRight="@dimen/content_margin"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:src="@drawable/ab_icon_edit" />
 
     </FrameLayout>
 
