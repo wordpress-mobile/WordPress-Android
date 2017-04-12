@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
@@ -47,7 +48,6 @@ import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,7 +68,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private boolean mEnableMetadata;
 
     private SiteModel mSite;
-    private MediaEditFragment mMediaEditFragment;
 
     private ImageView mImageView;
     private VideoView mVideoView;
@@ -170,6 +169,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mEnableMetadata = true;
             mediaUri = media.getUrl();
             showMetaData(media);
+            fadeInMetadata();
         } else {
             delayedFinish(true);
             return;
@@ -190,8 +190,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
-        mMediaEditFragment = (MediaEditFragment) getFragmentManager().findFragmentByTag(MediaEditFragment.TAG);
-        setLookClosable(mMediaEditFragment != null);
+        setLookClosable(getEditFragment() != null);
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -239,9 +238,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mMediaEditFragment != null) {
-            mMediaEditFragment.saveMedia();
-            getFragmentManager().popBackStack();
+        MediaEditFragment fragment = getEditFragment();
+        if (fragment != null) {
+            ActivityUtils.hideKeyboard(this);
+            fragment.saveChanges();
         }
 
         setLookClosable(false);
@@ -340,13 +340,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
     }
-
-    private void updateMetadata() {
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-        if (media != null) {
-            showMetaData(media);
-        }
-    }
     
     private void showMetaData(@NonNull final MediaModel media) {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
@@ -378,7 +371,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         String fileURL = media.getUrl();
         String fileName = media.getFileName();
-        String imageUri = TextUtils.isEmpty(fileURL) ? media.getFilePath() : fileURL;
 
         fileNameView.setText(fileName);
 
@@ -414,8 +406,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             editBtn.setVisibility(View.GONE);
         }
-
-        fadeInMetadata();
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {
@@ -488,6 +478,11 @@ public class MediaPreviewActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        updateMetadata();
+        if (!event.isError() && mMediaId != 0) {
+            MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+            if (media != null) {
+                showMetaData(media);
+            }
+        }
     }
 }

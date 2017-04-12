@@ -18,8 +18,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
-import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -141,8 +139,7 @@ public class MediaEditFragment extends Fragment {
         }
     }
 
-    public void saveMedia() {
-        ActivityUtils.hideKeyboard(getActivity());
+    public void saveChanges() {
         if (isDirty()) {
             mMediaModel.setTitle(mTitleView.getText().toString());
             mMediaModel.setDescription(mDescriptionView.getText().toString());
@@ -178,22 +175,18 @@ public class MediaEditFragment extends Fragment {
         mDescriptionView.setText(mediaModel.getDescription());
     }
 
-    public boolean isDirty() {
+    private boolean isDirty() {
         return mLocalMediaId != MISSING_MEDIA_ID &&
                 (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
                 || !StringUtils.equals(mCaptionOriginal, mCaptionView.getText().toString())
                 || !StringUtils.equals(mDescriptionOriginal, mDescriptionView.getText().toString()));
     }
 
-    // FluxC events
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMediaChanged(OnMediaChanged event) {
-        if (isAdded()) {
-            getActivity().invalidateOptionsMenu();
-            ToastUtils.showToast(getActivity(),
-                    event.isError() ? R.string.media_edit_failure : R.string.media_edit_success,
-                    ToastUtils.Duration.LONG);
+    public void onMediaChanged(MediaStore.OnMediaChanged event) {
+        if (isAdded() && event.isError()) {
+            ToastUtils.showToast(getActivity(), R.string.media_edit_failure);
         }
     }
 }
