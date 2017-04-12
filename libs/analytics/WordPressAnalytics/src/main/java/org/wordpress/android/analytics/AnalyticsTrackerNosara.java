@@ -163,24 +163,30 @@ public class AnalyticsTrackerNosara extends Tracker {
 
         // create the merged JSON Object of properties
         // Properties defined by the user have precedence over the default ones pre-defined at "event level"
-        final JSONObject propertiesToJSON;
+        JSONObject propertiesToJSON = null;
         if (properties != null && properties.size() > 0) {
-            propertiesToJSON = new JSONObject(properties);
-            for (String key : predefinedEventProperties.keySet()) {
-                try {
-                    if (propertiesToJSON.has(key)) {
-                        AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
-                                "the same property pre-defined at event level. This may generate unexpected behavior!!");
-                        AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
-                                predefinedEventProperties.get(key).toString());
-                    } else {
-                        propertiesToJSON.put(key, predefinedEventProperties.get(key));
+            try {
+                propertiesToJSON = new JSONObject(properties);
+                for (String key : predefinedEventProperties.keySet()) {
+                    try {
+                        if (propertiesToJSON.has(key)) {
+                            AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
+                                    "the same property pre-defined at event level. This may generate unexpected behavior!!");
+                            AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
+                                    predefinedEventProperties.get(key).toString());
+                        } else {
+                            propertiesToJSON.put(key, predefinedEventProperties.get(key));
+                        }
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                     }
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                 }
+            } catch (NullPointerException e) {
+                AppLog.e(AppLog.T.STATS, "A property passed to the event " + eventName + " has null key!", e);
             }
-        } else{
+        }
+
+        if (propertiesToJSON == null) {
             propertiesToJSON = new JSONObject(predefinedEventProperties);
         }
 
@@ -190,8 +196,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
         }
     }
-
-
 
     @Override
     public void endSession() {
