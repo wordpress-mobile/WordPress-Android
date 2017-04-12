@@ -34,7 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:padding="16dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:fontFamily="serif"
+                android:textStyle="bold"
+                android:textSize="@dimen/aztec_title_size"
                 aztec:lineSpacingExtra="@dimen/spacing_extra_title"
                 aztec:textColor="@color/grey_dark"
                 aztec:textColorHint="@color/hint_text" >
