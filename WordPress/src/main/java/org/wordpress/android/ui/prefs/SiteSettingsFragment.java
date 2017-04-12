@@ -1121,13 +1121,23 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void handleStartOver() {
+        // Only paid plans should be handled here, free plans should be redirected to website from "Start Over" button
+        if (mSite == null || mSite.getHasFreePlan()) {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"help@wordpress.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.start_over_email_subject,
+                SiteUtils.getHomeURLOrHostName(mSite)));
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.start_over_email_body, mSite.getUrl()));
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.contact_support)));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ToastUtils.showToast(getActivity(), R.string.start_over_email_intent_error);
+        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED,
                 mSite);
-        if (mSite == null || mSite.getHasFreePlan()) {
-            // free plan, redirect to website
-        } else {
-            // paid plan, send email
-        }
     }
 
     private void showListEditorDialog(int titleRes, int headerRes) {
