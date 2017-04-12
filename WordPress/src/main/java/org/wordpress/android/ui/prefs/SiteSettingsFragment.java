@@ -256,7 +256,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onResume() {
         super.onResume();
 
-        // Fragment#onEditFragmentResume() is called after FragmentActivity#onPostResume().
+        // Fragment#onResume() is called after FragmentActivity#onPostResume().
         // The latter is the most secure way of keeping track of the activity's state, and avoid calls to commitAllowingStateLoss.
         mIsFragmentPaused = false;
 

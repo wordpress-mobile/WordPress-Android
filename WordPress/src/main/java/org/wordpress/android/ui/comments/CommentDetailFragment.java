@@ -202,7 +202,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (savedInstanceState != null) {
             mIdForFragmentContainer = savedInstanceState.getInt(KEY_FRAGMENT_CONTAINER_ID);
             if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                // The note will be set in onEditFragmentResume()
+                // The note will be set in onResume()
                 // See WordPress.deferredInit()
                 mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
             } else {

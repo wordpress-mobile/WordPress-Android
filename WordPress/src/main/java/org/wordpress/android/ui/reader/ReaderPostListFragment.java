@@ -449,7 +449,7 @@ public class ReaderPostListFragment extends Fragment
                 }
 
                 if (mFirstLoad){
-                    /* let onEditFragmentResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData method
+                    /* let onResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData method
                     * is called on two moments: once for first time load, and then each time the swipe to refresh gesture
                     * triggers a refresh
                     */

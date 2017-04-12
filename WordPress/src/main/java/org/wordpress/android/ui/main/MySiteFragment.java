@@ -148,7 +148,7 @@ public class MySiteFragment extends Fragment
         mCurrentPlanNameTextView = (WPTextView) rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = (RelativeLayout) rootView.findViewById(R.id.row_pages);
 
-        // hide the FAB the first time the fragment is created in order to animate it in onEditFragmentResume()
+        // hide the FAB the first time the fragment is created in order to animate it in onResume()
         if (savedInstanceState == null) {
             mFabView.setVisibility(View.INVISIBLE);
         }
