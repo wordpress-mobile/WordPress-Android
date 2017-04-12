@@ -444,7 +444,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
-                    mSite = null;
                 }
             });
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
@@ -1349,6 +1348,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
+        mSite = null;
+    }
+
+    // .org site removed from the app
+    public void handleSiteRemoved() {
         mSite = null;
     }
 

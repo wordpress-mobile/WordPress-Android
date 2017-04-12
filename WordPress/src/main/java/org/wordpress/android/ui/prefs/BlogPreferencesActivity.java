@@ -103,10 +103,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ConnectionChangeReceiver.ConnectionChangeEvent event) {
-        FragmentManager fragmentManager = getFragmentManager();
-        SiteSettingsFragment siteSettingsFragment =
-                (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
-
+        SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
         if (siteSettingsFragment != null) {
             if (!event.isConnected()) {
                 ToastUtils.showToast(this, getString(R.string.site_settings_disconnected_toast));
@@ -123,17 +120,18 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
-        setResult(RESULT_BLOG_REMOVED);
-        finish();
+        SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
+        if (siteSettingsFragment != null) {
+            siteSettingsFragment.handleSiteRemoved();
+            setResult(RESULT_BLOG_REMOVED);
+            finish();
+        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteDeleted(OnSiteDeleted event) {
-        FragmentManager fragmentManager = getFragmentManager();
-        SiteSettingsFragment siteSettingsFragment =
-                (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
-
+        SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
         if (siteSettingsFragment != null) {
             if (event.isError()) {
                 siteSettingsFragment.handleDeleteSiteError(event.error);
@@ -144,5 +142,10 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             setResult(RESULT_BLOG_REMOVED);
             finish();
         }
+    }
+
+    private SiteSettingsFragment getSettingsFragment() {
+        FragmentManager fragmentManager = getFragmentManager();
+        return (SiteSettingsFragment) fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
     }
 }
