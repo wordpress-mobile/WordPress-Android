@@ -242,12 +242,11 @@ public class MediaPreviewActivity extends AppCompatActivity
                         .setNegativeButton(R.string.cancel, null)
                         .create()
                         .show();
-            } else {
-                getFragmentManager().popBackStack();
+                return;
             }
-        } else {
-            super.onBackPressed();
         }
+
+        super.onBackPressed();
     }
 
     /*
