@@ -68,6 +68,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.passcodelock.AppLockManager;
@@ -398,6 +399,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onMediaItemSelected(View sourceView, int localMediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+        if (media != null) {
+            // TODO: right now only images & videos are supported
+            String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
+            if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
+                return;
+            }
+        }
         MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
     }
 
