@@ -58,7 +58,7 @@
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_pending_drafts">Notify me on pending drafts</string>
     <string name="notification_blink">Blink notification light</string>
-    <string name="sure_to_remove_account">Remove this site?</string>
+    <string name="sure_to_remove_account">Remove this site from the app?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
@@ -1584,6 +1584,7 @@
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
+    <string name="remove_site_hint">Remove this site from the app</string>
 
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>
