@@ -105,6 +105,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
 
     /**
+     * url for redirecting free users to empty their sites (start over)
+     */
+    private final String WORDRESS_EMPTY_SITE_SUPPORT_URL = "https://en.support.wordpress.com/empty-site/";
+
+    /**
      * Used to move the Uncategorized category to the beginning of the category list.
      */
     private static final int UNCATEGORIZED_CATEGORY_ID = 1;
@@ -392,13 +397,19 @@ public class SiteSettingsFragment extends PreferenceFragment
             return setupMorePreferenceScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
-            if (dialog == null) return false;
+            if (mSite == null || dialog == null) return false;
 
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_ACCESSED, mSite);
 
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
-            String title = getString(R.string.start_over);
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            if (mSite.getHasFreePlan()) {
+                // Don't show the start over detail screen for free users, instead show the support page
+                dialog.dismiss();
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDRESS_EMPTY_SITE_SUPPORT_URL);
+            } else {
+                setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+                String title = getString(R.string.start_over);
+                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            }
         }
 
         return false;
