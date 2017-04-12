@@ -70,7 +70,7 @@
                 android:layout_marginTop="@dimen/margin_large"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/grey"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_large"
                 android:visibility="gone"
                 tools:text="media_details_caption"
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/grey"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_large"
                 android:visibility="gone"
                 tools:text="media_details_description"
@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_large"
-                android:textColor="@color/grey"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="media_details_file_type" />
 
@@ -102,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                android:textColor="@color/grey"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="media_details_date" />
 

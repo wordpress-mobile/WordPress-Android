@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:hint="@string/media_edit_caption_text"
             android:inputType="textCapSentences|textAutoCorrect"
-            android:textSize="@dimen/text_sz_large"
             tools:text="media_edit_fragment_caption" />
 
     </android.support.design.widget.TextInputLayout>
@@ -50,7 +49,6 @@
             android:hint="@string/media_edit_description_text"
             android:inputType="textCapSentences|textAutoCorrect"
             android:lines="3"
-            android:textSize="@dimen/text_sz_large"
             tools:text="media_edit_fragment_caption" />
 
     </android.support.design.widget.TextInputLayout>
