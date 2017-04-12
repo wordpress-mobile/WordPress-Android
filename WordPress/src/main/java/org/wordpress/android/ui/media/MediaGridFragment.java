@@ -97,7 +97,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private SiteModel mSite;
 
     public interface MediaGridListener {
-        void onMediaItemSelected(int localMediaId);
+        void onMediaItemSelected(View sourceView, int localMediaId);
         void onRetryUpload(int localMediaId);
     }
 
@@ -247,9 +247,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onAdapterItemSelected(int position) {
+    public void onAdapterItemSelected(View sourceView, int position) {
         int localMediaId = mGridAdapter.getLocalMediaIdAtPosition(position);
-        mListener.onMediaItemSelected(localMediaId);
+        mListener.onMediaItemSelected(sourceView, localMediaId);
     }
 
     @Override

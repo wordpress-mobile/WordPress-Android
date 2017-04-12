@@ -605,7 +605,6 @@ Language: sk
 	<string name="passcode_wrong_passcode">Nesprávny PIN</string>
 	<string name="error_downloading_image">Chyba pri sťahovaní obrázka</string>
 	<string name="error_load_comment">Nepodarilo sa načítať komentár</string>
-	<string name="error_upload">Počas nahrávania %s nastala chyba</string>
 	<string name="error_edit_comment">Počas úpravy komentára sa vyskytla chyba</string>
 	<string name="error_moderate_comment">Počas moderovania nastala chyba</string>
 	<string name="error_generic">Vyskytla sa chyba</string>

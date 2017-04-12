@@ -318,7 +318,6 @@ Language: gd_GB
 	<string name="error_generic">Thachair mearachd</string>
 	<string name="error_moderate_comment">Thachair mearachd fhad \'s a bha sinn ri modarataireachd</string>
 	<string name="error_edit_comment">Thachair mearachd rè deasachadh a’ bheachd</string>
-	<string name="error_upload">Thachair mearachd fhad ’s a bha sinn a’ luchdadh suas %s</string>
 	<string name="notifications_empty_list">Gun bhrathan</string>
 	<string name="error_delete_post">Thachair mearachd fhad ’s a bhathar a’ sguabadh às %s</string>
 	<string name="error_refresh_posts">Cha b’ urrainn dhuinn na puist ath-nuadhachadh aig an àm seo</string>
