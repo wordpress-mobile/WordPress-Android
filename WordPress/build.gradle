@@ -45,14 +45,15 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
     }
 
     productFlavors {
-        vanilla {} // used for release and beta
+        vanilla { // used for release and beta
+            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+        }
 
         zalpha { // alpha version - enable experimental features
-            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
