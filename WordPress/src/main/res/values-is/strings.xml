@@ -20,7 +20,6 @@ Language: is
 	<string name="jetpack_message">Jetpack viðbótin verður að vera uppsett og virk. Viltu setja upp eða virkja Jetpack?</string>
 	<string name="error_media_load">Get ekki hlaðið skrá</string>
 	<string name="error_media_refresh_no_connection">Tenging þarf að vera til staðar til að endurfríska safn</string>
-	<string name="error_media_parse_format">Gat ekki unnið úr svari við %s skrá</string>
 	<string name="error_media_unauthorized">Þú hefur ekki heimild til þess að skoða eða breyta skrá</string>
 	<string name="error_media_not_found">Skrá fannst ekki</string>
 	<string name="error_media_insufficient_fs_permissions">Lestrarheimildar krafist á skrá</string>
@@ -839,7 +838,6 @@ Language: is
 	<string name="username_must_be_at_least_four_characters">Notandanafn þarf að vera minnst 4 stafir</string>
 	<string name="error_load_comment">Gat ekki hlaðið athugasemd</string>
 	<string name="sdcard_message">Tengds SD minniskorts er krafist til þess að hlaða inn skrám</string>
-	<string name="error_upload">Villa kom upp við upphleðslu á %s</string>
 	<string name="error_edit_comment">Villa kom upp við að breyta ummælunum</string>
 	<string name="error_moderate_comment">Villa kom upp við ritstýringu</string>
 	<string name="error_delete_post">Villa kom upp við að eyða %s</string>

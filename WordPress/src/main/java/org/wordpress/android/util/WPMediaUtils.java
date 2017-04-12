@@ -17,6 +17,7 @@ public class WPMediaUtils {
         if (isVideo) {
             return null;
         }
+        // TODO implement site settings for .org sites
         SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
         // Site Settings are implemented on .com/Jetpack sites only
         if (siteSettings != null && siteSettings.init(false).getOptimizedImage()) {

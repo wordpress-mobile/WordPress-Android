@@ -766,7 +766,6 @@ Language: ru
 	<string name="passcode_wrong_passcode">Неправильный PIN</string>
 	<string name="error_downloading_image">Ошибка при загрузке картинки</string>
 	<string name="error_load_comment">Невозможно загрузить комментарии</string>
-	<string name="error_upload">Произошла ошибка при загрузке %s</string>
 	<string name="error_edit_comment">Во время редактирования комментария произошла ошибка</string>
 	<string name="error_moderate_comment">Во время модерации произошла ошибка</string>
 	<string name="error_generic">Произошла ошибка</string>

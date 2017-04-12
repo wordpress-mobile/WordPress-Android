@@ -274,7 +274,6 @@ Language: hi_IN
 	<string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
 	<string name="error_delete_post">%s को हटाने के दौरान एक त्रुटि हुई</string>
 	<string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
-	<string name="error_upload">%s को अपलोड करने के दौरान एक त्रुटि हुई</string>
 	<string name="blog_name_cant_be_used">आप उस साइट पते का उपयोग नहीं कर सकते</string>
 	<string name="invalid_url_message">दर्ज किया गये ब्लॉग यूआरएल की वैधता की जाँच करे</string>
 	<string name="error_refresh_comments">टिप्पणिया इस समय रिफ्रेश नहीं हो सकती</string>

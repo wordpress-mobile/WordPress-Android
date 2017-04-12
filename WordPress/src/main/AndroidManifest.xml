@@ -161,7 +161,7 @@
             android:label="@string/add_new_category"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
-            android:name=".ui.photopicker.PhotoPickerPreviewActivity"
+            android:name=".ui.media.MediaPreviewActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".editor.legacy.EditLinkActivity"

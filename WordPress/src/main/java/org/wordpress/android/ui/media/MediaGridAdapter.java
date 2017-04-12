@@ -67,7 +67,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
         void onAdapterRetryUpload(int localMediaId);
-        void onAdapterItemSelected(int position);
+        void onAdapterItemSelected(View sourceView, int position);
         void onAdapterSelectionCountChanged(int count);
     }
 
@@ -256,7 +256,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                             toggleItemSelected(GridViewHolder.this, position);
                         }
                     } else if (mCallback != null) {
-                        mCallback.onAdapterItemSelected(position);
+                        mCallback.onAdapterItemSelected(v, position);
                     }
                 }
             });
@@ -298,7 +298,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                                 mCallback.onAdapterRetryUpload(media.getId());
                             }
                         } else if (mCallback != null) {
-                            mCallback.onAdapterItemSelected(position);
+                            mCallback.onAdapterItemSelected(v, position);
                         }
                     }
                 }

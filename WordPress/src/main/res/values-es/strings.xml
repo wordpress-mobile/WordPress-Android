@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-01-18 19:47:26+0000
+Translation-Revision-Date: 2017-04-04 17:42:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="error_all_media_upload_canceled">Todos los archivos de multimedia han sido cancelados debido a un error desconocido. Por favor vuelva a intentar cargarlos</string>
+	<string name="error_unknown_post_type">Formato de entrada desconocido</string>
+	<string name="error_unknown_post">Entrada desconocida, puede que la copia local de este entrada no esté sincronizada con el servidor</string>
+	<string name="error_fetch_site_after_creation">El sitio ha sido creado, puede que necesite actualizar sus sitios en el selector de sitio.</string>
+	<string name="error_media_request_too_large">Archivo multimedia demasiado grande, no se ha podido cargar</string>
+	<string name="error_media_parse_error">No se ha podido parsear la respuesta tras la carga de medios</string>
+	<string name="error_upload_params">Error durante la carga de %1$s: %2$s</string>
+	<string name="submit_for_review">Enviar</string>
+	<string name="media_error_too_large_upload">El archivo es demasiado grande. Por favor, póngase en contacto con el proveedor de alojamiento para solucionar este problema</string>
+	<string name="role_subscriber">Suscriptor</string>
+	<string name="tell_me_more">Más información</string>
+	<string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
+	<string name="cannot_add_duplicate_site">Este sitio ya existe en la aplicación, no se puede Agregar.</string>
+	<string name="already_logged_in_wpcom_same_username">Ya estás conectado en tu cuenta de WordPress.com. Tu sitio aparecerá en el selector de sitio, asegúrese de que no está oculto.</string>
+	<string name="already_logged_in_wpcom">Ya estás registrado en una cuenta de WordPress.com, no se puede agregar un sitio de WordPress.com a otra cuenta.</string>
+	<string name="migration_error_not_connected">Falló el proceso de migración: trata de relanzar la app cuando \n       tengas una conexión de red.</string>
+	<string name="migration_message">Actualizando de la app de WordPress...</string>
+	<string name="checking_username">Comprobar Nombre de usuario</string>
+	<string name="jetpack_different_com_account">No se admiten sitios de Jetpack pertenecientes a diferentes cuentas de WordPress.com</string>
+	<string name="jetpack_use_com_account">Para agregar su sitio Jetpack, inicie sesión la cuenta de WordPress.com que utilizó para conectar Jetpack.</string>
+	<string name="jetpack_message">El plugin Jetpack debe ser instalado y activado. ¿Quieres instalar o activar Jetpack?</string>
+	<string name="error_media_load">No se puede cargar archivos multimedia</string>
+	<string name="error_media_refresh_no_connection">Se necesita estar conectado para actualizar la biblioteca</string>
+	<string name="error_media_unauthorized">No tienes permiso para ver o editar archivos multimedia</string>
+	<string name="error_media_not_found">No se ha podido encontrar el archivo multimedia</string>
+	<string name="error_media_insufficient_fs_permissions">Es necesario permiso de lectura en los archivos multimedia</string>
+	<string name="site_settings_optimize_images_hint">Permiten ahorrar ancho de banda en conexiones móviles</string>
+	<string name="site_settings_optimize_images">Optimiza las imágenes</string>
+	<string name="no_site_error">No pudo conectarse al sitio de WordPress. No hay ningún sitio WordPress válida en esta \n        dirección. Compruebe la dirección del sitio (URL) que escribiste.</string>
+	<string name="media_generic_error">Error de los archivos multimedia</string>
+	<string name="media_upload_error">Hubo un error al cargar el archivo multimedia</string>
+	<string name="retry">Reintentar</string>
+	<string name="confirm">Confirmar</string>
+	<string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibidoun error 403 cuando se intenta acceder a \n        su endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con su sitio. Póngase en contacto con su anfitrión para solucionar este problema.</string>
+	<string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
+	<string name="reader_liked_default_tag">Entradas que me gustan</string>
+	<string name="reader_discover_default_tag">Novedades</string>
+	<string name="reader_followed_default_tag">Sitios que sigues</string>
+	<string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide con tu búsqueda</string>
+	<string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
+	<string name="visual_editor_disabled">El editor visual se ha desactivado</string>
+	<string name="preference_editor_visual">Visual</string>
+	<string name="preference_editor_legacy">Heredado</string>
+	<string name="preference_editor_type">Definir el tipo de editor</string>
+	<string name="pending_draft_one_generic">No dejes el trabajo a medias; "%1$s" está pendiente de publicarse.</string>
+	<string name="pending_draft_one_month">No dejes el trabajo a medias; "%1$s" está pendiente de publicarse.</string>
+	<string name="pending_draft_one_week_2">"%1$s" se ha guardado como borrador. Acuérdate de publicarla.</string>
+	<string name="pending_draft_one_week_1">El borrador "%1$s" te está esperando; no te olvides de publicarlo.</string>
+	<string name="pending_draft_one_day_2">¿Sabías que "%1$s" aún es un borrador? No esperes más y publícala.</string>
+	<string name="pending_draft_one_day_1">Ayer guardaste \'%1$s\' como borrador. ¡No olvides publicarla!</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">El plugin Jetpack está conectado pero el módulo de estadísticas no está activo. Contacta con el administrador del sitio.</string>
 	<string name="jetpack_stats_module_disabled_message">El plugin Jetpack está conectado pero el módulo de estadísticas no está activo. ¿Quieres activar las estadísticas?</string>
 	<string name="jetpack_info">Información de Jetpack</string>
@@ -128,7 +178,7 @@ Language: es
 	<string name="invite_message_title">Mensaje personalizado</string>
 	<string name="invite">Invitar</string>
 	<string name="invite_names_title">Nombres de usuario o correos electrónicos</string>
-	<string name="invite_people">Invitar gente</string>
+	<string name="invite_people">Invitar a gente</string>
 	<string name="my_site_header_external">Externo</string>
 	<string name="send_link">Enviar enlace</string>
 	<string name="signup_succeed_signin_failed">Tu cuenta se ha creado pero ocurrió un error mientras te dábamos acceso \n \nTrata de acceder con tu usuario y contraseña recién creados.</string>
@@ -592,7 +642,7 @@ Language: es
 	<string name="my_site_btn_view_admin">Ver Administrador</string>
 	<string name="my_site_header_publish">Publicar</string>
 	<string name="my_site_header_look_and_feel">Aspecto</string>
-	<string name="my_site_btn_site_settings">Preferencias</string>
+	<string name="my_site_btn_site_settings">Ajustes</string>
 	<string name="my_site_btn_blog_posts">Entradas del blog</string>
 	<string name="reader_label_new_posts_subtitle">Toca para mostrarlos</string>
 	<string name="my_site_header_configuration">Configuración</string>
@@ -823,7 +873,6 @@ Language: es
 	<string name="passcode_wrong_passcode">PIN erróneo</string>
 	<string name="error_downloading_image">Error al descargar la imagen</string>
 	<string name="error_load_comment">No se pudo cargar el comentario</string>
-	<string name="error_upload">Ocurrió un error mientras se subía el %s</string>
 	<string name="error_edit_comment">Ocurrió un error al editar el comentario</string>
 	<string name="error_moderate_comment">Ocurrió un error al moderar el comentario</string>
 	<string name="error_generic">Ocurrió un error</string>
@@ -867,6 +916,7 @@ Language: es
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
 	<string name="reader_share_link">Compartir enlace</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
+	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack. Contacta con el administrador del sitio.</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
 	<string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
 	<string name="wordpress_blog">Blog de WordPress</string>
