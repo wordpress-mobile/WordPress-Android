@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-14 00:35:18+0000
+Translation-Revision-Date: 2017-04-10 00:23:26+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="role_subscriber">購読者</string>
+	<string name="tell_me_more">もっと知る</string>
+	<string name="duplicate_site_detected">重複サイトが検出されました。</string>
+	<string name="cannot_add_duplicate_site">このサイトはすでにアプリに存在します。新たに追加することはできません。</string>
+	<string name="already_logged_in_wpcom_same_username">すでに WordPress.com アカウントにログインしています。あなたのサイトはサイトピッカーに表示されているはずです。非表示になっていないか、ご確認ください。</string>
+	<string name="already_logged_in_wpcom">すでに WordPress.com アカウントにログインしています。別のアカウントに結び付いている WordPress.com サイトを追加することはできません。</string>
+	<string name="migration_error_not_connected">移行処理に失敗しました。アプリの起動は\nネットワーク接続があるときにお試しください。</string>
+	<string name="migration_message">WordPress アプリを更新中…</string>
+	<string name="checking_username">ユーザー名の確認</string>
+	<string name="jetpack_different_com_account">別の WordPress.com アカウントに属している Jetpack サイトはサポートされません。</string>
+	<string name="jetpack_use_com_account">ご使用の Jetpack サイトを追加するには、Jetpack への接続に使用した WordPress.com アカウントにログインしてください。</string>
+	<string name="jetpack_message">Jetpack プラグインがインストールされており、有効になっている必要があります。Jetpack をインストールまたは有効化しますか ?</string>
+	<string name="error_media_load">メディアを読み込めません</string>
+	<string name="error_media_refresh_no_connection">ライブラリのリフレッシュに接続が必要</string>
+	<string name="error_media_unauthorized">メディアを表示または編集する権限がありません</string>
+	<string name="error_media_not_found">メディアを検出できませんでした</string>
+	<string name="error_media_insufficient_fs_permissions">メディアファイルに対する読み取り権限が必要です</string>
+	<string name="site_settings_optimize_images_hint">モバイル接続の帯域幅を節約する場合に有効にする</string>
+	<string name="site_settings_optimize_images">画像を最適化</string>
+	<string name="no_site_error">WordPress サイトに接続できませんでした。有効な WordPress サイトはこの\nアドレスにはありません。入力したサイトアドレス (URL) を確認してください。</string>
+	<string name="media_generic_error">メディアエラーが発生しました</string>
+	<string name="media_upload_error">メディアアップロードエラーが発生しました</string>
+	<string name="retry">再試行</string>
+	<string name="confirm">確認</string>
+	<string name="xmlrpc_endpoint_forbidden_error">接続できませんでした。サイトの XMLRPC エンドポイントにアクセスしようとし多際に403エラーを受け取りました。サイトと通信するためにアプリはこのエンドポイントにアクセスする必要があります。ホストに連絡してこの問題を解決してください。</string>
+	<string name="xmlrpc_post_blocked_error">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
 	<string name="reader_liked_default_tag">「いいね」した投稿</string>
 	<string name="reader_discover_default_tag">Discover</string>
 	<string name="reader_followed_default_tag">フォロー中のサイト</string>
@@ -423,7 +449,7 @@ Language: ja_JP
 	<string name="site_settings_allow_comments_title">コメントを許可</string>
 	<string name="site_settings_default_format_title">デフォルトのフォーマット</string>
 	<string name="site_settings_default_category_title">デフォルトカテゴリー</string>
-	<string name="site_settings_address_title">住所</string>
+	<string name="site_settings_address_title">アドレス</string>
 	<string name="site_settings_title_title">サイトのタイトル</string>
 	<string name="site_settings_tagline_title">キャッチフレーズ</string>
 	<string name="site_settings_this_device_header">このデバイス</string>
@@ -808,7 +834,6 @@ Language: ja_JP
 	<string name="help_center">ヘルプセンター</string>
 	<string name="ssl_certificate_error">無効な SSL 証明書</string>
 	<string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
-	<string name="error_upload">%sをアップロードする際にエラーが発生しました</string>
 	<string name="error_downloading_image">画像ダウンロードエラー</string>
 	<string name="blog_not_found">このブログにアクセスする際にエラーが発生しました</string>
 	<string name="comments_empty_list">コメントはありません</string>
@@ -971,6 +996,7 @@ Language: ja_JP
 	<string name="remove_account">サイトを削除</string>
 	<string name="notifications_empty_all">通知はまだありません。</string>
 	<string name="invalid_site_url_message">入力したサイト URL が正しいか確認してください</string>
+	<string name="jetpack_message_not_admin">Jetpack プラグインが必要です。サイト管理者にご連絡ください。</string>
 	<string name="deleting_page">ページを削除中</string>
 	<string name="deleting_post">投稿を削除中</string>
 	<string name="share_link">リンクを共有</string>

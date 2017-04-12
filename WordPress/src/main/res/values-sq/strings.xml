@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-22 20:46:24+0000
+Translation-Revision-Date: 2017-04-08 09:55:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
+	<string name="error_unknown_post_type">Format i panjohur postimesh</string>
+	<string name="error_unknown_post">Postim i panjohur, kopja vendore e këtij postimi mund të jetë e panjëkohësuar me atë të shërbyesit</string>
+	<string name="error_fetch_site_after_creation">Sajti është krijuar, mund t’ju duhet të rifreskoni sajtet tuaj te zgjedhësi i sajteve.</string>
+	<string name="error_media_request_too_large">Media shumë e madhe, s’mund të ngarkohet</string>
+	<string name="error_media_parse_error">S’mund të përtypet përgjigja pas ngarkimit të medias</string>
+	<string name="error_upload_params">Gabim teksa ngarkohej %1$s: %2$s</string>
+	<string name="submit_for_review">Parashtroje</string>
+	<string name="media_error_too_large_upload">Kartela është shumë e madhe. Ju lutemi, lidhuni me furnizuesin e strehimit web, që të ndreqë këtë problem</string>
 	<string name="role_subscriber">Pajtimtar</string>
 	<string name="tell_me_more">Tregomëni më tepër</string>
 	<string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
@@ -20,7 +29,6 @@ Language: sq_AL
 	<string name="jetpack_message">Shtojca Jetpack duhet të jetë e instaluar dhe e aktivizuar. Doni të instalohet ose të aktivizohet Jetpack-u?</string>
 	<string name="error_media_load">S’arrihet të ngarkohet media</string>
 	<string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
-	<string name="error_media_parse_format">S’u gatit dor përgjigje për median %s</string>
 	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
 	<string name="error_media_not_found">S’u gjet dot media</string>
 	<string name="error_media_insufficient_fs_permissions">Lypset leje leximi mbi kartelë media</string>
@@ -850,7 +858,6 @@ Language: sq_AL
 	<string name="error_generic">Ndodhi një gabim</string>
 	<string name="error_moderate_comment">Ndodhi një gabim gjatë moderimit</string>
 	<string name="error_edit_comment">Ndodhi një gabim gjatë përpunimit të komentit</string>
-	<string name="error_upload">Ndodhi një gabim gjatë ngarkimit të %s</string>
 	<string name="error_load_comment">S\'u ngarkua dot komenti</string>
 	<string name="error_downloading_image">Gabim në shkarkim figure</string>
 	<string name="passcode_wrong_passcode">PIN i gabuar</string>

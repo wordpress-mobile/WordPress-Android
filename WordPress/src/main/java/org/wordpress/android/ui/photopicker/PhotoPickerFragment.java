@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
@@ -183,11 +180,6 @@ public class PhotoPickerFragment extends Fragment {
         return mBottomBar.getVisibility() == View.VISIBLE;
     }
 
-    /*
-     *   - single tap adds the photo to post or selects it if multi-select is enabled
-     *   - double tap previews the photo
-     *   - long press enables multi-select
-     */
     private final PhotoPickerAdapterListener mAdapterListener = new PhotoPickerAdapterListener() {
         @Override
         public void onItemTapped(Uri mediaUri) {
@@ -196,11 +188,6 @@ public class PhotoPickerFragment extends Fragment {
                 uriList.add(mediaUri);
                 mListener.onPhotoPickerMediaChosen(uriList);
             }
-        }
-
-        @Override
-        public void onItemDoubleTapped(View view, Uri mediaUri) {
-            showPreview(view, mediaUri);
         }
 
         @Override
@@ -229,29 +216,6 @@ public class PhotoPickerFragment extends Fragment {
         if (isAdded()) {
             getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
         }
-    }
-
-    /*
-     * shows full-screen preview of the passed media
-     */
-    private void showPreview(View sourceView, Uri mediaUri) {
-        boolean isVideo = getAdapter().isVideoUri(mediaUri);
-        Intent intent = new Intent(getActivity(), PhotoPickerPreviewActivity.class);
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, mediaUri.toString());
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, isVideo);
-
-        int startWidth = sourceView.getWidth();
-        int startHeight = sourceView.getHeight();
-        int startX = startWidth / 2;
-        int startY = startHeight / 2;
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
-                sourceView,
-                startX,
-                startY,
-                startWidth,
-                startHeight);
-        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     private boolean hasAdapter() {

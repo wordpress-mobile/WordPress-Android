@@ -504,7 +504,6 @@ Language: eu_ES
 	<string name="error_load_comment">Ezin izan da iruzkina kargatu</string>
 	<string name="error_downloading_image">Irudia deskargatzean errorea</string>
 	<string name="stats_empty_comments">Oraindik iruzkin gabe</string>
-	<string name="error_upload">%s igotzean errore bat gertatu da</string>
 	<string name="no_network_message">Ez dago sarerako konexiorik eskuragarri</string>
 	<string name="wait_until_upload_completes">Itxaron karga osatu bitartean</string>
 	<string name="blog_not_found">Blog honetara sartzean errore bat gertatu da</string>

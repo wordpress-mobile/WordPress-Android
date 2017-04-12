@@ -275,7 +275,7 @@ public abstract class SiteSettingsInterface {
 
     public int getMaxImageWidth() {
         int resizeWidth = mSettings.maxImageWidth;
-        return resizeWidth;
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
     }
 
     public int getImageQuality() {
