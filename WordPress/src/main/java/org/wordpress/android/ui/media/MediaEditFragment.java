@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -45,8 +44,6 @@ public class MediaEditFragment extends Fragment {
     private String mCaptionOriginal;
 
     private int mLocalMediaId = MISSING_MEDIA_ID;
-    private ScrollView mScrollView;
-    private View mLinearLayout;
 
     private SiteModel mSite;
     private MediaModel mMediaModel;
@@ -111,16 +108,15 @@ public class MediaEditFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mScrollView = (ScrollView) inflater.inflate(R.layout.media_edit_fragment, container, false);
+        View view  = inflater.inflate(R.layout.media_edit_fragment, container, false);
 
-        mLinearLayout = mScrollView.findViewById(R.id.media_edit_linear_layout);
-        mTitleView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_title);
-        mCaptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_caption);
-        mDescriptionView = (EditText) mScrollView.findViewById(R.id.media_edit_fragment_description);
+        mTitleView = (EditText) view.findViewById(R.id.media_edit_fragment_title);
+        mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
+        mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
 
         loadMedia(getLocalMediaId());
 
-        return mScrollView;
+        return view;
     }
 
  @Override
@@ -150,12 +146,8 @@ public class MediaEditFragment extends Fragment {
 
     private void refreshViews(MediaModel mediaModel) {
         if (mediaModel == null) {
-            mLinearLayout.setVisibility(View.GONE);
             return;
         }
-
-        mLinearLayout.setVisibility(View.VISIBLE);
-        mScrollView.scrollTo(0, 0);
 
         boolean isLocal = MediaUtils.isLocalFile(mediaModel.getUploadState());
 
