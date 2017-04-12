@@ -381,10 +381,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void showMetaData(@NonNull final MediaModel media) {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
 
+        TextView titleView = (TextView) mMetadataView.findViewById(R.id.media_details_file_name_or_title);
         TextView captionView = (TextView) mMetadataView.findViewById(R.id.media_details_caption);
         TextView descriptionView = (TextView) mMetadataView.findViewById(R.id.media_details_description);
         TextView dateView = (TextView) mMetadataView.findViewById(R.id.media_details_date);
-        TextView fileNameView = (TextView) mMetadataView.findViewById(R.id.media_details_file_name);
         TextView fileTypeView = (TextView) mMetadataView.findViewById(R.id.media_details_file_type);
 
         if (TextUtils.isEmpty(media.getCaption())) {
@@ -409,7 +409,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         String fileURL = media.getUrl();
         String fileName = media.getFileName();
 
-        fileNameView.setText(fileName);
+        titleView.setText(TextUtils.isEmpty(media.getTitle()) ? fileName : media.getTitle());
 
         float mediaWidth = media.getWidth();
         float mediaHeight = media.getHeight();

@@ -52,13 +52,22 @@
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/media_details_file_name_or_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:textColor="@color/blue_medium"
+                android:textSize="@dimen/text_sz_large"
+                android:textStyle="bold"
+                tools:text="media_details_file_name" />
+
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_details_caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_large"
-                android:textStyle="bold"
                 android:visibility="gone"
                 tools:text="media_details_caption"
                 tools:visibility="visible" />
@@ -72,30 +81,6 @@
                 android:visibility="gone"
                 tools:text="media_details_description"
                 tools:visibility="visible" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:text="@string/media_details_label_file_name"
-                android:textColor="@color/blue_medium"
-                android:textSize="@dimen/text_sz_large" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_details_file_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="media_details_file_name" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:text="@string/media_details_label_file_type"
-                android:textColor="@color/blue_medium"
-                android:textSize="@dimen/text_sz_large" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_details_file_type"
