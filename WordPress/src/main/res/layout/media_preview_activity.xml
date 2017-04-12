@@ -59,13 +59,13 @@
                 android:textColor="@color/blue_medium"
                 android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"
-                tools:text="media_details_file_name" />
+                tools:text="media_details_file_name_or_title" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_details_caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_large"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_large"
                 android:visibility="gone"
@@ -86,6 +86,7 @@
                 android:id="@+id/media_details_file_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="media_details_file_type" />
