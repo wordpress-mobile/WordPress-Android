@@ -246,7 +246,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onPause() {
         super.onPause();
-        // Locally save the site. mSite can be null after site deletion.
+        // Locally save the site. mSite can be null after site deletion or site removal (.org sites)
         if (mSite != null) {
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
         }
@@ -444,6 +444,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                    mSite = null;
                 }
             });
             dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
