@@ -190,7 +190,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
-        setLookClosable(getEditFragment() != null);
+        setLookClosable(hasEditFragment());
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -241,10 +241,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        MediaEditFragment fragment = getEditFragment();
-        if (fragment != null) {
+        if (hasEditFragment()) {
             ActivityUtils.hideKeyboard(this);
-            fragment.saveChanges();
+            getEditFragment().saveChanges();
         }
 
         setLookClosable(false);
@@ -266,7 +265,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item = menu.findItem(R.id.menu_edit);
         if (item != null) {
-            item.setVisible(getEditFragment() == null);
+            item.setVisible(!hasEditFragment());
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -334,7 +333,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
             attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
                 @Override
                 public void onViewTap(View view, float x, float y) {
-                    fadeInMetadata();
+                    if (!hasEditFragment()) {
+                        fadeInMetadata();
+                    }
                 }
             });
         }
@@ -426,11 +427,15 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private final Runnable fadeOutRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!isFinishing() && mMetadataView.getVisibility() == View.VISIBLE) {
-                AniUtils.fadeOut(mMetadataView, AniUtils.Duration.LONG);
-            }
+            fadeOutMetadata();
         }
     };
+
+    private void fadeOutMetadata() {
+        if (!isFinishing() && mMetadataView.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mMetadataView, AniUtils.Duration.LONG);
+        }
+    }
 
     private void fadeInMetadata() {
         if (!isFinishing()) {
@@ -456,6 +461,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
         return dateString;
     }
 
+    private boolean hasEditFragment() {
+        return getEditFragment() != null;
+    }
+
     private MediaEditFragment getEditFragment() {
         FragmentManager fm = getFragmentManager();
         Fragment fragment = fm.findFragmentByTag(MediaEditFragment.TAG);
@@ -466,7 +475,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
     }
 
     private void showEditFragment(int localMediaId) {
-        setLookClosable(true);
         MediaEditFragment fragment = getEditFragment();
         if (fragment == null) {
             fragment = MediaEditFragment.newInstance(mSite, localMediaId);
@@ -478,7 +486,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             fragment.loadMedia(localMediaId);
         }
+
+        setLookClosable(true);
         invalidateOptionsMenu();
+        fadeOutMetadata();
     }
 
     public void setLookClosable(boolean lookClosable) {
