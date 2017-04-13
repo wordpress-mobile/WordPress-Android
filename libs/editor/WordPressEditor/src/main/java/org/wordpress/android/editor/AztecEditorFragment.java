@@ -64,7 +64,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -93,7 +92,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private AztecText title;
     private AztecText content;
-    private boolean mContentSet;
+    private boolean mAztecReady;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter imageLoader;
@@ -173,6 +172,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 getActivity().invalidateOptionsMenu();
             }
         };
+
+        mAztecReady = true;
 
         return view;
     }
@@ -305,7 +306,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void setContent(CharSequence text) {
         content.fromHtml(text.toString());
-        mContentSet = true;
         updateFailedMediaList();
         overlayFailedMedia();
 
@@ -313,6 +313,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // post. If any of them do, add them to our mUploadingMedia queue so to be able to match
         // FluxC progress updates with our visual entities
         updateUploadingMediaList();
+        mAztecReady = true;
     }
 
     /**
@@ -539,6 +540,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 return new AttributesWithClass(attrs).hasClass("failed");
             }
         });
+        mFailedMediaIds.clear();
     }
 
     @Override
@@ -556,7 +558,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaType mediaType, final MediaFile mediaFile) {
-        if(!isAdded() || content == null || !mContentSet) {
+        if(!isAdded() || content == null || !mAztecReady) {
             return;
         }
         if (mediaType != null) {
@@ -604,7 +606,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        if(!isAdded() || content == null || !mContentSet) {
+        if(!isAdded() || content == null || !mAztecReady) {
             return;
         }
 
