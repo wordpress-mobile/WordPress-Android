@@ -68,14 +68,18 @@ import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionExcepti
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
@@ -1176,9 +1180,34 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void publishPost() {
+        AccountModel account = mAccountStore.getAccount();
+        // prompt user to verify e-mail before publishing
+        if (!account.getEmailVerified()) {
+            String message = TextUtils.isEmpty(account.getEmail())
+                    ? getString(R.string.editor_confirm_email_prompt_message)
+                    : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email), account.getEmail());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.editor_confirm_email_prompt_title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    ToastUtils.showToast(EditPostActivity.this, getString(R.string.toast_saving_post_as_draft));
+                                    savePostAndFinish();
+                                }
+                            })
+                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mDispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction());
+                                }
+                            });
+            builder.create().show();
+            return;
+        }
 
         boolean isFirstTimePublish = isFirstTimePublish();
-
         boolean postUpdateSuccessful = updatePostObject();
         if (!postUpdateSuccessful) {
             // just return, since the only case updatePostObject() can fail is when the editor
@@ -1989,6 +2018,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL) {
+            if (!event.isError()) {
+                ToastUtils.showToast(this, getString(R.string.toast_verification_email_sent));
+            } else {
+                ToastUtils.showToast(this, getString(R.string.toast_verification_email_send_error));
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
         if (event.isError()) {
             final String errorMessage;
@@ -2360,5 +2401,4 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             onUploadProgress(event.media, event.progress);
         }
     }
-
 }
