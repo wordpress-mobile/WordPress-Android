@@ -72,7 +72,7 @@ public class EndpointNode {
             // For 'mixed' endpoints, e.g. item:$theItem, return the label part ('item')
             return getLocalEndpoint().substring(0, getLocalEndpoint().indexOf(":")).replaceAll("-", "_");
         } else {
-            return getLocalEndpoint().replaceAll("/|\\$|#.*|_ID|_id|<|>", "").replaceAll("-", "_");
+            return getLocalEndpoint().replaceAll("/|\\$|#.*|(?<!_or)(_ID|_id)|<|>", "").replaceAll("-", "_");
         }
     }
 
