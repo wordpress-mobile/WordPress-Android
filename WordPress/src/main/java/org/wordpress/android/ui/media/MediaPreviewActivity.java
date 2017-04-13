@@ -159,6 +159,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mIsVideo = getIntent().getBooleanExtra(ARG_IS_VIDEO, false);
         }
 
+        boolean hasEditFragment = hasEditFragment();
+        setLookClosable(hasEditFragment);
+
         String mediaUri;
         if (!TextUtils.isEmpty(mContentUri)) {
             mediaUri = mContentUri;
@@ -171,7 +174,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
             mIsVideo = media.isVideo();
             mEnableMetadata = true;
             mediaUri = media.getUrl();
-            showMetaData(media);
+            loadMetaData(media);
+            if (!hasEditFragment) {
+                fadeInMetadata();
+            }
         } else {
             delayedFinish(true);
             return;
@@ -192,9 +198,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
-        boolean hasEditFragment = hasEditFragment();
         mShowEditMenuItem = mEnableMetadata && mSite != null && !hasEditFragment;
-        setLookClosable(hasEditFragment);
 
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -379,7 +383,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mVideoView.requestFocus();
     }
     
-    private void showMetaData(@NonNull final MediaModel media) {
+    private void loadMetaData(@NonNull final MediaModel media) {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
 
         TextView titleView = (TextView) mMetadataView.findViewById(R.id.media_details_file_name_or_title);
@@ -431,8 +435,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else {
             fileTypeView.setVisibility(View.GONE);
         }
-
-        fadeInMetadata();
     }
 
     private final Runnable fadeOutRunnable = new Runnable() {
@@ -516,7 +518,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
         if (!event.isError() && mMediaId != 0) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
             if (media != null) {
-                showMetaData(media);
+                loadMetaData(media);
+                fadeInMetadata();
             }
         }
     }
