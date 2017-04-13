@@ -256,8 +256,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         //AppPrefs.setAztecEditorAvailable(true);
         //AppPrefs.setAztecEditorEnabled(true);
-        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
-        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
+        mShowAztecEditor = false;//AppPrefs.isAztecEditorEnabled();
+        mShowNewEditor = true;//AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -2259,6 +2259,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         switch (event) {
             case HTML_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
+                hidePhotoPicker();
                 break;
             case MEDIA_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
@@ -2268,6 +2269,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             case LINK_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
+                hidePhotoPicker();
                 break;
             case IMAGE_EDITED:
                 AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);
