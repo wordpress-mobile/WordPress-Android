@@ -1772,8 +1772,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
-                    String mimeType = getContentResolver().getType(imageUri);
-                    fetchMedia(imageUri, mimeType);
+                    fetchMedia(imageUri);
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -1810,7 +1809,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
-    private void fetchMedia(Uri mediaUri, final String mimeType) {
+    private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
             new AsyncTask<Uri, Integer, Uri>() {
@@ -1830,7 +1829,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
-            queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri));
+            addMedia(mediaUri);
         }
     }
 
