@@ -610,12 +610,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        AttributesWithClass attributesWithClass = new AttributesWithClass(
-                content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
-        attributesWithClass.addClass("uploading");
-        content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(localMediaId), 1, (int)(progress * 10000),
-                attributesWithClass.getAttributesIml());
-        content.refreshText();
+        ImagePredicate  predicate = ImagePredicate.localMediaIdPredicate(localMediaId);
+        if (predicate != null) {
+            Attributes attrs = content.getMediaAttributes(predicate);
+            if (attrs != null) {
+                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                if (attributesWithClass != null) {
+                    attributesWithClass.addClass("uploading");
+                    content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(localMediaId), 1, (int)(progress * 10000),
+                            attributesWithClass.getAttributesIml());
+                    content.refreshText();
+                }
+            }
+        }
     }
 
     @Override
