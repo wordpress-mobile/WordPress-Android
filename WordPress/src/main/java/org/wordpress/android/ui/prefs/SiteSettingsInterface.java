@@ -127,8 +127,8 @@ public abstract class SiteSettingsInterface {
         if (SiteUtils.isAccessibleViaWPComAPI(site)) {
             return new DotComSiteSettings(host, site, listener);
         }
-        // Not implemented for self hosted sites
-        return null;
+
+        return new DotOrgSiteSettings(host, site, listener);
     }
 
     /**
@@ -774,7 +774,8 @@ public abstract class SiteSettingsInterface {
     private void loadCachedSettings() {
         Cursor localSettings = SiteSettingsTable.getSettings(mSite.getId());
 
-        if (localSettings != null) {
+        if (localSettings != null && localSettings.getCount() > 0) {
+            mSettings.isInLocalTable = true;
             Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
             mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
             mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
@@ -786,14 +787,24 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
             mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
             mRemoteSettings.imageQualitySetting = mSettings.imageQualitySetting;
-            localSettings.close();
             notifyUpdatedOnUiThread(null);
         } else {
             mSettings.isInLocalTable = false;
+            mSettings.localTableId = mSite.getId();
             setAddress(mSite.getUrl());
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());
             setTitle(mSite.getName());
+        }
+
+        // Self hosted always read account data from the main table
+        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+            setUsername(mSite.getUsername());
+            setPassword(mSite.getPassword());
+        }
+
+        if (localSettings != null) {
+            localSettings.close();
         }
     }
 

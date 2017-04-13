@@ -188,6 +188,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mStartOverPref;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
+    private Preference mRemoveSitePref; // .ORG Only
 
     private boolean mEditingEnabled = true;
 
@@ -245,7 +246,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onPause() {
         super.onPause();
-        // Locally save the site. mSite can be null after site deletion.
+        // Locally save the site. mSite can be null after site deletion or site removal (.org sites)
         if (mSite != null) {
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
         }
@@ -436,6 +437,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mDeleteSitePref) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
+        } else if (preference == mRemoveSitePref) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+            dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                }
+            });
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+            dialogBuilder.setCancelable(false);
+            dialogBuilder.create().show();
         } else {
             return false;
         }
@@ -668,6 +681,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
+        mRemoveSitePref = getClickPref(R.string.pref_key_site_remove_site);
 
         sortLanguages();
 
@@ -1264,9 +1278,14 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeNonSelfHostedPreferences() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        mUsernamePref.setEnabled(true);
+        mPasswordPref.setEnabled(true);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_start_over_screen);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_export_site);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_delete_site);
     }
 
     private void removeNonJetpackPreferences() {
@@ -1276,6 +1295,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeNonDotComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_remove_site);
     }
 
     private Preference getChangePref(int id) {
@@ -1328,6 +1348,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
+        mSite = null;
+    }
+
+    // .org site removed from the app
+    public void handleSiteRemoved() {
         mSite = null;
     }
 
