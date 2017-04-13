@@ -15,6 +15,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -1137,7 +1138,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
+        intent.setType(ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"help@wordpress.com"});
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.start_over_email_subject,
                 SiteUtils.getHomeURLOrHostName(mSite)));
