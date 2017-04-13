@@ -111,8 +111,6 @@
     <string name="media_add_popup_title">Add to media library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
     <string name="media_add_popup_capture_video">Capture video</string>
-    <string name="media_add_new_media_gallery">Create gallery</string>
-    <string name="media_gallery_date_range" comment="Displaying media from 2014-01-13 to 2014-01-23">Displaying media from %1$s to %2$s</string>
 
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
