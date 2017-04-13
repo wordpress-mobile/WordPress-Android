@@ -775,6 +775,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        hidePhotoPicker();
+
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
