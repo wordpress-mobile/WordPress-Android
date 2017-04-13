@@ -15,6 +15,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,6 +106,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
 
     /**
+     * url for redirecting free users to empty their sites (start over)
+     */
+    public static final String WORDPRESS_EMPTY_SITE_SUPPORT_URL = "https://en.support.wordpress.com/empty-site/";
+
+    /**
      * Used to move the Uncategorized category to the beginning of the category list.
      */
     private static final int UNCATEGORIZED_CATEGORY_ID = 1;
@@ -188,6 +194,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mStartOverPref;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
+    private Preference mRemoveSitePref; // .ORG Only
 
     private boolean mEditingEnabled = true;
 
@@ -245,7 +252,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onPause() {
         super.onPause();
-        // Locally save the site. mSite can be null after site deletion.
+        // Locally save the site. mSite can be null after site deletion or site removal (.org sites)
         if (mSite != null) {
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
         }
@@ -392,13 +399,19 @@ public class SiteSettingsFragment extends PreferenceFragment
             return setupMorePreferenceScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
-            if (dialog == null) return false;
+            if (mSite == null || dialog == null) return false;
 
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_ACCESSED, mSite);
 
-            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
-            String title = getString(R.string.start_over);
-            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            if (mSite.getHasFreePlan()) {
+                // Don't show the start over detail screen for free users, instead show the support page
+                dialog.dismiss();
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDPRESS_EMPTY_SITE_SUPPORT_URL);
+            } else {
+                setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+                String title = getString(R.string.start_over);
+                WPActivityUtils.addToolbarToDialog(this, dialog, title);
+            }
         }
 
         return false;
@@ -419,10 +432,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
         } else if (preference == mStartOverPref) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED,
-                    mSite);
-            HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                    HelpshiftHelper.Tag.ORIGIN_START_OVER, mAccountStore.getAccount().getUserName());
+            handleStartOver();
         } else if (preference == mCloseAfterPref) {
             showCloseAfterDialog();
         } else if (preference == mPagingPref) {
@@ -436,6 +446,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mDeleteSitePref) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
+        } else if (preference == mRemoveSitePref) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+            dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                }
+            });
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+            dialogBuilder.setCancelable(false);
+            dialogBuilder.create().show();
         } else {
             return false;
         }
@@ -668,6 +690,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
+        mRemoveSitePref = getClickPref(R.string.pref_key_site_remove_site);
 
         sortLanguages();
 
@@ -1123,6 +1146,26 @@ public class SiteSettingsFragment extends PreferenceFragment
                 getWhitelistSummary(val));
     }
 
+    private void handleStartOver() {
+        // Only paid plans should be handled here, free plans should be redirected to website from "Start Over" button
+        if (mSite == null || mSite.getHasFreePlan()) {
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType(ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"help@wordpress.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.start_over_email_subject,
+                SiteUtils.getHomeURLOrHostName(mSite)));
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.start_over_email_body, mSite.getUrl()));
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.contact_support)));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ToastUtils.showToast(getActivity(), R.string.start_over_email_intent_error);
+        }
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_START_OVER_CONTACT_SUPPORT_CLICKED,
+                mSite);
+    }
+
     private void showListEditorDialog(int titleRes, int headerRes) {
         mDialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
         mDialog.setOnDismissListener(this);
@@ -1264,9 +1307,14 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeNonSelfHostedPreferences() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        mUsernamePref.setEnabled(true);
+        mPasswordPref.setEnabled(true);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_start_over_screen);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_export_site);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_delete_site);
     }
 
     private void removeNonJetpackPreferences() {
@@ -1276,6 +1324,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeNonDotComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_remove_site);
     }
 
     private Preference getChangePref(int id) {
@@ -1328,6 +1377,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
+        mSite = null;
+    }
+
+    // .org site removed from the app
+    public void handleSiteRemoved() {
         mSite = null;
     }
 
