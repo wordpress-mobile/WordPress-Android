@@ -35,7 +35,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
-import android.view.ContextMenu;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -110,7 +109,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -517,14 +515,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /*
-     * native photo picker is always enabled, this gives us a simple way to revert to
-     * the previous behavior if we need to
-     */
-    private boolean enablePhotoPicker() {
-        return true;
-    }
-
-    /*
      * resizes the photo picker based on device orientation - full height in landscape, half
      * height in portrait
      */
@@ -854,62 +844,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void openContextMenu(View view) {
-        // if we're using the native photo picker, ignore the request - if we're not using
-        // the photo picker, then this will show the "seven item menu monstrosity"
-        if (enablePhotoPicker()) {
-            return;
-        }
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-            super.openContextMenu(view);
-        } else {
-            AppLockManager.getInstance().setExtendedTimeout();
-            mMenuView = view;
-        }
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, SELECT_PHOTO_MENU_POSITION, 0, getResources().getText(R.string.select_photo));
-        if (DeviceUtils.getInstance().hasCamera(this)) {
-            menu.add(0, CAPTURE_PHOTO_MENU_POSITION, 0, getResources().getText(R.string.media_add_popup_capture_photo));
-        }
-        menu.add(0, SELECT_VIDEO_MENU_POSITION, 0, getResources().getText(R.string.select_video));
-        if (DeviceUtils.getInstance().hasCamera(this)) {
-            menu.add(0, CAPTURE_VIDEO_MENU_POSITION, 0, getResources().getText(R.string.media_add_popup_capture_video));
-        }
-
-        menu.add(0, ADD_GALLERY_MENU_POSITION, 0, getResources().getText(R.string.media_add_new_media_gallery));
-        menu.add(0, SELECT_LIBRARY_MENU_POSITION, 0, getResources().getText(R.string.select_from_media_library));
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case SELECT_PHOTO_MENU_POSITION:
-                launchPictureLibrary();
-                return true;
-            case CAPTURE_PHOTO_MENU_POSITION:
-                launchCamera();
-                return true;
-            case SELECT_VIDEO_MENU_POSITION:
-                launchVideoLibrary();
-                return true;
-            case CAPTURE_VIDEO_MENU_POSITION:
-                launchVideoCamera();
-                return true;
-            case ADD_GALLERY_MENU_POSITION:
-                startMediaGalleryActivity(null);
-                return true;
-            case SELECT_LIBRARY_MENU_POSITION:
-                startMediaGalleryAddActivity();
-                return true;
-            default:
-                return false;
-        }
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -2189,12 +2123,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        if (enablePhotoPicker()) {
-            if (!isPhotoPickerShowing()) {
-                showPhotoPicker();
-            } else {
-                hidePhotoPicker();
-            }
+        if (!isPhotoPickerShowing()) {
+            showPhotoPicker();
+        } else {
+            hidePhotoPicker();
         }
     }
 
