@@ -1560,6 +1560,9 @@
     <string name="about_me_hint">A few words about you…</string>
     <string name="start_over">Start Over</string>
     <string name="site_settings_start_over_hint">Start your site over</string>
+    <string name="start_over_email_subject">Start over with site %s</string>
+    <string name="start_over_email_body">I want to start over with the site %s</string>
+    <string name="start_over_email_intent_error">Unable to send an email</string>
     <string name="let_us_help">Let Us Help</string>
     <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
     <string name="contact_support">Contact support</string>
