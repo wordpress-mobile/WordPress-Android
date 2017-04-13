@@ -256,8 +256,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         //AppPrefs.setAztecEditorAvailable(true);
         //AppPrefs.setAztecEditorEnabled(true);
-        mShowAztecEditor = false;//AppPrefs.isAztecEditorEnabled();
-        mShowNewEditor = true;//AppPrefs.isVisualEditorEnabled();
+        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
+        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
