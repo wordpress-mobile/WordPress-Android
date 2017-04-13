@@ -161,14 +161,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     public static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
 
-    // Context menu positioning
-    private static final int SELECT_PHOTO_MENU_POSITION = 0;
-    private static final int CAPTURE_PHOTO_MENU_POSITION = 1;
-    private static final int SELECT_VIDEO_MENU_POSITION = 2;
-    private static final int CAPTURE_VIDEO_MENU_POSITION = 3;
-    private static final int ADD_GALLERY_MENU_POSITION = 4;
-    private static final int SELECT_LIBRARY_MENU_POSITION = 5;
-
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
     public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
@@ -262,8 +254,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
-        //AppPrefs.setAztecEditorAvailable(true);
-        //AppPrefs.setAztecEditorEnabled(true);
+        AppPrefs.setAztecEditorAvailable(true);
+        AppPrefs.setAztecEditorEnabled(true);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 

@@ -379,8 +379,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void enableMediaMode(boolean enable) {
-        // TODO: this won't be available until the next Aztec release
-        //formattingToolbar.enableMediaMode(enable);
+        formattingToolbar.enableMediaMode(enable);
         getActivity().invalidateOptionsMenu();
     }
 
