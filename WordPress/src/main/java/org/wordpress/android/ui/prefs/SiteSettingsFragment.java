@@ -108,7 +108,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * url for redirecting free users to empty their sites (start over)
      */
-    private final String WORDRESS_EMPTY_SITE_SUPPORT_URL = "https://en.support.wordpress.com/empty-site/";
+    public static final String WORDPRESS_EMPTY_SITE_SUPPORT_URL = "https://en.support.wordpress.com/empty-site/";
 
     /**
      * Used to move the Uncategorized category to the beginning of the category list.
@@ -405,7 +405,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (mSite.getHasFreePlan()) {
                 // Don't show the start over detail screen for free users, instead show the support page
                 dialog.dismiss();
-                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDRESS_EMPTY_SITE_SUPPORT_URL);
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(getActivity(), WORDPRESS_EMPTY_SITE_SUPPORT_URL);
             } else {
                 setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
                 String title = getString(R.string.start_over);
