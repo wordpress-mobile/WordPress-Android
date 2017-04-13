@@ -332,6 +332,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 mImageView.setImageBitmap(bmp);
             } else {
                 delayedFinish(true);
+                return;
             }
         }
 
