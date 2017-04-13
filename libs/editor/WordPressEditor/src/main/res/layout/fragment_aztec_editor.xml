@@ -72,6 +72,8 @@
                     aztec:bulletWidth="@dimen/bullet_width"
                     aztec:codeBackground="@color/code_background"
                     aztec:codeColor="@color/code"
+                    aztec:drawableFailed="@drawable/ic_image_failed_grey_a_40_48dp"
+                    aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
                     aztec:historyEnable="true"
                     aztec:historySize="10"
                     aztec:linkColor="@color/link"
