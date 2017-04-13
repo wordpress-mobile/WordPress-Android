@@ -1,5 +1,7 @@
 * text=auto
 gradlew text eol=lf
+buckw text eol=lf
+BUCK text eol=lf
 *.sh text eol=lf
 *.py text eol=lf
 *.bat text eol=crlf

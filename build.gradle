@@ -1,3 +1,18 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.uber:okbuck:0.17.3'
+    }
+}
+
+repositories {
+    jcenter()
+}
+
+apply plugin: 'com.uber.okbuck'
+
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 
 subprojects {

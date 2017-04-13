@@ -9,6 +9,7 @@ gd,gd,Scottish-Gaelic
 hi,hi,Hindi
 hu,hu,Hungarian
 id,id,Indonesian
+id,in,Indonesian
 it,it,Italian
 ja,ja,Japanese
 ko,ko,Korean
@@ -19,6 +20,7 @@ ru,ru,Russian
 sv,sv,Swedish
 th,th,Thai
 uz,uz,Uzbek
+zh-cn,zh,Chinese(Simplified)
 zh-cn,zh-rCN,Chinese(Simplified)
 zh-tw,zh-rTW,Chinese(Traditional)
 zh-tw,zh-rHK,Chinese(Traditional)
@@ -26,6 +28,7 @@ en-gb,en-rGB,GB-English
 tr,tr,Turkish
 eu,eu,Basque
 he,he,Hebrew
+he,iw,Hebrew
 pt-br,pt-rBR,Portuguese(Brazil)
 ar,ar,Arabic
 ro,ro,Romanian

@@ -1,12 +1,11 @@
 package org.wordpress.android.util.helpers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.TypedValue;
 
-import org.wordpress.android.util.R;
+import org.wordpress.android.util.local.R;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 public class SwipeToRefreshHelper implements OnRefreshListener {
