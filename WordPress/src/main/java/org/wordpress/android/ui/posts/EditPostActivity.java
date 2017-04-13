@@ -517,10 +517,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /*
-     * native photo picker is only enabled for the Aztec editor
+     * native photo picker is always enabled, this gives us a simple way to revert to
+     * the previous behavior if we need to
      */
     private boolean enablePhotoPicker() {
-        return mShowAztecEditor;
+        return true;
     }
 
     /*
