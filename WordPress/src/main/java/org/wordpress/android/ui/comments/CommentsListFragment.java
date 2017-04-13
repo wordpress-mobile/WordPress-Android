@@ -587,7 +587,7 @@ public class CommentsListFragment extends Fragment {
 
         private void setItemEnabled(Menu menu, int menuId, boolean isEnabled, boolean isVisible) {
             final MenuItem item = menu.findItem(menuId);
-            if (item == null || item.isEnabled() == isEnabled)
+            if (item == null || (item.isEnabled() == isEnabled && item.isVisible() == isVisible))
                 return;
             item.setVisible(isVisible);
             item.setEnabled(isEnabled);
