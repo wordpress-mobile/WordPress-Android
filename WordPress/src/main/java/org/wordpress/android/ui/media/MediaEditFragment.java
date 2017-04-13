@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -119,7 +122,16 @@ public class MediaEditFragment extends Fragment {
         return view;
     }
 
- @Override
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // force the keyboard to appear on the title when activity is created (but not in landscape)
+        if (savedInstanceState == null && !DisplayUtils.isLandscape(getActivity())) {
+            EditTextUtils.showSoftInput(mTitleView);
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
