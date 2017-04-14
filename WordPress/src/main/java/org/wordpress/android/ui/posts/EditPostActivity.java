@@ -1236,10 +1236,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
 
-            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && NetworkUtils.isNetworkAvailable(this)) {
-                if (!hasFailedMedia()) {
-                    savePostOnlineAndFinishAsync(isFirstTimePublish);
-                }
+            boolean hasUploadingOrFailedMedia = mEditorFragment.isUploadingMedia() ||
+                    mEditorFragment.isActionInProgress() || mEditorFragment.hasFailedMediaUploads();
+
+            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUploadingOrFailedMedia
+                    && NetworkUtils.isNetworkAvailable(this)) {
+                savePostOnlineAndFinishAsync(isFirstTimePublish);
             } else {
                 savePostLocallyAndFinishAsync();
             }
