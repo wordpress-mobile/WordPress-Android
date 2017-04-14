@@ -431,6 +431,11 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onSiteLongClick(final SiteRecord siteRecord) {
+        return true;
+    }
+
+    @Override
     public void onSiteClick(SiteRecord siteRecord) {
         if (mActionMode == null) {
             hideSoftKeyboard();

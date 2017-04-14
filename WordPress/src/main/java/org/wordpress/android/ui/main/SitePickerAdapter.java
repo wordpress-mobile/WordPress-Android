@@ -36,6 +36,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
 
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
+        boolean onSiteLongClick(SiteRecord site);
     }
 
     interface OnSelectedCountChangedListener {
