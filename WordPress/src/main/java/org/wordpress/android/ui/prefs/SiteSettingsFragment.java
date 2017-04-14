@@ -921,7 +921,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.delete_site_warning_title);
         String text = getString(R.string.delete_site_warning, "<b>" + UrlUtils.getHost(mSite.getUrl()) + "</b>")
-                + "<br></br>"
+                + "<br><br>"
                 + "<i>" + getString(R.string.delete_site_warning_subtitle) + "</i>";
         builder.setMessage(HtmlUtils.fromHtml(text));
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
