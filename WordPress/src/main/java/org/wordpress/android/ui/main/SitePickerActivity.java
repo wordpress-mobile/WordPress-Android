@@ -432,7 +432,30 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     public boolean onSiteLongClick(final SiteRecord siteRecord) {
+        final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
+        if (site == null) {
+            return false;
+        }
+        if (site.isWPCom() || site.isJetpackConnected()) {
+            startSupportActionMode(new ActionModeCallback());
+        } else {
+            showRemoveSelfHostedSiteDialog(site);
+        }
         return true;
+    }
+
+    private void showRemoveSelfHostedSiteDialog(@NonNull final SiteModel site) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
+            }
+        });
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+        dialogBuilder.setCancelable(false);
+        dialogBuilder.create().show();
     }
 
     @Override
