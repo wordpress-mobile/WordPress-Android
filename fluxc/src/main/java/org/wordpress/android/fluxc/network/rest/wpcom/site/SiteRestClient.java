@@ -7,6 +7,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -286,6 +288,36 @@ public class SiteRestClient extends BaseWPComRestClient {
                         ExportSiteResponsePayload payload = new ExportSiteResponsePayload();
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newExportedSiteAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void suggestDomains(@NonNull final String query, final boolean includeWordpressCom,
+                               final boolean includeDotBlogSubdomain, final int quantity) {
+        String url = WPCOMREST.domains.suggestions.getUrlV1_1();
+        Map<String, String> params = new HashMap<>(4);
+        params.put("query", query);
+        // ugly trick to bypass checkstyle and its dot com rule
+        params.put("include_wordpressdot" + "com", String.valueOf(includeWordpressCom));
+        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        params.put("quantity", String.valueOf(quantity));
+        final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, params,
+                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
+                new Listener<ArrayList<DomainSuggestionResponse>>() {
+                    @Override
+                    public void onResponse(ArrayList<DomainSuggestionResponse> response) {
+                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, response);
+                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
+                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
                     }
                 }
         );

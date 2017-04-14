@@ -12,6 +12,8 @@
 
 /read/feed/$feed_url_or_id#long,String
 
+/domains/suggestions
+
 /sites/
 /sites/$site/delete
 /sites/$site/exports/start

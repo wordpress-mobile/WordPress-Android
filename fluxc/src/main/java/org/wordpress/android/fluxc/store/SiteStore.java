@@ -18,6 +18,10 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
@@ -29,6 +33,7 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteExcepti
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,6 +75,35 @@ public class SiteStore extends Store {
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
+        }
+    }
+
+    public static class SuggestDomainsPayload extends Payload {
+        public String query;
+        public boolean includeWordpressCom;
+        public boolean includeDotBlogSubdomain;
+        public int quantity;
+        public SuggestDomainsPayload(@NonNull String query, boolean includeWordpressCom,
+                                     boolean includeDotBlogSubdomain, int quantity) {
+            this.query = query;
+            this.includeWordpressCom = includeWordpressCom;
+            this.includeDotBlogSubdomain = includeDotBlogSubdomain;
+            this.quantity = quantity;
+        }
+    }
+
+    public static class SuggestDomainsResponsePayload extends Payload {
+        public String query;
+        public List<DomainSuggestionResponse> suggestions;
+        public SuggestDomainsResponsePayload(@NonNull String query, BaseNetworkError error) {
+            this.query = query;
+            this.error = error;
+            this.suggestions = new ArrayList<>();
+        }
+
+        public SuggestDomainsResponsePayload(@NonNull String query, ArrayList<DomainSuggestionResponse> suggestions) {
+            this.query = query;
+            this.suggestions = suggestions;
         }
     }
 
@@ -172,6 +206,24 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class SuggestDomainError implements OnChangedError {
+        public SuggestDomainErrorType type;
+        public String message;
+        public SuggestDomainError(@NonNull String apiErrorType, @NonNull String message) {
+            this.type = SuggestDomainErrorType.fromString(apiErrorType);
+            this.message = message;
+        }
+    }
+
+    public static class OnSuggestedDomains extends OnChanged<SuggestDomainError> {
+        public String query;
+        public List<DomainSuggestionResponse> suggestions;
+        public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
+            this.query = query;
+            this.suggestions = suggestions;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -181,6 +233,24 @@ public class SiteStore extends Store {
         INVALID_SITE,
         DUPLICATE_SITE,
         GENERIC_ERROR
+    }
+
+    public enum SuggestDomainErrorType {
+        EMPTY_QUERY,
+        INVALID_MINIMUM_QUANTITY,
+        INVALID_MAXIMUM_QUANTITY,
+        GENERIC_ERROR;
+
+        public static SuggestDomainErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (SuggestDomainErrorType v : SuggestDomainErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum PostFormatsErrorType {
@@ -641,6 +711,9 @@ public class SiteStore extends Store {
             case IS_WPCOM_URL:
                 checkUrlIsWPCom((String) action.getPayload());
                 break;
+            case SUGGEST_DOMAINS:
+                suggestDomains((SuggestDomainsPayload) action.getPayload());
+                break;
             case CREATED_NEW_SITE:
                 handleCreateNewSiteCompleted((NewSiteResponsePayload) action.getPayload());
                 break;
@@ -658,6 +731,9 @@ public class SiteStore extends Store {
                 break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
+                break;
+            case SUGGESTED_DOMAINS:
+                handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -834,5 +910,23 @@ public class SiteStore extends Store {
             rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible);
         }
         return rowsAffected;
+    }
+
+    private void suggestDomains(SuggestDomainsPayload payload) {
+        mSiteRestClient.suggestDomains(payload.query, payload.includeWordpressCom, payload.includeDotBlogSubdomain,
+                payload.quantity);
+    }
+
+    private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
+        OnSuggestedDomains event = new OnSuggestedDomains(payload.query, payload.suggestions);
+        if (payload.isError()) {
+            if (payload.error instanceof WPComGsonRequest.WPComGsonNetworkError) {
+                event.error = new SuggestDomainError(((WPComGsonNetworkError) payload.error).apiError,
+                        payload.error.message);
+            } else {
+                event.error = new SuggestDomainError("", payload.error.message);
+            }
+        }
+        emitChange(event);
     }
 }
