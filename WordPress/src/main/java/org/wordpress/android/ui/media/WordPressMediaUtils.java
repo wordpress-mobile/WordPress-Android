@@ -35,7 +35,7 @@ public class WordPressMediaUtils {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setTitle(context.getResources().getText(R.string.sdcard_title));
         dialogBuilder.setMessage(context.getResources().getText(R.string.sdcard_message));
-        dialogBuilder.setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
             }
