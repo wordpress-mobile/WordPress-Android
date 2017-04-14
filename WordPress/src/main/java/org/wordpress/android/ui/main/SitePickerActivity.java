@@ -451,6 +451,7 @@ public class SitePickerActivity extends AppCompatActivity
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
+                getAdapter().loadSites();
             }
         });
         dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
