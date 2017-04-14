@@ -1587,7 +1587,6 @@
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
-    <string name="remove_site_hint">Remove this site from the app</string>
 
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>

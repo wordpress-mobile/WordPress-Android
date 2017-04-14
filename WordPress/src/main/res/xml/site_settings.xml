@@ -322,12 +322,6 @@
             android:title="@string/site_settings_delete_site_title"
             app:longClickHint="@string/delete_site_hint" />
 
-        <org.wordpress.android.ui.prefs.WPPreference
-            android:id="@+id/remove_account"
-            android:key="@string/pref_key_site_remove_site"
-            android:title="@string/remove_account"
-            app:longClickHint="@string/remove_site_hint" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>
