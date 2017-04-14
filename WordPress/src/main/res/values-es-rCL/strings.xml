@@ -356,7 +356,6 @@ Language: es_CL
 	<string name="error_generic">Ocurrió un error</string>
 	<string name="error_moderate_comment">Ocurrió un error al moderar el comentario</string>
 	<string name="error_edit_comment">Ocurrió un error al editar el comentario</string>
-	<string name="error_upload">Ocurrió un error mientras se subía el %s</string>
 	<string name="error_load_comment">No se pudo cargar el comentario</string>
 	<string name="error_downloading_image">Error al descargar la imagen</string>
 	<string name="passcode_wrong_passcode">PIN erróneo</string>

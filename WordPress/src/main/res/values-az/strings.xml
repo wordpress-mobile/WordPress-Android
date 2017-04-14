@@ -288,7 +288,6 @@ Language: az
 	<string name="error_refresh_stats">Statistikalar hazırda təzələnə bilmir</string>
 	<string name="error_generic">Bir xəta baş verdi</string>
 	<string name="error_moderate_comment">Moderasiya sırasında xəta baş verdi</string>
-	<string name="error_upload">%s yüklənərkən xəta baş verdi       </string>
 	<string name="error_load_comment">Şərh yüklənmədi</string>
 	<string name="error_downloading_image">Təsvir endirilərkən xəta baş verdi</string>
 	<string name="passcode_wrong_passcode">Yanlış PIN</string>

@@ -182,11 +182,14 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
+    private DetailListPreference mImageWidthPref;
+    private DetailListPreference mImageQualityPref;
 
     // Advanced settings
     private Preference mStartOverPref;
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
+    private Preference mRemoveSitePref; // .ORG Only
 
     private boolean mEditingEnabled = true;
 
@@ -244,7 +247,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Override
     public void onPause() {
         super.onPause();
-        // Locally save the site. mSite can be null after site deletion.
+        // Locally save the site. mSite can be null after site deletion or site removal (.org sites)
         if (mSite != null) {
             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
         }
@@ -435,6 +438,18 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mDeleteSitePref) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
+        } else if (preference == mRemoveSitePref) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+            dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                }
+            });
+            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+            dialogBuilder.setCancelable(false);
+            dialogBuilder.create().show();
         } else {
             return false;
         }
@@ -506,9 +521,21 @@ public class SiteSettingsFragment extends PreferenceFragment
             changeEditTextPreferenceValue(mPasswordPref, mSiteSettings.getPassword());
         } else if (preference == mOptimizedImage) {
             mSiteSettings.setOptimizedImage((Boolean) newValue);
+            mImageWidthPref.setEnabled((Boolean) newValue);
             Map<String, Object> properties = new HashMap<>();
             properties.put("enabled", newValue);
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED, properties);
+        } else if (preference == mImageWidthPref) {
+            int newWidth = Integer.parseInt(newValue.toString());
+            mSiteSettings.setImageResizeWidth(newWidth);
+            setDetailListPreferenceValue(mImageWidthPref,
+                    newValue.toString(),
+                    getLabelForImageMaxWidthValue(mSiteSettings.getMaxImageWidth()));
+        } else if (preference == mImageQualityPref) {
+            mSiteSettings.setImageQuality(Integer.parseInt(newValue.toString()));
+            setDetailListPreferenceValue(mImageQualityPref,
+                    newValue.toString(),
+                    getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
         } else if (preference == mCategoryPref) {
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
@@ -650,9 +677,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
         mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
         mOptimizedImage = (WPSwitchPreference) getChangePref(R.string.pref_key_optimize_image);
+        mImageWidthPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_width);
+        mImageQualityPref = (DetailListPreference) getChangePref(R.string.pref_key_site_image_quality);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
+        mRemoveSitePref = getClickPref(R.string.pref_key_site_remove_site);
 
         sortLanguages();
 
@@ -678,6 +708,12 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // Set Local settings
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
+        setDetailListPreferenceValue(mImageWidthPref,
+                String.valueOf(mSiteSettings.getMaxImageWidth()),
+                getLabelForImageMaxWidthValue(mSiteSettings.getMaxImageWidth()));
+        setDetailListPreferenceValue(mImageQualityPref,
+                String.valueOf(mSiteSettings.getImageQuality()),
+                getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -689,7 +725,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref,
-                mOptimizedImage, mDeleteSitePref
+                mDeleteSitePref
         };
 
         for (Preference preference : editablePreference) {
@@ -697,6 +733,31 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         mEditingEnabled = enabled;
+    }
+
+
+    private String getLabelForImageMaxWidthValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_width_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_width_entries);
+        for (int i = 0; i < values.length ; i++) {
+           if (values[i].equals(String.valueOf(newValue))) {
+               return entries[i];
+           }
+        }
+
+        return entries[0];
+    }
+
+    private String getLabelForImageQualityValue(int newValue) {
+        String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_values);
+        String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_entries);
+        for (int i = 0; i < values.length ; i++) {
+            if (values[i].equals(String.valueOf(newValue))) {
+                return entries[i];
+            }
+        }
+
+        return entries[0];
     }
 
     private void showRelatedPostsDialog() {
@@ -910,6 +971,13 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void setPreferencesFromSiteSettings() {
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
+        setDetailListPreferenceValue(mImageWidthPref,
+                String.valueOf(mSiteSettings.getMaxImageWidth()),
+                getLabelForImageMaxWidthValue(mSiteSettings.getMaxImageWidth()));
+        setDetailListPreferenceValue(mImageQualityPref,
+                String.valueOf(mSiteSettings.getImageQuality()),
+                getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
+
         changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
         changeEditTextPreferenceValue(mTaglinePref, mSiteSettings.getTagline());
         changeEditTextPreferenceValue(mAddressPref, mSiteSettings.getAddress());
@@ -1229,9 +1297,14 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void removeNonSelfHostedPreferences() {
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_site_related_posts);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        mUsernamePref.setEnabled(true);
+        mPasswordPref.setEnabled(true);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_start_over_screen);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_export_site);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_delete_site);
     }
 
     private void removeNonJetpackPreferences() {
@@ -1241,6 +1314,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private void removeNonDotComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_remove_site);
     }
 
     private Preference getChangePref(int id) {
@@ -1293,6 +1367,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                 .SITE_SETTINGS_DELETE_SITE_RESPONSE_OK, mSite);
         dismissProgressDialog(mDeleteSiteProgressDialog);
         mDeleteSiteProgressDialog = null;
+        mSite = null;
+    }
+
+    // .org site removed from the app
+    public void handleSiteRemoved() {
         mSite = null;
     }
 

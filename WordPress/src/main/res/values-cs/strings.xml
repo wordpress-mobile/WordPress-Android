@@ -831,7 +831,6 @@ Language: cs_CZ
 	<string name="error_refresh_stats">Statistika momentálně nemohla být obnovena</string>
 	<string name="error_generic">Nastala chyba</string>
 	<string name="error_edit_comment">Nastala chyba při opravě komentáře</string>
-	<string name="error_upload">Nastala chyba při nahrávání %s</string>
 	<string name="error_load_comment">Nemohl nahrát komentář</string>
 	<string name="error_downloading_image">Chyba při stahování obrázku</string>
 	<string name="passcode_wrong_passcode">Špatný PIN</string>

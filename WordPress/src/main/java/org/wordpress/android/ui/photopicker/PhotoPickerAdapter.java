@@ -8,15 +8,14 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -39,7 +38,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
      */
     protected interface PhotoPickerAdapterListener {
         void onItemTapped(Uri mediaUri);
-        void onItemDoubleTapped(View view, Uri mediaUri);
         void onSelectedCountChanged(int count);
         void onAdapterLoaded(boolean isEmpty);
     }
@@ -169,11 +167,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return position >= 0 && position < mMediaList.size();
     }
 
-    boolean isVideoUri(Uri uri) {
-        int index = indexOfUri(uri);
-        return index > -1 && getItemAtPosition(index).isVideo;
-    }
-
     void setAllowMultiSelect(boolean allow) {
         mAllowMultiSelect = allow;
     }
@@ -249,15 +242,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         return mIsMultiSelectEnabled ? mSelectedUris.size() : 0;
     }
 
-    private int indexOfUri(Uri uri) {
-        for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).uri.equals(uri)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     /*
      * calls notifyDataSetChanged() with the ThumbnailLoader image fade disabled - used to
      * prevent unnecessary flicker when changing existing items
@@ -274,7 +258,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
         private final View videoOverlay;
-        private final GestureDetector detector;
+        private final View btnPreview;
 
         public ThumbnailViewHolder(View view) {
             super(view);
@@ -282,13 +266,14 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = view.findViewById(R.id.image_video_overlay);
+            btnPreview = view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
 
-            detector = new GestureDetector(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
+            imgThumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onSingleTapConfirmed(MotionEvent e) {
+                public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position)) {
                         if (mIsMultiSelectEnabled) {
@@ -298,19 +283,12 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                             mListener.onItemTapped(uri);
                         }
                     }
-                    return true;
                 }
+            });
+
+            imgThumbnail.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public boolean onDoubleTap(MotionEvent e) {
-                    int position = getAdapterPosition();
-                    if (isValidPosition(position) && mListener != null) {
-                        Uri uri = getItemAtPosition(position).uri;
-                        mListener.onItemDoubleTapped(itemView, uri);
-                    }
-                    return true;
-                }
-                @Override
-                public void onLongPress(MotionEvent e) {
+                public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position) && mAllowMultiSelect) {
                         if (!mIsMultiSelectEnabled) {
@@ -318,14 +296,22 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                         }
                         toggleSelection(ThumbnailViewHolder.this, position);
                     }
+                    return true;
                 }
             });
 
-            imgThumbnail.setOnTouchListener(new View.OnTouchListener() {
+            btnPreview.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    detector.onTouchEvent(event);
-                    return true;
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    PhotoPickerItem item = getItemAtPosition(position);
+                    if (item != null) {
+                        MediaPreviewActivity.showPreview(
+                                mContext,
+                                imgThumbnail,
+                                item.uri.toString(),
+                                item.isVideo);
+                    }
                 }
             });
         }

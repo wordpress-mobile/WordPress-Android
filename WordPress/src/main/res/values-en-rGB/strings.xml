@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-20 20:24:45+0000
+Translation-Revision-Date: 2017-04-04 11:06:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
+	<string name="error_unknown_post_type">Unknown post format</string>
+	<string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
+	<string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
+	<string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
+	<string name="error_media_parse_error">Could not parse response after media upload</string>
+	<string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
+	<string name="submit_for_review">Submit</string>
+	<string name="media_error_too_large_upload">The file is too big. Please contact the web hosting provider to fix this issue</string>
 	<string name="role_subscriber">Subscriber</string>
 	<string name="tell_me_more">Tell me more</string>
 	<string name="duplicate_site_detected">A duplicate site has been detected.</string>
@@ -20,7 +29,6 @@ Language: en_GB
 	<string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
 	<string name="error_media_load">Unable to load media</string>
 	<string name="error_media_refresh_no_connection">Connection required to refresh library</string>
-	<string name="error_media_parse_format">Could not parse response to %s media</string>
 	<string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
 	<string name="error_media_not_found">Media could not be found</string>
 	<string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
@@ -34,8 +42,8 @@ Language: en_GB
 	<string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
 	<string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
 	<string name="reader_liked_default_tag">Posts I Like</string>
-	<string name="reader_followed_default_tag">Followed Sites</string>
 	<string name="reader_discover_default_tag">Discover</string>
+	<string name="reader_followed_default_tag">Followed Sites</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
 	<string name="visual_editor_disabled">Visual Editor disabled</string>
@@ -865,7 +873,6 @@ Language: en_GB
 	<string name="passcode_wrong_passcode">Wrong PIN</string>
 	<string name="error_downloading_image">Error downloading image</string>
 	<string name="error_load_comment">Couldn\'t load the comment</string>
-	<string name="error_upload">An error occurred while uploading the %s</string>
 	<string name="error_edit_comment">An error occurred while editing the comment</string>
 	<string name="error_moderate_comment">An error occurred while moderating</string>
 	<string name="error_generic">An error occurred</string>

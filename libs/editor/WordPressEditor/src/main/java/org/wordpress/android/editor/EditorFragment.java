@@ -1199,9 +1199,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
-            // TODO: media IDs are Long's; should we update to use ArrayList<Long>?
-            ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
-            mediaIds.add(String.valueOf(remoteMediaId));
+            ArrayList<Long> mediaIds = mUploadingMediaGallery.getIds();
+            mediaIds.add(remoteMediaId);
             mUploadingMediaGallery.setIds(mediaIds);
 
             if (remaining == 0) {
@@ -1344,7 +1343,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
-                builder.setPositiveButton(R.string.stop_upload_button, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
 
