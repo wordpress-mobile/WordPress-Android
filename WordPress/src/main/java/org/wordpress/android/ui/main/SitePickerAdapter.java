@@ -205,7 +205,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                         toggleSelection(clickedPosition);
                         return true;
                     } else if (mSiteSelectedListener != null) {
-                        return mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
+                        boolean result = mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
+                        setItemSelected(clickedPosition, true);
+                        return result;
                     }
                 } else {
                     AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);

@@ -159,9 +159,7 @@ public class SitePickerActivity extends AppCompatActivity
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
-            mRecycleView.setItemAnimator(new DefaultItemAnimator());
-            getAdapter().setEnableEditMode(true);
-            startSupportActionMode(new ActionModeCallback());
+            startEditingVisibility();
             return true;
         } else if (itemId == R.id.menu_search) {
             mSearchView.requestFocus();
@@ -437,26 +435,14 @@ public class SitePickerActivity extends AppCompatActivity
             return false;
         }
         if (site.isWPCom() || site.isJetpackConnected()) {
-            startSupportActionMode(new ActionModeCallback());
+            if (mActionMode != null) {
+                return false;
+            }
+            startEditingVisibility();
         } else {
             showRemoveSelfHostedSiteDialog(site);
         }
         return true;
-    }
-
-    private void showRemoveSelfHostedSiteDialog(@NonNull final SiteModel site) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
-        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
-                getAdapter().loadSites();
-            }
-        });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
-        dialogBuilder.setCancelable(false);
-        dialogBuilder.create().show();
     }
 
     @Override
@@ -593,5 +579,26 @@ public class SitePickerActivity extends AppCompatActivity
             });
             return builder.create();
         }
+    }
+
+    private void startEditingVisibility() {
+        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+        getAdapter().setEnableEditMode(true);
+        startSupportActionMode(new ActionModeCallback());
+    }
+
+    private void showRemoveSelfHostedSiteDialog(@NonNull final SiteModel site) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
+                getAdapter().loadSites();
+            }
+        });
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+        dialogBuilder.setCancelable(false);
+        dialogBuilder.create().show();
     }
 }
