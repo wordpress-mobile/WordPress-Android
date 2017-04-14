@@ -195,6 +195,24 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                 }
             }
         });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int clickedPosition = holder.getAdapterPosition();
+                if (isValidPosition(clickedPosition)) {
+                    if (mIsMultiSelectEnabled) {
+                        toggleSelection(clickedPosition);
+                        return true;
+                    } else if (mSiteSelectedListener != null) {
+                        return mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
+                    }
+                } else {
+                    AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
+                }
+                return false;
+            }
+        });
     }
 
     public String getLastSearch() {
