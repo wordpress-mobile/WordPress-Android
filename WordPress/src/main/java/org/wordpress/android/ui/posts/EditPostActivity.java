@@ -621,11 +621,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon) {
         hidePhotoPicker();
         switch (icon) {
-            case ANDROID_CAMERA:
+            case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
                 break;
-            case ANDROID_PICKER:
+            case ANDROID_CAPTURE_VIDEO:
+                launchVideoCamera();
+                break;
+            case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
+                break;
+            case ANDROID_CHOOSE_VIDEO:
+                launchVideoLibrary();
                 break;
             case WP_MEDIA:
                 startMediaGalleryAddActivity();

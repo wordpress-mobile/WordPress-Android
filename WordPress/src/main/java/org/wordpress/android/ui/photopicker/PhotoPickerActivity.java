@@ -20,6 +20,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -133,7 +134,7 @@ public class PhotoPickerActivity extends AppCompatActivity
             case RequestCodes.PICTURE_LIBRARY:
                 if (data != null) {
                     Uri imageUri = data.getData();
-                    pictureSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
+                    mediaSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
             // user took a photo with the device camera
@@ -141,10 +142,20 @@ public class PhotoPickerActivity extends AppCompatActivity
                 try {
                     File f = new File(mMediaCapturePath);
                     Uri capturedImageUri = Uri.fromFile(f);
-                    pictureSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
+                    mediaSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
                 } catch (RuntimeException e) {
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
+                break;
+            case RequestCodes.VIDEO_LIBRARY:
+                if (data != null) {
+                    Uri videoUri = data.getData();
+                    mediaSelected(videoUri, PhotoPickerMediaSource.ANDROID_PICKER);
+                }
+                break;
+            case RequestCodes.TAKE_VIDEO:
+                Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
+                mediaSelected(capturedVideoUri, PhotoPickerMediaSource.ANDROID_PICKER);
                 break;
         }
     }
@@ -165,7 +176,17 @@ public class PhotoPickerActivity extends AppCompatActivity
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    private void pictureSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
+    private void launchVideoLibrary() {
+        WordPressMediaUtils.launchVideoLibrary(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void launchVideoCamera() {
+        WordPressMediaUtils.launchVideoCamera(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
+    private void mediaSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
         Intent intent = new Intent()
                 .putExtra(EXTRA_MEDIA_URI, mediaUri.toString())
                 .putExtra(EXTRA_MEDIA_SOURCE, source.name());
@@ -176,21 +197,25 @@ public class PhotoPickerActivity extends AppCompatActivity
     @Override
     public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
         if (uriList.size() > 0) {
-            pictureSelected(uriList.get(0), PhotoPickerMediaSource.APP_PICKER);
+            mediaSelected(uriList.get(0), PhotoPickerMediaSource.APP_PICKER);
         }
     }
 
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon) {
         switch (icon) {
-            case ANDROID_CAMERA:
+            case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
                 break;
-            case ANDROID_PICKER:
+            case ANDROID_CAPTURE_VIDEO:
+                launchVideoCamera();
+                break;
+            case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
+                break;
+            case ANDROID_CHOOSE_VIDEO:
+                launchVideoLibrary();
                 break;
         }
     }
-
-
 }
