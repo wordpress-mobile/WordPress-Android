@@ -130,19 +130,26 @@ public class PhotoPickerFragment extends Fragment {
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAMERA);
-                }*/
-                showCameraPopupMenu(v);
+                if (mPhotosOnly) {
+                    if (mListener != null) {
+                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                    }
+                } else {
+                    showCameraPopupMenu(v);
+                }
             }
         });
         mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPickerPopupMenu(v);
-                /*if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_PICKER);
-                }*/
+                if (mPhotosOnly) {
+                    if (mListener != null) {
+                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    }
+                } else {
+                    showPickerPopupMenu(v);
+                }
+
             }
         });
 
