@@ -59,6 +59,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -881,7 +882,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             if (hasActivePurchases(purchases)) {
                 showPurchasesDialog(site);
             } else {
-                showDeleteSiteDialog();
+                showDeleteSiteWarningDialog();
             }
         } catch (JSONException e) {
             AppLog.e(AppLog.T.API, "Error occurred while trying to delete site: " + e.toString());
@@ -921,6 +922,25 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return false;
+    }
+
+    private void showDeleteSiteWarningDialog() {
+        if (!isAdded() || mIsFragmentPaused) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.delete_site_warning_title);
+        String text = getString(R.string.delete_site_warning, "<b>" + UrlUtils.getHost(mSite.getUrl()) + "</b>")
+                + "<br><br>"
+                + "<i>" + getString(R.string.delete_site_warning_subtitle) + "</i>";
+        builder.setMessage(HtmlUtils.fromHtml(text));
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                showDeleteSiteDialog();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 
     private void showDeleteSiteDialog() {
