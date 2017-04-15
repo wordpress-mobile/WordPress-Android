@@ -20,7 +20,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -147,16 +146,6 @@ public class PhotoPickerActivity extends AppCompatActivity
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
                 break;
-            case RequestCodes.VIDEO_LIBRARY:
-                if (data != null) {
-                    Uri videoUri = data.getData();
-                    mediaSelected(videoUri, PhotoPickerMediaSource.ANDROID_PICKER);
-                }
-                break;
-            case RequestCodes.TAKE_VIDEO:
-                Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                mediaSelected(capturedVideoUri, PhotoPickerMediaSource.ANDROID_PICKER);
-                break;
         }
     }
 
@@ -173,16 +162,6 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private void launchPictureLibrary() {
         WordPressMediaUtils.launchPictureLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchVideoLibrary() {
-        WordPressMediaUtils.launchVideoLibrary(this);
-        AppLockManager.getInstance().setExtendedTimeout();
-    }
-
-    private void launchVideoCamera() {
-        WordPressMediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
@@ -207,14 +186,8 @@ public class PhotoPickerActivity extends AppCompatActivity
             case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
                 break;
-            case ANDROID_CAPTURE_VIDEO:
-                launchVideoCamera();
-                break;
             case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
-                break;
-            case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary();
                 break;
         }
     }
