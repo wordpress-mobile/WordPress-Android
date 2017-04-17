@@ -29,7 +29,7 @@ public class ReleaseOkHttpClientModule {
 
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient.Builder provideMediaOkHttpClientInstanceCustomSSL(MemorizingTrustManager memorizingTrustManager) {
+    public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -45,7 +45,7 @@ public class ReleaseOkHttpClientModule {
     @Singleton
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient provideMediaOkHttpClientInstance(@Named("custom-ssl")OkHttpClient.Builder builder) {
+    public OkHttpClient provideOkHttpClientSharedInstanceCustomSSL(@Named("custom-ssl")OkHttpClient.Builder builder) {
         return builder
                 .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
