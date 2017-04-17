@@ -45,7 +45,7 @@ public class ReleaseOkHttpClientModule {
     @Singleton
     @Provides
     @Named("custom-ssl")
-    public OkHttpClient provideOkHttpClientSharedInstanceCustomSSL(@Named("custom-ssl")OkHttpClient.Builder builder) {
+    public OkHttpClient provideMediaOkHttpClientInstanceCustomSSL(@Named("custom-ssl")OkHttpClient.Builder builder) {
         return builder
                 .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -56,7 +56,7 @@ public class ReleaseOkHttpClientModule {
     @Singleton
     @Provides
     @Named("regular")
-    public OkHttpClient provideOkHttpClientSharedInstance(@Named("regular")OkHttpClient.Builder builder) {
+    public OkHttpClient provideMediaOkHttpClientInstance(@Named("regular")OkHttpClient.Builder builder) {
         return builder
                 .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
                 .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
