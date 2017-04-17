@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +65,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
@@ -86,6 +89,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
 
     public static final int MAX_ACTION_TIME_MS = 2000;
+
+    public static final String UPLOADED_IMAGE_TEMPLATE = "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s" +
+            " alignnone size-full\" width=\"%d\" height=\"%d\"></a>";
 
     private String mTitle = "";
     private String mContentHtml = "";
@@ -1677,5 +1683,26 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onActionFinished() {
         mActionStartedAt = -1;
+    }
+
+    public static String replaceMediaFileWithUrl(@NonNull String postContent, MediaFile mediaFile) {
+        if (mediaFile == null) {
+            return postContent;
+        }
+
+        if (!mediaFile.isVideo()) {
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            String remoteMediaId = mediaFile.getMediaId();
+            String replacementHtml = String.format(Locale.US, UPLOADED_IMAGE_TEMPLATE, remoteUrl, remoteUrl,
+                    remoteMediaId, mediaFile.getWidth(), mediaFile.getHeight());
+
+            Pattern pattern = Pattern.compile("<span id=\"img_container_" + mediaFile.getId() + "\".*?<\\/span>");
+            Matcher matcher = pattern.matcher(postContent);
+            postContent = matcher.replaceAll(replacementHtml);
+        } else {
+            // TODO: Implement video replacement
+        }
+
+        return postContent;
     }
 }
