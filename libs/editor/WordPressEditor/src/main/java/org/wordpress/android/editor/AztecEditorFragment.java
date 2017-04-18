@@ -617,7 +617,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
                 if (attributesWithClass != null) {
                     attributesWithClass.addClass("uploading");
-                    content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(localMediaId), 1, (int)(progress * 10000),
+                    content.setOverlayLevel(predicate, 1, (int)(progress * 10000),
                             attributesWithClass.getAttributesIml());
                     content.refreshText();
                 }
