@@ -173,6 +173,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
+        content.refreshText();
+
         mAztecReady = true;
 
         return view;
@@ -477,9 +479,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
-                AttributesImpl attrs = new AttributesImpl();
-                attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
-                attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
+                AttributesImpl attrs = getAttributesWithSourceAndDataWpId(localMediaId, safeMediaUrl);
 
                 // load a scaled version of the image to prevent OOM exception
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
@@ -495,22 +495,39 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 // set intermediate shade overlay
-                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
-                        new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
-                        Gravity.FILL, attrs);
-
-                Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
-                // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
-                progressDrawable.setBounds(0, 0, 0, 4);
-
-                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, progressDrawable,
-                        Gravity.FILL_HORIZONTAL | Gravity.TOP, attrs);
-
-                content.refreshText();
+                overlayImageUploadProgressStartOrReattach(localMediaId, safeMediaUrl);
 
                 mUploadingMedia.add(localMediaId);
             }
         }
+    }
+
+    private AttributesImpl getAttributesWithSourceAndDataWpId(String localMediaId, String safeMediaUrl) {
+        AttributesImpl attrs = new AttributesImpl();
+        attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
+        if (safeMediaUrl != null) {
+            attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
+        }
+        return attrs;
+    }
+
+    private void overlayImageUploadProgressStartOrReattach(String localMediaId, String safeMediaUrl) {
+        AttributesImpl attrs = getAttributesWithSourceAndDataWpId(localMediaId, safeMediaUrl);
+
+        // set intermediate shade overlay
+        ImagePredicate predicate =  ImagePredicate.localMediaIdPredicate(localMediaId);
+        content.setOverlay(predicate, 0,
+                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                Gravity.FILL, attrs);
+
+        Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+        // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+        progressDrawable.setBounds(0, 0, 0, 4);
+
+        content.setOverlay(predicate, 1, progressDrawable,
+                Gravity.FILL_HORIZONTAL | Gravity.TOP, attrs);
+
+        content.refreshText();
     }
 
     @Override
@@ -612,6 +629,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         ImagePredicate  predicate = ImagePredicate.localMediaIdPredicate(localMediaId);
         if (predicate != null) {
+
+            overlayImageUploadProgressStartOrReattach(localMediaId, null);
+
             Attributes attrs = content.getMediaAttributes(predicate);
             if (attrs != null) {
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
