@@ -20,6 +20,7 @@ public class AztecImageLoader implements Html.ImageGetter {
     public AztecImageLoader(Context context) {
         this.context = context;
     }
+
     @Override
     public void loadImage(String url, final Callbacks callbacks, int maxWidth) {
         // TODO: if a local file then load it directly. This is a quick fix though.
@@ -36,10 +37,9 @@ public class AztecImageLoader implements Html.ImageGetter {
                 Bitmap bitmap = response.getBitmap();
 
                 if (bitmap == null) {
-                    // the loader tries to let us know to just use the default image for now
-                    callbacks.onUseDefaultImage();
+                    callbacks.onImageLoading(null);
                 } else {
-                    BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), response.getBitmap());
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
                     callbacks.onImageLoaded(bitmapDrawable);
                 }
             }

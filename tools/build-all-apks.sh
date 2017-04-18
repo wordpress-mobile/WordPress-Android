@@ -26,6 +26,8 @@ function gradle_version_code {
   grep -E 'versionCode' $BUILDFILE | sed s/versionCode// | grep -Eo "[a-zA-Z0-9.-]+"
 }
 
+BUILD_APK_RET_VALUE=0
+
 function build_apk {
   branch=$1
   flavor=$2
@@ -41,7 +43,7 @@ function build_apk {
   ./gradlew assemble"$flavor"Release --offline >> $LOGFILE 2>&1
   cp -v $OUTDIR/$apk $BUILDDIR/$name | tee -a $LOGFILE
   echo "APK ready: $name" | tee -a $LOGFILE
-  return $version_code
+  BUILD_APK_RET_VALUE=$version_code
 }
 
 function check_clean_working_dir {
@@ -55,11 +57,11 @@ function check_clean_working_dir {
 check_clean_working_dir
 date > $LOGFILE
 build_apk $release_branch Vanilla
-release_code=$?
+release_code=$BUILD_APK_RET_VALUE
 build_apk $beta_branch Vanilla
-beta_code=$?
+beta_code=$BUILD_APK_RET_VALUE
 build_apk $alpha_branch Zalpha
-alpha_code=$?
+alpha_code=$BUILD_APK_RET_VALUE
 git checkout $current_branch
 
 echo "Version codes - release: $release_code, beta: $beta_code, alpha: $alpha_code" | tee -a $LOGFILE
