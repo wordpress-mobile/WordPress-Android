@@ -434,7 +434,7 @@ public class SitePickerActivity extends AppCompatActivity
         if (site == null) {
             return false;
         }
-        if (site.isWPCom() || site.isJetpackConnected()) {
+        if (site.isWPCom()) {
             if (mActionMode != null) {
                 return false;
             }
