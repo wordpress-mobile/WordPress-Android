@@ -1385,11 +1385,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSite = null;
     }
 
-    // .org site removed from the app
-    public void handleSiteRemoved() {
-        mSite = null;
-    }
-
     public void handleDeleteSiteError(SiteStore.DeleteSiteError error) {
         AppLog.e(AppLog.T.SETTINGS, "SiteDeleted error: " + error.type);
 
