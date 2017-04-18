@@ -135,7 +135,7 @@ dependencies {
 //    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:a6147f4a3eb405497678d47124aeb922d1a8fe6e') {
 //        exclude group: "com.android.volley";
 //    }
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:feature~multi-uploads-xmlrpc-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:feature~multi-uploads-SNAPSHOT') {
         exclude group: "com.android.volley";
     }
 
