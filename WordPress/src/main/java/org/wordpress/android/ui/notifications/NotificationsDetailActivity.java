@@ -215,9 +215,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().registerSticky(this);
-        //if the user hasn't used swipe yet, hint the user they can navigate through notifications detail
-        //using swipe on the ViewPager
-        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && (mAdapter.getCount() > 1)) {
+        // If the user hasn't used swipe yet and if the adapter is initialised and have at least 2 notifications,
+        // show a hint to promote swipe usage on the ViewPager
+        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAdapter != null && mAdapter.getCount() > 1) {
             WPSwipeSnackbar.show(mViewPager);
         }
     }
