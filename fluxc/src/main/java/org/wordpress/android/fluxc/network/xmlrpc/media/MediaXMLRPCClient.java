@@ -48,7 +48,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -58,18 +58,15 @@ import okhttp3.Request.Builder;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
-    // track the network call to support cancelling
-    private Call mCurrentUploadCall;
+    // this will hold which media is being uploaded by which call, in order to be able
+    // to monitor multiple uploads
+    private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
-    public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient.Builder okClientBuilder,
+    public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okHttpClient,
                              AccessToken accessToken, UserAgent userAgent,
                              HTTPAuthManager httpAuthManager) {
         super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
-        mOkHttpClient = okClientBuilder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .build();
+        mOkHttpClient = okHttpClient;
     }
 
     @Override
@@ -159,8 +156,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
         okhttp3.Request request = builder.build();
 
-        mCurrentUploadCall = mOkHttpClient.newCall(request);
-        mCurrentUploadCall.enqueue(new Callback() {
+        Call call = mOkHttpClient.newCall(request);
+        mCurrentUploadCalls.put(media.getId(), call);
+
+        AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
+        call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
@@ -181,30 +181,43 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
                         AppLog.w(T.MEDIA, "media upload failed with error: " + mediaError.message);
                         notifyMediaUploaded(media, mediaError);
+
+                        // clean from the current uploads map
+                        removeCallFromCurrentUploadsMap(media.getId());
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
                     MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
                     error.message = response.message();
                     notifyMediaUploaded(media, error);
+
+                    // clean from the current uploads map
+                    removeCallFromCurrentUploadsMap(media.getId());
                 }
-                mCurrentUploadCall = null;
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                if (mCurrentUploadCall != null && mCurrentUploadCall.isCanceled()) {
-                    // Do not report errors since the upload was canceled and notified separately
-                    mCurrentUploadCall = null;
-                    return;
-                }
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
-                MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                error.message = e.getLocalizedMessage();
-                notifyMediaUploaded(media, error);
-                mCurrentUploadCall = null;
+                if (!media.isUploadCancelled()) {
+                    // TODO it would be great to raise some more fine grained errors here, for
+                    // instance timeouts should be raised instead of GENERIC_ERROR
+                    MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                    error.message = e.getLocalizedMessage();
+                    notifyMediaUploaded(media, error);
+                }
+                // clean from the current uploads map
+                mCurrentUploadCalls.remove(media.getId());
             }
         });
+    }
+
+    private void removeCallFromCurrentUploadsMap(int id) {
+        // clean from the current uploads map
+        mCurrentUploadCalls.remove(id);
+        AppLog.d(T.MEDIA, "mediaXMLRPCClient: removed id: " +  id + " from current"
+                + " uploads, remaining: "
+                + mCurrentUploadCalls.size());
     }
 
     /**
@@ -280,6 +293,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
                     notifyMediaFetched(site, media, error);
                 }
+
+                // clean from the current uploads map
+                removeCallFromCurrentUploadsMap(media.getId());
             }
         }, new BaseRequest.BaseErrorListener() {
             @Override
@@ -331,9 +347,26 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     public void cancelUpload(final MediaModel media) {
+        if (media == null) {
+            MediaStore.MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            notifyMediaUploaded(null, error);
+            return;
+        }
+
         // cancel in-progress upload if necessary
-        if (mCurrentUploadCall != null && mCurrentUploadCall.isExecuted() && !mCurrentUploadCall.isCanceled()) {
-            mCurrentUploadCall.cancel();
+        int mediaModelId = media.getId();
+        // make sure we know which call/media to look for
+        Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
+        if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
+            AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
+            // set the upload Cancelled flag on the media model so in case a failure is raised for this upload
+            // after cancellation (or as a product of it) we don't need to notify about the error
+            media.setUploadCancelled(true);
+            correspondingCall.cancel();
+            // clean from the current uploads map
+            mCurrentUploadCalls.remove(mediaModelId);
+
+            // report the upload was successfully cancelled
             notifyMediaUploadCanceled(media);
         }
     }

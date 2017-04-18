@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -63,16 +63,14 @@ import okhttp3.OkHttpClient;
  */
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
-    private Call mCurrentUploadCall;
+    // this will hold which media is being uploaded by which call, in order to be able
+    // to monitor multiple uploads
+    private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                           OkHttpClient.Builder okClientBuilder, AccessToken accessToken, UserAgent userAgent) {
+                           OkHttpClient okHttpClient, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
-        mOkHttpClient = okClientBuilder
-                .connectTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .readTimeout(BaseRequest.UPLOAD_REQUEST_READ_TIMEOUT, TimeUnit.MILLISECONDS)
-                .writeTimeout(BaseRequest.DEFAULT_REQUEST_TIMEOUT, TimeUnit.MILLISECONDS)
-                .build();
+        mOkHttpClient = okHttpClient;
     }
 
     @Override
@@ -120,6 +118,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * Uploads a single media item to a WP.com site.
      */
     public void uploadMedia(final SiteModel site, final MediaModel mediaToUpload) {
+        if (mediaToUpload == null || mediaToUpload.getId() == 0) {
+            // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
+            MediaStore.MediaError error = new MediaError(MediaErrorType.INVALID_ID);
+            notifyMediaUploaded(mediaToUpload, error);
+            return;
+        }
         performUpload(mediaToUpload, site);
     }
 
@@ -245,9 +249,19 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
 
         // cancel in-progress upload if necessary
-        if (mCurrentUploadCall != null && mCurrentUploadCall.isExecuted() && !mCurrentUploadCall.isCanceled()) {
+        int mediaModelId = media.getId();
+        // make sure we know which call/media to look for
+        Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
+        if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
-            mCurrentUploadCall.cancel();
+            // set the upload Cancelled flag on the media model so in case a failure is raised for this upload
+            // after cancellation (or as a product of it) we don't need to notify about the error
+            media.setUploadCancelled(true);
+            correspondingCall.cancel();
+            // clean from the current uploads map
+            mCurrentUploadCalls.remove(mediaModelId);
+
+            // report the upload was successfully cancelled
             notifyMediaUploadCanceled(media);
         }
     }
@@ -270,8 +284,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 .post(body)
                 .build();
 
-        mCurrentUploadCall = mOkHttpClient.newCall(request);
-        mCurrentUploadCall.enqueue(new Callback() {
+        Call call = mOkHttpClient.newCall(request);
+        mCurrentUploadCalls.put(media.getId(), call);
+
+        AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
+        call.enqueue(new Callback() {
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.isSuccessful()) {
@@ -292,24 +309,31 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaStore.MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
                         notifyMediaUploaded(media, error);
                     }
+                    // clean from the current uploads map
+                    mCurrentUploadCalls.remove(media.getId());
+                    AppLog.d(T.MEDIA, "mediaRestClient: removed id: " +  media.getId() + " from current"
+                            + " uploads, remaining: "
+                            + mCurrentUploadCalls.size());
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaUploaded(media, parseUploadError(response));
+                    // clean from the current uploads map
+                    mCurrentUploadCalls.remove(media.getId());
                 }
-                mCurrentUploadCall = null;
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                if (mCurrentUploadCall != null && mCurrentUploadCall.isCanceled()) {
-                    // Do not report errors since the upload was canceled and notified separately
-                    mCurrentUploadCall = null;
-                    return;
-                }
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
-                MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                notifyMediaUploaded(media, error);
-                mCurrentUploadCall = null;
+                if (!media.isUploadCancelled()) {
+                    // TODO it would be great to raise some more fine grained errors here, for
+                    // instance timeouts should be raised instead of GENERIC_ERROR
+                    MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                    error.message = e.getLocalizedMessage();
+                    notifyMediaUploaded(media, error);
+                }
+                // clean from the current uploads map
+                mCurrentUploadCalls.remove(media.getId());
             }
         });
     }
