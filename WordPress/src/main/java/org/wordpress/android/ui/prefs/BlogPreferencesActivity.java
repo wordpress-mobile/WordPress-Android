@@ -38,20 +38,19 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
-    private SiteModel mSite;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        final SiteModel site;
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            site = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            site = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        if (mSite == null) {
+        if (site == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
@@ -61,7 +60,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
+            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
         }
 
         FragmentManager fragmentManager = getFragmentManager();
