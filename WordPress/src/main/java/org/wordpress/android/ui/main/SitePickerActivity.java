@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -199,6 +200,17 @@ public class SitePickerActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         mDispatcher.register(this);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteRemoved(OnSiteRemoved event) {
+        if (!event.isError()) {
+            getAdapter().loadSites();
+        } else {
+            // shouldn't happen
+            ToastUtils.showToast(this, "Error removing site, try again later");
+        }
     }
 
     @SuppressWarnings("unused")
@@ -594,7 +606,6 @@ public class SitePickerActivity extends AppCompatActivity
         dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
-                getAdapter().loadSites();
             }
         });
         dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
