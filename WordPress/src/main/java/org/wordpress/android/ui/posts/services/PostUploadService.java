@@ -301,7 +301,7 @@ public class PostUploadService extends Service {
                 mCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
             }
             if (!mHasVideo) {
-                // Check if there is a img tag in the post. Media added in any editor other than legacy.
+                // Check if there is a video tag in the post. Media added in any editor other than legacy.
                 String videoTagsPattern = "<video[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>|\\[wpvideo\\s+([^\\]]+)\\]";
                 Pattern pattern = Pattern.compile(videoTagsPattern);
                 Matcher matcher = pattern.matcher(postContent);
