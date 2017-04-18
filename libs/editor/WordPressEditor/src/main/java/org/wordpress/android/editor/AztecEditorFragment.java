@@ -308,13 +308,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void setContent(CharSequence text) {
         content.fromHtml(text.toString());
+
         updateFailedMediaList();
         overlayFailedMedia();
 
-        // TODO here get the current uploads from the service and check if an of them belong to this
-        // post. If any of them do, add them to our mUploadingMedia queue so to be able to match
-        // FluxC progress updates with our visual entities
         updateUploadingMediaList();
+        overlayProgressingMedia();
+
         mAztecReady = true;
     }
 
@@ -392,18 +392,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void updateUploadingMediaList() {
+        updateMediaList(mUploadingMedia, "uploading");
+    }
+
+    private void updateMediaList(Set<String> listToUpdate, final String classToUse) {
         AztecText.AttributePredicate uploadingPredicate = new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NonNull Attributes attrs) {
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
-                return attributesWithClass.hasClass("uploading");
+                return attributesWithClass.hasClass(classToUse);
             }
         };
 
-        mUploadingMedia.clear();
+        listToUpdate.clear();
 
         for (Attributes attrs : content.getAllMediaAttributes(uploadingPredicate)) {
-            safeAddMediaIdToSet(mUploadingMedia, attrs.getValue("data-wpid"));
+            String localMediaId = attrs.getValue("data-wpid");
+            safeAddMediaIdToSet(listToUpdate, localMediaId);
         }
     }
 
@@ -414,19 +419,31 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void updateFailedMediaList() {
-        AztecText.AttributePredicate failedPredicate = new AztecText.AttributePredicate() {
-            @Override
-            public boolean matches(@NonNull Attributes attrs) {
-                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
-                return attributesWithClass.hasClass("failed");
-            }
-        };
+        updateMediaList(mFailedMediaIds, "failed");
+    }
 
-        mFailedMediaIds.clear();
-
-        for (Attributes attrs : content.getAllMediaAttributes(failedPredicate)) {
-            safeAddMediaIdToSet(mFailedMediaIds, attrs.getValue("data-wpid"));
+    private void overlayProgressingMedia() {
+        for (String localMediaId : mUploadingMedia) {
+            Attributes attributes = content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId));
+            overlayProgressingMedia(localMediaId, attributes);
         }
+    }
+
+    private void overlayProgressingMedia(String localMediaId, Attributes attributes) {
+        // set intermediate shade overlay
+        ImagePredicate predicate =  ImagePredicate.localMediaIdPredicate(localMediaId);
+        content.setOverlay(predicate, 0,
+                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                Gravity.FILL, attributes);
+
+        Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+        // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+        progressDrawable.setBounds(0, 0, 0, 4);
+
+        content.setOverlay(predicate, 1, progressDrawable,
+                Gravity.FILL_HORIZONTAL | Gravity.TOP, attributes);
+
+        content.refreshText();
     }
 
     private void overlayFailedMedia() {
@@ -630,7 +647,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         ImagePredicate  predicate = ImagePredicate.localMediaIdPredicate(localMediaId);
         if (predicate != null) {
 
-            overlayImageUploadProgressStartOrReattach(localMediaId, null);
+            // overlayImageUploadProgressStartOrReattach(localMediaId, null);
 
             Attributes attrs = content.getMediaAttributes(predicate);
             if (attrs != null) {
