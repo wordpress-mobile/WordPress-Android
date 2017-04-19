@@ -358,12 +358,6 @@ public class PostStore extends Store {
         }
     }
 
-    private void searchPosts(SearchPostsPayload payload) {
-    }
-
-    private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
-    }
-
     private void deletePost(RemotePostPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mPostRestClient.deletePost(payload.post, payload.site);
@@ -393,6 +387,14 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
+        }
+    }
+
+    private void searchPosts(SearchPostsPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.searchPosts(payload.site, payload.searchTerm);
+        } else {
+            // TODO: emit error, only REST API supported
         }
     }
 
@@ -438,6 +440,10 @@ public class PostStore extends Store {
         }
 
         emitChange(onPostChanged);
+    }
+
+    private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
+        // TODO
     }
 
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
