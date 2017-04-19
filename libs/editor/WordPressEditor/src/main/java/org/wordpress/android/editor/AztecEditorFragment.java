@@ -1157,16 +1157,72 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE && data != null) {
-
-            Bundle extras = data.getExtras();
-            if (extras == null) {
+        if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
+            if (data == null || data.getExtras() == null && tappedImagePredicate != null) {
                 return;
             }
 
-            final String imageMeta = Utils.escapeQuotes(StringUtils.notNullStr(extras.getString("imageMeta")));
+            Bundle extras = data.getExtras();
+            JSONObject meta;
+            try {
+                meta = new JSONObject(StringUtils.notNullStr(extras.getString("imageMeta")));
+            } catch (JSONException e) {
+                // ignore errors
+                return;
+            }
 
+            AztecAttributes attributes = content.getElementAttributes(tappedImagePredicate);
 
+            // set image properties
+            attributes.setValue("src", JSONUtils.getString(meta, "src"));
+            attributes.setValue("title", JSONUtils.getString(meta, "title"));
+            attributes.setValue("width", JSONUtils.getString(meta, "width"));
+            attributes.setValue("height", JSONUtils.getString(meta, "height"));
+            attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
+
+            AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
+
+            // remove previously set properties
+            attributesWithClass.removeClassStartingWith("align-");
+            attributesWithClass.removeClassStartingWith("size-");
+            attributesWithClass.removeClassStartingWith("wp-image-");
+
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align"))) {
+                attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
+            }
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size")) {
+                attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
+            }
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
+                attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
+            }
+
+            content.updateElementAttributes(tappedImagePredicate, attributesWithClass.getAttributes());
+
+            // captions required shortcode support
+//            String caption = JSONUtils.getString(meta, "caption");
+            
+            // there is an issue with having an image inside a link
+            // https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
+//            String link = JSONUtils.getString(meta, "linkUrl");
+
+            final int imageRemoteId = extras.getInt("imageRemoteId");
+            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
+
+            if (imageRemoteId != 0) {
+                if (isFeaturedImage) {
+                    mFeaturedImageId = imageRemoteId;
+                    mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                } else {
+                    // If this image was unset as featured, clear the featured image id
+                    if (mFeaturedImageId == imageRemoteId) {
+                        mFeaturedImageId = 0;
+                        mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                    }
+                }
+            }
+
+            tappedImagePredicate = null;
         }
     }
 }
