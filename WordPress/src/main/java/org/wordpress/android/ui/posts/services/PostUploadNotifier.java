@@ -87,8 +87,6 @@ public class PostUploadNotifier {
     public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
 
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
-
         // Get the shareableUrl
         String shareableUrl = WPMeShortlinks.getPostShortlink(site, post);
         if (shareableUrl == null && !TextUtils.isEmpty(post.getLink())) {
@@ -104,7 +102,9 @@ public class PostUploadNotifier {
                     .page_updated) : mContext.getResources().getText(R.string.post_updated));
         }
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
-        if (notificationData.latestIcon == null) {
+
+        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        if (notificationData == null || notificationData.latestIcon == null) {
             notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
                     .getResources(),
                     R.mipmap.app_icon));
