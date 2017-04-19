@@ -686,7 +686,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return aztecAttributes;
         }
 
-        String optValue(String key, String defaultValue) {
+        String getAttribute(String key, String defaultValue) {
             if (aztecAttributes.hasAttribute(key)) {
                 return aztecAttributes.getValue(key);
             } else {
@@ -890,42 +890,45 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private JSONObject getMetadata(AttributesWithClass attrs, int naturalWidth, int naturalHeight) {
         JSONObject metadata = new JSONObject();
-        putOpt(metadata, "align", "none");          // Accepted values: center, left, right or empty string.
-        putOpt(metadata, "alt", "");                // Image alt attribute
-        putOpt(metadata, "attachment_id", "");      // Numeric attachment id of the image in the site's media library
-        putOpt(metadata, "caption", "");            // The text of the caption for the image (if any)
-        putOpt(metadata, "captionClassName", "");   // The classes for the caption shortcode (if any).
-        putOpt(metadata, "captionId", "");          // The caption shortcode's ID attribute. The numeric value should match the value of attachment_id
-        putOpt(metadata, "classes", "");            // The class attribute for the image. Does not include editor generated classes
-        putOpt(metadata, "height", "");             // The image height attribute
-        putOpt(metadata, "linkClassName", "");      // The class attribute for the link
-        putOpt(metadata, "linkRel", "");            // The rel attribute for the link (if any)
-        putOpt(metadata, "linkTargetBlank", false); // true if the link should open in a new window.
-        putOpt(metadata, "linkUrl", "");            // The href attribute of the link
-        putOpt(metadata, "size", "custom");         // Accepted values: custom, medium, large, thumbnail, or empty string
-        putOpt(metadata, "src", "");                // The src attribute of the image
-        putOpt(metadata, "title", "");              // The title attribute of the image (if any)
-        putOpt(metadata, "width", "");              // The image width attribute
-        putOpt(metadata, "naturalWidth", "");       // The natural width of the image.
-        putOpt(metadata, "naturalHeight", "");       // The natural height of the image.
+        addMetadataProperty(metadata, "align", "none");          // Accepted values: center, left, right or empty string.
+        addMetadataProperty(metadata, "alt", "");                // Image alt attribute
+        addMetadataProperty(metadata, "attachment_id", "");      // Numeric attachment id of the image in the site's media library
+        addMetadataProperty(metadata, "caption", "");            // The text of the caption for the image (if any)
+        addMetadataProperty(metadata, "captionClassName", "");   // The classes for the caption shortcode (if any).
+        addMetadataProperty(metadata, "captionId", "");          // The caption shortcode's ID attribute. The numeric value should match the value of attachment_id
+        addMetadataProperty(metadata, "classes", "");            // The class attribute for the image. Does not include editor generated classes
+        addMetadataProperty(metadata, "height", "");             // The image height attribute
+        addMetadataProperty(metadata, "linkClassName", "");      // The class attribute for the link
+        addMetadataProperty(metadata, "linkRel", "");            // The rel attribute for the link (if any)
+        addMetadataProperty(metadata, "linkTargetBlank", false); // true if the link should open in a new window.
+        addMetadataProperty(metadata, "linkUrl", "");            // The href attribute of the link
+        addMetadataProperty(metadata, "size", "custom");         // Accepted values: custom, medium, large, thumbnail, or empty string
+        addMetadataProperty(metadata, "src", "");                // The src attribute of the image
+        addMetadataProperty(metadata, "title", "");              // The title attribute of the image (if any)
+        addMetadataProperty(metadata, "width", "");              // The image width attribute
+        addMetadataProperty(metadata, "naturalWidth", "");       // The natural width of the image.
+        addMetadataProperty(metadata, "naturalHeight", "");       // The natural height of the image.
 
-        putOpt(metadata, "src", attrs.optValue("src", ""));
-        putOpt(metadata, "alt", attrs.optValue("alt", ""));
-        putOpt(metadata, "title", attrs.optValue("title", ""));
-        putOpt(metadata, "naturalWidth", naturalWidth);
-        putOpt(metadata, "naturalHeight", naturalHeight);
-
-        String width = attrs.optValue("width", "");
-        String height = attrs.optValue("height", "");
+        addMetadataProperty(metadata, "src", attrs.getAttribute("src", ""));
+        addMetadataProperty(metadata, "alt", attrs.getAttribute("alt", ""));
+        addMetadataProperty(metadata, "title", attrs.getAttribute("title", ""));
+        addMetadataProperty(metadata, "naturalWidth", naturalWidth);
+        addMetadataProperty(metadata, "naturalHeight", naturalHeight);
 
         Pattern isIntRegExp = Pattern.compile("^\\d+$");
 
+        String width = attrs.getAttribute("width", "");
         if (!isIntRegExp.matcher(width).matches() || NumberUtils.toInt(width) == 0) {
-            putOpt(metadata, "width", naturalWidth);
+            addMetadataProperty(metadata, "width", naturalWidth);
+        } else {
+            addMetadataProperty(metadata, "width", width);
         }
 
+        String height = attrs.getAttribute("height", "");
         if (!isIntRegExp.matcher(height).matches() || NumberUtils.toInt(height) == 0) {
-            putOpt(metadata, "height", naturalHeight);
+            addMetadataProperty(metadata, "height", naturalHeight);
+        } else {
+            addMetadataProperty(metadata, "height", height);
         }
 
         List<String> extraClasses = new ArrayList<>();
@@ -934,20 +937,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             if (Pattern.matches("^wp-image.*", clazz)) {
                 String attachmentIdString = clazz.replace("wp-image-", "");
                 if (NumberUtils.toInt(attachmentIdString) != 0) {
-                    putOpt(metadata, "attachment_id", attachmentIdString);
+                    addMetadataProperty(metadata, "attachment_id", attachmentIdString);
                 } else {
                     AppLog.d(AppLog.T.EDITOR, "AttachmentId was not an integer! String value: " + attachmentIdString);
                 }
             } else if (Pattern.matches("^align.*", clazz)) {
-                putOpt(metadata, "align", clazz.replace("align-", ""));
+                addMetadataProperty(metadata, "align", clazz.replace("align-", ""));
             } else if (Pattern.matches("^size-.*", clazz)) {
-                putOpt(metadata, "size", clazz.replace("size-", ""));
+                addMetadataProperty(metadata, "size", clazz.replace("size-", ""));
             } else {
                 extraClasses.add(clazz);
             }
         }
 
-        putOpt(metadata, "classes", TextUtils.join(" ", extraClasses));
+        addMetadataProperty(metadata, "classes", TextUtils.join(" ", extraClasses));
 
 //        // Extract caption
 //        var captionMeta = ZSSEditor.captionMetaForImage( imageNode )
@@ -967,7 +970,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return metadata;
     }
 
-    private JSONObject putOpt(JSONObject jsonObject, String key, String value) {
+    private JSONObject addMetadataProperty(JSONObject jsonObject, String key, String value) {
         try {
             return jsonObject.put(key, value);
         } catch (JSONException e) {
@@ -977,7 +980,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return jsonObject;
     }
 
-    private JSONObject putOpt(JSONObject jsonObject, String key, int value) {
+    private JSONObject addMetadataProperty(JSONObject jsonObject, String key, int value) {
         try {
             return jsonObject.put(key, value);
         } catch (JSONException e) {
@@ -987,7 +990,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return jsonObject;
     }
 
-    private JSONObject putOpt(JSONObject jsonObject, String key, boolean value) {
+    private JSONObject addMetadataProperty(JSONObject jsonObject, String key, boolean value) {
         try {
             return jsonObject.put(key, value);
         } catch (JSONException e) {
