@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -649,6 +650,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         void addClass(String c) {
             classes.add(c);
+        }
+
+        void removeClassStartingWith(String prefix) {
+            Iterator<String> iterator = classes.iterator();
+            while (iterator.hasNext()) {
+                String cls = iterator.next();
+                if (cls.startsWith(prefix)) {
+                    iterator.remove();
+                }
+            }
         }
 
         void removeClass(String c) {
