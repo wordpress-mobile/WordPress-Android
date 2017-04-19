@@ -54,6 +54,35 @@ public class PostStore extends Store {
         }
     }
 
+    public static class SearchPostsPayload extends FetchPostsPayload {
+        public String searchTerm;
+
+        public SearchPostsPayload(SiteModel site, String searchTerm) {
+            super(site);
+            this.searchTerm = searchTerm;
+        }
+
+        public SearchPostsPayload(SiteModel site, String searchTerm, boolean loadMore) {
+            super(site, loadMore);
+            this.searchTerm = searchTerm;
+        }
+    }
+
+    public static class SearchPostsResponsePayload extends Payload {
+        public PostError error;
+        public PostsModel posts;
+        public SiteModel site;
+        public boolean loadedMore;
+        public boolean canLoadMore;
+
+        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, boolean loadedMore, boolean canLoadMore) {
+            this.posts = posts;
+            this.site = site;
+            this.loadedMore = loadedMore;
+            this.canLoadMore = canLoadMore;
+        }
+    }
+
     public static class FetchPostsResponsePayload extends Payload {
         public PostError error;
         public PostsModel posts;
@@ -321,18 +350,18 @@ public class PostStore extends Store {
                 removeAllPosts();
                 break;
             case SEARCH_POSTS:
-                searchPosts((RemotePostPayload) action.getPayload());
+                searchPosts((SearchPostsPayload) action.getPayload());
                 break;
             case SEARCHED_POST:
-                handleSearchPostsCompleted((RemotePostPayload) action.getPayload());
+                handleSearchPostsCompleted((SearchPostsResponsePayload) action.getPayload());
                 break;
         }
     }
 
-    private void searchPosts(RemotePostPayload payload) {
+    private void searchPosts(SearchPostsPayload payload) {
     }
 
-    private void handleSearchPostsCompleted(RemotePostPayload payload) {
+    private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
     }
 
     private void deletePost(RemotePostPayload payload) {
