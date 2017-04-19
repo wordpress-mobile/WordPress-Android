@@ -320,7 +320,19 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
+            case SEARCH_POSTS:
+                searchPosts((RemotePostPayload) action.getPayload());
+                break;
+            case SEARCHED_POST:
+                handleSearchPostsCompleted((RemotePostPayload) action.getPayload());
+                break;
         }
+    }
+
+    private void searchPosts(RemotePostPayload payload) {
+    }
+
+    private void handleSearchPostsCompleted(RemotePostPayload payload) {
     }
 
     private void deletePost(RemotePostPayload payload) {
