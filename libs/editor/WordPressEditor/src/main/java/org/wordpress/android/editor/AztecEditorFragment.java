@@ -1190,7 +1190,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align"))) {
                 attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
             }
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size")) {
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
                 attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
             }
             if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
@@ -1201,7 +1201,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             // captions required shortcode support
 //            String caption = JSONUtils.getString(meta, "caption");
-            
+
             // there is an issue with having an image inside a link
             // https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
 //            String link = JSONUtils.getString(meta, "linkUrl");
