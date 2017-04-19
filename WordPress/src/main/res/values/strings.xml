@@ -1429,6 +1429,7 @@
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_dotcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
+    <string name="site_picker_remove_site_error">Error removing site, try again later</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>

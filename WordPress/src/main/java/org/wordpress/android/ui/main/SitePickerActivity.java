@@ -210,7 +210,7 @@ public class SitePickerActivity extends AppCompatActivity
         } else {
             // shouldn't happen
             AppLog.e(AppLog.T.DB, "Encountered unexpected error while attempting to remove site: " + event.error);
-            ToastUtils.showToast(this, "Error removing site, try again later");
+            ToastUtils.showToast(this, R.string.site_picker_remove_site_error);
         }
     }
 
