@@ -215,6 +215,9 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void searchPosts(final SiteModel site, final String searchTerm) {
+    }
+
     private PostModel postResponseToPostModel(PostWPComRestResponse from) {
         PostModel post = new PostModel();
         post.setRemotePostId(from.ID);
