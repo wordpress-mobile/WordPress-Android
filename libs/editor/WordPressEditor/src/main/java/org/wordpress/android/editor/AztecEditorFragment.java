@@ -1176,10 +1176,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             // set image properties
             attributes.setValue("src", JSONUtils.getString(meta, "src"));
-            attributes.setValue("title", JSONUtils.getString(meta, "title"));
+
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "title"))) {
+                attributes.setValue("title", JSONUtils.getString(meta, "title"));
+            }
+
             attributes.setValue("width", JSONUtils.getString(meta, "width"));
             attributes.setValue("height", JSONUtils.getString(meta, "height"));
-            attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
+
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "alt"))) {
+                attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
+            }
 
             AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
 
@@ -1198,7 +1205,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
                 attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
             }
-            
+
             if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
                 attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
             }
