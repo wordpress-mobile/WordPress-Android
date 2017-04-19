@@ -939,7 +939,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     AppLog.d(AppLog.T.EDITOR, "AttachmentId was not an integer! String value: " + attachmentIdString);
                 }
             } else if (Pattern.matches("^align.*", clazz)) {
-                putOpt(metadata, "align", clazz.replace("align", ""));
+                putOpt(metadata, "align", clazz.replace("align-", ""));
             } else if (Pattern.matches("^size-.*", clazz)) {
                 putOpt(metadata, "size", clazz.replace("size-", ""));
             } else {
