@@ -1696,7 +1696,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             String replacementHtml = String.format(Locale.US, UPLOADED_IMAGE_TEMPLATE, remoteUrl, remoteUrl,
                     remoteMediaId, mediaFile.getWidth(), mediaFile.getHeight());
 
-            Pattern pattern = Pattern.compile("<span id=\"img_container_" + mediaFile.getId() + "\".*?<\\/span>");
+            Pattern pattern = Pattern.compile("<span id=\"img_container_" + mediaFile.getId() + "\".*?<img.*?></span>");
             Matcher matcher = pattern.matcher(postContent);
             postContent = matcher.replaceAll(replacementHtml);
         } else {
