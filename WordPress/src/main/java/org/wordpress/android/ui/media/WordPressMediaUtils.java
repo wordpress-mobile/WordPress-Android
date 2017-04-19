@@ -165,8 +165,8 @@ public class WordPressMediaUtils {
         try {
             fileUri = FileProvider.getUriForFile(context, applicationId + ".provider", new File(mediaCapturePath));
         } catch (IllegalArgumentException e) {
-            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new recording", e);
-            throw new IOException("Cannot access the file planned to store the new recording");
+            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media", e);
+            throw new IOException("Cannot access the file planned to store the new media");
         }
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
