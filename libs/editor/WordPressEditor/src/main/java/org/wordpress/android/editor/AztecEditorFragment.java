@@ -1112,6 +1112,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
                 dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
+                dialogBundle.putBoolean("isAztecEnabled", true);
 
                 // Request and add an authorization header for HTTPS images
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://.
