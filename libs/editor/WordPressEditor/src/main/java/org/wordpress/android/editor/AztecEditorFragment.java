@@ -1187,12 +1187,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             attributesWithClass.removeClassStartingWith("size-");
             attributesWithClass.removeClassStartingWith("wp-image-");
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align"))) {
+            // only assign the align class to the image if we're not printing
+            // a caption, since the alignment is sent to the shortcode
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align")) &&
+                    TextUtils.isEmpty(JSONUtils.getString(meta, "caption"))) {
                 attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
             }
+
             if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
                 attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
             }
+            
             if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
                 attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
             }
