@@ -106,6 +106,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private long mActionStartedAt = -1;
 
+    private ImagePredicate tappedImagePredicate;
+
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
         Bundle args = new Bundle();
@@ -573,6 +575,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return new ImagePredicate(id, "data-wpid");
         }
 
+        static ImagePredicate genericPredicate(String idName, String id) {
+            return new ImagePredicate(id, idName);
+        }
+
         static ImagePredicate idPredicate(String id) {
             return new ImagePredicate(id, "id");
         }
@@ -996,17 +1002,26 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         Set<String> classes = getClassAttribute(attrs);
 
         String id;
+        String idName;
         String uploadStatus = "";
         JSONObject meta = getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains("uploading")) {
             uploadStatus = "uploading";
-            id = attrs.getValue("data-wpid");
+            idName = "data-wpid";
         } else if (classes.contains("failed")) {
             uploadStatus = "failed";
-            id = attrs.getValue("data-wpid");
+            idName = "data-wpid";
         } else {
-            id = attrs.getValue("id");
+            idName = "id";
         }
+
+        id = attrs.getValue(idName);
+        if (TextUtils.isEmpty(id)) {
+            idName = "aztec_id";
+            id = attrs.getValue(idName);
+        }
+
+        tappedImagePredicate = ImagePredicate.genericPredicate(idName, id);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
