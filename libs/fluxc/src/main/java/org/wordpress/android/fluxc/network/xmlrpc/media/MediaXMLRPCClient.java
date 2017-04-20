@@ -215,7 +215,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     private void removeCallFromCurrentUploadsMap(int id) {
         // clean from the current uploads map
         mCurrentUploadCalls.remove(id);
-        AppLog.d(T.MEDIA, "mediaXMLRPCClient: removed id: " +  id + " from current"
+        AppLog.d(T.MEDIA, "mediaXMLRPCClient: removed id: " + id + " from current"
                 + " uploads, remaining: "
                 + mCurrentUploadCalls.size());
     }
