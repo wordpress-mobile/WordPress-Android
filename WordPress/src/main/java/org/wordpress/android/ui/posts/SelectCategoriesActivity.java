@@ -174,6 +174,10 @@ public class SelectCategoriesActivity extends AppCompatActivity {
             switch (requestCode) {
                 case ACTIVITY_REQUEST_CODE_ADD_CATEGORY:
                     if (resultCode == RESULT_OK) {
+                        if (!NetworkUtils.checkConnection(this)) {
+                            mEmptyView.setText(R.string.no_network_title);
+                            break;
+                        }
                         TermModel newCategory = (TermModel) extras.getSerializable(AddCategoryActivity.KEY_CATEGORY);
 
                         // Save selected categories
