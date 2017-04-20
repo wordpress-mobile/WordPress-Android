@@ -170,6 +170,16 @@ public class PostStore extends Store {
         }
     }
 
+    public static class OnPostsSearched extends OnChanged<PostError> {
+        public String searchTerm;
+        public PostsModel searchResults;
+
+        public OnPostsSearched(String searchTerm, PostsModel searchResults) {
+            this.searchTerm = searchTerm;
+            this.searchResults = searchResults;
+        }
+    }
+
     public enum PostErrorType {
         UNKNOWN_POST,
         UNKNOWN_POST_TYPE,
@@ -447,7 +457,17 @@ public class PostStore extends Store {
     }
 
     private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
-        // TODO
+        OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, payload.posts);
+
+        if (payload.isError()) {
+            onPostsSearched.error = payload.error;
+        } else if (payload.posts.getPosts() != null && payload.posts.getPosts().size() > 0) {
+            for (PostModel post : payload.posts.getPosts()) {
+                PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
+            }
+        }
+
+        emitChange(onPostsSearched);
     }
 
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
