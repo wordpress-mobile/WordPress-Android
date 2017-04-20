@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -20,13 +23,16 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+    public static final String EXTRA_SEARCH_TERM = "searchTerm";
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
     private SiteModel mSite;
+
+    private String mCurrentSearch;
 
     @Inject SiteStore mSiteStore;
 
@@ -35,13 +41,23 @@ public class PostsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        // init
+        unpackIntent(getIntent());
+        if (savedInstanceState != null) {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+
+        // need a Site to continue
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
+        // set layout and init toolbar
         setContentView(R.layout.post_list_activity);
 
-        mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
@@ -49,20 +65,8 @@ public class PostsListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FragmentManager fm = getFragmentManager();
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
+        mPostList = getPostListFragment();
 
-        if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            finish();
-            return;
-        }
-
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         showErrorDialogIfNeeded(getIntent().getExtras());
     }
 
@@ -110,6 +114,35 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // don't add search for self-hosted sites
+        if (!mSite.isWPCom()) {
+            return true;
+        }
+
+        getMenuInflater().inflate(R.menu.posts_list, menu);
+
+        MenuItem searchAction = menu.findItem(R.id.search_posts_list);
+        if (searchAction != null && searchAction.getActionView() != null) {
+            MenuItemCompat.setOnActionExpandListener(searchAction, new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                    getSupportActionBar().setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+                    return true;
+                }
+            });
+            ((SearchView) searchAction.getActionView()).setOnQueryTextListener(this);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -122,5 +155,40 @@ public class PostsListActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        if (!TextUtils.isEmpty(mCurrentSearch)) {
+            outState.putString(EXTRA_SEARCH_TERM, mCurrentSearch);
+        }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        getSupportActionBar().setTitle("Searching for " + query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        mPostList.filterPosts(query);
+        return false;
+    }
+
+    private PostsListFragment getPostListFragment() {
+        PostsListFragment frag = (PostsListFragment) getFragmentManager().findFragmentById(R.id.postList);
+        if (frag == null) {
+            frag = PostsListFragment.newInstance(mSite);
+        }
+        return frag;
+    }
+
+    private void unpackIntent(@NonNull Intent intent) {
+        if (intent.hasExtra(WordPress.SITE)) {
+            mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+        }
+        if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
+            mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+        }
+        if (intent.hasExtra(EXTRA_SEARCH_TERM)) {
+            mCurrentSearch = intent.getStringExtra(EXTRA_SEARCH_TERM);
+        }
     }
 }
