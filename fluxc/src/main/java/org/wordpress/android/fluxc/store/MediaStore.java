@@ -193,6 +193,7 @@ public class MediaStore extends Store {
         PARSE_ERROR,
         NOT_AUTHENTICATED,
         REQUEST_TOO_LARGE,
+        SERVER_ERROR,
 
         // logic constraints errors
         INVALID_ID,
@@ -210,6 +211,8 @@ public class MediaStore extends Store {
                     return MediaErrorType.AUTHORIZATION_REQUIRED;
                 case PARSE_ERROR:
                     return MediaErrorType.PARSE_ERROR;
+                case SERVER_ERROR:
+                    return MediaErrorType.SERVER_ERROR;
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
@@ -223,6 +226,8 @@ public class MediaStore extends Store {
                     return MediaErrorType.NOT_AUTHENTICATED;
                 case 413:
                     return MediaErrorType.REQUEST_TOO_LARGE;
+                case 500:
+                    return MediaErrorType.SERVER_ERROR;
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
