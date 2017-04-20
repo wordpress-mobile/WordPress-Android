@@ -370,7 +370,7 @@ public class PostStore extends Store {
             case SEARCH_POSTS:
                 searchPosts((SearchPostsPayload) action.getPayload(), false);
                 break;
-            case SEARCHED_POST:
+            case SEARCHED_POSTS:
                 handleSearchPostsCompleted((SearchPostsResponsePayload) action.getPayload());
                 break;
         }

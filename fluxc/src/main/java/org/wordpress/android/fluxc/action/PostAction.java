@@ -37,7 +37,7 @@ public enum PostAction implements IAction {
     @Action(payloadType = RemotePostPayload.class)
     DELETED_POST,
     @Action(payloadType = SearchPostsResponsePayload.class)
-    SEARCHED_POST,
+    SEARCHED_POSTS,
 
     // Local actions
     @Action(payloadType = PostModel.class)
