@@ -278,7 +278,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     public void searchPosts(final SiteModel site, final String searchTerm) {
         SearchPostsResponsePayload payload = new SearchPostsResponsePayload(null, site, searchTerm, false, false);
         payload.error = new PostError(PostErrorType.UNSUPPORTED_ACTION, "Search only supported on .com/Jetpack sites");
-        mDispatcher.dispatch(PostActionBuilder.newSearchedPostAction(payload));
+        mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
     }
 
     private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site, boolean isPage) {

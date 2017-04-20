@@ -247,7 +247,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
                         SearchPostsResponsePayload payload =
                             new SearchPostsResponsePayload(postsModel, site, searchTerm, loadedMore, canLoadMore);
-                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostAction(payload));
+                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -256,7 +256,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         SearchPostsResponsePayload payload =
                             new SearchPostsResponsePayload(null, site, searchTerm, false, false);
                         payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
-                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostAction(payload));
+                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
                     }
                 }
         );
