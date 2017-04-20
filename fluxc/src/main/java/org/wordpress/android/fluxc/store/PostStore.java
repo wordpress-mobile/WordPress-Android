@@ -408,6 +408,7 @@ public class PostStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mPostRestClient.searchPosts(payload.site, payload.searchTerm);
         } else {
+            // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.searchPosts(payload.site, payload.searchTerm);
         }
     }
