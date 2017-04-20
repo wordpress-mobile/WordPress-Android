@@ -311,6 +311,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setLoginUrl(from.options.login_url);
             site.setTimezone(from.options.gmt_offset);
             site.setFrameNonce(from.options.frame_nonce);
+            site.setUnMappedUrl(from.options.unmapped_url);
         }
         if (from.plan != null) {
             try {
