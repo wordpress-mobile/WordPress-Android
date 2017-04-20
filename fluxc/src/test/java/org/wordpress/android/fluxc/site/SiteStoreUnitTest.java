@@ -308,7 +308,7 @@ public class SiteStoreUnitTest {
         int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
         assertEquals(1, sitesCount);
 
-        List<SiteModel> wpComSites  = SiteSqlUtils.getWPComSites().getAsModel();
+        List<SiteModel> wpComSites = SiteSqlUtils.getWPComSites().getAsModel();
         assertEquals(0, wpComSites.size());
         assertEquals(1, SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount());
         List<SiteModel> jetpackSites =

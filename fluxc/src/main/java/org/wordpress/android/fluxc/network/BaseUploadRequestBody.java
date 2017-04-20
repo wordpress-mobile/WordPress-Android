@@ -64,7 +64,7 @@ public abstract class BaseUploadRequestBody extends RequestBody {
         return null;
     }
 
-    private final MediaModel       mMedia;
+    private final MediaModel mMedia;
     private final ProgressListener mListener;
 
     public BaseUploadRequestBody(MediaModel media, ProgressListener listener) {

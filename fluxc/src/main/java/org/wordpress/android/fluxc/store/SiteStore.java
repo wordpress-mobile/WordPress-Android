@@ -550,7 +550,7 @@ public class SiteStore extends Store {
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     public int getLocalIdForRemoteSiteId(long siteId) {
-        List<SiteModel> sites =  WellSql.select(SiteModel.class)
+        List<SiteModel> sites = WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
                 .or()
@@ -574,7 +574,7 @@ public class SiteStore extends Store {
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
     public int getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
-        List<SiteModel> sites =  WellSql.select(SiteModel.class)
+        List<SiteModel> sites = WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
                 .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
@@ -598,7 +598,7 @@ public class SiteStore extends Store {
      * sites.
      */
     public long getSiteIdForLocalId(int id) {
-        List<SiteModel> result =  WellSql.select(SiteModel.class)
+        List<SiteModel> result = WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, id)
                 .endGroup().endWhere()
