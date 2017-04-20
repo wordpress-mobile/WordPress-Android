@@ -193,7 +193,8 @@ public class MediaStore extends Store {
         PARSE_ERROR,
         NOT_AUTHENTICATED,
         REQUEST_TOO_LARGE,
-        SERVER_ERROR,
+        SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
+        TIMEOUT,
 
         // logic constraints errors
         INVALID_ID,
@@ -213,6 +214,8 @@ public class MediaStore extends Store {
                     return MediaErrorType.PARSE_ERROR;
                 case SERVER_ERROR:
                     return MediaErrorType.SERVER_ERROR;
+                case TIMEOUT:
+                    return MediaErrorType.TIMEOUT;
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }

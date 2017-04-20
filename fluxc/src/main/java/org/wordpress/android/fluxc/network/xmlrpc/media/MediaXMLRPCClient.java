@@ -217,6 +217,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
         mediaError.message = e.getLocalizedMessage();
 
+        if (e instanceof java.net.SocketTimeoutException) {
+            mediaError.type = MediaErrorType.TIMEOUT;
+        }
+
         String errorMessage = e.getMessage();
         if (TextUtils.isEmpty(errorMessage)) {
             return mediaError;
