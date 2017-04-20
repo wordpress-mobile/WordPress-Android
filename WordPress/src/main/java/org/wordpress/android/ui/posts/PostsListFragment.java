@@ -120,7 +120,6 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
-
         super.onDestroy();
     }
 
@@ -476,6 +475,8 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         if (!TextUtils.isEmpty(searchTerm)) {
             PostStore.SearchPostsPayload payload = new PostStore.SearchPostsPayload(mSite, searchTerm);
             mDispatcher.dispatch(PostActionBuilder.newSearchPostsAction(payload));
+        } else {
+            mRecyclerView.setAdapter(getPostListAdapter());
         }
     }
 
