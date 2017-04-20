@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -221,7 +222,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             return mediaError;
         }
 
-        errorMessage =  errorMessage.toLowerCase();
+        errorMessage =  errorMessage.toLowerCase(Locale.US);
         if (errorMessage.contains("broken pipe") || errorMessage.contains("epipe")) {
             // do not use the real error message.
             mediaError.message = "";
