@@ -9,9 +9,9 @@ public class MediaUtils {
     // MIME types
     //
 
-    public static final String MIME_TYPE_IMAGE       = "image/";
-    public static final String MIME_TYPE_VIDEO       = "video/";
-    public static final String MIME_TYPE_AUDIO       = "audio/";
+    public static final String MIME_TYPE_IMAGE = "image/";
+    public static final String MIME_TYPE_VIDEO = "video/";
+    public static final String MIME_TYPE_AUDIO = "audio/";
     public static final String MIME_TYPE_APPLICATION = "application/";
 
     // ref https://en.support.wordpress.com/accepted-filetypes/

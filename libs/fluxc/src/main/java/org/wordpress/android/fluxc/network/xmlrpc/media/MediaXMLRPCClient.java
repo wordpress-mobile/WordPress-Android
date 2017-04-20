@@ -443,10 +443,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (exception instanceof XMLRPCFault) {
             switch (((XMLRPCFault) exception).getFaultCode()) {
                 case 404:
-                    mediaError.type =  MediaErrorType.NOT_FOUND;
+                    mediaError.type = MediaErrorType.NOT_FOUND;
                     break;
                 case 403:
-                    mediaError.type =  MediaErrorType.NOT_AUTHENTICATED;
+                    mediaError.type = MediaErrorType.NOT_AUTHENTICATED;
                     break;
             }
         }
