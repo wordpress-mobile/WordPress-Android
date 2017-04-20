@@ -42,7 +42,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 6;
+        return 7;
     }
 
     @Override
@@ -83,6 +83,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 5:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add HAS_FREE_PLAN boolean;");
+                oldVersion++;
+            case 6:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add UN_MAPPED_URL text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
