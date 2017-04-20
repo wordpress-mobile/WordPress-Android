@@ -7,7 +7,7 @@ public class DomainSuggestionResponse implements Response {
     public String domain_name;
     public boolean is_free;
 
-    public int product_id;
+    public String product_id;
     public String product_slug;
     public float relevance;
 }
