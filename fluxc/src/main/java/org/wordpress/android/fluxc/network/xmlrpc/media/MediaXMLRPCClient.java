@@ -214,9 +214,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     private MediaError parseUploadError(IOException e) {
         MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+        mediaError.message = e.getLocalizedMessage();
+
         String errorMessage = e.getMessage();
         if (TextUtils.isEmpty(errorMessage)) {
-            mediaError.message = e.getLocalizedMessage();
             return mediaError;
         }
 
