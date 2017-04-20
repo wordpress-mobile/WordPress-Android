@@ -202,9 +202,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!media.isUploadCancelled()) {
-                    // TODO it would be great to raise some more fine grained errors here, for
-                    // instance timeouts should be raised instead of GENERIC_ERROR
-                    MediaStore.MediaError error = parseUploadError(e);
+                    MediaStore.MediaError error = MediaError.fromIOException(e);
                     notifyMediaUploaded(media, error);
                 }
                 // clean from the current uploads map
@@ -213,27 +211,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         });
     }
 
-    private MediaError parseUploadError(IOException e) {
-        MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
-        mediaError.message = e.getLocalizedMessage();
 
-        if (e instanceof java.net.SocketTimeoutException) {
-            mediaError.type = MediaErrorType.TIMEOUT;
-        }
-
-        String errorMessage = e.getMessage();
-        if (TextUtils.isEmpty(errorMessage)) {
-            return mediaError;
-        }
-
-        errorMessage =  errorMessage.toLowerCase(Locale.US);
-        if (errorMessage.contains("broken pipe") || errorMessage.contains("epipe")) {
-            // do not use the real error message.
-            mediaError.message = "";
-        }
-
-        return mediaError;
-    }
 
     private void removeCallFromCurrentUploadsMap(int id) {
         // clean from the current uploads map

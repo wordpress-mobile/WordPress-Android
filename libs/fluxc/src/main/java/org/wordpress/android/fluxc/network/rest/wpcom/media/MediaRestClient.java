@@ -328,8 +328,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 if (!media.isUploadCancelled()) {
                     // TODO it would be great to raise some more fine grained errors here, for
                     // instance timeouts should be raised instead of GENERIC_ERROR
-                    MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                    error.message = e.getLocalizedMessage();
+                    MediaStore.MediaError error = MediaError.fromIOException(e);
                     notifyMediaUploaded(media, error);
                 }
                 // clean from the current uploads map
@@ -343,11 +342,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
 
     private MediaError parseUploadError(okhttp3.Response response) {
-        MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
-        if (response.code() == 403) {
-            mediaError.type = MediaErrorType.AUTHORIZATION_REQUIRED;
-        } else if (response.code() == 413) {
-            mediaError.type = MediaErrorType.REQUEST_TOO_LARGE;
+        MediaError mediaError = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
+
+        if (mediaError.type == MediaErrorType.REQUEST_TOO_LARGE) {
             mediaError.message = response.message();
             return mediaError;
         }
