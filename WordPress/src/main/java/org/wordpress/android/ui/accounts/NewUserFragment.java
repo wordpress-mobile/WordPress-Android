@@ -55,6 +55,7 @@ import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UserEmailUtils;
+import org.wordpress.android.util.WPLowerCaseTextWatcher;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker2.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
@@ -515,6 +516,7 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
 
         mEmailTextField.addTextChangedListener(this);
+        mEmailTextField.addTextChangedListener(new WPLowerCaseTextWatcher());
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
         mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);

@@ -30,6 +30,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPLowerCaseTextWatcher;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +64,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mWebAddressPreference = (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_web_address));
 
         mEmailPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mEmailPreference.getEditText().addTextChangedListener(new WPLowerCaseTextWatcher());
         mEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
         mWebAddressPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
