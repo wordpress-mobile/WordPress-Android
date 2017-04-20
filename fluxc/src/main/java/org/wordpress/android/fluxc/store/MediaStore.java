@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.WellCursor;
@@ -22,8 +23,10 @@ import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -128,6 +131,28 @@ public class MediaStore extends Store {
         public MediaError(MediaErrorType type, String message) {
             this.type = type;
             this.message = message;
+        }
+
+        public static MediaError fromIOException(IOException e) {
+            MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+            mediaError.message = e.getLocalizedMessage();
+
+            if (e instanceof java.net.SocketTimeoutException) {
+                mediaError.type = MediaErrorType.TIMEOUT;
+            }
+
+            String errorMessage = e.getMessage();
+            if (TextUtils.isEmpty(errorMessage)) {
+                return mediaError;
+            }
+
+            errorMessage =  errorMessage.toLowerCase(Locale.US);
+            if (errorMessage.contains("broken pipe") || errorMessage.contains("epipe")) {
+                // do not use the real error message.
+                mediaError.message = "";
+            }
+
+            return mediaError;
         }
     }
 
