@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResp
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.SearchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
@@ -216,6 +217,42 @@ public class PostRestClient extends BaseWPComRestClient {
     }
 
     public void searchPosts(final SiteModel site, final String searchTerm) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
+
+        Map<String, String> params = new HashMap<>();
+
+        params.put("search", searchTerm);
+
+        final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PostsResponse.class,
+                new Listener<PostsResponse>() {
+                    @Override
+                    public void onResponse(PostsResponse response) {
+                        List<PostModel> postArray = new ArrayList<>();
+                        PostModel post;
+                        for (PostWPComRestResponse postResponse : response.posts) {
+                            post = postResponseToPostModel(postResponse);
+                            post.setLocalSiteId(site.getId());
+                            postArray.add(post);
+                        }
+
+                        SearchPostsResponsePayload payload =
+                            new SearchPostsResponsePayload(new PostsModel(postArray), site, searchTerm, false, false);
+                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SearchPostsResponsePayload payload =
+                            new SearchPostsResponsePayload(null, site, searchTerm, false, false);
+                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostAction(payload));
+                    }
+                }
+        );
+
+        add(request);
     }
 
     private PostModel postResponseToPostModel(PostWPComRestResponse from) {
