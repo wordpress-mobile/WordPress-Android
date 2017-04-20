@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.OnPostsSearched;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -470,6 +472,24 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         }
     }
 
+    public void filterPosts(String searchTerm) {
+        if (!TextUtils.isEmpty(searchTerm)) {
+            PostStore.SearchPostsPayload payload = new PostStore.SearchPostsPayload(mSite, searchTerm);
+            mDispatcher.dispatch(PostActionBuilder.newSearchPostsAction(payload));
+        }
+    }
+
+    private void updateAdapter(List<PostModel> posts) {
+        if (posts == null && posts.isEmpty()) {
+            mRecyclerView.setAdapter(null);
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
+        PostsListAdapter adapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+        adapter.setPosts(posts);
+        mRecyclerView.setAdapter(adapter);
+        hideEmptyView();
+    }
+
     private void publishPost(final PostModel post) {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
@@ -618,6 +638,18 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostsSearched(OnPostsSearched event) {
+        if (event.isError()) {
+            ToastUtils.showToast(getActivity(), "Error searching posts: " + event.error.type);
+            return;
+        }
+
+        List<PostModel> results = event.searchResults == null ? null : event.searchResults.getPosts();
+        updateAdapter(results);
     }
 
     /*
