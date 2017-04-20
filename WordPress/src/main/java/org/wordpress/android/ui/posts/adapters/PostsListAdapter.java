@@ -179,10 +179,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return;
         }
 
-        final PostModel post = mPosts.get(position);
+        final PostModel post = getItem(position);
         Context context = holder.itemView.getContext();
 
-        if (holder instanceof PostViewHolder) {
+        if (post != null && holder instanceof PostViewHolder) {
             PostViewHolder postHolder = (PostViewHolder) holder;
 
             if (StringUtils.isNotEmpty(post.getTitle())) {
