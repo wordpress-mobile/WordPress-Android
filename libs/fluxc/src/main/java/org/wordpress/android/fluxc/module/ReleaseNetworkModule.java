@@ -120,19 +120,19 @@ public class ReleaseNetworkModule {
     @Provides
     public MediaRestClient provideMediaRestClient(Context appContext, Dispatcher dispatcher,
                                                   @Named("regular") RequestQueue requestQueue,
-                                                  @Named("regular") OkHttpClient.Builder okHttpClientBuilder,
+                                                  @Named("regular") OkHttpClient okHttpClient,
                                                   AccessToken token, UserAgent userAgent) {
-        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClientBuilder, token, userAgent);
+        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClient, token, userAgent);
     }
 
     @Singleton
     @Provides
     public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher,
                                                       @Named("custom-ssl") RequestQueue requestQueue,
-                                                      @Named("custom-ssl") OkHttpClient.Builder okHttpClientBuilder,
+                                                      @Named("custom-ssl") OkHttpClient okHttpClient,
                                                       AccessToken token, UserAgent userAgent,
                                                       HTTPAuthManager httpAuthManager) {
-        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClientBuilder, token, userAgent, httpAuthManager);
+        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClient, token, userAgent, httpAuthManager);
     }
 
     @Singleton
