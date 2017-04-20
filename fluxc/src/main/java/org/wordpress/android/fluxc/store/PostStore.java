@@ -170,6 +170,7 @@ public class PostStore extends Store {
     public enum PostErrorType {
         UNKNOWN_POST,
         UNKNOWN_POST_TYPE,
+        UNSUPPORTED_ACTION,
         UNAUTHORIZED,
         INVALID_RESPONSE,
         GENERIC_ERROR;
@@ -394,7 +395,7 @@ public class PostStore extends Store {
         if (payload.site.isUsingWpComRestApi()) {
             mPostRestClient.searchPosts(payload.site, payload.searchTerm);
         } else {
-            // TODO: emit error, only REST API supported
+            mPostXMLRPCClient.searchPosts(payload.site, payload.searchTerm);
         }
     }
 
