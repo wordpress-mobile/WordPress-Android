@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.fluxc.store.PostStore.SearchPostsResponsePayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -272,6 +273,12 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         request.disableRetries();
         add(request);
+    }
+
+    public void searchPosts(final SiteModel site, final String searchTerm) {
+        SearchPostsResponsePayload payload = new SearchPostsResponsePayload(null, site, false, false);
+        payload.error = new PostError(PostErrorType.UNSUPPORTED_ACTION, "Search only supported on .com/Jetpack sites");
+        mDispatcher.dispatch(PostActionBuilder.newSearchedPostAction(payload));
     }
 
     private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site, boolean isPage) {
