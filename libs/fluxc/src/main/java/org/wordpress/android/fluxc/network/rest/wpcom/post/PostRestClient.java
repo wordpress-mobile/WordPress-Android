@@ -216,11 +216,16 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void searchPosts(final SiteModel site, final String searchTerm) {
+    public void searchPosts(final SiteModel site, final String searchTerm, final boolean pages, final int offset) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
 
+        if (pages) {
+            params.put("type", "page");
+        }
+        params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
+        params.put("offset", String.valueOf(offset));
         params.put("search", searchTerm);
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
@@ -236,8 +241,12 @@ public class PostRestClient extends BaseWPComRestClient {
                             postArray.add(post);
                         }
 
+                        boolean loadedMore = offset > 0;
+                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
+                        PostsModel postsModel = new PostsModel(postArray);
+
                         SearchPostsResponsePayload payload =
-                            new SearchPostsResponsePayload(new PostsModel(postArray), site, searchTerm, false, false);
+                            new SearchPostsResponsePayload(postsModel, site, searchTerm, loadedMore, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newSearchedPostAction(payload));
                     }
                 },

@@ -56,15 +56,17 @@ public class PostStore extends Store {
 
     public static class SearchPostsPayload extends FetchPostsPayload {
         public String searchTerm;
+        public int offset;
 
         public SearchPostsPayload(SiteModel site, String searchTerm) {
             super(site);
             this.searchTerm = searchTerm;
         }
 
-        public SearchPostsPayload(SiteModel site, String searchTerm, boolean loadMore) {
-            super(site, loadMore);
+        public SearchPostsPayload(SiteModel site, String searchTerm, int offset) {
+            super(site);
             this.searchTerm = searchTerm;
+            this.offset = offset;
         }
     }
 
@@ -173,10 +175,12 @@ public class PostStore extends Store {
     public static class OnPostsSearched extends OnChanged<PostError> {
         public String searchTerm;
         public PostsModel searchResults;
+        public boolean canLoadMore;
 
-        public OnPostsSearched(String searchTerm, PostsModel searchResults) {
+        public OnPostsSearched(String searchTerm, PostsModel searchResults, boolean canLoadMore) {
             this.searchTerm = searchTerm;
             this.searchResults = searchResults;
+            this.canLoadMore = canLoadMore;
         }
     }
 
@@ -364,7 +368,7 @@ public class PostStore extends Store {
                 removeAllPosts();
                 break;
             case SEARCH_POSTS:
-                searchPosts((SearchPostsPayload) action.getPayload());
+                searchPosts((SearchPostsPayload) action.getPayload(), false);
                 break;
             case SEARCHED_POST:
                 handleSearchPostsCompleted((SearchPostsResponsePayload) action.getPayload());
@@ -404,9 +408,9 @@ public class PostStore extends Store {
         }
     }
 
-    private void searchPosts(SearchPostsPayload payload) {
+    private void searchPosts(SearchPostsPayload payload, boolean pages) {
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.searchPosts(payload.site, payload.searchTerm);
+            mPostRestClient.searchPosts(payload.site, payload.searchTerm, pages, payload.offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.searchPosts(payload.site, payload.searchTerm);
@@ -458,7 +462,7 @@ public class PostStore extends Store {
     }
 
     private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
-        OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, payload.posts);
+        OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, payload.posts, payload.canLoadMore);
 
         if (payload.isError()) {
             onPostsSearched.error = payload.error;
