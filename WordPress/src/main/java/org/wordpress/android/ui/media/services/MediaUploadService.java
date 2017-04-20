@@ -310,7 +310,7 @@ public class MediaUploadService extends Service {
     public void onMediaUploaded(OnMediaUploaded event) {
         // event for unknown media, ignoring
         if (event.media == null) {
-            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);
+            AppLog.w(AppLog.T.MEDIA, "Received media event for null media, ignoring");
             return;
         }
 
