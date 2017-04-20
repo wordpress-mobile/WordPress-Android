@@ -311,7 +311,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                     // clean from the current uploads map
                     mCurrentUploadCalls.remove(media.getId());
-                    AppLog.d(T.MEDIA, "mediaRestClient: removed id: " +  media.getId() + " from current"
+                    AppLog.d(T.MEDIA, "mediaRestClient: removed id: " + media.getId() + " from current"
                             + " uploads, remaining: "
                             + mCurrentUploadCalls.size());
                 } else {
