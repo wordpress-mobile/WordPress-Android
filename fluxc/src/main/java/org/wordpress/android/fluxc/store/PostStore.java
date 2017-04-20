@@ -72,12 +72,15 @@ public class PostStore extends Store {
         public PostError error;
         public PostsModel posts;
         public SiteModel site;
+        public String searchTerm;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, boolean loadedMore, boolean canLoadMore) {
+        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, String searchTerm,
+                                          boolean loadedMore, boolean canLoadMore) {
             this.posts = posts;
             this.site = site;
+            this.searchTerm = searchTerm;
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
         }
