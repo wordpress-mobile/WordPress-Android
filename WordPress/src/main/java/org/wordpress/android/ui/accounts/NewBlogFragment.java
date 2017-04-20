@@ -311,7 +311,6 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         @Override
         public void afterTextChanged(Editable s) {
             mSiteUrlSuggestionAdapter.clear();
-            mSiteUrlSuggestionAdapter.notifyDataSetInvalidated();
         }
     };
 
@@ -383,20 +382,13 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlSuggestionAdapter.clear();
         for (DomainSuggestionResponse suggestion : event.suggestions) {
             // Only add free suggestions ending by .wordpress.com
-            if (suggestion.is_free && suggestion.domain_name.endsWith(".wordpress.com")) {
+            if (suggestion.is_free && !TextUtils.isEmpty(suggestion.domain_name)
+                    && suggestion.domain_name.endsWith(".wordpress.com")) {
                 mSiteUrlSuggestionAdapter.add(suggestion.domain_name.replace(".wordpress.com", ""));
             }
         }
-        mSiteUrlSuggestionAdapter.notifyDataSetInvalidated();
         if (!mSiteUrlSuggestionAdapter.isEmpty() && mSiteUrlTextField.hasFocus()) {
-            // Sad workaround to show the drop down, the dropdown is hidden via a posted runnable when previous
-            // adapter modifiers are called (clear and add). We could eventually subclass AutoCompleteTextView.
-            mSiteUrlTextField.post(new Runnable() {
-                @Override
-                public void run() {
-                    mSiteUrlTextField.showDropDown();
-                }
-            });
+            mSiteUrlTextField.showDropDown();
         }
     }
 }
