@@ -85,34 +85,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         }
     }
 
-    /**
-     * intent extras will contain error info if this activity was started from an
-     * upload error notification
-     */
-    private void showErrorDialogIfNeeded(Bundle extras) {
-        if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
-            return;
-        }
-
-        final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-
-        if (TextUtils.isEmpty(errorMessage)) {
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getText(R.string.error))
-               .setMessage(errorMessage)
-               .setPositiveButton(R.string.ok, null)
-               .setCancelable(true);
-
-        builder.create().show();
-    }
-
-    public boolean isRefreshing() {
-        return mPostList.isRefreshing();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // don't add search for self-hosted sites
@@ -172,6 +144,10 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         return false;
     }
 
+    public boolean isRefreshing() {
+        return mPostList.isRefreshing();
+    }
+
     private PostsListFragment getPostListFragment() {
         PostsListFragment frag = (PostsListFragment) getFragmentManager().findFragmentById(R.id.postList);
         if (frag == null) {
@@ -190,5 +166,29 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         if (intent.hasExtra(EXTRA_SEARCH_TERM)) {
             mCurrentSearch = intent.getStringExtra(EXTRA_SEARCH_TERM);
         }
+    }
+
+    /**
+     * intent extras will contain error info if this activity was started from an
+     * upload error notification
+     */
+    private void showErrorDialogIfNeeded(Bundle extras) {
+        if (extras == null || !extras.containsKey(EXTRA_ERROR_MSG) || isFinishing()) {
+            return;
+        }
+
+        final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
+
+        if (TextUtils.isEmpty(errorMessage)) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getText(R.string.error))
+                .setMessage(errorMessage)
+                .setPositiveButton(R.string.ok, null)
+                .setCancelable(true);
+
+        builder.create().show();
     }
 }
