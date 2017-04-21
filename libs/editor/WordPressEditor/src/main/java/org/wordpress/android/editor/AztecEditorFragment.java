@@ -433,7 +433,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return "";
         }
 
-        return content.toHtml(false);
+        if (content.getVisibility() == View.VISIBLE) {
+            return content.toHtml(false);
+        } else {
+            return source.getPureHtml(false);
+        }
     }
 
     @Override
