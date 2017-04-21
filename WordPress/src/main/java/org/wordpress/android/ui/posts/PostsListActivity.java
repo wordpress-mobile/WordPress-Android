@@ -32,6 +32,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     private PostsListFragment mPostList;
     private SiteModel mSite;
 
+    private MenuItem mSearchAction;
     private String mCurrentSearch;
 
     @Inject SiteStore mSiteStore;
@@ -94,9 +95,9 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
         getMenuInflater().inflate(R.menu.posts_list, menu);
 
-        MenuItem searchAction = menu.findItem(R.id.search_posts_list);
-        if (searchAction != null && searchAction.getActionView() != null) {
-            MenuItemCompat.setOnActionExpandListener(searchAction, new MenuItemCompat.OnActionExpandListener() {
+        mSearchAction = menu.findItem(R.id.search_posts_list);
+        if (mSearchAction != null && mSearchAction.getActionView() != null) {
+            MenuItemCompat.setOnActionExpandListener(mSearchAction, new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem menuItem) {
                     return true;
@@ -108,7 +109,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
                     return true;
                 }
             });
-            ((SearchView) searchAction.getActionView()).setOnQueryTextListener(this);
+            ((SearchView) mSearchAction.getActionView()).setOnQueryTextListener(this);
         }
 
         return true;
@@ -144,7 +145,10 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        getSupportActionBar().setTitle("Searching for " + query);
+        if (mSearchAction != null) {
+            mSearchAction.collapseActionView();
+        }
+        setTitle("'" + query + "'");
         return false;
     }
 
