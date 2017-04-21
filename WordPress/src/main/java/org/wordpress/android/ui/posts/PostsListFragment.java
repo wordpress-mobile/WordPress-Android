@@ -77,7 +77,6 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     private TextView mEmptyViewTitle;
     private ImageView mEmptyViewImage;
 
-    private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
@@ -404,41 +403,6 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     }
 
     /*
-     * called by the adapter after posts have been loaded
-     */
-    public void onPostsLoaded(int postCount) {
-        if (!isAdded()) {
-            return;
-        }
-
-        if (postCount == 0 && !mIsFetchingPosts) {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-            } else {
-                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            }
-        } else if (postCount > 0) {
-            hideEmptyView();
-        }
-    }
-
-    /*
-     * called by the adapter to load more posts when the user scrolls towards the last post
-     */
-    public void onLoadMore() {
-        if (mCanLoadMorePosts && !mIsFetchingPosts) {
-            requestPosts(true);
-        }
-    }
-
-    /*
-     * called by the adapter when the user clicks a post
-     */
-    public void onPostSelected(PostModel post) {
-        onPostButtonClicked(PostListButton.BUTTON_EDIT, post);
-    }
-
-    /*
      * called by the adapter when the user clicks the edit/view/stats/trash button for a post
      */
     @Override
@@ -486,9 +450,10 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     }
 
     private void updateAdapter(List<PostModel> posts) {
-        if (posts == null && posts.isEmpty()) {
+        if (posts == null || posts.isEmpty()) {
             mRecyclerView.setAdapter(null);
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            return;
         }
         PostsListAdapter adapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
         adapter.setPosts(posts);
@@ -614,7 +579,21 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
                 setRefreshing(false);
                 hideLoadMoreProgress();
                 if (!event.isError()) {
-                    mCanLoadMorePosts = event.canLoadMore;
+                    int count;
+                    if (mIsPage) {
+                        count = mPostStore.getPagesCountForSite(mSite);
+                    } else {
+                        count = mPostStore.getPostsCountForSite(mSite);
+                    }
+                    if (count > 0) {
+                        hideEmptyView();
+                    } else {
+                        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+                        } else {
+                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                        }
+                    }
                     loadPosts(LoadMode.IF_CHANGED);
                 } else {
                     PostError error = event.error;
