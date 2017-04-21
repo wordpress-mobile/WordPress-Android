@@ -60,7 +60,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -104,7 +104,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                    getSupportActionBar().setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+                    setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
                     return true;
                 }
             });
@@ -129,6 +129,16 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         outState.putSerializable(WordPress.SITE, mSite);
         if (!TextUtils.isEmpty(mCurrentSearch)) {
             outState.putString(EXTRA_SEARCH_TERM, mCurrentSearch);
+        }
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        } else {
+            super.setTitle(title);
         }
     }
 
