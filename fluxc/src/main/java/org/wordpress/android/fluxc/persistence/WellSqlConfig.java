@@ -86,7 +86,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 6:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table SiteModel add UN_MAPPED_URL text;");
+                db.execSQL("alter table SiteModel add UNMAPPED_URL text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
