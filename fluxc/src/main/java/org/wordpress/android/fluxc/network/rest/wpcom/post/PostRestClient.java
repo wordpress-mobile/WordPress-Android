@@ -245,8 +245,8 @@ public class PostRestClient extends BaseWPComRestClient {
                         boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
                         PostsModel postsModel = new PostsModel(postArray);
 
-                        SearchPostsResponsePayload payload =
-                            new SearchPostsResponsePayload(postsModel, site, searchTerm, loadedMore, canLoadMore);
+                        SearchPostsResponsePayload payload = new SearchPostsResponsePayload(
+                                postsModel, site, searchTerm, pages, loadedMore, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
                     }
                 },
@@ -255,7 +255,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         PostError postError = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
                         SearchPostsResponsePayload payload =
-                                new SearchPostsResponsePayload(site, searchTerm, postError);
+                                new SearchPostsResponsePayload(site, searchTerm, pages, postError);
                         mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
                     }
                 }

@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -76,21 +75,24 @@ public class PostStore extends Store {
         public PostsModel posts;
         public SiteModel site;
         public String searchTerm;
+        public boolean isPages;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, String searchTerm,
+        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, String searchTerm, boolean isPages,
                                           boolean loadedMore, boolean canLoadMore) {
             this.posts = posts;
             this.site = site;
             this.searchTerm = searchTerm;
+            this.isPages = isPages;
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
         }
 
-        public SearchPostsResponsePayload(SiteModel site, String searchTerm, PostError error) {
+        public SearchPostsResponsePayload(SiteModel site, String searchTerm, boolean isPages, PostError error) {
             this.site = site;
             this.searchTerm = searchTerm;
+            this.isPages = isPages;
             this.error = error;
         }
     }
