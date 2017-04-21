@@ -18,6 +18,7 @@ public class SiteWPComRestResponse extends Payload implements Response {
         public String login_url;
         public String gmt_offset;
         public String frame_nonce;
+        public String unmapped_url;
     }
 
     public class Plan {
