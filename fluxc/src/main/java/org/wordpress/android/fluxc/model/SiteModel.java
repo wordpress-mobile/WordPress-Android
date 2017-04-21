@@ -71,7 +71,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private String mPlanShortName;
     @Column private String mIconUrl;
     @Column private boolean mHasFreePlan;
-    @Column private String mUnMappedUrl;
+    @Column private String mUnmappedUrl;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -448,12 +448,12 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
         mHasFreePlan = hasFreePlan;
     }
 
-    public String getUnMappedUrl() {
-        return mUnMappedUrl;
+    public String getUnmappedUrl() {
+        return mUnmappedUrl;
     }
 
-    public void setUnMappedUrl(String unMappedUrl) {
-        mUnMappedUrl = unMappedUrl;
+    public void setUnmappedUrl(String unMappedUrl) {
+        mUnmappedUrl = unMappedUrl;
     }
 
     public boolean isJetpackInstalled() {
