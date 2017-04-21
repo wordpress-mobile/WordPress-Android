@@ -54,18 +54,18 @@ public class PostStore extends Store {
         }
     }
 
-    public static class SearchPostsPayload extends FetchPostsPayload {
+    public static class SearchPostsPayload extends Payload {
+        public SiteModel site;
         public String searchTerm;
         public int offset;
 
         public SearchPostsPayload(SiteModel site, String searchTerm) {
-            super(site);
+            this.site = site;
             this.searchTerm = searchTerm;
         }
 
         public SearchPostsPayload(SiteModel site, String searchTerm, int offset) {
-            super(site);
-            this.searchTerm = searchTerm;
+            this(site, searchTerm);
             this.offset = offset;
         }
     }
