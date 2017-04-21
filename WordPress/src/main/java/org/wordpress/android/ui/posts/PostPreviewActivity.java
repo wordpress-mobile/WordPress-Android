@@ -25,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -147,6 +148,17 @@ public class PostPreviewActivity extends AppCompatActivity {
                 fragment.setPost(mPost);
                 fragment.refreshPreview();
             }
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedState) {
+        super.onRestoreInstanceState(savedState);
+        if (savedState.containsKey(WordPress.SITE)) {
+            mSite = (SiteModel) savedState.getSerializable(WordPress.SITE);
+        }
+        if (savedState.containsKey(EXTRA_POST)) {
+            mPost = (PostModel) savedState.getSerializable(EXTRA_POST);
         }
     }
 
