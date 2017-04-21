@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -422,7 +423,11 @@ public class PostStore extends Store {
             mPostRestClient.searchPosts(payload.site, payload.searchTerm, pages, payload.offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.searchPosts(payload.site, payload.searchTerm);
+            PostError error =
+                    new PostError(PostErrorType.UNSUPPORTED_ACTION, "Search only supported on .com/Jetpack sites");
+            OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, null, false);
+            onPostsSearched.error = error;
+            emitChange(onPostsSearched);
         }
     }
 
