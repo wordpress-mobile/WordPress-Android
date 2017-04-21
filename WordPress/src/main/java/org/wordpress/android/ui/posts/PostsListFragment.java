@@ -492,6 +492,7 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         }
         PostsListAdapter adapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
         adapter.setPosts(posts);
+        adapter.setOnPostButtonClickListener(this);
         mRecyclerView.setAdapter(adapter);
         hideEmptyView();
     }
