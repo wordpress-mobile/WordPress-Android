@@ -253,9 +253,9 @@ public class PostRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        PostError postError = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
                         SearchPostsResponsePayload payload =
-                            new SearchPostsResponsePayload(null, site, searchTerm, false, false);
-                        payload.error = new PostError(((WPComGsonNetworkError) error).apiError, error.message);
+                                new SearchPostsResponsePayload(site, searchTerm, postError);
                         mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
                     }
                 }

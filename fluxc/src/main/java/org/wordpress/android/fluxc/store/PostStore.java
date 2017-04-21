@@ -86,6 +86,12 @@ public class PostStore extends Store {
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
         }
+
+        public SearchPostsResponsePayload(SiteModel site, String searchTerm, PostError error) {
+            this.site = site;
+            this.searchTerm = searchTerm;
+            this.error = error;
+        }
     }
 
     public static class FetchPostsResponsePayload extends Payload {
