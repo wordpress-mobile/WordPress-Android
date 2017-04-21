@@ -451,6 +451,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
+
+        if (mEditorFragment != null && mPost.hasEmptyContentFields()) {
+            // new and empty post? delete it
+            if (mIsNewPost) {
+                WordPress.wpDB.deletePost(mPost);
+            }
+        }
     }
 
     @Override
