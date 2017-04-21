@@ -37,6 +37,7 @@ import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * An adapter for the media gallery grid.
@@ -352,22 +353,26 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             imageView.setImageBitmap(bitmap);
         } else {
             imageView.setImageBitmap(null);
-            new BitmapWorkerTask(imageView, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
-                @Override
-                public void onBitmapReady(final String path, final ImageView imageView, final Bitmap bitmap) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            WordPress.getBitmapCache().put(path, bitmap);
-                            if (imageView != null
-                                    && imageView.getTag() instanceof String
-                                    && ((String)imageView.getTag()).equalsIgnoreCase(path)) {
-                                imageView.setImageBitmap(bitmap);
+            try {
+                new BitmapWorkerTask(imageView, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
+                    @Override
+                    public void onBitmapReady(final String path, final ImageView imageView, final Bitmap bitmap) {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                WordPress.getBitmapCache().put(path, bitmap);
+                                if (imageView != null
+                                        && imageView.getTag() instanceof String
+                                        && ((String) imageView.getTag()).equalsIgnoreCase(path)) {
+                                    imageView.setImageBitmap(bitmap);
+                                }
                             }
-                        }
-                    });
-                }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filePath);
+                        });
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filePath);
+            } catch (RejectedExecutionException e) {
+                AppLog.e(AppLog.T.MEDIA, e);
+            }
         }
     }
 
