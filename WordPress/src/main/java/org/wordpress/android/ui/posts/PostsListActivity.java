@@ -150,7 +150,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
     @Override
     public boolean onQueryTextChange(String query) {
-        mPostList.filterPosts(query);
+        mPostList.filterPosts(query, mIsPage);
         return false;
     }
 

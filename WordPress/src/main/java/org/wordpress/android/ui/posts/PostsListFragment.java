@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.SearchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
@@ -471,10 +472,14 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         }
     }
 
-    public void filterPosts(String searchTerm) {
+    public void filterPosts(String searchTerm, boolean pages) {
         if (!TextUtils.isEmpty(searchTerm)) {
-            PostStore.SearchPostsPayload payload = new PostStore.SearchPostsPayload(mSite, searchTerm);
-            mDispatcher.dispatch(PostActionBuilder.newSearchPostsAction(payload));
+            SearchPostsPayload payload = new SearchPostsPayload(mSite, searchTerm);
+            if (pages) {
+                mDispatcher.dispatch(PostActionBuilder.newSearchPagesAction(payload));
+            } else {
+                mDispatcher.dispatch(PostActionBuilder.newSearchPostsAction(payload));
+            }
         } else {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
