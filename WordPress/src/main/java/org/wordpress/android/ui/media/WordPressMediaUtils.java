@@ -152,7 +152,7 @@ public class WordPressMediaUtils {
 
         // make sure the directory we plan to store the recording in exists
         File directory = new File(mediaCapturePath).getParentFile();
-        if (directory == null | (!directory.exists() && !directory.mkdirs())) {
+        if (directory == null || (!directory.exists() && !directory.mkdirs())) {
             try {
                 throw new IOException("Path to file could not be created: " + mediaCapturePath);
             } catch (IOException e) {
