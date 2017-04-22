@@ -581,10 +581,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return new ImagePredicate(id, idName);
         }
 
-        static ImagePredicate idPredicate(String id) {
-            return new ImagePredicate(id, "id");
-        }
-
         private ImagePredicate(String id, String attributeName) {
             mId = id;
             mAttributeName = attributeName;
