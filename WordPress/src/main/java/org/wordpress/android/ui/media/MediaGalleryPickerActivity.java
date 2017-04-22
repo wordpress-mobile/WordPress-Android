@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -228,18 +229,22 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (count == 0 && mActionMode != null) {
-            mActionMode.finish();
-        } else if (mActionMode == null) {
-            startActionMode(new ActionModeCallback());
+        if (!mIsSelectOneItem) {
+            if (mActionMode == null) {
+                startActionMode(new ActionModeCallback());
+            } else if (count == 0) {
+                mActionMode.finish();
+            } else {
+                updateActionModeTitle(count);
+            }
         }
-
-        updateActionModeTitle(count);
     }
 
     private void updateActionModeTitle(int count) {
         if (mActionMode != null) {
             mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
+            MenuItem item = mActionMode.getMenu().findItem(R.id.mnu_confirm_selection);
+            item.setVisible(count > 0);
         }
     }
 
@@ -296,6 +301,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mActionMode = mode;
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.photo_picker_action_mode, menu);
             updateActionModeTitle(mGridAdapter.getSelectedItemCount());
             return true;
         }
@@ -307,12 +314,19 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.mnu_confirm_selection) {
+                setResultIdsAndFinish();
+                return true;
+            }
             return false;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            setResultIdsAndFinish();
+            mActionMode = null;
+            if (mIsSelectOneItem) {
+                setResultIdsAndFinish();
+            }
         }
     }
 }
