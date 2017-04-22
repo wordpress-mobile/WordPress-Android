@@ -34,7 +34,6 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.ccil.cowan.tagsoup.AttributesImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -67,7 +66,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 
@@ -83,6 +81,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
+
+    private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
 
     public static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -851,6 +851,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (!attrs.hasAttribute(idName) || TextUtils.isEmpty(attrs.getValue(idName))) {
+            idName = TEMP_IMAGE_ID;
             attrs.setValue(idName, UUID.randomUUID().toString());
         }
 
@@ -1044,7 +1045,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
             }
 
-            content.updateElementAttributes(tappedImagePredicate, attributesWithClass.getAttributes());
+            AztecAttributes attrs = attributesWithClass.getAttributes();
+            attrs.removeAttribute(TEMP_IMAGE_ID);
+
+            content.updateElementAttributes(tappedImagePredicate, attrs);
 
             // captions required shortcode support
 //            String caption = JSONUtils.getString(meta, "caption");
