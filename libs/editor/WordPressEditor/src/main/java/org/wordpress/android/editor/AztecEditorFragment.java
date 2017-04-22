@@ -162,8 +162,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         setHasOptionsMenu(true);
 
-        registerForContextMenu(formattingToolbar);
-
         invalidateOptionsHandler = new Handler();
         invalidateOptionsRunnable = new Runnable() {
             @Override
@@ -866,7 +864,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
         } else {
             mEditorFragmentListener.onAddMediaClicked();
-            getActivity().openContextMenu(formattingToolbar);
         }
     }
 
