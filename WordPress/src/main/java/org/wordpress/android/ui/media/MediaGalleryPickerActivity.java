@@ -101,6 +101,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
+        setTitle(R.string.select_from_media_library);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mRecycler = (RecyclerView) findViewById(R.id.recycler);
 
         int numColumns = MediaGridAdapter.getColumnCount(this);
@@ -114,15 +121,12 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
         if (mIsSelectOneItem) {
             mGridAdapter.setAllowMultiselect(false);
-            setTitle(R.string.select_from_media_library);
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
         } else {
             mGridAdapter.setAllowMultiselect(true);
-            mGridAdapter.setInMultiSelect(true);
-            mGridAdapter.setSelectedItems(selectedItems);
+            if (selectedItems != null && selectedItems.size() > 0) {
+                mGridAdapter.setInMultiSelect(true);
+                mGridAdapter.setSelectedItems(selectedItems);
+            }
         }
     }
 
@@ -212,18 +216,15 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
     @Override
     public void onAdapterItemSelected(View sourceView, int position) {
-        if (mIsSelectOneItem) {
-            // Single select, just finish the activity once an item is selected
-            Intent intent = new Intent();
-            int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
-            ArrayList<Long> remoteMediaIds = new ArrayList<>();
-            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
-            if (media != null) {
-                remoteMediaIds.add(media.getMediaId());
-                intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+        Intent intent = new Intent();
+        int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
+        ArrayList<Long> remoteMediaIds = new ArrayList<>();
+        MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+        if (media != null) {
+            remoteMediaIds.add(media.getMediaId());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
