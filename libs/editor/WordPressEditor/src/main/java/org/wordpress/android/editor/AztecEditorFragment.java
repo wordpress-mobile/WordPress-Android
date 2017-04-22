@@ -873,7 +873,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                         switch (mediaType) {
                             case IMAGE:
-                                content.removeMedia(ImagePredicate.idPredicate(localMediaId));
+                                content.removeMedia(tappedImagePredicate);
                                 break;
                             case VIDEO:
                                 // TODO: remove video
@@ -899,21 +899,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 switch (mediaType) {
                     case IMAGE:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                content.getElementAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
+                                content.getElementAttributes(tappedImagePredicate));
                         attributesWithClass.removeClass("failed");
 
                         // set intermediate shade overlay
-                        AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.localMediaIdPredicate(localMediaId);
-                        content.setOverlay(localMediaIdPredicate, 0,
+                        content.setOverlay(tappedImagePredicate, 0,
                                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
 
                         Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
                         // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                         progressDrawable.setBounds(0, 0, 0, 4);
 
-                        content.setOverlay(localMediaIdPredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
-                        
-                        content.updateElementAttributes(localMediaIdPredicate, attributesWithClass.getAttributes());
+                        content.setOverlay(tappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
+                        content.updateElementAttributes(tappedImagePredicate, attributesWithClass.getAttributes());
 
                         content.refreshText();
                         break;
