@@ -325,9 +325,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
-            if (mIsSelectOneItem) {
-                setResultIdsAndFinish();
-            }
+            mGridAdapter.setInMultiSelect(false);
         }
     }
 }
