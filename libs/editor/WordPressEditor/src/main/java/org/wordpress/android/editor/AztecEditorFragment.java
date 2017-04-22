@@ -427,7 +427,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         Drawable alertDrawable = getResources().getDrawable(R.drawable.media_retry_image);
         content.setOverlay(localMediaIdPredicate, 1, alertDrawable, Gravity.CENTER);
-
         content.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attributes));
     }
 
@@ -463,9 +462,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
-                AttributesImpl attrs = new AttributesImpl();
-                attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
-                attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
+                AztecAttributes attrs = new AztecAttributes();
+                attrs.setValue("data-wpid", localMediaId);
+                attrs.setValue("src", safeMediaUrl);
+                attrs.setValue("class", "uploading");
 
                 // load a scaled version of the image to prevent OOM exception
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
@@ -493,7 +493,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 content.setOverlay(localMediaIdPredicate, 1, progressDrawable,
                         Gravity.FILL_HORIZONTAL | Gravity.TOP);
 
-                content.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attrs));
+                content.updateElementAttributes(localMediaIdPredicate, attrs);
 
                 content.refreshText();
 
