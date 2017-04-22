@@ -850,12 +850,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             idName = "id";
         }
 
-        id = attrs.getValue(idName);
-        if (TextUtils.isEmpty(id)) {
-            idName = "aztec_id";
-            id = attrs.getValue(idName);
+        if (!attrs.hasAttribute(idName) || TextUtils.isEmpty(attrs.getValue(idName))) {
+            attrs.setValue(idName, UUID.randomUUID().toString());
         }
 
+        String id = attrs.getValue(idName);
         tappedImagePredicate = ImagePredicate.genericPredicate(idName, id);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
