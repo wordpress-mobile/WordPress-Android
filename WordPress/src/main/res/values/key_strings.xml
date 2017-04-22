@@ -72,7 +72,6 @@
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_export_site" translatable="false">pref_key_site_export_site</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
-    <string name="pref_key_site_remove_site" translatable="false">wp_pref_site_remove_site</string>
     <string name="pref_key_username" translatable="false">wp_pref_key_username</string>
     <string name="pref_key_email" translatable="false">wp_pref_key_email</string>
     <string name="pref_key_primary_site" translatable="false">wp_pref_key_primary_site></string>

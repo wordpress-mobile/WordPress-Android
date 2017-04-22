@@ -958,6 +958,7 @@
     <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
     <string name="editor_post_saved_online">The post was saved online</string>
     <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
+    <string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
@@ -1427,6 +1428,7 @@
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_dotcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
+    <string name="site_picker_remove_site_error">Error removing site, try again later</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -1443,7 +1445,7 @@
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
-    <string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
+    <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
@@ -1587,7 +1589,6 @@
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
-    <string name="remove_site_hint">Remove this site from the app</string>
 
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>

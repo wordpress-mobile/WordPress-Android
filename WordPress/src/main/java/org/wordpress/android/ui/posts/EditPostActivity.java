@@ -155,6 +155,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
+    public static final String EXTRA_HAS_UNFINISHED_MEDIA = "hasUnfinishedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
@@ -1108,6 +1109,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void saveResult(boolean saved, boolean savedLocally) {
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
+        i.putExtra(EXTRA_HAS_UNFINISHED_MEDIA, hasUnfinishedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST, mPost);
@@ -1200,10 +1202,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
 
-            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && NetworkUtils.isNetworkAvailable(this)) {
-                if (!hasFailedMedia()) {
-                    savePostOnlineAndFinishAsync(isFirstTimePublish);
-                }
+            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
+                    && NetworkUtils.isNetworkAvailable(this)) {
+                savePostOnlineAndFinishAsync(isFirstTimePublish);
             } else {
                 savePostLocallyAndFinishAsync();
             }
@@ -1219,6 +1220,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean isFirstTimePublish() {
         return PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
                 (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
+    }
+
+    private boolean hasUnfinishedMedia() {
+        return mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress() ||
+                mEditorFragment.hasFailedMediaUploads();
     }
 
     private boolean updatePostObject() {
