@@ -34,7 +34,6 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.ccil.cowan.tagsoup.AttributesImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -413,14 +412,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void overlayFailedMedia() {
         for (String localMediaId : mFailedMediaIds) {
-            Attributes attributes = content.getElementAttributes(ImagePredicate.localMediaIdPredicate(localMediaId));
+            Attributes attributes = content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(localMediaId));
             overlayFailedMedia(localMediaId, attributes);
         }
     }
 
     private void overlayFailedMedia(String localMediaId, Attributes attributes) {
         // set intermediate shade overlay
-        AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.localMediaIdPredicate(localMediaId);
+        AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
         content.setOverlay(localMediaIdPredicate, 0,
                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
                 Gravity.FILL);
@@ -481,7 +480,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 // set intermediate shade overlay
-                AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.localMediaIdPredicate(localMediaId);
+                AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                 content.setOverlay(localMediaIdPredicate, 0,
                         new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
                         Gravity.FILL);
@@ -553,13 +552,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaType != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             if (mediaType.equals(MediaType.IMAGE)) {
-                AttributesImpl attrs = new AttributesImpl();
-                attrs.addAttribute("", "src", "src", "string", remoteUrl);
+
+                AztecAttributes attrs = new AztecAttributes();
+                attrs.setValue("src", remoteUrl);
 
                 // clear overlay
-                AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.localMediaIdPredicate(localMediaId);
-                content.clearOverlays(localMediaIdPredicate);
-                content.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attrs));
+                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                content.clearOverlays(predicate);
+                content.updateElementAttributes(predicate, attrs);
                 content.refreshText();
 
                 mUploadingMedia.remove(localMediaId);
@@ -573,11 +573,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         private final String mId;
         private final String mAttributeName;
 
-        static ImagePredicate localMediaIdPredicate(String id) {
+        static ImagePredicate getLocalMediaIdPredicate(String id) {
             return new ImagePredicate(id, "data-wpid");
         }
 
-        static ImagePredicate genericPredicate(String idName, String id) {
+        static ImagePredicate newInstance(String idName, String id) {
             return new ImagePredicate(id, idName);
         }
 
@@ -599,7 +599,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
-            AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.localMediaIdPredicate(localMediaId);
+            AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
             content.setOverlayLevel(localMediaIdPredicate, 1, (int)(progress * 10000));
             content.refreshText();
         }
@@ -615,7 +615,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             switch (mediaType) {
                 case IMAGE:
                     AttributesWithClass attributesWithClass = new AttributesWithClass(
-                            content.getElementAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
+                            content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(localMediaId)));
 
                     attributesWithClass.removeClass("uploading");
                     attributesWithClass.addClass("failed");
