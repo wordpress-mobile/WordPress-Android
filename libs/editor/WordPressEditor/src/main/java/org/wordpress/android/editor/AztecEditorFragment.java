@@ -599,13 +599,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
-            AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    content.getElementAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
-            attributesWithClass.addClass("uploading");
-
             AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.localMediaIdPredicate(localMediaId);
             content.setOverlayLevel(localMediaIdPredicate, 1, (int)(progress * 10000));
-            content.updateElementAttributes(localMediaIdPredicate, attributesWithClass.getAttributes());
             content.refreshText();
         }
     }
