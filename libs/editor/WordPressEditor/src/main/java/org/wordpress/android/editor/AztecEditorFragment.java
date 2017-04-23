@@ -841,13 +841,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             idName = "id";
         }
 
+        String id = attrs.getValue(idName);
+
+        // generate the element ID if "id" or "data-wpid" are missing
         if (!attrs.hasAttribute(idName) || TextUtils.isEmpty(attrs.getValue(idName))) {
             idName = TEMP_IMAGE_ID;
-            attrs.setValue(idName, UUID.randomUUID().toString());
+            id = UUID.randomUUID().toString();
         }
 
-        String id = attrs.getValue(idName);
-        tappedImagePredicate = ImagePredicate.genericPredicate(idName, id);
+        attrs.setValue(idName, id);
+        tappedImagePredicate = ImagePredicate.newInstance(idName, id);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
