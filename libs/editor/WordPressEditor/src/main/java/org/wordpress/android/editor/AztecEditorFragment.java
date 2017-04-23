@@ -867,7 +867,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
 
                         switch (mediaType) {
                             case IMAGE:
@@ -883,17 +882,31 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        try {
+                            // only retry if id is valid
+                            Integer.parseInt(localMediaId);
+                            mEditorFragmentListener.onMediaRetryClicked(localMediaId);
+                        } catch (NumberFormatException e) {
+                            // invalid id
+                        }
                         dialog.dismiss();
                     }
                 });
+
+                // stop the media upload while the dialog is being shown
+                // otherwise the upload might finish and we won't find the element for removal
+                if (this.mUploadingMedia.containsKey(localMediaId)) {
+                    mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
+                }
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
             case "failed":
                 // Retry media upload
-                mEditorFragmentListener.onMediaRetryClicked(localMediaId);
-
+                if (mFailedMediaIds.contains(localMediaId)) {
+                    mEditorFragmentListener.onMediaRetryClicked(localMediaId);
+                }
                 switch (mediaType) {
                     case IMAGE:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
