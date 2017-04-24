@@ -254,4 +254,21 @@ public class UrlUtils {
         }
         return uriBuilder.build().toString();
     }
+
+    /**
+     * Extracts the subdomain from a domain string.
+     * @param domain A domain is expected. Protocol is optional
+     * @return The subdomain or an empty string.
+     */
+    public static String extractSubDomain(String domain) {
+        String str = UrlUtils.addUrlSchemeIfNeeded(domain, false);
+        String host = UrlUtils.getHost(str);
+        if (host.length() > 0) {
+            String[] parts = host.split("\\.");
+            if (parts.length > 1) { // There should be at least 2 dots for there to be a subdomain.
+                return parts[0];
+            }
+        }
+        return "";
+    }
 }

@@ -83,7 +83,7 @@ public class DeviceUtils {
         return model;
     }
 
-    public boolean isDeviceLocked(Context context){
+    public boolean isDeviceLocked(Context context) {
         KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
         return myKM.inKeyguardRestrictedInputMode();
     }

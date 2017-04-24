@@ -17,9 +17,9 @@ public class MediaGallery implements Serializable {
     private boolean isRandom;
     private String type;
     private int numColumns;
-    private ArrayList<String> ids;
+    private ArrayList<Long> ids;
 
-    public MediaGallery(boolean isRandom, String type, int numColumns, ArrayList<String> ids) {
+    public MediaGallery(boolean isRandom, String type, int numColumns, ArrayList<Long> ids) {
         this.isRandom = isRandom;
         this.type = type;
         this.numColumns = numColumns;
@@ -31,7 +31,7 @@ public class MediaGallery implements Serializable {
         isRandom = false;
         type = "";
         numColumns = 3;
-        ids = new ArrayList<String>();
+        ids = new ArrayList<>();
         this.uniqueId = System.currentTimeMillis();
     }
 
@@ -59,14 +59,14 @@ public class MediaGallery implements Serializable {
         this.numColumns = numColumns;
     }
 
-    public ArrayList<String> getIds() {
+    public ArrayList<Long> getIds() {
         return ids;
     }
 
     public String getIdsStr() {
         String ids_str = "";
         if (ids.size() > 0) {
-            for (String id : ids) {
+            for (Long id : ids) {
                 ids_str += id + ",";
             }
             ids_str = ids_str.substring(0, ids_str.length() - 1);
@@ -74,7 +74,7 @@ public class MediaGallery implements Serializable {
         return ids_str;
     }
 
-    public void setIds(ArrayList<String> ids) {
+    public void setIds(ArrayList<Long> ids) {
         this.ids = ids;
     }
 

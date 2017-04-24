@@ -1,13 +1,20 @@
 package org.wordpress.android.util;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -28,9 +35,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
+    private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
 
     public static boolean isValidImage(String url) {
         if (url == null) {
@@ -102,8 +112,10 @@ public class MediaUtils {
             return false;
         }
 
-        return  (state.equals("queued") || state.equals("uploading") || state.equals("retry")
-                || state.equals("failed"));
+        return state.equalsIgnoreCase("queued")
+                || state.equalsIgnoreCase("uploading")
+                || state.equalsIgnoreCase("retry")
+                || state.equalsIgnoreCase("failed");
     }
 
     public static Uri getLastRecordedVideoUri(Activity activity) {
@@ -174,6 +186,21 @@ public class MediaUtils {
         }
     }
 
+    public static @Nullable String getFilenameFromURI(Context context, Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        try {
+            String result = null;
+            if (cursor != null && cursor.moveToFirst()) {
+                result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+            return result;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
@@ -209,12 +236,12 @@ public class MediaUtils {
                 input = new URL(imageUri.toString()).openStream();
             }
 
-            String fileName = "wp-" + System.currentTimeMillis();
-            if (isVideo) {
-                fileName += "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            String fileName = getFilenameFromURI(context, imageUri);
+            if (TextUtils.isEmpty(fileName)) {
+                fileName = generateTimeStampedFileName(mimeType);
             }
 
-            File f = new File(cacheDir, fileName);
+            File f = getUniqueCacheFileForName(fileName, cacheDir, mimeType);
 
             OutputStream output = new FileOutputStream(f);
 
@@ -229,15 +256,40 @@ public class MediaUtils {
             input.close();
 
             return Uri.fromFile(f);
-        } catch (FileNotFoundException e) {
-            AppLog.e(T.UTILS, e);
-        } catch (MalformedURLException e) {
-            AppLog.e(T.UTILS, e);
         } catch (IOException e) {
             AppLog.e(T.UTILS, e);
         }
 
         return null;
+    }
+
+    private static File getUniqueCacheFileForName(String fileName, File cacheDir, String mimeType) {
+        File file = new File(cacheDir, fileName);
+
+        while (file.exists()) {
+            Matcher matcher = FILE_EXISTS_PATTERN.matcher(fileName);
+            if (matcher.matches()) {
+                String baseFileName = matcher.group(1);
+                String existingDuplicationNumber = matcher.group(3);
+                String fileType = StringUtils.notNullStr(matcher.group(4));
+
+                if (existingDuplicationNumber == null) {
+                    // Not a copy already
+                    fileName = baseFileName + "-1" + fileType;
+                } else {
+                    fileName = baseFileName + "-" + (StringUtils.stringToInt(existingDuplicationNumber) + 1) + fileType;
+                }
+            } else {
+                // Shouldn't happen, but in case our match fails fall back to timestamped file name
+                fileName = generateTimeStampedFileName(mimeType);
+            }
+            file = new File(cacheDir, fileName);
+        }
+        return file;
+    }
+
+    private static String generateTimeStampedFileName(String mimeType) {
+        return "wp-" + System.currentTimeMillis() + "." + getExtensionForMimeType(mimeType);
     }
 
     public static String getMimeTypeOfInputStream(InputStream stream) {
@@ -335,20 +387,148 @@ public class MediaUtils {
         return fileExtensionFromMimeType.toLowerCase();
     }
 
-    public static String getPathFromContentUri(Context context, Uri imageUri) {
-        if(context == null || imageUri == null) {
-            return null;
+    /**
+     * Get a file path from a Uri. This will get the the path for Storage Access
+     * Framework Documents, as well as the _data field for the MediaStore and
+     * other file-based ContentProviders.
+     *
+     * Based on paulburke's solution for aFileChooser - https://github.com/iPaulPro/aFileChooser
+     *
+     * @param context The context.
+     * @param uri The Uri to query.
+     */
+    public static String getPath(final Context context, final Uri uri) {
+        String path = getDocumentProviderPathKitkatOrHigher(context, uri);
+
+        if (path != null) {
+            return path;
         }
 
-        String path = null;
-        String[] projection = new String[]{MediaStore.Images.Media.DATA};
-        Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
-        if (cur != null && cur.moveToFirst()) {
-            int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-            path = cur.getString(dataColumn);
+        // MediaStore (and general)
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getDataColumn(context, uri, null, null);
         }
-        SqlUtils.closeCursor(cur);
-        return path;
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static String getDocumentProviderPathKitkatOrHigher(final Context context, final Uri uri) {
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = MediaStore.MediaColumns._ID + "=?";
+
+                final String[] selectionArgs = new String[] {
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the value of the data column for this Uri. This is useful for
+     * MediaStore Uris, and other file-based ContentProviders.
+     *
+     * @param context The context.
+     * @param uri The Uri to query.
+     * @param selection (Optional) Filter used in the query.
+     * @param selectionArgs (Optional) Selection arguments used in the query.
+     * @return The value of the _data column, which is typically a file path.
+     */
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+        Cursor cursor = null;
+        final String column = MediaStore.MediaColumns.DATA;
+
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndex(column);
+                if (column_index != -1) {
+                    return cursor.getString(column_index);
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
     public static long getVideoDurationMS(Context context, File file) {
@@ -365,7 +545,17 @@ public class MediaUtils {
             return 0L;
         }
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(context, videoUri);
+        try {
+            retriever.setDataSource(context, videoUri);
+        } catch (IllegalArgumentException | SecurityException e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video.", e);
+            return 0L;
+        } catch (RuntimeException e) {
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5431
+            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video due to a Runtime Exception happened setting the datasource", e);
+            return 0L;
+        }
+
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         if (time == null) {
             return 0L;
