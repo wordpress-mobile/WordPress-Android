@@ -43,7 +43,8 @@ import javax.inject.Inject;
 public class MediaUploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
-    private List<MediaModel> mUploadQueue = new ArrayList<>();
+    private List<MediaModel> mPendingUploads = new ArrayList<>();
+    private List<MediaModel> mInProgressUploads = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -71,7 +72,7 @@ public class MediaUploadService extends Service {
 
     @Override
     public void onDestroy() {
-        for (MediaModel oneUpload : mUploadQueue) {
+        for (MediaModel oneUpload : mInProgressUploads) {
             cancelUpload(oneUpload);
         }
         mDispatcher.unregister(this);
@@ -83,7 +84,6 @@ public class MediaUploadService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -196,13 +196,13 @@ public class MediaUploadService extends Service {
     private void completeUploadWithId(int id) {
         MediaModel media = getMediaFromQueueById(id);
         if (media != null) {
-            mUploadQueue.remove(media);
+            mInProgressUploads.remove(media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
 
     private MediaModel getMediaFromQueueById(int id) {
-        for (MediaModel media : mUploadQueue) {
+        for (MediaModel media : mInProgressUploads) {
             if (media.getId() == id)
                 return media;
         }
@@ -210,23 +210,20 @@ public class MediaUploadService extends Service {
     }
 
     private MediaModel getNextMediaToUpload() {
-        if (!mUploadQueue.isEmpty()) {
-            return mUploadQueue.get(0);
+        if (!mPendingUploads.isEmpty()) {
+            return mPendingUploads.remove(0);
         }
         return null;
     }
 
     private void addUniqueMediaToQueue(MediaModel media) {
         if (media != null) {
-            for (MediaModel queuedMedia : mUploadQueue) {
-                if (queuedMedia.getLocalSiteId() == media.getLocalSiteId() &&
-                        StringUtils.equals(queuedMedia.getFilePath(), media.getFilePath())) {
-                    return;
-                }
+            if (mediaAlreadyQueuedOrUploading(media)) {
+                return;
             }
 
             // no match found in queue
-            mUploadQueue.add(media);
+            mPendingUploads.add(media);
         }
     }
 
@@ -283,6 +280,7 @@ public class MediaUploadService extends Service {
     private void dispatchUploadAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
         AppLog.i(AppLog.T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
+        mInProgressUploads.add(media);
         media.setUploadState(UploadState.UPLOADING.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
@@ -299,7 +297,7 @@ public class MediaUploadService extends Service {
 
     private void stopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
-        if (mUploadQueue.size() == 0) {
+        if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
@@ -312,7 +310,7 @@ public class MediaUploadService extends Service {
     public void onMediaUploaded(OnMediaUploaded event) {
         // event for unknown media, ignoring
         if (event.media == null) {
-            AppLog.w(AppLog.T.MEDIA, "Media event not recognized: " + event.media);
+            AppLog.w(AppLog.T.MEDIA, "Received media event for null media, ignoring");
             return;
         }
 
@@ -338,5 +336,28 @@ public class MediaUploadService extends Service {
             mediaProperties.putAll(properties);
         }
         AnalyticsTracker.track(stat, mediaProperties);
+    }
+
+    private boolean mediaAlreadyQueuedOrUploading(MediaModel mediaModel) {
+        for (MediaModel queuedMedia : mInProgressUploads) {
+            AppLog.d(AppLog.T.TESTS, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
+                    mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
+                    queuedMedia.getLocalSiteId());
+            if (queuedMedia.getLocalSiteId() == mediaModel.getLocalSiteId() &&
+                    StringUtils.equals(queuedMedia.getFilePath(), mediaModel.getFilePath())) {
+                return true;
+            }
+        }
+
+        for (MediaModel queuedMedia : mPendingUploads) {
+            AppLog.d(AppLog.T.TESTS, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
+                    mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
+                    queuedMedia.getLocalSiteId());
+            if (queuedMedia.getLocalSiteId() == mediaModel.getLocalSiteId() &&
+                    StringUtils.equals(queuedMedia.getFilePath(), mediaModel.getFilePath())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
