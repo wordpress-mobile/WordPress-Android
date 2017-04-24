@@ -124,20 +124,20 @@ public class MetadataUtils {
     }
 
     static class AttributesWithClass {
-        private AztecAttributes aztecAttributes;
-        private Set<String> classes;
+        private AztecAttributes mAztecAttributes;
+        private Set<String> mClasses;
 
         AttributesWithClass(Attributes attrs) {
-            aztecAttributes = new AztecAttributes(attrs);
-            classes = getClassAttribute(attrs);
+            mAztecAttributes = new AztecAttributes(attrs);
+            mClasses = getClassAttribute(attrs);
         }
 
         void addClass(String c) {
-            classes.add(c);
+            mClasses.add(c);
         }
 
         void removeClassStartingWith(String prefix) {
-            Iterator<String> iterator = classes.iterator();
+            Iterator<String> iterator = mClasses.iterator();
             while (iterator.hasNext()) {
                 String cls = iterator.next();
                 if (cls.startsWith(prefix)) {
@@ -147,26 +147,26 @@ public class MetadataUtils {
         }
 
         void removeClass(String c) {
-            classes.remove(c);
+            mClasses.remove(c);
         }
 
         boolean hasClass(String clazz) {
-            return classes.contains(clazz);
+            return mClasses.contains(clazz);
         }
 
         public Set<String> getClasses() {
-            return classes;
+            return mClasses;
         }
 
         AztecAttributes getAttributes() {
-            String classesStr = TextUtils.join(" ", classes);
-            aztecAttributes.setValue("class", classesStr);
-            return aztecAttributes;
+            String classesStr = TextUtils.join(" ", mClasses);
+            mAztecAttributes.setValue("class", classesStr);
+            return mAztecAttributes;
         }
 
         String getAttribute(String key, String defaultValue) {
-            if (aztecAttributes.hasAttribute(key)) {
-                return aztecAttributes.getValue(key);
+            if (mAztecAttributes.hasAttribute(key)) {
+                return mAztecAttributes.getValue(key);
             } else {
                 return defaultValue;
             }
