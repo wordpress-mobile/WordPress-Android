@@ -97,11 +97,11 @@ public class PostPreviewActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
 
+        mPost = mPostStore.getPostByLocalPostId(mPost.getId());
         if (mPost == null) {
             finish();
             return;
         }
-        mPost = mPostStore.getPostByLocalPostId(mPost.getId());
         if (hasPreviewFragment()) {
             refreshPreview();
         } else {
