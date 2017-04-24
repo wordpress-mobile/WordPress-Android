@@ -25,15 +25,24 @@ public class WPHtmlTagHandler implements Html.TagHandler {
     public void handleTag(final boolean opening, final String tag, Editable output,
                           final XMLReader xmlReader) {
         if (tag != null) {
-            if (tag.equals("ul") || tag.equals("ol") || tag.equals("dd")) {
-                if (opening) {
-                    mListParents.add(tag);
-                } else {
-                    mListParents.remove(tag);
-                }
-                mListItemCount = 0;
-            } else if (tag.equals("li") && !opening) {
-                handleListTag(output);
+            if (tag.equals("WPUL")) {
+                if (opening)
+                    mListParents.add("ul");
+                else
+                    mListParents.remove("ul");
+            } else if (tag.equals("WPOL")) {
+                if (opening)
+                    mListParents.add("ol");
+                else
+                    mListParents.remove("ol");
+            } else if (tag.equals("WPLI")) {
+                if (!opening)
+                    handleListTag(output);
+            } else if (tag.equals("dd")) {
+                if (opening)
+                    mListParents.add("dd");
+                else
+                    mListParents.remove("dd");
             }
         }
     }
