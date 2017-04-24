@@ -97,8 +97,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
 
-        mPost = mPostStore.getPostByLocalPostId(mPost.getId());
-        if (mPost == null) {
+        if (mPost == null || (mPost = mPostStore.getPostByLocalPostId(mPost.getId())) == null) {
             finish();
             return;
         }
