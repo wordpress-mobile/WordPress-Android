@@ -1183,9 +1183,6 @@
     <string name="reader_followed_default_tag">Followed Sites</string>
     <string name="reader_liked_default_tag">Posts I Like</string>
 
-    <!-- share dialog title when sharing a reader url -->
-    <string name="reader_share_link">Share link</string>
-
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>
     <string name="reader_menu_block_blog">Block this blog</string>
