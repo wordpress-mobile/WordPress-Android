@@ -52,7 +52,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.+'
     compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v0.5.0-alpha.5')
-    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:glide-loader:v0.5.0-alpha.5')
 }
 
 signing {

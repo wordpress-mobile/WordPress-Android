@@ -98,6 +98,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -129,7 +130,6 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
-import org.wordpress.aztec.glideloader.GlideImageLoader;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -1343,7 +1343,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
                         mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
-                        mAztecEditorFragment.setImageLoader(new GlideImageLoader(getBaseContext()));
+                        mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
                         return mAztecEditorFragment;
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
