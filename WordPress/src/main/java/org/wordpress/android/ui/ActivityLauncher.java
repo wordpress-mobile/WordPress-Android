@@ -205,11 +205,13 @@ public class ActivityLauncher {
 
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
-        // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
-        url = url.replace(site.getUrl(), site.getUnmappedUrl());
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
         if (site.isWPCom()) {
+            if (!TextUtils.isEmpty(site.getUnmappedUrl())) {
+                // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
+                url = url.replace(site.getUrl(), site.getUnmappedUrl());
+            }
             WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity.openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
