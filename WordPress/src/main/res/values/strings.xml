@@ -1049,7 +1049,6 @@
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
-    <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
@@ -1180,9 +1179,6 @@
     <string name="reader_discover_default_tag">Discover</string>
     <string name="reader_followed_default_tag">Followed Sites</string>
     <string name="reader_liked_default_tag">Posts I Like</string>
-
-    <!-- share dialog title when sharing a reader url -->
-    <string name="reader_share_link">Share link</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>

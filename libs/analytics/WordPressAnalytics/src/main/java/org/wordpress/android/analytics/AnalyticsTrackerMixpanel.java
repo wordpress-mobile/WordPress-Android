@@ -61,6 +61,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
     @Override
     public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
+        if (!isValidEvent(stat)) {
+            return;
+        }
+
         AnalyticsTrackerMixpanelInstructionsForStat instructions = instructionsForStat(stat);
 
         if (instructions == null) {
@@ -242,8 +246,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
     }
 
-    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(
-            AnalyticsTracker.Stat stat) {
+    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat) {
+        if (!isValidEvent(stat)) {
+            return null;
+        }
         AnalyticsTrackerMixpanelInstructionsForStat instructions;
         switch (stat) {
             case APPLICATION_OPENED:
