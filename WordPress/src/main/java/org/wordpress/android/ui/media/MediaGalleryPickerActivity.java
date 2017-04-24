@@ -123,7 +123,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
             mGridAdapter.setAllowMultiselect(false);
         } else {
             mGridAdapter.setAllowMultiselect(true);
-            if (selectedItems != null && selectedItems.size() > 0) {
+            if (selectedItems.size() > 0) {
                 mGridAdapter.setInMultiSelect(true);
                 mGridAdapter.setSelectedItems(selectedItems);
             }
