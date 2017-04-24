@@ -630,6 +630,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             Attributes attrs = content.getMediaAttributes(predicate);
             if (attrs != null) {
+                // START BLOCK
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
                 if (attributesWithClass != null) {
                     attributesWithClass.addClass("uploading");
@@ -640,12 +641,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         content.refreshText();
                     }
                     catch (IndexOutOfBoundsException ex) {
-                        // we can safely disregard exceptions at this level as AztecEditor accomodates
-                        // for the next event
-                        ex.printStackTrace();
+                        /*
+                         * it could happen that the localMediaId is not found, because FluxC events are not
+                         * guaranteed to be received in order, so we might have received the `upload
+                         * finished` event (thus clearing the id from within the Post html), and then
+                         * still receive some more progress events for the same file, which we can't
+                         * avoid but disregard.
+                         * ex.printStackTrace();
+                         */
+                        AppLog.d(AppLog.T.EDITOR, localMediaId + " - aztec listener NOT FOUND ");
                     }
                 }
+                // END BLOCK
 
+                // THESE NEXT LINES WOULD BE A <BLOCK> REPLACEMENT if the ID issue is solved
 //                content.setOverlayLevel(predicate, 1, (int)(progress * 10000),
 //                        attrs);
 //                content.refreshText();
