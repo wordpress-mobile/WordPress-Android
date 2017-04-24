@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
-import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -38,20 +37,19 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
-    private SiteModel mSite;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        final SiteModel site;
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            site = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            site = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        if (mSite == null) {
+        if (site == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
@@ -61,7 +59,7 @@ public class BlogPreferencesActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(mSite)));
+            actionBar.setTitle(StringUtils.unescapeHTML(SiteUtils.getSiteNameOrHomeURL(site)));
         }
 
         FragmentManager fragmentManager = getFragmentManager();
@@ -114,17 +112,6 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             //https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
             // Checks for stats widgets that were synched with a blog that could be gone now.
             //            StatsWidgetProvider.updateWidgetsOnLogout(this);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteRemoved(OnSiteRemoved event) {
-        SiteSettingsFragment siteSettingsFragment = getSettingsFragment();
-        if (siteSettingsFragment != null) {
-            siteSettingsFragment.handleSiteRemoved();
-            setResult(RESULT_BLOG_REMOVED);
-            finish();
         }
     }
 

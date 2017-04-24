@@ -457,7 +457,7 @@ public class ReaderPostDetailFragment extends Fragment
         intent.putExtra(Intent.EXTRA_TEXT, url);
         intent.putExtra(Intent.EXTRA_SUBJECT, mPost.getTitle());
         try {
-            startActivity(Intent.createChooser(intent, getString(R.string.reader_share_link)));
+            startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
         } catch (android.content.ActivityNotFoundException ex) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_share_intent);
         }

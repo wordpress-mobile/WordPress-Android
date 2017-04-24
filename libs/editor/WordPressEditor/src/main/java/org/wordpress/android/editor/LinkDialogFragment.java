@@ -31,7 +31,7 @@ public class LinkDialogFragment extends DialogFragment {
         final EditText linkEditText = (EditText) view.findViewById(R.id.linkText);
 
         builder.setView(view)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Intent intent = new Intent();
