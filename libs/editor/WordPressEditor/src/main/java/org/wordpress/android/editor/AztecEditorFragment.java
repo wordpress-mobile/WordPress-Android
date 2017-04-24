@@ -869,36 +869,30 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        switch (mediaType) {
-                            case IMAGE:
-                                content.removeMedia(tappedImagePredicate);
-                                break;
-                            case VIDEO:
-                                // TODO: remove video
+                        if (mUploadingMedia.containsKey(localMediaId)) {
+                            mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
+
+                            switch (mediaType) {
+                                case IMAGE:
+                                    content.removeMedia(tappedImagePredicate);
+                                    break;
+                                case VIDEO:
+                                    // TODO: remove video
+                            }
+                            mUploadingMedia.remove(localMediaId);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
                         }
-                        mUploadingMedia.remove(localMediaId);
+
                         dialog.dismiss();
                     }
                 });
 
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        try {
-                            // only retry if id is valid
-                            Integer.parseInt(localMediaId);
-                            mEditorFragmentListener.onMediaRetryClicked(localMediaId);
-                        } catch (NumberFormatException e) {
-                            // invalid id
-                        }
                         dialog.dismiss();
                     }
                 });
-
-                // stop the media upload while the dialog is being shown
-                // otherwise the upload might finish and we won't find the element for removal
-                if (this.mUploadingMedia.containsKey(localMediaId)) {
-                    mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
-                }
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
