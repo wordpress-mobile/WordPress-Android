@@ -1244,7 +1244,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
 
-            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && NetworkUtils.isNetworkAvailable(this)) {
+            boolean hasUploadingOrFailedMedia = mEditorFragment.isUploadingMedia() ||
+                    mEditorFragment.isActionInProgress() || mEditorFragment.hasFailedMediaUploads();
+            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUploadingOrFailedMedia
+                    && NetworkUtils.isNetworkAvailable(this)) {
                 if (!hasFailedMedia()) {
                     savePostOnlineAndFinishAsync(isFirstTimePublish);
                 }
@@ -2384,6 +2387,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             onUploadSuccess(event.media);
         }
         else {
+            AppLog.w(AppLog.T.MEDIA, "EDITPOSTACTIVITY: " + event.media.getId() + " - " + event.progress);
             onUploadProgress(event.media, event.progress);
         }
     }
