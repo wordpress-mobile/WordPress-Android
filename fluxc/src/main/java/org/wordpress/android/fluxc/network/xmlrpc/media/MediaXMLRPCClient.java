@@ -167,11 +167,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     // HTTP_OK code doesn't mean the upload is successful, XML-RPC API returns code 200 with an
                     // xml field "faultCode" on error.
                     try {
-                        MediaModel responseMedia = getMediaFromUploadResponse(response);
-                        if (responseMedia != null) {
+                        Map responseMap = getMapFromUploadResponse(response);
+                        if (responseMap != null) {
                             AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
                             // We only get the media Id from the response
-                            media.setMediaId(responseMedia.getMediaId());
+                            media.setMediaId(MapUtils.getMapLong(responseMap, "id"));
                             // Upload media response only has `type, id, file, url` fields whereas we need
                             // `parent, title, caption, description, videopress_shortcode, thumbnail,
                             // date_created_gmt, link, width, height` fields, so we need to make a fetch for them
@@ -439,7 +439,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return responseMedia;
     }
 
-    private MediaModel getMediaFromXmlrpcResponse(HashMap response) {
+    private MediaModel getMediaFromXmlrpcResponse(Map response) {
         if (response == null || response.isEmpty()) return null;
 
         MediaModel media = new MediaModel();
@@ -486,20 +486,20 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return mediaError;
     }
 
-    private MediaModel getMediaFromUploadResponse(okhttp3.Response response) throws XMLRPCException {
-        MediaModel media = new MediaModel();
+    private static Map getMapFromUploadResponse(okhttp3.Response response) throws XMLRPCException {
+        Map responseMap = new HashMap();
         try {
             String data = new String(response.body().bytes(), "UTF-8");
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
-            Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
-            if (obj instanceof Map) {
-                media.setMediaId(MapUtils.getMapLong((Map) obj, "id"));
+            Object responseObject = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
+            if (responseObject instanceof Map) {
+                responseMap = (Map) responseObject;
             }
         } catch (IOException | XmlPullParserException e) {
             AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
             return null;
         }
-        return media;
+        return responseMap;
     }
 
     private Map<String, Object> getEditMediaFields(final MediaModel media) {
