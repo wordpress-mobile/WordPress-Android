@@ -67,6 +67,8 @@ import de.greenrobot.event.EventBus;
 public class PostsListFragment extends Fragment implements PostsListAdapter.OnPostButtonClickListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
+    private static final long SEARCH_DELAY_MS = 1000L;
+
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
@@ -83,6 +85,9 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     private int mPostIdForPostToBeDeleted = 0;
 
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
+
+    private String mSearchTerm;
+    private Handler mHandler;
 
     private SiteModel mSite;
 
@@ -106,6 +111,7 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
 
+        mHandler = new Handler();
         updateSiteOrFinishActivity(savedInstanceState);
 
         if (isAdded()) {
@@ -436,14 +442,13 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         }
     }
 
-    public void filterPosts(String searchTerm, boolean pages) {
+    public void filterPosts(final String searchTerm) {
+        // cancel scheduled search runnable
+        mHandler.removeCallbacks(mSearchRunnable);
+
         if (!TextUtils.isEmpty(searchTerm)) {
-            SearchPostsPayload payload = new SearchPostsPayload(mSite, searchTerm);
-            if (pages) {
-                mDispatcher.dispatch(PostActionBuilder.newSearchPagesAction(payload));
-            } else {
-                mDispatcher.dispatch(PostActionBuilder.newSearchPostsAction(payload));
-            }
+            mSearchTerm = searchTerm;
+            mHandler.postDelayed(mSearchRunnable, SEARCH_DELAY_MS);
         } else {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
@@ -617,6 +622,18 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
                 break;
         }
     }
+
+    private final Runnable mSearchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            SearchPostsPayload payload = new SearchPostsPayload(mSite, mSearchTerm);
+            if (mIsPage) {
+                mDispatcher.dispatch(PostActionBuilder.newSearchPagesAction(payload));
+            } else {
+                mDispatcher.dispatch(PostActionBuilder.newSearchPostsAction(payload));
+            }
+        }
+    };
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
