@@ -960,6 +960,7 @@
     <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
     <string name="editor_post_saved_online">The post was saved online</string>
     <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
+    <string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
@@ -1050,7 +1051,6 @@
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
-    <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>

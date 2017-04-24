@@ -35,7 +35,7 @@ public class WordPressMediaUtils {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setTitle(context.getResources().getText(R.string.sdcard_title));
         dialogBuilder.setMessage(context.getResources().getText(R.string.sdcard_message));
-        dialogBuilder.setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
             }
@@ -135,31 +135,45 @@ public class WordPressMediaUtils {
             showSDCardRequiredDialog(context);
             return null;
         } else {
-            return getLaunchCameraIntent(context, applicationId, callback);
+            try {
+                return getLaunchCameraIntent(context, applicationId, callback);
+            } catch (IOException e) {
+                // No need to write log here
+                return null;
+            }
         }
     }
 
-    private static Intent getLaunchCameraIntent(Context context, String applicationId, LaunchCameraCallback callback) {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-
-        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System
+    private static Intent getLaunchCameraIntent(Context context, String applicationId, LaunchCameraCallback callback)
+            throws IOException {
+        File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        String mediaCapturePath = externalStoragePublicDirectory + File.separator + "Camera" + File.separator + "wp-" + System
                 .currentTimeMillis() + ".jpg";
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context,
-                applicationId + ".provider", new File(mediaCapturePath)));
-
-        if (callback != null) {
-            callback.onMediaCapturePathReady(mediaCapturePath);
-        }
 
         // make sure the directory we plan to store the recording in exists
         File directory = new File(mediaCapturePath).getParentFile();
-        if (!directory.exists() && !directory.mkdirs()) {
+        if (directory == null || (!directory.exists() && !directory.mkdirs())) {
             try {
-                throw new IOException("Path to file could not be created.");
+                throw new IOException("Path to file could not be created: " + mediaCapturePath);
             } catch (IOException e) {
-                AppLog.e(T.POSTS, e);
+                AppLog.e(T.MEDIA, e);
+                throw e;
             }
+        }
+
+        Uri fileUri;
+        try {
+            fileUri = FileProvider.getUriForFile(context, applicationId + ".provider", new File(mediaCapturePath));
+        } catch (IllegalArgumentException e) {
+            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media", e);
+            throw new IOException("Cannot access the file planned to store the new media");
+        }
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fileUri);
+
+        if (callback != null) {
+            callback.onMediaCapturePathReady(mediaCapturePath);
         }
         return intent;
     }
@@ -170,18 +184,23 @@ public class WordPressMediaUtils {
             return;
         }
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(makePickOrCaptureIntent(fragment.getActivity(), applicationId, callback),
-                RequestCodes.PICTURE_LIBRARY_OR_CAPTURE);
+
+        Intent intent = makePickOrCaptureIntent(fragment.getActivity(), applicationId, callback);
+        fragment.startActivityForResult(intent, RequestCodes.PICTURE_LIBRARY_OR_CAPTURE);
     }
 
     private static Intent makePickOrCaptureIntent(Context context, String applicationId, LaunchCameraCallback callback) {
         Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
 
         if (DeviceUtils.getInstance().hasCamera(context)) {
-            Intent cameraIntent = getLaunchCameraIntent(context, applicationId, callback);
-            pickPhotoIntent.putExtra(
-                    Intent.EXTRA_INITIAL_INTENTS,
-                    new Intent[]{ cameraIntent });
+            try {
+                Intent cameraIntent = getLaunchCameraIntent(context, applicationId, callback);
+                pickPhotoIntent.putExtra(
+                        Intent.EXTRA_INITIAL_INTENTS,
+                        new Intent[]{ cameraIntent });
+            } catch (IOException e) {
+                // No need to write log here
+            }
         }
 
         return pickPhotoIntent;

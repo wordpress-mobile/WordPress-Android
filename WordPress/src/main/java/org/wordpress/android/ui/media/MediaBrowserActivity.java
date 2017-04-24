@@ -544,8 +544,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void uploadList(List<Uri> uriList) {
+        if (uriList == null || uriList.size() == 0) {
+            return;
+        }
         for (Uri uri : uriList) {
-            fetchMedia(uri, getContentResolver().getType(uri));
+            if (uri != null) {
+                fetchMedia(uri, getContentResolver().getType(uri));
+            }
         }
     }
 
