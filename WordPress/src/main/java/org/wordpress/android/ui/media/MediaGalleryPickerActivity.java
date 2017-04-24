@@ -158,6 +158,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         outState.putIntArray(STATE_SELECTED_ITEMS, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
         outState.putLongArray(STATE_FILTERED_ITEMS, ListUtils.toLongArray(mFilteredItems));
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @SuppressWarnings("unused")
