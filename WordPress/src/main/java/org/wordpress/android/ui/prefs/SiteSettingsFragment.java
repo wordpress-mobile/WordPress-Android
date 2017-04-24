@@ -1237,7 +1237,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 WPPrefUtils.layoutAsInput(input);
                 input.setWidth(getResources().getDimensionPixelSize(R.dimen.list_editor_input_max_width));
                 input.setHint(R.string.site_settings_list_editor_input_hint);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();

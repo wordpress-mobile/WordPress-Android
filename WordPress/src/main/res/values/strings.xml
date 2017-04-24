@@ -1051,7 +1051,6 @@
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
-    <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>

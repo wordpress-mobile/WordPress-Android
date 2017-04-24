@@ -121,7 +121,7 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
         switch (dialogType) {
             case ALERT:
                 builder.setIcon(android.R.drawable.ic_dialog_alert);
-                builder.setNeutralButton(R.string.ok, this);
+                builder.setNeutralButton(android.R.string.ok, this);
                 break;
 
             case CUSTOM:
