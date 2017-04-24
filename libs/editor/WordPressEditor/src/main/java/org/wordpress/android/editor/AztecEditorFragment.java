@@ -851,7 +851,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         attrs.setValue(idName, id);
-        tappedImagePredicate = new ImagePredicate(idName, id);
+        tappedImagePredicate = new ImagePredicate(id, idName);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
