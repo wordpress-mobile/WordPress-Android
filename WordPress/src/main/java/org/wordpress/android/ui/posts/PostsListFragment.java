@@ -447,9 +447,11 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         mHandler.removeCallbacks(mSearchRunnable);
 
         if (!TextUtils.isEmpty(searchTerm)) {
+            showLoadMoreProgress();
             mSearchTerm = searchTerm;
             mHandler.postDelayed(mSearchRunnable, SEARCH_DELAY_MS);
         } else {
+            hideLoadMoreProgress();
             mRecyclerView.setAdapter(getPostListAdapter());
         }
     }
@@ -646,6 +648,8 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostsSearched(OnPostsSearched event) {
+        hideLoadMoreProgress();
+
         if (event.isError()) {
             ToastUtils.showToast(getActivity(), "Error searching posts: " + event.error.type);
             return;
