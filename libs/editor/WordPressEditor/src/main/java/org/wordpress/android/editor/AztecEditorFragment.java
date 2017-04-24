@@ -577,11 +577,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return new ImagePredicate(id, "data-wpid");
         }
 
-        static ImagePredicate newInstance(String idName, String id) {
-            return new ImagePredicate(id, idName);
-        }
-
-        private ImagePredicate(String id, String attributeName) {
+        ImagePredicate(String id, String attributeName) {
             mId = id;
             mAttributeName = attributeName;
         }
@@ -850,7 +846,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         attrs.setValue(idName, id);
-        tappedImagePredicate = ImagePredicate.newInstance(idName, id);
+        tappedImagePredicate = new ImagePredicate(idName, id);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
