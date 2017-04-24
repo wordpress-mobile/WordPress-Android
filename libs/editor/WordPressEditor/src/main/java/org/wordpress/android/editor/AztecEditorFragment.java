@@ -331,7 +331,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return "";
         }
 
-        return StringUtils.notNullStr(title.getText().toString().replaceAll("&nbsp;$", ""));
+        // TODO: Aztec returns a ZeroWidthJoiner when empty so, strip it. Aztec needs fixing to return empty string.
+        return StringUtils.notNullStr(title.getText().toString().replaceAll("&nbsp;$", "").replaceAll("\u200B", ""));
     }
 
     @Override
@@ -439,7 +440,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return "";
         }
 
-        return content.toHtml(false);
+        if (content.getVisibility() == View.VISIBLE) {
+            return content.toHtml(false);
+        } else {
+            return source.getPureHtml(false);
+        }
     }
 
     @Override
