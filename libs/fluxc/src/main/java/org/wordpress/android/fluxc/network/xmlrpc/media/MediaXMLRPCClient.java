@@ -57,6 +57,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request.Builder;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
+    private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
+            "attachment_id", "parent", "title", "caption", "description", "thumbnail", "date_created_gmt", "link"};
+
     private OkHttpClient mOkHttpClient;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
@@ -170,12 +173,22 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         Map responseMap = getMapFromUploadResponse(response);
                         if (responseMap != null) {
                             AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
-                            // We only get the media Id from the response
-                            media.setMediaId(MapUtils.getMapLong(responseMap, "id"));
-                            // Upload media response only has `type, id, file, url` fields whereas we need
-                            // `parent, title, caption, description, videopress_shortcode, thumbnail,
-                            // date_created_gmt, link, width, height` fields, so we need to make a fetch for them
-                            fetchMedia(site, media, true);
+                            if (isDeprecatedUploadResponse(responseMap)) {
+                                media.setMediaId(MapUtils.getMapLong(responseMap, "id"));
+                                // Upload media response only has `type, id, file, url` fields whereas we need
+                                // `parent, title, caption, description, videopress_shortcode, thumbnail,
+                                // date_created_gmt, link, width, height` fields, so we need to make a fetch for them
+                                // This only applies to WordPress sites running versions older than WordPress 4.4
+                                fetchMedia(site, media, true);
+                            } else {
+                                MediaModel responseMedia = getMediaFromXmlrpcResponse(responseMap);
+                                // Retain local IDs
+                                responseMedia.setId(media.getId());
+                                responseMedia.setLocalSiteId(site.getId());
+                                // TODO: setLocalPostId()
+
+                                notifyMediaUploaded(responseMedia, null);
+                            }
                         }
                     } catch (XMLRPCException fault) {
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
@@ -280,9 +293,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (responseMedia != null) {
                     AppLog.v(T.MEDIA, "Fetched media with remoteId= " + media.getMediaId()
                                       + " localId=" + media.getId());
-                    responseMedia.setLocalSiteId(site.getId());
-                    // Keep the same local id after a fetch
+                    // Retain local IDs
                     responseMedia.setId(media.getId());
+                    responseMedia.setLocalSiteId(site.getId());
+                    // TODO: setLocalPostId()
                     if (isFreshUpload) {
                         notifyMediaUploaded(responseMedia, null);
                     } else {
@@ -500,6 +514,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             return null;
         }
         return responseMap;
+    }
+
+    private static boolean isDeprecatedUploadResponse(Map responseMap) throws XMLRPCException {
+        for (String requiredResponseField : REQUIRED_UPLOAD_RESPONSE_FIELDS) {
+            if (!responseMap.containsKey(requiredResponseField)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Map<String, Object> getEditMediaFields(final MediaModel media) {
