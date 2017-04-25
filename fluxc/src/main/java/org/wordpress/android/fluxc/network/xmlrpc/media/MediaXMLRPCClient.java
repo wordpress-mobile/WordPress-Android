@@ -187,6 +187,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                                 responseMedia.setLocalSiteId(site.getId());
 
                                 notifyMediaUploaded(responseMedia, null);
+
+                                // clean from the current uploads map
+                                removeCallFromCurrentUploadsMap(media.getId());
                             }
                         }
                     } catch (XMLRPCException fault) {
