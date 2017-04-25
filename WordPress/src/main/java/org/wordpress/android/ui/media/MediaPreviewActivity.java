@@ -304,10 +304,11 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void loadImage(@NonNull String mediaUri) {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
+        int size = Math.max(width, height);
 
         if (mediaUri.startsWith("http")) {
             showProgress(true);
-            String imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, width, height);
+            String imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -324,9 +325,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
                         delayedFinish(true);
                     }
                 }
-            }, width, height);
+            }, size, 0);
         } else {
-            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mediaUri), width, null, 0);
+            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mediaUri), size, null, 0);
             if (bytes == null) {
                 delayedFinish(true);
                 return;
