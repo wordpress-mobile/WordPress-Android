@@ -65,7 +65,7 @@
                 android:background="@color/white"
                 android:layout_marginBottom="16dp">
 
-                <org.wordpress.persistentedittext.PersistentEditText
+                <org.wordpress.android.widgets.AutoCompleteEmptyTextView
                     android:id="@+id/site_url"
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
@@ -78,8 +78,7 @@
                     android:paddingTop="12dp"
                     android:paddingRight="0dp"
                     android:paddingBottom="12dp"
-                    android:layout_toLeftOf="@+id/textView"
-                    app:persistenceEnabled="true"/>
+                    android:layout_toLeftOf="@+id/textView"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"

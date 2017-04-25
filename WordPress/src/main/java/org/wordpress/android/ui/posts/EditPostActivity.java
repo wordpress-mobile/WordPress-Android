@@ -1925,8 +1925,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        long mediaId = ids.get(0);
-        addExistingMediaToEditor(mediaId);
+        // if only one item was chosen insert it as a media object, otherwise create a gallery
+        // from the selected items
+        if (ids.size() == 1) {
+            long mediaId = ids.get(0);
+            addExistingMediaToEditor(mediaId);
+        } else {
+            MediaGallery gallery = new MediaGallery();
+            gallery.setIds(ids);
+            mEditorFragment.appendGallery(gallery);
+        }
     }
 
     private void handleMediaGalleryResult(Intent data) {
