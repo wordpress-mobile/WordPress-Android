@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -275,15 +276,24 @@ public class WPWebViewActivity extends WebViewActivity {
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
-        if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
-            username = mAccountStore.getAccount().getUserName();
-        }
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
             Toast.makeText(this, getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
             finish();
+            return;
+        }
+
+        if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
+            username = mAccountStore.getAccount().getUserName();
+
+            // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
+            int siteLocalId = AppPrefs.getSelectedSite();
+            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+            if (selectedSite != null && selectedSite.isWPCom() && !TextUtils.isEmpty(selectedSite.getUnmappedUrl())) {
+                addressToLoad = addressToLoad.replace(selectedSite.getUrl(), selectedSite.getUnmappedUrl());
+            }
         }
 
         if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
