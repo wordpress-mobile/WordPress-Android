@@ -35,8 +35,6 @@ import android.webkit.URLUtil;
 
 import com.android.volley.toolbox.ImageLoader;
 
-import org.apache.commons.lang3.math.NumberUtils;
-import org.ccil.cowan.tagsoup.AttributesImpl;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +48,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecText.OnMediaTappedListener;
 import org.wordpress.aztec.HistoryListener;
@@ -66,7 +65,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
+import java.util.UUID;
+
+import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         OnImeBackListener,
@@ -80,6 +81,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
+
+    private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
 
     public static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -104,6 +107,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private Set<String> mFailedMediaIds;
 
     private long mActionStartedAt = -1;
+
+    private ImagePredicate tappedImagePredicate;
 
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -327,7 +332,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return "";
         }
 
-        return StringUtils.notNullStr(title.getText().toString().replaceAll("&nbsp;$", ""));
+        // TODO: Aztec returns a ZeroWidthJoiner when empty so, strip it. Aztec needs fixing to return empty string.
+        return StringUtils.notNullStr(title.getText().toString().replaceAll("&nbsp;$", "").replaceAll("\u200B", ""));
     }
 
     @Override
@@ -401,27 +407,28 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mFailedMediaIds.clear();
 
-        for (Attributes attrs : content.getAllMediaAttributes(failedPredicate)) {
+        for (Attributes attrs : content.getAllElementAttributes(failedPredicate)) {
             mFailedMediaIds.add(attrs.getValue("data-wpid"));
         }
     }
 
     private void overlayFailedMedia() {
         for (String localMediaId : mFailedMediaIds) {
-            Attributes attributes = content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId));
+            Attributes attributes = content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(localMediaId));
             overlayFailedMedia(localMediaId, attributes);
         }
     }
 
     private void overlayFailedMedia(String localMediaId, Attributes attributes) {
         // set intermediate shade overlay
-        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
+        AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+        content.setOverlay(localMediaIdPredicate, 0,
                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_error_color)),
-                Gravity.FILL, attributes);
+                Gravity.FILL);
 
         Drawable alertDrawable = getResources().getDrawable(R.drawable.media_retry_image);
-        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, alertDrawable, Gravity.CENTER,
-                attributes);
+        content.setOverlay(localMediaIdPredicate, 1, alertDrawable, Gravity.CENTER);
+        content.updateElementAttributes(localMediaIdPredicate, new AztecAttributes(attributes));
     }
 
     /**
@@ -434,7 +441,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return "";
         }
 
-        return content.toHtml(false);
+        if (content.getVisibility() == View.VISIBLE) {
+            return content.toHtml(false);
+        } else {
+            return source.getPureHtml(false);
+        }
     }
 
     @Override
@@ -456,9 +467,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
-                AttributesImpl attrs = new AttributesImpl();
-                attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
-                attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
+                AztecAttributes attrs = new AztecAttributes();
+                attrs.setValue("data-wpid", localMediaId);
+                attrs.setValue("src", safeMediaUrl);
+                attrs.setValue("class", "uploading");
 
                 // load a scaled version of the image to prevent OOM exception
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
@@ -474,16 +486,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 // set intermediate shade overlay
-                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
+                AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                content.setOverlay(localMediaIdPredicate, 0,
                         new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
-                        Gravity.FILL, attrs);
+                        Gravity.FILL);
 
                 Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
                 // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                 progressDrawable.setBounds(0, 0, 0, 4);
 
-                content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, progressDrawable,
-                        Gravity.FILL_HORIZONTAL | Gravity.TOP, attrs);
+                content.setOverlay(localMediaIdPredicate, 1, progressDrawable,
+                        Gravity.FILL_HORIZONTAL | Gravity.TOP);
+
+                content.updateElementAttributes(localMediaIdPredicate, attrs);
 
                 content.refreshText();
 
@@ -546,11 +561,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
             if (mediaType.equals(MediaType.IMAGE)) {
-                AttributesImpl attrs = new AttributesImpl();
-                attrs.addAttribute("", "src", "src", "string", remoteUrl);
+
+                AztecAttributes attrs = new AztecAttributes();
+                attrs.setValue("src", remoteUrl);
 
                 // clear overlay
-                content.clearOverlays(ImagePredicate.localMediaIdPredicate(localMediaId), attrs);
+                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                content.clearOverlays(predicate);
+                content.updateElementAttributes(predicate, attrs);
                 content.refreshText();
 
                 mUploadingMedia.remove(localMediaId);
@@ -564,15 +582,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         private final String mId;
         private final String mAttributeName;
 
-        static ImagePredicate localMediaIdPredicate(String id) {
+        static ImagePredicate getLocalMediaIdPredicate(String id) {
             return new ImagePredicate(id, "data-wpid");
         }
 
-        static ImagePredicate idPredicate(String id) {
-            return new ImagePredicate(id, "id");
-        }
-
-        private ImagePredicate(String id, String attributeName) {
+        ImagePredicate(String id, String attributeName) {
             mId = id;
             mAttributeName = attributeName;
         }
@@ -590,11 +604,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
         final MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
-            AttributesWithClass attributesWithClass = new AttributesWithClass(
-                    content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
-            attributesWithClass.addClass("uploading");
-            content.setOverlayLevel(ImagePredicate.localMediaIdPredicate(localMediaId), 1, (int)(progress * 10000),
-                    attributesWithClass.getAttributesIml());
+            AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+            content.setOverlayLevel(localMediaIdPredicate, 1, (int)(progress * 10000));
             content.refreshText();
         }
     }
@@ -609,13 +620,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             switch (mediaType) {
                 case IMAGE:
                     AttributesWithClass attributesWithClass = new AttributesWithClass(
-                            content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
+                            content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(localMediaId)));
 
                     attributesWithClass.removeClass("uploading");
                     attributesWithClass.addClass("failed");
 
-                    // TODO: errorMessage is not being shown as of now. It should be used by overlayFailedMedia
-                    overlayFailedMedia(localMediaId, attributesWithClass.getAttributesIml());
+                    overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
                     content.refreshText();
                     break;
                 case VIDEO:
@@ -623,58 +633,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
             mFailedMediaIds.add(localMediaId);
             mUploadingMedia.remove(localMediaId);
-        }
-    }
-
-    private static Set<String> getClassAttribute(Attributes attributes) {
-        if (attributes.getIndex("class") == -1) {
-            return new HashSet<>(new ArrayList<String>());
-        }
-        return new HashSet<>(Arrays.asList(attributes.getValue("class").split(" ")));
-    }
-
-    static class AttributesWithClass {
-        private AttributesImpl mAttributesIml;
-        private Set<String> mClasses;
-
-        AttributesWithClass(Attributes attrs) {
-            mAttributesIml = new AttributesImpl(attrs);
-            mClasses = getClassAttribute(attrs);
-        }
-
-        void addClass(String c) {
-            mClasses.add(c);
-        }
-
-        void removeClass(String c) {
-            mClasses.remove(c);
-        }
-
-        boolean hasClass(String clazz) {
-            return mClasses.contains(clazz);
-        }
-
-        public Set<String> getClasses() {
-            return mClasses;
-        }
-
-        AttributesImpl getAttributesIml() {
-            String classesStr = TextUtils.join(" ", mClasses);
-            if (mAttributesIml.getIndex("class") == -1) {
-                mAttributesIml.addAttribute("", "class", "class", "string", classesStr);
-            } else {
-                mAttributesIml.setValue(mAttributesIml.getIndex("class"), classesStr);
-            }
-
-            return mAttributesIml;
-        }
-
-        String optValue(String key, String defaultValue) {
-            if (mAttributesIml.getIndex(key) == -1) {
-                return defaultValue;
-            } else {
-                return mAttributesIml.getValue(key);
-            }
         }
     }
 
@@ -871,131 +829,33 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private JSONObject getMetadata(AttributesWithClass attrs, int naturalWidth, int naturalHeight) {
-        JSONObject metadata = new JSONObject();
-        putOpt(metadata, "align", "none");          // Accepted values: center, left, right or empty string.
-        putOpt(metadata, "alt", "");                // Image alt attribute
-        putOpt(metadata, "attachment_id", "");      // Numeric attachment id of the image in the site's media library
-        putOpt(metadata, "caption", "");            // The text of the caption for the image (if any)
-        putOpt(metadata, "captionClassName", "");   // The classes for the caption shortcode (if any).
-        putOpt(metadata, "captionId", "");          // The caption shortcode's ID attribute. The numeric value should match the value of attachment_id
-        putOpt(metadata, "classes", "");            // The class attribute for the image. Does not include editor generated classes
-        putOpt(metadata, "height", "");             // The image height attribute
-        putOpt(metadata, "linkClassName", "");      // The class attribute for the link
-        putOpt(metadata, "linkRel", "");            // The rel attribute for the link (if any)
-        putOpt(metadata, "linkTargetBlank", false); // true if the link should open in a new window.
-        putOpt(metadata, "linkUrl", "");            // The href attribute of the link
-        putOpt(metadata, "size", "custom");         // Accepted values: custom, medium, large, thumbnail, or empty string
-        putOpt(metadata, "src", "");                // The src attribute of the image
-        putOpt(metadata, "title", "");              // The title attribute of the image (if any)
-        putOpt(metadata, "width", "");              // The image width attribute
-        putOpt(metadata, "naturalWidth", "");       // The natural width of the image.
-        putOpt(metadata, "naturalHeight", "");       // The natural height of the image.
-
-        putOpt(metadata, "src", attrs.optValue("src", ""));
-        putOpt(metadata, "alt", attrs.optValue("alt", ""));
-        putOpt(metadata, "title", attrs.optValue("title", ""));
-        putOpt(metadata, "naturalWidth", naturalWidth);
-        putOpt(metadata, "naturalHeight", naturalHeight);
-
-        String width = attrs.optValue("width", "");
-        String height = attrs.optValue("height", "");
-
-        Pattern isIntRegExp = Pattern.compile("^\\d+$");
-
-        if (!isIntRegExp.matcher(width).matches() || NumberUtils.toInt(width) == 0) {
-            putOpt(metadata, "width", naturalWidth);
-        }
-
-        if (!isIntRegExp.matcher(height).matches() || NumberUtils.toInt(height) == 0) {
-            putOpt(metadata, "height", naturalHeight);
-        }
-
-        List<String> extraClasses = new ArrayList<>();
-
-        for (String clazz : attrs.getClasses()) {
-            if (Pattern.matches("^wp-image.*", clazz)) {
-                String attachmentIdString = clazz.replace("wp-image-", "");
-                if (NumberUtils.toInt(attachmentIdString) != 0) {
-                    putOpt(metadata, "attachment_id", attachmentIdString);
-                } else {
-                    AppLog.d(AppLog.T.EDITOR, "AttachmentId was not an integer! String value: " + attachmentIdString);
-                }
-            } else if (Pattern.matches("^align.*", clazz)) {
-                putOpt(metadata, "align", clazz.replace("align", ""));
-            } else if (Pattern.matches("^size-.*", clazz)) {
-                putOpt(metadata, "size", clazz.replace("size-", ""));
-            } else {
-                extraClasses.add(clazz);
-            }
-        }
-
-        putOpt(metadata, "classes", TextUtils.join(" ", extraClasses));
-
-//        // Extract caption
-//        var captionMeta = ZSSEditor.captionMetaForImage( imageNode )
-//        if (captionMeta.caption != '') {
-//            metadata = $.extend( metadata, captionMeta );
-//        }
-//
-//        // Extract linkTo
-//        if ( imageNode.parentNode && imageNode.parentNode.nodeName === 'A' ) {
-//            link = imageNode.parentNode;
-//            metadata.linkClassName = link.className;
-//            metadata.linkRel = $( link ).attr( 'rel' ) || '';
-//            metadata.linkTargetBlank = $( link ).attr( 'target' ) === '_blank' ? true : false;
-//            metadata.linkUrl = $( link ).attr( 'href' ) || '';
-//        }
-
-        return metadata;
-    }
-
-    private JSONObject putOpt(JSONObject jsonObject, String key, String value) {
-        try {
-            return jsonObject.put(key, value);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-    }
-
-    private JSONObject putOpt(JSONObject jsonObject, String key, int value) {
-        try {
-            return jsonObject.put(key, value);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-    }
-
-    private JSONObject putOpt(JSONObject jsonObject, String key, boolean value) {
-        try {
-            return jsonObject.put(key, value);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return jsonObject;
-    }
-
     @Override
-    public void mediaTapped(@NotNull Attributes attrs, int naturalWidth, int naturalHeight) {
-        Set<String> classes = getClassAttribute(attrs);
+    public void mediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
+        Set<String> classes = MetadataUtils.getClassAttribute(attrs);
 
-        String id;
+        String idName;
         String uploadStatus = "";
-        JSONObject meta = getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
+        JSONObject meta = MetadataUtils.getMetadata(new AttributesWithClass(attrs), naturalWidth, naturalHeight);
         if (classes.contains("uploading")) {
             uploadStatus = "uploading";
-            id = attrs.getValue("data-wpid");
+            idName = "data-wpid";
         } else if (classes.contains("failed")) {
             uploadStatus = "failed";
-            id = attrs.getValue("data-wpid");
+            idName = "data-wpid";
         } else {
-            id = attrs.getValue("id");
+            idName = "id";
         }
+
+        String id = attrs.getValue(idName);
+
+        // generate the element ID if "id" or "data-wpid" are missing
+        if (!attrs.hasAttribute(idName) || TextUtils.isEmpty(attrs.getValue(idName))) {
+            idName = TEMP_IMAGE_ID;
+            id = UUID.randomUUID().toString();
+        }
+
+        attrs.setValue(idName, id);
+        tappedImagePredicate = new ImagePredicate(id, idName);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
@@ -1012,16 +872,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
 
-                        switch (mediaType) {
-                            case IMAGE:
-                                content.removeMedia(ImagePredicate.idPredicate(localMediaId));
-                                break;
-                            case VIDEO:
-                                // TODO: remove video
+                        if (mUploadingMedia.containsKey(localMediaId)) {
+                            mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
+
+                            switch (mediaType) {
+                                case IMAGE:
+                                    content.removeMedia(tappedImagePredicate);
+                                    break;
+                                case VIDEO:
+                                    // TODO: remove video
+                            }
+                            mUploadingMedia.remove(localMediaId);
+                        } else {
+                            ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
                         }
-                        mUploadingMedia.remove(localMediaId);
+
                         dialog.dismiss();
                     }
                 });
@@ -1037,25 +903,26 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 break;
             case "failed":
                 // Retry media upload
-                mEditorFragmentListener.onMediaRetryClicked(localMediaId);
-
+                if (mFailedMediaIds.contains(localMediaId)) {
+                    mEditorFragmentListener.onMediaRetryClicked(localMediaId);
+                }
                 switch (mediaType) {
                     case IMAGE:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId)));
+                                content.getElementAttributes(tappedImagePredicate));
                         attributesWithClass.removeClass("failed");
 
                         // set intermediate shade overlay
-                        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 0,
-                                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
-                                Gravity.FILL, attributesWithClass.getAttributesIml());
+                        content.setOverlay(tappedImagePredicate, 0,
+                                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
 
                         Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
                         // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                         progressDrawable.setBounds(0, 0, 0, 4);
 
-                        content.setOverlay(ImagePredicate.localMediaIdPredicate(localMediaId), 1, progressDrawable,
-                                Gravity.FILL_HORIZONTAL | Gravity.TOP, attributesWithClass.getAttributesIml());
+                        content.setOverlay(tappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
+                        content.updateElementAttributes(tappedImagePredicate, attributesWithClass.getAttributes());
+
                         content.refreshText();
                         break;
                     case VIDEO:
@@ -1084,6 +951,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
                 dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
+                dialogBundle.putBoolean("isAztecEnabled", true);
 
                 // Request and add an authorization header for HTTPS images
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://.
@@ -1129,11 +997,87 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if ((requestCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_ADD ||
-                requestCode == LinkDialogFragment.LINK_DIALOG_REQUEST_CODE_UPDATE)) {
-            // TODO: handle link/unlink
-        } else if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
-            // TODO: handle media settings
+        if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
+            if (data == null || data.getExtras() == null && tappedImagePredicate != null) {
+                return;
+            }
+
+            Bundle extras = data.getExtras();
+            JSONObject meta;
+            try {
+                meta = new JSONObject(StringUtils.notNullStr(extras.getString("imageMeta")));
+            } catch (JSONException e) {
+                // ignore errors
+                return;
+            }
+
+            AztecAttributes attributes = content.getElementAttributes(tappedImagePredicate);
+
+            // set image properties
+            attributes.setValue("src", JSONUtils.getString(meta, "src"));
+
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "title"))) {
+                attributes.setValue("title", JSONUtils.getString(meta, "title"));
+            }
+
+            attributes.setValue("width", JSONUtils.getString(meta, "width"));
+            attributes.setValue("height", JSONUtils.getString(meta, "height"));
+
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "alt"))) {
+                attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
+            }
+
+            AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
+
+            // remove previously set properties
+            attributesWithClass.removeClassStartingWith("align-");
+            attributesWithClass.removeClassStartingWith("size-");
+            attributesWithClass.removeClassStartingWith("wp-image-");
+
+            // only assign the align class to the image if we're not printing
+            // a caption, since the alignment is sent to the shortcode
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align")) &&
+                    TextUtils.isEmpty(JSONUtils.getString(meta, "caption"))) {
+                attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
+            }
+
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
+                attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
+            }
+
+            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
+                attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
+            }
+
+            AztecAttributes attrs = attributesWithClass.getAttributes();
+            attrs.removeAttribute(TEMP_IMAGE_ID);
+
+            content.updateElementAttributes(tappedImagePredicate, attrs);
+
+            // captions required shortcode support
+//            String caption = JSONUtils.getString(meta, "caption");
+
+            // there is an issue with having an image inside a link
+            // https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
+//            String link = JSONUtils.getString(meta, "linkUrl");
+
+            final int imageRemoteId = extras.getInt("imageRemoteId");
+            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
+
+            if (imageRemoteId != 0) {
+                if (isFeaturedImage) {
+                    mFeaturedImageId = imageRemoteId;
+                    mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                } else {
+                    // If this image was unset as featured, clear the featured image id
+                    if (mFeaturedImageId == imageRemoteId) {
+                        mFeaturedImageId = 0;
+                        mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                    }
+                }
+            }
+
+            tappedImagePredicate = null;
         }
     }
 

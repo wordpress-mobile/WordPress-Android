@@ -205,7 +205,7 @@ public class WordPress extends MultiDexApplication {
             // The cache size will be measured in kilobytes rather than
             // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            int cacheSize = maxMemory / 16;  //Use 1/16th of the available memory for this memory cache.
+            int cacheSize = maxMemory / 4;  //Use 1/4th of the available memory for this memory cache.
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;

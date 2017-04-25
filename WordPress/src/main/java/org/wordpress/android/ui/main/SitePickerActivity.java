@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -159,9 +160,7 @@ public class SitePickerActivity extends AppCompatActivity
             onBackPressed();
             return true;
         } else if (itemId == R.id.menu_edit) {
-            mRecycleView.setItemAnimator(new DefaultItemAnimator());
-            getAdapter().setEnableEditMode(true);
-            startSupportActionMode(new ActionModeCallback());
+            startEditingVisibility();
             return true;
         } else if (itemId == R.id.menu_search) {
             mSearchView.requestFocus();
@@ -201,6 +200,18 @@ public class SitePickerActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         mDispatcher.register(this);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteRemoved(OnSiteRemoved event) {
+        if (!event.isError()) {
+            getAdapter().loadSites();
+        } else {
+            // shouldn't happen
+            AppLog.e(AppLog.T.DB, "Encountered unexpected error while attempting to remove site: " + event.error);
+            ToastUtils.showToast(this, R.string.site_picker_remove_site_error);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -431,6 +442,23 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onSiteLongClick(final SiteRecord siteRecord) {
+        final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
+        if (site == null) {
+            return false;
+        }
+        if (site.isWPCom()) {
+            if (mActionMode != null) {
+                return false;
+            }
+            startEditingVisibility();
+        } else {
+            showRemoveSelfHostedSiteDialog(site);
+        }
+        return true;
+    }
+
+    @Override
     public void onSiteClick(SiteRecord siteRecord) {
         if (mActionMode == null) {
             hideSoftKeyboard();
@@ -564,5 +592,25 @@ public class SitePickerActivity extends AppCompatActivity
             });
             return builder.create();
         }
+    }
+
+    private void startEditingVisibility() {
+        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+        getAdapter().setEnableEditMode(true);
+        startSupportActionMode(new ActionModeCallback());
+    }
+
+    private void showRemoveSelfHostedSiteDialog(@NonNull final SiteModel site) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(getResources().getText(R.string.remove_account));
+        dialogBuilder.setMessage(getResources().getText(R.string.sure_to_remove_account));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
+            }
+        });
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
+        dialogBuilder.setCancelable(false);
+        dialogBuilder.create().show();
     }
 }

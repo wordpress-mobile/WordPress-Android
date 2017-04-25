@@ -263,15 +263,15 @@ public class PostUploadService extends Service {
                 mPost.setFeaturedImageId(featuredImageID);
             }
 
+            // Track analytics only if the post is newly published
+            if (mFirstPublishPosts.contains(mPost.getId())) {
+                prepareUploadAnalytics(mPost.getContent());
+            }
+
             EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalSiteId()));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
-
-            // Track analytics only if the post is newly published
-            if (mFirstPublishPosts.contains(mPost.getId())) {
-                prepareUploadAnalytics();
-            }
 
             return true;
         }
@@ -282,7 +282,7 @@ public class PostUploadService extends Service {
             return matcher.find();
         }
 
-        private void prepareUploadAnalytics() {
+        private void prepareUploadAnalytics(String postContent) {
             // Calculate the words count
             mCurrentUploadingPostAnalyticsProperties = new HashMap<>();
             mCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
@@ -290,8 +290,22 @@ public class PostUploadService extends Service {
             if (hasGallery()) {
                 mCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
             }
+            if (!mHasImage) {
+                // Check if there is a img tag in the post. Media added in any editor other than legacy.
+                String imageTagsPattern = "<img[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>";
+                Pattern pattern = Pattern.compile(imageTagsPattern);
+                Matcher matcher = pattern.matcher(postContent);
+                mHasImage = matcher.find();
+            }
             if (mHasImage) {
                 mCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
+            }
+            if (!mHasVideo) {
+                // Check if there is a video tag in the post. Media added in any editor other than legacy.
+                String videoTagsPattern = "<video[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>|\\[wpvideo\\s+([^\\]]+)\\]";
+                Pattern pattern = Pattern.compile(videoTagsPattern);
+                Matcher matcher = pattern.matcher(postContent);
+                mHasVideo = matcher.find();
             }
             if (mHasVideo) {
                 mCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
