@@ -35,7 +35,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
-import android.view.ContextMenu;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -110,7 +109,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -163,14 +161,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
     public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     public static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
-
-    // Context menu positioning
-    private static final int SELECT_PHOTO_MENU_POSITION = 0;
-    private static final int CAPTURE_PHOTO_MENU_POSITION = 1;
-    private static final int SELECT_VIDEO_MENU_POSITION = 2;
-    private static final int CAPTURE_VIDEO_MENU_POSITION = 3;
-    private static final int ADD_GALLERY_MENU_POSITION = 4;
-    private static final int SELECT_LIBRARY_MENU_POSITION = 5;
 
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
@@ -518,13 +508,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     /*
-     * native photo picker is only enabled for the Aztec editor
-     */
-    private boolean enablePhotoPicker() {
-        return mShowAztecEditor;
-    }
-
-    /*
      * resizes the photo picker based on device orientation - full height in landscape, half
      * height in portrait
      */
@@ -639,11 +622,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon) {
         hidePhotoPicker();
         switch (icon) {
-            case ANDROID_CAMERA:
+            case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
                 break;
-            case ANDROID_PICKER:
+            case ANDROID_CAPTURE_VIDEO:
+                launchVideoCamera();
+                break;
+            case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
+                break;
+            case ANDROID_CHOOSE_VIDEO:
+                launchVideoLibrary();
                 break;
             case WP_MEDIA:
                 startMediaGalleryAddActivity();
@@ -793,6 +782,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        hidePhotoPicker();
+
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
@@ -854,62 +845,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void openContextMenu(View view) {
-        // if we're using the native photo picker, ignore the request - if we're not using
-        // the photo picker, then this will show the "seven item menu monstrosity"
-        if (enablePhotoPicker()) {
-            return;
-        }
-        if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-            super.openContextMenu(view);
-        } else {
-            AppLockManager.getInstance().setExtendedTimeout();
-            mMenuView = view;
-        }
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.add(0, SELECT_PHOTO_MENU_POSITION, 0, getResources().getText(R.string.select_photo));
-        if (DeviceUtils.getInstance().hasCamera(this)) {
-            menu.add(0, CAPTURE_PHOTO_MENU_POSITION, 0, getResources().getText(R.string.media_add_popup_capture_photo));
-        }
-        menu.add(0, SELECT_VIDEO_MENU_POSITION, 0, getResources().getText(R.string.select_video));
-        if (DeviceUtils.getInstance().hasCamera(this)) {
-            menu.add(0, CAPTURE_VIDEO_MENU_POSITION, 0, getResources().getText(R.string.media_add_popup_capture_video));
-        }
-
-        menu.add(0, ADD_GALLERY_MENU_POSITION, 0, getResources().getText(R.string.media_add_new_media_gallery));
-        menu.add(0, SELECT_LIBRARY_MENU_POSITION, 0, getResources().getText(R.string.select_from_media_library));
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case SELECT_PHOTO_MENU_POSITION:
-                launchPictureLibrary();
-                return true;
-            case CAPTURE_PHOTO_MENU_POSITION:
-                launchCamera();
-                return true;
-            case SELECT_VIDEO_MENU_POSITION:
-                launchVideoLibrary();
-                return true;
-            case CAPTURE_VIDEO_MENU_POSITION:
-                launchVideoCamera();
-                return true;
-            case ADD_GALLERY_MENU_POSITION:
-                startMediaGalleryActivity(null);
-                return true;
-            case SELECT_LIBRARY_MENU_POSITION:
-                startMediaGalleryAddActivity();
-                return true;
-            default:
-                return false;
-        }
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -2202,12 +2137,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onAddMediaClicked() {
-        if (enablePhotoPicker()) {
-            if (!isPhotoPickerShowing()) {
-                showPhotoPicker();
-            } else {
-                hidePhotoPicker();
-            }
+        if (!isPhotoPickerShowing()) {
+            showPhotoPicker();
+        } else {
+            hidePhotoPicker();
         }
     }
 
@@ -2348,6 +2281,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         switch (event) {
             case HTML_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_HTML);
+                hidePhotoPicker();
                 break;
             case MEDIA_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
@@ -2357,6 +2291,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             case LINK_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
+                hidePhotoPicker();
                 break;
             case IMAGE_EDITED:
                 AnalyticsTracker.track(Stat.EDITOR_EDITED_IMAGE);

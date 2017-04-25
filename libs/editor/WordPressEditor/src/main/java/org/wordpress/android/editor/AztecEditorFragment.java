@@ -167,8 +167,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         setHasOptionsMenu(true);
 
-        registerForContextMenu(formattingToolbar);
-
         invalidateOptionsHandler = new Handler();
         invalidateOptionsRunnable = new Runnable() {
             @Override
@@ -385,8 +383,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void enableMediaMode(boolean enable) {
-        // TODO: this won't be available until the next Aztec release
-        //formattingToolbar.enableMediaMode(enable);
+        formattingToolbar.enableMediaMode(enable);
         getActivity().invalidateOptionsMenu();
     }
 
@@ -821,7 +818,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
         } else {
             mEditorFragmentListener.onAddMediaClicked();
-            getActivity().openContextMenu(formattingToolbar);
         }
     }
 

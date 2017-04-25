@@ -202,7 +202,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         Button linkButton = (Button) rootView.findViewById(R.id.link);
         Button moreButton = (Button) rootView.findViewById(R.id.more);
 
-        registerForContextMenu(mAddPictureButton);
         mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
         mContentEditText.setOnSelectionChangedListener(this);
         mContentEditText.setOnTouchListener(this);
@@ -455,9 +454,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             } else if (id == R.id.addPictureButton) {
                 mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
                 mEditorFragmentListener.onAddMediaClicked();
-                if (isAdded()) {
-                    getActivity().openContextMenu(mAddPictureButton);
-                }
             }
         }
     };
