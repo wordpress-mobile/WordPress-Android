@@ -87,7 +87,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaPushed(site, media, error);
+            notifyMediaPushed(site, null, error);
             return;
         }
 
@@ -212,7 +212,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaDeleted(site, media, error);
+            notifyMediaDeleted(site, null, error);
             return;
         }
 
