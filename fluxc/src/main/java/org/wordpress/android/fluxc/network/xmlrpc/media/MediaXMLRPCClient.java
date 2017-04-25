@@ -503,19 +503,18 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private static Map getMapFromUploadResponse(okhttp3.Response response) throws XMLRPCException {
-        Map responseMap = new HashMap();
         try {
             String data = new String(response.body().bytes(), "UTF-8");
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
             Object responseObject = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
             if (responseObject instanceof Map) {
-                responseMap = (Map) responseObject;
+                return (Map) responseObject;
             }
         } catch (IOException | XmlPullParserException e) {
             AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
             return null;
         }
-        return responseMap;
+        return null;
     }
 
     private static boolean isDeprecatedUploadResponse(Map responseMap) throws XMLRPCException {
