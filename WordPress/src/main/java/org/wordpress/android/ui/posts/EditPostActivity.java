@@ -2122,6 +2122,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setMimeType(mimeType);
         media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        if (!mPost.isLocalDraft()) {
+            media.setPostId(mPost.getRemotePostId());
+        }
 
         return media;
     }
