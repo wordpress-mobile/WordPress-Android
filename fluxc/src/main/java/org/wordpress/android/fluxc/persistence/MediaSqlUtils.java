@@ -238,7 +238,7 @@ public class MediaSqlUtils {
             // update, media item already exists
             int oldId = existingMedia.get(0).getId();
             return WellSql.update(MediaModel.class).whereId(oldId)
-                    .put(media, new UpdateAllExceptId<MediaModel>()).execute();
+                    .put(media, new UpdateAllExceptId<>(MediaModel.class)).execute();
         }
     }
 
