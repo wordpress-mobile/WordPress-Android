@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -46,6 +45,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         unpackIntent(getIntent());
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mCurrentSearch = savedInstanceState.getString(EXTRA_SEARCH_TERM, null);
         }
 
         // need a Site to continue
@@ -96,7 +96,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         getMenuInflater().inflate(R.menu.posts_list, menu);
 
         MenuItem searchAction = menu.findItem(R.id.search_posts_list);
-        View actionView = searchAction == null ? null : searchAction.getActionView();
+        SearchView actionView = searchAction == null ? null : (SearchView) searchAction.getActionView();
         if (actionView != null) {
             MenuItemCompat.setOnActionExpandListener(searchAction, new MenuItemCompat.OnActionExpandListener() {
                 @Override
@@ -110,7 +110,11 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
                     return true;
                 }
             });
-            ((SearchView) actionView).setOnQueryTextListener(this);
+            actionView.setOnQueryTextListener(this);
+
+            if (!TextUtils.isEmpty(mCurrentSearch)) {
+                actionView.setQuery(mCurrentSearch, true);
+            }
         }
 
         return true;
@@ -143,6 +147,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
     @Override
     public boolean onQueryTextChange(String query) {
+        mCurrentSearch = query;
         mPostList.filterPosts(query);
         return false;
     }
@@ -164,9 +169,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         }
         if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
             mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
-        }
-        if (intent.hasExtra(EXTRA_SEARCH_TERM)) {
-            mCurrentSearch = intent.getStringExtra(EXTRA_SEARCH_TERM);
         }
     }
 
