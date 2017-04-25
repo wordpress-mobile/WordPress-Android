@@ -1050,6 +1050,65 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Login - Auto Fill Credentials Updated");
                 break;
+            case LOGIN_PROLOGUE_VIEWED:instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                    mixpanelInstructionsForEventName("Login - Prologue Viewed");
+                break;
+            case LOGIN_EMAIL_FORM_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Email Form Viewed");
+                break;
+            case LOGIN_EMAIL_RETRY_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Email Retry Viewed");
+                break;
+            case LOGIN_MAGIC_LINK_OPEN_FORM_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Magic Link Open Mail Viewed");
+                break;
+            case LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Magic Link Request Viewed");
+                break;
+            case LOGIN_PASSWORD_FORM_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Password Form Viewed");
+                break;
+            case LOGIN_PASSWORD_RETRY_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Password Retry Viewed");
+                break;
+            case LOGIN_URL_FORM_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - URL Form Viewed");
+                break;
+            case LOGIN_URL_RETRY_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - URL Retry Viewed");
+                break;
+            case LOGIN_URL_HELP_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - URL Help Viewed");
+                break;
+            case LOGIN_USERNAME_PASSWORD_FORM_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Username Password Viewed");
+                break;
+            case LOGIN_USERNAME_PASSWORD_RETRY_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Username Password Retry Viewed");
+                break;
+            case LOGIN_TWO_FACTOR_FORM_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Two Factor Viewed");
+                break;
+            case LOGIN_EPILOGUE_VIEWED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Epilogue Viewed");
+                break;
+            case LOGIN_FORGOT_PASSWORD_CLICKED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Login - Forgot Password Clicked");
+                break;
             case PERSON_REMOVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("People Management - Removed Person");
