@@ -13,6 +13,8 @@ import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.HTTPAuthModel;
@@ -54,7 +56,9 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Request.Builder;
+import okhttp3.Response;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
     private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
@@ -95,9 +99,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     AppLog.i(T.MEDIA, "Media updated on remote: " + media.getTitle());
                     notifyMediaPushed(site, media, null);
                 }
-            }, new BaseRequest.BaseErrorListener() {
+            }, new BaseErrorListener() {
                 @Override
-                public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                public void onErrorResponse(@NonNull BaseNetworkError error) {
                     AppLog.e(T.MEDIA, "error response to XMLRPC.EDIT_MEDIA request: " + error);
                     if (is404Response(error)) {
                         AppLog.e(T.MEDIA, "media does not exist, no need to report error");
@@ -123,7 +127,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         if (!MediaUtils.canReadFile(media.getFilePath())) {
-            MediaStore.MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
+            MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
             notifyMediaUploaded(media, error);
             return;
         }
@@ -148,7 +152,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             authString = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
         }
 
-        Builder builder = new okhttp3.Request.Builder()
+        Builder builder = new Request.Builder()
                 .url(url)
                 .post(requestBody)
                 .addHeader("User-Agent", mUserAgent.toString());
@@ -157,7 +161,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             // Add the authorization header
             builder.addHeader("Authorization", authString);
         }
-        okhttp3.Request request = builder.build();
+        Request request = builder.build();
 
         Call call = mOkHttpClient.newCall(request);
         mCurrentUploadCalls.put(media.getId(), call);
@@ -165,7 +169,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, okhttp3.Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     // HTTP_OK code doesn't mean the upload is successful, XML-RPC API returns code 200 with an
                     // xml field "faultCode" on error.
@@ -213,7 +217,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (!media.isUploadCancelled()) {
                     // TODO it would be great to raise some more fine grained errors here, for
                     // instance timeouts should be raised instead of GENERIC_ERROR
-                    MediaStore.MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                    MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
                     error.message = e.getLocalizedMessage();
                     notifyMediaUploaded(media, error);
                 }
@@ -255,9 +259,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     notifyMediaListFetched(site, error);
                 }
             }
-        }, new BaseRequest.BaseErrorListener() {
+        }, new BaseErrorListener() {
             @Override
-            public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+            public void onErrorResponse(@NonNull BaseNetworkError error) {
                 AppLog.e(T.MEDIA, "XMLRPC.GET_MEDIA_LIBRARY error response:", error.volleyError);
                 MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                 notifyMediaListFetched(site, mediaError);
@@ -313,9 +317,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     }
                 }
             }
-        }, new BaseRequest.BaseErrorListener() {
+        }, new BaseErrorListener() {
             @Override
-            public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+            public void onErrorResponse(@NonNull BaseNetworkError error) {
                 AppLog.v(T.MEDIA, "XMLRPC.GET_MEDIA_ITEM error response: " + error);
                 MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                 if (isFreshUpload) {
@@ -352,9 +356,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
                 notifyMediaDeleted(site, media, null);
             }
-        }, new BaseRequest.BaseErrorListener() {
+        }, new BaseErrorListener() {
             @Override
-            public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+            public void onErrorResponse(@NonNull BaseNetworkError error) {
                 AppLog.v(T.MEDIA, "Error response from XMLRPC.DELETE_MEDIA:" + error);
                 MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                 notifyMediaDeleted(site, media, new MediaError(mediaError));
@@ -364,7 +368,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     public void cancelUpload(final MediaModel media) {
         if (media == null) {
-            MediaStore.MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
             notifyMediaUploaded(null, error);
             return;
         }
@@ -508,7 +512,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return mediaError;
     }
 
-    private static Map getMapFromUploadResponse(okhttp3.Response response) throws XMLRPCException {
+    private static Map getMapFromUploadResponse(Response response) throws XMLRPCException {
         try {
             String data = new String(response.body().bytes(), "UTF-8");
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
@@ -541,7 +545,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return mediaFields;
     }
 
-    private boolean is404Response(BaseRequest.BaseNetworkError error) {
+    private boolean is404Response(BaseNetworkError error) {
         if (error.isGeneric() && error.type == BaseRequest.GenericErrorType.NOT_FOUND) {
             return true;
         }
