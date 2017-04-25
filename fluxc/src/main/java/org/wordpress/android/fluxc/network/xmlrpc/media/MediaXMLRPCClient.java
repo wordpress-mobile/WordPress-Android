@@ -275,7 +275,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaFetched(site, null, error);
+            if (isFreshUpload) {
+                notifyMediaUploaded(null, error);
+            } else {
+                notifyMediaFetched(site, null, error);
+            }
             return;
         }
 
@@ -300,7 +304,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 } else {
                     AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                    notifyMediaFetched(site, media, error);
+                    if (isFreshUpload) {
+                        notifyMediaUploaded(media, error);
+                    } else {
+                        notifyMediaFetched(site, media, error);
+                    }
                 }
             }
         }, new BaseRequest.BaseErrorListener() {
