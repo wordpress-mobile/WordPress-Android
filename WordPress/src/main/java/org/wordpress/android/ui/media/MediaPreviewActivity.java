@@ -313,7 +313,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        mImageView.setImageBitmap(response.getBitmap());
+                        setBitmap(response.getBitmap());
                     }
                 }
                 @Override
@@ -334,14 +334,17 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             if (bmp != null) {
-                mImageView.setImageBitmap(bmp);
+                setBitmap(bmp);
             } else {
                 delayedFinish(true);
                 return;
             }
         }
+    }
 
-        // assign the photo attacher to enable pinch/zoom
+    private void setBitmap(@NonNull Bitmap bmp) {
+        // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
+        // for it to be correctly resized upon loading
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
 
         // fade in metadata when tapped
@@ -355,6 +358,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 }
             });
         }
+
+        mImageView.setImageBitmap(bmp);
     }
 
     /*
