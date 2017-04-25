@@ -236,7 +236,7 @@
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
     <string name="button_publish">Publish</string>
-    <string name="button_save">Save</string>
+    <string name="button_save" translatable="false">@string/save</string>
     <string name="button_view">View</string>
     <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
