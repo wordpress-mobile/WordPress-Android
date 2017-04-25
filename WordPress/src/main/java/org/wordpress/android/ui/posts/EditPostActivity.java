@@ -1763,7 +1763,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else {
             mediaModel.setTitle(ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath()));
         }
-        mediaModel.setPostId(mPost.getId());
+        mediaModel.setLocalPostId(mPost.getId());
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
 
