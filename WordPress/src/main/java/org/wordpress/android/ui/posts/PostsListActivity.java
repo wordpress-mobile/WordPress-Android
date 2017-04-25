@@ -33,7 +33,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     private PostsListFragment mPostList;
     private SiteModel mSite;
 
-    private MenuItem mSearchAction;
     private String mCurrentSearch;
 
     @Inject SiteStore mSiteStore;
@@ -67,7 +66,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mPostList = getPostListFragment();
+        mPostList = (PostsListFragment) getFragmentManager().findFragmentById(R.id.postList);
 
         showErrorDialogIfNeeded(getIntent().getExtras());
     }
@@ -96,10 +95,10 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
         getMenuInflater().inflate(R.menu.posts_list, menu);
 
-        mSearchAction = menu.findItem(R.id.search_posts_list);
-        View actionView = mSearchAction.getActionView();
-        if (mSearchAction != null && actionView != null) {
-            MenuItemCompat.setOnActionExpandListener(mSearchAction, new MenuItemCompat.OnActionExpandListener() {
+        MenuItem searchAction = menu.findItem(R.id.search_posts_list);
+        View actionView = searchAction == null ? null : searchAction.getActionView();
+        if (actionView != null) {
+            MenuItemCompat.setOnActionExpandListener(searchAction, new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem menuItem) {
                     return true;
@@ -137,9 +136,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (mSearchAction != null) {
-            mSearchAction.collapseActionView();
-        }
+        mPostList.filterPosts(query);
         setActionBarTitle("'" + query + "'");
         return false;
     }
@@ -159,14 +156,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         if (actionBar != null) {
             actionBar.setTitle(title);
         }
-    }
-
-    private PostsListFragment getPostListFragment() {
-        PostsListFragment frag = (PostsListFragment) getFragmentManager().findFragmentById(R.id.postList);
-        if (frag == null) {
-            frag = PostsListFragment.newInstance(mSite);
-        }
-        return frag;
     }
 
     private void unpackIntent(@NonNull Intent intent) {
