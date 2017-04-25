@@ -61,7 +61,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            setActionBarTitle(getString(mIsPage ? R.string.pages : R.string.posts));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -105,7 +105,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                    setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+                    setActionBarTitle(getString(mIsPage ? R.string.pages : R.string.posts));
                     return true;
                 }
             });
@@ -134,21 +134,11 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     }
 
     @Override
-    public void setTitle(CharSequence title) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(title);
-        } else {
-            super.setTitle(title);
-        }
-    }
-
-    @Override
     public boolean onQueryTextSubmit(String query) {
         if (mSearchAction != null) {
             mSearchAction.collapseActionView();
         }
-        setTitle("'" + query + "'");
+        setActionBarTitle("'" + query + "'");
         return false;
     }
 
@@ -160,6 +150,13 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
     public boolean isRefreshing() {
         return mPostList.isRefreshing();
+    }
+
+    private void setActionBarTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        }
     }
 
     private PostsListFragment getPostListFragment() {
