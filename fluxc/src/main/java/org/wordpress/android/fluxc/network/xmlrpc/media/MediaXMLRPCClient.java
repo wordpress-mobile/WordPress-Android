@@ -191,6 +191,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                                 // clean from the current uploads map
                                 removeCallFromCurrentUploadsMap(media.getId());
                             }
+                        } else {
+                            AppLog.w(T.MEDIA, "error uploading media - malformed response: " + response.message());
+                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR, response.message());
+                            notifyMediaUploaded(media, error);
+
+                            // clean from the current uploads map
+                            removeCallFromCurrentUploadsMap(media.getId());
                         }
                     } catch (XMLRPCException fault) {
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
