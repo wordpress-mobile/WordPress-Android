@@ -64,7 +64,12 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PostsListFragment extends Fragment implements PostsListAdapter.OnPostButtonClickListener {
+public class PostsListFragment extends Fragment
+        implements PostsListAdapter.OnPostsLoadedListener,
+        PostsListAdapter.OnLoadMoreListener,
+        PostsListAdapter.OnPostSelectedListener,
+        PostsListAdapter.OnPostButtonClickListener {
+
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private static final long SEARCH_DELAY_MS = 1000L;
@@ -79,6 +84,7 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     private TextView mEmptyViewTitle;
     private ImageView mEmptyViewImage;
 
+    private boolean mCanLoadMorePosts = true;
     private boolean mIsPage;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
@@ -269,6 +275,9 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
     private @Nullable PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
             mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+            mPostsListAdapter.setOnLoadMoreListener(this);
+            mPostsListAdapter.setOnPostsLoadedListener(this);
+            mPostsListAdapter.setOnPostSelectedListener(this);
             mPostsListAdapter.setOnPostButtonClickListener(this);
         }
 
@@ -416,6 +425,44 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
             mShouldCancelPendingDraftNotification = false;
         }
         super.onDetach();
+    }
+
+    /*
+     * called by the adapter after posts have been loaded
+     */
+    @Override
+    public void onPostsLoaded(int postCount) {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (postCount == 0 && !mIsFetchingPosts) {
+            if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            } else {
+                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+            }
+        } else if (postCount > 0) {
+            hideEmptyView();
+        }
+    }
+
+    /*
+     * called by the adapter to load more posts when the user scrolls towards the last post
+     */
+    @Override
+    public void onLoadMore() {
+        if (mCanLoadMorePosts && !mIsFetchingPosts) {
+            requestPosts(true);
+        }
+    }
+
+    /*
+     * called by the adapter when the user clicks a post
+     */
+    @Override
+    public void onPostSelected(PostModel post) {
+        onPostButtonClicked(PostListButton.BUTTON_EDIT, post);
     }
 
     /*
