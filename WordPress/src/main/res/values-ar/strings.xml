@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-06 20:58:49+0000
+Translation-Revision-Date: 2017-04-14 09:48:33+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+	<string name="error_all_media_upload_canceled">تم إلغاء جميع عمليات رفع الوسائط بسبب خطأ غير معروف. يُرجى إعادة محاولة الرفع</string>
+	<string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
+	<string name="error_unknown_post">مقالة غير معروفة، ربما تكون النسخة المحلية من هذه المقالة غير متزامنة مع الخادم</string>
+	<string name="error_fetch_site_after_creation">تم إنشاء الموقع، ربما تحتاج إلى تحديث مواقعك في منتقي المواقع.</string>
+	<string name="error_media_request_too_large">الوسائط كبيرة جدًا ولا يمكن رفعها</string>
+	<string name="error_media_parse_error">يتعذر تحليل الاستجابة بعد رفع الوسائط</string>
+	<string name="error_upload_params">حدث خطأ أثناء رفع %1$s: %2$s</string>
+	<string name="submit_for_review">إرسال</string>
+	<string name="media_error_too_large_upload">الملف كبير جدًا. يُرجى الاتصال بمزود خدمة استضافة الويب لإصلاح هذه المشكلة</string>
 	<string name="reader_photo_by">صورة بواسطة %s</string>
 	<string name="all_your_sites">جميع مواقعي</string>
 	<string name="reader_label_image_count_one">صورة واحدة</string>
@@ -425,7 +434,6 @@ Language: ar
 	<string name="media_file_name">اسم الملف: %s</string>
 	<string name="media_uploaded_on">تم الرفع في: %s</string>
 	<string name="media_dimensions">أبعاد: %s</string>
-	<string name="upload_queued">تم الوضع في قائمة الانتظار</string>
 	<string name="media_file_type">نوع الملف: %s</string>
 	<string name="reader_label_gap_marker">تحميل المزيد من المقالات</string>
 	<string name="notifications_no_search_results">لا توجد مواقع مطابقة "%s"</string>
@@ -552,7 +560,6 @@ Language: ar
 	<string name="hide">إخفاء</string>
 	<string name="deselect_all">إلغاء تحديد الكل</string>
 	<string name="stats_generic_error">تعذر تحميل الإحصاءات المطلوبة</string>
-	<string name="error_publish_no_network">لا يمكن النشر في حالة عدم وجود اتصال. تم الحفظ كمسودة.</string>
 	<string name="editor_toast_invalid_path">مسار الملف غير صالح</string>
 	<string name="verification_code">رمز التحقق</string>
 	<string name="invalid_verification_code">رمز التحقق غير صالح</string>
@@ -946,7 +953,6 @@ Language: ar
 	<string name="reader_label_removed_tag">تم حذف %s</string>
 	<string name="reader_toast_err_tag_exists">أنت متابع لهذا الوسم بالفعل</string>
 	<string name="reader_toast_err_comment_failed">لايمكن نشر تعليقك</string>
-	<string name="reader_share_subject">تمت المشاركة من %s</string>
 	<string name="reader_toast_err_url_intent">لايمكن فتح %s</string>
 	<string name="reader_toast_err_view_image">لايمكن عرض الصورة</string>
 	<string name="reader_toast_err_share_intent">لايمكن المشاركة</string>

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-10 00:23:26+0000
+Translation-Revision-Date: 2017-04-20 08:01:35+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="photo_picker_title">写真を選択</string>
+	<string name="error_publish_no_network">デバイスがオフラインです。変更をローカルで保存しました。</string>
+	<string name="editor_post_saved_online_not_published">投稿はオンラインで下書きとして保存されました。公開しませんか ?</string>
+	<string name="editor_post_saved_online">投稿はオンラインで保存しました</string>
+	<string name="editor_post_saved_locally_not_published">投稿はローカルのみで保存されました。公開しませんか ?</string>
+	<string name="editor_post_saved_locally">投稿をデバイスに保存しました</string>
+	<string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
+	<string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
+	<string name="media_encoder_quality_95">非常に高い</string>
+	<string name="media_encoder_quality_90">高い</string>
+	<string name="media_encoder_quality_85">普通</string>
+	<string name="media_encoder_quality_80">低い</string>
+	<string name="media_upload_state_uploaded">アップロード済み</string>
+	<string name="media_encoder_quality_100">最高</string>
+	<string name="media_upload_state_failed">失敗</string>
+	<string name="media_upload_state_deleted">削除済み</string>
+	<string name="media_upload_state_deleting">削除中</string>
+	<string name="media_upload_state_uploading">アップロード中</string>
+	<string name="media_upload_state_queued">待機中</string>
+	<string name="update_draft">下書きを更新</string>
+	<string name="keep_editing">編集を続行</string>
+	<string name="image_quality">画質</string>
+	<string name="error_all_media_upload_canceled">不明なエラーにより、メディアのアップロードはすべてキャンセルされました。もう一度アップロードをお試しください</string>
+	<string name="error_unknown_post_type">投稿フォーマットが不明です</string>
+	<string name="error_unknown_post">不明な投稿です。この投稿のローカルコピーがサーバーと同期されていない可能性があります。</string>
+	<string name="error_fetch_site_after_creation">サイトは作成されているので、サイトピッカーでサイトを最新表示してください。</string>
+	<string name="error_media_request_too_large">メディアのサイズが大きすぎるため、アップロードできません</string>
+	<string name="error_media_parse_error">メディアのアップロード後の応答を解析できませんでした</string>
+	<string name="error_upload_params">%1$sをアップロードする際にエラーが発生しました。%2$s</string>
+	<string name="submit_for_review">送信</string>
+	<string name="media_error_too_large_upload">ファイルのサイズが大きすぎます。この問題を解決するには、Web ホスティングサービスに連絡してください</string>
 	<string name="role_subscriber">購読者</string>
 	<string name="tell_me_more">もっと知る</string>
 	<string name="duplicate_site_detected">重複サイトが検出されました。</string>
@@ -23,7 +54,6 @@ Language: ja_JP
 	<string name="error_media_unauthorized">メディアを表示または編集する権限がありません</string>
 	<string name="error_media_not_found">メディアを検出できませんでした</string>
 	<string name="error_media_insufficient_fs_permissions">メディアファイルに対する読み取り権限が必要です</string>
-	<string name="site_settings_optimize_images_hint">モバイル接続の帯域幅を節約する場合に有効にする</string>
 	<string name="site_settings_optimize_images">画像を最適化</string>
 	<string name="no_site_error">WordPress サイトに接続できませんでした。有効な WordPress サイトはこの\nアドレスにはありません。入力したサイトアドレス (URL) を確認してください。</string>
 	<string name="media_generic_error">メディアエラーが発生しました</string>
@@ -513,7 +543,6 @@ Language: ja_JP
 	<string name="media_file_name">ファイル名: %s</string>
 	<string name="media_uploaded_on">アップロード日: %s</string>
 	<string name="media_dimensions">サイズ: %s</string>
-	<string name="upload_queued">待機中</string>
 	<string name="media_file_type">ファイル形式: %s</string>
 	<string name="reader_label_gap_marker">さらに投稿を読み込む</string>
 	<string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
@@ -653,7 +682,6 @@ Language: ja_JP
 	<string name="invalid_verification_code">無効な認証コード</string>
 	<string name="verification_code">認証コード</string>
 	<string name="editor_toast_invalid_path">無効なファイルパス</string>
-	<string name="error_publish_no_network">接続がないため公開できません。下書きとして保存します。</string>
 	<string name="device">端末</string>
 	<string name="language">言語</string>
 	<string name="media_details_label_file_name">ファイル名</string>
@@ -1043,7 +1071,6 @@ Language: ja_JP
 	<string name="reader_label_removed_tag">%s を削除</string>
 	<string name="reader_likes_only_you">「いいね」をつけました</string>
 	<string name="username_invalid">無効なユーザー名</string>
-	<string name="reader_share_subject">%s から共有</string>
 	<string name="jetpack_not_found">Jetpack プラグインが見つかりません</string>
 	<string name="reader_toast_err_view_image">画像を表示できません</string>
 	<string name="reader_toast_err_tag_exists">すでにこのタグをフォロー中です</string>

@@ -464,7 +464,6 @@ Language: bg
 	<string name="media_dimensions">Размери: %s</string>
 	<string name="media_uploaded_on">Дата на качване: %s</string>
 	<string name="media_file_type">Тип на файл: %s</string>
-	<string name="upload_queued">В опашката</string>
 	<string name="reader_label_gap_marker">Зареждане на още публикации</string>
 	<string name="notifications_no_search_results">Нито един сайт няма \'%s\'</string>
 	<string name="search_sites">Търсене в сайтовете</string>
@@ -601,7 +600,6 @@ Language: bg
 	<string name="editor_toast_invalid_path">Невалиден път до файла</string>
 	<string name="language">Език</string>
 	<string name="invalid_verification_code">Невалиден верификационен код</string>
-	<string name="error_publish_no_network">Не може да бъде публикувано когато няма връзка с интернет. Запазено в чернови.</string>
 	<string name="verify">Верифициране</string>
 	<string name="two_step_footer_label">Въведете кода, предоставен от приложението за оторизиране</string>
 	<string name="two_step_footer_button">Изпращане на кода чрез текстово съобщение</string>
@@ -980,7 +978,6 @@ Language: bg
 	<string name="nux_add_selfhosted_blog">Добавяне на самостоятелно хостван уебсайт</string>
 	<string name="nux_oops_not_selfhosted_blog">Влизане в WordPress.com</string>
 	<string name="reader_likes_only_you">Ти хареса това</string>
-	<string name="reader_share_subject">Споделено от %s</string>
 	<string name="reader_likes_one">Едно лице хареса това</string>
 	<string name="username_invalid">Невалидно потребителско име</string>
 	<string name="reader_untitled_post">(Неозаглавен)</string>
