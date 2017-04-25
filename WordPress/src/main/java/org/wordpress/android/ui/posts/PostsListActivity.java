@@ -99,7 +99,7 @@ public class PostsListActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getText(R.string.error))
                .setMessage(errorMessage)
-               .setPositiveButton(R.string.ok, null)
+               .setPositiveButton(android.R.string.ok, null)
                .setCancelable(true);
 
         builder.create().show();

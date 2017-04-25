@@ -41,6 +41,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        if (!isValidEvent(stat)) {
+            return;
+        }
+
         String eventName = getEventNameForStat(stat);
         if (eventName == null) {
             AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
@@ -156,27 +160,43 @@ public class AnalyticsTrackerNosara extends Tracker {
             userType = TracksClient.NosaraUserType.ANON;
         }
 
+        // It seems that we're tracking some events with user = null. Make sure we're catching the error here.
+        if (user == null) {
+            try {
+                throw new AnalyticsException("Trying to track analytics with an null user!");
+                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+            } catch (AnalyticsException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+            return;
+        }
 
         // create the merged JSON Object of properties
         // Properties defined by the user have precedence over the default ones pre-defined at "event level"
-        final JSONObject propertiesToJSON;
+        JSONObject propertiesToJSON = null;
         if (properties != null && properties.size() > 0) {
-            propertiesToJSON = new JSONObject(properties);
-            for (String key : predefinedEventProperties.keySet()) {
-                try {
-                    if (propertiesToJSON.has(key)) {
-                        AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
-                                "the same property pre-defined at event level. This may generate unexpected behavior!!");
-                        AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
-                                predefinedEventProperties.get(key).toString());
-                    } else {
-                        propertiesToJSON.put(key, predefinedEventProperties.get(key));
+            try {
+                propertiesToJSON = new JSONObject(properties);
+                for (String key : predefinedEventProperties.keySet()) {
+                    try {
+                        if (propertiesToJSON.has(key)) {
+                            AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
+                                    "the same property pre-defined at event level. This may generate unexpected behavior!!");
+                            AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
+                                    predefinedEventProperties.get(key).toString());
+                        } else {
+                            propertiesToJSON.put(key, predefinedEventProperties.get(key));
+                        }
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                     }
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                 }
+            } catch (NullPointerException e) {
+                AppLog.e(AppLog.T.STATS, "A property passed to the event " + eventName + " has null key!", e);
             }
-        } else{
+        }
+
+        if (propertiesToJSON == null) {
             propertiesToJSON = new JSONObject(predefinedEventProperties);
         }
 
@@ -186,8 +206,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
         }
     }
-
-
 
     @Override
     public void endSession() {
@@ -251,6 +269,10 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
+        if (!isValidEvent(stat)) {
+            return null;
+        }
+
         switch (stat) {
             case APPLICATION_OPENED:
                 return "application_opened";

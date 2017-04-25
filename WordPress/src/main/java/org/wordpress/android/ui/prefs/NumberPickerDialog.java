@@ -98,7 +98,7 @@ public class NumberPickerDialog extends DialogFragment
             mHeaderText.setVisibility(View.GONE);
         }
 
-        builder.setPositiveButton(R.string.ok, this);
+        builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);
 

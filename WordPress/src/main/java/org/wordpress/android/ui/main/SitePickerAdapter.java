@@ -36,6 +36,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
 
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
+        boolean onSiteLongClick(SiteRecord site);
     }
 
     interface OnSelectedCountChangedListener {
@@ -192,6 +193,26 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                 } else {
                     AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
                 }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int clickedPosition = holder.getAdapterPosition();
+                if (isValidPosition(clickedPosition)) {
+                    if (mIsMultiSelectEnabled) {
+                        toggleSelection(clickedPosition);
+                        return true;
+                    } else if (mSiteSelectedListener != null) {
+                        boolean result = mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
+                        setItemSelected(clickedPosition, true);
+                        return result;
+                    }
+                } else {
+                    AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
+                }
+                return false;
             }
         });
     }

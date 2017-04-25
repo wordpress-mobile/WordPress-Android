@@ -6,4 +6,10 @@
         android:icon="@drawable/ab_icon_edit"
         android:title="@string/edit"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_share_24dp"
+        android:title="@string/share_link"
+        app:showAsAction="ifRoom" />
 </menu>
