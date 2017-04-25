@@ -466,7 +466,7 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         }
     }
 
-    private void updateAdapter(List<PostModel> posts) {
+    private void showSearchResults(List<PostModel> posts) {
         if (posts == null || posts.isEmpty()) {
             mRecyclerView.setAdapter(null);
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
@@ -666,7 +666,7 @@ public class PostsListFragment extends Fragment implements PostsListAdapter.OnPo
         }
 
         List<PostModel> results = event.searchResults == null ? null : event.searchResults.getPosts();
-        updateAdapter(results);
+        showSearchResults(results);
     }
 
     /*
