@@ -187,34 +187,22 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                                 responseMedia.setLocalSiteId(site.getId());
 
                                 notifyMediaUploaded(responseMedia, null);
-
-                                // clean from the current uploads map
-                                removeCallFromCurrentUploadsMap(media.getId());
                             }
                         } else {
                             AppLog.w(T.MEDIA, "error uploading media - malformed response: " + response.message());
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR, response.message());
                             notifyMediaUploaded(media, error);
-
-                            // clean from the current uploads map
-                            removeCallFromCurrentUploadsMap(media.getId());
                         }
                     } catch (XMLRPCException fault) {
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
                         AppLog.w(T.MEDIA, "media upload failed with error: " + mediaError.message);
                         notifyMediaUploaded(media, mediaError);
-
-                        // clean from the current uploads map
-                        removeCallFromCurrentUploadsMap(media.getId());
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
                     MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
                     error.message = response.message();
                     notifyMediaUploaded(media, error);
-
-                    // clean from the current uploads map
-                    removeCallFromCurrentUploadsMap(media.getId());
                 }
             }
 
@@ -228,8 +216,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     error.message = e.getLocalizedMessage();
                     notifyMediaUploaded(media, error);
                 }
-                // clean from the current uploads map
-                mCurrentUploadCalls.remove(media.getId());
             }
         });
     }
@@ -316,9 +302,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
                     notifyMediaFetched(site, media, error);
                 }
-
-                // clean from the current uploads map
-                removeCallFromCurrentUploadsMap(media.getId());
             }
         }, new BaseRequest.BaseErrorListener() {
             @Override
@@ -386,8 +369,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             // after cancellation (or as a product of it) we don't need to notify about the error
             media.setUploadCancelled(true);
             correspondingCall.cancel();
-            // clean from the current uploads map
-            mCurrentUploadCalls.remove(mediaModelId);
 
             // report the upload was successfully cancelled
             notifyMediaUploadCanceled(media);
@@ -409,6 +390,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
+        if (media != null) {
+            removeCallFromCurrentUploadsMap(media.getId());
+        }
+
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
@@ -436,6 +421,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaUploadCanceled(MediaModel media) {
+        if (media != null) {
+            removeCallFromCurrentUploadsMap(media.getId());
+        }
+
         ProgressPayload payload = new ProgressPayload(media, 0.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
