@@ -70,7 +70,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public class NewUserFragment extends AbstractFragment implements TextWatcher {
+public class NewUserFragment extends AbstractFragment {
     public static final int NEW_USER = 1;
     private AutoCompleteTextView mSiteUrlTextField;
     private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
@@ -100,18 +100,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return new NewUserFragment();
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        checkIfFieldsFilled();
-    }
 
     private boolean fieldsFilled() {
         return EditTextUtils.getText(mEmailTextField).trim().length() > 0
@@ -521,10 +509,26 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mSiteUrlSuggestionAdapter = new ArrayAdapter<>(getActivity(), R.layout.domain_suggestion_dropdown);
         mSiteUrlTextField.setAdapter(mSiteUrlSuggestionAdapter);
 
-        mEmailTextField.addTextChangedListener(this);
-        mPasswordTextField.addTextChangedListener(this);
-        mUsernameTextField.addTextChangedListener(this);
+        mEmailTextField.addTextChangedListener(mCheckFieldsFilledWatcher);
+        mPasswordTextField.addTextChangedListener(mCheckFieldsFilledWatcher);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
+        mUsernameTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkIfFieldsFilled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mSiteUrlSuggestionAdapter.clear();
+                mSiteUrlSuggestionAdapter.notifyDataSetChanged();
+            }
+        });
 
         mSiteUrlTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -539,7 +543,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             @Override
             public void afterTextChanged(Editable editable) {
                 lowerCaseEditable(editable);
-                mSiteUrlSuggestionAdapter.clear();
             }
         });
 
@@ -572,6 +575,21 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         initInfoButton(rootView);
         return rootView;
     }
+
+    private final TextWatcher mCheckFieldsFilledWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkIfFieldsFilled();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
     private void checkIfFieldsFilled() {
         if (fieldsFilled()) {
