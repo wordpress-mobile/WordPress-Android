@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.yarolegovich.wellsql.DefaultWellConfig;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.WellTableManager;
+import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.TableClass;
 import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 
@@ -21,6 +22,8 @@ import org.wordpress.android.fluxc.network.HTTPAuthModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class WellSqlConfig extends DefaultWellConfig {
@@ -28,17 +31,17 @@ public class WellSqlConfig extends DefaultWellConfig {
         super(context);
     }
 
-    private static final Class[] TABLES = {
-            AccountModel.class,
-            SiteModel.class,
-            MediaModel.class,
-            PostFormatModel.class,
-            PostModel.class,
-            CommentModel.class,
-            TaxonomyModel.class,
-            TermModel.class,
-            HTTPAuthModel.class
-    };
+    private static final List<Class<? extends Identifiable>> TABLES = new ArrayList<Class<? extends Identifiable>>() {{
+        add(AccountModel.class);
+        add(CommentModel.class);
+        add(HTTPAuthModel.class);
+        add(MediaModel.class);
+        add(PostFormatModel.class);
+        add(PostModel.class);
+        add(SiteModel.class);
+        add(TaxonomyModel.class);
+        add(TermModel.class);
+    }};
 
     @Override
     public int getDbVersion() {
@@ -52,7 +55,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public void onCreate(SQLiteDatabase db, WellTableManager helper) {
-        for (Class table : TABLES) {
+        for (Class<? extends Identifiable> table : TABLES) {
             helper.createTable(table);
         }
     }
@@ -117,7 +120,7 @@ public class WellSqlConfig extends DefaultWellConfig {
      */
     public void reset() {
         SQLiteDatabase db = WellSql.giveMeWritableDb();
-        for (Class clazz : TABLES) {
+        for (Class<? extends Identifiable> clazz : TABLES) {
             TableClass table = getTable(clazz);
             db.execSQL("DROP TABLE IF EXISTS " + table.getTableName());
             db.execSQL(table.createStatement());
