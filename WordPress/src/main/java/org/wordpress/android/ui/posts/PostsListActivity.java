@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -96,7 +97,8 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         getMenuInflater().inflate(R.menu.posts_list, menu);
 
         mSearchAction = menu.findItem(R.id.search_posts_list);
-        if (mSearchAction != null && mSearchAction.getActionView() != null) {
+        View actionView = mSearchAction.getActionView();
+        if (mSearchAction != null && actionView != null) {
             MenuItemCompat.setOnActionExpandListener(mSearchAction, new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem menuItem) {
@@ -109,7 +111,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
                     return true;
                 }
             });
-            ((SearchView) mSearchAction.getActionView()).setOnQueryTextListener(this);
+            ((SearchView) actionView).setOnQueryTextListener(this);
         }
 
         return true;
