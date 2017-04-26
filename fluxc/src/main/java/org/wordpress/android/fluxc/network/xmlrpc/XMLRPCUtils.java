@@ -17,29 +17,28 @@ public class XMLRPCUtils {
 
     @NonNull
     public static <T> T safeGetMapValue(@NonNull Map<?, ?> map, String key, T defaultValue) {
-        if (map != null) {
-            if (!map.containsKey(key)) {
-                return defaultValue;
-            }
-            Object value = map.get(key);
-            if (defaultValue.getClass().isInstance(value)) {
-                return (T) value;
-            }
-
-            if (defaultValue instanceof String) {
-                return (T) MapUtils.getMapStr(map, key);
-            } else if (defaultValue instanceof Boolean) {
-                return (T) Boolean.valueOf(MapUtils.getMapBool(map, key));
-            } else if (defaultValue instanceof Integer) {
-                return (T) Integer.valueOf(MapUtils.getMapInt(map, key, (Integer) defaultValue));
-            } else if (defaultValue instanceof Long) {
-                return (T) Long.valueOf(MapUtils.getMapLong(map, key, (Long) defaultValue));
-            } else if (defaultValue instanceof Float) {
-                return (T) Float.valueOf(MapUtils.getMapFloat(map, key, (Float) defaultValue));
-            } else if (defaultValue instanceof Double) {
-                return (T) Double.valueOf(MapUtils.getMapDouble(map, key, (Double) defaultValue));
-            }
+        if (!map.containsKey(key)) {
+            return defaultValue;
         }
+        Object value = map.get(key);
+        if (defaultValue.getClass().isInstance(value)) {
+            return (T) value;
+        }
+
+        if (defaultValue instanceof String) {
+            return (T) MapUtils.getMapStr(map, key);
+        } else if (defaultValue instanceof Boolean) {
+            return (T) Boolean.valueOf(MapUtils.getMapBool(map, key));
+        } else if (defaultValue instanceof Integer) {
+            return (T) Integer.valueOf(MapUtils.getMapInt(map, key, (Integer) defaultValue));
+        } else if (defaultValue instanceof Long) {
+            return (T) Long.valueOf(MapUtils.getMapLong(map, key, (Long) defaultValue));
+        } else if (defaultValue instanceof Float) {
+            return (T) Float.valueOf(MapUtils.getMapFloat(map, key, (Float) defaultValue));
+        } else if (defaultValue instanceof Double) {
+            return (T) Double.valueOf(MapUtils.getMapDouble(map, key, (Double) defaultValue));
+        }
+
         return defaultValue;
     }
 
