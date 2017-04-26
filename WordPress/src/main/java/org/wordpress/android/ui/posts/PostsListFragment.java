@@ -196,6 +196,7 @@ public class PostsListFragment extends Fragment
             boolean isPublishable = post != null && PostUtils.isPublishable(post);
             boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
             boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
+            boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
 
             if (hasChanges) {
                 if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -213,14 +214,26 @@ public class PostsListFragment extends Fragment
                                         }
                                     }).show();
                         } else if (savedLocally) {
-                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                    R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_publish, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            publishPost(post);
-                                        }
-                                    }).show();
+                            if (isScheduledPost) {
+                                Snackbar.make(getActivity().findViewById(R.id.coordinator),
+                                        R.string.editor_scheduled_post_saved_locally, Snackbar.LENGTH_LONG)
+                                        .setAction(R.string.button_save, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                publishPost(post);
+                                            }
+                                        }).show();
+
+                            } else {
+                                Snackbar.make(getActivity().findViewById(R.id.coordinator),
+                                        R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
+                                        .setAction(R.string.button_publish, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                publishPost(post);
+                                            }
+                                        }).show();
+                            }
                         } else if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
                             Snackbar.make(getActivity().findViewById(R.id.coordinator),
                                     R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
