@@ -413,7 +413,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         listToUpdate.clear();
 
         for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
-            mFailedMediaIds.add(attrs.getValue("data-wpid"));
+            listToUpdate.add(attrs.getValue("data-wpid"));
         }
     }
 
