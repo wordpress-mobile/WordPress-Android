@@ -57,6 +57,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request.Builder;
 
 public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListener {
+    private static final String[] REQUIRED_UPLOAD_RESPONSE_FIELDS = {
+            "attachment_id", "parent", "title", "caption", "description", "thumbnail", "date_created_gmt", "link"};
+
     private OkHttpClient mOkHttpClient;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
@@ -167,32 +170,39 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     // HTTP_OK code doesn't mean the upload is successful, XML-RPC API returns code 200 with an
                     // xml field "faultCode" on error.
                     try {
-                        MediaModel responseMedia = getMediaFromUploadResponse(response);
-                        if (responseMedia != null) {
+                        Map responseMap = getMapFromUploadResponse(response);
+                        if (responseMap != null) {
                             AppLog.d(T.MEDIA, "media upload successful, local id=" + media.getId());
-                            // We only get the media Id from the response
-                            media.setMediaId(responseMedia.getMediaId());
-                            // Upload media response only has `type, id, file, url` fields whereas we need
-                            // `parent, title, caption, description, videopress_shortcode, thumbnail,
-                            // date_created_gmt, link, width, height` fields, so we need to make a fetch for them
-                            fetchMedia(site, media, true);
+                            if (isDeprecatedUploadResponse(responseMap)) {
+                                media.setMediaId(MapUtils.getMapLong(responseMap, "id"));
+                                // Upload media response only has `type, id, file, url` fields whereas we need
+                                // `parent, title, caption, description, videopress_shortcode, thumbnail,
+                                // date_created_gmt, link, width, height` fields, so we need to make a fetch for them
+                                // This only applies to WordPress sites running versions older than WordPress 4.4
+                                fetchMedia(site, media, true);
+                            } else {
+                                MediaModel responseMedia = getMediaFromXmlrpcResponse(responseMap);
+                                // Retain local IDs
+                                responseMedia.setId(media.getId());
+                                responseMedia.setLocalSiteId(site.getId());
+
+                                notifyMediaUploaded(responseMedia, null);
+                            }
+                        } else {
+                            AppLog.w(T.MEDIA, "error uploading media - malformed response: " + response.message());
+                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR, response.message());
+                            notifyMediaUploaded(media, error);
                         }
                     } catch (XMLRPCException fault) {
                         MediaError mediaError = getMediaErrorFromXMLRPCException(fault);
                         AppLog.w(T.MEDIA, "media upload failed with error: " + mediaError.message);
                         notifyMediaUploaded(media, mediaError);
-
-                        // clean from the current uploads map
-                        removeCallFromCurrentUploadsMap(media.getId());
                     }
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response.message());
                     MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
                     error.message = response.message();
                     notifyMediaUploaded(media, error);
-
-                    // clean from the current uploads map
-                    removeCallFromCurrentUploadsMap(media.getId());
                 }
             }
 
@@ -206,8 +216,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     error.message = e.getLocalizedMessage();
                     notifyMediaUploaded(media, error);
                 }
-                // clean from the current uploads map
-                mCurrentUploadCalls.remove(media.getId());
             }
         });
     }
@@ -267,7 +275,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            notifyMediaFetched(site, null, error);
+            if (isFreshUpload) {
+                notifyMediaUploaded(null, error);
+            } else {
+                notifyMediaFetched(site, null, error);
+            }
             return;
         }
 
@@ -280,9 +292,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 if (responseMedia != null) {
                     AppLog.v(T.MEDIA, "Fetched media with remoteId= " + media.getMediaId()
                                       + " localId=" + media.getId());
-                    responseMedia.setLocalSiteId(site.getId());
-                    // Keep the same local id after a fetch
+                    // Retain local IDs
                     responseMedia.setId(media.getId());
+                    responseMedia.setLocalSiteId(site.getId());
+
                     if (isFreshUpload) {
                         notifyMediaUploaded(responseMedia, null);
                     } else {
@@ -291,11 +304,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 } else {
                     AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
                     MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                    notifyMediaFetched(site, media, error);
+                    if (isFreshUpload) {
+                        notifyMediaUploaded(media, error);
+                    } else {
+                        notifyMediaFetched(site, media, error);
+                    }
                 }
-
-                // clean from the current uploads map
-                removeCallFromCurrentUploadsMap(media.getId());
             }
         }, new BaseRequest.BaseErrorListener() {
             @Override
@@ -363,8 +377,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             // after cancellation (or as a product of it) we don't need to notify about the error
             media.setUploadCancelled(true);
             correspondingCall.cancel();
-            // clean from the current uploads map
-            mCurrentUploadCalls.remove(mediaModelId);
 
             // report the upload was successfully cancelled
             notifyMediaUploadCanceled(media);
@@ -385,7 +397,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaUploaded(@NonNull MediaModel media, MediaError error) {
+    private void notifyMediaUploaded(MediaModel media, MediaError error) {
+        if (media != null) {
+            removeCallFromCurrentUploadsMap(media.getId());
+        }
+
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
@@ -413,6 +429,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaUploadCanceled(MediaModel media) {
+        if (media != null) {
+            removeCallFromCurrentUploadsMap(media.getId());
+        }
+
         ProgressPayload payload = new ProgressPayload(media, 0.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
@@ -439,7 +459,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return responseMedia;
     }
 
-    private MediaModel getMediaFromXmlrpcResponse(HashMap response) {
+    private MediaModel getMediaFromXmlrpcResponse(Map response) {
         if (response == null || response.isEmpty()) return null;
 
         MediaModel media = new MediaModel();
@@ -486,20 +506,28 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return mediaError;
     }
 
-    private MediaModel getMediaFromUploadResponse(okhttp3.Response response) throws XMLRPCException {
-        MediaModel media = new MediaModel();
+    private static Map getMapFromUploadResponse(okhttp3.Response response) throws XMLRPCException {
         try {
             String data = new String(response.body().bytes(), "UTF-8");
             InputStream is = new ByteArrayInputStream(data.getBytes(Charset.forName("UTF-8")));
-            Object obj = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
-            if (obj instanceof Map) {
-                media.setMediaId(MapUtils.getMapLong((Map) obj, "id"));
+            Object responseObject = XMLSerializerUtils.deserialize(XMLSerializerUtils.scrubXmlResponse(is));
+            if (responseObject instanceof Map) {
+                return (Map) responseObject;
             }
         } catch (IOException | XmlPullParserException e) {
             AppLog.w(AppLog.T.MEDIA, "Failed to parse XMLRPC.wpUploadFile response: " + response);
             return null;
         }
-        return media;
+        return null;
+    }
+
+    private static boolean isDeprecatedUploadResponse(Map responseMap) throws XMLRPCException {
+        for (String requiredResponseField : REQUIRED_UPLOAD_RESPONSE_FIELDS) {
+            if (!responseMap.containsKey(requiredResponseField)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Map<String, Object> getEditMediaFields(final MediaModel media) {
