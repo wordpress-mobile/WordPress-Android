@@ -204,45 +204,31 @@ public class PostsListFragment extends Fragment
                             ToastUtils.Duration.SHORT);
                 } else {
                     if (isPublishable) {
+                        View.OnClickListener publishPostListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                publishPost(post);
+                            }
+                        };
                         if (hasUnfinishedMedia) {
-                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                    R.string.editor_post_saved_locally_unfinished_media, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_edit, new View.OnClickListener() {
+                            showSnackbar(R.string.editor_post_saved_locally_unfinished_media, R.string.button_edit,
+                                    new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                                         }
-                                    }).show();
+                            });
                         } else if (savedLocally) {
                             if (isScheduledPost) {
-                                Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                        R.string.editor_scheduled_post_saved_locally, Snackbar.LENGTH_LONG)
-                                        .setAction(R.string.button_save, new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                publishPost(post);
-                                            }
-                                        }).show();
-
+                                showSnackbar(R.string.editor_scheduled_post_saved_locally, R.string.button_save,
+                                        publishPostListener);
                             } else {
-                                Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                        R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
-                                        .setAction(R.string.button_publish, new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                publishPost(post);
-                                            }
-                                        }).show();
+                                showSnackbar(R.string.editor_post_saved_locally_not_published, R.string.button_publish,
+                                        publishPostListener);
                             }
                         } else if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
-                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                    R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_publish, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            publishPost(post);
-                                        }
-                                    }).show();
+                            showSnackbar(R.string.editor_post_saved_online_not_published, R.string.button_publish,
+                                    publishPostListener);
                         }
                     } else {
                         if (savedLocally) {
@@ -254,7 +240,11 @@ public class PostsListFragment extends Fragment
                 }
             }
         }
+    }
 
+    private void showSnackbar(int messageRes, int buttonTitleRes, View.OnClickListener onClickListener) {
+        Snackbar.make(getActivity().findViewById(R.id.coordinator), messageRes, Snackbar.LENGTH_LONG)
+                .setAction(buttonTitleRes, onClickListener).show();
     }
 
     private void initSwipeToRefreshHelper(View view) {
