@@ -1146,13 +1146,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             if (!mediaFile.isVideo()) {
-                AztecAttributes attrs = new AztecAttributes();
+
+                // fill in Aztec with the post's content
+                AztecText content = new AztecText(context);
+                content.fromHtml(postContent);
+
+                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+
+                // remove then uploading class
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(predicate));
+                attributesWithClass.removeClass("uploading");
+
+                // add then new src property with the remoteUrl
+                AztecAttributes attrs = attributesWithClass.getAttributes();
                 attrs.setValue("src", remoteUrl);
 
                 // clear overlay
-                AztecText content = new AztecText(context);
-                content.fromHtml(postContent);
-                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                 content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attrs);
                 content.refreshText();
