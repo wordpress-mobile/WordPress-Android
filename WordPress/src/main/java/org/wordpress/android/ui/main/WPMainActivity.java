@@ -641,7 +641,9 @@ public class WPMainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         // Sign-out is handled in `handleSiteRemoved`, no need to show the `SignInActivity` here
-        mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+        if (mAccountStore.hasAccessToken()) {
+            mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
+        }
     }
 
     @SuppressWarnings("unused")
