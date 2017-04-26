@@ -76,7 +76,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
         }
 
         alertDialogBuilder.setCancelable(true)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         if (getTargetFragment() instanceof Callback) {
                             ((Callback) getTargetFragment()).onSuccessfulInput(editText.getText().toString(), callbackId);

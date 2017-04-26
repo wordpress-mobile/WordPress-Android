@@ -129,7 +129,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(media.getFilePath());
         boolean isSelected = isItemSelected(media.getId());
-        boolean isImage = media.getMimeType().startsWith("image/");
+        boolean isImage = media.getMimeType() != null && media.getMimeType().startsWith("image/");
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
@@ -283,6 +283,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
+                    if (!isValidPosition(position)) {
+                        return;
+                    }
                     if (isInMultiSelect()) {
                         if (canSelectPosition(position)) {
                             toggleItemSelected(GridViewHolder.this, position);
