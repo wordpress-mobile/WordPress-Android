@@ -412,14 +412,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         listToUpdate.clear();
 
-<<<<<<< HEAD
-        for (Attributes attrs : content.getAllMediaAttributes(uploadingPredicate)) {
-            String localMediaId = attrs.getValue("data-wpid");
-            safeAddMediaIdToSet(listToUpdate, localMediaId);
-=======
-        for (Attributes attrs : content.getAllElementAttributes(failedPredicate)) {
+        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
             mFailedMediaIds.add(attrs.getValue("data-wpid"));
->>>>>>> feature/fluxc-media-upload-service-multiple-uploads
         }
     }
 
@@ -435,24 +429,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void overlayProgressingMedia() {
         for (String localMediaId : mUploadingMedia) {
-            Attributes attributes = content.getMediaAttributes(ImagePredicate.localMediaIdPredicate(localMediaId));
-            overlayProgressingMedia(localMediaId, attributes);
+            overlayProgressingMedia(localMediaId);
         }
     }
 
-    private void overlayProgressingMedia(String localMediaId, Attributes attributes) {
+    private void overlayProgressingMedia(String localMediaId) {
         // set intermediate shade overlay
-        ImagePredicate predicate =  ImagePredicate.localMediaIdPredicate(localMediaId);
+        ImagePredicate predicate =  ImagePredicate.getLocalMediaIdPredicate(localMediaId);
         content.setOverlay(predicate, 0,
                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
-                Gravity.FILL, attributes);
+                Gravity.FILL);
 
         Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
         // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
         progressDrawable.setBounds(0, 0, 0, 4);
 
         content.setOverlay(predicate, 1, progressDrawable,
-                Gravity.FILL_HORIZONTAL | Gravity.TOP, attributes);
+                Gravity.FILL_HORIZONTAL | Gravity.TOP);
 
         content.refreshText();
     }
@@ -512,14 +505,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
-<<<<<<< HEAD
-                AttributesImpl attrs = getAttributesWithSourceAndDataWpId(localMediaId, safeMediaUrl);
-=======
                 AztecAttributes attrs = new AztecAttributes();
                 attrs.setValue("data-wpid", localMediaId);
                 attrs.setValue("src", safeMediaUrl);
                 attrs.setValue("class", "uploading");
->>>>>>> feature/fluxc-media-upload-service-multiple-uploads
 
                 // load a scaled version of the image to prevent OOM exception
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
@@ -535,40 +524,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 // set intermediate shade overlay
-<<<<<<< HEAD
-                overlayProgressingMedia(localMediaId, attrs);
+                overlayProgressingMedia(localMediaId);
 
                 mUploadingMedia.add(localMediaId);
-=======
-                AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
-                content.setOverlay(localMediaIdPredicate, 0,
-                        new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
-                        Gravity.FILL);
-
-                Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
-                // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
-                progressDrawable.setBounds(0, 0, 0, 4);
-
-                content.setOverlay(localMediaIdPredicate, 1, progressDrawable,
-                        Gravity.FILL_HORIZONTAL | Gravity.TOP);
-
-                content.updateElementAttributes(localMediaIdPredicate, attrs);
-
-                content.refreshText();
-
-                mUploadingMedia.put(localMediaId, MediaType.IMAGE);
->>>>>>> feature/fluxc-media-upload-service-multiple-uploads
             }
         }
-    }
-
-    private AttributesImpl getAttributesWithSourceAndDataWpId(String localMediaId, String safeMediaUrl) {
-        AttributesImpl attrs = new AttributesImpl();
-        attrs.addAttribute("", "data-wpid", "data-wpid", "string", localMediaId);
-        if (safeMediaUrl != null) {
-            attrs.addAttribute("", "src", "src", "string", safeMediaUrl);
-        }
-        return attrs;
     }
 
     @Override
@@ -947,7 +907,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        if (mUploadingMedia.containsKey(localMediaId)) {
+                        if (mUploadingMedia.contains(localMediaId)) {
                             mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
 
                             switch (mediaType) {
