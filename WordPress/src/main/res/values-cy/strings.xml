@@ -23,7 +23,6 @@ Language: cy_GB
 	<string name="error_media_unauthorized">Nid oes gennych ganiatâd i weld y na golygu  cyfryngau</string>
 	<string name="error_media_not_found">Methu canfod cyfryngau</string>
 	<string name="error_media_insufficient_fs_permissions">Mae angen caniatâd darllen ar y ffeil cyfrwng</string>
-	<string name="site_settings_optimize_images_hint">Galluogi i arbed lled band ar gysylltiadau symudol</string>
 	<string name="site_settings_optimize_images">Optimeiddio Delweddau</string>
 	<string name="no_site_error">Methu cysylltu â gwefan WordPress. Nid oes gwefan WordPress dilys yn y cyfeiriad\n      hwn. Gwiriwch cyfeiriad y wefan (URL).</string>
 	<string name="media_generic_error">Digwyddodd gwall cyfryngau</string>
@@ -513,7 +512,6 @@ Language: cy_GB
 	<string name="media_file_name">Enw ffeil: %s</string>
 	<string name="media_uploaded_on">Llwythwyd i fyny ar: %s</string>
 	<string name="media_dimensions">Dimensiynau: %s</string>
-	<string name="upload_queued">Mewn ciw</string>
 	<string name="media_file_type">Math o ffeil: %s</string>
 	<string name="reader_label_gap_marker">Llwytho rhagor o gofnodion</string>
 	<string name="notifications_no_search_results">Dim gwefannau\'n cydweddu â \'%s\'</string>
@@ -655,7 +653,6 @@ Language: cy_GB
 	<string name="invalid_verification_code">Cod dilysu annilys</string>
 	<string name="verification_code">Cod dilysu</string>
 	<string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
-	<string name="error_publish_no_network">Methu cyhoeddi heb gysylltiad. Cadw fel drafft.</string>
 	<string name="device">Dyfais</string>
 	<string name="language">Iaith</string>
 	<string name="media_details_label_file_type">Math o ffeil</string>
@@ -1048,7 +1045,6 @@ Language: cy_GB
 	<string name="reader_btn_follow">Dilyn</string>
 	<string name="reader_btn_unfollow">Yn dilyn</string>
 	<string name="reader_btn_share">Rhannu</string>
-	<string name="reader_share_subject">Rhannu o %s</string>
 	<string name="reader_untitled_post">(Dideitl)</string>
 	<string name="jetpack_not_found">Heb ganfod ategyn jetpack</string>
 	<string name="select_from_media_library">Dewiswch o\'r llyfrgell cyfryngau</string>

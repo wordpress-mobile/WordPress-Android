@@ -1,17 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-18 11:30:35+0000
+Translation-Revision-Date: 2017-04-19 11:53:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+	<string name="photo_picker_title">Scegli foto</string>
+	<string name="error_publish_no_network">Il dispositivo è offline. Le modifiche sono state salvate a livello locale.</string>
+	<string name="editor_post_saved_online_not_published">L\'articolo è stato salvato online come bozza. Prendi in considerazione la possibilità di pubblicarlo.</string>
+	<string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
+	<string name="editor_post_saved_locally_not_published">L\'articolo è stato salvato solo a livello locale. Prendi in considerazione la possibilità di pubblicarlo.</string>
+	<string name="editor_post_saved_locally">L\'articolo è stato salvato sul dispositivo</string>
+	<string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
+	<string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
+	<string name="media_encoder_quality_100">Massima</string>
+	<string name="media_encoder_quality_95">Molto alta</string>
+	<string name="media_encoder_quality_90">Alta</string>
+	<string name="media_encoder_quality_85">Media</string>
+	<string name="media_encoder_quality_80">Bassa</string>
+	<string name="media_upload_state_uploaded">Caricato</string>
+	<string name="media_upload_state_failed">Non riuscito</string>
+	<string name="media_upload_state_deleted">Eliminato</string>
+	<string name="media_upload_state_deleting">Eliminazione in corso</string>
+	<string name="media_upload_state_uploading">Caricamento in corso</string>
+	<string name="media_upload_state_queued">Accodato</string>
+	<string name="update_draft">Aggiorna bozza</string>
+	<string name="keep_editing">Continua a modificare</string>
+	<string name="image_quality">Qualità delle immagini</string>
+	<string name="error_all_media_upload_canceled">Tutti i caricamenti dei file multimediali sono stati cancellati a causa di un errore sconosciuto. Riprova il caricamento.</string>
+	<string name="error_unknown_post_type">Formato dell\'articolo sconosciuto</string>
+	<string name="error_unknown_post">Articolo sconosciuto, la copia locale potrebbe non essere sincronizzata con il server.</string>
+	<string name="error_fetch_site_after_creation">Il sito è stato creato. Potresti aver bisogno di aggiornare i tuoi siti nel relativo selezionatore.</string>
+	<string name="error_media_request_too_large">File multimediale troppo grande, non può essere caricato</string>
+	<string name="error_media_parse_error">Impossibile analizzare la risposta dopo il caricamento del file multimediale</string>
+	<string name="error_upload_params">Errore durante il caricamento di %1$s: %2$s</string>
+	<string name="submit_for_review">Invia</string>
+	<string name="media_error_too_large_upload">Il file è troppo grande. Contatta il fornitore del servizio di hosting per risolvere il problema.</string>
 	<string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
 	<string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
 	<string name="visual_editor_disabled">Editor visuale disabilitato</string>
 	<string name="preference_editor_visual">Visuale</string>
-	<string name="preference_editor_legacy">Attuale</string>
 	<string name="preference_editor_type">Imposta il tipo di editor</string>
+	<string name="preference_editor_legacy">Testuale</string>
 	<string name="pending_draft_one_generic">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
 	<string name="pending_draft_one_month">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
 	<string name="pending_draft_one_week_2">\'%1$s\' rimane una bozza. Ricordati di pubblicarlo!</string>
@@ -484,7 +515,6 @@ Language: it
 	<string name="media_file_name">Nome del file: %s</string>
 	<string name="media_uploaded_on">Aggiornato il: %s</string>
 	<string name="media_dimensions">Dimensioni: %s</string>
-	<string name="upload_queued">Accodato</string>
 	<string name="media_file_type">Tipo di file: %s</string>
 	<string name="reader_label_gap_marker">Carica altri articoli</string>
 	<string name="notifications_no_search_results">Nessun sito corrisponde a \'%s\'</string>
@@ -619,7 +649,6 @@ Language: it
 	<string name="stats_generic_error">Le statistiche richieste non possono venir caricate</string>
 	<string name="device">Dispositivo</string>
 	<string name="language">Lingua</string>
-	<string name="error_publish_no_network">Impossibile pubblicare perchè non c\'è una connessione. Salva come bozza.</string>
 	<string name="editor_toast_invalid_path">Percorso file non valido</string>
 	<string name="verification_code">Codice di verifica</string>
 	<string name="invalid_verification_code">Codice di verifica non valido</string>
@@ -1010,7 +1039,6 @@ Language: it
 	<string name="reader_likes_one">Ad una persona piace questo</string>
 	<string name="reader_likes_only_you">Ti piace questo</string>
 	<string name="reader_untitled_post">(Senza titolo)</string>
-	<string name="reader_share_subject">Condividi da %s</string>
 	<string name="reader_btn_share">Condividi</string>
 	<string name="reader_btn_follow">Segui</string>
 	<string name="reader_btn_unfollow">Seguendo</string>

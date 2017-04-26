@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-22 12:41:47+0000
+Translation-Revision-Date: 2017-04-19 08:54:35+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+	<string name="photo_picker_title">Pilih foto</string>
+	<string name="error_publish_no_network">Perangkat offline. Perubahan disimpan secara lokal.</string>
+	<string name="editor_post_saved_online_not_published">Pos disimpan online sebagai konsep. Pertimbangkan untuk memublikasikannya.</string>
+	<string name="editor_post_saved_online">Pos disimpan online</string>
+	<string name="editor_post_saved_locally_not_published">Pos hanya disimpan secara lokal. Pertimbangkan untuk memublikasikannya.</string>
+	<string name="editor_post_saved_locally">Pos disimpan di perangkat Anda</string>
+	<string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
+	<string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
+	<string name="media_encoder_quality_100">Maksimum</string>
+	<string name="media_encoder_quality_95">Sangat Tinggi</string>
+	<string name="media_encoder_quality_90">Tinggi</string>
+	<string name="media_encoder_quality_85">Sedang</string>
+	<string name="media_encoder_quality_80">Rendah</string>
+	<string name="media_upload_state_uploaded">Diunggah</string>
+	<string name="media_upload_state_failed">Gagal</string>
+	<string name="media_upload_state_deleted">Dihapus</string>
+	<string name="media_upload_state_deleting">Menghapus</string>
+	<string name="media_upload_state_uploading">Mengunggah</string>
+	<string name="media_upload_state_queued">Diantrekan</string>
+	<string name="update_draft">Perbarui konsep</string>
+	<string name="keep_editing">Lanjutkan menyunting</string>
+	<string name="image_quality">Kualitas gambar</string>
+	<string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
+	<string name="error_unknown_post_type">Format pos tidak diketahui</string>
+	<string name="error_unknown_post">Pos tidak diketahui, salinan lokal pos ini mungkin tidak sinkron dengan server</string>
+	<string name="error_fetch_site_after_creation">Situs telah dibuat, Anda mungkin perlu menyegarkan situs di pemilih situs.</string>
+	<string name="error_media_request_too_large">Media terlalu besar, tidak dapat diunggah</string>
+	<string name="error_media_parse_error">Tidak dapat mengurai respons setelah mengunggah media</string>
+	<string name="error_upload_params">Error saat mengunggah %1$s: %2$s</string>
+	<string name="submit_for_review">Kirim</string>
+	<string name="media_error_too_large_upload">File terlalu besar. Hubungi penyedia hosting web untuk menyelesaikan masalah ini</string>
 	<string name="reader_empty_followed_blogs_search_title">Tidak ada situs yang cocok</string>
 	<string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
 	<string name="preference_editor_visual">Visual</string>
@@ -484,7 +515,6 @@ Language: id
 	<string name="media_file_name">Nama file: %s</string>
 	<string name="media_uploaded_on">Diunggah pada: %s</string>
 	<string name="media_dimensions">Dimensi: %s</string>
-	<string name="upload_queued">Diantrekan</string>
 	<string name="media_file_type">Jenis file: %s</string>
 	<string name="reader_label_gap_marker">Muat pos lainnya</string>
 	<string name="notifications_no_search_results">Tidak ada situs yang cocok dengan \'%s\'</string>
@@ -624,7 +654,6 @@ Language: id
 	<string name="invalid_verification_code">Kode verifikasi tidak valid</string>
 	<string name="verification_code">Kode verifikasi</string>
 	<string name="editor_toast_invalid_path">Lokasi file tidak valid</string>
-	<string name="error_publish_no_network">Tak bisa menerbitkan tanpa koneksi internet. Tersimpan sebagai draf.</string>
 	<string name="language">Bahasa</string>
 	<string name="device">Perangkat</string>
 	<string name="media_details_label_file_name">Nama file</string>
@@ -1006,7 +1035,6 @@ Language: id
 	<string name="select_from_media_library">Pilih dari pustaka media</string>
 	<string name="jetpack_not_found">Plugin Jetpack tidak ditemukan</string>
 	<string name="reader_untitled_post">(Tanpa Judul)</string>
-	<string name="reader_share_subject">di sebarkan dari %s</string>
 	<string name="reader_btn_share">Bagikan</string>
 	<string name="reader_btn_follow">Ikuti</string>
 	<string name="reader_btn_unfollow">Pengikut</string>
