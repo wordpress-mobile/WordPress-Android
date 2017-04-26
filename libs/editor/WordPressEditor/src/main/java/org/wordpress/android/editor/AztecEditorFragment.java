@@ -599,14 +599,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             // saved the post to Db or not
             if (mediaType.equals(MediaType.IMAGE)) {
 
-                AztecAttributes attrs = new AztecAttributes();
+                // clear overlay
+                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+
+                // remove the uploading class
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(predicate));
+                attributesWithClass.removeClass("uploading");
+
+                // add then new src property with the remoteUrl
+                AztecAttributes attrs = attributesWithClass.getAttributes();
                 attrs.setValue("src", remoteUrl);
 
                 // clear overlay
-                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                 content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attrs);
                 content.refreshText();
+
 
                 mUploadingMediaProgressMax.remove(localMediaId);
             } else if (mediaType.equals(MediaType.VIDEO)) {
