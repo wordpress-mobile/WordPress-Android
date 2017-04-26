@@ -5,14 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,6 +30,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
@@ -40,7 +43,9 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -65,9 +70,10 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public class NewUserFragment extends AbstractFragment implements TextWatcher {
+public class NewUserFragment extends AbstractFragment {
     public static final int NEW_USER = 1;
-    private EditText mSiteUrlTextField;
+    private AutoCompleteTextView mSiteUrlTextField;
+    private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
@@ -75,7 +81,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
-    private boolean mAutoCompleteUrl;
     private String mUsername;
     private String mEmail;
     private String mPassword;
@@ -95,18 +100,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return new NewUserFragment();
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        checkIfFieldsFilled();
-    }
 
     private boolean fieldsFilled() {
         return EditTextUtils.getText(mEmailTextField).trim().length() > 0
@@ -512,13 +505,30 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mEmailTextField.setSelection(EditTextUtils.getText(mEmailTextField).length());
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
-        mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
+        mSiteUrlTextField = (AutoCompleteTextView) rootView.findViewById(R.id.site_url);
+        mSiteUrlSuggestionAdapter = new ArrayAdapter<>(getActivity(), R.layout.domain_suggestion_dropdown);
+        mSiteUrlTextField.setAdapter(mSiteUrlSuggestionAdapter);
 
-        mEmailTextField.addTextChangedListener(this);
-        mPasswordTextField.addTextChangedListener(this);
-        mUsernameTextField.addTextChangedListener(this);
-        mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
+        mEmailTextField.addTextChangedListener(mCheckFieldsFilledWatcher);
+        mPasswordTextField.addTextChangedListener(mCheckFieldsFilledWatcher);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
+        mUsernameTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkIfFieldsFilled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mSiteUrlSuggestionAdapter.clear();
+                mSiteUrlSuggestionAdapter.notifyDataSetChanged();
+            }
+        });
 
         mSiteUrlTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -536,32 +546,20 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
         });
 
-        mUsernameTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // auto fill blog address
-                mSiteUrlTextField.setError(null);
-                if (mAutoCompleteUrl) {
-                    mSiteUrlTextField.setText(EditTextUtils.getText(mUsernameTextField));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                lowerCaseEditable(editable);
-            }
-        });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    getDomainSuggestionsFromTitle();
+                }
+            }
+        });
+
+        mSiteUrlTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    mAutoCompleteUrl = EditTextUtils.getText(mUsernameTextField)
-                            .equals(EditTextUtils.getText(mSiteUrlTextField))
-                            || EditTextUtils.isEmpty(mSiteUrlTextField);
+                    mSiteUrlTextField.showDropDown();
                 }
             }
         });
@@ -578,6 +576,21 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return rootView;
     }
 
+    private final TextWatcher mCheckFieldsFilledWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkIfFieldsFilled();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
     private void checkIfFieldsFilled() {
         if (fieldsFilled()) {
             mSignupButton.setEnabled(true);
@@ -585,14 +598,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             mSignupButton.setEnabled(false);
         }
     }
-
-    private final OnKeyListener mSiteUrlKeyListener = new OnKeyListener() {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            mAutoCompleteUrl = EditTextUtils.isEmpty(mSiteUrlTextField);
-            return false;
-        }
-    };
 
     private SmartLockHelper getSmartLockHelper() {
         if (getActivity() != null && getActivity() instanceof SignInActivity) {
@@ -616,6 +621,14 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
         // Fetch sites
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+    }
+
+    private void getDomainSuggestionsFromTitle() {
+        String username = EditTextUtils.getText(mUsernameTextField);
+        if (!TextUtils.isEmpty(username)) {
+            SuggestDomainsPayload payload = new SuggestDomainsPayload(username, true, false, 5);
+            mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
+        }
     }
 
     // OnChanged events
@@ -711,4 +724,24 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             finishCurrentActivity();
         }
     }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSuggestedDomains(OnSuggestedDomains event) {
+        if (!isAdded() || event.isError()) {
+            return;
+        }
+
+        mSiteUrlSuggestionAdapter.clear();
+        for (DomainSuggestionResponse suggestion : event.suggestions) {
+            // Only add free suggestions ending by .wordpress.com
+            if (suggestion.is_free && !TextUtils.isEmpty(suggestion.domain_name)
+                    && suggestion.domain_name.endsWith(".wordpress.com")) {
+                mSiteUrlSuggestionAdapter.add(suggestion.domain_name.replace(".wordpress.com", ""));
+            }
+        }
+        if (!mSiteUrlSuggestionAdapter.isEmpty() && mSiteUrlTextField.hasFocus()) {
+            mSiteUrlTextField.showDropDown();
+        }
+        }
 }

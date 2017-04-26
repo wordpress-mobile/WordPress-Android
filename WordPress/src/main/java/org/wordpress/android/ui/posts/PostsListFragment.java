@@ -195,6 +195,7 @@ public class PostsListFragment extends Fragment
             final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
             boolean isPublishable = post != null && PostUtils.isPublishable(post);
             boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
+            boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
 
             if (hasChanges) {
                 if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -202,7 +203,16 @@ public class PostsListFragment extends Fragment
                             ToastUtils.Duration.SHORT);
                 } else {
                     if (isPublishable) {
-                        if (savedLocally) {
+                        if (hasUnfinishedMedia) {
+                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
+                                    R.string.editor_post_saved_locally_unfinished_media, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.button_edit, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+                                        }
+                                    }).show();
+                        } else if (savedLocally) {
                             Snackbar.make(getActivity().findViewById(R.id.coordinator),
                                     R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
                                     .setAction(R.string.button_publish, new View.OnClickListener() {

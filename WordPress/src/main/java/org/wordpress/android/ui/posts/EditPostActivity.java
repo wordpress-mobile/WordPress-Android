@@ -68,14 +68,18 @@ import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionExcepti
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
@@ -153,6 +157,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
+    public static final String EXTRA_HAS_UNFINISHED_MEDIA = "hasUnfinishedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
@@ -1170,6 +1175,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void saveResult(boolean saved, boolean savedLocally) {
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
+        i.putExtra(EXTRA_HAS_UNFINISHED_MEDIA, hasUnfinishedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST, mPost);
@@ -1177,9 +1183,34 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void publishPost() {
+        AccountModel account = mAccountStore.getAccount();
+        // prompt user to verify e-mail before publishing
+        if (!account.getEmailVerified()) {
+            String message = TextUtils.isEmpty(account.getEmail())
+                    ? getString(R.string.editor_confirm_email_prompt_message)
+                    : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email), account.getEmail());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.editor_confirm_email_prompt_title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    ToastUtils.showToast(EditPostActivity.this, getString(R.string.toast_saving_post_as_draft));
+                                    savePostAndFinish();
+                                }
+                            })
+                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    mDispatcher.dispatch(AccountActionBuilder.newSendVerificationEmailAction());
+                                }
+                            });
+            builder.create().show();
+            return;
+        }
 
         boolean isFirstTimePublish = isFirstTimePublish();
-
         boolean postUpdateSuccessful = updatePostObject();
         if (!postUpdateSuccessful) {
             // just return, since the only case updatePostObject() can fail is when the editor
@@ -1237,10 +1268,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
 
-            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && NetworkUtils.isNetworkAvailable(this)) {
-                if (!hasFailedMedia()) {
-                    savePostOnlineAndFinishAsync(isFirstTimePublish);
-                }
+            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
+                    && NetworkUtils.isNetworkAvailable(this)) {
+                savePostOnlineAndFinishAsync(isFirstTimePublish);
             } else {
                 savePostLocallyAndFinishAsync();
             }
@@ -1256,6 +1286,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private boolean isFirstTimePublish() {
         return PostStatus.fromPost(mPost) == PostStatus.PUBLISHED &&
                 (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
+    }
+
+    private boolean hasUnfinishedMedia() {
+        return mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress() ||
+                mEditorFragment.hasFailedMediaUploads();
     }
 
     private boolean updatePostObject() {
@@ -1886,7 +1921,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
-            queueFileForUpload(mediaUri, getContentResolver().getType(mediaUri));
+            addMedia(mediaUri);
         }
     }
 
@@ -1956,8 +1991,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        long mediaId = ids.get(0);
-        addExistingMediaToEditor(mediaId);
+        // if only one item was chosen insert it as a media object, otherwise create a gallery
+        // from the selected items
+        if (ids.size() == 1) {
+            long mediaId = ids.get(0);
+            addExistingMediaToEditor(mediaId);
+        } else {
+            MediaGallery gallery = new MediaGallery();
+            gallery.setIds(ids);
+            mEditorFragment.appendGallery(gallery);
+        }
     }
 
     private void handleMediaGalleryResult(Intent data) {
@@ -1985,6 +2028,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         } else {
             ToastUtils.showToast(this, R.string.error_media_refresh_no_connection, ToastUtils.Duration.SHORT);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (event.causeOfChange == AccountAction.SEND_VERIFICATION_EMAIL) {
+            if (!event.isError()) {
+                ToastUtils.showToast(this, getString(R.string.toast_verification_email_sent));
+            } else {
+                ToastUtils.showToast(this, getString(R.string.toast_verification_email_send_error));
+            }
         }
     }
 
@@ -2379,5 +2434,4 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             onUploadProgress(event.media, event.progress);
         }
     }
-
 }

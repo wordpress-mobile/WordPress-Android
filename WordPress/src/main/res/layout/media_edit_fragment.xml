@@ -1,80 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content"
+    android:background="@color/black_translucent_50"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_extra_large">
 
-    <LinearLayout
-        android:id="@+id/media_edit_linear_layout"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_extra_large"
-        android:visibility="invisible"
-        tools:visibility="visible">
+        android:layout_height="wrap_content">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_edit_title_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_large"
-            android:text="@string/media_edit_title_text"
-            android:textSize="@dimen/text_sz_large" />
-
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/media_edit_fragment_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/media_edit_title_hint"
-            android:inputType="textCapSentences|textAutoCorrect" />
+            android:hint="@string/media_edit_title_text"
+            android:inputType="textCapSentences|textAutoCorrect"
+            tools:text="media_edit_title_text" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_edit_caption_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:text="@string/media_edit_caption_text"
-            android:textSize="@dimen/text_sz_large" />
+    </android.support.design.widget.TextInputLayout>
 
-        <EditText
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small">
+
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/media_edit_fragment_caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/media_edit_caption_hint"
-            android:inputType="textCapSentences|textAutoCorrect" />
+            android:hint="@string/media_edit_caption_text"
+            android:inputType="textCapSentences|textAutoCorrect"
+            tools:text="media_edit_fragment_caption" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_edit_description_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:paddingLeft="@dimen/margin_large"
-            android:text="@string/media_edit_description_text"
-            android:textSize="@dimen/text_sz_large" />
+    </android.support.design.widget.TextInputLayout>
 
-        <EditText
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small">
+
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/media_edit_fragment_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"
-            android:hint="@string/media_edit_description_hint"
+            android:hint="@string/media_edit_description_text"
             android:inputType="textCapSentences|textAutoCorrect"
-            android:lines="3" />
+            android:lines="3"
+            tools:text="media_edit_fragment_caption" />
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large">
-
-            <include
-                android:id="@+id/media_edit_fragment_image_local"
-                layout="@layout/media_grid_image_local" />
-
-            <include
-                android:id="@+id/media_edit_fragment_image_network"
-                layout="@layout/media_grid_image_network" />
-        </FrameLayout>
-    </LinearLayout>
-
-</ScrollView>
+    </android.support.design.widget.TextInputLayout>
+</LinearLayout>

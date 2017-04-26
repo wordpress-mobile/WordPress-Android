@@ -58,7 +58,7 @@
     <string name="notification_vibrate">Vibrate</string>
     <string name="notification_pending_drafts">Notify me on pending drafts</string>
     <string name="notification_blink">Blink notification light</string>
-    <string name="sure_to_remove_account">Remove this site?</string>
+    <string name="sure_to_remove_account">Remove this site from the app?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error">Error</string>
@@ -960,6 +960,7 @@
     <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
     <string name="editor_post_saved_online">The post was saved online</string>
     <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
+    <string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
@@ -1050,7 +1051,6 @@
     <!-- message on post preview explaining links are disabled -->
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
-    <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
@@ -1181,9 +1181,6 @@
     <string name="reader_discover_default_tag">Discover</string>
     <string name="reader_followed_default_tag">Followed Sites</string>
     <string name="reader_liked_default_tag">Posts I Like</string>
-
-    <!-- share dialog title when sharing a reader url -->
-    <string name="reader_share_link">Share link</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>
@@ -1429,6 +1426,7 @@
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_dotcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
+    <string name="site_picker_remove_site_error">Error removing site, try again later</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -1445,7 +1443,7 @@
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="me_btn_login_logout">Login/Logout</string>
     <string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
-    <string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
+    <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site</string>
@@ -1560,6 +1558,9 @@
     <string name="about_me_hint">A few words about you…</string>
     <string name="start_over">Start Over</string>
     <string name="site_settings_start_over_hint">Start your site over</string>
+    <string name="start_over_email_subject">Start over with site %s</string>
+    <string name="start_over_email_body">I want to start over with the site %s</string>
+    <string name="start_over_email_intent_error">Unable to send an email</string>
     <string name="let_us_help">Let Us Help</string>
     <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
     <string name="contact_support">Contact support</string>
@@ -1575,8 +1576,10 @@
     <string name="keep_your_content">Keep Your Content</string>
     <string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It can not be recovered in the future.</string>
     <string name="export_site_hint">Export your site to an XML file</string>
-    <string name="are_you_sure">Are You Sure?</string>
+    <string name="delete_site_warning_title">Delete site?</string>
     <string name="delete_site_summary">This action can not be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
+    <string name="delete_site_warning">All your posts, images, and data will be deleted. And this site’s address (%s) will be lost.</string>
+    <string name="delete_site_warning_subtitle">Be careful! Once a site is deleted, it cannot be recovered. Please be sure before you proceed.</string>
     <string name="delete_site_hint">Delete site</string>
     <string name="delete_site_progress">Deleting site…</string>
     <string name="purchases_request_error">Something went wrong. Could not request purchases.</string>
@@ -1672,5 +1675,14 @@
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
+
+    <!-- E-mail verification reminder dialog -->
+    <string name="toast_saving_post_as_draft">Saving post as draft</string>
+    <string name="toast_verification_email_sent">Verification email sent, check your inbox</string>
+    <string name="toast_verification_email_send_error">Error sending verification email. Are you already verified?</string>
+    <string name="editor_confirm_email_prompt_title">Please confirm your email address</string>
+    <string name="editor_confirm_email_prompt_message">We sent you an email when you first signed up. Please open the message and click the blue button to enable publishing.</string>
+    <string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
+    <string name="editor_confirm_email_prompt_negative">Resend Email</string>
 
 </resources>

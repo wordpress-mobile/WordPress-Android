@@ -585,10 +585,11 @@ public class CommentsListFragment extends Fragment {
             return true;
         }
 
-        private void setItemEnabled(Menu menu, int menuId, boolean isEnabled) {
+        private void setItemEnabled(Menu menu, int menuId, boolean isEnabled, boolean isVisible) {
             final MenuItem item = menu.findItem(menuId);
-            if (item == null || item.isEnabled() == isEnabled)
+            if (item == null || (item.isEnabled() == isEnabled && item.isVisible() == isVisible))
                 return;
+            item.setVisible(isVisible);
             item.setEnabled(isEnabled);
             if (item.getIcon() != null) {
                 // must mutate the drawable to avoid affecting other instances of it
@@ -609,16 +610,16 @@ public class CommentsListFragment extends Fragment {
             boolean hasAnyNonSpam = hasSelection && selectedComments.hasAnyWithoutStatus(CommentStatus.SPAM);
             boolean hasTrash = hasSelection && selectedComments.hasAnyWithStatus(CommentStatus.TRASH);
 
-            setItemEnabled(menu, R.id.menu_approve, hasUnapproved || hasSpam || hasTrash);
-            setItemEnabled(menu, R.id.menu_unapprove, hasApproved);
-            setItemEnabled(menu, R.id.menu_spam, hasAnyNonSpam);
-            setItemEnabled(menu, R.id.menu_trash, hasSelection);
+            setItemEnabled(menu, R.id.menu_approve, hasUnapproved || hasSpam || hasTrash, true);
+            setItemEnabled(menu, R.id.menu_unapprove, hasApproved, true);
+            setItemEnabled(menu, R.id.menu_spam, hasAnyNonSpam, hasAnyNonSpam);
+            setItemEnabled(menu, R.id.menu_unspam, hasSpam && !hasAnyNonSpam, hasSpam && !hasAnyNonSpam);
+            setItemEnabled(menu, R.id.menu_trash, hasSelection, true);
 
             final MenuItem trashItem = menu.findItem(R.id.menu_trash);
             if (trashItem != null && mCommentStatusFilter == CommentStatusCriteria.TRASH) {
                 trashItem.setTitle(R.string.mnu_comment_delete_permanently);
             }
-
             return true;
         }
 
@@ -634,6 +635,9 @@ public class CommentsListFragment extends Fragment {
                 return true;
             } else if (i == R.id.menu_unapprove) {
                 moderateSelectedComments(CommentStatus.UNAPPROVED);
+                return true;
+            } else if (i == R.id.menu_unspam) {
+                moderateSelectedComments(CommentStatus.APPROVED);
                 return true;
             } else if (i == R.id.menu_spam) {
                 moderateSelectedComments(CommentStatus.SPAM);

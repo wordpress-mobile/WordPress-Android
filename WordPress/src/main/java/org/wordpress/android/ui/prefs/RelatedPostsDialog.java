@@ -98,7 +98,7 @@ public class RelatedPostsDialog extends DialogFragment
         titleText.setText(R.string.site_settings_related_posts_title);
         titleText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
         builder.setCustomTitle(titleView);
-        builder.setPositiveButton(R.string.ok, this);
+        builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(v);
 
