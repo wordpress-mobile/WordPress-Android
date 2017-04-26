@@ -143,7 +143,6 @@ Language: th
 	<string name="media_dimensions">ขนาดมิติ: %s</string>
 	<string name="media_uploaded_on">อัปโหลดแล้วบน: %s</string>
 	<string name="media_file_name">ชื่อไฟล์: %s</string>
-	<string name="upload_queued">เข้าคิวแล้ว</string>
 	<string name="media_file_type">ประเภทไฟล์: %s</string>
 	<string name="reader_label_gap_marker">โหลดเรื่องเพิ่มเติม</string>
 	<string name="notifications_no_search_results">ไม่มีเว็บใดตรงกับ \'%s\'</string>
@@ -279,7 +278,6 @@ Language: th
 	<string name="invalid_verification_code">โค้ดยืนยันไม่ถูกต้อง</string>
 	<string name="verification_code">โค้ดยืนยัน</string>
 	<string name="editor_toast_invalid_path">ที่อยู่ไฟล์ไม่ถูกต้อง</string>
-	<string name="error_publish_no_network">ไม่สามารถเผยแพร่ในขณะที่ไม่มีการเชื่อมต่อ  บันทึกเป็นฉบับร่าง</string>
 	<string name="two_step_footer_label">ใส่โค้ดจากแอพยืนยันตัวตนของคุณ</string>
 	<string name="verify">ยืนยัน</string>
 	<string name="two_step_sms_sent">ตรวจสอบข้อความของคุณสำหรับโค้ดยืนยัน</string>
@@ -677,7 +675,6 @@ Language: th
 	<string name="reader_btn_unfollow">กำลังติดตาม</string>
 	<string name="jetpack_not_found">ไม่พบปลั๊กอิน Jetpack</string>
 	<string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
-	<string name="reader_share_subject">แบ่งปันจาก %s แล้ว</string>
 	<string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>
 	<string name="media_add_new_media_gallery">สร้างคลังรูปภาพ</string>
 	<string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>

@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-08 09:55:43+0000
+Translation-Revision-Date: 2017-04-13 09:49:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="photo_picker_title">Zgjidhni foto</string>
+	<string name="error_publish_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
+	<string name="editor_post_saved_online_not_published">Postimi u ruaj si skicë në internet. Shihni mundësinë e botimit të tij.</string>
+	<string name="editor_post_saved_online">Postimi u ruajt në internet</string>
+	<string name="editor_post_saved_locally_not_published">Postimi u ruaj lokalisht. Shihni mundësinë e botimit të tij.</string>
+	<string name="editor_post_saved_locally">Postimi u ruaj në pajisjen tuaj</string>
+	<string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
+	<string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
+	<string name="media_encoder_quality_100">Maksimum</string>
+	<string name="media_encoder_quality_95">Shumë e Lartë</string>
+	<string name="media_encoder_quality_90">E lartë</string>
+	<string name="media_encoder_quality_85">E mesme</string>
+	<string name="media_encoder_quality_80">E ulët</string>
+	<string name="media_upload_state_uploaded">U ngarkua</string>
+	<string name="media_upload_state_failed">Dështoi</string>
+	<string name="media_upload_state_deleted">U fshi</string>
+	<string name="media_upload_state_deleting">Po fshihet</string>
+	<string name="media_upload_state_uploading">Po ngarkohet</string>
+	<string name="media_upload_state_queued">Në radhë</string>
+	<string name="update_draft">Përditësoni skicën</string>
+	<string name="keep_editing">Vazhdoni përpunimin</string>
+	<string name="image_quality">Cilësi figure</string>
 	<string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
 	<string name="error_unknown_post_type">Format i panjohur postimesh</string>
 	<string name="error_unknown_post">Postim i panjohur, kopja vendore e këtij postimi mund të jetë e panjëkohësuar me atë të shërbyesit</string>
@@ -32,7 +54,6 @@ Language: sq_AL
 	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
 	<string name="error_media_not_found">S’u gjet dot media</string>
 	<string name="error_media_insufficient_fs_permissions">Lypset leje leximi mbi kartelë media</string>
-	<string name="site_settings_optimize_images_hint">Aktivizojeni për të kursyer bandë në lidhje celulari</string>
 	<string name="site_settings_optimize_images">Optimizo Figurat</string>
 	<string name="no_site_error">S’u lidh dot te sajt WordPress. S’ka sajt WordPress të vlefshëm në këtë\n        adresë. Kontrolloni adresën (URL) të sajtit që dhatë.</string>
 	<string name="media_generic_error">Ndodhi një gabim mediash</string>
@@ -523,7 +544,6 @@ Language: sq_AL
 	<string name="media_dimensions">Përmasa: %s</string>
 	<string name="media_file_name">Emër kartele: %s</string>
 	<string name="media_file_type">Lloj kartele: %s</string>
-	<string name="upload_queued">Në radhë</string>
 	<string name="reader_label_gap_marker">Ngarko më tepër postime</string>
 	<string name="notifications_no_search_results">S&amp;#8217;ka sajte me përputhje për \'%s\'</string>
 	<string name="search_sites">Kërkoni në sajte</string>
@@ -666,7 +686,6 @@ Language: sq_AL
 	<string name="two_step_sms_sent">Kontrolloni mesazhet tuaj tekst për kodin e verifikimit.</string>
 	<string name="media_details_label_file_name">Emër kartele</string>
 	<string name="media_details_label_file_type">Lloj kartele</string>
-	<string name="error_publish_no_network">S&amp;#8217;mund të ketë botim, kur s&amp;#8217;ka lidhje. U ruajt si skicë.</string>
 	<string name="sign_in_jetpack">Që të lidheni me Jetpack-un, bëni hyrjen te llogaria juaj WordPress.com.</string>
 	<string name="auth_required">Hyni sërish që të vazhdohet.</string>
 	<string name="publisher">Botues:</string>
@@ -1044,7 +1063,6 @@ Language: sq_AL
 	<string name="empty_list_default">Kjo listë është e zbrazët</string>
 	<string name="select_from_media_library">Përzgjidhni nga mediateka</string>
 	<string name="reader_untitled_post">(Pa titull)</string>
-	<string name="reader_share_subject">Ndarë nga %s</string>
 	<string name="reader_btn_share">Ndajeni me të tjerët</string>
 	<string name="reader_btn_follow">Ndiqe</string>
 	<string name="reader_hint_comment_on_comment">Përgjigjjuni komentit…</string>

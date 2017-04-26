@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
@@ -31,8 +32,10 @@ public class PhotoPickerFragment extends Fragment {
     static final int NUM_COLUMNS = 3;
 
     public enum PhotoPickerIcon {
-        ANDROID_CAMERA,
-        ANDROID_PICKER,
+        ANDROID_CHOOSE_PHOTO,
+        ANDROID_CHOOSE_VIDEO,
+        ANDROID_CAPTURE_PHOTO,
+        ANDROID_CAPTURE_VIDEO,
         WP_MEDIA
     }
 
@@ -127,17 +130,26 @@ public class PhotoPickerFragment extends Fragment {
         mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAMERA);
+                if (mPhotosOnly) {
+                    if (mListener != null) {
+                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                    }
+                } else {
+                    showCameraPopupMenu(v);
                 }
             }
         });
         mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_PICKER);
+                if (mPhotosOnly) {
+                    if (mListener != null) {
+                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    }
+                } else {
+                    showPickerPopupMenu(v);
                 }
+
             }
         });
 
@@ -160,6 +172,61 @@ public class PhotoPickerFragment extends Fragment {
         return view;
     }
 
+    private void showPickerPopupMenu(@NonNull View view) {
+        PopupMenu popup = new PopupMenu(getActivity(), view);
+
+        MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_choose_photo);
+        itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (mListener != null) {
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                }
+                return true;
+            }
+        });
+
+        MenuItem itemVideo = popup.getMenu().add(R.string.photo_picker_choose_video);
+        itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (mListener != null) {
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
+                }
+                return true;
+            }
+        });
+
+        popup.show();
+    }
+
+    private void showCameraPopupMenu(@NonNull View view) {
+        PopupMenu popup = new PopupMenu(getActivity(), view);
+
+        MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_capture_photo);
+        itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (mListener != null) {
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                }
+                return true;
+            }
+        });
+
+        MenuItem itemVideo = popup.getMenu().add(R.string.photo_picker_capture_video);
+        itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (mListener != null) {
+                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
+                }
+                return true;
+            }
+        });
+
+        popup.show();
+    }
     void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
