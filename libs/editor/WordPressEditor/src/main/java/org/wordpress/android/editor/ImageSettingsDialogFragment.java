@@ -34,7 +34,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * A full-screen DialogFragment with image settings.
@@ -60,8 +59,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private CheckBox mFeaturedCheckBox;
 
     private boolean mIsFeatured;
-
-    private Map<String, String> mHttpHeaders;
 
     private CharSequence mPreviousActionBarTitle;
     private boolean mPreviousHomeAsUpEnabled;
@@ -148,8 +145,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         if (bundle != null) {
             try {
                 mImageMeta = new JSONObject(bundle.getString("imageMeta"));
-
-                mHttpHeaders = (Map) bundle.getSerializable("headerMap");
 
                 final String imageSrc = mImageMeta.getString("src");
                 final String imageFilename = imageSrc.substring(imageSrc.lastIndexOf("/") + 1);
