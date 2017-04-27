@@ -20,12 +20,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,7 +132,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_image_options, container, false);
 
-        ImageView thumbnailImage = (ImageView) view.findViewById(R.id.image_thumbnail);
+        NetworkImageView thumbnailImage = (NetworkImageView) view.findViewById(R.id.image_thumbnail);
         TextView filenameLabel = (TextView) view.findViewById(R.id.image_filename);
         mTitleText = (EditText) view.findViewById(R.id.image_title);
         mCaptionText = (EditText) view.findViewById(R.id.image_caption);
@@ -342,27 +342,20 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
         return metaData;
     }
+    /**
+     * Loads the given network image URL into the {@link NetworkImageView}.
+     */
+    private void loadThumbnail(String imageUrl, NetworkImageView imageView) {
+        if (imageUrl != null) {
+            Uri uri = Uri.parse(imageUrl);
+            String filepath = uri.getLastPathSegment();
 
-    private void loadThumbnail(final String src, final ImageView thumbnailImage) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded()) {
-                    final Uri localUri = Utils.downloadExternalMedia(getActivity(), Uri.parse(src), mHttpHeaders);
-
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                thumbnailImage.setImageURI(localUri);
-                            }
-                        });
-                    }
-                }
+            if (MediaUtils.isValidImage(filepath)) {
+                imageView.setImageUrl(imageUrl, mImageLoader);
             }
-        });
-
-        thread.start();
+        } else {
+            imageView.setImageResource(0);
+        }
     }
 
     /**
