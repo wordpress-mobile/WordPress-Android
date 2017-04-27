@@ -489,6 +489,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
+
             if (mediaFile.isVideo()) {
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
@@ -501,7 +502,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // load a scaled version of the image to prevent OOM exception
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
                 Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
-               if (bitmapToShow != null) {
+
+                if (bitmapToShow != null) {
                     content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
                 } else {
                     // Use a placeholder
