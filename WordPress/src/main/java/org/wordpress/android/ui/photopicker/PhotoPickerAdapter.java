@@ -298,8 +298,8 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
 
-            View framePreview = view.findViewById(R.id.frame_preview);
-            framePreview.setOnClickListener(new View.OnClickListener() {
+            View imgPreview = view.findViewById(R.id.image_preview);
+            imgPreview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
