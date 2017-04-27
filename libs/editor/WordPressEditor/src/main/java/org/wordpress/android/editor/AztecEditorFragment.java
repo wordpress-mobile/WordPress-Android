@@ -480,7 +480,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                         if (downloadedBitmap.getWidth() < MIN_BITMAP_WIDTH) {
                             // Bitmap is too small.  Show image placeholder.
-                            ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                            ToastUtils.showToast(getActivity(), R.string.error_media_small);
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
                             content.insertMedia(drawable, attrs);
                             return;
