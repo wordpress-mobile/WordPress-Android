@@ -506,11 +506,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (bitmapToShow != null) {
                     content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
                 } else {
-                    // Use a placeholder
+                    // Failed to retrieve bitmap.  Show failed placeholder.
                     ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable d = getResources().getDrawable(R.drawable.ic_gridicons_image);
-                    d.setBounds(0, 0, maxWidth, maxWidth);
-                    content.insertMedia(d, attrs);
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                    drawable.setBounds(0, 0, maxWidth, maxWidth);
+                    content.insertMedia(drawable, attrs);
                 }
 
                 // set intermediate shade overlay
