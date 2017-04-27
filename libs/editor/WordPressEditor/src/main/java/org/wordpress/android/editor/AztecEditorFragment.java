@@ -83,7 +83,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
 
-    private static final int MIN_BITMAP_WIDTH = 200;
+    private static final int MIN_BITMAP_DIMENSION_DP = 48;
 
     public static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -478,7 +478,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         AztecAttributes attrs = new AztecAttributes();
                         attrs.setValue("src", mediaUrl);
 
-                        if (downloadedBitmap.getWidth() < MIN_BITMAP_WIDTH) {
+                        int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
+
+                        if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
                             // Bitmap is too small.  Show image placeholder.
                             ToastUtils.showToast(getActivity(), R.string.error_media_small);
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
