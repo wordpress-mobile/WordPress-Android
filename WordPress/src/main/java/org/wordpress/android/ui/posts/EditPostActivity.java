@@ -1178,79 +1178,98 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void publishPost() {
+        // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
+        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
+        // on API 16 (and 21) with the visual editor.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isFirstTimePublish = isFirstTimePublish();
 
-        boolean isFirstTimePublish = isFirstTimePublish();
-
-        boolean postUpdateSuccessful = updatePostObject();
-        if (!postUpdateSuccessful) {
-            // just return, since the only case updatePostObject() can fail is when the editor
-            // fragment is not added to the activity
-            return;
-        }
-
-        boolean isPublishable = PostUtils.isPublishable(mPost);
-
-        // if post was modified or has unsaved local changes and is publishable, save it
-        saveResult(isPublishable, false);
-
-        if (isPublishable) {
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                if (!hasFailedMedia()) {
-                    savePostOnlineAndFinishAsync(isFirstTimePublish);
+                boolean postUpdateSuccessful = updatePostObject();
+                if (!postUpdateSuccessful) {
+                    // just return, since the only case updatePostObject() can fail is when the editor
+                    // fragment is not added to the activity
+                    return;
                 }
-            } else {
-                savePostLocallyAndFinishAsync();
+
+                boolean isPublishable = PostUtils.isPublishable(mPost);
+
+                // if post was modified or has unsaved local changes and is publishable, save it
+                saveResult(isPublishable, false);
+
+                if (isPublishable) {
+                    if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                        if (!hasFailedMedia()) {
+                            savePostOnlineAndFinishAsync(isFirstTimePublish);
+                        }
+                    } else {
+                        savePostLocallyAndFinishAsync();
+                    }
+                } else {
+                    ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                }
             }
-        } else {
-            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
-        }
+        }).start();
     }
 
     private void savePostAndFinish() {
+        // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
+        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
+        // on API 16 (and 21) with the visual editor.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // check if the opened post had some unsaved local changes
+                boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
+                boolean isFirstTimePublish = isFirstTimePublish();
 
-        // check if the opened post had some unsaved local changes
-        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
-        boolean isFirstTimePublish = isFirstTimePublish();
+                boolean postUpdateSuccessful = updatePostObject();
+                if (!postUpdateSuccessful) {
+                    // just return, since the only case updatePostObject() can fail is when the editor
+                    // fragment is not added to the activity
+                    return;
+                }
 
-        boolean postUpdateSuccessful = updatePostObject();
-        if (!postUpdateSuccessful) {
-            // just return, since the only case updatePostObject() can fail is when the editor
-            // fragment is not added to the activity
-            return;
-        }
+                boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+                boolean isPublishable = PostUtils.isPublishable(mPost);
+                boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
+                        isPublishable && hasLocalChanges;
 
-        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
-        boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
-                isPublishable && hasLocalChanges;
+                // if post was modified or has unsaved local changes and is publishable, save it
+                boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
+                saveResult(shouldSave, false);
 
-        // if post was modified or has unsaved local changes and is publishable, save it
-        boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
-        saveResult(shouldSave, false);
+                if (shouldSave) {
+                    if (isNewPost()) {
+                        // new post - user just left the editor without publishing, they probably want
+                        // to keep the post as a draft
+                        mPost.setStatus(PostStatus.DRAFT.toString());
+                        if (mEditPostSettingsFragment != null) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mEditPostSettingsFragment.updateStatusSpinner();
+                                }
+                            });
+                        }
+                    }
 
-        if (shouldSave) {
-            if (isNewPost()) {
-                // new post - user just left the editor without publishing, they probably want
-                // to keep the post as a draft
-                mPost.setStatus(PostStatus.DRAFT.toString());
-                if (mEditPostSettingsFragment != null) {
-                    mEditPostSettingsFragment.updateStatusSpinner();
+                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
+                            && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                        savePostOnlineAndFinishAsync(isFirstTimePublish);
+                    } else {
+                        savePostLocallyAndFinishAsync();
+                    }
+                } else {
+                    // discard post if new & empty
+                    if (!isPublishable && isNewPost()) {
+                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
+                    }
+                    finish();
                 }
             }
-
-            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
-                    && NetworkUtils.isNetworkAvailable(this)) {
-                savePostOnlineAndFinishAsync(isFirstTimePublish);
-            } else {
-                savePostLocallyAndFinishAsync();
-            }
-        } else {
-            // discard post if new & empty
-            if (!isPublishable && isNewPost()) {
-                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
-            }
-            finish();
-        }
+        }).start();
     }
 
     private boolean isFirstTimePublish() {
