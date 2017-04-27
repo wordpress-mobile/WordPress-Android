@@ -25,6 +25,8 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
@@ -46,6 +48,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
     private JSONObject mImageMeta;
     private int mMaxImageWidth;
+    private ImageLoader mImageLoader;
 
     private EditText mTitleText;
     private EditText mCaptionText;
@@ -273,6 +276,10 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
         restorePreviousActionBar();
         getFragmentManager().popBackStack();
+    }
+
+    public void setImageLoader(ImageLoader imageLoader) {
+        mImageLoader = imageLoader;
     }
 
     private void restorePreviousActionBar() {
