@@ -156,6 +156,7 @@ public class SiteStoreUnitTest {
         assertEquals(0, mSiteStore.getWPComSitesCount());
         assertEquals(2, mSiteStore.getSelfHostedSitesCount());
         assertEquals(2, mSiteStore.getJetpackSitesCount()); // misleading but we will remove that method
+        assertEquals(1, mSiteStore.getWPComAndJetpackSitesCount());
 
         // User "install and connect" ponySite site to Jetpack via his connected .com account
 
@@ -168,6 +169,7 @@ public class SiteStoreUnitTest {
         assertEquals(0, mSiteStore.getWPComSitesCount());
         assertEquals(1, mSiteStore.getSelfHostedSitesCount());
         assertEquals(3, mSiteStore.getJetpackSitesCount());
+        assertEquals(2, mSiteStore.getWPComAndJetpackSitesCount());
     }
 
     @Test
@@ -277,14 +279,14 @@ public class SiteStoreUnitTest {
 
         SiteModel selfHostedSite = generateSelfHostedNonJPSite();
         SiteModel wpComSite = generateWPComSite();
-        SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
+        SiteModel jetpackSiteOverXMLRPC = generateJetpackSiteOverXMLRPC();
         SiteSqlUtils.insertOrUpdateSite(selfHostedSite);
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
-        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
 
         assertEquals(1, SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount());
         assertNotNull(mSiteStore.getSiteBySiteId(wpComSite.getSiteId()));
-        assertNotNull(mSiteStore.getSiteBySiteId(jetpackSite.getSiteId()));
+        assertNotNull(mSiteStore.getSiteBySiteId(jetpackSiteOverXMLRPC.getSiteId()));
         assertNull(mSiteStore.getSiteBySiteId(selfHostedSite.getSiteId()));
     }
 
