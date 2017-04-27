@@ -458,6 +458,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        // Show failed placeholder.
+                        ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                        AztecAttributes attributes = new AztecAttributes();
+                        attributes.setValue("src", mediaUrl);
+                        content.insertMedia(drawable, attributes);
                     }
 
                     @Override
