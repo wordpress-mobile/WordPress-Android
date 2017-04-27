@@ -1038,11 +1038,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 try {
                     meta = new JSONObject(StringUtils.notNullStr(extras.getString("imageMeta")));
                 } catch (JSONException e) {
-                    // ignore errors
                     return;
                 }
 
-                // set image properties
                 attributes.setValue("src", JSONUtils.getString(meta, "src"));
 
                 if (!TextUtils.isEmpty(JSONUtils.getString(meta, "title"))) {
@@ -1058,13 +1056,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
 
-                // remove previously set properties
+                // remove previously set class attributes to add updated values
                 attributesWithClass.removeClassStartingWith("align-");
                 attributesWithClass.removeClassStartingWith("size-");
                 attributesWithClass.removeClassStartingWith("wp-image-");
 
-                // only assign the align class to the image if we're not printing
-                // a caption, since the alignment is sent to the shortcode
+                // only add align attribute if there is no caption since alignment is sent with shortcode
                 if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align")) &&
                         TextUtils.isEmpty(JSONUtils.getString(meta, "caption"))) {
                     attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
@@ -1078,12 +1075,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
                 }
 
-                // captions required shortcode support
-//            String caption = JSONUtils.getString(meta, "caption");
+//                TODO: Add shortcode support to allow captions.
+//                https://github.com/wordpress-mobile/AztecEditor-Android/issues/17
+//                String caption = JSONUtils.getString(meta, "caption");
 
-                // there is an issue with having an image inside a link
-                // https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
-//            String link = JSONUtils.getString(meta, "linkUrl");
+//                TODO: Fix issue with image inside link.
+//                https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
+//                String link = JSONUtils.getString(meta, "linkUrl");
 
                 final int imageRemoteId = extras.getInt("imageRemoteId");
                 final boolean isFeaturedImage = extras.getBoolean("isFeatured");
@@ -1093,7 +1091,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         mFeaturedImageId = imageRemoteId;
                         mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
                     } else {
-                        // If this image was unset as featured, clear the featured image id
+                        // if this image was unset as featured, clear the featured image id
                         if (mFeaturedImageId == imageRemoteId) {
                             mFeaturedImageId = 0;
                             mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
