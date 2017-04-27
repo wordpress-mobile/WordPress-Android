@@ -109,8 +109,8 @@ public class SiteStoreUnitTest {
         assertEquals(1, mSiteStore.getWPComAndJetpackSitesCount());
 
         // Test counts with one .COM, one self-hosted and one Jetpack site
-        SiteModel jetpackSiteOverXMLRPC = generateJetpackSiteOverXMLRPC();
-        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
+        SiteModel jetpackSiteOverRest = generateJetpackSiteOverRestOnly();
+        SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRest);
 
         assertTrue(mSiteStore.hasSite());
         assertTrue(mSiteStore.hasWPComSite());
@@ -122,6 +122,52 @@ public class SiteStoreUnitTest {
         assertEquals(1, mSiteStore.getSelfHostedSitesCount());
         assertEquals(1, mSiteStore.getJetpackSitesCount());
         assertEquals(2, mSiteStore.getWPComAndJetpackSitesCount());
+    }
+
+    @Test
+    public void testSelfHostedAndJetpackSites() throws DuplicateSiteException {
+        // Note: not using the helper methods to make sure of the SiteModel definition
+        SiteModel ponySite = new SiteModel();
+        ponySite.setXmlRpcUrl("http://pony.com/xmlrpc.php");
+        ponySite.setSiteId(1);
+        ponySite.setIsWPCom(false);
+        ponySite.setOrigin(SiteModel.ORIGIN_XMLRPC);
+        SiteSqlUtils.insertOrUpdateSite(ponySite);
+
+        SiteModel jetpackOverXMLRPC = new SiteModel();
+        jetpackOverXMLRPC.setXmlRpcUrl("http://pony2.com/xmlrpc.php");
+        jetpackOverXMLRPC.setSiteId(2);
+        jetpackOverXMLRPC.setIsWPCom(false);
+        jetpackOverXMLRPC.setIsJetpackInstalled(true);
+        jetpackOverXMLRPC.setIsJetpackConnected(true);
+        jetpackOverXMLRPC.setOrigin(SiteModel.ORIGIN_XMLRPC);
+        SiteSqlUtils.insertOrUpdateSite(jetpackOverXMLRPC);
+
+        SiteModel jetpackOverRest = new SiteModel();
+        jetpackOverRest.setXmlRpcUrl("http://pony3.com/xmlrpc.php");
+        jetpackOverRest.setSiteId(3);
+        jetpackOverRest.setIsWPCom(false);
+        jetpackOverRest.setIsJetpackInstalled(true);
+        jetpackOverRest.setIsJetpackConnected(true);
+        jetpackOverRest.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
+        SiteSqlUtils.insertOrUpdateSite(jetpackOverRest);
+
+        assertEquals(3, mSiteStore.getSitesCount());
+        assertEquals(0, mSiteStore.getWPComSitesCount());
+        assertEquals(2, mSiteStore.getSelfHostedSitesCount());
+        assertEquals(2, mSiteStore.getJetpackSitesCount()); // misleading but we will remove that method
+
+        // User "install and connect" ponySite site to Jetpack via his connected .com account
+
+        ponySite.setIsJetpackInstalled(true);
+        ponySite.setIsJetpackConnected(true);
+        ponySite.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
+        SiteSqlUtils.insertOrUpdateSite(ponySite);
+
+        assertEquals(3, mSiteStore.getSitesCount());
+        assertEquals(0, mSiteStore.getWPComSitesCount());
+        assertEquals(1, mSiteStore.getSelfHostedSitesCount());
+        assertEquals(3, mSiteStore.getJetpackSitesCount());
     }
 
     @Test
@@ -254,7 +300,7 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(wpComSite);
         SiteSqlUtils.insertOrUpdateSite(jetpackSite);
 
-        assertEquals(2, SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount());
+        assertEquals(1, SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount());
         assertNotNull(mSiteStore.getSiteBySiteId(wpComSite.getSiteId()));
         assertNotNull(mSiteStore.getSiteBySiteId(jetpackSite.getSiteId()));
         assertNull(mSiteStore.getSiteBySiteId(selfHostedSite.getSiteId()));
@@ -284,7 +330,7 @@ public class SiteStoreUnitTest {
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverXMLRPC);
         SiteSqlUtils.insertOrUpdateSite(jetpackSiteOverRestOnly);
 
-        assertEquals(3, SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount());
+        assertEquals(2, SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount());
 
         List<SiteModel> wpComSites = SiteSqlUtils.getWPComSites().getAsModel();
         assertEquals(1, wpComSites.size());
