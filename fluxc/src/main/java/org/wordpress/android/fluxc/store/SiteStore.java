@@ -622,21 +622,6 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Given a (remote) site id, returns true if the given site is WP.com or Jetpack-enabled
-     * (returns false for non-Jetpack self-hosted sites).
-     */
-    public boolean hasWPComOrJetpackSiteWithSiteId(long siteId) {
-        int localId = getLocalIdForRemoteSiteId(siteId);
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, localId)
-                .beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
-                .endGroup().endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
-    }
-
-    /**
      * Given a .COM site ID (either a .COM site id, or the .COM id of a Jetpack site), returns the site as a
      * {@link SiteModel}.
      */
