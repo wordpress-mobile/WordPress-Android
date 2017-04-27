@@ -109,7 +109,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private long mActionStartedAt = -1;
 
-    private ImagePredicate tappedImagePredicate;
+    private ImagePredicate mTappedImagePredicate;
 
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -879,7 +879,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         attrs.setValue(idName, id);
-        tappedImagePredicate = new ImagePredicate(id, idName);
+        mTappedImagePredicate = new ImagePredicate(id, idName);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
@@ -902,7 +902,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                             switch (mediaType) {
                                 case IMAGE:
-                                    content.removeMedia(tappedImagePredicate);
+                                    content.removeMedia(mTappedImagePredicate);
                                     break;
                                 case VIDEO:
                                     // TODO: remove video
@@ -933,19 +933,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 switch (mediaType) {
                     case IMAGE:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                content.getElementAttributes(tappedImagePredicate));
+                                content.getElementAttributes(mTappedImagePredicate));
                         attributesWithClass.removeClass("failed");
 
                         // set intermediate shade overlay
-                        content.setOverlay(tappedImagePredicate, 0,
+                        content.setOverlay(mTappedImagePredicate, 0,
                                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
 
                         Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
                         // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                         progressDrawable.setBounds(0, 0, 0, 4);
 
-                        content.setOverlay(tappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
-                        content.updateElementAttributes(tappedImagePredicate, attributesWithClass.getAttributes());
+                        content.setOverlay(mTappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
+                        content.updateElementAttributes(mTappedImagePredicate, attributesWithClass.getAttributes());
 
                         content.refreshText();
                         break;
@@ -1022,11 +1022,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
-            if (tappedImagePredicate != null) {
-                AztecAttributes attributes = content.getElementAttributes(tappedImagePredicate);
+            if (mTappedImagePredicate != null) {
+                AztecAttributes attributes = content.getElementAttributes(mTappedImagePredicate);
                 attributes.removeAttribute(TEMP_IMAGE_ID);
 
-                content.updateElementAttributes(tappedImagePredicate, attributes);
+                content.updateElementAttributes(mTappedImagePredicate, attributes);
 
                 if (data == null || data.getExtras() == null) {
                     return;
@@ -1099,7 +1099,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
                 }
 
-                tappedImagePredicate = null;
+                mTappedImagePredicate = null;
             }
         }
     }
