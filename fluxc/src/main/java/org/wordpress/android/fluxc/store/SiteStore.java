@@ -453,6 +453,7 @@ public class SiteStore extends Store {
 
     /**
      * Returns the number of self-hosted sites (can't be Jetpack) in the store.
+     * TODO: rename this method
      */
     public int getSelfHostedSitesCount() {
         return SiteSqlUtils.getSelfHostedSites().getAsCursor().getCount();
@@ -460,6 +461,7 @@ public class SiteStore extends Store {
 
     /**
      * Checks whether the store contains at least one self-hosted site (can't be Jetpack).
+     * TODO: rename this method
      */
     public boolean hasSelfHostedSite() {
         return getSelfHostedSitesCount() != 0;
@@ -467,6 +469,7 @@ public class SiteStore extends Store {
 
     /**
      * Returns all Jetpack sites in the store.
+     * TODO: remove this method
      */
     public List<SiteModel> getJetpackSites() {
         return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsModel();
@@ -474,6 +477,7 @@ public class SiteStore extends Store {
 
     /**
      * Returns the number of Jetpack sites in the store.
+     * TODO: remove this method
      */
     public int getJetpackSitesCount() {
         return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsCursor().getCount();
@@ -481,6 +485,7 @@ public class SiteStore extends Store {
 
     /**
      * Checks whether the store contains at least one Jetpack site.
+     * TODO: remove this method
      */
     public boolean hasJetpackSite() {
         return getJetpackSitesCount() != 0;
@@ -516,21 +521,14 @@ public class SiteStore extends Store {
      * Returns all visible .COM sites as {@link SiteModel}s.
      */
     public List<SiteModel> getVisibleWPComAndJetpackSites() {
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
-                .endGroup()
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endWhere()
-                .getAsModel();
+        return SiteSqlUtils.getVisibleWPComAndJetpackSites().getAsModel();
     }
 
     /**
      * Returns the number of visible .COM sites.
      */
     public int getVisibleWPComAndJetpackSitesCount() {
-        return getVisibleWPComAndJetpackSites().size();
+        return SiteSqlUtils.getVisibleWPComAndJetpackSites().getAsCursor().getCount();
     }
 
     /**
@@ -621,21 +619,6 @@ public class SiteStore extends Store {
         } else {
             return result.get(0).getSelfHostedSiteId();
         }
-    }
-
-    /**
-     * Given a (remote) site id, returns true if the given site is WP.com or Jetpack-enabled
-     * (returns false for non-Jetpack self-hosted sites).
-     */
-    public boolean hasWPComOrJetpackSiteWithSiteId(long siteId) {
-        int localId = getLocalIdForRemoteSiteId(siteId);
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, localId)
-                .beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
-                .endGroup().endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
     }
 
     /**
