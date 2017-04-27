@@ -135,6 +135,9 @@ public class AppPrefs {
 
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
+
+        // wizard style login flow active
+        LOGIN_WIZARD_STYLE_ACTIVE,
     }
 
     private static SharedPreferences prefs() {
@@ -391,6 +394,18 @@ public class AppPrefs {
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
         }
+    }
+
+    // Wizard-style login flow
+    public static void setLoginWizardStyleActive(boolean loginWizardActive) {
+        setBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, loginWizardActive);
+        if (loginWizardActive) {
+            AnalyticsTracker.track(Stat.LOGIN_WIZARD_STYLE_ACTIVATED);
+        }
+    }
+
+    public static boolean isLoginWizardStyleActivated() {
+        return BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE || getBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, false);
     }
 
     // Aztec Editor
