@@ -1022,86 +1022,87 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
-            if (data == null || data.getExtras() == null && tappedImagePredicate != null) {
-                return;
-            }
+            if (tappedImagePredicate != null) {
+                AztecAttributes attributes = content.getElementAttributes(tappedImagePredicate);
+                attributes.removeAttribute(TEMP_IMAGE_ID);
 
-            Bundle extras = data.getExtras();
-            JSONObject meta;
-            try {
-                meta = new JSONObject(StringUtils.notNullStr(extras.getString("imageMeta")));
-            } catch (JSONException e) {
-                // ignore errors
-                return;
-            }
+                content.updateElementAttributes(tappedImagePredicate, attributes);
 
-            AztecAttributes attributes = content.getElementAttributes(tappedImagePredicate);
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
 
-            // set image properties
-            attributes.setValue("src", JSONUtils.getString(meta, "src"));
+                Bundle extras = data.getExtras();
+                JSONObject meta;
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "title"))) {
-                attributes.setValue("title", JSONUtils.getString(meta, "title"));
-            }
+                try {
+                    meta = new JSONObject(StringUtils.notNullStr(extras.getString("imageMeta")));
+                } catch (JSONException e) {
+                    // ignore errors
+                    return;
+                }
 
-            attributes.setValue("width", JSONUtils.getString(meta, "width"));
-            attributes.setValue("height", JSONUtils.getString(meta, "height"));
+                // set image properties
+                attributes.setValue("src", JSONUtils.getString(meta, "src"));
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "alt"))) {
-                attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
-            }
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "title"))) {
+                    attributes.setValue("title", JSONUtils.getString(meta, "title"));
+                }
 
-            AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
+                attributes.setValue("width", JSONUtils.getString(meta, "width"));
+                attributes.setValue("height", JSONUtils.getString(meta, "height"));
 
-            // remove previously set properties
-            attributesWithClass.removeClassStartingWith("align-");
-            attributesWithClass.removeClassStartingWith("size-");
-            attributesWithClass.removeClassStartingWith("wp-image-");
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "alt"))) {
+                    attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
+                }
 
-            // only assign the align class to the image if we're not printing
-            // a caption, since the alignment is sent to the shortcode
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align")) &&
-                    TextUtils.isEmpty(JSONUtils.getString(meta, "caption"))) {
-                attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
-            }
+                AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
-                attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
-            }
+                // remove previously set properties
+                attributesWithClass.removeClassStartingWith("align-");
+                attributesWithClass.removeClassStartingWith("size-");
+                attributesWithClass.removeClassStartingWith("wp-image-");
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
-                attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
-            }
+                // only assign the align class to the image if we're not printing
+                // a caption, since the alignment is sent to the shortcode
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align")) &&
+                        TextUtils.isEmpty(JSONUtils.getString(meta, "caption"))) {
+                    attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
+                }
 
-            AztecAttributes attrs = attributesWithClass.getAttributes();
-            attrs.removeAttribute(TEMP_IMAGE_ID);
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
+                    attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
+                }
 
-            content.updateElementAttributes(tappedImagePredicate, attrs);
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
+                    attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
+                }
 
-            // captions required shortcode support
+                // captions required shortcode support
 //            String caption = JSONUtils.getString(meta, "caption");
 
-            // there is an issue with having an image inside a link
-            // https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
+                // there is an issue with having an image inside a link
+                // https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
 //            String link = JSONUtils.getString(meta, "linkUrl");
 
-            final int imageRemoteId = extras.getInt("imageRemoteId");
-            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
+                final int imageRemoteId = extras.getInt("imageRemoteId");
+                final boolean isFeaturedImage = extras.getBoolean("isFeatured");
 
-            if (imageRemoteId != 0) {
-                if (isFeaturedImage) {
-                    mFeaturedImageId = imageRemoteId;
-                    mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
-                } else {
-                    // If this image was unset as featured, clear the featured image id
-                    if (mFeaturedImageId == imageRemoteId) {
-                        mFeaturedImageId = 0;
+                if (imageRemoteId != 0) {
+                    if (isFeaturedImage) {
+                        mFeaturedImageId = imageRemoteId;
                         mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                    } else {
+                        // If this image was unset as featured, clear the featured image id
+                        if (mFeaturedImageId == imageRemoteId) {
+                            mFeaturedImageId = 0;
+                            mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                        }
                     }
                 }
-            }
 
-            tappedImagePredicate = null;
+                tappedImagePredicate = null;
+            }
         }
     }
 }
