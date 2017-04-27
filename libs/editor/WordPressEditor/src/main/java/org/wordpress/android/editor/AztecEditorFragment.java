@@ -32,11 +32,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -66,8 +68,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
-
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         OnImeBackListener,
         EditorMediaUploadListener,
@@ -82,6 +82,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_CONTENT = "content";
 
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
+
+    private static final int MIN_BITMAP_WIDTH = 200;
 
     public static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -453,9 +455,37 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // TODO: insert video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
-                // TODO: insert image
-                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
+                imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                        Bitmap downloadedBitmap = container.getBitmap();
+
+                        if (downloadedBitmap == null) {
+                            // No bitmap downloaded from server.
+                            return;
+                        }
+
+                        AztecAttributes attrs = new AztecAttributes();
+                        attrs.setValue("src", mediaUrl);
+
+                        if (downloadedBitmap.getWidth() < MIN_BITMAP_WIDTH) {
+                            // Bitmap is too small.  Show image placeholder.
+                            ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                            Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
+                            content.insertMedia(drawable, attrs);
+                            return;
+                        }
+
+                        Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
+                        content.insertMedia(new BitmapDrawable(getResources(), resizedBitmap), attrs);
+                    }
+                }, 0, 0);
             }
+
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
