@@ -32,11 +32,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
@@ -66,8 +68,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
-
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         OnImeBackListener,
         EditorMediaUploadListener,
@@ -82,6 +82,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_CONTENT = "content";
 
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
+
+    private static final int MIN_BITMAP_DIMENSION_DP = 48;
 
     public static final int MAX_ACTION_TIME_MS = 2000;
 
@@ -107,7 +109,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private long mActionStartedAt = -1;
 
-    private ImagePredicate tappedImagePredicate;
+    private ImagePredicate mTappedImagePredicate;
 
     public static AztecEditorFragment newInstance(String title, String content) {
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -453,12 +455,49 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // TODO: insert video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
             } else {
-                // TODO: insert image
-                ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
+                imageLoader.get(mediaUrl, new ImageLoader.ImageListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Show failed placeholder.
+                        ToastUtils.showToast(getActivity(), R.string.error_media_load);
+                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                        AztecAttributes attributes = new AztecAttributes();
+                        attributes.setValue("src", mediaUrl);
+                        content.insertMedia(drawable, attributes);
+                    }
+
+                    @Override
+                    public void onResponse(ImageLoader.ImageContainer container, boolean isImmediate) {
+                        Bitmap downloadedBitmap = container.getBitmap();
+
+                        if (downloadedBitmap == null) {
+                            // No bitmap downloaded from server.
+                            return;
+                        }
+
+                        AztecAttributes attrs = new AztecAttributes();
+                        attrs.setValue("src", mediaUrl);
+
+                        int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
+
+                        if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
+                            // Bitmap is too small.  Show image placeholder.
+                            ToastUtils.showToast(getActivity(), R.string.error_media_small);
+                            Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
+                            content.insertMedia(drawable, attrs);
+                            return;
+                        }
+
+                        Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
+                        content.insertMedia(new BitmapDrawable(getResources(), resizedBitmap), attrs);
+                    }
+                }, 0, 0);
             }
+
             mActionStartedAt = System.currentTimeMillis();
         } else {
             String localMediaId = String.valueOf(mediaFile.getId());
+
             if (mediaFile.isVideo()) {
                 // TODO: insert local video
                 ToastUtils.showToast(getActivity(), R.string.media_insert_unimplemented);
@@ -471,14 +510,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // load a scaled version of the image to prevent OOM exception
                 int maxWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
                 Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
-               if (bitmapToShow != null) {
+
+                if (bitmapToShow != null) {
                     content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
                 } else {
-                    // Use a placeholder
+                    // Failed to retrieve bitmap.  Show failed placeholder.
                     ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable d = getResources().getDrawable(R.drawable.ic_gridicons_image);
-                    d.setBounds(0, 0, maxWidth, maxWidth);
-                    content.insertMedia(d, attrs);
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+                    drawable.setBounds(0, 0, maxWidth, maxWidth);
+                    content.insertMedia(drawable, attrs);
                 }
 
                 // set intermediate shade overlay
@@ -847,7 +887,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         attrs.setValue(idName, id);
-        tappedImagePredicate = new ImagePredicate(id, idName);
+        mTappedImagePredicate = new ImagePredicate(id, idName);
 
         onMediaTapped(id, MediaType.IMAGE, meta, uploadStatus);
     }
@@ -870,7 +910,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                             switch (mediaType) {
                                 case IMAGE:
-                                    content.removeMedia(tappedImagePredicate);
+                                    content.removeMedia(mTappedImagePredicate);
                                     break;
                                 case VIDEO:
                                     // TODO: remove video
@@ -901,19 +941,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 switch (mediaType) {
                     case IMAGE:
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
-                                content.getElementAttributes(tappedImagePredicate));
+                                content.getElementAttributes(mTappedImagePredicate));
                         attributesWithClass.removeClass("failed");
 
                         // set intermediate shade overlay
-                        content.setOverlay(tappedImagePredicate, 0,
+                        content.setOverlay(mTappedImagePredicate, 0,
                                 new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)), Gravity.FILL);
 
                         Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
                         // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
                         progressDrawable.setBounds(0, 0, 0, 4);
 
-                        content.setOverlay(tappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
-                        content.updateElementAttributes(tappedImagePredicate, attributesWithClass.getAttributes());
+                        content.setOverlay(mTappedImagePredicate, 1, progressDrawable, Gravity.FILL_HORIZONTAL | Gravity.TOP);
+                        content.updateElementAttributes(mTappedImagePredicate, attributesWithClass.getAttributes());
 
                         content.refreshText();
                         break;
@@ -990,86 +1030,85 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE) {
-            if (data == null || data.getExtras() == null && tappedImagePredicate != null) {
-                return;
-            }
+            if (mTappedImagePredicate != null) {
+                AztecAttributes attributes = content.getElementAttributes(mTappedImagePredicate);
+                attributes.removeAttribute(TEMP_IMAGE_ID);
 
-            Bundle extras = data.getExtras();
-            JSONObject meta;
-            try {
-                meta = new JSONObject(StringUtils.notNullStr(extras.getString("imageMeta")));
-            } catch (JSONException e) {
-                // ignore errors
-                return;
-            }
+                content.updateElementAttributes(mTappedImagePredicate, attributes);
 
-            AztecAttributes attributes = content.getElementAttributes(tappedImagePredicate);
+                if (data == null || data.getExtras() == null) {
+                    return;
+                }
 
-            // set image properties
-            attributes.setValue("src", JSONUtils.getString(meta, "src"));
+                Bundle extras = data.getExtras();
+                JSONObject meta;
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "title"))) {
-                attributes.setValue("title", JSONUtils.getString(meta, "title"));
-            }
+                try {
+                    meta = new JSONObject(StringUtils.notNullStr(extras.getString("imageMeta")));
+                } catch (JSONException e) {
+                    return;
+                }
 
-            attributes.setValue("width", JSONUtils.getString(meta, "width"));
-            attributes.setValue("height", JSONUtils.getString(meta, "height"));
+                attributes.setValue("src", JSONUtils.getString(meta, "src"));
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "alt"))) {
-                attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
-            }
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "title"))) {
+                    attributes.setValue("title", JSONUtils.getString(meta, "title"));
+                }
 
-            AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
+                attributes.setValue("width", JSONUtils.getString(meta, "width"));
+                attributes.setValue("height", JSONUtils.getString(meta, "height"));
 
-            // remove previously set properties
-            attributesWithClass.removeClassStartingWith("align-");
-            attributesWithClass.removeClassStartingWith("size-");
-            attributesWithClass.removeClassStartingWith("wp-image-");
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "alt"))) {
+                    attributes.setValue("alt", JSONUtils.getString(meta, "alt"));
+                }
 
-            // only assign the align class to the image if we're not printing
-            // a caption, since the alignment is sent to the shortcode
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align")) &&
-                    TextUtils.isEmpty(JSONUtils.getString(meta, "caption"))) {
-                attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
-            }
+                AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
-                attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
-            }
+                // remove previously set class attributes to add updated values
+                attributesWithClass.removeClassStartingWith("align-");
+                attributesWithClass.removeClassStartingWith("size-");
+                attributesWithClass.removeClassStartingWith("wp-image-");
 
-            if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
-                attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
-            }
+                // only add align attribute if there is no caption since alignment is sent with shortcode
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "align")) &&
+                        TextUtils.isEmpty(JSONUtils.getString(meta, "caption"))) {
+                    attributesWithClass.addClass("align-" + JSONUtils.getString(meta, "align"));
+                }
 
-            AztecAttributes attrs = attributesWithClass.getAttributes();
-            attrs.removeAttribute(TEMP_IMAGE_ID);
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "size"))) {
+                    attributesWithClass.addClass("size-" + JSONUtils.getString(meta, "size"));
+                }
 
-            content.updateElementAttributes(tappedImagePredicate, attrs);
+                if (!TextUtils.isEmpty(JSONUtils.getString(meta, "attachment_id"))) {
+                    attributesWithClass.addClass("wp-image-" + JSONUtils.getString(meta, "attachment_id"));
+                }
 
-            // captions required shortcode support
-//            String caption = JSONUtils.getString(meta, "caption");
+//                TODO: Add shortcode support to allow captions.
+//                https://github.com/wordpress-mobile/AztecEditor-Android/issues/17
+//                String caption = JSONUtils.getString(meta, "caption");
 
-            // there is an issue with having an image inside a link
-            // https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
-//            String link = JSONUtils.getString(meta, "linkUrl");
+//                TODO: Fix issue with image inside link.
+//                https://github.com/wordpress-mobile/AztecEditor-Android/issues/196
+//                String link = JSONUtils.getString(meta, "linkUrl");
 
-            final int imageRemoteId = extras.getInt("imageRemoteId");
-            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
+                final int imageRemoteId = extras.getInt("imageRemoteId");
+                final boolean isFeaturedImage = extras.getBoolean("isFeatured");
 
-            if (imageRemoteId != 0) {
-                if (isFeaturedImage) {
-                    mFeaturedImageId = imageRemoteId;
-                    mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
-                } else {
-                    // If this image was unset as featured, clear the featured image id
-                    if (mFeaturedImageId == imageRemoteId) {
-                        mFeaturedImageId = 0;
+                if (imageRemoteId != 0) {
+                    if (isFeaturedImage) {
+                        mFeaturedImageId = imageRemoteId;
                         mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                    } else {
+                        // if this image was unset as featured, clear the featured image id
+                        if (mFeaturedImageId == imageRemoteId) {
+                            mFeaturedImageId = 0;
+                            mEditorFragmentListener.onFeaturedImageChanged(mFeaturedImageId);
+                        }
                     }
                 }
-            }
 
-            tappedImagePredicate = null;
+                mTappedImagePredicate = null;
+            }
         }
     }
 }
