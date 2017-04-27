@@ -188,24 +188,6 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testHasWPComOrJetpackSiteWithSiteId() throws DuplicateSiteException {
-        assertFalse(mSiteStore.hasWPComOrJetpackSiteWithSiteId(673));
-
-        SiteModel wpComSite = generateWPComSite();
-        SiteSqlUtils.insertOrUpdateSite(wpComSite);
-
-        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(wpComSite.getSiteId()));
-
-        SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
-        SiteSqlUtils.insertOrUpdateSite(jetpackSite);
-
-        // hasWPComOrJetpackSiteWithSiteId() should be able to locate a Jetpack site with either the site id or the
-        // .COM site id
-        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(jetpackSite.getSiteId()));
-        assertTrue(mSiteStore.hasWPComOrJetpackSiteWithSiteId(jetpackSite.getSelfHostedSiteId()));
-    }
-
-    @Test
     public void testWPComSiteVisibility() throws DuplicateSiteException {
         // Should not cause any errors
         mSiteStore.isWPComSiteVisibleByLocalId(45);
