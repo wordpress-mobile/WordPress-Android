@@ -162,7 +162,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         boolean hasEditFragment = hasEditFragment();
         setLookClosable(hasEditFragment);
 
-        String mediaUri;
+        String mediaUri = null;
         if (!TextUtils.isEmpty(mContentUri)) {
             mediaUri = mContentUri;
         } else if (mMediaId != 0) {
@@ -178,7 +178,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
             if (!hasEditFragment) {
                 fadeInMetadata();
             }
-        } else {
+        }
+
+        if (TextUtils.isEmpty(mediaUri)) {
             delayedFinish(true);
             return;
         }
