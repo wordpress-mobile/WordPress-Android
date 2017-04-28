@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -47,29 +47,48 @@
         android:layout_height="wrap_content"
         android:src="@drawable/gallery_icon_thumbnailgrid" />
 
-    <LinearLayout
-        android:id="@+id/media_gallery_settings_num_columns_container"
+    <RelativeLayout
+        android:id="@+id/num_columns_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <org.wordpress.android.widgets.WPTextView
-            style="@style/MediaGalleryText"
+        <TextView
+            android:id="@+id/text_num_columns_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/media_gallery_num_columns" />
 
-        <org.wordpress.android.ui.ExpandableHeightGridView
-            android:id="@+id/media_gallery_num_columns_grid"
+        <SeekBar
+            android:id="@+id/seekbar_num_columns"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:columnWidth="32dp"
-            android:horizontalSpacing="8dp"
-            android:isScrollContainer="false"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="8dp" />
-    </LinearLayout>
+            android:layout_below="@+id/text_num_columns_label"
+            android:theme="@style/Widget.AppCompat.SeekBar.Discrete" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekbar_num_columns"
+            android:text="1"
+            android:textSize="@dimen/text_sz_small" />
+
+        <TextView
+            android:id="@+id/text_num_columns_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seekbar_num_columns"
+            android:layout_centerHorizontal="true"
+            android:text="3"
+            android:textSize="@dimen/text_sz_large" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/seekbar_num_columns"
+            android:text="9"
+            android:textSize="@dimen/text_sz_small" />
+    </RelativeLayout>
+
 </LinearLayout>
