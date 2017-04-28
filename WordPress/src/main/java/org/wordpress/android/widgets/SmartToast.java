@@ -50,6 +50,6 @@ public class SmartToast {
         toast.show();
 
         numTimesShown++;
-        //AppPrefs.setInt(key, numTimesShown);
+        AppPrefs.setInt(key, numTimesShown);
     }
 }
