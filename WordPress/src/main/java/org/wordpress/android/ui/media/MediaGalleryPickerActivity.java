@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.SmartToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +127,10 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
                 mGridAdapter.setInMultiSelect(true);
                 mGridAdapter.setSelectedItems(selectedItems);
             }
+        }
+
+        if (!mIsSelectOneItem && savedInstanceState == null) {
+            SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_PICKER_LONG_PRESS);
         }
     }
 
