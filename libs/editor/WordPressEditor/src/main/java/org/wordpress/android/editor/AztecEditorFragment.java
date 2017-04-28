@@ -87,6 +87,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public static final int MAX_ACTION_TIME_MS = 2000;
 
+    private static final MediaFile DEFAULT_MEDIA = new MediaFile();
+    private static final String DEFAULT_MEDIA_TITLE = DEFAULT_MEDIA.getTitle();
+    private static final int DEFAULT_MEDIA_HEIGHT = DEFAULT_MEDIA.getHeight();
+    private static final int DEFAULT_MEDIA_WIDTH = DEFAULT_MEDIA.getWidth();
+
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = Arrays.asList(ClipDescription
             .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
@@ -463,6 +468,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
                         AztecAttributes attributes = new AztecAttributes();
                         attributes.setValue("src", mediaUrl);
+                        setAttributeValuesIfNotDefault(attributes, mediaFile);
                         content.insertMedia(drawable, attributes);
                     }
 
@@ -475,8 +481,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             return;
                         }
 
-                        AztecAttributes attrs = new AztecAttributes();
-                        attrs.setValue("src", mediaUrl);
+                        AztecAttributes attributes = new AztecAttributes();
+                        attributes.setValue("src", mediaUrl);
+                        setAttributeValuesIfNotDefault(attributes, mediaFile);
 
                         int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
 
@@ -484,12 +491,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             // Bitmap is too small.  Show image placeholder.
                             ToastUtils.showToast(getActivity(), R.string.error_media_small);
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                            content.insertMedia(drawable, attrs);
+                            content.insertMedia(drawable, attributes);
                             return;
                         }
 
                         Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
-                        content.insertMedia(new BitmapDrawable(getResources(), resizedBitmap), attrs);
+                        content.insertMedia(new BitmapDrawable(getResources(), resizedBitmap), attributes);
                     }
                 }, 0, 0);
             }
@@ -1109,6 +1116,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 mTappedImagePredicate = null;
             }
+        }
+    }
+
+    protected void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
+        if (!mediaFile.getTitle().equalsIgnoreCase(DEFAULT_MEDIA_TITLE)) {
+            attributes.setValue("title", mediaFile.getTitle());
+        }
+
+        if (mediaFile.getWidth() != DEFAULT_MEDIA_WIDTH) {
+            attributes.setValue("width", String.valueOf(mediaFile.getWidth()));
+        }
+
+        if (mediaFile.getHeight() != DEFAULT_MEDIA_HEIGHT) {
+            attributes.setValue("height", String.valueOf(mediaFile.getHeight()));
         }
     }
 }
