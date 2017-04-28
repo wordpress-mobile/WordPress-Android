@@ -306,16 +306,17 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void loadImage(@NonNull String mediaUri) {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
+        int size = Math.max(width, height);
 
         if (mediaUri.startsWith("http")) {
             showProgress(true);
-            String imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, width, height);
+            String imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        mImageView.setImageBitmap(response.getBitmap());
+                        setBitmap(response.getBitmap());
                     }
                 }
                 @Override
@@ -326,9 +327,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
                         delayedFinish(true);
                     }
                 }
-            }, width, height);
+            }, size, 0);
         } else {
-            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mediaUri), width, null, 0);
+            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mediaUri), size, null, 0);
             if (bytes == null) {
                 delayedFinish(true);
                 return;
@@ -336,14 +337,17 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             if (bmp != null) {
-                mImageView.setImageBitmap(bmp);
+                setBitmap(bmp);
             } else {
                 delayedFinish(true);
                 return;
             }
         }
+    }
 
-        // assign the photo attacher to enable pinch/zoom
+    private void setBitmap(@NonNull Bitmap bmp) {
+        // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
+        // for it to be correctly resized upon loading
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
 
         // fade in metadata when tapped
@@ -357,6 +361,8 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 }
             });
         }
+
+        mImageView.setImageBitmap(bmp);
     }
 
     /*
