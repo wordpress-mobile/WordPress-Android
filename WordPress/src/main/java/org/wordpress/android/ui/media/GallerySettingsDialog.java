@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,7 @@ import org.wordpress.android.R;
 /**
  * The fragment containing the settings for the media gallery
  */
-public class GallerySettingsDialog extends DialogFragment {
+public class GallerySettingsDialog extends AppCompatDialogFragment {
     private static final int DEFAULT_COLUMN_COUNT = 3;
     private static final int MAX_COLUMN_COUNT = 9;
 
@@ -43,7 +43,7 @@ public class GallerySettingsDialog extends DialogFragment {
 
     public static GallerySettingsDialog newInstance() {
         GallerySettingsDialog dialog = new GallerySettingsDialog();
-        dialog.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme);
+        dialog.setStyle(AppCompatDialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light);
         return dialog;
     }
 
