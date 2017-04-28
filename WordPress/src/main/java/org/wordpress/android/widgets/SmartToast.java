@@ -21,20 +21,23 @@ public class SmartToast {
         COMMENTS_LONG_PRESS
     }
 
-    private final Context mContext;
-    private final SmartToastType mType;
+    private static final int MAX_TIMES_TO_SHOW = 3;
 
-    public static void showSmartToast(@NonNull Context context, @NonNull SmartToastType type) {
+    public static void show(@NonNull Context context, @NonNull SmartToastType type) {
         DeletablePrefKey key;
+        int stringResId;
         switch (type) {
             case PHOTO_PICKER_LONG_PRESS:
                 key = DeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER;
+                stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case WP_MEDIA_PICKER_LONG_PRESS:
                 key = DeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_COUNTER;
+                stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
                 key = DeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER;
+                stringResId = R.string.smart_toast_comments_long_press;
                 break;
             default:
                 return;
@@ -44,34 +47,9 @@ public class SmartToast {
             return;
         }
 
-        SmartToast smartToast = new SmartToast(context, type);
-        smartToast.show();
+        ToastUtils.showToast(context, stringResId, ToastUtils.Duration.LONG);
 
         numTimesShown++;
-        AppPrefs.setInt(key, numTimesShown);
-    }
-
-    private SmartToast(@NonNull Context context, @NonNull SmartToastType type) {
-        mContext = context;
-        mType = type;
-    }
-
-    private static final int MAX_TIMES_TO_SHOW = 3;
-
-    private void show() {
-        int stringResId;
-        switch (mType) {
-            case PHOTO_PICKER_LONG_PRESS:
-            case WP_MEDIA_PICKER_LONG_PRESS:
-                stringResId = R.string.smart_toast_photo_long_press;
-                break;
-            case COMMENTS_LONG_PRESS:
-                stringResId = R.string.smart_toast_comments_long_press;
-                break;
-            default:
-                return;
-        }
-
-        ToastUtils.showToast(mContext, stringResId, ToastUtils.Duration.LONG);
+        //AppPrefs.setInt(key, numTimesShown);
     }
 }

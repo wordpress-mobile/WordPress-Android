@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.widgets.SmartToast;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -168,6 +169,10 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         reload();
+
+        if (mAllowMultiSelect && savedInstanceState == null) {
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
+        }
 
         return view;
     }
