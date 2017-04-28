@@ -2,11 +2,13 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey;
-import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.DisplayUtils;
 
 /**
  * Simple wrapper for limiting the number of times to show a toast message - originally designed
@@ -42,7 +44,10 @@ public class SmartToast {
             return;
         }
 
-        ToastUtils.showToast(context, stringResId, ToastUtils.Duration.LONG);
+        int yOffset = DisplayUtils.dpToPx(context, 48);
+        Toast toast = Toast.makeText(context, context.getString(stringResId), Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
+        toast.show();
 
         numTimesShown++;
         //AppPrefs.setInt(key, numTimesShown);
