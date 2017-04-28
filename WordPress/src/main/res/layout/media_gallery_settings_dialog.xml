@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RadioGroup
@@ -41,129 +41,35 @@
 
     </RadioGroup>
 
-    <ScrollView
-        android:id="@+id/media_gallery_settings_content_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/image_gallery_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/gallery_icon_thumbnailgrid" />
 
-        <LinearLayout
+    <LinearLayout
+        android:id="@+id/media_gallery_settings_num_columns_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            style="@style/MediaGalleryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_gallery_num_columns" />
+
+        <org.wordpress.android.ui.ExpandableHeightGridView
+            android:id="@+id/media_gallery_num_columns_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <org.wordpress.android.widgets.WPTextView
-                style="@style/MediaGalleryText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/media_gallery_type" />
-
-
-            <LinearLayout
-                android:id="@+id/media_gallery_type_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <CheckBox
-                    android:id="@+id/media_gallery_type_thumbnail_grid"
-                    style="@style/MediaGalleryTypeCheckbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_grid_selector"
-                    android:paddingLeft="0dp"
-                    android:text="@string/media_gallery_type_thumbnail_grid" />
-
-                <CheckBox
-                    android:id="@+id/media_gallery_type_tiled"
-                    style="@style/MediaGalleryTypeCheckbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_tiled_selector"
-                    android:paddingLeft="0dp"
-                    android:text="@string/media_gallery_type_tiled" />
-
-                <CheckBox
-                    android:id="@+id/media_gallery_type_squares"
-                    style="@style/MediaGalleryTypeCheckbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_squares_selector"
-                    android:paddingLeft="0dp"
-                    android:text="@string/media_gallery_type_squares" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/media_gallery_type_circles"
-                    style="@style/MediaGalleryTypeCheckbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_circles_selector"
-                    android:paddingLeft="0dp"
-                    android:text="@string/media_gallery_type_circles" />
-
-                <CheckBox
-                    android:id="@+id/media_gallery_type_slideshow"
-                    style="@style/MediaGalleryTypeCheckbox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_gallery_slideshow_selector"
-                    android:paddingLeft="0dp"
-                    android:text="@string/media_gallery_type_slideshow" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/white" />
-
-            <LinearLayout
-                android:id="@+id/media_gallery_settings_num_columns_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:orientation="vertical">
-
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/MediaGalleryText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_num_columns" />
-
-                <org.wordpress.android.ui.ExpandableHeightGridView
-                    android:id="@+id/media_gallery_num_columns_grid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:columnWidth="32dp"
-                    android:horizontalSpacing="8dp"
-                    android:isScrollContainer="false"
-                    android:numColumns="auto_fit"
-                    android:stretchMode="columnWidth"
-                    android:verticalSpacing="8dp" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
+            android:layout_marginTop="16dp"
+            android:columnWidth="32dp"
+            android:horizontalSpacing="8dp"
+            android:isScrollContainer="false"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="8dp" />
+    </LinearLayout>
 </LinearLayout>

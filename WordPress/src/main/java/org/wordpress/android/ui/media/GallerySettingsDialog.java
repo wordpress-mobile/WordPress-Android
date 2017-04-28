@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.media;
 
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -12,9 +12,9 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ExpandableHeightGridView;
@@ -31,7 +31,6 @@ public class GallerySettingsDialog extends DialogFragment {
     private static final String STATE_GALLERY_TYPE_ORD = "GALLERY_TYPE_ORD";
 
     private View mNumColumnsContainer;
-    private ScrollView mScrollView;
     private RadioGroup mGalleryRadioGroup;
 
     private GalleryType mType;
@@ -42,34 +41,11 @@ public class GallerySettingsDialog extends DialogFragment {
     private CustomGridAdapter mGridAdapter;
 
     private enum GalleryType {
-        DEFAULT(""),
-        TILED("rectangular"),
-        SQUARES("square"),
-        CIRCLES("circle"),
-        SLIDESHOW("slideshow");
-
-        private final String mTag;
-
-        private GalleryType(String tag) {
-            mTag = tag;
-        }
-
-        public String getTag() {
-            return mTag;
-        }
-
-        public static GalleryType getTypeFromTag(String tag) {
-            if (tag.equals("rectangular"))
-                return TILED;
-            else if (tag.equals("square"))
-                return SQUARES;
-            else if (tag.equals("circle"))
-                return CIRCLES;
-            else if (tag.equals("slideshow"))
-                return SLIDESHOW;
-            else
-                return DEFAULT;
-        }
+        DEFAULT,
+        TILED,
+        SQUARES,
+        CIRCLES,
+        SLIDESHOW
     }
 
     public static GallerySettingsDialog newInstance() {
@@ -80,18 +56,35 @@ public class GallerySettingsDialog extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mAllowCheckChanged = true;
-        mType = GalleryType.DEFAULT;
-        mNumColumns = DEFAULT_THUMBNAIL_COLUMN_COUNT;
-
         View view = inflater.inflate(R.layout.media_gallery_settings_dialog, container, false);
 
-        mScrollView = (ScrollView) view.findViewById(R.id.media_gallery_settings_content_container);
+        mNumColumnsContainer = view.findViewById(R.id.media_gallery_settings_num_columns_container);
         mGalleryRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_gallery_type);
 
-        mNumColumnsContainer = view.findViewById(R.id.media_gallery_settings_num_columns_container);
-        int visible = (mType == GalleryType.DEFAULT) ? View.VISIBLE : View.GONE;
-        mNumColumnsContainer.setVisibility(visible);
+        mGalleryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                GalleryType galleryType;
+                switch (checkedId) {
+                    case R.id.radio_circles:
+                        galleryType = GalleryType.CIRCLES;
+                        break;
+                    case R.id.radio_slideshow:
+                        galleryType = GalleryType.SLIDESHOW;
+                        break;
+                    case R.id.radio_squares:
+                        galleryType = GalleryType.SQUARES;
+                        break;
+                    case R.id.radio_tiled:
+                        galleryType = GalleryType.TILED;
+                        break;
+                    default:
+                        galleryType = GalleryType.DEFAULT;
+                        break;
+                }
+                setType(galleryType);
+            }
+        });
 
         ExpandableHeightGridView numColumnsGrid = (ExpandableHeightGridView) view.findViewById(R.id.media_gallery_num_columns_grid);
         numColumnsGrid.setExpanded(true);
@@ -103,45 +96,7 @@ public class GallerySettingsDialog extends DialogFragment {
         mGridAdapter = new CustomGridAdapter(mNumColumns);
         numColumnsGrid.setAdapter(mGridAdapter);
 
-        restoreState(savedInstanceState);
-        setType(mType.getTag());
-
         return view;
-    }
-
-    private RadioButton getRadioButtonForType(@NonNull GalleryType type) {
-        if (!isAdded()) {
-            return null;
-        }
-
-        @IdRes int resId;
-        switch (type) {
-            case CIRCLES:
-                resId = R.id.radio_circles;
-                break;
-            case SLIDESHOW:
-                resId = R.id.radio_slideshow;
-                break;
-            case SQUARES:
-                resId = R.id.radio_squares;
-                break;
-            case TILED:
-                resId = R.id.radio_tiled;
-                break;
-            default:
-                resId = R.id.radio_thumbnail_grid;
-                break;
-        }
-        return (RadioButton) mGalleryRadioGroup.findViewById(resId);
-    }
-
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null)
-            return;
-
-        mNumColumns = savedInstanceState.getInt(STATE_NUM_COLUMNS);
-        int galleryTypeOrdinal = savedInstanceState.getInt(STATE_GALLERY_TYPE_ORD);
-        mType = GalleryType.values()[galleryTypeOrdinal];
     }
 
     @Override
@@ -149,6 +104,21 @@ public class GallerySettingsDialog extends DialogFragment {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_NUM_COLUMNS, mNumColumns);
         outState.putInt(STATE_GALLERY_TYPE_ORD, mType.ordinal());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mNumColumns = savedInstanceState.getInt(STATE_NUM_COLUMNS);
+            int galleryTypeOrdinal = savedInstanceState.getInt(STATE_GALLERY_TYPE_ORD);
+            mType = GalleryType.values()[galleryTypeOrdinal];
+        } else {
+            mAllowCheckChanged = true;
+            mType = GalleryType.DEFAULT;
+            mNumColumns = DEFAULT_THUMBNAIL_COLUMN_COUNT;
+        }
+        setType(mType);
     }
 
     private class CustomGridAdapter extends BaseAdapter implements OnCheckedChangeListener {
@@ -221,18 +191,44 @@ public class GallerySettingsDialog extends DialogFragment {
         }
     }
 
-    public void setType(String type) {
-        mType = GalleryType.getTypeFromTag(type);
-        RadioButton radio = getRadioButtonForType(mType);
-        if (radio != null) {
-            radio.setChecked(true);
-            boolean showNumColumns = (mType == GalleryType.DEFAULT);
-            mNumColumnsContainer.setVisibility(showNumColumns ? View.VISIBLE : View.GONE);
-        }
-    }
+    public void setType(GalleryType galleryType) {
+        mType = galleryType;
 
-    public String getType() {
-        return mType.getTag();
+        boolean showNumColumns = (mType == GalleryType.DEFAULT);
+        mNumColumnsContainer.setVisibility(showNumColumns ? View.VISIBLE : View.GONE);
+
+        @IdRes int resId;
+        @DrawableRes int drawableId;
+        switch (mType) {
+            case CIRCLES:
+                resId = R.id.radio_circles;
+                drawableId = R.drawable.gallery_icon_circles;
+                break;
+            case SLIDESHOW:
+                resId = R.id.radio_slideshow;
+                drawableId = R.drawable.gallery_icon_slideshow;
+                break;
+            case SQUARES:
+                resId = R.id.radio_squares;
+                drawableId = R.drawable.gallery_icon_squares;
+                break;
+            case TILED:
+                resId = R.id.radio_tiled;
+                drawableId = R.drawable.gallery_icon_tiled;
+                break;
+            default:
+                resId = R.id.radio_thumbnail_grid;
+                drawableId = R.drawable.gallery_icon_thumbnailgrid;
+                break;
+        }
+
+        RadioButton radio = (RadioButton) mGalleryRadioGroup.findViewById(resId);
+        if (!radio.isChecked()) {
+            radio.setChecked(true);
+        }
+
+        ImageView imageView = (ImageView) getView().findViewById(R.id.image_gallery_type);
+        imageView.setImageResource(drawableId);
     }
 
     public void setNumColumns(int numColumns) {
