@@ -527,7 +527,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         return null;
     }
 
-    private static boolean isDeprecatedUploadResponse(Map responseMap) throws XMLRPCException {
+    private static boolean isDeprecatedUploadResponse(Map responseMap) {
         for (String requiredResponseField : REQUIRED_UPLOAD_RESPONSE_FIELDS) {
             if (!responseMap.containsKey(requiredResponseField)) {
                 return true;
