@@ -1687,4 +1687,10 @@
     <string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
     <string name="editor_confirm_email_prompt_negative">Resend Email</string>
 
+    <!-- Login -->
+    <string name="log_in">Log In</string>
+    <string name="create_wordpress_site">Create WordPress site</string>
+
+    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
+
 </resources>

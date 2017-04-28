@@ -196,6 +196,16 @@
         <item name="colorButtonNormal">@color/white</item>
     </style>
 
+    <style name="WordPress.BlueButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/blue_wordpress</item>
+        <item name="android:textColor">@color/nux_primary_button</item>
+    </style>
+
+    <style name="WordPress.WhiteButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="android:textColor">@color/blue_wordpress</item>
+    </style>
+
     <!-- NUX Styles -->
     <style name="WordPress.NUXPrimaryButton">
         <item name="android:textColor">@color/nux_primary_button</item>
