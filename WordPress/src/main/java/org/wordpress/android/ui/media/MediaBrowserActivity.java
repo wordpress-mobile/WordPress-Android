@@ -140,7 +140,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.media);
         }
 
         FragmentManager fm = getFragmentManager();
