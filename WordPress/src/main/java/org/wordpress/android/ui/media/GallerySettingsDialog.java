@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AniUtils;
 
 /**
  * The fragment containing the settings for the media gallery
@@ -128,7 +129,11 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         mGalleryType = galleryType;
 
         boolean showNumColumns = (galleryType == GalleryType.DEFAULT);
-        mNumColumnsContainer.setVisibility(showNumColumns ? View.VISIBLE : View.INVISIBLE);
+        if (showNumColumns && mNumColumnsContainer.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mNumColumnsContainer, AniUtils.Duration.SHORT);
+        } else if (!showNumColumns && mNumColumnsContainer.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mNumColumnsContainer, AniUtils.Duration.SHORT);
+        }
 
         @IdRes int resId;
         @DrawableRes int drawableId;

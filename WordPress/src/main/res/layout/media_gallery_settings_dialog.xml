@@ -73,14 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_num_columns_label"
+            android:progress="3"
             android:theme="@style/Widget.AppCompat.SeekBar.Discrete" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/seekbar_num_columns"
-            android:text="1"
-            android:textSize="@dimen/text_sz_small" />
 
         <TextView
             android:id="@+id/text_num_columns_value"
@@ -91,13 +85,6 @@
             android:text="3"
             android:textSize="@dimen/text_sz_large" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/seekbar_num_columns"
-            android:text="9"
-            android:textSize="@dimen/text_sz_small" />
     </RelativeLayout>
 
 </LinearLayout>
