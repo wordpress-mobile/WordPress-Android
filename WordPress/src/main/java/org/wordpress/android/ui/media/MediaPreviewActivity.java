@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -327,18 +328,38 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 }
             }, size, 0);
         } else {
-            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mediaUri), size, null, 0);
-            if (bytes == null) {
-                delayedFinish(true);
+            new LocalImageTask(mediaUri, size).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private class LocalImageTask extends AsyncTask<Void, Void, Bitmap> {
+        private final String mMediaUri;
+        private final int mSize;
+
+        LocalImageTask(@NonNull String mediaUri, int size) {
+            mMediaUri = mediaUri;
+            mSize = size;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            byte[] bytes = ImageUtils.createThumbnailFromUri(
+                    MediaPreviewActivity.this, Uri.parse(mMediaUri), mSize, null, 0);
+            if (bytes != null) {
+                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isFinishing()) {
                 return;
             }
-
-            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            if (bmp != null) {
-                setBitmap(bmp);
+            if (bitmap != null) {
+                setBitmap(bitmap);
             } else {
                 delayedFinish(true);
-                return;
             }
         }
     }
