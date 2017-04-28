@@ -8,7 +8,6 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppPrefs.DeletablePrefKey;
-import org.wordpress.android.util.DisplayUtils;
 
 /**
  * Simple wrapper for limiting the number of times to show a toast message - originally designed
@@ -44,7 +43,7 @@ public class SmartToast {
             return;
         }
 
-        int yOffset = DisplayUtils.dpToPx(context, 48);
+        int yOffset = context.getResources().getDimensionPixelOffset(R.dimen.smart_toast_offset_y);
         Toast toast = Toast.makeText(context, context.getString(stringResId), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
         toast.show();
