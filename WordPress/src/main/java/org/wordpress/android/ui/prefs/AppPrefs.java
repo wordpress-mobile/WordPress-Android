@@ -93,7 +93,6 @@ public class AppPrefs {
 
         // smart toast counters
         SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER,
-        SMART_TOAST_WP_MEDIA_LONG_PRESS_COUNTER,
         SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER
     }
 

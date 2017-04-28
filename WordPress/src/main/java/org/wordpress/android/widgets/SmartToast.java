@@ -17,7 +17,6 @@ public class SmartToast {
 
     public enum SmartToastType {
         PHOTO_PICKER_LONG_PRESS,
-        WP_MEDIA_PICKER_LONG_PRESS,
         COMMENTS_LONG_PRESS
     }
 
@@ -29,10 +28,6 @@ public class SmartToast {
         switch (type) {
             case PHOTO_PICKER_LONG_PRESS:
                 key = DeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER;
-                stringResId = R.string.smart_toast_photo_long_press;
-                break;
-            case WP_MEDIA_PICKER_LONG_PRESS:
-                key = DeletablePrefKey.SMART_TOAST_WP_MEDIA_LONG_PRESS_COUNTER;
                 stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
