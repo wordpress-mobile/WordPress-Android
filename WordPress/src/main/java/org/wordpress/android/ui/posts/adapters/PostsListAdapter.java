@@ -476,7 +476,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         break;
                     default:
                         if (mOnPostButtonClickListener != null) {
-                            mOnPostButtonClickListener.onPostButtonClicked(buttonType, post);
+                            PostModel latestPost = mPostStore.getPostByLocalPostId(post.getId());
+                            if (latestPost == null) {
+                                loadPosts(LoadMode.FORCED);
+                                return;
+                            }
+                            mOnPostButtonClickListener.onPostButtonClicked(buttonType, latestPost);
                         }
                         break;
                 }
