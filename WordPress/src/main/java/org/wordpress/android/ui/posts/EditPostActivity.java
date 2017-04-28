@@ -1181,7 +1181,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         savePostLocallyAndFinishAsync();
                     }
                 } else {
-                    ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                    EditPostActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                        }
+                    });
                 }
             }
         }).start();
