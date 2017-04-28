@@ -71,6 +71,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.widgets.SmartToast;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -150,6 +151,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // if media was shared add it to the library
         handleSharedMedia();
+
+        if (savedInstanceState == null) {
+            SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
+        }
     }
 
     @Override
