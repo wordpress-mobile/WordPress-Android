@@ -2,50 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/media_gallery_bg"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/media_gallery_settings_header"
+    <RadioGroup
+        android:id="@+id/radio_group_gallery_type"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/media_gallery_settings_title"
-            style="@style/MediaGalleryText"
+        <RadioButton
+            android:id="@+id/radio_thumbnail_grid"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:drawablePadding="8dp"
-            android:gravity="center"
-            android:text="@string/media_gallery_settings_title" />
-    </FrameLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/media_gallery_type_thumbnail_grid" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/white" />
+        <RadioButton
+            android:id="@+id/radio_tiled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_gallery_type_tiled" />
+
+        <RadioButton
+            android:id="@+id/radio_squares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_gallery_type_squares" />
+
+        <RadioButton
+            android:id="@+id/radio_circles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_gallery_type_circles" />
+
+        <RadioButton
+            android:id="@+id/radio_slideshow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_gallery_type_slideshow" />
+
+    </RadioGroup>
 
     <ScrollView
         android:id="@+id/media_gallery_settings_content_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp" >
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/white" />
+            android:paddingRight="16dp">
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/MediaGalleryText"
@@ -53,13 +59,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/media_gallery_type" />
 
+
             <LinearLayout
                 android:id="@+id/media_gallery_type_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                android:weightSum="3" >
+                android:weightSum="3">
 
                 <CheckBox
                     android:id="@+id/media_gallery_type_thumbnail_grid"
@@ -96,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/media_gallery_type_circles"
@@ -136,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/MediaGalleryText"
