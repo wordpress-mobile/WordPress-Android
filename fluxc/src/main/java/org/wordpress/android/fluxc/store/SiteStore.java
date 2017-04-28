@@ -403,15 +403,23 @@ public class SiteStore extends Store {
     /**
      * Returns all .COM and Jetpack sites in the store.
      */
-    public List<SiteModel> getWPComAndJetpackSites() {
-        return SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
+    public List<SiteModel> getSitesAccessedViaWPComRest() {
+        return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsModel();
     }
 
     /**
      * Returns the number of .COM and Jetpack sites in the store.
      */
-    public int getWPComAndJetpackSitesCount() {
-        return SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount();
+    public int getSitesAccessedViaWPComRestCount() {
+        return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount();
+    }
+
+    /**
+     * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
+     * Jetpack sites accessed via XMLRPC).
+     */
+    public boolean hasSitesAccessedViaWPComRest() {
+        return getSitesAccessedViaWPComRestCount() != 0;
     }
 
     /**
@@ -430,11 +438,12 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns .COM and Jetpack sites with a name or url matching the search string.
+     * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API) with a
+     * name or url matching the search string.
      */
     @NonNull
-    public List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getWPComAndJetpackSitesByNameOrUrlMatching(searchString);
+    public List<SiteModel> getSitesAccessedViaWPComRestByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString);
     }
 
     /**
@@ -447,60 +456,23 @@ public class SiteStore extends Store {
     /**
      * Returns all self-hosted sites (can't be Jetpack) in the store.
      */
-    public List<SiteModel> getSelfHostedSites() {
-        return SiteSqlUtils.getSelfHostedSites().getAsModel();
+    public List<SiteModel> getSitesAccessedViaXMLRPC() {
+        return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsModel();
     }
 
     /**
-     * Returns the number of self-hosted sites (can't be Jetpack) in the store.
-     * TODO: rename this method
+     * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
-    public int getSelfHostedSitesCount() {
-        return SiteSqlUtils.getSelfHostedSites().getAsCursor().getCount();
+    public int getSitesAccessedViaXMLRPCCount() {
+        return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsCursor().getCount();
     }
 
     /**
-     * Checks whether the store contains at least one self-hosted site (can't be Jetpack).
-     * TODO: rename this method
+     * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
+     * Jetpack sites accessed via XMLRPC).
      */
-    public boolean hasSelfHostedSite() {
-        return getSelfHostedSitesCount() != 0;
-    }
-
-    /**
-     * Returns all Jetpack sites in the store.
-     * TODO: remove this method
-     */
-    public List<SiteModel> getJetpackSites() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsModel();
-    }
-
-    /**
-     * Returns the number of Jetpack sites in the store.
-     * TODO: remove this method
-     */
-    public int getJetpackSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsCursor().getCount();
-    }
-
-    /**
-     * Checks whether the store contains at least one Jetpack site.
-     * TODO: remove this method
-     */
-    public boolean hasJetpackSite() {
-        return getJetpackSitesCount() != 0;
-    }
-
-    /**
-     * Checks whether the store contains a self-hosted site matching the given (remote) site id and XML-RPC URL.
-     */
-    public boolean hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                .endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
+    public boolean hasSiteAccessedViaXMLRPC() {
+        return getSitesAccessedViaXMLRPCCount() != 0;
     }
 
     /**
@@ -520,15 +492,15 @@ public class SiteStore extends Store {
     /**
      * Returns all visible .COM sites as {@link SiteModel}s.
      */
-    public List<SiteModel> getVisibleWPComAndJetpackSites() {
-        return SiteSqlUtils.getVisibleWPComAndJetpackSites().getAsModel();
+    public List<SiteModel> getVisibleSitesAccessedViaWPCom() {
+        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().getAsModel();
     }
 
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleWPComAndJetpackSitesCount() {
-        return SiteSqlUtils.getVisibleWPComAndJetpackSites().getAsCursor().getCount();
+    public int getVisibleSitesAccessedViaWPComCount() {
+        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().getAsCursor().getCount();
     }
 
     /**
@@ -735,7 +707,7 @@ public class SiteStore extends Store {
     private void removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        List<SiteModel> wpcomAndJetpackSites = SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
+        List<SiteModel> wpcomAndJetpackSites = SiteSqlUtils.getSitesAccessedViaWPComRest().getAsModel();
         int rowsAffected = removeSites(wpcomAndJetpackSites);
         emitChange(new OnSiteRemoved(rowsAffected));
     }
