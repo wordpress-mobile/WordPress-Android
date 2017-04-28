@@ -22,9 +22,9 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     // Associated IDs
     @Column private int mLocalSiteId;
-    @Column private int mLocalPostId;
-    @Column private long mMediaId;
-    @Column private long mPostId;
+    @Column private int mLocalPostId; // The local post the media was uploaded from, for lookup after media uploads
+    @Column private long mMediaId; // The remote ID of the media
+    @Column private long mPostId; // The remote post ID ('parent') of the media
     @Column private long mAuthorId;
     @Column private String mGuid;
 
