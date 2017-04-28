@@ -610,7 +610,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
         hidePhotoPicker();
         for (Uri uri: uriList) {
-            addMedia(uri);
+            if (addMedia(uri)) {
+                boolean isVideo = MediaUtils.isVideo(uri.toString());
+                trackAddMediaFromDeviceEvents(false, isVideo, uri);
+            }
         }
     }
 
@@ -1716,7 +1719,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        AnalyticsTracker.track(currentStat, properties);
+        AnalyticsUtils.trackWithSiteDetails(currentStat, mSite, properties);
     }
 
     /**
@@ -1732,9 +1735,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (isVideo) {
-            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY, mSite,  null);
         } else {
-            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, mSite,  null);
         }
     }
 
