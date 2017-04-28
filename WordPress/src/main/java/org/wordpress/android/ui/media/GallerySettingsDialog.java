@@ -128,7 +128,7 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         mGalleryType = galleryType;
 
         boolean showNumColumns = (galleryType == GalleryType.DEFAULT);
-        mNumColumnsContainer.setVisibility(showNumColumns ? View.VISIBLE : View.GONE);
+        mNumColumnsContainer.setVisibility(showNumColumns ? View.VISIBLE : View.INVISIBLE);
 
         @IdRes int resId;
         @DrawableRes int drawableId;

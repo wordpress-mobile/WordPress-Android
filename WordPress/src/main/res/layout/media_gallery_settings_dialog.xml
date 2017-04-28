@@ -4,53 +4,62 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RadioGroup
-        android:id="@+id/radio_group_gallery_type"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RadioButton
-            android:id="@+id/radio_thumbnail_grid"
+        <RadioGroup
+            android:id="@+id/radio_group_gallery_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/radio_thumbnail_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/media_gallery_type_thumbnail_grid" />
+
+            <RadioButton
+                android:id="@+id/radio_tiled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/media_gallery_type_tiled" />
+
+            <RadioButton
+                android:id="@+id/radio_squares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/media_gallery_type_squares" />
+
+            <RadioButton
+                android:id="@+id/radio_circles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/media_gallery_type_circles" />
+
+            <RadioButton
+                android:id="@+id/radio_slideshow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/media_gallery_type_slideshow" />
+
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/image_gallery_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/media_gallery_type_thumbnail_grid" />
-
-        <RadioButton
-            android:id="@+id/radio_tiled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_gallery_type_tiled" />
-
-        <RadioButton
-            android:id="@+id/radio_squares"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_gallery_type_squares" />
-
-        <RadioButton
-            android:id="@+id/radio_circles"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_gallery_type_circles" />
-
-        <RadioButton
-            android:id="@+id/radio_slideshow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/media_gallery_type_slideshow" />
-
-    </RadioGroup>
-
-    <ImageView
-        android:id="@+id/image_gallery_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/gallery_icon_thumbnailgrid" />
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:src="@drawable/gallery_icon_thumbnailgrid"
+            android:tint="@color/grey_darken_10" />
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/num_columns_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
         android:orientation="horizontal">
 
         <TextView
