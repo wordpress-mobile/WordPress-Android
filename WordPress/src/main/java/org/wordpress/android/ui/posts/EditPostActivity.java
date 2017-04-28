@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -89,6 +90,8 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.SignInDialogFragment;
+import org.wordpress.android.ui.media.GallerySettingsDialog;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -552,8 +555,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * user has requested to show the photo picker
      */
     void showPhotoPicker() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        GallerySettingsDialog dialog = GallerySettingsDialog.newInstance();
+        ft.add(dialog, "gallery_settings");
+        ft.commitAllowingStateLoss();
+
         // request permissions if we don't already have them
-        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
+        /*if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
             return;
         }
 
@@ -584,7 +592,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (mAztecEditorFragment != null) {
             mAztecEditorFragment.enableMediaMode(true);
-        }
+        }*/
     }
 
     public void hidePhotoPicker() {
