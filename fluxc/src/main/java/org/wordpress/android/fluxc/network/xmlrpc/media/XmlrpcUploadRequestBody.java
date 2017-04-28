@@ -33,6 +33,7 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
             + "<member><name>name</name><value><string>%s</string></value></member>" // name
             + "<member><name>type</name><value><string>%s</string></value></member>" // type
             + "<member><name>overwrite</name><value><boolean>1</boolean></value></member>"
+            + "<member><name>post_id</name><value><int>%d</int></value></member>" // remote post ID
             + "<member><name>bits</name><value><base64>"; // bits
     private static final String APPEND_XML =
             "</base64></value></member></struct></value></param></params></methodCall>";
@@ -40,8 +41,6 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     private final String mPrependString;
     private long mMediaSize;
     private long mContentSize = -1;
-
-
     private long mMediaBytesWritten = 0;
 
     public XmlrpcUploadRequestBody(MediaModel media, ProgressListener listener, SiteModel site) {
@@ -53,7 +52,8 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
                 StringEscapeUtils.escapeXml(site.getUsername()),
                 StringEscapeUtils.escapeXml(site.getPassword()),
                 StringEscapeUtils.escapeXml(media.getFileName()),
-                StringEscapeUtils.escapeXml(media.getMimeType()));
+                StringEscapeUtils.escapeXml(media.getMimeType()),
+                media.getPostId());
 
         try {
             mMediaSize = contentLength();
