@@ -25,25 +25,25 @@ public class SmartToast {
     private static final int MAX_TIMES_TO_SHOW = 3;
 
     public static void show(@NonNull Context context, @NonNull SmartToastType type) {
-        DeletablePrefKey key;
+        DeletablePrefKey keyCounter;
         int stringResId;
         switch (type) {
             case PHOTO_PICKER_LONG_PRESS:
-                key = DeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER;
+                keyCounter = DeletablePrefKey.SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER;
+                stringResId = R.string.smart_toast_photo_long_press;
+                break;
+            case WP_MEDIA_BROWSER_LONG_PRESS:
+                keyCounter = DeletablePrefKey.SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER;
                 stringResId = R.string.smart_toast_photo_long_press;
                 break;
             case COMMENTS_LONG_PRESS:
-                key = DeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER;
+                keyCounter = DeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER;
                 stringResId = R.string.smart_toast_comments_long_press;
-                break;
-            case WP_MEDIA_BROWSER_LONG_PRESS:
-                key = DeletablePrefKey.SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER;
-                stringResId = R.string.smart_toast_photo_long_press;
                 break;
             default:
                 return;
         }
-        int numTimesShown = AppPrefs.getInt(key);
+        int numTimesShown = AppPrefs.getInt(keyCounter);
         if (numTimesShown >= MAX_TIMES_TO_SHOW) {
             return;
         }
@@ -54,6 +54,6 @@ public class SmartToast {
         toast.show();
 
         numTimesShown++;
-        AppPrefs.setInt(key, numTimesShown);
+        AppPrefs.setInt(keyCounter, numTimesShown);
     }
 }
