@@ -1687,4 +1687,7 @@
     <string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
     <string name="editor_confirm_email_prompt_negative">Resend Email</string>
 
+    <!-- smart toasts -->
+    <string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
+    <string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
 </resources>
