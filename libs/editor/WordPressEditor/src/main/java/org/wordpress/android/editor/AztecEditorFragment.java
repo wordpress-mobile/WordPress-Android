@@ -88,7 +88,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static final int MAX_ACTION_TIME_MS = 2000;
 
     private static final MediaFile DEFAULT_MEDIA = new MediaFile();
-    private static final String DEFAULT_MEDIA_TITLE = DEFAULT_MEDIA.getTitle();
     private static final int DEFAULT_MEDIA_HEIGHT = DEFAULT_MEDIA.getHeight();
     private static final int DEFAULT_MEDIA_WIDTH = DEFAULT_MEDIA.getWidth();
 
@@ -1120,7 +1119,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     protected void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
-        if (!mediaFile.getTitle().equalsIgnoreCase(DEFAULT_MEDIA_TITLE)) {
+        if (!TextUtils.isEmpty(StringUtils.notNullStr(mediaFile.getTitle()))) {
             attributes.setValue("title", mediaFile.getTitle());
         }
 
