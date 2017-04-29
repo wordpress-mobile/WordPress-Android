@@ -23,10 +23,6 @@ public class XMLRPCUtils {
         }
         Class<T> clazz = (Class<T>) defaultValue.getClass();
 
-        Object value = map.get(key);
-        if (clazz.isInstance(value)) {
-            return clazz.cast(value);
-        }
 
         Object result;
         if (defaultValue instanceof String) {
