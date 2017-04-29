@@ -468,6 +468,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             Bundle bundle = (Bundle) super.saveState();
             // This is a possible solution to https://github.com/wordpress-mobile/WordPress-Android/issues/5456
             // See https://issuetracker.google.com/issues/37103380#comment77 for more details
+            if (bundle == null) {
+                bundle = new Bundle();
+            }
             bundle.putParcelableArray("states", null);
             return bundle;
         }
