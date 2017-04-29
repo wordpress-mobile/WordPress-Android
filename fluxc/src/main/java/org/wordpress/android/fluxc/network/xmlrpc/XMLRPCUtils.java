@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.wordpress.android.util.MapUtils;
 
+import java.util.Date;
 import java.util.Map;
 
 public class XMLRPCUtils {
@@ -40,6 +41,12 @@ public class XMLRPCUtils {
             result = MapUtils.getMapFloat(map, key, (Float) defaultValue);
         } else if (defaultValue instanceof Double) {
             result = MapUtils.getMapDouble(map, key, (Double) defaultValue);
+        } else if (clazz == Date.class) {
+            // Matching clazz specifically here to exclude subclasses of Date from being passed as default value
+            // (Date is the only non-final type the XML-RPC deserializer returns - instanceof is safe for the rest)
+            // clazz will have the exact value of the runtime class of defaultValue, and if we allow subclasses (by
+            // using instanceof), we will end up trying to cast, e.g., a Date object from the map to a Time
+            result = map.get(key);
         }
 
         if (result != null) {
