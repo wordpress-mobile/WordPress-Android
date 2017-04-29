@@ -97,7 +97,7 @@ public class XMLRPCUtilsTest {
         assertThat(XMLRPCUtils.safeGetMapValue(getTestMapForValue(theDate), new Date(4244)), equalTo(theDate));
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = RuntimeException.class)
     public void testGetValueInvalidType() {
         // Something bad should happen if we try this - Random isn't a possible type the XML-RPC deserializer would
         // parse into, so it's guaranteed to always return the default value, without us ever knowing that we're
@@ -106,10 +106,12 @@ public class XMLRPCUtilsTest {
         assertThat(XMLRPCUtils.safeGetMapValue(getTestMapForValue("text"), thing), equalTo(thing));
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testGetValueInvalidTypeSubclass() {
         // If we pass a Date subclass as the default value, we might expect it to work as a match for a Date entry
         // But it doesn't - we'll always receive the default value
+        // Something bad should happen if we try this too - we should be warned that we're giving safeGetMapValue()
+        // an impossible type
         Date theDate = new Date();
         assertThat(XMLRPCUtils.safeGetMapValue(getTestMapForValue(theDate), new Time(4244)), equalTo(theDate));
     }
