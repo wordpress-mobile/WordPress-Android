@@ -31,8 +31,8 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
     private RadioGroup mGalleryRadioGroup;
     private SeekBar mNumColumnsSeekBar;
 
-    private GalleryType mGalleryType = GalleryType.DEFAULT;
-    private int mNumColumns = DEFAULT_COLUMN_COUNT;
+    private GalleryType mGalleryType;
+    private int mNumColumns;
 
     private enum GalleryType {
         DEFAULT,
@@ -122,6 +122,12 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
     }
 
     private void setGalleryType(@NonNull GalleryType galleryType) {
+        if (galleryType == mGalleryType) {
+            return;
+        }
+
+        mGalleryType = galleryType;
+
         // column count applies only to thumbnail grid
         boolean showNumColumns = (galleryType == GalleryType.DEFAULT);
         if (showNumColumns && mNumColumnsContainer.getVisibility() != View.VISIBLE) {
@@ -160,19 +166,15 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
             radio.setChecked(true);
         }
 
-        // animate out/in the gallery preview image if the type has changed
-        if (galleryType != mGalleryType) {
-            final ImageView imageView = (ImageView) getView().findViewById(R.id.image_gallery_type);
-            AniUtils.scaleOut(imageView, View.VISIBLE, AniUtils.Duration.SHORT, new AniUtils.AnimationEndListener() {
-                @Override
-                public void onAnimationEnd() {
-                    imageView.setImageResource(drawableId);
-                    AniUtils.scaleIn(imageView, AniUtils.Duration.SHORT);
-                }
-            });
-        }
-
-        mGalleryType = galleryType;
+        // scale out the gallery type image, then set the new image and scale it back in
+        final ImageView imageView = (ImageView) getView().findViewById(R.id.image_gallery_type);
+        AniUtils.scaleOut(imageView, View.VISIBLE, AniUtils.Duration.SHORT, new AniUtils.AnimationEndListener() {
+            @Override
+            public void onAnimationEnd() {
+                imageView.setImageResource(drawableId);
+                AniUtils.scaleIn(imageView, AniUtils.Duration.SHORT);
+            }
+        });
     }
 
     private void setNumColumns(int numColumns, boolean fromSeekBar) {
@@ -186,9 +188,5 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
 
         TextView textValue = (TextView) getView().findViewById(R.id.text_num_columns_value);
         textValue.setText(Integer.toString(mNumColumns));
-    }
-
-    public int getNumColumns() {
-        return mNumColumns;
     }
 }
