@@ -835,23 +835,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         new SavePostOnlineAndFinishTask(isFirstTimePublish).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private boolean hasFailedMedia() {
-        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
-        if (mEditorFragment.hasFailedMediaUploads()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.editor_toast_failed_uploads)
-                    .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Clear failed uploads
-                            mEditorFragment.removeAllFailedMediaUploads();
-                        }
-                    }).setNegativeButton(android.R.string.cancel, null);
-            builder.create().show();
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void openContextMenu(View view) {
         // if we're using the native photo picker, ignore the request - if we're not using
@@ -1200,7 +1183,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
-                        if (!hasFailedMedia()) {
+                        // Show an Alert Dialog asking the user if they want to remove all failed media before upload
+                        if (mEditorFragment.hasFailedMediaUploads()) {
+                            EditPostActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveFailedUploadsDialog();
+                                }
+                            });
+                        } else {
                             savePostOnlineAndFinishAsync(isFirstTimePublish);
                         }
                     } else {
@@ -1216,6 +1207,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         }).start();
+    }
+
+    private void showRemoveFailedUploadsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.editor_toast_failed_uploads)
+                .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Clear failed uploads
+                        mEditorFragment.removeAllFailedMediaUploads();
+                    }
+                }).setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
     }
 
     private void savePostAndFinish() {
