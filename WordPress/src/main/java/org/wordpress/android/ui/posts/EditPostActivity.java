@@ -90,8 +90,8 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.GallerySettingsDialog;
-import org.wordpress.android.ui.media.GallerySettingsDialog.GallerySettingsCallback;
+import org.wordpress.android.ui.media.InsertMediaDialog;
+import org.wordpress.android.ui.media.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -1977,9 +1977,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * choice between inserting them individually or as a gallery
      */
     private void showGallerySettings(final ArrayList<Long> mediaIds) {
-        GallerySettingsCallback callback = new GallerySettingsCallback() {
+        InsertMediaCallback callback = new InsertMediaCallback() {
             @Override
-            public void onCompleted(GallerySettingsDialog dialog) {
+            public void onCompleted(InsertMediaDialog dialog) {
                 switch (dialog.getInsertType()) {
                     case GALLERY:
                         MediaGallery gallery = new MediaGallery();
@@ -1996,7 +1996,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         };
-        GallerySettingsDialog dialog = GallerySettingsDialog.newInstance(callback);
+        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(dialog, "gallery_settings");
         ft.commitAllowingStateLoss();

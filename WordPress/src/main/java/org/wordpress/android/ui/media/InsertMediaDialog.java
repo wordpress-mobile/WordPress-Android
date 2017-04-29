@@ -19,9 +19,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AniUtils;
 
 /**
- * The fragment containing the settings for the media gallery
+ * Displayed after user selects multiple items from the WP media library - provides the user a
+ * choice between inserting them individually or as a gallery
  */
-public class GallerySettingsDialog extends AppCompatDialogFragment {
+public class InsertMediaDialog extends AppCompatDialogFragment {
 
     public enum InsertType {
         INDIVIDUALLY,
@@ -53,8 +54,8 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         }
     }
 
-    public interface GallerySettingsCallback {
-        void onCompleted(GallerySettingsDialog dialog);
+    public interface InsertMediaCallback {
+        void onCompleted(InsertMediaDialog dialog);
     }
 
     private static final int DEFAULT_COLUMN_COUNT = 3;
@@ -69,20 +70,20 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
     private ViewGroup mNumColumnsContainer;
     private SeekBar mNumColumnsSeekBar;
 
-    private GallerySettingsCallback mCallback;
+    private InsertMediaCallback mCallback;
     private GalleryType mGalleryType;
     private InsertType mInsertType;
     private int mNumColumns;
 
 
-    public static GallerySettingsDialog newInstance(@NonNull GallerySettingsCallback callback) {
-        GallerySettingsDialog dialog = new GallerySettingsDialog();
+    public static InsertMediaDialog newInstance(@NonNull InsertMediaCallback callback) {
+        InsertMediaDialog dialog = new InsertMediaDialog();
         dialog.setStyle(AppCompatDialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
         dialog.setCallback(callback);
         return dialog;
     }
 
-    private void setCallback(@NonNull GallerySettingsCallback callback) {
+    private void setCallback(@NonNull InsertMediaCallback callback) {
         mCallback = callback;
     }
 
@@ -161,7 +162,7 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onCompleted(GallerySettingsDialog.this);
+                mCallback.onCompleted(InsertMediaDialog.this);
                 getDialog().dismiss();
             }
         });
@@ -211,11 +212,11 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
             radio.setChecked(true);
         }
 
-        View container = getView().findViewById(R.id.container_gallery_settings);
-        boolean showGalleryTypes = insertType == InsertType.GALLERY;
-        if (showGalleryTypes && container.getVisibility() != View.VISIBLE) {
+        ViewGroup container = (ViewGroup) getView().findViewById(R.id.container_gallery_settings);
+        boolean enableGalleryTypes = insertType == InsertType.GALLERY;
+        if (enableGalleryTypes && container.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(container, AniUtils.Duration.SHORT);
-        } else if (!showGalleryTypes && container.getVisibility() == View.VISIBLE) {
+        } else if (!enableGalleryTypes && container.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(container, AniUtils.Duration.SHORT, View.INVISIBLE);
         }
     }
