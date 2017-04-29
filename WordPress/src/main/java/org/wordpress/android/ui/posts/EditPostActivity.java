@@ -1608,12 +1608,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // needed by the legacy editor to save local drafts
             try {
                 postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
-            } catch (IndexOutOfBoundsException e) {
+            } catch (RuntimeException e) {
                 // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
                 // See https://code.google.com/p/android/issues/detail?id=5164
-                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
-            } catch (RuntimeException e) {
-                // same as above, we'll just use the current editable
                 postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
             }
         } else {
