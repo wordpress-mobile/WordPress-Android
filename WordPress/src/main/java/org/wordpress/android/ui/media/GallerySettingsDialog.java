@@ -293,7 +293,7 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
             mNumColumnsSeekBar.setProgress(numColumns);
         }
 
-        TextView textValue = (TextView) getView().findViewById(R.id.text_num_columns_value);
-        textValue.setText(Integer.toString(mNumColumns));
+        TextView textValue = (TextView) getView().findViewById(R.id.text_num_columns_label);
+        textValue.setText(String.format(getString(R.string.media_gallery_column_count), mNumColumns));
     }
 }

@@ -124,6 +124,7 @@
     <string name="media_gallery_image_order_random">Random</string>
     <string name="media_gallery_image_order_reverse">Reverse</string>
     <string name="media_gallery_num_columns">Number of columns</string>
+    <string name="media_gallery_column_count">%d columns</string>
     <string name="media_gallery_type">Type</string>
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
     <string name="media_gallery_type_squares">Squares</string>

@@ -110,7 +110,7 @@
                         android:id="@+id/text_num_columns_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_gallery_num_columns" />
+                        android:text="@string/media_gallery_column_count" />
 
                     <SeekBar
                         android:id="@+id/seekbar_num_columns"
@@ -120,15 +120,6 @@
                         android:progress="3"
                         android:theme="@style/Widget.AppCompat.SeekBar.Discrete" />
 
-                    <TextView
-                        android:id="@+id/text_num_columns_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/seekbar_num_columns"
-                        android:layout_centerHorizontal="true"
-                        android:text="3"
-                        android:textSize="@dimen/text_sz_large" />
-
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
@@ -136,7 +127,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large">
 
         <Button
             android:id="@+id/button_cancel"
