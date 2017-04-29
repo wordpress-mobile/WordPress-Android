@@ -19,7 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AniUtils;
 
 /**
- * Displayed after user selects multiple items from the WP media library - provides the user a
+ * Displayed after user selects multiple items from the WP media library - provides a
  * choice between inserting them individually or as a gallery
  */
 public class InsertMediaDialog extends AppCompatDialogFragment {
@@ -36,7 +36,7 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
         CIRCLES,
         SLIDESHOW;
 
-        // override to return the actual name used in the gallery shortcode
+        // overridden to return the actual name used in the gallery shortcode
         @Override
         public String toString() {
             switch (this) {
@@ -55,7 +55,7 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
     }
 
     public interface InsertMediaCallback {
-        void onCompleted(InsertMediaDialog dialog);
+        void onCompleted(@NonNull InsertMediaDialog dialog);
     }
 
     private static final int DEFAULT_COLUMN_COUNT = 3;

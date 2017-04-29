@@ -1962,24 +1962,23 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        // if only one item was chosen insert it as a media object, otherwise create a gallery
-        // from the selected items
+        // if only one item was chosen insert it as a media object, otherwise show the insert
+        // media dialog so the user can choose how to insert the items
         if (ids.size() == 1) {
             long mediaId = ids.get(0);
             addExistingMediaToEditor(mediaId);
         } else {
-            showGallerySettings(ids);
+            showInsertMediaDialog(ids);
         }
     }
 
     /*
-     * called after user selects multiple photos from WP media library - gives the user the
-     * choice between inserting them individually or as a gallery
+     * called after user selects multiple photos from WP media library
      */
-    private void showGallerySettings(final ArrayList<Long> mediaIds) {
+    private void showInsertMediaDialog(final ArrayList<Long> mediaIds) {
         InsertMediaCallback callback = new InsertMediaCallback() {
             @Override
-            public void onCompleted(InsertMediaDialog dialog) {
+            public void onCompleted(@NonNull InsertMediaDialog dialog) {
                 switch (dialog.getInsertType()) {
                     case GALLERY:
                         MediaGallery gallery = new MediaGallery();
@@ -1998,7 +1997,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         };
         InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(dialog, "gallery_settings");
+        ft.add(dialog, "insert_media");
         ft.commitAllowingStateLoss();
     }
 
