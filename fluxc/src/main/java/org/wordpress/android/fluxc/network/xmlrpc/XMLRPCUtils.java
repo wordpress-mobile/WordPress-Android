@@ -47,6 +47,13 @@ public class XMLRPCUtils {
             // clazz will have the exact value of the runtime class of defaultValue, and if we allow subclasses (by
             // using instanceof), we will end up trying to cast, e.g., a Date object from the map to a Time
             result = map.get(key);
+        } else {
+            // The XML-RPC deserializer only returns the above types. Any other type passed for the default value
+            // will cause the default value to be returned 100% of the time, regardless of whether the value is set
+            // in the map or not
+            // Instead, make it obvious that an impossible type was given as the default value
+            throw new RuntimeException("Invalid type: " + clazz.getName() + ". Expected "
+                    + "String, boolean, int, long, float, double, or Date.");
         }
 
         if (result != null) {
