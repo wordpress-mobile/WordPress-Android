@@ -1119,10 +1119,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     protected void setAttributeValuesIfNotDefault(AztecAttributes attributes, MediaFile mediaFile) {
-        if (!TextUtils.isEmpty(StringUtils.notNullStr(mediaFile.getTitle()))) {
-            attributes.setValue("title", mediaFile.getTitle());
-        }
-
         if (mediaFile.getWidth() != DEFAULT_MEDIA_WIDTH) {
             attributes.setValue("width", String.valueOf(mediaFile.getWidth()));
         }
