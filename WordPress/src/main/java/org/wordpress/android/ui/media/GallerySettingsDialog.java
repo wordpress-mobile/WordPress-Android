@@ -187,7 +187,7 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
             setGalleryType(GalleryType.values()[galleryTypeOrdinal]);
             setNumColumns(savedInstanceState.getInt(STATE_NUM_COLUMNS), false);
         } else {
-            setInsertType(InsertType.INDIVIDUALLY);
+            setInsertType(InsertType.GALLERY);
             setGalleryType(GalleryType.DEFAULT);
             setNumColumns(DEFAULT_COLUMN_COUNT, false);
         }
