@@ -31,8 +31,8 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
     private RadioGroup mGalleryRadioGroup;
     private SeekBar mNumColumnsSeekBar;
 
-    private GalleryType mGalleryType;
-    private int mNumColumns;
+    private GalleryType mGalleryType = GalleryType.DEFAULT;
+    private int mNumColumns = DEFAULT_COLUMN_COUNT;
 
     private enum GalleryType {
         DEFAULT,
@@ -53,13 +53,13 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.media_gallery_settings_dialog, container, false);
 
         mNumColumnsContainer = (ViewGroup) view.findViewById(R.id.num_columns_container);
-        mNumColumnsSeekBar = (SeekBar) view.findViewById(R.id.seekbar_num_columns);
+        mNumColumnsSeekBar = (SeekBar) mNumColumnsContainer.findViewById(R.id.seekbar_num_columns);
         mNumColumnsSeekBar.setMax(MAX_COLUMN_COUNT - 1);
         mNumColumnsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (fromUser) {
-                    setNumColumns(progress + 1);
+                    setNumColumns(progress, true);
                 }
             }
             @Override
@@ -112,22 +112,17 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            setNumColumns(savedInstanceState.getInt(STATE_NUM_COLUMNS));
             int galleryTypeOrdinal = savedInstanceState.getInt(STATE_GALLERY_TYPE_ORD);
             setGalleryType(GalleryType.values()[galleryTypeOrdinal]);
+            setNumColumns(savedInstanceState.getInt(STATE_NUM_COLUMNS), false);
         } else {
             setGalleryType(GalleryType.DEFAULT);
-            setNumColumns(DEFAULT_COLUMN_COUNT);
+            setNumColumns(DEFAULT_COLUMN_COUNT, false);
         }
     }
 
     private void setGalleryType(@NonNull GalleryType galleryType) {
-        if (galleryType == mGalleryType) {
-            return;
-        }
-
-        mGalleryType = galleryType;
-
+        // column count applies only to thumbnail grid
         boolean showNumColumns = (galleryType == GalleryType.DEFAULT);
         if (showNumColumns && mNumColumnsContainer.getVisibility() != View.VISIBLE) {
             AniUtils.fadeIn(mNumColumnsContainer, AniUtils.Duration.SHORT);
@@ -135,8 +130,8 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
             AniUtils.fadeOut(mNumColumnsContainer, AniUtils.Duration.SHORT);
         }
 
-        @IdRes int resId;
-        @DrawableRes int drawableId;
+        @IdRes final int resId;
+        @DrawableRes final int drawableId;
         switch (galleryType) {
             case CIRCLES:
                 resId = R.id.radio_circles;
@@ -165,17 +160,32 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
             radio.setChecked(true);
         }
 
-        ImageView imageView = (ImageView) getView().findViewById(R.id.image_gallery_type);
-        imageView.setImageResource(drawableId);
+        // animate out/in the gallery preview image if the type has changed
+        if (galleryType != mGalleryType) {
+            final ImageView imageView = (ImageView) getView().findViewById(R.id.image_gallery_type);
+            AniUtils.scaleOut(imageView, View.VISIBLE, AniUtils.Duration.SHORT, new AniUtils.AnimationEndListener() {
+                @Override
+                public void onAnimationEnd() {
+                    imageView.setImageResource(drawableId);
+                    AniUtils.scaleIn(imageView, AniUtils.Duration.SHORT);
+                }
+            });
+        }
+
+        mGalleryType = galleryType;
     }
 
-    public void setNumColumns(int numColumns) {
-        mNumColumns = numColumns;
-        if (isAdded()) {
-            mNumColumnsSeekBar.setProgress(numColumns - 1);
-            TextView textValue = (TextView) getView().findViewById(R.id.text_num_columns_value);
-            textValue.setText(Integer.toString(numColumns));
+    private void setNumColumns(int numColumns, boolean fromSeekBar) {
+        // seekbar is zero-based, so increment the column count if this was called from it
+        if (fromSeekBar) {
+            mNumColumns = numColumns + 1;
+        } else {
+            mNumColumns = numColumns;
+            mNumColumnsSeekBar.setProgress(numColumns);
         }
+
+        TextView textValue = (TextView) getView().findViewById(R.id.text_num_columns_value);
+        textValue.setText(Integer.toString(mNumColumns));
     }
 
     public int getNumColumns() {
