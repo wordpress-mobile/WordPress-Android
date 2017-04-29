@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.media;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +92,10 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().setTitle(R.string.media_insert_title);
-        View view = inflater.inflate(R.layout.media_gallery_settings_dialog, container, false);
+
+        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(themer);
+        View view = localInflater.inflate(R.layout.media_gallery_settings_dialog, container, false);
 
         mInsertRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_insert_type);
         mInsertRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
