@@ -20,23 +20,30 @@ public class XMLRPCUtils {
         if (!map.containsKey(key)) {
             return defaultValue;
         }
+        Class<T> clazz = (Class<T>) defaultValue.getClass();
+
         Object value = map.get(key);
-        if (defaultValue.getClass().isInstance(value)) {
-            return (T) value;
+        if (clazz.isInstance(value)) {
+            return clazz.cast(value);
         }
 
+        Object result;
         if (defaultValue instanceof String) {
-            return (T) MapUtils.getMapStr(map, key);
+            result = MapUtils.getMapStr(map, key);
         } else if (defaultValue instanceof Boolean) {
-            return (T) Boolean.valueOf(MapUtils.getMapBool(map, key));
+            result = MapUtils.getMapBool(map, key);
         } else if (defaultValue instanceof Integer) {
-            return (T) Integer.valueOf(MapUtils.getMapInt(map, key, (Integer) defaultValue));
+            result = MapUtils.getMapInt(map, key, (Integer) defaultValue);
         } else if (defaultValue instanceof Long) {
-            return (T) Long.valueOf(MapUtils.getMapLong(map, key, (Long) defaultValue));
+            result = MapUtils.getMapLong(map, key, (Long) defaultValue);
         } else if (defaultValue instanceof Float) {
-            return (T) Float.valueOf(MapUtils.getMapFloat(map, key, (Float) defaultValue));
+            result = MapUtils.getMapFloat(map, key, (Float) defaultValue);
         } else if (defaultValue instanceof Double) {
-            return (T) Double.valueOf(MapUtils.getMapDouble(map, key, (Double) defaultValue));
+            result = MapUtils.getMapDouble(map, key, (Double) defaultValue);
+        }
+
+        if (result != null) {
+            return clazz.cast(result);
         }
 
         return defaultValue;
