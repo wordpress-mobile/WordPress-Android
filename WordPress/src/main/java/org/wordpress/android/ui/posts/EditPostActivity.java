@@ -90,8 +90,8 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.media.GallerySettingsDialog;
+import org.wordpress.android.ui.media.GallerySettingsDialog.GallerySettingsCallback;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -555,13 +555,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * user has requested to show the photo picker
      */
     void showPhotoPicker() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        GallerySettingsDialog dialog = GallerySettingsDialog.newInstance();
-        ft.add(dialog, "gallery_settings");
-        ft.commitAllowingStateLoss();
-
         // request permissions if we don't already have them
-        /*if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
+        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
             return;
         }
 
@@ -592,7 +587,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (mAztecEditorFragment != null) {
             mAztecEditorFragment.enableMediaMode(true);
-        }*/
+        }
     }
 
     public void hidePhotoPicker() {
@@ -1973,10 +1968,38 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             long mediaId = ids.get(0);
             addExistingMediaToEditor(mediaId);
         } else {
-            MediaGallery gallery = new MediaGallery();
-            gallery.setIds(ids);
-            mEditorFragment.appendGallery(gallery);
+            showGallerySettings(ids);
         }
+    }
+
+    /*
+     * called after user selects multiple photos from WP media library - gives the user the
+     * choice between inserting them individually or as a gallery
+     */
+    private void showGallerySettings(final ArrayList<Long> mediaIds) {
+        GallerySettingsCallback callback = new GallerySettingsCallback() {
+            @Override
+            public void onCompleted(GallerySettingsDialog dialog) {
+                switch (dialog.getInsertType()) {
+                    case GALLERY:
+                        MediaGallery gallery = new MediaGallery();
+                        gallery.setType(dialog.getGalleryType().toString());
+                        gallery.setNumColumns(dialog.getNumColumns());
+                        gallery.setIds(mediaIds);
+                        mEditorFragment.appendGallery(gallery);
+                        break;
+                    case INDIVIDUALLY:
+                        for (Long id: mediaIds) {
+                            addExistingMediaToEditor(id);
+                        }
+                        break;
+                }
+            }
+        };
+        GallerySettingsDialog dialog = GallerySettingsDialog.newInstance(callback);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialog, "gallery_settings");
+        ft.commitAllowingStateLoss();
     }
 
     private void handleMediaGalleryResult(Intent data) {

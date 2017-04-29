@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -32,7 +33,28 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         TILED,
         SQUARES,
         CIRCLES,
-        SLIDESHOW
+        SLIDESHOW;
+
+        // override to return the actual name used in the gallery shortcode
+        @Override
+        public String toString() {
+            switch (this) {
+                case CIRCLES:
+                    return "circle";
+                case SLIDESHOW:
+                    return "slideshow";
+                case SQUARES:
+                    return "square";
+                case TILED:
+                    return "rectangular";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    public interface GallerySettingsCallback {
+        void onCompleted(GallerySettingsDialog dialog);
     }
 
     private static final int DEFAULT_COLUMN_COUNT = 3;
@@ -47,14 +69,21 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
     private ViewGroup mNumColumnsContainer;
     private SeekBar mNumColumnsSeekBar;
 
+    private GallerySettingsCallback mCallback;
     private GalleryType mGalleryType;
     private InsertType mInsertType;
     private int mNumColumns;
 
-    public static GallerySettingsDialog newInstance() {
+
+    public static GallerySettingsDialog newInstance(@NonNull GallerySettingsCallback callback) {
         GallerySettingsDialog dialog = new GallerySettingsDialog();
-        dialog.setStyle(AppCompatDialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog_Alert);
+        dialog.setStyle(AppCompatDialogFragment.STYLE_NO_FRAME, R.style.Theme_AppCompat_Light_Dialog);
+        dialog.setCallback(callback);
         return dialog;
+    }
+
+    private void setCallback(@NonNull GallerySettingsCallback callback) {
+        mCallback = callback;
     }
 
     @Override
@@ -120,6 +149,23 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
             }
         });
 
+        Button btnCancel = (Button) view.findViewById(R.id.button_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDialog().cancel();
+            }
+        });
+
+        Button btnOk = (Button) view.findViewById(R.id.button_ok);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onCompleted(GallerySettingsDialog.this);
+                getDialog().dismiss();
+            }
+        });
+
         return view;
     }
 
@@ -147,6 +193,10 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         }
     }
 
+    public InsertType getInsertType() {
+        return mInsertType;
+    }
+
     private void setInsertType(@NonNull InsertType insertType) {
         if (insertType == mInsertType) {
             return;
@@ -168,6 +218,10 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
         } else if (!showGalleryTypes && container.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(container, AniUtils.Duration.SHORT, View.INVISIBLE);
         }
+    }
+
+    public GalleryType getGalleryType() {
+        return mGalleryType;
     }
 
     private void setGalleryType(@NonNull GalleryType galleryType) {
@@ -224,6 +278,10 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
                 AniUtils.scaleIn(imageView, AniUtils.Duration.SHORT);
             }
         });
+    }
+
+    public int getNumColumns() {
+        return mNumColumns;
     }
 
     private void setNumColumns(int numColumns, boolean fromSeekBar) {
