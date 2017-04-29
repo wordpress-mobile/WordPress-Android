@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/margin_large">
 
     <RadioGroup
         android:id="@+id/radio_group_insert_type"
@@ -29,7 +30,7 @@
         android:id="@+id/container_gallery_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_extra_extra_large"
+        android:layout_marginLeft="@dimen/margin_extra_large"
         android:orientation="vertical"
         android:visibility="invisible"
         tools:visibility="visible">
@@ -47,36 +48,31 @@
                     android:id="@+id/radio_thumbnail_grid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_thumbnail_grid"
-                    android:textSize="@dimen/text_sz_small" />
+                    android:text="@string/media_gallery_type_thumbnail_grid" />
 
                 <RadioButton
                     android:id="@+id/radio_tiled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_tiled"
-                    android:textSize="@dimen/text_sz_small" />
+                    android:text="@string/media_gallery_type_tiled" />
 
                 <RadioButton
                     android:id="@+id/radio_squares"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_squares"
-                    android:textSize="@dimen/text_sz_small" />
+                    android:text="@string/media_gallery_type_squares" />
 
                 <RadioButton
                     android:id="@+id/radio_circles"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_circles"
-                    android:textSize="@dimen/text_sz_small" />
+                    android:text="@string/media_gallery_type_circles" />
 
                 <RadioButton
                     android:id="@+id/radio_slideshow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_slideshow"
-                    android:textSize="@dimen/text_sz_small" />
+                    android:text="@string/media_gallery_type_slideshow" />
 
             </RadioGroup>
 

@@ -53,7 +53,7 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
 
     public static GallerySettingsDialog newInstance() {
         GallerySettingsDialog dialog = new GallerySettingsDialog();
-        dialog.setStyle(AppCompatDialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light);
+        dialog.setStyle(AppCompatDialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog_Alert);
         return dialog;
     }
 
