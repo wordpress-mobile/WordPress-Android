@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.media;
+package org.wordpress.android.ui.posts;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,8 +21,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AniUtils;
 
 /**
- * Displayed after user selects multiple items from the WP media library - provides a
- * choice between inserting them individually or as a gallery
+ * Displayed after user selects multiple items from the WP media library to insert into
+ * a post - provides a choice between inserting them individually or as a gallery
  */
 public class InsertMediaDialog extends AppCompatDialogFragment {
 
