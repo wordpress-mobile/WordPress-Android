@@ -77,7 +77,7 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
 
     public static GallerySettingsDialog newInstance(@NonNull GallerySettingsCallback callback) {
         GallerySettingsDialog dialog = new GallerySettingsDialog();
-        dialog.setStyle(AppCompatDialogFragment.STYLE_NO_FRAME, R.style.Theme_AppCompat_Light_Dialog);
+        dialog.setStyle(AppCompatDialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
         dialog.setCallback(callback);
         return dialog;
     }
