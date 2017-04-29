@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <RadioGroup
-        android:id="@+id/radio_group_insertion_type"
+        android:id="@+id/radio_group_insert_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -14,13 +14,15 @@
             android:id="@+id/radio_insert_individually"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/media_insert_individually" />
+            android:text="@string/media_insert_individually"
+            android:textSize="@dimen/text_sz_large" />
 
         <RadioButton
             android:id="@+id/radio_insert_as_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/media_insert_as_gallery" />
+            android:text="@string/media_insert_as_gallery"
+            android:textSize="@dimen/text_sz_large" />
     </RadioGroup>
 
     <LinearLayout
@@ -28,7 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_extra_extra_large"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible"
+        tools:visibility="visible">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -43,31 +47,36 @@
                     android:id="@+id/radio_thumbnail_grid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_thumbnail_grid" />
+                    android:text="@string/media_gallery_type_thumbnail_grid"
+                    android:textSize="@dimen/text_sz_small" />
 
                 <RadioButton
                     android:id="@+id/radio_tiled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_tiled" />
+                    android:text="@string/media_gallery_type_tiled"
+                    android:textSize="@dimen/text_sz_small" />
 
                 <RadioButton
                     android:id="@+id/radio_squares"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_squares" />
+                    android:text="@string/media_gallery_type_squares"
+                    android:textSize="@dimen/text_sz_small" />
 
                 <RadioButton
                     android:id="@+id/radio_circles"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_circles" />
+                    android:text="@string/media_gallery_type_circles"
+                    android:textSize="@dimen/text_sz_small" />
 
                 <RadioButton
                     android:id="@+id/radio_slideshow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_type_slideshow" />
+                    android:text="@string/media_gallery_type_slideshow"
+                    android:textSize="@dimen/text_sz_small" />
 
             </RadioGroup>
 
@@ -86,7 +95,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            tools:visibility="visible">
 
             <TextView
                 android:id="@+id/text_num_columns_label"
