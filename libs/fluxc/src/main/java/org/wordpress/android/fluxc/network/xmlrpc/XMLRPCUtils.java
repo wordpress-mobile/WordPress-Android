@@ -21,8 +21,12 @@ public class XMLRPCUtils {
         if (!map.containsKey(key)) {
             return defaultValue;
         }
-        Class<T> clazz = (Class<T>) defaultValue.getClass();
 
+        // The XML deserializer returns a narrow set of values, and they're all matched exactly below.
+        // None of them are parameterizable, and we'll throw an exception below if any unexpected type is given
+        // Given those constraints, it's safe to ignore this warning
+        @SuppressWarnings("unchecked")
+        Class<T> clazz = (Class<T>) defaultValue.getClass();
 
         Object result;
         if (defaultValue instanceof String) {
