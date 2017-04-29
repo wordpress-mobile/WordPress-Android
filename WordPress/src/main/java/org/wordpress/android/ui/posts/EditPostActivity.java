@@ -1612,6 +1612,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
                 // See https://code.google.com/p/android/issues/detail?id=5164
                 postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
+            } catch (RuntimeException e) {
+                // same as above, we'll just use the current editable
+                postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
             }
         } else {
             postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
