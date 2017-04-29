@@ -53,12 +53,13 @@ public class GallerySettingsDialog extends AppCompatDialogFragment {
 
     public static GallerySettingsDialog newInstance() {
         GallerySettingsDialog dialog = new GallerySettingsDialog();
-        dialog.setStyle(AppCompatDialogFragment.STYLE_NO_TITLE, R.style.Theme_AppCompat_Light_Dialog_Alert);
+        dialog.setStyle(AppCompatDialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog_Alert);
         return dialog;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getDialog().setTitle(R.string.media_insert_title);
         View view = inflater.inflate(R.layout.media_gallery_settings_dialog, container, false);
 
         mInsertRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_insert_type);
