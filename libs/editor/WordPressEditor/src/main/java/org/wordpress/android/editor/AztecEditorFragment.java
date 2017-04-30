@@ -78,7 +78,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final String ATTR_ALIGN_DASH = "align-";
     private static final String ATTR_CLASS = "class";
     private static final String ATTR_ID_WP = "data-wpid";
-    private static final String ATTR_IMAGE_WP = "wp-image-";
+    private static final String ATTR_IMAGE_WP_DASH = "wp-image-";
     private static final String ATTR_SIZE = "size";
     private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
@@ -1073,7 +1073,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // remove previously set class attributes to add updated values
                 attributesWithClass.removeClassStartingWith(ATTR_ALIGN_DASH);
                 attributesWithClass.removeClassStartingWith(ATTR_SIZE_DASH);
-                attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP);
+                attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP_DASH);
 
                 // only add align attribute if there is no caption since alignment is sent with shortcode
                 if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_ALIGN)) &&
@@ -1086,7 +1086,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_ID_ATTACHMENT))) {
-                    attributesWithClass.addClass(ATTR_IMAGE_WP + JSONUtils.getString(meta, ATTR_ID_ATTACHMENT));
+                    attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + JSONUtils.getString(meta, ATTR_ID_ATTACHMENT));
                 }
 
 //                TODO: Add shortcode support to allow captions.
