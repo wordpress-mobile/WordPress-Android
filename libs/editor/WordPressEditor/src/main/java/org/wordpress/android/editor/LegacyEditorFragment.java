@@ -81,7 +81,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     private static final String KEY_IMAGE_SPANS = "image-spans";
     private static final String KEY_START = "start";
     private static final String KEY_END = "end";
-    private static final String KEY_CONTENT = "content";
     private static final String TAG_FORMAT_BAR_BUTTON_STRONG = "strong";
     private static final String TAG_FORMAT_BAR_BUTTON_EM = "em";
     private static final String TAG_FORMAT_BAR_BUTTON_UNDERLINE = "u";
@@ -230,7 +229,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         if (savedInstanceState != null) {
             Parcelable[] spans = savedInstanceState.getParcelableArray(KEY_IMAGE_SPANS);
 
-            mContent = savedInstanceState.getString(KEY_CONTENT, "");
+            mContent = savedInstanceState.getString(ATTR_CONTENT, "");
             mContentEditText.setText(mContent);
             mContentEditText.setSelection(savedInstanceState.getInt(KEY_START, 0),
                                           savedInstanceState.getInt(KEY_END, 0));
@@ -1021,7 +1020,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
         outState.putInt(KEY_START, mContentEditText.getSelectionStart());
         outState.putInt(KEY_END, mContentEditText.getSelectionEnd());
-        outState.putString(KEY_CONTENT, mContentEditText.getText().toString());
+        outState.putString(ATTR_CONTENT, mContentEditText.getText().toString());
     }
 
     private class AddMediaFileTask extends AsyncTask<Void, Void, WPEditImageSpan> {
