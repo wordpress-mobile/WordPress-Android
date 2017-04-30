@@ -259,14 +259,12 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void showVisualEditorPromoDialogIfNeeded() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
-                DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
-                        R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
-                        R.string.new_editor_promo_button_label);
-                newFragment.show(getFragmentManager(), "visual-editor-promo");
-                AppPrefs.setVisualEditorPromoRequired(false);
-            }
+        if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
+            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
+                    R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
+                    R.string.new_editor_promo_button_label);
+            newFragment.show(getFragmentManager(), "visual-editor-promo");
+            AppPrefs.setVisualEditorPromoRequired(false);
         }
     }
 
