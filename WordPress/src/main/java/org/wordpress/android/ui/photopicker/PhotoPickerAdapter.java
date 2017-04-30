@@ -1,15 +1,12 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -260,7 +258,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
         private final View videoOverlay;
-        private final View btnPreview;
 
         public ThumbnailViewHolder(View view) {
             super(view);
@@ -268,7 +265,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = view.findViewById(R.id.image_video_overlay);
-            btnPreview = view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
@@ -302,41 +298,22 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
 
-            btnPreview.setOnClickListener(new View.OnClickListener() {
+            View imgPreview = view.findViewById(R.id.image_preview);
+            imgPreview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    showPreview(imgThumbnail, position);
+                    PhotoPickerItem item = getItemAtPosition(position);
+                    if (item != null) {
+                        MediaPreviewActivity.showPreview(
+                                mContext,
+                                imgThumbnail,
+                                item.uri.toString(),
+                                item.isVideo);
+                    }
                 }
             });
         }
-    }
-
-    /*
-     * show full-screen preview of the item and the passed position
-     */
-    private void showPreview(View sourceView, int position) {
-        PhotoPickerItem item = getItemAtPosition(position);
-        if (item == null) {
-            return;
-        }
-
-        Intent intent = new Intent(mContext, PhotoPickerPreviewActivity.class);
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_MEDIA_URI, item.uri.toString());
-        intent.putExtra(PhotoPickerPreviewActivity.ARG_IS_VIDEO, item.isVideo);
-
-        int startWidth = sourceView.getWidth();
-        int startHeight = sourceView.getHeight();
-        int startX = startWidth / 2;
-        int startY = startHeight / 2;
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(
-                sourceView,
-                startX,
-                startY,
-                startWidth,
-                startHeight);
-        ActivityCompat.startActivity(mContext, intent, options.toBundle());
     }
 
     /*

@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-09-09 14:54:08+0000
+Translation-Revision-Date: 2017-04-19 08:50:36+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+	<string name="photo_picker_title">選擇照片</string>
+	<string name="error_publish_no_network">裝置已離線。變更已儲存到本機。</string>
+	<string name="editor_post_saved_online_not_published">文章已在線上儲存為草稿。考慮發佈。</string>
+	<string name="editor_post_saved_online">文章已在線上儲存</string>
+	<string name="editor_post_saved_locally_not_published">僅將文章儲存到本機。考慮發佈。</string>
+	<string name="editor_post_saved_locally">文章已儲存到你的裝置</string>
+	<string name="site_settings_image_quality_hint">照片品質。越高的值代表越高的照片品質。</string>
+	<string name="site_settings_optimize_images_summary">啟用即可調整照片大小和壓縮照片</string>
+	<string name="media_encoder_quality_100">上限</string>
+	<string name="media_encoder_quality_95">超高</string>
+	<string name="media_encoder_quality_90">高</string>
+	<string name="media_encoder_quality_85">中</string>
+	<string name="media_encoder_quality_80">低</string>
+	<string name="media_upload_state_uploaded">已上傳</string>
+	<string name="media_upload_state_failed">失敗</string>
+	<string name="media_upload_state_deleted">已刪除</string>
+	<string name="media_upload_state_deleting">正在刪除</string>
+	<string name="media_upload_state_uploading">正在上傳</string>
+	<string name="media_upload_state_queued">已排進佇列</string>
+	<string name="update_draft">更新草稿</string>
+	<string name="keep_editing">繼續編輯</string>
+	<string name="image_quality">圖片品質</string>
+	<string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
+	<string name="error_unknown_post_type">未知的文章格式</string>
+	<string name="error_unknown_post">未知的文章，此文章的本機副本可能並未與伺服器同步</string>
+	<string name="error_fetch_site_after_creation">網站已建立，你可能需要重新整理網站挑選器中的網站清單。</string>
+	<string name="error_media_request_too_large">媒體檔案太大，無法上傳</string>
+	<string name="error_media_parse_error">媒體上傳後，無法剖析回應</string>
+	<string name="error_upload_params">上傳 %1$s 時發生錯誤：%2$s</string>
+	<string name="submit_for_review">送出</string>
+	<string name="media_error_too_large_upload">此檔案太大。請聯絡網頁主機服務提供者解決此問題</string>
 	<string name="role_admin">管理員</string>
 	<string name="role_editor">編輯者</string>
 	<string name="role_author">作者</string>
@@ -396,7 +427,6 @@ Language: zh_TW
 	<string name="media_file_name">檔案名稱：%s</string>
 	<string name="media_uploaded_on">上傳時間：%s</string>
 	<string name="media_dimensions">尺寸：%s</string>
-	<string name="upload_queued">已排進佇列</string>
 	<string name="media_file_type">檔案類型：%s</string>
 	<string name="reader_label_gap_marker">載入更多文章</string>
 	<string name="notifications_no_search_results">沒有網站符合「%s」</string>
@@ -525,7 +555,6 @@ Language: zh_TW
 	<string name="stats_generic_error">無法載入必要的統計資料</string>
 	<string name="device">裝置</string>
 	<string name="language">語言</string>
-	<string name="error_publish_no_network">未連線時無法發表。已儲存為草稿。</string>
 	<string name="editor_toast_invalid_path">檔案路徑無效</string>
 	<string name="verification_code">驗證碼</string>
 	<string name="invalid_verification_code">驗證碼無效</string>
@@ -906,7 +935,6 @@ Language: zh_TW
 	<string name="select_from_media_library">從媒體庫選擇</string>
 	<string name="jetpack_not_found">找不到 Jetpack</string>
 	<string name="reader_untitled_post">（未命名）</string>
-	<string name="reader_share_subject">從 %s 分享</string>
 	<string name="reader_btn_unfollow">追蹤</string>
 	<string name="reader_label_added_tag">新增 %s</string>
 	<string name="reader_label_removed_tag">移除 %s</string>

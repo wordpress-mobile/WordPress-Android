@@ -259,12 +259,14 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void showVisualEditorPromoDialogIfNeeded() {
-        if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
-            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
-                    R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
-                    R.string.new_editor_promo_button_label);
-            newFragment.show(getFragmentManager(), "visual-editor-promo");
-            AppPrefs.setVisualEditorPromoRequired(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
+                DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
+                        R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
+                        R.string.new_editor_promo_button_label);
+                newFragment.show(getFragmentManager(), "visual-editor-promo");
+                AppPrefs.setVisualEditorPromoRequired(false);
+            }
         }
     }
 
@@ -568,7 +570,7 @@ public class WPMainActivity extends AppCompatActivity {
                 break;
             case RequestCodes.SITE_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
-                    handleBlogRemoved();
+                    handleSiteRemoved();
                 }
                 break;
             case RequestCodes.APP_SETTINGS:
@@ -675,7 +677,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleBlogRemoved() {
+    private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
@@ -775,6 +777,6 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
-        handleBlogRemoved();
+        handleSiteRemoved();
     }
 }

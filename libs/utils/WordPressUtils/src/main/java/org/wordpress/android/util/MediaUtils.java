@@ -193,7 +193,11 @@ public class MediaUtils {
         try {
             String result = null;
             if (cursor != null && cursor.moveToFirst()) {
-                result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                int columnIndexDisplayName = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (columnIndexDisplayName == -1) {
+                    return null;
+                }
+                result = cursor.getString(columnIndexDisplayName);
             }
             return result;
         } finally {
@@ -311,7 +315,13 @@ public class MediaUtils {
                 }
                 URL urlForGuessingMime = new URL(filePathForGuessingMime);
                 URLConnection uc = urlForGuessingMime.openConnection();
-                String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
+                String guessedContentType = null;
+                try {
+                    guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
+                } catch (StringIndexOutOfBoundsException e) {
+                    // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5699
+                    AppLog.e(AppLog.T.MEDIA, "Error getting the content type for " + mediaFile.getPath() +" by using URLConnection.getContentType", e);
+                }
                 // check if returned "content/unknown"
                 if (!TextUtils.isEmpty(guessedContentType) && !guessedContentType.equals("content/unknown")) {
                     mimeType = guessedContentType;

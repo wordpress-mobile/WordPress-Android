@@ -244,7 +244,7 @@ public class EditCommentActivity extends AppCompatActivity {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
         dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(R.string.error_edit_comment);
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // just close the dialog
             }

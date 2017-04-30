@@ -37,22 +37,23 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "7.2-rc-1"
-        versionCode 381
+        versionName "7.3-rc-4"
+        versionCode 399
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
     }
 
     productFlavors {
-        vanilla {} // used for release and beta
+        vanilla { // used for release and beta
+            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+        }
 
         zalpha { // alpha version - enable experimental features
-            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
@@ -131,7 +132,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:cdc724bfc8e14166f0b79441a4924c96ca0fb1d3') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:1c2cef7fdcbb90e120a513b2f5f2adb8572fb0a9') {
         exclude group: "com.android.volley";
     }
 

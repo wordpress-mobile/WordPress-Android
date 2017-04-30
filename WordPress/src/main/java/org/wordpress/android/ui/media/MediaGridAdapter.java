@@ -37,6 +37,7 @@ import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * An adapter for the media gallery grid.
@@ -67,7 +68,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
         void onAdapterRetryUpload(int localMediaId);
-        void onAdapterItemSelected(int position);
+        void onAdapterItemSelected(View sourceView, int position);
         void onAdapterSelectionCountChanged(int count);
     }
 
@@ -129,7 +130,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(media.getFilePath());
         boolean isSelected = isItemSelected(media.getId());
-        boolean isImage = media.getMimeType().startsWith("image/");
+        boolean isImage = media.getMimeType() != null && media.getMimeType().startsWith("image/");
 
         if (isImage) {
             holder.fileContainer.setVisibility(View.GONE);
@@ -256,7 +257,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                             toggleItemSelected(GridViewHolder.this, position);
                         }
                     } else if (mCallback != null) {
-                        mCallback.onAdapterItemSelected(position);
+                        mCallback.onAdapterItemSelected(v, position);
                     }
                 }
             });
@@ -283,6 +284,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
+                    if (!isValidPosition(position)) {
+                        return;
+                    }
                     if (isInMultiSelect()) {
                         if (canSelectPosition(position)) {
                             toggleItemSelected(GridViewHolder.this, position);
@@ -298,7 +302,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                                 mCallback.onAdapterRetryUpload(media.getId());
                             }
                         } else if (mCallback != null) {
-                            mCallback.onAdapterItemSelected(position);
+                            mCallback.onAdapterItemSelected(v, position);
                         }
                     }
                 }
@@ -352,22 +356,26 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             imageView.setImageBitmap(bitmap);
         } else {
             imageView.setImageBitmap(null);
-            new BitmapWorkerTask(imageView, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
-                @Override
-                public void onBitmapReady(final String path, final ImageView imageView, final Bitmap bitmap) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            WordPress.getBitmapCache().put(path, bitmap);
-                            if (imageView != null
-                                    && imageView.getTag() instanceof String
-                                    && ((String)imageView.getTag()).equalsIgnoreCase(path)) {
-                                imageView.setImageBitmap(bitmap);
+            try {
+                new BitmapWorkerTask(imageView, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
+                    @Override
+                    public void onBitmapReady(final String path, final ImageView imageView, final Bitmap bitmap) {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                WordPress.getBitmapCache().put(path, bitmap);
+                                if (imageView != null
+                                        && imageView.getTag() instanceof String
+                                        && ((String) imageView.getTag()).equalsIgnoreCase(path)) {
+                                    imageView.setImageBitmap(bitmap);
+                                }
                             }
-                        }
-                    });
-                }
-            }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filePath);
+                        });
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filePath);
+            } catch (RejectedExecutionException e) {
+                AppLog.e(AppLog.T.MEDIA, e);
+            }
         }
     }
 

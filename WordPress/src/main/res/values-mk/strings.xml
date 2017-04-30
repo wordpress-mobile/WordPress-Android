@@ -347,7 +347,6 @@ Language: mk
 	<string name="select_from_media_library">Избери медиа од библиотеката</string>
 	<string name="jetpack_not_found">Jetpack додатокот не е пронајден</string>
 	<string name="reader_untitled_post">(без наслов)</string>
-	<string name="reader_share_subject">Споделено од %s</string>
 	<string name="reader_btn_share">Сподели</string>
 	<string name="reader_btn_follow">Следи</string>
 	<string name="reader_toast_err_comment_failed">Неможе да се испрати вашиот коментар</string>

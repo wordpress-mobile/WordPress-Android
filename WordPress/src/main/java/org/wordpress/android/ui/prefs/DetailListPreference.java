@@ -85,7 +85,7 @@ public class DetailListPreference extends ListPreference
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_AlertDialog);
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
-        builder.setPositiveButton(R.string.ok, this);
+        builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
 
         if (mDetails == null) {

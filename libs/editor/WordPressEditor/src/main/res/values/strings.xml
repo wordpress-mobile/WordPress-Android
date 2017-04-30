@@ -4,7 +4,6 @@
     <string name="post_content">Content</string>
     <string name="post_title">Title</string>
 
-    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="save">Save</string>
@@ -19,7 +18,7 @@
     <string name="alert_error_adding_media">An error occurred while inserting media</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
-    <string name="stop_upload_button">Stop Upload</string>
+    <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
     <string name="format_bar_tag_bold" translatable="false">bold</string>
     <string name="format_bar_tag_italic" translatable="false">italic</string>
@@ -108,4 +107,6 @@
 
     <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
     <string name="error_media_load">Unable to load media</string>
+    <string name="error_media_small">Media too small to show</string>
+
 </resources>

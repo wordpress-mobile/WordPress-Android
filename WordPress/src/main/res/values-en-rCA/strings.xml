@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-05 16:23:26+0000
+Translation-Revision-Date: 2017-04-13 18:54:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+	<string name="photo_picker_title">Choose photo</string>
+	<string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
+	<string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
+	<string name="editor_post_saved_online">The post was saved online</string>
+	<string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
+	<string name="editor_post_saved_locally">The post was saved on your device</string>
+	<string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
+	<string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
+	<string name="media_encoder_quality_100">Maximum</string>
+	<string name="media_encoder_quality_95">Very High</string>
+	<string name="media_encoder_quality_90">High</string>
+	<string name="media_encoder_quality_85">Medium</string>
+	<string name="media_encoder_quality_80">Low</string>
+	<string name="media_upload_state_uploaded">Uploaded</string>
+	<string name="media_upload_state_failed">Failed</string>
+	<string name="media_upload_state_deleted">Deleted</string>
+	<string name="media_upload_state_deleting">Deleting</string>
+	<string name="media_upload_state_uploading">Uploading</string>
+	<string name="media_upload_state_queued">Queued</string>
+	<string name="update_draft">Update draft</string>
+	<string name="keep_editing">Keep editing</string>
+	<string name="image_quality">Image quality</string>
 	<string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 	<string name="error_unknown_post_type">Unknown post format</string>
 	<string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
@@ -32,7 +54,6 @@ Language: en_CA
 	<string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
 	<string name="error_media_not_found">Media could not be found</string>
 	<string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
-	<string name="site_settings_optimize_images_hint">Enable to save bandwidth on mobile connections</string>
 	<string name="site_settings_optimize_images">Optimize Images</string>
 	<string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this\n        address. Check the site address (URL) you entered.</string>
 	<string name="media_generic_error">Media error occurred</string>
@@ -522,7 +543,6 @@ Language: en_CA
 	<string name="media_file_name">File name: %s</string>
 	<string name="media_uploaded_on">Uploaded on: %s</string>
 	<string name="media_dimensions">Dimensions: %s</string>
-	<string name="upload_queued">Queued</string>
 	<string name="media_file_type">File type: %s</string>
 	<string name="reader_label_gap_marker">Load more posts</string>
 	<string name="notifications_no_search_results">No sites matched \'%s\'</string>
@@ -659,7 +679,6 @@ Language: en_CA
 	<string name="language">Language</string>
 	<string name="media_details_label_file_name">File name</string>
 	<string name="media_details_label_file_type">File type</string>
-	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
 	<string name="editor_toast_invalid_path">Invalid file path</string>
 	<string name="verification_code">Verification code</string>
 	<string name="invalid_verification_code">Invalid verification code</string>
@@ -1045,7 +1064,6 @@ Language: en_CA
 	<string name="select_from_media_library">Select from media library</string>
 	<string name="jetpack_not_found">Jetpack plugin not found</string>
 	<string name="reader_untitled_post">(Untitled)</string>
-	<string name="reader_share_subject">Shared from %s</string>
 	<string name="reader_btn_share">Share</string>
 	<string name="reader_btn_follow">Follow</string>
 	<string name="reader_btn_unfollow">Following</string>

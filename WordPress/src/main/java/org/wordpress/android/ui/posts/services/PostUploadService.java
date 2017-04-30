@@ -67,6 +67,7 @@ import de.greenrobot.event.EventBus;
 public class PostUploadService extends Service {
     private static final ArrayList<PostModel> mPostsList = new ArrayList<>();
     private static PostModel mCurrentUploadingPost = null;
+    private static Map<String, Object> mCurrentUploadingPostAnalyticsProperties;
     private static boolean mUseLegacyMode;
     private UploadPostTask mCurrentTask = null;
 
@@ -172,6 +173,7 @@ public class PostUploadService extends Service {
         synchronized (mPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running
                 mCurrentUploadingPost = null;
+                mCurrentUploadingPostAnalyticsProperties = null;
                 if (mPostsList.size() > 0) {
                     mCurrentUploadingPost = mPostsList.remove(0);
                     mCurrentTask = new UploadPostTask();
@@ -187,6 +189,7 @@ public class PostUploadService extends Service {
         synchronized (mPostsList) {
             mCurrentTask = null;
             mCurrentUploadingPost = null;
+            mCurrentUploadingPostAnalyticsProperties = null;
         }
         uploadNextPost();
     }
@@ -260,15 +263,15 @@ public class PostUploadService extends Service {
                 mPost.setFeaturedImageId(featuredImageID);
             }
 
+            // Track analytics only if the post is newly published
+            if (mFirstPublishPosts.contains(mPost.getId())) {
+                prepareUploadAnalytics(mPost.getContent());
+            }
+
             EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalSiteId()));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
-
-            // Track analytics only if the post is newly published
-            if (mFirstPublishPosts.contains(mPost.getId())) {
-                trackUploadAnalytics();
-            }
 
             return true;
         }
@@ -279,28 +282,41 @@ public class PostUploadService extends Service {
             return matcher.find();
         }
 
-        private void trackUploadAnalytics() {
+        private void prepareUploadAnalytics(String postContent) {
             // Calculate the words count
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+            mCurrentUploadingPostAnalyticsProperties = new HashMap<>();
+            mCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
 
             if (hasGallery()) {
-                properties.put("with_galleries", true);
+                mCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
+            }
+            if (!mHasImage) {
+                // Check if there is a img tag in the post. Media added in any editor other than legacy.
+                String imageTagsPattern = "<img[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>";
+                Pattern pattern = Pattern.compile(imageTagsPattern);
+                Matcher matcher = pattern.matcher(postContent);
+                mHasImage = matcher.find();
             }
             if (mHasImage) {
-                properties.put("with_photos", true);
+                mCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
+            }
+            if (!mHasVideo) {
+                // Check if there is a video tag in the post. Media added in any editor other than legacy.
+                String videoTagsPattern = "<video[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>|\\[wpvideo\\s+([^\\]]+)\\]";
+                Pattern pattern = Pattern.compile(videoTagsPattern);
+                Matcher matcher = pattern.matcher(postContent);
+                mHasVideo = matcher.find();
             }
             if (mHasVideo) {
-                properties.put("with_videos", true);
+                mCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
             }
             if (mHasCategory) {
-                properties.put("with_categories", true);
+                mCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
             }
             if (!mPost.getTagNameList().isEmpty()) {
-                properties.put("with_tags", true);
+                mCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
             }
-            properties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
-            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST, mSite, properties);
+            mCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
         }
 
         /**
@@ -597,6 +613,14 @@ public class PostUploadService extends Service {
             mPostUploadNotifier.cancelNotification(event.post);
             boolean isFirstTimePublish = mFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccess(event.post, site, isFirstTimePublish);
+            if (isFirstTimePublish) {
+                if (mCurrentUploadingPostAnalyticsProperties != null){
+                    mCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
+                }
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
+                        mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
+                        mCurrentUploadingPostAnalyticsProperties);
+            }
         }
 
         finishUpload();
