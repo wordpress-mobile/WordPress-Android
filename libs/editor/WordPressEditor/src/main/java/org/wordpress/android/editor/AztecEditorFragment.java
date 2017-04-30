@@ -75,12 +75,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecToolbarClickListener,
         HistoryListener {
 
-    private static final String ATTR_ALIGN_ = "align-";
+    private static final String ATTR_ALIGN_DASH = "align-";
     private static final String ATTR_CLASS = "class";
     private static final String ATTR_ID_WP = "data-wpid";
     private static final String ATTR_IMAGE_WP = "wp-image-";
     private static final String ATTR_SIZE = "size";
-    private static final String ATTR_SIZE_ = "size-";
+    private static final String ATTR_SIZE_DASH = "size-";
     private static final String TEMP_IMAGE_ID = "data-temp-aztec-id";
 
     private static final int MIN_BITMAP_DIMENSION_DP = 48;
@@ -1071,18 +1071,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attributes);
 
                 // remove previously set class attributes to add updated values
-                attributesWithClass.removeClassStartingWith(ATTR_ALIGN_);
-                attributesWithClass.removeClassStartingWith(ATTR_SIZE_);
+                attributesWithClass.removeClassStartingWith(ATTR_ALIGN_DASH);
+                attributesWithClass.removeClassStartingWith(ATTR_SIZE_DASH);
                 attributesWithClass.removeClassStartingWith(ATTR_IMAGE_WP);
 
                 // only add align attribute if there is no caption since alignment is sent with shortcode
                 if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_ALIGN)) &&
                         TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_CAPTION))) {
-                    attributesWithClass.addClass(ATTR_ALIGN_ + JSONUtils.getString(meta, ATTR_ALIGN));
+                    attributesWithClass.addClass(ATTR_ALIGN_DASH + JSONUtils.getString(meta, ATTR_ALIGN));
                 }
 
                 if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_SIZE))) {
-                    attributesWithClass.addClass(ATTR_SIZE_ + JSONUtils.getString(meta, ATTR_SIZE));
+                    attributesWithClass.addClass(ATTR_SIZE_DASH + JSONUtils.getString(meta, ATTR_SIZE));
                 }
 
                 if (!TextUtils.isEmpty(JSONUtils.getString(meta, ATTR_ID_ATTACHMENT))) {
