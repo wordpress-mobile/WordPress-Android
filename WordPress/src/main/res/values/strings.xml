@@ -1679,8 +1679,8 @@
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
-    <string name="photo_picker_choose_photo">Choose photo</string>
-    <string name="photo_picker_choose_video">Choose video</string>
+    <string name="photo_picker_choose_photo">Choose photo from device</string>
+    <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
 
