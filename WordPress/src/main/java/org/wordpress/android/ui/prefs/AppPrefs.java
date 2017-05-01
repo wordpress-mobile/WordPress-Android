@@ -90,11 +90,6 @@ public class AppPrefs {
 
         // list of last time a notification has been created for a draft
         PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
-
-        // smart toast counters
-        SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER,
-        SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER,
-        SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER
     }
 
     /**
@@ -140,6 +135,11 @@ public class AppPrefs {
 
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
+
+        // smart toast counters
+        SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER,
+        SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER,
+        SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER
     }
 
     private static SharedPreferences prefs() {
