@@ -49,6 +49,29 @@ public abstract class EditorFragmentAbstract extends Fragment {
         }
     }
 
+    protected static final String ARG_PARAM_TITLE = "param_title";
+    protected static final String ARG_PARAM_CONTENT = "param_content";
+    protected static final String ATTR_ALIGN = "align";
+    protected static final String ATTR_ALT = "alt";
+    protected static final String ATTR_CAPTION = "caption";
+    protected static final String ATTR_CONTENT = "content";
+    protected static final String ATTR_DIMEN_HEIGHT = "height";
+    protected static final String ATTR_DIMEN_WIDTH = "width";
+    protected static final String ATTR_ID = "id";
+    protected static final String ATTR_ID_ATTACHMENT = "attachment_id";
+    protected static final String ATTR_ID_IMAGE_REMOTE = "imageRemoteId";
+    protected static final String ATTR_SRC = "src";
+    protected static final String ATTR_STATUS_FAILED = "failed";
+    protected static final String ATTR_STATUS_UPLOADING = "uploading";
+    protected static final String ATTR_TITLE = "title";
+    protected static final String ATTR_URL_LINK = "linkUrl";
+    protected static final String EXTRA_ENABLED_AZTEC = "isAztecEnabled";
+    protected static final String EXTRA_FEATURED = "isFeatured";
+    protected static final String EXTRA_HEADER = "headerMap";
+    protected static final String EXTRA_IMAGE_FEATURED = "featuredImageSupported";
+    protected static final String EXTRA_IMAGE_META = "imageMeta";
+    protected static final String EXTRA_MAX_WIDTH = "maxWidth";
+
     private static final String FEATURED_IMAGE_SUPPORT_KEY = "featured-image-supported";
     private static final String FEATURED_IMAGE_WIDTH_KEY   = "featured-image-width";
 
