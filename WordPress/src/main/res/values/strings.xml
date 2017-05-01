@@ -131,7 +131,11 @@
     <string name="media_gallery_type_circles">Circles</string>
     <string name="media_gallery_type_slideshow">Slideshow</string>
     <string name="media_gallery_edit">Edit gallery</string>
-    <string name="wp_media_title">WordPress media</string>
+    <string name="media_gallery_column_count_single">1 column</string>
+    <string name="media_gallery_column_count_multi">%d columns</string>
+    <string name="media_insert_title">Add multiple photos</string>
+    <string name="media_insert_individually">Add individually</string>
+    <string name="media_insert_as_gallery">Add as gallery</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
@@ -400,6 +404,7 @@
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
+    <string name="select_from_media_library">Select from media library</string>
 
     <!-- category management -->
     <string name="categories">Categories</string>
@@ -1673,8 +1678,8 @@
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
-    <string name="photo_picker_choose_photo">Choose photo from device</string>
-    <string name="photo_picker_choose_video">Choose video from device</string>
+    <string name="photo_picker_choose_photo">Choose photo</string>
+    <string name="photo_picker_choose_video">Choose video</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
 
@@ -1687,7 +1692,4 @@
     <string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
     <string name="editor_confirm_email_prompt_negative">Resend Email</string>
 
-    <!-- smart toasts -->
-    <string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
-    <string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
 </resources>
