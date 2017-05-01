@@ -136,6 +136,7 @@
     <string name="media_insert_title">Add multiple photos</string>
     <string name="media_insert_individually">Add individually</string>
     <string name="media_insert_as_gallery">Add as gallery</string>
+    <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
