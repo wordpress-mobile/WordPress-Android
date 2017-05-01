@@ -832,23 +832,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         new SavePostOnlineAndFinishTask(isFirstTimePublish).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private boolean hasFailedMedia() {
-        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
-        if (mEditorFragment.hasFailedMediaUploads()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.editor_toast_failed_uploads)
-                    .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Clear failed uploads
-                            mEditorFragment.removeAllFailedMediaUploads();
-                        }
-                    }).setNegativeButton(android.R.string.cancel, null);
-            builder.create().show();
-            return true;
-        }
-        return false;
-    }
-
     private void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
@@ -1176,17 +1159,42 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
-                        if (!hasFailedMedia()) {
+                        // Show an Alert Dialog asking the user if they want to remove all failed media before upload
+                        if (mEditorFragment.hasFailedMediaUploads()) {
+                            EditPostActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveFailedUploadsDialog();
+                                }
+                            });
+                        } else {
                             savePostOnlineAndFinishAsync(isFirstTimePublish);
                         }
                     } else {
                         savePostLocallyAndFinishAsync();
                     }
                 } else {
-                    ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                    EditPostActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                        }
+                    });
                 }
             }
         }).start();
+    }
+
+    private void showRemoveFailedUploadsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.editor_toast_failed_uploads)
+                .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Clear failed uploads
+                        mEditorFragment.removeAllFailedMediaUploads();
+                    }
+                }).setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
     }
 
     private void savePostAndFinish() {
@@ -1579,7 +1587,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // needed by the legacy editor to save local drafts
             try {
                 postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
-            } catch (IndexOutOfBoundsException e) {
+            } catch (RuntimeException e) {
                 // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
                 // See https://code.google.com/p/android/issues/detail?id=5164
                 postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
@@ -1794,7 +1802,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else {
             mediaModel.setTitle(ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath()));
         }
-        mediaModel.setPostId(mPost.getId());
+        mediaModel.setLocalPostId(mPost.getId());
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
 
@@ -2153,6 +2161,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setMimeType(mimeType);
         media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        if (!mPost.isLocalDraft()) {
+            media.setPostId(mPost.getRemotePostId());
+        }
 
         return media;
     }
