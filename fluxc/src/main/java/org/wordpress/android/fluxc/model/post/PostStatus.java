@@ -63,12 +63,12 @@ public enum PostStatus {
     public static synchronized PostStatus fromPost(PostModel post) {
         String value = post.getStatus();
         long dateCreatedGMT = 0;
-        if (post.getDateCreated() != null) {
-            Date dateCreated = DateTimeUtils.dateUTCFromIso8601(post.getDateCreated());
-            if (dateCreated != null) {
-                dateCreatedGMT = dateCreated.getTime();
-            }
+
+        Date dateCreated = DateTimeUtils.dateUTCFromIso8601(post.getDateCreated());
+        if (dateCreated != null) {
+            dateCreatedGMT = dateCreated.getTime();
         }
+
         return fromStringAndDateGMT(value, dateCreatedGMT);
     }
 
