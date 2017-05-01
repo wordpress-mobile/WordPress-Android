@@ -103,7 +103,7 @@
                     android:id="@+id/text_num_columns_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/media_gallery_column_count" />
+                    android:text="@string/media_gallery_column_count_single" />
 
                 <SeekBar
                     android:id="@+id/seekbar_num_columns"

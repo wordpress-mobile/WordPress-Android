@@ -300,6 +300,10 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
         }
 
         TextView textValue = (TextView) getView().findViewById(R.id.text_num_columns_label);
-        textValue.setText(String.format(getString(R.string.media_gallery_column_count), mNumColumns));
+        if (mNumColumns == 1) {
+            textValue.setText(getString(R.string.media_gallery_column_count_single));
+        } else {
+            textValue.setText(String.format(getString(R.string.media_gallery_column_count_multi), mNumColumns));
+        }
     }
 }
