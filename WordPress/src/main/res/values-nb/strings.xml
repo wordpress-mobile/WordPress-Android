@@ -54,7 +54,6 @@ Language: nb_NO
 	<string name="verification_code">Verifikasjonskode</string>
 	<string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
 	<string name="verify">Verifiser</string>
-	<string name="error_publish_no_network">Kan ikke publisere uten tilkobling. Laget som utkast.</string>
 	<string name="language">Språk</string>
 	<string name="device">Enhet</string>
 	<string name="reader_empty_posts_request_failed">Ute av stand til å hente innlegg</string>
@@ -231,7 +230,6 @@ Language: nb_NO
 	<string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
 	<string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
 	<string name="reader_likes_one">En person liker dette</string>
-	<string name="reader_share_subject">Delt fra %s</string>
 	<string name="limit_reached">Midlertidig begrenset. Du kan prøve igjen om 1 minutt. Dersom du prøver igjen før dette, vil begrensningsperioden bli utvidet. Dersom du mener dette er en feil, vennligst ta kontakt med brukerstøtte.</string>
 	<string name="themes">Temaer</string>
 	<string name="all">Alle</string>

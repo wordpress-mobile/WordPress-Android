@@ -111,8 +111,6 @@
     <string name="media_add_popup_title">Add to media library</string>
     <string name="media_add_popup_capture_photo">Capture photo</string>
     <string name="media_add_popup_capture_video">Capture video</string>
-    <string name="media_add_new_media_gallery">Create gallery</string>
-    <string name="media_gallery_date_range" comment="Displaying media from 2014-01-13 to 2014-01-23">Displaying media from %1$s to %2$s</string>
 
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
@@ -1675,6 +1673,10 @@
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
+    <string name="photo_picker_choose_photo">Choose photo</string>
+    <string name="photo_picker_choose_video">Choose video</string>
+    <string name="photo_picker_capture_photo">Take photo</string>
+    <string name="photo_picker_capture_video">Take video</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>

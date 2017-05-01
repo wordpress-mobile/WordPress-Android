@@ -506,7 +506,6 @@ Language: el_GR
 	<string name="media_file_name">Όνομα αρχείου: %s</string>
 	<string name="media_uploaded_on">Μεταφορτώθηκε στο: %s</string>
 	<string name="media_file_type">Τύπος αρχείου: %s</string>
-	<string name="upload_queued">Στην ουρά</string>
 	<string name="reader_label_gap_marker">Φόρτωμα περισσότερων άρθρων</string>
 	<string name="notifications_no_search_results">Δεν βρέθηκαν ιστότοποι που να ταιριάζουν με την \'%s\'</string>
 	<string name="search_sites">Αναζήτηση ιστότοπων</string>
@@ -637,7 +636,6 @@ Language: el_GR
 	<string name="verify">Επαλήθευση</string>
 	<string name="verification_code">Κωδικός επαλήθευσης</string>
 	<string name="invalid_verification_code">Μη έγκυρος κωδικός επαλήθευσης</string>
-	<string name="error_publish_no_network">Αδυναμία δημοσίευσης ενώ δεν υπάρχει σύνδεση. Αποθηκεύτηκε ως προσχέδιο.</string>
 	<string name="editor_toast_invalid_path">Μη έγκυρη διαδρομή αρχείου</string>
 	<string name="two_step_footer_label">Εισάγετε τον κωδικό από την εφαρμογή σας πιστοποίησης.</string>
 	<string name="two_step_footer_button">Αποστολή κώδικα μέσω μηνύματος κειμένου</string>
@@ -1024,7 +1022,6 @@ Language: el_GR
 	<string name="username_invalid">Εσφαλμένο Όνομα Χρήστη</string>
 	<string name="limit_reached">Φτάσατε το όριο. Μπορείτε να προσπαθήσετε ξανά σε 1 λεπτό. Αν προσπαθήσετε ξανά πριν περάσει η χρονική περίοδος του 1 λεπτού το μόνο που θα καταφέρετε είναι να αυξήσετε το χρόνο αναμονής σας μέχρι να αρθεί η απαγόρευση. Εάν πιστεύετε ότι αυτό είναι σφάλμα, παρακαλώ επικοινωνήστε με την τεχνική υποστήριξη.</string>
 	<string name="nux_tutorial_get_started_title">Ξεκινήστε!</string>
-	<string name="reader_share_subject">Μοιράστηκε από %s</string>
 	<string name="reader_untitled_post">Ανώνυμο</string>
 	<string name="reader_toast_err_view_image">Αδυναμία προβολής της εικόνας</string>
 	<string name="reader_label_added_tag">Προστέθηκε η %s</string>

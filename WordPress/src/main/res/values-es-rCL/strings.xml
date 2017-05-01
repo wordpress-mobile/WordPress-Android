@@ -152,7 +152,6 @@ Language: es_CL
 	<string name="language">Idioma</string>
 	<string name="media_details_label_file_name">Nombre del archivo:</string>
 	<string name="media_details_label_file_type">Tipo de archivo:</string>
-	<string name="error_publish_no_network">No se puede publicar mientras no haya conexión. Guardado como borrador.</string>
 	<string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
 	<string name="verification_code">Código de verificación</string>
 	<string name="invalid_verification_code">Código de verificación no válido</string>
@@ -528,7 +527,6 @@ Language: es_CL
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
-	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="reader_btn_share">Compartir</string>
 	<string name="reader_btn_follow">Seguir</string>
 	<string name="reader_btn_unfollow">Siguiendo</string>

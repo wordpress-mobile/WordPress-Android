@@ -391,7 +391,6 @@ Language: vi_VN
 	<string name="media_uploaded_on">Được tải lên lúc: %s</string>
 	<string name="media_file_name">Tên tập tin: %s</string>
 	<string name="media_file_type">Loại tập tin: %s</string>
-	<string name="upload_queued">Hàng chờ</string>
 	<string name="reader_label_gap_marker">Tải nhiều bài viết hơn</string>
 	<string name="notifications_no_search_results">Không có site nào khớp \'%s\'</string>
 	<string name="search_sites">Tìm kiếm site</string>
@@ -532,7 +531,6 @@ Language: vi_VN
 	<string name="invalid_verification_code">Mã xác nhận không hợp lệ</string>
 	<string name="verification_code">Mã xác nhận</string>
 	<string name="editor_toast_invalid_path">Đường dẫn tập tin không hợp lệ</string>
-	<string name="error_publish_no_network">Không thể xuất bản trong khi không có kết nối mạng. Đã lưu như bản nháp.</string>
 	<string name="media_details_label_file_type">Loại tập tin</string>
 	<string name="media_details_label_file_name">Tên tập tin</string>
 	<string name="language">Ngôn ngữ</string>
@@ -926,7 +924,6 @@ Language: vi_VN
 	<string name="reader_btn_unfollow">Đang theo dõi</string>
 	<string name="reader_btn_follow">Theo dõi</string>
 	<string name="reader_btn_share">Chia sẻ</string>
-	<string name="reader_share_subject">Được chia sẻ từ %s</string>
 	<string name="reader_untitled_post">(Chưa có tiêu đề)</string>
 	<string name="jetpack_not_found">Plugin Jetpack không tìm thấy</string>
 	<string name="select_from_media_library">Chọn từ thư viện media</string>

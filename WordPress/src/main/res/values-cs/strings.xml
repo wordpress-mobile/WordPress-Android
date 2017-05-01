@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-23 07:47:35+0000
+Translation-Revision-Date: 2017-04-14 06:32:26+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="media_encoder_quality_100">Maximální</string>
+	<string name="media_encoder_quality_95">Hodně vysoká</string>
+	<string name="media_encoder_quality_90">Vysoká</string>
+	<string name="media_encoder_quality_85">Střední</string>
+	<string name="media_encoder_quality_80">Nízká</string>
+	<string name="media_upload_state_uploaded">Nahráno</string>
+	<string name="media_upload_state_failed">Chyba</string>
+	<string name="media_upload_state_deleted">Smazáno</string>
+	<string name="media_upload_state_deleting">Mazání</string>
+	<string name="media_upload_state_uploading">Nahrávání</string>
+	<string name="update_draft">Aktualizovat koncept</string>
+	<string name="image_quality">Kvalita obrázku</string>
 	<string name="reader_liked_default_tag">Příspěvek I To se mi líbí</string>
 	<string name="reader_discover_default_tag">Objevit</string>
 	<string name="reader_followed_default_tag">Sledované stránky</string>
@@ -487,7 +499,6 @@ Language: cs_CZ
 	<string name="media_file_name">Název souboru: %s</string>
 	<string name="media_uploaded_on">Nahráno: %s</string>
 	<string name="media_dimensions">Rozměry: %s</string>
-	<string name="upload_queued">Ve frontě</string>
 	<string name="media_file_type">Typ souboru: %s</string>
 	<string name="reader_label_gap_marker">Načíst více příspěvků</string>
 	<string name="notifications_no_search_results">Žádné webové stránky se neshodují s \'%s\'</string>
@@ -623,7 +634,6 @@ Language: cs_CZ
 	<string name="verify">Ověřit</string>
 	<string name="language">Jazyk</string>
 	<string name="device">Zařízení</string>
-	<string name="error_publish_no_network">Nelze publikovat bez připojení. Uloženo jako koncept.</string>
 	<string name="editor_toast_invalid_path">Neplatná cesta k souboru</string>
 	<string name="verification_code">Ověřovací kód</string>
 	<string name="invalid_verification_code">Neplatný ověřovací kód</string>
@@ -1013,7 +1023,6 @@ Language: cs_CZ
 	<string name="select_from_media_library">Vyberte z knihovny medií</string>
 	<string name="jetpack_not_found">Plugin Jetpack nebyl nalezen</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
-	<string name="reader_share_subject">Sdíleno z %s</string>
 	<string name="reader_btn_follow">Sledovat</string>
 	<string name="reader_btn_unfollow">Sleduji</string>
 	<string name="reader_hint_comment_on_comment">Odpovědět na komentář...</string>
