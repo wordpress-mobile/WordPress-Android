@@ -1800,7 +1800,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else {
             mediaModel.setTitle(ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath()));
         }
-        mediaModel.setPostId(mPost.getId());
+        mediaModel.setLocalPostId(mPost.getId());
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
 
@@ -2159,6 +2159,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setMimeType(mimeType);
         media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        if (!mPost.isLocalDraft()) {
+            media.setPostId(mPost.getRemotePostId());
+        }
 
         return media;
     }
