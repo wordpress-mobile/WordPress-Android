@@ -185,6 +185,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                                 // Retain local IDs
                                 responseMedia.setId(media.getId());
                                 responseMedia.setLocalSiteId(site.getId());
+                                responseMedia.setLocalPostId(media.getLocalPostId());
 
                                 notifyMediaUploaded(responseMedia, null);
                             }
@@ -295,6 +296,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     // Retain local IDs
                     responseMedia.setId(media.getId());
                     responseMedia.setLocalSiteId(site.getId());
+                    responseMedia.setLocalPostId(media.getLocalPostId());
 
                     if (isFreshUpload) {
                         notifyMediaUploaded(responseMedia, null);
