@@ -2128,9 +2128,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return null;
         }
 
-        // we need to update media with the post Id
+        // we need to update media with the local post Id
         MediaModel media = buildMediaModel(uri, mimeType, startingState);
-        media.setPostId(mPost.getId());
+        media.setLocalPostId(mPost.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         // add this item to the queue - we keep it for visual aid atm
