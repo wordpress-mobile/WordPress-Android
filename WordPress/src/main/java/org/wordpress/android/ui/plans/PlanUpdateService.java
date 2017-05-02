@@ -76,6 +76,7 @@ public class PlanUpdateService extends Service {
         mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
         if (mSite == null) {
             AppLog.e(AppLog.T.PLANS, "PlanUpdateService was started with an empty site.");
+            requestFailed();
             return START_NOT_STICKY;
         }
 
