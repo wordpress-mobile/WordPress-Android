@@ -73,6 +73,10 @@ public class PlanUpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+        if (mSite == null) {
+            AppLog.e(AppLog.T.PLANS, "PlanUpdateService was started with an empty site.");
+            return START_NOT_STICKY;
+        }
 
         mNumActiveRequests = 2;
         downloadPlanFeatures();
