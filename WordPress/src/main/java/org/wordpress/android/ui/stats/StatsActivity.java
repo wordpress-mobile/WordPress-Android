@@ -620,7 +620,7 @@ public class StatsActivity extends AppCompatActivity
         mTabToSelectOnGraph = newItem;
     }
 
-    private void bumpPromoAnaylticsAndShowPromoDialogIfNecessary() {
+    private void bumpPromoAnalyticsAndShowPromoDialogIfNecessary() {
         if (mIsUpdatingStats || mThereWasAnErrorLoadingStats) {
             // Do nothing in case of errors or when it's still loading
             return;
@@ -654,7 +654,7 @@ public class StatsActivity extends AppCompatActivity
 
         if (!mIsUpdatingStats && !mThereWasAnErrorLoadingStats) {
             // Do not bump promo analytics or show the dialog in case of errors or when it's still loading
-            bumpPromoAnaylticsAndShowPromoDialogIfNecessary();
+            bumpPromoAnalyticsAndShowPromoDialogIfNecessary();
         }
     }
 
