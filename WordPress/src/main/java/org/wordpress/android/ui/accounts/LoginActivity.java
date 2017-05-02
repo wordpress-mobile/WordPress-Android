@@ -8,11 +8,16 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavigationFsm;
+import org.wordpress.android.ui.accounts.login.nav.LoginEvents;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavigationController;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavigationFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginState;
 
-public class LoginActivity extends AppCompatActivity implements LoginNavigationFsm.ContextImplementation {
+public class LoginActivity extends AppCompatActivity implements
+        LoginNavigationFsmGetter,
+        LoginNavigationController.ContextImplementation {
 
-    LoginNavigationFsm mLoginNavigationFsm;
+    LoginNavigationController mLoginNavigationController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements LoginNavigationF
             addLoginPrologueFragment();
         }
 
-         mLoginNavigationFsm = new LoginNavigationFsm(this);
+        mLoginNavigationController = new LoginNavigationController(LoginState.PROLOGUE, this);
     }
 
     protected void addLoginPrologueFragment() {
@@ -36,17 +41,19 @@ public class LoginActivity extends AppCompatActivity implements LoginNavigationF
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mLoginNavigationFsm.register();
+    public LoginEvents.LoginNavPrologue getLoginNavPrologue() {
+        return mLoginNavigationController.getLoginNavPrologue();
     }
 
     @Override
-    public void onStop() {
-        mLoginNavigationFsm.unregister();
-        super.onStop();
+    public LoginEvents.LoginNavInputEmail getLoginNavInputEmail() {
+        return mLoginNavigationController.getLoginNavInputEmail();
     }
 
+    @Override
+    public LoginEvents.LoginNavInputSiteAddress getLoginNavInputSiteAddress() {
+        return mLoginNavigationController.getLoginNavInputSiteAddress();
+    }
 
     @Override
     public void toast(String message) {
