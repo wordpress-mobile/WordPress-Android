@@ -109,8 +109,12 @@ public class PlansActivity extends AppCompatActivity {
                 finish();
                 return;
             }
+            if (!PlanUpdateService.startService(this, mSelectedSite)) {
+                Toast.makeText(this, R.string.plans_loading_error, Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
             showProgress();
-            PlanUpdateService.startService(this, mSelectedSite);
         } else {
             setupPlansUI();
         }
