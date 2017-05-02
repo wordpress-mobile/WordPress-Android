@@ -8,9 +8,11 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavigationFsm;
 
-public class LoginActivity extends AppCompatActivity implements
-        LogInOrSignUpFragment.OnLogInOrSignUpFragmentInteraction {
+public class LoginActivity extends AppCompatActivity implements LoginNavigationFsm.ContextImplementation {
+
+    LoginNavigationFsm mLoginNavigationFsm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,8 @@ public class LoginActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             addLoginPrologueFragment();
         }
+
+         mLoginNavigationFsm = new LoginNavigationFsm(this);
     }
 
     protected void addLoginPrologueFragment() {
@@ -32,12 +36,20 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLoginTapped() {
-        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+    public void onStart() {
+        super.onStart();
+        mLoginNavigationFsm.register();
     }
 
     @Override
-    public void onCreateSiteTapped() {
-        Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show();
+    public void onStop() {
+        mLoginNavigationFsm.unregister();
+        super.onStop();
+    }
+
+
+    @Override
+    public void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
