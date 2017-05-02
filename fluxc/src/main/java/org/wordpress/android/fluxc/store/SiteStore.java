@@ -401,22 +401,23 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all .COM and Jetpack sites in the store.
+     * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API).
      */
     public List<SiteModel> getSitesAccessedViaWPComRest() {
         return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsModel();
     }
 
     /**
-     * Returns the number of .COM and Jetpack sites in the store.
+     * Returns the number of sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected
+     * via WPCom REST API).
      */
     public int getSitesAccessedViaWPComRestCount() {
         return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount();
     }
 
     /**
-     * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
-     * Jetpack sites accessed via XMLRPC).
+     * Checks whether the store contains at least one site accessed via WPCom REST API (WPCom sites or Jetpack
+     * sites connected via WPCom REST API).
      */
     public boolean hasSitesAccessedViaWPComRest() {
         return getSitesAccessedViaWPComRestCount() != 0;
@@ -454,7 +455,7 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all self-hosted sites (can't be Jetpack) in the store.
+     * Returns sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     public List<SiteModel> getSitesAccessedViaXMLRPC() {
         return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsModel();
