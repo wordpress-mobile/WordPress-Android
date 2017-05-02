@@ -33,6 +33,14 @@ public class PlanUpdateService extends Service {
     private final List<Plan> mSitePlans = new ArrayList<>();
 
     public static void startService(Context context, SiteModel site) {
+        if (context == null) {
+            AppLog.e(AppLog.T.PLANS, "Context is null, can't download plans!");
+            return;
+        }
+        if (site == null) {
+            AppLog.e(AppLog.T.PLANS, "Can't download plans for an empty site!");
+            return;
+        }
         Intent intent = new Intent(context, PlanUpdateService.class);
         intent.putExtra(WordPress.SITE, site);
         context.startService(intent);
