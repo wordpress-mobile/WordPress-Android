@@ -307,9 +307,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         String trimmedQuery = "";
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             trimmedQuery = mSearchView.getQuery().toString().trim();
-            sites = mSiteStore.getWPComAndJetpackSitesByNameOrUrlMatching(trimmedQuery);
+            sites = mSiteStore.getSitesAccessedViaWPComRestByNameOrUrlMatching(trimmedQuery);
         } else {
-            sites = mSiteStore.getWPComAndJetpackSites();
+            sites = mSiteStore.getSitesAccessedViaWPComRest();
         }
         mSiteCount = sites.size();
 

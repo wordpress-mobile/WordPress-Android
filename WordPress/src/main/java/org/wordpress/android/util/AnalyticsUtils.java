@@ -59,7 +59,7 @@ public class AnalyticsUtils {
         metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
         metadata.setUserConnected(FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore));
         metadata.setWordPressComUser(accountStore.hasAccessToken());
-        metadata.setJetpackUser(siteStore.hasJetpackSite());
+        metadata.setJetpackUser(siteStore.getSitesAccessedViaWPComRestCount() - siteStore.getWPComSitesCount() > 0);
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
