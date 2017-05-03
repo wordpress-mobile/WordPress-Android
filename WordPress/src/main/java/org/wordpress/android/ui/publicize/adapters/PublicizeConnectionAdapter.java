@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.ui.publicize.ConnectButton;
@@ -19,11 +19,15 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import javax.inject.Inject;
+
 public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeConnectionAdapter.ConnectionViewHolder> {
 
     public interface OnAdapterLoadedListener {
         void onAdapterLoaded(boolean isEmpty);
     }
+
+    @Inject AccountStore mAccountStore;
 
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
 
@@ -40,7 +44,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         mSiteId = siteId;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         mServiceId = StringUtils.notNullStr(serviceId);
-        mCurrentUserId = AccountHelper.getDefaultAccount().getUserId();
+        mCurrentUserId = mAccountStore.getAccount().getUserId();
         setHasStableIds(true);
     }
 
