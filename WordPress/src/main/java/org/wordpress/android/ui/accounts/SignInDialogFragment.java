@@ -27,7 +27,6 @@ import javax.inject.Inject;
 public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
-    private static String ARG_FOOTER = "footer";
     private static String ARG_IMAGE = "image";
     private static String ARG_NUMBER_OF_BUTTONS = "number-of-buttons";
     private static String ARG_FIRST_BUTTON_LABEL = "first-btn-label";
@@ -36,7 +35,6 @@ public class SignInDialogFragment extends DialogFragment {
     private static String ARG_FIRST_BUTTON_ACTION = "first-btn-action";
     private static String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
     private static String ARG_THIRD_BUTTON_ACTION = "third-btn-action";
-    private static String ARG_TELL_ME_MORE_BUTTON_ACTION = "tell-me-more-btn-action";
     private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID = "tell-me-more-btn-param-name-faq-id";
     private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID = "tell-me-more-btn-param-name-section-id";
     public static String ARG_OPEN_URL_PARAM = "open-url-param";
@@ -202,12 +200,12 @@ public class SignInDialogFragment extends DialogFragment {
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_FAQ_PAGE:
-                String faqid = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID);
-                String sectionid = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID);
-                if (faqid != null) {
-                    Support.showSingleFAQ(getActivity(), faqid);
-                } else if (sectionid != null) {
-                    Support.showFAQSection(getActivity(), sectionid);
+                String faqId = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID);
+                String sectionId = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID);
+                if (faqId != null) {
+                    Support.showSingleFAQ(getActivity(), faqId);
+                } else if (sectionId != null) {
+                    Support.showFAQSection(getActivity(), sectionId);
                 }
                 break;
             default:
