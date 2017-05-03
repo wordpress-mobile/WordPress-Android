@@ -94,7 +94,6 @@ Language: da_DK
 	<string name="media_details_label_file_type">Filtype</string>
 	<string name="device">Enhed</string>
 	<string name="language">Sprog</string>
-	<string name="error_publish_no_network">Kan ikke udgive uden forbindelse. Gemt som kladde.</string>
 	<string name="media_details_label_file_name">Filnavn</string>
 	<string name="stats_followers_total_email_paged">Viser %1$d - %2$d af %3$s følgere på e-mail</string>
 	<string name="stats_followers_total_wpcom_paged">Viser %1$d - %2$d af %3$s følgere på WordPress.com</string>
@@ -451,7 +450,6 @@ Language: da_DK
 	<string name="create_account_wpcom">Opret en konto på WordPress.com</string>
 	<string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt tag</string>
 	<string name="jetpack_not_found">Jetpack-pluginnet blev ikke fundet</string>
-	<string name="reader_share_subject">Delt fra %s</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
 	<string name="media_add_popup_title">Tilføj til mediebibliotek</string>
 	<string name="media_add_new_media_gallery">Opret galleri</string>

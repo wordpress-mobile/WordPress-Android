@@ -461,7 +461,6 @@ Language: gl_ES
 	<string name="media_uploaded_on">Cargado o: %s</string>
 	<string name="media_dimensions">Dimensións: %s</string>
 	<string name="media_file_type">Tipo de ficheiro: %s</string>
-	<string name="upload_queued">Agardando na cola</string>
 	<string name="reader_label_gap_marker">Cargar máis artigos</string>
 	<string name="notifications_no_search_results">Non hai sitios que coincidan con \'%s\' </string>
 	<string name="search_sites">Buscar sitios</string>
@@ -597,7 +596,6 @@ Language: gl_ES
 	<string name="language">Idioma</string>
 	<string name="media_details_label_file_name">Nome do ficheiro</string>
 	<string name="media_details_label_file_type">Tipo de ficheiro</string>
-	<string name="error_publish_no_network">Non se pode publicar sen ter conexión. Gardado como borrador.</string>
 	<string name="editor_toast_invalid_path">Ruta do ficheiro non válida</string>
 	<string name="verification_code">Código de verificación</string>
 	<string name="invalid_verification_code">Código de verificación non válido</string>
@@ -1001,7 +999,6 @@ Language: gl_ES
 	<string name="reader_toast_err_share_intent">Non foi posible compartir</string>
 	<string name="reader_toast_err_view_image">Non foi posible mostrar a imaxe</string>
 	<string name="reader_toast_err_url_intent">No foi posible abrir %s</string>
-	<string name="reader_share_subject">Compartido desde %s</string>
 	<string name="limit_reached">Límite acadado. Podes intentalo de novo dentro dun minuto. Tentalo antes só servirá para incrementar a espera até que a prohibición caduque. Se consideras que se trata dun erro, contacta co soporte.</string>
 	<string name="connecting_wpcom">Conectando con WordPress.com</string>
 	<string name="stats_totals_plays">Reproducións</string>

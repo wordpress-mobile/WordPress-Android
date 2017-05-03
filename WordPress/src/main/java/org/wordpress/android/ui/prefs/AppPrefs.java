@@ -135,6 +135,11 @@ public class AppPrefs {
 
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
+
+        // smart toast counters
+        SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER,
+        SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER,
+        SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER
     }
 
     private static SharedPreferences prefs() {
@@ -184,11 +189,11 @@ public class AppPrefs {
         }
     }
 
-    private static int getInt(PrefKey key) {
+    public static int getInt(PrefKey key) {
         return getInt(key, 0);
     }
 
-    private static void setInt(PrefKey key, int value) {
+    public static void setInt(PrefKey key, int value) {
         setString(key, Integer.toString(value));
     }
 

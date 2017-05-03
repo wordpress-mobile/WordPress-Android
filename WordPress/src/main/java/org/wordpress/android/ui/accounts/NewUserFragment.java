@@ -74,6 +74,11 @@ public class NewUserFragment extends AbstractFragment {
     public static final int NEW_USER = 1;
     private AutoCompleteTextView mSiteUrlTextField;
     private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
+
+    private static final String KEY_SITES_FETCHED = "KEY_SITES_FETCHED";
+    private static final String KEY_ACCOUNT_SETTINGS_FETCHED = "KEY_ACCOUNT_SETTINGS_FETCHED";
+    private static final String KEY_ACCOUNT_FETCHED = "KEY_ACCOUNT_FETCHED";
+
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
@@ -81,12 +86,8 @@ public class NewUserFragment extends AbstractFragment {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
-    private String mUsername;
-    private String mEmail;
-    private String mPassword;
 
-    private NewSitePayload mNewSitePayload;
-    private NewAccountPayload mNewAccountPayload;
+    private boolean mAutoCompleteUrl;
 
     protected boolean mSitesFetched = false;
     protected boolean mAccountSettingsFetched = false;
@@ -381,22 +382,35 @@ public class NewUserFragment extends AbstractFragment {
         mAccountSettingsFetched = false;
         mAccountFetched = false;
 
-        String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
-        mEmail = EditTextUtils.getText(mEmailTextField).trim();
-        mUsername = EditTextUtils.getText(mUsernameTextField).trim();
-        mPassword = EditTextUtils.getText(mPasswordTextField).trim();
+        String username = getUsername();
+        String email = getEmail();
+        NewAccountPayload newAccountPayload = new NewAccountPayload(username, getPassword(), getEmail(), true);
 
-        String siteTitle = siteUrlToSiteName(siteUrl);
-        String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
-
-        mNewAccountPayload = new NewAccountPayload(mUsername, mPassword, mEmail, true);
-        mNewSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, true);
-
-        mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
+        mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(newAccountPayload));
         updateProgress(getString(R.string.validating_site_data));
 
-        AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + mEmail
-                + ", site title: " + siteTitle + ", site URL: " + siteUrl);
+        AppLog.i(T.NUX, "User starts account creation, username: " + username + ", email: " + email
+                + ", site title: " + getSiteTitle() + ", site URL: " + getSiteUrl());
+    }
+
+    private String getSiteUrl() {
+        return EditTextUtils.getText(mSiteUrlTextField).trim();
+    }
+
+    private String getSiteTitle() {
+        return siteUrlToSiteName(getSiteUrl());
+    }
+
+    private String getUsername() {
+        return EditTextUtils.getText(mUsernameTextField).trim();
+    }
+
+    private String getPassword() {
+        return EditTextUtils.getText(mPasswordTextField).trim();
+    }
+
+    private String getEmail() {
+        return EditTextUtils.getText(mEmailTextField).trim();
     }
 
     private void finishCurrentActivity() {
@@ -423,8 +437,8 @@ public class NewUserFragment extends AbstractFragment {
         }
         endProgress();
         Intent intent = new Intent();
-        intent.putExtra("username", mUsername);
-        intent.putExtra("password", mPassword);
+        intent.putExtra("username", getUsername());
+        intent.putExtra("password", getPassword());
         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         try {
             getFragmentManager().popBackStack();
@@ -473,6 +487,12 @@ public class NewUserFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
+
+        if (savedInstanceState != null) {
+            mSitesFetched = savedInstanceState.getBoolean(KEY_SITES_FETCHED, false);
+            mAccountFetched = savedInstanceState.getBoolean(KEY_ACCOUNT_FETCHED, false);
+            mAccountSettingsFetched = savedInstanceState.getBoolean(KEY_ACCOUNT_SETTINGS_FETCHED, false);
+        }
     }
 
     @Override
@@ -609,12 +629,12 @@ public class NewUserFragment extends AbstractFragment {
     private void fetchSiteAndAccount() {
         // User has been created. From this point, all errors should close this screen and display the
         // sign in screen
-        AnalyticsUtils.refreshMetadataNewUser(mUsername, mEmail);
+        AnalyticsUtils.refreshMetadataNewUser(getUsername(), getEmail());
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
         // Save credentials to smart lock
         SmartLockHelper smartLockHelper = getSmartLockHelper();
         if (smartLockHelper != null) {
-            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, mUsername, null);
+            smartLockHelper.saveCredentialsInSmartLock(getUsername(), getPassword(), getUsername(), null);
         }
         // Fetch user infos
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -631,12 +651,20 @@ public class NewUserFragment extends AbstractFragment {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save fetch state
+        outState.putBoolean(KEY_SITES_FETCHED, mSitesFetched);
+        outState.putBoolean(KEY_ACCOUNT_FETCHED, mAccountFetched);
+        outState.putBoolean(KEY_ACCOUNT_SETTINGS_FETCHED, mAccountSettingsFetched);
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
             finishAndShowSignInScreen();
@@ -645,7 +673,10 @@ public class NewUserFragment extends AbstractFragment {
         if (mAccountStore.hasAccessToken()) {
             // Account created and user authenticated, now create the site
             updateProgress(getString(R.string.creating_your_site));
-            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+            String deviceLanguage = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
+            NewSitePayload newSitePayload = new NewSitePayload(getSiteUrl(), getSiteUrl(), deviceLanguage,
+                    SiteVisibility.PUBLIC, false);
+            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
 
             // Get reader tags so they're available as soon as the Reader is accessed - done for
             // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
@@ -661,7 +692,6 @@ public class NewUserFragment extends AbstractFragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewUserCreated(OnNewUserCreated event) {
-        AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
             AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
@@ -670,19 +700,21 @@ public class NewUserFragment extends AbstractFragment {
         }
         if (event.dryRun) {
             // User Validated, now try to validate site creation
-            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+            String deviceLanguage = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
+            NewSitePayload newSitePayload = new NewSitePayload(getSiteUrl(), getSiteUrl(), deviceLanguage,
+                    SiteVisibility.PUBLIC, true);
+            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
             updateProgress(getString(R.string.validating_site_data));
             return;
         }
         // User created, now authenticate the newly created user
-        AuthenticatePayload payload = new AuthenticatePayload(mNewAccountPayload.username, mNewAccountPayload.password);
+        AuthenticatePayload payload = new AuthenticatePayload(getUsername(), getPassword());
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
-        AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
             AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
@@ -692,9 +724,9 @@ public class NewUserFragment extends AbstractFragment {
         if (event.dryRun) {
             // User and Site validated, dispatch the same actions with dryRun disabled
             updateProgress(getString(R.string.creating_your_account));
-            mNewSitePayload.dryRun = false;
-            mNewAccountPayload.dryRun = false;
-            mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
+            NewAccountPayload newAccountPayload = new NewAccountPayload(getUsername(), getPassword(), getEmail(),
+                    false);
+            mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(newAccountPayload));
             return;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
@@ -705,7 +737,6 @@ public class NewUserFragment extends AbstractFragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        AppLog.i(T.NUX, event.toString());
         mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
         mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
         // Finish activity if sites have been fetched
@@ -717,7 +748,6 @@ public class NewUserFragment extends AbstractFragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        AppLog.i(T.NUX, event.toString());
         mSitesFetched = true;
         // Finish activity if account settings have been fetched
         if (mAccountSettingsFetched && mAccountFetched) {

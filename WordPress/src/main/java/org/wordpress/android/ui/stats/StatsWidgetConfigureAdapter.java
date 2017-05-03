@@ -210,21 +210,17 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         private List<SiteModel> getBlogsForCurrentView() {
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted sites and all wp.com sites
                     return mSiteStore.getSites();
                 } else {
-                    // only wp.com and jetpack sites
-                    return mSiteStore.getWPComAndJetpackSites();
+                    return mSiteStore.getSitesAccessedViaWPComRest();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted sites plus visible wp.com and jetpack sites
-                    List<SiteModel> out = mSiteStore.getVisibleWPComAndJetpackSites();
-                    out.addAll(mSiteStore.getSelfHostedSites());
+                    List<SiteModel> out = mSiteStore.getVisibleSitesAccessedViaWPCom();
+                    out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
                     return out;
                 } else {
-                    // only visible wp.com and jetpack sites
-                    return mSiteStore.getVisibleWPComAndJetpackSites();
+                    return mSiteStore.getVisibleSitesAccessedViaWPCom();
                 }
             }
         }

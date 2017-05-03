@@ -464,6 +464,13 @@ public class PostsListFragment extends Fragment
     public void onPostButtonClicked(int buttonType, PostModel post) {
         if (!isAdded()) return;
 
+        // Get the latest version of the post, in case it's changed since the last time we refreshed the post list
+        post = mPostStore.getPostByLocalPostId(post.getId());
+        if (post == null) {
+            loadPosts(LoadMode.FORCED);
+            return;
+        }
+
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);

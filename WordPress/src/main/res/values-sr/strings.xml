@@ -111,7 +111,6 @@ Language: sr_RS
 	<string name="invalid_verification_code">Погрешан верификациони код</string>
 	<string name="verification_code">Код за потврђивање</string>
 	<string name="editor_toast_invalid_path">Неисправна путања до датотеке</string>
-	<string name="error_publish_no_network">Није могуће објавити услед недостатка интернет везе. Сачувано као нацрт.</string>
 	<string name="language">Језик</string>
 	<string name="device">Уређај</string>
 	<string name="reader_empty_posts_request_failed">Није могуће добавити чланке</string>
@@ -485,7 +484,6 @@ Language: sr_RS
 	<string name="reader_toast_err_url_intent">Није могуће отворити %s</string>
 	<string name="reader_toast_err_view_image">Није могуће прегледати слику</string>
 	<string name="reader_btn_share">Поделите</string>
-	<string name="reader_share_subject">Подељено од стране %s</string>
 	<string name="reader_untitled_post">(Без наслова)</string>
 	<string name="jetpack_not_found">Додатак Џетпек није пронађен</string>
 	<string name="reader_toast_err_share_intent">Није могуће делити</string>

@@ -68,6 +68,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -140,7 +141,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.media);
         }
 
         FragmentManager fm = getFragmentManager();
@@ -151,6 +151,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // if media was shared add it to the library
         handleSharedMedia();
+
+        if (savedInstanceState == null) {
+            SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
+        }
     }
 
     @Override
