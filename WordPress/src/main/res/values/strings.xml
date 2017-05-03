@@ -970,10 +970,6 @@
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
     <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
     <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
-    <string name="new_editor_promo_button_label">Great, thanks!</string>
-    <string name="new_editor_promo_title">Brand new editor</string>
-    <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
-    editor. Try it out by creating a new post.</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
