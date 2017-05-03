@@ -127,6 +127,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
+import org.wordpress.android.widgets.SmartToast;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -560,6 +561,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
             initPhotoPicker();
+            SmartToast.show(this, SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
         }
 
         // hide soft keyboard

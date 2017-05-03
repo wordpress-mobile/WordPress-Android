@@ -230,13 +230,15 @@
         <!-- Media Activities -->
         <activity
             android:name=".ui.media.MediaBrowserActivity"
+            android:label="@string/wp_media_title"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.media.MediaPreviewActivity"
             android:windowSoftInputMode="adjustNothing"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".ui.media.MediaGalleryActivity" />
-        <activity android:name=".ui.media.MediaGalleryPickerActivity" />
+        <activity android:name=".ui.media.MediaGalleryPickerActivity"
+            android:label="@string/wp_media_title"/>
 
         <!-- Theme Activities -->
         <activity
