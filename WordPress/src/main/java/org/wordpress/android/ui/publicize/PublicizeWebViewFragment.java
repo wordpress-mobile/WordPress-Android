@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
@@ -23,10 +24,12 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WebViewUtils;
 
+import javax.inject.Inject;
+
 import de.greenrobot.event.EventBus;
 
 public class PublicizeWebViewFragment extends PublicizeBaseFragment {
-
+    @Inject AccountStore mAccountStore;
     private int mSiteId;
     private String mServiceId;
     private int mConnectionId;
@@ -173,8 +176,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
                         return;
                     }
 
+                    long currentUserId = mAccountStore.getAccount().getUserId();
                     // call the endpoint to make the actual connection
-                    PublicizeActions.connect(mSiteId, mServiceId);
+                    PublicizeActions.connect(mSiteId, mServiceId, currentUserId);
                     WebViewUtils.clearCookiesAsync();
                 }
             }
