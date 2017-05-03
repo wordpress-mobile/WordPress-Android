@@ -334,7 +334,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }).start();
     }
 
-
     /*
      * builds the list of media items from the device
      */
