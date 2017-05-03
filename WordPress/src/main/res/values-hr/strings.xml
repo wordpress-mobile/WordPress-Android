@@ -180,7 +180,6 @@ Language: hr
 	<string name="media_dimensions">Dimenzije: %s</string>
 	<string name="media_file_name">Ime datoteke: %s</string>
 	<string name="media_file_type">Vrsta datoteke: %s</string>
-	<string name="upload_queued">Na čekanju</string>
 	<string name="reader_label_gap_marker">Učitaj više objava</string>
 	<string name="notifications_no_search_results">Nijedna web-stranica se ne podudara sa \'%s\'</string>
 	<string name="search_sites">Pretraživanje web-stranica</string>
@@ -316,7 +315,6 @@ Language: hr
 	<string name="language">Jezik</string>
 	<string name="verification_code">Kod za provjeru</string>
 	<string name="verify">Provjeri</string>
-	<string name="error_publish_no_network">Nije moguće objaviti dok nema veze. Snimljeno kao skica.</string>
 	<string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
 	<string name="invalid_verification_code">Neispravan verifikacijski kod</string>
 	<string name="two_step_footer_label">Unesite kod iz autentifikacijske aplikacije.</string>
@@ -719,7 +717,6 @@ Language: hr
 	<string name="connecting_wpcom">Spajanje sa WordPress.com</string>
 	<string name="username_invalid">Neispravno korisničko ime</string>
 	<string name="nux_tutorial_get_started_title">Započnimo!</string>
-	<string name="reader_share_subject">Podijeljeno sa %s</string>
 	<string name="limit_reached">Dosegnuti je limit. Možete ponovno pokušati za 1 minutu. Ako pokušate prije toga produžiti ćete vrijeme koje morate čekati prije nego što se digne ban. Ako mislite da je ovo greška, kontaktirajte podršku.</string>
 	<string name="stats_timeframe_days">Dani</string>
 	<string name="stats_timeframe_weeks">Tjedni</string>

@@ -21,7 +21,6 @@ Language: hu
 	<string name="language">Nyelv</string>
 	<string name="device">Eszköz</string>
 	<string name="two_step_sms_sent">Nézzük meg a szöveges üzeneteink között az ellenőrző kódot</string>
-	<string name="error_publish_no_network">Internetkapcsolat nélkül nem lehet közzétenni. Elmentve vázlatként.</string>
 	<string name="stats_view_authors">Szerzők</string>
 	<string name="publisher">Közzétevő:</string>
 	<string name="pages_fetching">Oldalak betöltése...</string>

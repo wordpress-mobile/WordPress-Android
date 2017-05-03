@@ -41,7 +41,6 @@ Language: uz
 	<string name="reader_toast_err_share_intent">Bo‘lishib bo‘lmadi</string>
 	<string name="reader_toast_err_view_image">Rasm ko‘rinmayapti</string>
 	<string name="reader_toast_err_url_intent">%s ochilmayapti</string>
-	<string name="reader_share_subject">%s orqali baham ko‘rilgan</string>
 	<string name="reader_label_added_tag">%s qo‘shildi</string>
 	<string name="reader_label_removed_tag">%s o‘chirildi</string>
 	<string name="reader_likes_one">Bir kishi yoqtirgan</string>

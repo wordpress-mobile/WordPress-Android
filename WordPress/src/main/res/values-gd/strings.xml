@@ -106,7 +106,6 @@ Language: gd_GB
 	<string name="invalid_verification_code">Còd dearbhadh mì-dhligheach</string>
 	<string name="verification_code">Còd dearbhaidh</string>
 	<string name="editor_toast_invalid_path">Tha slighe an fhaidhle mì-dhligheach</string>
-	<string name="error_publish_no_network">Chan urrainn dhut foillseachadh mur eil ceangal ann. Chaidh dreachd dheth a shàbhaladh.</string>
 	<string name="language">Cànan</string>
 	<string name="device">Uidheam</string>
 	<string name="media_details_label_file_name">Ainm an fhaidhle</string>
@@ -481,7 +480,6 @@ Language: gd_GB
 	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
 	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
-	<string name="reader_share_subject">Air a cho-roinneadh o %s</string>
 	<string name="reader_btn_share">Co-roinn</string>
 	<string name="reader_btn_follow">Lean</string>
 	<string name="reader_btn_unfollow">A\' leanntainn</string>

@@ -454,7 +454,6 @@ Language: hi_IN
 	<string name="media_add_popup_title">मीडिया संग्रह में जोड़े</string>
 	<string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
 	<string name="select_from_media_library">मीडिया लाइब्रेरी से चुने </string>
-	<string name="reader_share_subject">%s द्वारा साझा किया गया</string>
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>

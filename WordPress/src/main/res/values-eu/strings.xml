@@ -681,7 +681,6 @@ Language: eu_ES
 	<string name="reader_toast_err_url_intent">Ezin izan da %s ireki</string>
 	<string name="nux_tutorial_get_started_title">Hasi!</string>
 	<string name="empty_list_default">Zerrenda hau hutsik dago</string>
-	<string name="reader_share_subject">%s-tik partekatua</string>
 	<string name="reader_btn_share">Partekatu</string>
 	<string name="reader_btn_follow">Jarraitu</string>
 	<string name="connecting_wpcom">WordPress.com-en saioa hasten</string>

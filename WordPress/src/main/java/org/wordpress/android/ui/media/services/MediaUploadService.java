@@ -146,7 +146,7 @@ public class MediaUploadService extends Service {
 
     private synchronized void updatePostWithMediaUrl(MediaModel media){
         if (media != null) {
-            PostModel post = mPostStore.getPostByLocalPostId(media.getPostId());
+            PostModel post = mPostStore.getPostByLocalPostId(media.getLocalPostId());
             if (post != null) {
                 // actually replace the media ID with the media uri
                 MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
