@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -36,22 +36,23 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-40"
-        versionCode 362
+        versionName "7.3-rc-5"
+        versionCode 402
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
-        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+        buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
     }
 
     productFlavors {
-        vanilla {} // used for release and beta
+        vanilla { // used for release and beta
+            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+        }
 
         zalpha { // alpha version - enable experimental features
-            buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
             applicationId "org.wordpress.android"
         }
 
@@ -130,7 +131,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:7f4e5df683249ce261e7c56ab115b197ae55624b') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:e46255029b6afa886b3e0ebb8ed96b4f57872e77') {
         exclude group: "com.android.volley";
     }
 

@@ -59,7 +59,7 @@ but this isn't used for mobile apps. Just use "https://localhost".
 
 Once you've created your application in the [applications manager][5], you'll
 need to edit the `./WordPress/gradle.properties` file and change the
-`WP.OAUTH.APP.ID` and `WP.OAUTH.APP.SECRET` fields. Then you can compile and
+`WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
 account.
 
@@ -78,7 +78,7 @@ Say hello on our [Slack][4] channel: `#mobile`.
 ## FAQ ##
 
 * Q: I can't build/test/package the project because of a `PermGen space` error.
-* A: Create a `build.properties` file in the project root directory with the
+* A: Create a `gradle.properties` file in the project root directory with the
 following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
 
 ## License ##

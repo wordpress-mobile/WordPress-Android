@@ -1,11 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-01 15:52:11+0000
+Translation-Revision-Date: 2017-04-13 06:27:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="error_publish_no_network">Enheten är off-line. Ändringarna har sparats lokalt.</string>
+	<string name="photo_picker_title">Välj foto</string>
+	<string name="editor_post_saved_online_not_published">Inlägget är sparat on-line som ett utkast. Du kanske vill publicera det?</string>
+	<string name="editor_post_saved_online">Inlägget har sparats on-line</string>
+	<string name="editor_post_saved_locally_not_published">Inlägget har endast sparats lokalt. Du kanske vill publicera det?</string>
+	<string name="editor_post_saved_locally">Inlägget har sparats på din enhet</string>
+	<string name="site_settings_image_quality_hint">Bildkvalitet. Ett högre värde innebär bilder med högre kvalitet.</string>
+	<string name="site_settings_optimize_images_summary">Gör det möjligt att ändra storlek på och komprimera bildfiler</string>
+	<string name="media_upload_state_uploaded">Uppladdat</string>
+	<string name="media_encoder_quality_80">Låg</string>
+	<string name="media_encoder_quality_85">Medium</string>
+	<string name="media_encoder_quality_90">Hög</string>
+	<string name="media_encoder_quality_95">Mycket hög</string>
+	<string name="media_encoder_quality_100">Max</string>
+	<string name="media_upload_state_queued">Tillagt i kön</string>
+	<string name="media_upload_state_uploading">Laddar upp</string>
+	<string name="media_upload_state_deleting">Raderar</string>
+	<string name="media_upload_state_deleted">Raderat</string>
+	<string name="media_upload_state_failed">Misslyckades</string>
+	<string name="image_quality">Bildkvalitet</string>
+	<string name="keep_editing">Fortsätt redigera</string>
+	<string name="update_draft">Uppdatera utkast</string>
+	<string name="error_all_media_upload_canceled">Alla mediauppladdningar har avbrutits på grund av ett okänt fel. Försök ladda upp igen</string>
+	<string name="error_unknown_post">Okänt inlägg, Den lokala kopian av detta inlägg skiljer sig eventuellt från versionen på servern</string>
+	<string name="error_unknown_post_type">Okänt inläggsformat</string>
+	<string name="error_media_request_too_large">Mediafilen för stor, går inte att ladda upp</string>
+	<string name="error_fetch_site_after_creation">Webbplatsen har skapats, du kan behöva uppdatera din webbplatslista i listan för val av webbplats.</string>
+	<string name="error_media_parse_error">Det gick inte att tolka svaret efter uppladdning av media</string>
+	<string name="error_upload_params">Fel vid uppladdning av %1$s: %2$s</string>
+	<string name="media_error_too_large_upload">Filen är för stor. Kontakta webbhotellet för att lösa problemet</string>
+	<string name="submit_for_review">Skicka</string>
+	<string name="role_subscriber">Prenumerant</string>
+	<string name="tell_me_more">Jag vill veta mer</string>
+	<string name="duplicate_site_detected">En dublett-webbplats har hittats.</string>
+	<string name="cannot_add_duplicate_site">Det går inte att lägga till denna webbplats. Den finns redan i appen.</string>
+	<string name="already_logged_in_wpcom_same_username">Du är redan inloggad till ditt konto på WordPress.com. Din webbplats bör synas i listan för val av webbplatser, se till att den inte är dold.</string>
+	<string name="already_logged_in_wpcom">Du är redan inloggad till ditt konto hos WordPress.com. Du kan inte lägga till någon webbplats från WordPress.com som är kopplad till ett annat konto.</string>
+	<string name="migration_error_not_connected">Migreringen misslyckades: försök att starta appen när du har nätverksanslutning.</string>
+	<string name="migration_message">WordPress-appen uppdateras ...</string>
+	<string name="checking_username">Användarnamnet kontrolleras</string>
+	<string name="jetpack_different_com_account">Det finns inte stöd för att ha samtidigt ha Jetpack-webbplatser som hör till olika konton på WordPress.com</string>
+	<string name="jetpack_use_com_account">För att lägga till din Jetpack-webbplats behöver du logga in till det konto på WordPress.com du använde när du anslöt Jetpack.</string>
+	<string name="jetpack_message">Tillägget Jetpack behöver bara installerat och aktiverat. Vill du installera eller aktivera Jetpack?</string>
+	<string name="error_media_load">Det går inte att läsa in media</string>
+	<string name="error_media_refresh_no_connection">Anslutning krävs för uppdatering av biblioteket</string>
+	<string name="error_media_unauthorized">Du saknar behörighet att se eller redigera aktuellt media</string>
+	<string name="error_media_not_found">Media-filen hittades inte</string>
+	<string name="error_media_insufficient_fs_permissions">Det krävs läsrättigheter för mediafilen</string>
+	<string name="site_settings_optimize_images">Optimera bilder</string>
+	<string name="no_site_error">Det gick inte att ansluta till WordPress-webbplatsen. På den angivna adressen finns det ingen giltig WordPress-webbplats. Kontrollera adressen (URL) du matat in.</string>
+	<string name="media_generic_error">Ett mediefel har inträffat</string>
+	<string name="media_upload_error">Ett fel inträffade vid uppladdning av media</string>
+	<string name="retry">Försök igen</string>
+	<string name="confirm">Bekräfta</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Det går inte att ansluta. Vi får fel 403 (förbjudet) när vi anropar XMLRPC-ändpunkten  för din webbplats. Appen behöver detta för att kunna kommunicera med din webbplats. Kontakta webbhotellet för att lösa detta problem.</string>
+	<string name="xmlrpc_post_blocked_error">Det gick inte att ansluta. Din webbserver blockerar POST-anrop, som appen behöver för att kommunicera med din webbplats. Kontakta ditt webbhotell för att lösa detta problem.</string>
 	<string name="reader_liked_default_tag">Inlägg jag har gillat</string>
 	<string name="reader_followed_default_tag">Webbplatser jag prenumererar på</string>
 	<string name="reader_discover_default_tag">Upptäck</string>
@@ -392,11 +448,9 @@ Language: sv_SE
 	<string name="site_settings_discussion_hint">Visa och ändra dina webbplatsers diskussionsinställningar</string>
 	<string name="site_settings_more_hint">Visa alla tillgängliga diskussionsinställningar</string>
 	<string name="site_settings_related_posts_hint">Visa eller dölj relaterade inlägg i läsaren</string>
-	<string name="site_settings_upload_and_link_image_hint">Aktivera för att alltid ladda upp bilden i fullstorlek</string>
 	<string name="site_settings_image_width_hint">Ändrar bildstorlek i inlägg till denna bredd</string>
 	<string name="site_settings_format_hint">Anger nytt inläggsformat</string>
 	<string name="site_settings_category_hint">Anger ny inläggskategori</string>
-	<string name="site_settings_location_hint">Lägg automatiskt till platsdata i dina inlägg</string>
 	<string name="site_settings_password_hint">Ändra ditt lösenord</string>
 	<string name="site_settings_username_hint">Nuvarande användarkonto</string>
 	<string name="site_settings_language_hint">Det språk som den här bloggen huvudsakligen är skrivet på</string>
@@ -425,7 +479,6 @@ Language: sv_SE
 	<string name="site_settings_allow_comments_title">Tillåt kommentarer</string>
 	<string name="site_settings_default_format_title">Standardformat</string>
 	<string name="site_settings_default_category_title">Standardkategori</string>
-	<string name="site_settings_location_title">Aktivera plats</string>
 	<string name="site_settings_address_title">Adress</string>
 	<string name="site_settings_title_title">Webbplatsens titel</string>
 	<string name="site_settings_tagline_title">Slogan</string>
@@ -490,7 +543,6 @@ Language: sv_SE
 	<string name="media_file_name">Filnamn: %s</string>
 	<string name="media_uploaded_on">Laddades upp den: %s</string>
 	<string name="media_dimensions">Storlek: %s</string>
-	<string name="upload_queued">Köad</string>
 	<string name="media_file_type">Filtyp: %s</string>
 	<string name="reader_label_gap_marker">Ladda fler inlägg</string>
 	<string name="notifications_no_search_results">Inga webbplatser matchade "%s"</string>
@@ -622,22 +674,7 @@ Language: sv_SE
 	<string name="hide">Dölj</string>
 	<string name="deselect_all">Avmarkera alla </string>
 	<string name="sign_out_wpcom_confirm">Att logga ut från ditt konto kommer ta bort all @%ss WordPress.com-data från denna enhet, inklusive lokala utkast och lokala förändringar.</string>
-	<string name="select_from_new_picker">Flerval med den nya väljaren</string>
 	<string name="stats_generic_error">Nödvändig statistik kunde inte laddas in. </string>
-	<string name="error_loading_blog_images">Kunde inte hämta bilder </string>
-	<string name="no_device_videos">Inga videor</string>
-	<string name="error_loading_blog_videos">Kunde inte hämta bilder </string>
-	<string name="no_blog_videos">Inga videor</string>
-	<string name="error_loading_videos">Det gick inte att ladda in videor</string>
-	<string name="loading_blog_videos">Hämtar videor</string>
-	<string name="no_media_sources">Kunde inte hämta media </string>
-	<string name="loading_blog_images">Hämtar bilder</string>
-	<string name="error_loading_images">Det gick inte att ladda in bilderna</string>
-	<string name="no_device_images">Inga bilder</string>
-	<string name="no_blog_images">Inga bilder</string>
-	<string name="no_media">Ingen media</string>
-	<string name="loading_images">Laddar bilder</string>
-	<string name="loading_videos">Laddar videos </string>
 	<string name="auth_required">Logga in igen för att fortsätta.</string>
 	<string name="sign_in_jetpack">Logga in på ditt WordPress.com-konto för att ansluta till Jetpack.</string>
 	<string name="two_step_sms_sent">Kolla dina SMS för att se verifieringskoden.</string>
@@ -647,15 +684,6 @@ Language: sv_SE
 	<string name="invalid_verification_code">Ogiltig verifieringskod</string>
 	<string name="verify">Verifiera</string>
 	<string name="editor_toast_invalid_path">Ogiltig sökväg till fil</string>
-	<string name="error_publish_no_network">Kunde inte publicera eftersom det into fanns någon nätanslutning. Sparat som utkast.</string>
-	<string name="tab_title_site_videos">Videoklipp på webbplats</string>
-	<string name="tab_title_site_images">Bilder på webbplats</string>
-	<string name="tab_title_device_videos">Videoklipp på enhet</string>
-	<string name="tab_title_device_images">Bilder på enhet</string>
-	<string name="take_video">Spela in video</string>
-	<string name="add_to_post">Lägg till i inlägg</string>
-	<string name="media_picker_title">Välj media</string>
-	<string name="take_photo">Ta ett foto</string>
 	<string name="device">Enhet</string>
 	<string name="language">Språk</string>
 	<string name="media_details_label_file_name">Filnamn</string>
@@ -788,7 +816,6 @@ Language: sv_SE
 	<string name="posts_empty_list">Inga inlägg än. Varför inte skapa ett?</string>
 	<string name="comment_reply_to_user">Svar till %s</string>
 	<string name="pages_empty_list">Inga sidor än. Varför inte skapa en?</string>
-	<string name="media_empty_list_custom_date">Ingen media för detta tidsintervall</string>
 	<string name="posting_post">Postar "%s"</string>
 	<string name="signing_out">Loggar ut...</string>
 	<string name="sending_content">Laddar upp %s innehåll</string>
@@ -847,7 +874,6 @@ Language: sv_SE
 	<string name="invalid_username_too_long">Användarnamn måste vara kortare än 61 tecken</string>
 	<string name="invalid_username_too_short">Användarnamn måste vara längre än 4 tecken</string>
 	<string name="passcode_wrong_passcode">Fel PIN</string>
-	<string name="error_upload">Ett fel uppstod vid uppladdning av %s</string>
 	<string name="invalid_email_message">Din epostadress är ogilltig</string>
 	<string name="invalid_password_message">Lösenord måste innehålla minst 4 tecken</string>
 	<string name="username_required">Ange ett användarnamn</string>
@@ -881,7 +907,6 @@ Language: sv_SE
 	<string name="blog_name_reserved">Webbplatsen är reserverad</string>
 	<string name="blog_name_reserved_but_may_be_available">Webbplatsen är reserverad men kan bli tillgänglig om ett par dagar</string>
 	<string name="nux_cannot_log_in">Vi kan inte logga in dig</string>
-	<string name="no_site_error">Det gick inte att ansluta till WordPress-webbplatsen</string>
 	<string name="reply_failed">Svara misslyckades</string>
 	<string name="error_refresh_comments">Kommentarerna kan inte uppdateras just nu</string>
 	<string name="error_refresh_pages">Sidorna kunde inte uppdateras just nu</string>
@@ -961,7 +986,6 @@ Language: sv_SE
 	<string name="privacy_policy">Integritetspolicy</string>
 	<string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
 	<string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>
-	<string name="jetpack_message_not_admin">Jetpack tillägget krävs för statistik. Kontakta administratören.</string>
 	<string name="reader_title_applog">Programlogg</string>
 	<string name="pending_review">Avvaktar granskning</string>
 	<string name="http_credentials">HTTP-autentiseringsuppgifter (valfritt)</string>
@@ -993,7 +1017,6 @@ Language: sv_SE
 	<string name="mnu_comment_unapprove">Godkänn ej</string>
 	<string name="dlg_unapproving_comments">Förkastar</string>
 	<string name="trash">Kasta bort</string>
-	<string name="category_slug">Kategorins permalänk (valfritt)</string>
 	<string name="category_parent">Kategorins förälder (valfritt):</string>
 	<string name="file_error_create">Kunde inte skapa temporär mediafil för uppladdning. Se till att det finns tillräckligt med utrymme på din enhet.</string>
 	<string name="site_address">Adress till din WordPress-installation (URL)</string>
@@ -1001,6 +1024,7 @@ Language: sv_SE
 	<string name="email_cant_be_used_to_signup">Du kan inte använda den e-postadressen för att registrera dig. Vi har problem med att de blockerar viss av våra e-post. Använd en annan e-postleverantör.</string>
 	<string name="notifications_empty_all">Inga notiser … ännu.</string>
 	<string name="invalid_site_url_message">Kontrollera att webbplatsens URL är giltig</string>
+	<string name="jetpack_message_not_admin">Tillägget Jetpack krävs. Kontakta webbplatsens administratör.</string>
 	<string name="deleting_page">Tar bort sida</string>
 	<string name="deleting_post">Tar bort inlägg</string>
 	<string name="share_url_post">Dela inlägg</string>
@@ -1038,10 +1062,8 @@ Language: sv_SE
 	<string name="media_add_new_media_gallery">Skapa galleri</string>
 	<string name="empty_list_default">Listan är tom</string>
 	<string name="select_from_media_library">Välj från mediebiblioteket</string>
-	<string name="jetpack_message">Jetpack-tillägget behövs för att visa statistik. Vill du installera Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack-tillägget kunde inte hittas</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
-	<string name="reader_share_subject">Delad från %s</string>
 	<string name="reader_btn_share">Dela</string>
 	<string name="reader_btn_follow">Följ</string>
 	<string name="reader_btn_unfollow">Följer</string>
@@ -1067,7 +1089,6 @@ Language: sv_SE
 	<string name="all">Alla</string>
 	<string name="images">Bilder</string>
 	<string name="unattached">Obundna</string>
-	<string name="custom_date">Anpassat datum</string>
 	<string name="media_add_popup_capture_photo">Ta foto</string>
 	<string name="media_add_popup_capture_video">Spela in video</string>
 	<string name="media_gallery_image_order_random">Slumpmässig</string>

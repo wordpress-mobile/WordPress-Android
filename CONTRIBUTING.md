@@ -92,13 +92,23 @@ We use `values/strings.xml` file for *ALL* translatable strings including string
 
 We also have string resources outside of `strings.xml` such as `key_strings`. These strings are not user-facing and should be used as static strings such as preference keys.
 
-To help ease the translation process we ask that you mark alias string resources - as well as other strings where appropriate - as not translatable. For example `<string name="foo" translatable="false">@string/bar</string>'
+To help ease the translation process we ask that you mark alias string resources - as well as other strings where appropriate - as not translatable. For example `<string name="foo" translatable="false">@string/bar</string>`
 
 # Drawable Resources
 
 The Android support library [v23.2.1](http://android-developers.blogspot.com/2016/02/android-support-library-232.html) added support for drawable resources to be provided exclusively in vector format. Adding a vector drawable (to `WordPress/src/main/res/drawable/`) should be the first option when adding assets. Only if a vector drawable is not available should pngs be added to the project. Also make sure to use `app:srcCompat` in place of `android:src` in XML files.
 
 Since Vector Drawable are not the easiest file type to edit, they're chances the Vector Drawable you'll add comes from a SVG file. If the SVG file is specific to the WPAndroid project (like a banner image or unlike a gridicon), then add the SVG source in `WordPress/src/future/svg/`. The argument behind this: make sure we can find and edit the SVG file and then export it in Vector Drawable format.
+
+Please follow the following naming convention for our icon drawables:
+
+* If it's an icon, prefix it by `ic_`.
+* If it's a [gridicon](https://github.com/Automattic/gridicons/tree/master/svg) use the same name (examples: `ic_my_sites` or `ic_reply`).
+* If it's not white, add the color to the name (example: `ic_reply_grey`).
+* Postfix all icons by their size in dp (example: `ic_reply_grey_32dp`).
+
+Valid icon names: `ic_reply_grey_32dp` (grey reply icon 32dp), `ic_reply_24dp` (white reply icon 24dp).
+Invalid icon names: `reply_blue` (missing `ic_` prefix and size), `ic_checkmark_white_24dp` (we don't need to specify `white`).
 
 # Subtree'd projects
 

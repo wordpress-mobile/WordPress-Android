@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -12,6 +13,7 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
@@ -27,8 +29,8 @@ public class AppLog {
 
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;
-
     private static boolean mEnableRecording = false;
+    private static List<AppLogListener> mListeners = new ArrayList<>(0);
 
     private AppLog() {
         throw new AssertionError();
@@ -40,6 +42,18 @@ public class AppLog {
      */
     public static void enableRecording(boolean enable) {
         mEnableRecording = enable;
+    }
+
+    public static void addListener(@NonNull AppLogListener listener) {
+        mListeners.add(listener);
+    }
+
+    public static void removeListeners() {
+        mListeners.clear();
+    }
+
+    public interface AppLogListener {
+        void onLog(T tag, LogLevel logLevel, String message);
     }
 
     /**
@@ -151,7 +165,7 @@ public class AppLog {
 
     private static final int MAX_ENTRIES = 99;
 
-    private enum LogLevel {
+    public enum LogLevel {
         v, d, i, w, e;
         private String toHtmlColor() {
             switch(this) {
@@ -228,12 +242,15 @@ public class AppLog {
     private static LogEntryList mLogEntries = new LogEntryList();
 
     private static void addEntry(T tag, LogLevel level, String text) {
-        // skip if recording is disabled (default)
-        if (!mEnableRecording) {
-            return;
+        // Call our listeners if any
+        for (AppLogListener listener : mListeners) {
+            listener.onLog(tag, level, text);
         }
-        LogEntry entry = new LogEntry(level, text, tag);
-        mLogEntries.addEntry(entry);
+        // Record entry if enabled
+        if (mEnableRecording) {
+            LogEntry entry = new LogEntry(level, text, tag);
+            mLogEntries.addEntry(entry);
+        }
     }
 
     private static String getStringStackTrace(Throwable throwable) {

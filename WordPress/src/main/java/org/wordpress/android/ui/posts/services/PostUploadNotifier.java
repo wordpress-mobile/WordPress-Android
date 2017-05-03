@@ -78,13 +78,14 @@ public class PostUploadNotifier {
     }
 
     public void cancelNotification(PostModel post) {
-        mNotificationManager.cancel(mPostIdToNotificationData.get(post.getId()).notificationId);
+        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        if (notificationData != null) {
+            mNotificationManager.cancel(notificationData.notificationId);
+        }
     }
 
     public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
-
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
 
         // Get the shareableUrl
         String shareableUrl = WPMeShortlinks.getPostShortlink(site, post);
@@ -101,7 +102,9 @@ public class PostUploadNotifier {
                     .page_updated) : mContext.getResources().getText(R.string.post_updated));
         }
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
-        if (notificationData.latestIcon == null) {
+
+        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        if (notificationData == null || notificationData.latestIcon == null) {
             notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
                     .getResources(),
                     R.mipmap.app_icon));
@@ -131,7 +134,7 @@ public class PostUploadNotifier {
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, shareIntent,
                     PendingIntent.FLAG_CANCEL_CURRENT);
-            notificationBuilder.addAction(R.drawable.ic_share_white_24dp, mContext.getString(R.string.share_action),
+            notificationBuilder.addAction(R.drawable.ic_share_24dp, mContext.getString(R.string.share_action),
                     pendingIntent);
         }
         doNotify(notificationId, notificationBuilder.build());

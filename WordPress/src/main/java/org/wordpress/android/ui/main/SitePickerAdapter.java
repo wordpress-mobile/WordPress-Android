@@ -36,6 +36,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
 
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
+        boolean onSiteLongClick(SiteRecord site);
     }
 
     interface OnSelectedCountChangedListener {
@@ -192,6 +193,26 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                 } else {
                     AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
                 }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int clickedPosition = holder.getAdapterPosition();
+                if (isValidPosition(clickedPosition)) {
+                    if (mIsMultiSelectEnabled) {
+                        toggleSelection(clickedPosition);
+                        return true;
+                    } else if (mSiteSelectedListener != null) {
+                        boolean result = mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
+                        setItemSelected(clickedPosition, true);
+                        return result;
+                    }
+                } else {
+                    AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
+                }
+                return false;
             }
         });
     }
@@ -468,21 +489,17 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         private List<SiteModel> getBlogsForCurrentView() {
             if (mShowHiddenSites) {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted sites and all wp.com sites
                     return mSiteStore.getSites();
                 } else {
-                    // only wp.com and jetpack sites
-                    return mSiteStore.getWPComAndJetpackSites();
+                    return mSiteStore.getSitesAccessedViaWPComRest();
                 }
             } else {
                 if (mShowSelfHostedSites) {
-                    // all self-hosted sites plus visible wp.com and jetpack sites
-                    List<SiteModel> out = mSiteStore.getVisibleWPComAndJetpackSites();
-                    out.addAll(mSiteStore.getSelfHostedSites());
+                    List<SiteModel> out = mSiteStore.getVisibleSitesAccessedViaWPCom();
+                    out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
                     return out;
                 } else {
-                    // only visible wp.com and jetpack blogs
-                    return mSiteStore.getVisibleWPComAndJetpackSites();
+                    return mSiteStore.getVisibleSitesAccessedViaWPCom();
                 }
             }
         }

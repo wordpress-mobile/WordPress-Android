@@ -25,6 +25,7 @@ import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
@@ -136,8 +137,8 @@ public abstract class SiteSettingsInterface {
         if (SiteUtils.isAccessibleViaWPComAPI(site)) {
             return new DotComSiteSettings(host, site, listener);
         }
-        // Not implemented for self hosted sites
-        return null;
+
+        return new DotOrgSiteSettings(host, site, listener);
     }
 
     /**
@@ -280,6 +281,15 @@ public abstract class SiteSettingsInterface {
 
     public boolean getOptimizedImage() {
         return mSettings.optimizedImage;
+    }
+
+    public int getMaxImageWidth() {
+        int resizeWidth = mSettings.maxImageWidth;
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
+    }
+
+    public int getImageQuality() {
+        return mSettings.imageQualitySetting > 1 ? mSettings.imageQualitySetting : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
     }
 
     public @NonNull Map<String, String> getFormats() {
@@ -605,6 +615,14 @@ public abstract class SiteSettingsInterface {
         mSettings.optimizedImage = optimizeImage;
     }
 
+    public void setImageResizeWidth(int width) {
+        mSettings.maxImageWidth = width;
+    }
+
+    public void setImageQuality(int quality) {
+        mSettings.imageQualitySetting = quality;
+    }
+
     public void setAllowComments(boolean allowComments) {
         mSettings.allowComments = allowComments;
     }
@@ -838,7 +856,8 @@ public abstract class SiteSettingsInterface {
     private void loadCachedSettings() {
         Cursor localSettings = SiteSettingsTable.getSettings(mSite.getId());
 
-        if (localSettings != null) {
+        if (localSettings != null && localSettings.getCount() > 0) {
+            mSettings.isInLocalTable = true;
             Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
             mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
             mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
@@ -848,14 +867,26 @@ public abstract class SiteSettingsInterface {
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
             mRemoteSettings.optimizedImage = mSettings.optimizedImage;
-            localSettings.close();
+            mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
+            mRemoteSettings.imageQualitySetting = mSettings.imageQualitySetting;
             notifyUpdatedOnUiThread(null);
         } else {
             mSettings.isInLocalTable = false;
+            mSettings.localTableId = mSite.getId();
             setAddress(mSite.getUrl());
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());
             setTitle(mSite.getName());
+        }
+
+        // Self hosted always read account data from the main table
+        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+            setUsername(mSite.getUsername());
+            setPassword(mSite.getPassword());
+        }
+
+        if (localSettings != null) {
+            localSettings.close();
         }
     }
 

@@ -5,14 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,6 +30,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
@@ -40,7 +43,9 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -65,9 +70,15 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public class NewUserFragment extends AbstractFragment implements TextWatcher {
+public class NewUserFragment extends AbstractFragment {
     public static final int NEW_USER = 1;
-    private EditText mSiteUrlTextField;
+    private AutoCompleteTextView mSiteUrlTextField;
+    private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
+
+    private static final String KEY_SITES_FETCHED = "KEY_SITES_FETCHED";
+    private static final String KEY_ACCOUNT_SETTINGS_FETCHED = "KEY_ACCOUNT_SETTINGS_FETCHED";
+    private static final String KEY_ACCOUNT_FETCHED = "KEY_ACCOUNT_FETCHED";
+
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
@@ -75,13 +86,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
-    private boolean mAutoCompleteUrl;
-    private String mUsername;
-    private String mEmail;
-    private String mPassword;
 
-    private NewSitePayload mNewSitePayload;
-    private NewAccountPayload mNewAccountPayload;
+    private boolean mAutoCompleteUrl;
 
     protected boolean mSitesFetched = false;
     protected boolean mAccountSettingsFetched = false;
@@ -95,18 +101,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return new NewUserFragment();
     }
 
-    @Override
-    public void afterTextChanged(Editable s) {
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        checkIfFieldsFilled();
-    }
 
     private boolean fieldsFilled() {
         return EditTextUtils.getText(mEmailTextField).trim().length() > 0
@@ -388,22 +382,35 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mAccountSettingsFetched = false;
         mAccountFetched = false;
 
-        String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
-        mEmail = EditTextUtils.getText(mEmailTextField).trim();
-        mUsername = EditTextUtils.getText(mUsernameTextField).trim();
-        mPassword = EditTextUtils.getText(mPasswordTextField).trim();
+        String username = getUsername();
+        String email = getEmail();
+        NewAccountPayload newAccountPayload = new NewAccountPayload(username, getPassword(), getEmail(), true);
 
-        String siteTitle = siteUrlToSiteName(siteUrl);
-        String language = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
-
-        mNewAccountPayload = new NewAccountPayload(mUsername, mPassword, mEmail, true);
-        mNewSitePayload = new NewSitePayload(siteUrl, siteTitle, language, SiteVisibility.PUBLIC, true);
-
-        mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
+        mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(newAccountPayload));
         updateProgress(getString(R.string.validating_site_data));
 
-        AppLog.i(T.NUX, "User tries to create a new account, username: " + mUsername + ", email: " + mEmail
-                + ", site title: " + siteTitle + ", site URL: " + siteUrl);
+        AppLog.i(T.NUX, "User starts account creation, username: " + username + ", email: " + email
+                + ", site title: " + getSiteTitle() + ", site URL: " + getSiteUrl());
+    }
+
+    private String getSiteUrl() {
+        return EditTextUtils.getText(mSiteUrlTextField).trim();
+    }
+
+    private String getSiteTitle() {
+        return siteUrlToSiteName(getSiteUrl());
+    }
+
+    private String getUsername() {
+        return EditTextUtils.getText(mUsernameTextField).trim();
+    }
+
+    private String getPassword() {
+        return EditTextUtils.getText(mPasswordTextField).trim();
+    }
+
+    private String getEmail() {
+        return EditTextUtils.getText(mEmailTextField).trim();
     }
 
     private void finishCurrentActivity() {
@@ -430,8 +437,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
         endProgress();
         Intent intent = new Intent();
-        intent.putExtra("username", mUsername);
-        intent.putExtra("password", mPassword);
+        intent.putExtra("username", getUsername());
+        intent.putExtra("password", getPassword());
         getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         try {
             getFragmentManager().popBackStack();
@@ -458,8 +465,8 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void initInfoButton(View rootView) {
-        ImageView infoBUtton = (ImageView) rootView.findViewById(R.id.info_button);
-        infoBUtton.setOnClickListener(new OnClickListener() {
+        ImageView infoButton = (ImageView) rootView.findViewById(R.id.info_button);
+        infoButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
@@ -470,21 +477,22 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
+    public void onDestroy() {
         mDispatcher.unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mDispatcher.register(this);
+
+        if (savedInstanceState != null) {
+            mSitesFetched = savedInstanceState.getBoolean(KEY_SITES_FETCHED, false);
+            mAccountFetched = savedInstanceState.getBoolean(KEY_ACCOUNT_FETCHED, false);
+            mAccountSettingsFetched = savedInstanceState.getBoolean(KEY_ACCOUNT_SETTINGS_FETCHED, false);
+        }
     }
 
     @Override
@@ -517,13 +525,30 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mEmailTextField.setSelection(EditTextUtils.getText(mEmailTextField).length());
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
-        mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
+        mSiteUrlTextField = (AutoCompleteTextView) rootView.findViewById(R.id.site_url);
+        mSiteUrlSuggestionAdapter = new ArrayAdapter<>(getActivity(), R.layout.domain_suggestion_dropdown);
+        mSiteUrlTextField.setAdapter(mSiteUrlSuggestionAdapter);
 
-        mEmailTextField.addTextChangedListener(this);
-        mPasswordTextField.addTextChangedListener(this);
-        mUsernameTextField.addTextChangedListener(this);
-        mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
+        mEmailTextField.addTextChangedListener(mCheckFieldsFilledWatcher);
+        mPasswordTextField.addTextChangedListener(mCheckFieldsFilledWatcher);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
+        mUsernameTextField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkIfFieldsFilled();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                mSiteUrlSuggestionAdapter.clear();
+                mSiteUrlSuggestionAdapter.notifyDataSetChanged();
+            }
+        });
 
         mSiteUrlTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -541,32 +566,20 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             }
         });
 
-        mUsernameTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // auto fill blog address
-                mSiteUrlTextField.setError(null);
-                if (mAutoCompleteUrl) {
-                    mSiteUrlTextField.setText(EditTextUtils.getText(mUsernameTextField));
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                lowerCaseEditable(editable);
-            }
-        });
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    getDomainSuggestionsFromTitle();
+                }
+            }
+        });
+
+        mSiteUrlTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    mAutoCompleteUrl = EditTextUtils.getText(mUsernameTextField)
-                            .equals(EditTextUtils.getText(mSiteUrlTextField))
-                            || EditTextUtils.isEmpty(mSiteUrlTextField);
+                    mSiteUrlTextField.showDropDown();
                 }
             }
         });
@@ -583,6 +596,21 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         return rootView;
     }
 
+    private final TextWatcher mCheckFieldsFilledWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            checkIfFieldsFilled();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
     private void checkIfFieldsFilled() {
         if (fieldsFilled()) {
             mSignupButton.setEnabled(true);
@@ -590,14 +618,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
             mSignupButton.setEnabled(false);
         }
     }
-
-    private final OnKeyListener mSiteUrlKeyListener = new OnKeyListener() {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            mAutoCompleteUrl = EditTextUtils.isEmpty(mSiteUrlTextField);
-            return false;
-        }
-    };
 
     private SmartLockHelper getSmartLockHelper() {
         if (getActivity() != null && getActivity() instanceof SignInActivity) {
@@ -609,12 +629,12 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private void fetchSiteAndAccount() {
         // User has been created. From this point, all errors should close this screen and display the
         // sign in screen
-        AnalyticsUtils.refreshMetadataNewUser(mUsername, mEmail);
+        AnalyticsUtils.refreshMetadataNewUser(getUsername(), getEmail());
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
         // Save credentials to smart lock
         SmartLockHelper smartLockHelper = getSmartLockHelper();
         if (smartLockHelper != null) {
-            smartLockHelper.saveCredentialsInSmartLock(mUsername, mPassword, mUsername, null);
+            smartLockHelper.saveCredentialsInSmartLock(getUsername(), getPassword(), getUsername(), null);
         }
         // Fetch user infos
         mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -623,12 +643,28 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
+    private void getDomainSuggestionsFromTitle() {
+        String username = EditTextUtils.getText(mUsernameTextField);
+        if (!TextUtils.isEmpty(username)) {
+            SuggestDomainsPayload payload = new SuggestDomainsPayload(username, true, false, 5);
+            mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Save fetch state
+        outState.putBoolean(KEY_SITES_FETCHED, mSitesFetched);
+        outState.putBoolean(KEY_ACCOUNT_FETCHED, mAccountFetched);
+        outState.putBoolean(KEY_ACCOUNT_SETTINGS_FETCHED, mAccountSettingsFetched);
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
             finishAndShowSignInScreen();
@@ -637,7 +673,10 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         if (mAccountStore.hasAccessToken()) {
             // Account created and user authenticated, now create the site
             updateProgress(getString(R.string.creating_your_site));
-            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+            String deviceLanguage = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
+            NewSitePayload newSitePayload = new NewSitePayload(getSiteUrl(), getSiteUrl(), deviceLanguage,
+                    SiteVisibility.PUBLIC, false);
+            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
 
             // Get reader tags so they're available as soon as the Reader is accessed - done for
             // both wp.com and self-hosted (self-hosted = "logged out" reader) - note that this
@@ -653,7 +692,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewUserCreated(OnNewUserCreated event) {
-        AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
             AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
@@ -662,19 +700,21 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         }
         if (event.dryRun) {
             // User Validated, now try to validate site creation
-            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(mNewSitePayload));
+            String deviceLanguage = LanguageUtils.getPatchedCurrentDeviceLanguage(getActivity());
+            NewSitePayload newSitePayload = new NewSitePayload(getSiteUrl(), getSiteUrl(), deviceLanguage,
+                    SiteVisibility.PUBLIC, true);
+            mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
             updateProgress(getString(R.string.validating_site_data));
             return;
         }
         // User created, now authenticate the newly created user
-        AuthenticatePayload payload = new AuthenticatePayload(mNewAccountPayload.username, mNewAccountPayload.password);
+        AuthenticatePayload payload = new AuthenticatePayload(getUsername(), getPassword());
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewSiteCreated(OnNewSiteCreated event) {
-        AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
             endProgress();
             AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_FAILED);
@@ -684,9 +724,9 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
         if (event.dryRun) {
             // User and Site validated, dispatch the same actions with dryRun disabled
             updateProgress(getString(R.string.creating_your_account));
-            mNewSitePayload.dryRun = false;
-            mNewAccountPayload.dryRun = false;
-            mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(mNewAccountPayload));
+            NewAccountPayload newAccountPayload = new NewAccountPayload(getUsername(), getPassword(), getEmail(),
+                    false);
+            mDispatcher.dispatch(AccountActionBuilder.newCreateNewAccountAction(newAccountPayload));
             return;
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
@@ -697,7 +737,6 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        AppLog.i(T.NUX, event.toString());
         mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
         mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
         // Finish activity if sites have been fetched
@@ -709,11 +748,30 @@ public class NewUserFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        AppLog.i(T.NUX, event.toString());
         mSitesFetched = true;
         // Finish activity if account settings have been fetched
         if (mAccountSettingsFetched && mAccountFetched) {
             finishCurrentActivity();
         }
     }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSuggestedDomains(OnSuggestedDomains event) {
+        if (!isAdded() || event.isError()) {
+            return;
+        }
+
+        mSiteUrlSuggestionAdapter.clear();
+        for (DomainSuggestionResponse suggestion : event.suggestions) {
+            // Only add free suggestions ending by .wordpress.com
+            if (suggestion.is_free && !TextUtils.isEmpty(suggestion.domain_name)
+                    && suggestion.domain_name.endsWith(".wordpress.com")) {
+                mSiteUrlSuggestionAdapter.add(suggestion.domain_name.replace(".wordpress.com", ""));
+            }
+        }
+        if (!mSiteUrlSuggestionAdapter.isEmpty() && mSiteUrlTextField.hasFocus()) {
+            mSiteUrlTextField.showDropDown();
+        }
+        }
 }

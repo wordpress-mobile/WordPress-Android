@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -25,6 +25,7 @@ public class StatsViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
     public final WPNetworkImageView networkImageView;
+    public final TextView alternativeImage;
     public final ImageView chevronImageView;
     public final ImageView linkImageView;
     public final ImageView imgMore;
@@ -37,7 +38,7 @@ public class StatsViewHolder {
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
         linkImageView = (ImageView) view.findViewById(R.id.stats_list_cell_link);
         networkImageView = (WPNetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-
+        alternativeImage = (TextView) view.findViewById(R.id.stats_list_cell_image_alt);
         imgMore = (ImageView) view.findViewById(R.id.image_more);
     }
 
@@ -107,7 +108,7 @@ public class StatsViewHolder {
             return;
         }
 
-        String name =  StringEscapeUtils.unescapeHtml(currentItem.getTitle());
+        String name =  StringEscapeUtils.unescapeHtml4(currentItem.getTitle());
         entryTextView.setText(name);
         rowContent.setOnClickListener(
                 new View.OnClickListener() {

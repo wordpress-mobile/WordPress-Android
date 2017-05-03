@@ -108,7 +108,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
 
-        builder.setPositiveButton(R.string.ok, this);
+        builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
         if (titleView != null) {
             TextView titleText = (TextView) titleView.findViewById(R.id.title);

@@ -645,7 +645,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mJetpackAuthLabel.setVisibility(View.VISIBLE);
             mAddSelfHostedButton.setVisibility(View.GONE);
             mCreateAccountButton.setVisibility(View.GONE);
-            mUsernameEditText.setText("");
         }
     }
 
@@ -1226,7 +1225,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError()) {
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-            AnalyticsTracker.track(Stat.LOGIN_FAILED);
+            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.type.toString(), event.error.message);
+
             showAuthError(event.error.type, event.error.message);
             endProgress();
             return;
@@ -1240,8 +1240,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        AppLog.i(T.NUX, "onSiteChanged: " + event.toString());
-
         if (event.isError()) {
             AppLog.e(T.API, "onSiteChanged has error: " + event.error.type + " - " + event.error.toString());
             endProgress();
@@ -1280,6 +1278,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
             handleDiscoveryError(event.error, event.failedEndpoint);
+            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.name(), event.error.toString());
             return;
         }
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);

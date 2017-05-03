@@ -41,7 +41,6 @@ import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.push.NotificationsProcessingService;
-import org.wordpress.android.push.NotificationsScreenLockWatchService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -238,19 +237,12 @@ public class WPMainActivity extends AppCompatActivity {
                 ActivityLauncher.showSignInForResult(this);
             }
         }
-        startService(new Intent(this, NotificationsScreenLockWatchService.class));
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
         WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
 
         // monitor whether we're not the default app
         trackDefaultApp();
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(new Intent(this, NotificationsScreenLockWatchService.class));
-        super.onDestroy();
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -576,7 +568,7 @@ public class WPMainActivity extends AppCompatActivity {
                 break;
             case RequestCodes.SITE_SETTINGS:
                 if (resultCode == SiteSettingsFragment.RESULT_BLOG_REMOVED) {
-                    handleBlogRemoved();
+                    handleSiteRemoved();
                 }
                 break;
             case RequestCodes.APP_SETTINGS:
@@ -588,6 +580,12 @@ public class WPMainActivity extends AppCompatActivity {
                 if (getNotificationsListFragment() != null) {
                     getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
                 }
+                break;
+            case RequestCodes.PHOTO_PICKER:
+                if (getMeFragment() != null) {
+                    getMeFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
     }
 
@@ -603,6 +601,17 @@ public class WPMainActivity extends AppCompatActivity {
         Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_MY_SITE);
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
+        }
+        return null;
+    }
+
+    /*
+     * returns the "me" fragment from the sites tab
+     */
+    private MeFragment getMeFragment() {
+        Fragment fragment = mTabAdapter.getFragment(WPMainTabAdapter.TAB_ME);
+        if (fragment instanceof MeFragment) {
+            return (MeFragment) fragment;
         }
         return null;
     }
@@ -666,7 +675,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleBlogRemoved() {
+    private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ActivityLauncher.showSignInForResult(this);
         } else {
@@ -748,7 +757,8 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        // "Reload" selected site from the db, would be smarter if the OnSiteChanged provided the list of changed sites.
+        // "Reload" selected site from the db
+        // It would be better if the OnSiteChanged provided the list of changed sites.
         if (getSelectedSite() == null && mSiteStore.hasSite()) {
             setSelectedSite(mSiteStore.getSites().get(0));
         }
@@ -758,24 +768,6 @@ public class WPMainActivity extends AppCompatActivity {
 
         SiteModel site = mSiteStore.getSiteByLocalId(getSelectedSite().getId());
         if (site != null) {
-            if (site.isJetpackConnected() && !TextUtils.isEmpty(site.getPassword())) {
-                // The user added a Jetpack-connected site as a self-hosted site - this isn't supported
-                if (!mAccountStore.hasAccessToken()) {
-                    // Ask user to sign in to WordPress.com to access their Jetpack site
-                    Intent signInIntent = new Intent(this, SignInActivity.class);
-                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, site.getId());
-                    signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
-                            getString(R.string.jetpack_use_com_account)
-                    );
-                    startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
-                    finish();
-                } else {
-                    // Remove the site and send the user back to the site list
-                    ToastUtils.showToast(this, R.string.jetpack_different_com_account, ToastUtils.Duration.LONG);
-                    mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(site));
-                }
-                return;
-            }
             mSelectedSite = site;
         }
     }
@@ -783,6 +775,6 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
-        handleBlogRemoved();
+        handleSiteRemoved();
     }
 }

@@ -6,7 +6,6 @@ import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -39,7 +38,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
@@ -53,6 +51,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -98,7 +97,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private SiteModel mSite;
 
     public interface MediaGridListener {
-        void onMediaItemSelected(int localMediaId);
+        void onMediaItemSelected(View sourceView, int localMediaId);
         void onRetryUpload(int localMediaId);
     }
 
@@ -248,9 +247,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     @Override
-    public void onAdapterItemSelected(int position) {
+    public void onAdapterItemSelected(View sourceView, int position) {
         int localMediaId = mGridAdapter.getLocalMediaIdAtPosition(position);
-        mListener.onMediaItemSelected(localMediaId);
+        mListener.onMediaItemSelected(sourceView, localMediaId);
     }
 
     @Override
@@ -278,14 +277,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void refreshSpinnerAdapter() {
         updateFilterText();
         updateSpinnerAdapter();
-        setFilter(mFilter);
     }
 
     public void refreshMediaFromDB() {
+        if (!isAdded()) return;
+
         setFilter(mFilter);
         updateFilterText();
         updateSpinnerAdapter();
-        if (isAdded() && mGridAdapter.getItemCount() == 0) {
+        if (mGridAdapter.getItemCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
                     fetchMediaList(false);
@@ -298,8 +298,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        Cursor cursor = mMediaStore.searchSiteMediaByTitleAsCursor(mSite, mSearchTerm);
-        mGridAdapter.setCursor(cursor);
+        List<MediaModel> mediaList = mMediaStore.searchSiteMediaByTitle(mSite, mSearchTerm);
+        mGridAdapter.setMediaList(mediaList);
     }
 
     public void setFilterEnabled(boolean enabled) {
@@ -310,16 +310,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void setFilter(Filter filter) {
         mFilter = filter;
-        Cursor cursor = filterItems(mFilter);
-        if (cursor == null || cursor.getCount() == 0) {
+        List<MediaModel> mediaList = filterItems(mFilter);
+        mGridAdapter.setMediaList(mediaList);
+        if (mediaList.size() == 0) {
             mResultView.setVisibility(View.GONE);
-        }
-        if (cursor != null && cursor.getCount() != 0) {
-            mGridAdapter.setCursor(cursor);
-            hideEmptyView();
         } else {
-            // No data to display. Clear the GridView and display a message in the empty view
-            mGridAdapter.setCursor(null);
+            hideEmptyView();
         }
         // Overwrite the LOADING message
         if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
@@ -356,22 +352,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void updateFilterText() {
-        int countAll = mMediaStore.getAllSiteMediaAsCursor(mSite).getCount();
-        int countImages = mMediaStore.getNotDeletedSiteImagesAsCursor(mSite).getCount();
-        int countUnattached = mMediaStore.getNotDeletedUnattachedMediaAsCursor(mSite).getCount();
-        setFiltersText(countAll, countImages, countUnattached);
+        int countAll = mMediaStore.getAllSiteMedia(mSite).size();
+        int countImages = mMediaStore.getSiteImages(mSite).size();
+        int countUnattached = mMediaStore.getUnattachedSiteMedia(mSite).size();
+        mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
+        mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
+        mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
     }
 
-    private Cursor filterItems(Filter filter) {
+    private List<MediaModel> filterItems(Filter filter) {
         switch (filter) {
-            case ALL:
-                return mMediaStore.getAllSiteMediaAsCursor(mSite);
             case IMAGES:
-                return mMediaStore.getNotDeletedSiteImagesAsCursor(mSite);
+                return mMediaStore.getSiteImages(mSite);
             case UNATTACHED:
-                return mMediaStore.getNotDeletedUnattachedMediaAsCursor(mSite);
+                return mMediaStore.getUnattachedSiteMedia(mSite);
+            default:
+                return mMediaStore.getAllSiteMedia(mSite);
         }
-        return null;
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
@@ -434,12 +431,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mSpinner.setSelection(mFilter.ordinal());
     }
 
-    private void setFiltersText(int countAll, int countImages, int countUnattached) {
-        mFiltersText[0] = getResources().getString(R.string.all) + " (" + countAll + ")";
-        mFiltersText[1] = getResources().getString(R.string.images) + " (" + countImages + ")";
-        mFiltersText[2] = getResources().getString(R.string.unattached) + " (" + countUnattached + ")";
-    }
-
     private void updateActionModeTitle(int selectCount) {
         if (mActionMode != null) {
             mActionMode.setTitle(String.format(getString(R.string.cab_selected), selectCount));
@@ -462,15 +453,13 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                 // update upload state
                                 for (int itemId : mGridAdapter.getSelectedItems()) {
                                     MediaModel media = mMediaStore.getMediaWithLocalId(itemId);
-                                    media.setUploadState(MediaUploadState.DELETE.name());
+                                    media.setUploadState(MediaUploadState.DELETING.name());
                                     mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
                                 }
                                 mGridAdapter.clearSelection();
                                 if (mActionMode != null) {
                                     mActionMode.finish();
                                 }
-                                refreshMediaFromDB();
-                                refreshSpinnerAdapter();
                             }
                         }).setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
@@ -525,8 +514,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
         MediaGridAdapter adapter = (MediaGridAdapter) mRecycler.getAdapter();
 
-        Cursor mediaCursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-        adapter.setCursor(mediaCursor);
+        List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
+        adapter.setMediaList(mediaList);
 
         mHasRetrievedAllMedia = !event.canLoadMore;
         adapter.setHasRetrievedAll(mHasRetrievedAllMedia);

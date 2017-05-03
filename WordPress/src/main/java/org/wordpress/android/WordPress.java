@@ -41,12 +41,14 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.module.AppContextModule;
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.modules.AppComponent;
@@ -65,6 +67,8 @@ import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.AppLogListener;
+import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -201,7 +205,7 @@ public class WordPress extends MultiDexApplication {
             // The cache size will be measured in kilobytes rather than
             // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            int cacheSize = maxMemory / 16;  //Use 1/16th of the available memory for this memory cache.
+            int cacheSize = maxMemory / 4;  //Use 1/4th of the available memory for this memory cache.
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;
@@ -228,14 +232,23 @@ public class WordPress extends MultiDexApplication {
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
 
-        ProfilingUtils.start("App Startup");
-        // Enable log recording
-        AppLog.enableRecording(true);
-        AppLog.i(T.UTILS, "WordPress.onCreate");
-
         if (!PackageUtils.isDebugBuild()) {
             Fabric.with(this, new Crashlytics());
         }
+
+        ProfilingUtils.start("App Startup");
+        // Enable log recording
+        AppLog.enableRecording(true);
+        AppLog.addListener(new AppLogListener() {
+            @Override
+            public void onLog(T tag, LogLevel logLevel, String message) {
+                StringBuffer sb = new StringBuffer();
+                sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
+                        .append(tag.toString()).append(": ").append(message);
+                CrashlyticsUtils.log(sb.toString());
+            }
+        });
+        AppLog.i(T.UTILS, "WordPress.onCreate");
 
         // If the migration was not done and if we have something to migrate
         runFluxCMigration();
@@ -545,7 +558,11 @@ public class WordPress extends MultiDexApplication {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!sIsMigrationInProgress || sMigrationListener == null) {
+        if (event.isError() && event.error.type == SiteErrorType.DUPLICATE_SITE) {
+            CrashlyticsUtils.logException(new DuplicateSiteException(), T.MAIN, "Duplicate site detected");
+        }
+
+        if (!sIsMigrationInProgress) {
             return;
         }
 
@@ -840,7 +857,10 @@ public class WordPress extends MultiDexApplication {
             ConnectionChangeReceiver.setEnabled(WordPress.this, true);
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
+            Map<String, Boolean> properties = new HashMap<>(1);
+            properties.put("pin_lock_enabled", AppLockManager.getInstance().getAppLock() != null
+                    && AppLockManager.getInstance().getAppLock().isPasswordLocked());
+            AnalyticsTracker.track(Stat.APPLICATION_OPENED, properties);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {

@@ -161,9 +161,6 @@
             android:label="@string/add_new_category"
             android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity
-            android:name=".ui.posts.photochooser.PhotoChooserPreviewActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
             android:name=".editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/Theme.AppCompat.Light.Dialog"
@@ -233,9 +230,15 @@
         <!-- Media Activities -->
         <activity
             android:name=".ui.media.MediaBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/wp_media_title" />
+        <activity
+            android:name=".ui.media.MediaPreviewActivity"
+            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".ui.media.MediaGalleryActivity" />
-        <activity android:name=".ui.media.MediaGalleryPickerActivity" />
+        <activity android:name=".ui.media.MediaGalleryPickerActivity"
+            android:label="@string/wp_media_title" />
 
         <!-- Theme Activities -->
         <activity
@@ -396,6 +399,11 @@
             android:label="@string/site_picker_title"
             android:theme="@style/CalypsoTheme" />
 
+        <activity
+            android:name=".ui.photopicker.PhotoPickerActivity"
+            android:label="@string/photo_picker_title"
+            android:theme="@style/Calypso.NoActionBar" />
+
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
@@ -506,10 +514,6 @@
             android:name=".ui.notifications.services.NotificationsUpdateService"
             android:exported="false"
             android:label="Notifications Update Service" />
-        <service
-            android:name=".push.NotificationsScreenLockWatchService"
-            android:exported="false"
-            android:label="Notifications Screen Lock watch Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library
@@ -546,11 +550,6 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
-        </receiver>
-        <receiver android:name=".ui.notifications.ScreenLockUnlockBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
         </receiver>
 
         <!-- Google Cloud Messaging receiver and services -->

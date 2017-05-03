@@ -73,13 +73,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     }
 
-    private static final String ARG_PARAM_TITLE = "param_title";
-    private static final String ARG_PARAM_CONTENT = "param_content";
-
     private static final String JS_CALLBACK_HANDLER = "nativeCallbackHandler";
-
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_CONTENT = "content";
 
     private static final String TAG_FORMAT_BAR_BUTTON_MEDIA = "media";
     private static final String TAG_FORMAT_BAR_BUTTON_LINK = "link";
@@ -332,8 +326,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         initJsEditor();
 
         if (savedInstanceState != null) {
-            setTitle(savedInstanceState.getCharSequence(KEY_TITLE));
-            setContent(savedInstanceState.getCharSequence(KEY_CONTENT));
+            setTitle(savedInstanceState.getCharSequence(ATTR_TITLE));
+            setContent(savedInstanceState.getCharSequence(ATTR_CONTENT));
         }
 
         // -- HTML mode configuration
@@ -425,8 +419,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onSaveInstanceState(Bundle outState) {
         try {
-            outState.putCharSequence(KEY_TITLE, getTitle());
-            outState.putCharSequence(KEY_CONTENT, getContent());
+            outState.putCharSequence(ATTR_TITLE, getTitle());
+            outState.putCharSequence(ATTR_CONTENT, getContent());
         } catch (IllegalEditorStateException e) {
             AppLog.e(T.EDITOR, "onSaveInstanceState: unable to get title or content");
         }
@@ -537,8 +531,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         ToggleButton mediaButton = (ToggleButton) view.findViewById(R.id.format_bar_button_media);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_MEDIA, mediaButton);
-
-        registerForContextMenu(mediaButton);
 
         ToggleButton linkButton = (ToggleButton) view.findViewById(R.id.format_bar_button_link);
         mTagToggleButtonMap.put(TAG_FORMAT_BAR_BUTTON_LINK, linkButton);
@@ -776,7 +768,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
             } else {
                 mEditorFragmentListener.onAddMediaClicked();
-                getActivity().openContextMenu(mTagToggleButtonMap.get(TAG_FORMAT_BAR_BUTTON_MEDIA));
             }
         } else if (id == R.id.format_bar_button_link) {
             if (!((ToggleButton) v).isChecked()) {
@@ -887,9 +878,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 return;
             }
 
-            final String imageMeta = Utils.escapeQuotes(StringUtils.notNullStr(extras.getString("imageMeta")));
-            final int imageRemoteId = extras.getInt("imageRemoteId");
-            final boolean isFeaturedImage = extras.getBoolean("isFeatured");
+            final String imageMeta = Utils.escapeQuotes(StringUtils.notNullStr(extras.getString(EXTRA_IMAGE_META)));
+            final int imageRemoteId = extras.getInt(ATTR_ID_IMAGE_REMOTE);
+            final boolean isFeaturedImage = extras.getBoolean(EXTRA_FEATURED);
 
             mWebView.post(new Runnable() {
                 @Override
@@ -1199,9 +1190,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         if (galleryId == mUploadingMediaGallery.getUniqueId()) {
-            // TODO: media IDs are Long's; should we update to use ArrayList<Long>?
-            ArrayList<String> mediaIds = mUploadingMediaGallery.getIds();
-            mediaIds.add(String.valueOf(remoteMediaId));
+            ArrayList<Long> mediaIds = mUploadingMediaGallery.getIds();
+            mediaIds.add(remoteMediaId);
             mUploadingMediaGallery.setIds(mediaIds);
 
             if (remaining == 0) {
@@ -1340,11 +1330,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
 
         switch (uploadStatus) {
-            case "uploading":
+            case ATTR_STATUS_UPLOADING:
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
-                builder.setPositiveButton(R.string.stop_upload_button, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
 
@@ -1374,7 +1364,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 break;
-            case "failed":
+            case ATTR_STATUS_FAILED:
                 // Retry media upload
                 mEditorFragmentListener.onMediaRetryClicked(mediaId);
 
@@ -1413,8 +1403,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 Bundle dialogBundle = new Bundle();
 
-                dialogBundle.putString("maxWidth", mBlogSettingMaxImageWidth);
-                dialogBundle.putBoolean("featuredImageSupported", mFeaturedImageSupported);
+                dialogBundle.putString(EXTRA_MAX_WIDTH, mBlogSettingMaxImageWidth);
+                dialogBundle.putBoolean(EXTRA_IMAGE_FEATURED, mFeaturedImageSupported);
 
                 // Request and add an authorization header for HTTPS images
                 // Use https:// when requesting the auth header, in case the image is incorrectly using http://.
@@ -1425,22 +1415,22 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 }
 
                 try {
-                    final String imageSrc = meta.getString("src");
+                    final String imageSrc = meta.getString(ATTR_SRC);
                     String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
                     if (authHeader.length() > 0) {
-                        meta.put("src", UrlUtils.makeHttps(imageSrc));
+                        meta.put(ATTR_SRC, UrlUtils.makeHttps(imageSrc));
                         headerMap.put("Authorization", authHeader);
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.EDITOR, "Could not retrieve image url from JSON metadata");
                 }
-                dialogBundle.putSerializable("headerMap", headerMap);
+                dialogBundle.putSerializable(EXTRA_HEADER, headerMap);
 
-                dialogBundle.putString("imageMeta", meta.toString());
+                dialogBundle.putString(EXTRA_IMAGE_META, meta.toString());
 
-                String imageId = JSONUtils.getString(meta, "attachment_id");
+                String imageId = JSONUtils.getString(meta, ATTR_ID_ATTACHMENT);
                 if (!imageId.isEmpty()) {
-                    dialogBundle.putBoolean("isFeatured", mFeaturedImageId == Integer.parseInt(imageId));
+                    dialogBundle.putBoolean(EXTRA_FEATURED, mFeaturedImageId == Integer.parseInt(imageId));
                 }
 
                 imageSettingsDialogFragment.setArguments(dialogBundle);

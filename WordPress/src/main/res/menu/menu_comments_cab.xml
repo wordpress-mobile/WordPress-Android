@@ -23,6 +23,11 @@
         app:showAsAction="ifRoom"
         android:title="@string/mnu_comment_spam" />
     <item
+        android:id="@+id/menu_unspam"
+        android:icon="@drawable/ic_spam_white_24dp"
+        app:showAsAction="ifRoom"
+        android:title="@string/mnu_comment_unspam" />
+    <item
         android:id="@+id/menu_trash"
         android:icon="@drawable/ic_trash_white_24dp"
         app:showAsAction="ifRoom"

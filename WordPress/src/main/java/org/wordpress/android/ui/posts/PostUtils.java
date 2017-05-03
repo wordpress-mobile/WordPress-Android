@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -14,8 +17,10 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.text.BreakIterator;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -101,29 +106,45 @@ public class PostUtils {
 
     public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
+        Map<String, Object> properties = new HashMap<>();
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
+                    properties.put("post_id", post.getRemotePostId());
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     // Analytics for the event EDITOR_PUBLISHED_POST are tracked in PostUploadService
                 }
                 break;
             case SCHEDULED:
                 if (!post.isLocalDraft()) {
-                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site);
+                    properties.put("post_id", post.getRemotePostId());
+                    AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
-                    Map<String, Object> properties = new HashMap<>();
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
                             properties);
                 }
                 break;
             case DRAFT:
+                properties.put("post_id", post.getRemotePostId());
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT, site);
                 break;
             default:
                 // No-op
+        }
+    }
+
+    public static void showCustomDialog(Activity activity, String title, String message,
+                                        String positiveButton, String negativeButton, String tag) {
+        FragmentManager fm = activity.getFragmentManager();
+        WPAlertDialogFragment saveDialog = (WPAlertDialogFragment) fm.findFragmentByTag(tag);
+        if (saveDialog == null) {
+
+            saveDialog = WPAlertDialogFragment.newCustomDialog(title, message, positiveButton, negativeButton);
+        }
+        if (!saveDialog.isAdded()) {
+            saveDialog.show(fm, tag);
         }
     }
 
@@ -250,15 +271,16 @@ public class PostUtils {
         return -1;
     }
 
-    public static int indexOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+    public static @NotNull List<Integer> indexesOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+        List<Integer> list = new ArrayList<>();
         if (mediaId == 0) {
-            return -1;
+            return list;
         }
         for (int i = 0; i < posts.size(); i++) {
             if (posts.get(i).getFeaturedImageId() == mediaId) {
-                return i;
+                list.add(i);
             }
         }
-        return -1;
+        return list;
     }
 }

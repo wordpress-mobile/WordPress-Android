@@ -61,6 +61,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
 
     @Override
     public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
+        if (!isValidEvent(stat)) {
+            return;
+        }
+
         AnalyticsTrackerMixpanelInstructionsForStat instructions = instructionsForStat(stat);
 
         if (instructions == null) {
@@ -191,7 +195,7 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         if (metadata.isUserConnected() && metadata.isWordPressComUser()) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
-            if (getAnonID() != null) {
+            if (getAnonID() != null && getWordPressComUserName() != null) {
                 mMixpanel.alias(getWordPressComUserName(), getAnonID());
                 clearAnonID();
             } else {
@@ -242,8 +246,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
         }
     }
 
-    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(
-            AnalyticsTracker.Stat stat) {
+    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat) {
+        if (!isValidEvent(stat)) {
+            return null;
+        }
         AnalyticsTrackerMixpanelInstructionsForStat instructions;
         switch (stat) {
             case APPLICATION_OPENED:
@@ -536,12 +542,19 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Editor - Closed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_closed");
                 break;
-            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_PHOTO_NEW:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Added Photo via Local Library");
+                        mixpanelInstructionsForEventName("Editor - Added Photo via Device Camera");
+                instructions.
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_device_camera");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_device_camera_to_post");
+                break;
+            case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Photo via Device Library");
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_local_library");
-                instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_local_library_to_post");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_device_library_to_post");
                 break;
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -550,12 +563,19 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_added_photo_via_wp_media_library");
                 instructions.setCurrentDateForPeopleProperty("last_time_added_photo_via_wp_media_library_to_post");
                 break;
-            case EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY:
+            case EDITOR_ADDED_VIDEO_NEW:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Added Video via Local Library");
+                        mixpanelInstructionsForEventName("Editor - Added Video via Device Camera");
+                instructions.
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_video_via_device_camera");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_device_camera_to_post");
+                break;
+            case EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Video via Device Library");
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_video_via_local_library");
-                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_local_library_to_post");
+                instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_device_library_to_post");
                 break;
             case EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -564,17 +584,17 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         "number_of_times_added_video_via_wp_media_library");
                 instructions.setCurrentDateForPeopleProperty("last_time_added_video_via_wp_media_library_to_post");
                 break;
-            case EDITOR_RESIZED_PHOTO:
+            case MEDIA_PHOTO_OPTIMIZED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Photo Resized");
+                        mixpanelInstructionsForEventName("Media - Photo Optimized");
                 instructions.
-                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_resized");
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_optimized");
                 break;
-            case EDITOR_RESIZED_PHOTO_ERROR:
+            case MEDIA_PHOTO_OPTIMIZE_ERROR:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Photo Resized Error");
+                        mixpanelInstructionsForEventName("Media - Photo Optimize Error");
                 instructions.
-                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_resized_error");
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_photo_optimize_error");
                 break;
             case EDITOR_PUBLISHED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -774,6 +794,10 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case OPENED_VIEW_SITE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Site Menu - Opened View Site");
+                break;
+            case OPENED_VIEW_SITE_FROM_HEADER:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Site Menu - Opened View Site From Header");
                 break;
             case OPENED_VIEW_ADMIN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -1265,6 +1289,30 @@ public class AnalyticsTrackerMixpanel extends Tracker {
             case DEEP_LINK_NOT_DEFAULT_HANDLER:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Deep link not default handler");
+                break;
+            case MEDIA_LIBRARY_ADDED_PHOTO:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Library - Added Photo");
+                break;
+            case MEDIA_LIBRARY_ADDED_VIDEO:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Library - Added Video");
+                break;
+            case MEDIA_UPLOAD_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Started");
+                break;
+            case MEDIA_UPLOAD_ERROR:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Error");
+                break;
+            case MEDIA_UPLOAD_SUCCESS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Response OK");
+                break;
+            case MEDIA_UPLOAD_CANCELED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Media Service - Upload Canceled");
                 break;
             default:
                 instructions = null;

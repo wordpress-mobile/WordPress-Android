@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -10,7 +9,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -29,6 +30,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -99,6 +101,12 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mRecycler = (RecyclerView) findViewById(R.id.recycler);
 
         int numColumns = MediaGridAdapter.getColumnCount(this);
@@ -112,15 +120,12 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
         if (mIsSelectOneItem) {
             mGridAdapter.setAllowMultiselect(false);
-            setTitle(R.string.select_from_media_library);
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
         } else {
             mGridAdapter.setAllowMultiselect(true);
-            mGridAdapter.setInMultiSelect(true);
-            mGridAdapter.setSelectedItems(selectedItems);
+            if (selectedItems.size() > 0) {
+                mGridAdapter.setInMultiSelect(true);
+                mGridAdapter.setSelectedItems(selectedItems);
+            }
         }
     }
 
@@ -157,6 +162,7 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         outState.putIntArray(STATE_SELECTED_ITEMS, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
         outState.putLongArray(STATE_FILTERED_ITEMS, ListUtils.toLongArray(mFilteredItems));
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @SuppressWarnings("unused")
@@ -186,13 +192,13 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
             // the activity may be gone by the time this finishes, so check for it
             if (!isFinishing()) {
+                List<MediaModel> mediaList;
                 if (mFilteredItems != null && !mFilteredItems.isEmpty()) {
-                    Cursor cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
-                    mGridAdapter.setCursor(cursor);
+                    mediaList = mMediaStore.getSiteImagesExcludingIds(mSite, mFilteredItems);
                 } else {
-                    Cursor cursor = mMediaStore.getSiteImagesAsCursor(mSite);
-                    mGridAdapter.setCursor(cursor);
+                    mediaList = mMediaStore.getSiteImages(mSite);
                 }
+                mGridAdapter.setMediaList(mediaList);
             }
         }
     }
@@ -209,48 +215,49 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onAdapterItemSelected(int position) {
-        if (mIsSelectOneItem) {
-            // Single select, just finish the activity once an item is selected
-            Intent intent = new Intent();
-            int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
-            ArrayList<Long> remoteMediaIds = new ArrayList<>();
-            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
-            if (media != null) {
-                remoteMediaIds.add(media.getMediaId());
-                intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+    public void onAdapterItemSelected(View sourceView, int position) {
+        Intent intent = new Intent();
+        int localId = mGridAdapter.getLocalMediaIdAtPosition(position);
+        ArrayList<Long> remoteMediaIds = new ArrayList<>();
+        MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+        if (media != null) {
+            remoteMediaIds.add(media.getMediaId());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (count == 0 && mActionMode != null) {
-            mActionMode.finish();
-        } else if (mActionMode == null) {
-            startActionMode(new ActionModeCallback());
+        if (!mIsSelectOneItem) {
+            if (mActionMode == null) {
+                startActionMode(new ActionModeCallback());
+            } else if (count == 0) {
+                mActionMode.finish();
+            } else {
+                updateActionModeTitle(count);
+            }
         }
-
-        updateActionModeTitle(count);
     }
 
     private void updateActionModeTitle(int count) {
         if (mActionMode != null) {
             mActionMode.setTitle(String.format(getString(R.string.cab_selected), count));
+            MenuItem item = mActionMode.getMenu().findItem(R.id.mnu_confirm_selection);
+            item.setVisible(count > 0);
         }
     }
 
     private void refreshViews() {
-        final Cursor cursor;
+        List<MediaModel> mediaList;
         if (mFilteredItems != null) {
-            cursor = mMediaStore.getSiteImagesExcludingIdsAsCursor(mSite, mFilteredItems);
+            mediaList = mMediaStore.getSiteImagesExcludingIds(mSite, mFilteredItems);
         } else {
-            cursor = mMediaStore.getAllSiteMediaAsCursor(mSite);
-            mGridAdapter.setCursor(cursor);
+            mediaList = mMediaStore.getAllSiteMedia(mSite);
         }
-        if (cursor.getCount() == 0) {
+        mGridAdapter.setMediaList(mediaList);
+        if (mediaList.size() == 0) {
             refreshMediaFromServer(false);
         }
     }
@@ -295,6 +302,8 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mActionMode = mode;
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.photo_picker_action_mode, menu);
             updateActionModeTitle(mGridAdapter.getSelectedItemCount());
             return true;
         }
@@ -306,12 +315,17 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.mnu_confirm_selection) {
+                setResultIdsAndFinish();
+                return true;
+            }
             return false;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            setResultIdsAndFinish();
+            mActionMode = null;
+            mGridAdapter.setInMultiSelect(false);
         }
     }
 }

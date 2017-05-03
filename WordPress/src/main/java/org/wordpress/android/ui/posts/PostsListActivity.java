@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -70,6 +72,15 @@ public class PostsListActivity extends AppCompatActivity {
         ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RequestCodes.EDIT_POST) {
+            mPostList.handleEditPostResult(resultCode, data);
+        }
+    }
+
     /**
      * intent extras will contain error info if this activity was started from an
      * upload error notification
@@ -88,7 +99,7 @@ public class PostsListActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getText(R.string.error))
                .setMessage(errorMessage)
-               .setPositiveButton(R.string.ok, null)
+               .setPositiveButton(android.R.string.ok, null)
                .setCancelable(true);
 
         builder.create().show();

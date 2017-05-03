@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,44 +26,48 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
 
 public class NewBlogFragment extends AbstractFragment implements TextWatcher {
-    private EditText mSiteUrlTextField;
+    private AutoCompleteTextView mSiteUrlTextField;
     private EditText mSiteTitleTextField;
+    private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
 
     private boolean mSignoutOnCancelMode;
-    private boolean mAutoCompleteUrl;
 
     private long mNewSiteRemoteId;
 
     @Inject Dispatcher mDispatcher;
-    @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mSiteUrlSuggestionAdapter = new ArrayAdapter<>(getActivity(), R.layout.domain_suggestion_dropdown);
     }
 
     @Override
@@ -228,8 +235,8 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
         mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
-        mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
-        mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
+        mSiteUrlTextField = (AutoCompleteTextView) rootView.findViewById(R.id.site_url);
+        mSiteUrlTextField.setAdapter(mSiteUrlSuggestionAdapter);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
         mSiteUrlTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -246,20 +253,27 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
                 lowerCaseEditable(editable);
             }
         });
+        mSiteUrlTextField.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus && !mSiteUrlSuggestionAdapter.isEmpty()) {
+                    mSiteUrlTextField.showDropDown();
+                }
+            }
+        });
 
         mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteTitleTextField.addTextChangedListener(this);
         mSiteTitleTextField.addTextChangedListener(mSiteTitleWatcher);
-        mSiteTitleTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mSiteTitleTextField.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mAutoCompleteUrl = EditTextUtils.getText(mSiteTitleTextField)
-                            .equals(EditTextUtils.getText(mSiteUrlTextField))
-                            || EditTextUtils.isEmpty(mSiteUrlTextField);
+                if (!hasFocus) {
+                    getDomainSuggestionsFromTitle();
                 }
             }
         });
+
         return rootView;
     }
 
@@ -292,24 +306,22 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // auto fill blog address from title if user hasn't modified url
-            if (mAutoCompleteUrl) {
-                mSiteUrlTextField.setText(titleToUrl(EditTextUtils.getText(mSiteTitleTextField)));
-            }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
+            mSiteUrlSuggestionAdapter.clear();
+            mSiteUrlSuggestionAdapter.notifyDataSetChanged();
         }
     };
 
-    private final OnKeyListener mSiteUrlKeyListener = new OnKeyListener() {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            mAutoCompleteUrl = EditTextUtils.isEmpty(mSiteUrlTextField);
-            return false;
+    private void getDomainSuggestionsFromTitle() {
+        String title = EditTextUtils.getText(mSiteTitleTextField);
+        if (!TextUtils.isEmpty(title)) {
+            SuggestDomainsPayload payload = new SuggestDomainsPayload(title, true, false, 5);
+            mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
         }
-    };
+    }
 
     private final TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
         @Override
@@ -331,7 +343,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         }
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
         mNewSiteRemoteId = event.newSiteRemoteId;
-        // Site created, update sites
+        // We can't get all the site informations from the new site endpoint, so we have to fetch the site list.
         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
     }
 
@@ -344,10 +356,40 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
             return;
         }
         endProgress();
-        Intent intent = new Intent();
+        if (event.isError()) {
+            // Site has been created but there was a error while fetching the sites. Can happen if we get
+            // a response including a broken Jetpack site. We can continue and check if the newly created
+            // site has been fetched.
+            AppLog.e(T.NUX, event.error.type.toString());
+        }
         SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        Intent intent = new Intent();
+        if (site != null) {
+            intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_fetch_site_after_creation, Duration.LONG);
+        }
         getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSuggestedDomains(OnSuggestedDomains event) {
+        if (!isAdded() || event.isError()) {
+            return;
+        }
+
+        mSiteUrlSuggestionAdapter.clear();
+        for (DomainSuggestionResponse suggestion : event.suggestions) {
+            // Only add free suggestions ending by .wordpress.com
+            if (suggestion.is_free && !TextUtils.isEmpty(suggestion.domain_name)
+                    && suggestion.domain_name.endsWith(".wordpress.com")) {
+                mSiteUrlSuggestionAdapter.add(suggestion.domain_name.replace(".wordpress.com", ""));
+            }
+        }
+        if (!mSiteUrlSuggestionAdapter.isEmpty() && mSiteUrlTextField.hasFocus()) {
+            mSiteUrlTextField.showDropDown();
+        }
     }
 }

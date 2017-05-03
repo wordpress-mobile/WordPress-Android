@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,12 +71,14 @@ public final class AnalyticsTracker {
         STATS_WIDGET_REMOVED,
         STATS_WIDGET_TAPPED,
         EDITOR_CREATED_POST,
-        EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
-        EDITOR_ADDED_VIDEO_VIA_LOCAL_LIBRARY,
+        EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY,
+        EDITOR_ADDED_VIDEO_VIA_DEVICE_LIBRARY,
+        EDITOR_ADDED_PHOTO_NEW,
+        EDITOR_ADDED_VIDEO_NEW,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
         EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY,
-        EDITOR_RESIZED_PHOTO,
-        EDITOR_RESIZED_PHOTO_ERROR,
+        MEDIA_PHOTO_OPTIMIZED,
+        MEDIA_PHOTO_OPTIMIZE_ERROR,
         EDITOR_UPDATED_POST,
         EDITOR_SCHEDULED_POST,
         EDITOR_CLOSED,
@@ -139,6 +142,7 @@ public final class AnalyticsTracker {
         OPENED_PAGES,
         OPENED_COMMENTS,
         OPENED_VIEW_SITE,
+        OPENED_VIEW_SITE_FROM_HEADER,
         OPENED_VIEW_ADMIN,
         OPENED_MEDIA_LIBRARY,
         OPENED_BLOG_SETTINGS,
@@ -180,6 +184,8 @@ public final class AnalyticsTracker {
         LOGIN_INSERTED_INVALID_URL,
         LOGIN_AUTOFILL_CREDENTIALS_FILLED,
         LOGIN_AUTOFILL_CREDENTIALS_UPDATED,
+        MEDIA_LIBRARY_ADDED_PHOTO,
+        MEDIA_LIBRARY_ADDED_VIDEO,
         PERSON_REMOVED,
         PERSON_UPDATED,
         PUSH_AUTHENTICATION_APPROVED,
@@ -226,6 +232,10 @@ public final class AnalyticsTracker {
         DEEP_LINKED,
         DEEP_LINKED_FALLBACK,
         DEEP_LINK_NOT_DEFAULT_HANDLER,
+        MEDIA_UPLOAD_STARTED,
+        MEDIA_UPLOAD_ERROR,
+        MEDIA_UPLOAD_SUCCESS,
+        MEDIA_UPLOAD_CANCELED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -269,6 +279,20 @@ public final class AnalyticsTracker {
         }
     }
 
+    /**
+     * A convenience method for logging an error event with some additional meta data.
+     * @param stat The stat to track.
+     * @param errorContext A string providing additional context (if any) about the error.
+     * @param errorType The type of error.
+     * @param errorDescription The error text or other description.
+     */
+    public static void track(Stat stat, String errorContext, String errorType, String errorDescription) {
+        Map<String, String> props = new HashMap<>();
+        props.put("error_context", errorContext);
+        props.put("error_type", errorType);
+        props.put("error_description", errorDescription);
+        track(stat, props);
+    }
 
     public static void flush() {
         if (mHasUserOptedOut) {

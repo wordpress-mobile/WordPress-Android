@@ -1,11 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-02 16:04:07+0000
+Translation-Revision-Date: 2017-04-23 20:37:42+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="photo_picker_title">Wybierz obrazek</string>
+	<string name="error_publish_no_network">Urządzenie jest offline. Zmiany zapisywane lokalnie.</string>
+	<string name="editor_post_saved_online_not_published">Wpis został zapisany online jako szkic. Rozważ opublikowanie.</string>
+	<string name="editor_post_saved_online">Wpis został zapisany online</string>
+	<string name="editor_post_saved_locally_not_published">Wpis zapisany jedynie lokalnie. Rozważ opublikowanie.</string>
+	<string name="editor_post_saved_locally">Wpis został zapisany na twoim urządzeniu</string>
+	<string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
+	<string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
+	<string name="media_encoder_quality_100">Maksymalna</string>
+	<string name="media_encoder_quality_95">Bardzo wysoka</string>
+	<string name="media_encoder_quality_90">Wysoka</string>
+	<string name="media_encoder_quality_85">Średnia</string>
+	<string name="media_encoder_quality_80">Niska</string>
+	<string name="media_upload_state_uploaded">Przesłano</string>
+	<string name="media_upload_state_failed">Niepowodzenie</string>
+	<string name="media_upload_state_deleted">Usunięto</string>
+	<string name="media_upload_state_deleting">Usuwanie</string>
+	<string name="media_upload_state_uploading">Przesyłanie</string>
+	<string name="media_upload_state_queued">W kolejce</string>
+	<string name="update_draft">Zaktualizuj szkic</string>
+	<string name="keep_editing">Kontynuuj edycję</string>
+	<string name="image_quality">Jakość obrazków</string>
+	<string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
+	<string name="error_unknown_post_type">Nieznany format wpisu</string>
+	<string name="error_unknown_post">Nieznany wpis, lokalna kopia wpisu może nie być zsynchronizowana z serwerem</string>
+	<string name="error_fetch_site_after_creation">Witryna została utworzona, może wystąpić konieczność odświeżenia listy witryn.</string>
+	<string name="error_media_request_too_large">Plik mediów jest zbyt duży, nie można przesłać</string>
+	<string name="error_media_parse_error">Nie można przetworzyć odpowiedzi po przesłaniu mediów</string>
+	<string name="error_upload_params">Błąd podczas przesyłania %1$s: %2$s </string>
+	<string name="submit_for_review">Prześlij</string>
+	<string name="media_error_too_large_upload">Plik jest zbyt duży. Skontaktuj się z dostawcą usługi hostingowej aby usunąć ten problem</string>
+	<string name="role_subscriber">Subskrybent</string>
+	<string name="tell_me_more">Powiedz mi więcej</string>
+	<string name="duplicate_site_detected">Wykryto duplikat witryny</string>
+	<string name="cannot_add_duplicate_site">Ta witryna już istnieje w aplikacji, nie możesz jej dodać.</string>
+	<string name="already_logged_in_wpcom_same_username">Jesteś już zalogowany na swoje konto WordPress.com. Twoja witryna powinna się pojawić w selektorze witryn. Upewnij się że nie jest ustawiona jako ukryta.</string>
+	<string name="already_logged_in_wpcom">Jesteś już zalogowany na swoje konto WordPress.com, nie można dodać konta WordPress.com połączonego z innym kontem.</string>
+	<string name="migration_error_not_connected">Proces migracji nie powiódł się: uruchom aplikację z aktywnym \npołączeniem sieciowym.</string>
+	<string name="migration_message">Aktualizacja aplikacji WordPress.. </string>
+	<string name="checking_username">Sprawdzanie nazwy użytkownika</string>
+	<string name="jetpack_different_com_account">Witryny Jetpack należące do różnych kont WordPress.com nie są wspierane</string>
+	<string name="jetpack_use_com_account">Aby dodać witrynę Jetpack, zaloguj się na swoje konto WordPress.com, które użyłeś do połączenia Jetpacka.</string>
+	<string name="jetpack_message">Wtyczka Jetpack musi być zainstalowana oraz uruchomiona. Czy chcesz zainstalować lub uruchomić Jetpack?</string>
+	<string name="error_media_load">Nie można wyczytać mediów</string>
+	<string name="error_media_refresh_no_connection">Aby odświeżyć bibliotekę wymagane jest połączenie internetowe</string>
+	<string name="error_media_unauthorized">Nie masz uprawnień do poglądi lub edycji mediów</string>
+	<string name="error_media_not_found">Nie można odnaleźć mediów</string>
+	<string name="error_media_insufficient_fs_permissions">Wymagane uprawnienia odczytu do pliku medialnego</string>
+	<string name="site_settings_optimize_images">Optymalizuj obrazki</string>
+	<string name="no_site_error">Nie można podłączyć witryny WordPress. Brak prawidłowej witryny WordPress pod tym adresem. Sprawdź czy wprowadziłeś poprawny adres.</string>
+	<string name="media_generic_error">Wystąpił błąd mediów</string>
+	<string name="media_upload_error">Wystąpił błąd przesyłania mediów</string>
+	<string name="retry">Spróbuj ponownie</string>
+	<string name="confirm">Potwierdź</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do punktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu.</string>
+	<string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST - aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
 	<string name="reader_liked_default_tag">Polubione wpisy</string>
 	<string name="reader_discover_default_tag">Odkrywaj</string>
 	<string name="reader_followed_default_tag">Obserwowane witryny</string>
@@ -183,7 +239,7 @@ Language: pl
 	<string name="logging_in">Logowanie</string>
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Otrzymaj odnośnik przesłany na twój adres email aby się niezwłocznie zalogować</string>
 	<string name="enter_your_password_instead">Wprowadź swoje hasło</string>
-	<string name="web_address_dialog_hint">Pokazywany publicznie kiedy komentujesz</string>
+	<string name="web_address_dialog_hint">Prezentowany kiedy dodajesz komentarze.</string>
 	<string name="username_email">Email lub użytkownik</string>
 	<string name="jetpack_not_connected_message">Wtyczka Jetpack jest zainstalowana, ale nie jest połączona z WordPress.com. Czy chcesz włączyć Jetpack?</string>
 	<string name="jetpack_not_connected">Wtyczka Jetpack nie jest podłączona</string>
@@ -392,11 +448,9 @@ Language: pl
 	<string name="site_settings_discussion_hint">Pokaż i zmień ustawienia dyskusji twoich witryn</string>
 	<string name="site_settings_more_hint">Pokaż wszystkie dostępne ustawienia Dyskusji</string>
 	<string name="site_settings_related_posts_hint">Pokaż lub ukryj powiązane wpisy w czytniku</string>
-	<string name="site_settings_upload_and_link_image_hint">Uaktywnij aby zawsze przesyłać obrazek oryginalnym rozmiarze</string>
 	<string name="site_settings_image_width_hint">Zmienia rozmiar obrazka do zadanej szerokości</string>
 	<string name="site_settings_format_hint">Ustawia format dla nowych wpisów</string>
 	<string name="site_settings_category_hint">Ustawia kategorię dla nowego wpisu</string>
-	<string name="site_settings_location_hint">Automatycznie dodawaj dane lokalizacyjne do twoich wpisów</string>
 	<string name="site_settings_password_hint">Zmień hasło</string>
 	<string name="site_settings_username_hint">Konto aktualnego użytkownika</string>
 	<string name="site_settings_language_hint">Główny język, w którym ten blog jest prowadzony</string>
@@ -425,7 +479,6 @@ Language: pl
 	<string name="site_settings_allow_comments_title">Włącz komentowanie</string>
 	<string name="site_settings_default_format_title">Domyślny format wpisów</string>
 	<string name="site_settings_default_category_title">Domyślna kategoria wpisów</string>
-	<string name="site_settings_location_title">Włącz lokalizację</string>
 	<string name="site_settings_address_title">Adres</string>
 	<string name="site_settings_tagline_title">Opis</string>
 	<string name="site_settings_title_title">Tytuł witryny</string>
@@ -491,7 +544,6 @@ Language: pl
 	<string name="media_uploaded_on">Przesłano %s</string>
 	<string name="media_file_name">Nazwa pliku: %s</string>
 	<string name="media_file_type">Typ pliku: %s</string>
-	<string name="upload_queued">W kolejce</string>
 	<string name="reader_label_gap_marker">Wczytaj więcej wpisów</string>
 	<string name="notifications_no_search_results">\'%s\' nie pasuje do żadnej witryny</string>
 	<string name="search_sites">Szukaj witryn</string>
@@ -607,7 +659,7 @@ Language: pl
 	<string name="my_site_btn_switch_site">Przełącz witrynę</string>
 	<string name="site_picker_title">Wybierz witrynę</string>
 	<string name="my_site_btn_view_site">Zobacz witrynę</string>
-	<string name="my_site_btn_view_admin">Pokaż Administratora</string>
+	<string name="my_site_btn_view_admin">Przejdź do kokpitu</string>
 	<string name="my_site_header_publish">Opublikuj</string>
 	<string name="my_site_header_look_and_feel">Wygląd</string>
 	<string name="my_site_btn_site_settings">Ustawienia</string>
@@ -622,22 +674,7 @@ Language: pl
 	<string name="hide">Ukryj</string>
 	<string name="show">Pokaż</string>
 	<string name="deselect_all">Odznacz wszystko</string>
-	<string name="select_from_new_picker">Wybierz media z kilku źródeł</string>
-	<string name="no_media_sources">Nie udało się załadować mediów</string>
-	<string name="loading_blog_videos">Ładowanie filmów</string>
-	<string name="loading_blog_images">Ładowanie zdjęć</string>
-	<string name="error_loading_videos">Błąd podczas ładowania filmów</string>
-	<string name="error_loading_images">Błąd podczas ładowania zdjęć</string>
-	<string name="error_loading_blog_videos">Nie udało się pobrać filmów</string>
-	<string name="error_loading_blog_images">Nie udało się pobrać zdjęć</string>
-	<string name="no_device_images">Brak zdjęć</string>
-	<string name="no_blog_videos">Brak filmów</string>
-	<string name="no_blog_images">Brak zdjęć</string>
-	<string name="no_device_videos">Brak filmów</string>
 	<string name="stats_generic_error">Nie udało się załadować wymaganych statystyk</string>
-	<string name="no_media">Brak mediów</string>
-	<string name="loading_images">Ładowanie zdjęć</string>
-	<string name="loading_videos">Ładowanie filmów</string>
 	<string name="auth_required">Zaloguj się ponownie, by kontynuować.</string>
 	<string name="sign_in_jetpack">Zaloguj się do swojego konta WordPress.com aby połączyć Jetpack.</string>
 	<string name="two_step_sms_sent">Sprawdź swoje SMSy w poszukiwaniu kodu weryfikacyjnego.</string>
@@ -647,17 +684,8 @@ Language: pl
 	<string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
 	<string name="verification_code">Kod weryfikacyjny</string>
 	<string name="editor_toast_invalid_path">Niewłaściwa ścieżka do pliku</string>
-	<string name="error_publish_no_network">Publikacja nie jest możliwa bez połączenia z Internetem. Treść zapisano jako szkic.</string>
 	<string name="media_details_label_file_type">Typ pliku</string>
 	<string name="media_details_label_file_name">Nazwa pliku</string>
-	<string name="tab_title_site_videos">Filmy z witryny</string>
-	<string name="tab_title_site_images">Zdjęcia z witryny</string>
-	<string name="tab_title_device_videos">Filmy z urządzenia</string>
-	<string name="tab_title_device_images">Zdjęcia z urządzenia</string>
-	<string name="take_video">Nagraj film</string>
-	<string name="take_photo">Zrób zdjęcie</string>
-	<string name="media_picker_title">Wybierz media</string>
-	<string name="add_to_post">Dodaj do wpisu</string>
 	<string name="language">Język</string>
 	<string name="device">Urządzenie</string>
 	<string name="media_fetching">Ładowanie mediów...</string>
@@ -757,7 +785,6 @@ Language: pl
 	<string name="delete_sure_post">Usuń ten wpis</string>
 	<string name="signing_out">Wylogowywanie...</string>
 	<string name="posting_post">Publikowanie "%s"</string>
-	<string name="media_empty_list_custom_date">Brak mediów w tym przedziale czasowym</string>
 	<string name="pages_empty_list">Brak stron. Może jakąś opublikujesz?</string>
 	<string name="comment_reply_to_user">Odpowiedz na komentarz %s</string>
 	<string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
@@ -865,13 +892,12 @@ Language: pl
 	<string name="passcode_wrong_passcode">Niewłaściwy PIN</string>
 	<string name="error_downloading_image">Błąd pobierania obrazka</string>
 	<string name="error_load_comment">Nie można było wczytać komentarza</string>
-	<string name="error_upload">Wystąpił błąd podczas wgrywania %s</string>
 	<string name="error_edit_comment">Przy edytowaniu komentarza wystąpił błąd.</string>
 	<string name="error_moderate_comment">Przy próbie moderacji wystąpił błąd.</string>
 	<string name="error_generic">Wystąpił błąd</string>
 	<string name="error_refresh_stats">Statystyki chwilowo nie mogły zostać wyświetlone</string>
 	<string name="error_refresh_comments">Komentarze nie mogły zostać odświeżone w tej chwili</string>
-	<string name="error_refresh_notifications">Powiadomienia nie mogły zostać odświeżone w tej chwili</string>
+	<string name="error_refresh_notifications">Błąd aktualizacji listy powiadomień</string>
 	<string name="error_refresh_pages">Strony nie mogły zostać odświeżone w tej chwili</string>
 	<string name="error_refresh_posts">W tej chwili nie można odświeżyć wpisów</string>
 	<string name="error_delete_post">Wystąpił błąd podczas usuwania %s</string>
@@ -886,7 +912,6 @@ Language: pl
 	<string name="cat_name_required">Nazwa kategorii jest wymagana</string>
 	<string name="adding_cat_success">Pomyślnie dodano kategorię</string>
 	<string name="adding_cat_failed">Nie udało się dodać kategorii</string>
-	<string name="no_site_error">Nie można nawiązać połączenia ze stroną WordPressa</string>
 	<string name="mnu_comment_unspam">To nie jest spam</string>
 	<string name="comments_empty_list">Brak komentarzy</string>
 	<string name="theme_auth_error_message">Upewnij się, że masz uprawnienia do zmiany motywu</string>
@@ -910,7 +935,7 @@ Language: pl
 	<string name="reader_toast_err_add_tag">Nie udało się dodać tagu</string>
 	<string name="reader_share_link">Udostępnij link</string>
 	<string name="reader_title_applog">Dziennik aplikacji</string>
-	<string name="jetpack_message_not_admin">Wtyczka Jetpack jest wymagana dla statystyk. Skontaktuj się z administratorem strony.</string>
+	<string name="jetpack_message_not_admin">Wymagana jest wtyczka Jetpack. Skontaktuj się z administratorem witryny.</string>
 	<string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
 	<string name="error_blog_hidden">Ten blog jest ukryty i nie mógł zostać wczytany. Włącz go ponownie w ustawieniach i spróbuj ponownie.</string>
 	<string name="wordpress_blog">WordPress blog</string>
@@ -934,7 +959,6 @@ Language: pl
 	<string name="share_action_post">Nowy wpis</string>
 	<string name="category_parent">Kategoria nadrzędna (opcjonalnie):</string>
 	<string name="category_desc">Opis kategorii (opcjonalnie)</string>
-	<string name="category_slug">Uproszczona nazwa kategorii (opcjonalnie)</string>
 	<string name="category_name">Nazwa kategorii</string>
 	<string name="add_new_category">Dodaj nową kategorię</string>
 	<string name="view_in_browser">Zobacz w przeglądarce</string>
@@ -1055,10 +1079,8 @@ Language: pl
 	<string name="reader_btn_unfollow">Obserwujesz</string>
 	<string name="reader_btn_follow">Obserwuj</string>
 	<string name="reader_btn_share">Udostępnij</string>
-	<string name="reader_share_subject">Udostępnione przez %s</string>
 	<string name="reader_untitled_post">(Brak tytułu)</string>
 	<string name="jetpack_not_found">Wtyczka Jetpack nie została znaleziona</string>
-	<string name="jetpack_message">Wtyczka Jetpack jest wymagana, aby uzyskać dostęp do statystyk. Zainstalować wtyczkę?</string>
 	<string name="select_from_media_library">Wybierz z biblioteki mediów</string>
 	<string name="empty_list_default">Lista jest pusta</string>
 	<string name="media_add_new_media_gallery">Tworzenie galerii</string>
@@ -1116,7 +1138,6 @@ Language: pl
 	<string name="media_gallery_image_order_random">Losowa</string>
 	<string name="media_add_popup_capture_video">Nagraj film</string>
 	<string name="media_add_popup_capture_photo">Wykonaj zdjęcie</string>
-	<string name="custom_date">Własna data</string>
 	<string name="unattached">Niezałączone</string>
 	<string name="images">Obrazki</string>
 	<string name="all">Wszystkie</string>

@@ -34,6 +34,23 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.Arrays;
 import java.util.Map;
 
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALIGN;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_CAPTION;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ID_IMAGE_REMOTE;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_URL_LINK;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_ENABLED_AZTEC;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_FEATURED;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_HEADER;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_FEATURED;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_META;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_MAX_WIDTH;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_SRC;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALT;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_DIMEN_HEIGHT;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ID_ATTACHMENT;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_TITLE;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_DIMEN_WIDTH;
+
 /**
  * A full-screen DialogFragment with image settings.
  *
@@ -101,19 +118,19 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 String imageRemoteId = "";
                 try {
-                    imageRemoteId = mImageMeta.getString("attachment_id");
+                    imageRemoteId = mImageMeta.getString(ATTR_ID_ATTACHMENT);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.EDITOR, "Unable to retrieve featured image id from meta data");
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra("imageMeta", mImageMeta.toString());
+                intent.putExtra(EXTRA_IMAGE_META, mImageMeta.toString());
 
                 mIsFeatured = mFeaturedCheckBox.isChecked();
-                intent.putExtra("isFeatured", mIsFeatured);
+                intent.putExtra(EXTRA_FEATURED, mIsFeatured);
 
                 if (!imageRemoteId.isEmpty()) {
-                    intent.putExtra("imageRemoteId", Integer.parseInt(imageRemoteId));
+                    intent.putExtra(ATTR_ID_IMAGE_REMOTE, Integer.parseInt(imageRemoteId));
                 }
 
                 getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
@@ -144,42 +161,64 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             try {
-                mImageMeta = new JSONObject(bundle.getString("imageMeta"));
+                mImageMeta = new JSONObject(bundle.getString(EXTRA_IMAGE_META));
 
-                mHttpHeaders = (Map) bundle.getSerializable("headerMap");
+                mHttpHeaders = (Map) bundle.getSerializable(EXTRA_HEADER);
 
-                final String imageSrc = mImageMeta.getString("src");
+                final String imageSrc = mImageMeta.getString(ATTR_SRC);
                 final String imageFilename = imageSrc.substring(imageSrc.lastIndexOf("/") + 1);
 
                 loadThumbnail(imageSrc, thumbnailImage);
                 filenameLabel.setText(imageFilename);
 
-                mTitleText.setText(mImageMeta.getString("title"));
-                mCaptionText.setText(mImageMeta.getString("caption"));
-                mAltText.setText(mImageMeta.getString("alt"));
+                mTitleText.setText(mImageMeta.getString(ATTR_TITLE));
+                mCaptionText.setText(mImageMeta.getString(ATTR_CAPTION));
+                mAltText.setText(mImageMeta.getString(ATTR_ALT));
 
-                String alignment = mImageMeta.getString("align");
+                String alignment = mImageMeta.getString(ATTR_ALIGN);
                 mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
                 int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
                 mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
 
-                mLinkTo.setText(mImageMeta.getString("linkUrl"));
+                mLinkTo.setText(mImageMeta.getString(ATTR_URL_LINK));
 
                 mMaxImageWidth = MediaUtils.getMaximumImageWidth(mImageMeta.getInt("naturalWidth"),
-                        bundle.getString("maxWidth"));
+                        bundle.getString(EXTRA_MAX_WIDTH));
 
-                setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt("width"));
+                setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt(ATTR_DIMEN_WIDTH));
 
-                boolean featuredImageSupported = bundle.getBoolean("featuredImageSupported");
+                boolean featuredImageSupported = bundle.getBoolean(EXTRA_IMAGE_FEATURED);
                 if (featuredImageSupported) {
                     mFeaturedCheckBox.setVisibility(View.VISIBLE);
-                    mIsFeatured = bundle.getBoolean("isFeatured", false);
+                    mIsFeatured = bundle.getBoolean(EXTRA_FEATURED, false);
                     mFeaturedCheckBox.setChecked(mIsFeatured);
                 }
             } catch (JSONException e1) {
                 AppLog.d(AppLog.T.EDITOR, "Missing JSON properties");
             }
+
+            // TODO: Unsupported in Aztec - remove once caption, alignment & link support added
+            if (bundle.getBoolean(EXTRA_ENABLED_AZTEC)) {
+                mCaptionText.setVisibility(View.GONE);
+                View label = view.findViewById(R.id.image_caption_label);
+                if (label != null) {
+                    label.setVisibility(View.GONE);
+                }
+
+                mLinkTo.setVisibility(View.GONE);
+                label = view.findViewById(R.id.image_link_to_label);
+                if (label != null) {
+                    label.setVisibility(View.GONE);
+                }
+
+                mAlignmentSpinner.setVisibility(View.GONE);
+                label = view.findViewById(R.id.alignment_spinner_label);
+                if (label != null) {
+                    label.setVisibility(View.GONE);
+                }
+            }
         }
+
 
         mTitleText.requestFocus();
 
@@ -296,17 +335,17 @@ public class ImageSettingsDialogFragment extends DialogFragment {
      */
     private JSONObject extractMetaDataFromFields(JSONObject metaData) {
         try {
-            metaData.put("title", mTitleText.getText().toString());
-            metaData.put("caption", mCaptionText.getText().toString());
-            metaData.put("alt", mAltText.getText().toString());
+            metaData.put(ATTR_TITLE, mTitleText.getText().toString());
+            metaData.put(ATTR_CAPTION, mCaptionText.getText().toString());
+            metaData.put(ATTR_ALT, mAltText.getText().toString());
             if (mAlignmentSpinner.getSelectedItemPosition() < mAlignmentKeyArray.length) {
-                metaData.put("align", mAlignmentKeyArray[mAlignmentSpinner.getSelectedItemPosition()]);
+                metaData.put(ATTR_ALIGN, mAlignmentKeyArray[mAlignmentSpinner.getSelectedItemPosition()]);
             }
-            metaData.put("linkUrl", mLinkTo.getText().toString());
+            metaData.put(ATTR_URL_LINK, mLinkTo.getText().toString());
 
             int newWidth = getEditTextIntegerClamped(mWidthText, 1, Integer.MAX_VALUE);
-            metaData.put("width", newWidth);
-            metaData.put("height", getRelativeHeightFromWidth(newWidth));
+            metaData.put(ATTR_DIMEN_WIDTH, newWidth);
+            metaData.put(ATTR_DIMEN_HEIGHT, getRelativeHeightFromWidth(newWidth));
         } catch (JSONException e) {
             AppLog.d(AppLog.T.EDITOR, "Unable to build JSON object from new meta data");
         }

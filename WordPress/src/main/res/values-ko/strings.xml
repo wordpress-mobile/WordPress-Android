@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-06 15:20:44+0000
+Translation-Revision-Date: 2017-04-19 08:49:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+	<string name="photo_picker_title">사진 선택</string>
+	<string name="error_publish_no_network">기기가 오프라인 상태입니다. 변경사항이 로컬로 저장되었습니다.</string>
+	<string name="editor_post_saved_online_not_published">글이 온라인으로 임시글로 저장되었습니다. 글 발행을 고려해 보세요.</string>
+	<string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
+	<string name="editor_post_saved_locally_not_published">글이 로컬로만 저장되었습니다. 글 발행을 고려해 보세요.</string>
+	<string name="editor_post_saved_locally">글이 기기에 저장되었습니다.</string>
+	<string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
+	<string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
+	<string name="media_encoder_quality_100">최대</string>
+	<string name="media_encoder_quality_95">매우 높음</string>
+	<string name="media_encoder_quality_90">높음</string>
+	<string name="media_encoder_quality_85">보통</string>
+	<string name="media_encoder_quality_80">낮음</string>
+	<string name="media_upload_state_uploaded">업로드됨</string>
+	<string name="media_upload_state_failed">실패</string>
+	<string name="media_upload_state_deleted">삭제됨</string>
+	<string name="media_upload_state_deleting">삭제 중</string>
+	<string name="media_upload_state_uploading">업로드 중</string>
+	<string name="media_upload_state_queued">대기열에 추가됨</string>
+	<string name="update_draft">임시글 업데이트</string>
+	<string name="keep_editing">계속 편집하기</string>
+	<string name="image_quality">이미지 품질</string>
+	<string name="error_all_media_upload_canceled">알 수 없는 오류로 인해 모든 미디어 업로드가 취소되었습니다. 업로드를 다시 시도하세요.</string>
+	<string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
+	<string name="error_unknown_post">알 수 없는 글로 인해 이 글의 로컬 복사본을 서버와 동기화할 수 없습니다.</string>
+	<string name="error_fetch_site_after_creation">사이트가 생성되면 사이트 선택 도구에서 사이트를 새로 고쳐야 할 수 있습니다.</string>
+	<string name="error_media_request_too_large">미디어가 너무 커서 업로드할 수 없습니다.</string>
+	<string name="error_media_parse_error">미디어 업로드 후에 응답을 구문 분석할 수 없습니다.</string>
+	<string name="error_upload_params">%1$s을(를) 업로드하는 동안 다음 오류가 발생했습니다. %2$s</string>
+	<string name="submit_for_review">제출하기</string>
+	<string name="media_error_too_large_upload">파일이 너무 큽니다. 웹 호스팅 공급업체에 연락하여 이 문제를 해결하세요.</string>
 	<string name="invalid_verification_code_format">반드시 6자리 숫자이어야 함</string>
 	<string name="confirm_discard_changes">저장하지 않은 변경사항을 버리시겠습니까?</string>
 	<string name="signout">로그아웃</string>
@@ -343,11 +374,9 @@ Language: ko_KR
 	<string name="site_settings_discussion_hint">사이트 토론 설정 보기 및 변경</string>
 	<string name="site_settings_more_hint">사용 가능한 모든 토론 설정 보기</string>
 	<string name="site_settings_related_posts_hint">리더에서 관련 글 표시 또는 숨기기</string>
-	<string name="site_settings_upload_and_link_image_hint">항상 최대 크기 이미지를 업로드할 수 있도록 허용</string>
 	<string name="site_settings_image_width_hint">글의 이미지를 이 폭으로 크기 조정합니다.</string>
 	<string name="site_settings_format_hint">새 글 형식을 설정합니다.</string>
 	<string name="site_settings_category_hint">새 글 카테고리를 설정합니다.</string>
-	<string name="site_settings_location_hint">글에 자동으로 위치 데이터 추가</string>
 	<string name="site_settings_password_hint">비밀번호 변경</string>
 	<string name="site_settings_username_hint">현재 사용자 계정</string>
 	<string name="site_settings_language_hint">이 블로그의 기본 언어</string>
@@ -376,7 +405,6 @@ Language: ko_KR
 	<string name="site_settings_allow_comments_title">댓글 허용</string>
 	<string name="site_settings_default_format_title">기본 형식</string>
 	<string name="site_settings_default_category_title">기본 카테고리</string>
-	<string name="site_settings_location_title">위치 활성화</string>
 	<string name="site_settings_address_title">주소</string>
 	<string name="site_settings_title_title">사이트 제목</string>
 	<string name="site_settings_tagline_title">태그라인</string>
@@ -442,7 +470,6 @@ Language: ko_KR
 	<string name="media_uploaded_on">업로드 위치: %s</string>
 	<string name="media_file_name">파일 이름: %s</string>
 	<string name="media_file_type">파일 형식: %s</string>
-	<string name="upload_queued">대기열에 추가됨</string>
 	<string name="reader_label_gap_marker">더 많은 글 로드</string>
 	<string name="notifications_no_search_results">\'%s\'에 일치하는 사이트 없음</string>
 	<string name="search_sites">사이트 검색</string>
@@ -573,33 +600,9 @@ Language: ko_KR
 	<string name="hide">숨기기</string>
 	<string name="deselect_all">모두 선택 해제</string>
 	<string name="sign_out_wpcom_confirm">로그아웃을 하면 사용중인 단말기에 저장된 @%s의 WordPress.com 자료와 임시글, 변경사항 등이 모두 삭제될 것입니다.</string>
-	<string name="select_from_new_picker">새로운 선택 도구로 복수 선택</string>
-	<string name="loading_blog_images">이미지 가져오는 중</string>
-	<string name="loading_blog_videos">비디오 가져오는 중</string>
-	<string name="no_media_sources">미디어를 가져올 수 없음</string>
-	<string name="error_loading_blog_videos">비디오를 가져올 수 없음</string>
-	<string name="error_loading_images">이미지 로드 오류</string>
-	<string name="error_loading_videos">비디오 로드 오류</string>
-	<string name="error_loading_blog_images">이미지를 가져올 수 없음</string>
-	<string name="no_blog_images">이미지 없음</string>
-	<string name="no_blog_videos">비디오 없음</string>
-	<string name="no_device_images">이미지 없음</string>
 	<string name="stats_generic_error">필요한 통계 자료를 로드할 수 없음</string>
-	<string name="no_device_videos">비디오 없음</string>
-	<string name="no_media">미디어 없음</string>
-	<string name="loading_videos">비디오 로드 중</string>
-	<string name="loading_images">이미지 로드 중</string>
 	<string name="device">장치</string>
 	<string name="language">언어</string>
-	<string name="add_to_post">글에 추가</string>
-	<string name="media_picker_title">미디어 선택</string>
-	<string name="take_photo">사진 촬영</string>
-	<string name="take_video">비디오 촬영</string>
-	<string name="tab_title_device_images">장치 이미지</string>
-	<string name="tab_title_device_videos">장치 비디오</string>
-	<string name="tab_title_site_images">사이트 이미지</string>
-	<string name="tab_title_site_videos">사이트 비디오</string>
-	<string name="error_publish_no_network">네트워크에 연결되지 않아 게시할 수 없습니다. 임시글로 저장되었습니다.</string>
 	<string name="editor_toast_invalid_path">잘못된 파일 경로</string>
 	<string name="verification_code">확인 코드</string>
 	<string name="invalid_verification_code">잘못된 확인 코드</string>
@@ -741,7 +744,6 @@ Language: ko_KR
 	<string name="posts_empty_list">아직 글이 없습니다. 하나 만들어보세요!</string>
 	<string name="comment_reply_to_user">%s에 응답</string>
 	<string name="pages_empty_list">페이지가 없습니다. 하나 만들어보세요!</string>
-	<string name="media_empty_list_custom_date">이 시간대에 미디어 없음</string>
 	<string name="posting_post">"%s" 게시</string>
 	<string name="reader_label_liked_by">좋아요를 표시한 회원:</string>
 	<string name="signing_out">로그아웃…</string>
@@ -835,9 +837,7 @@ Language: ko_KR
 	<string name="reply_failed">회신 할 수 없습니다 .</string>
 	<string name="error_generic">오류가 발생 했습니다. 나중에 다시 시도 하십시오.</string>
 	<string name="error_edit_comment">코멘트 편집 할 때 오류가 발생 했습니다. 나중에 다시 시도 하십시오.</string>
-	<string name="error_upload">%s을 업로드 할 때 오류가 발생 했습니다.</string>
 	<string name="out_of_memory">장치 메모리가 부족합니다.</string>
-	<string name="no_site_error">WordPress 사이트에 연결할 수 없습니다 . 잠시 후 다시 시도해 주십시오.</string>
 	<string name="no_network_message">사용 가능한 네트워크가 없습니다. 네트워크에 연결하고 다시 시도하십시오 .</string>
 	<string name="sdcard_message">미디어를 업로드하려면 SD카드가 필요합니다.</string>
 	<string name="no_account">WordPress 계정을 찾을 수 없습니다. 계정을 추가하고 다시 시도하십시오.</string>
@@ -886,7 +886,6 @@ Language: ko_KR
 	<string name="file_error_create">미디어 업로드시에 임시 파일을 만들 수 없습니다 . 장치에 여유 공간이 있는지 확인 하십시오.</string>
 	<string name="post_format">작성 형식</string>
 	<string name="category_name">카테고리 이름</string>
-	<string name="category_slug">카테고리 슬러그(옵션)</string>
 	<string name="category_desc">카테고리 설명(옵션)</string>
 	<string name="file_not_found">올라간 미디어 파일을 찾을 수 없습니다. 삭제 또는 이동 된 것 같습니다.</string>
 	<string name="horizontal_alignment">가로</string>
@@ -933,7 +932,6 @@ Language: ko_KR
 	<string name="mnu_comment_approve">승인</string>
 	<string name="mnu_comment_unapprove">미승인</string>
 	<string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
-	<string name="jetpack_message_not_admin">제트 팩 플러그인은 통계가 필요합니다. 사이트 관리자에게 문의하세요.</string>
 	<string name="reader_toast_err_add_tag">태그를 추가할 수 없습니다.</string>
 	<string name="reader_toast_err_remove_tag">태그를 삭제할 수 없습니다.</string>
 	<string name="mnu_comment_spam">스팸</string>
@@ -952,6 +950,7 @@ Language: ko_KR
 	<string name="remove_account">사이트 제거</string>
 	<string name="notifications_empty_all">알림이 없습니다.</string>
 	<string name="invalid_site_url_message">입력한 사이트 URL이 올바른지 확인합니다.</string>
+	<string name="jetpack_message_not_admin">젯팩 플러그인이 필요합니다. 사이트 관리자에게 문의하세요.</string>
 	<string name="deleting_page">페이지 삭제</string>
 	<string name="deleting_post">글 삭제</string>
 	<string name="share_url_post">글 공유</string>
@@ -999,13 +998,11 @@ Language: ko_KR
 	<string name="reader_label_removed_tag">%s를 제거</string>
 	<string name="reader_likes_only_you">"좋아요"를 클릭 했습니다</string>
 	<string name="username_invalid">잘못된 사용자 이름</string>
-	<string name="reader_share_subject">%s에서 공유</string>
 	<string name="jetpack_not_found">Jetpack 플러그인 을 찾을 수 없습니다</string>
 	<string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>
 	<string name="reader_toast_err_tag_exists">이미 이 태그를 팔로우 중입니다</string>
 	<string name="reader_toast_err_tag_invalid">유효한 태그가 없습니다</string>
 	<string name="reader_toast_err_share_intent">공유에 실패</string>
-	<string name="jetpack_message">통계를 보려면 Jetpack 플러그인이 필요합니다. Jetpack을 설치하시겠습니까 ?</string>
 	<string name="reader_likes_one">1명이 "좋아요"를 달았습니다</string>
 	<string name="reader_toast_err_comment_failed">의견을 게시 할 수 없습니다</string>
 	<string name="connecting_wpcom">WordPress.com에 연결 중</string>
@@ -1071,7 +1068,6 @@ Language: ko_KR
 	<string name="theme_set_success">테마 설정을 완료 했습니다.</string>
 	<string name="share_action_title">추가 정보</string>
 	<string name="theme_auth_error_title">테마 정보를 가져오는데 실패했습니다</string>
-	<string name="custom_date">사용자 지정 날짜</string>
 	<string name="upload">업로드</string>
 	<string name="discard">제거</string>
 	<string name="sign_in">로그인</string>
