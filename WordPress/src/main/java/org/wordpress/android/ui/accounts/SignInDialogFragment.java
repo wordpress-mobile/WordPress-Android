@@ -32,7 +32,6 @@ public class SignInDialogFragment extends DialogFragment {
     private static String ARG_FIRST_BUTTON_LABEL = "first-btn-label";
     private static String ARG_SECOND_BUTTON_LABEL = "second-btn-label";
     private static String ARG_THIRD_BUTTON_LABEL = "third-btn-label";
-    private static String ARG_FIRST_BUTTON_ACTION = "first-btn-action";
     private static String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
     private static String ARG_THIRD_BUTTON_ACTION = "third-btn-action";
     private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID = "tell-me-more-btn-param-name-faq-id";
@@ -59,7 +58,7 @@ public class SignInDialogFragment extends DialogFragment {
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
-        return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0, 0, "", "");
+        return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0, "", "");
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
@@ -67,16 +66,14 @@ public class SignInDialogFragment extends DialogFragment {
                                                    String thirdButtonLabel, int secondButtonAction,
                                                    int thirdButtonAction) {
         return newInstance(title, message, imageSource, numberOfButtons, firstButtonLabel, secondButtonLabel,
-                thirdButtonLabel, 0, secondButtonAction, thirdButtonAction, "", "");
+                thirdButtonLabel, secondButtonAction, thirdButtonAction, "", "");
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
-                                                String firstButtonLabel, String secondButtonLabel,
-                                                String thirdButtonLabel, int firstButtonAction,
-                                                   int secondButtonAction,
-                                                   int thirdButtonAction,
-                                                   String tellMeMoreButtonFaqId,
-                                                   String tellMeMoreButtonSectionId) {
+                                                   String firstButtonLabel, String secondButtonLabel,
+                                                   String thirdButtonLabel,
+                                                   int secondButtonAction, int thirdButtonAction,
+                                                   String tellMeMoreButtonFaqId, String tellMeMoreButtonSectionId) {
         SignInDialogFragment adf = new SignInDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
@@ -86,7 +83,6 @@ public class SignInDialogFragment extends DialogFragment {
         bundle.putString(ARG_FIRST_BUTTON_LABEL, firstButtonLabel);
         bundle.putString(ARG_SECOND_BUTTON_LABEL, secondButtonLabel);
         bundle.putString(ARG_THIRD_BUTTON_LABEL, thirdButtonLabel);
-        bundle.putInt(ARG_FIRST_BUTTON_ACTION, firstButtonAction);
         bundle.putInt(ARG_SECOND_BUTTON_ACTION, secondButtonAction);
         bundle.putInt(ARG_THIRD_BUTTON_ACTION, thirdButtonAction);
         bundle.putString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID, tellMeMoreButtonFaqId);
