@@ -9,7 +9,7 @@ import java.util.Locale;
 
 public class EditorAsyncMediaTest extends AndroidTestCase {
     public void testHybridEditorUploadingImageSwap() {
-        MediaFile mediaFile = generateSampleUploadedMediaFile1();
+        MediaFile mediaFile = generateSampleUploadedPhoto1();
 
         String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
                 "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
@@ -46,7 +46,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
     }
 
     public void testHybridEditorUploadingImageSwapMultiple() {
-        MediaFile mediaFile = generateSampleUploadedMediaFile1();
+        MediaFile mediaFile = generateSampleUploadedPhoto1();
 
         String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
                 "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
@@ -67,7 +67,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals("Some text\n" + expectedTag + "\nMore text" + secondUploadingImageHtml, modifiedContent);
 
         // -- Replace second image --
-        MediaFile mediaFile2 = generateSampleUploadedMediaFile2();
+        MediaFile mediaFile2 = generateSampleUploadedPhoto2();
         modifiedContent = EditorFragment.replaceMediaFileWithUrl(modifiedContent, mediaFile2);
 
         String expectedSecondTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\"" +
@@ -89,7 +89,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
     }
 
     public void testHybridEditorUploadingImageSwapOldApis() {
-        MediaFile mediaFile = generateSampleUploadedMediaFile1();
+        MediaFile mediaFile = generateSampleUploadedPhoto1();
 
         String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
                 "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
@@ -115,7 +115,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
     }
 
     public void testHybridEditorUploadingImageSwapOldApisMultiple() {
-        MediaFile mediaFile = generateSampleUploadedMediaFile1();
+        MediaFile mediaFile = generateSampleUploadedPhoto1();
 
         String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
                 "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
@@ -137,7 +137,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals("Some text\n" + expectedTag + "\nMore text" + secondUploadingImageHtml, modifiedContent);
 
         // -- Replace second image --
-        MediaFile mediaFile2 = generateSampleUploadedMediaFile2();
+        MediaFile mediaFile2 = generateSampleUploadedPhoto2();
         modifiedContent = EditorFragment.replaceMediaFileWithUrl(modifiedContent, mediaFile2);
 
         String expectedSecondTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\"" +
@@ -159,7 +159,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
     }
 
     public void testHybridEditorUploadingVideoSwapVideopress() {
-        MediaFile mediaFile = generateSampleUploadedVideoMediaFileVideopress();
+        MediaFile mediaFile = generateSampleUploadedVideoVideopress();
 
         String expectedTag = mediaFile.getVideoPressShortCode();
 
@@ -194,7 +194,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
     }
 
     public void testHybridEditorUploadingVideoSwapSelfHosted() {
-        MediaFile mediaFile = generateSampleUploadedVideoMediaFile();
+        MediaFile mediaFile = generateSampleUploadedVideo();
 
         String expectedTag = String.format(Locale.US, "[video src=\"%s\" poster=\"%s\"][/video]",
                 mediaFile.getFileURL(), mediaFile.getThumbnailURL());
@@ -230,7 +230,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
     }
 
     public void testHybridEditorUploadingVideoSwapOldApis() {
-        MediaFile mediaFile = generateSampleUploadedVideoMediaFileVideopress();
+        MediaFile mediaFile = generateSampleUploadedVideoVideopress();
 
         String expectedTag = mediaFile.getVideoPressShortCode();
 
@@ -253,7 +253,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
     }
 
-    private static MediaFile generateSampleUploadedMediaFile1() {
+    private static MediaFile generateSampleUploadedPhoto1() {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setId(54);
         mediaFile.setMediaId("673");
@@ -264,7 +264,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         return mediaFile;
     }
 
-    private static MediaFile generateSampleUploadedMediaFile2() {
+    private static MediaFile generateSampleUploadedPhoto2() {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setId(65);
         mediaFile.setMediaId("679");
@@ -275,7 +275,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         return mediaFile;
     }
 
-    private static MediaFile generateSampleUploadedVideoMediaFile() {
+    private static MediaFile generateSampleUploadedVideo() {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setId(76);
         mediaFile.setMediaId("679");
@@ -288,7 +288,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         return mediaFile;
     }
 
-    private static MediaFile generateSampleUploadedVideoMediaFileVideopress() {
+    private static MediaFile generateSampleUploadedVideoVideopress() {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setId(87);
         mediaFile.setMediaId("679");
