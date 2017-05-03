@@ -32,7 +32,7 @@ public class SiteSqlUtils {
                 .where().equals(field, value).endWhere();
     }
 
-    public static List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(String searchString) {
+    public static List<SiteModel> getSitesAccessedViaWPComRestByNameOrUrlMatching(String searchString) {
         // Note: by default SQLite "LIKE" operator is case insensitive, and that's what we're looking for.
         return WellSql.select(SiteModel.class).where()
                 // ORIGIN = ORIGIN_WPCOM_REST AND (x in url OR x in name)
@@ -184,26 +184,24 @@ public class SiteSqlUtils {
     }
 
     /**
-     * TODO: rename this method
-     *
      * @return A selectQuery to get all the sites accessed via the XMLRPC, this includes: pure self hosted sites,
      * but also Jetpack sites connected via XMLRPC.
      */
-    public static SelectQuery<SiteModel> getSelfHostedSites() {
+    public static SelectQuery<SiteModel> getSitesAccessedViaXMLRPC() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_XMLRPC)
                 .endGroup().endWhere();
     }
 
-    public static SelectQuery<SiteModel> getWPComAndJetpackSites() {
+    public static SelectQuery<SiteModel> getSitesAccessedViaWPComRest() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
                 .endGroup().endWhere();
     }
 
-    public static SelectQuery<SiteModel> getVisibleWPComAndJetpackSites() {
+    public static SelectQuery<SiteModel> getVisibleSitesAccessedViaWPCom() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
