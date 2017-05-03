@@ -39,13 +39,6 @@ public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID = "tell-me-more-btn-param-name-section-id";
     public static String ARG_OPEN_URL_PARAM = "open-url-param";
 
-    private ImageView mImageView;
-    private WPTextView mTitleTextView;
-    private WPTextView mDescriptionTextView;
-    private WPTextView mFooterBottomButton;
-    private WPTextView mFooterCenterButton;
-    private WPTextView mFooterTopButton;
-
     public static final int ACTION_FINISH = 1;
     public static final int ACTION_OPEN_URL = 2;
     public static final int ACTION_OPEN_SUPPORT_CHAT = 3;
@@ -112,17 +105,17 @@ public class SignInDialogFragment extends DialogFragment {
         }
         View v = inflater.inflate(R.layout.signin_dialog_fragment, container, false);
 
-        mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
-        mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
-        mDescriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
-        mFooterBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_first_button);
-        mFooterTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_third_button);
-        mFooterCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_second_button);
+        ImageView imageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
+        WPTextView titleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
+        WPTextView descriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
+        WPTextView footerBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_first_button);
+        WPTextView footerTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_third_button);
+        WPTextView footerCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_second_button);
         final Bundle arguments = getArguments();
 
-        mTitleTextView.setText(arguments.getString(ARG_TITLE));
-        mDescriptionTextView.setText(arguments.getString(ARG_DESCRIPTION));
-        mImageView.setImageResource(arguments.getInt(ARG_IMAGE));
+        titleTextView.setText(arguments.getString(ARG_TITLE));
+        descriptionTextView.setText(arguments.getString(ARG_DESCRIPTION));
+        imageView.setImageResource(arguments.getInt(ARG_IMAGE));
 
         View.OnClickListener clickListenerDismiss = new View.OnClickListener() {
             @Override
@@ -148,29 +141,29 @@ public class SignInDialogFragment extends DialogFragment {
         switch (arguments.getInt(ARG_NUMBER_OF_BUTTONS, 1)) {
             case 1:
                 // One button: we keep only the centered button
-                mFooterCenterButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
-                mFooterCenterButton.setOnClickListener(clickListenerDismiss);
-                mFooterBottomButton.setVisibility(View.GONE);
-                mFooterTopButton.setVisibility(View.GONE);
+                footerCenterButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                footerCenterButton.setOnClickListener(clickListenerDismiss);
+                footerBottomButton.setVisibility(View.GONE);
+                footerTopButton.setVisibility(View.GONE);
                 break;
             case 2:
                 // Two buttons: we keep only the left and right buttons
-                mFooterBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
-                mFooterTopButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
-                mFooterCenterButton.setVisibility(View.GONE);
-                mFooterTopButton.setOnClickListener(clickListenerSecondButton);
+                footerBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                footerTopButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
+                footerCenterButton.setVisibility(View.GONE);
+                footerTopButton.setOnClickListener(clickListenerSecondButton);
                 break;
             case 3:
-                mFooterBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
-                mFooterCenterButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
-                mFooterCenterButton.setOnClickListener(clickListenerSecondButton);
-                mFooterTopButton.setText(arguments.getString(ARG_THIRD_BUTTON_LABEL));
-                mFooterTopButton.setOnClickListener(clickListenerThirdButton);
+                footerBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                footerCenterButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
+                footerCenterButton.setOnClickListener(clickListenerSecondButton);
+                footerTopButton.setText(arguments.getString(ARG_THIRD_BUTTON_LABEL));
+                footerTopButton.setOnClickListener(clickListenerThirdButton);
                 break;
         }
         v.setClickable(true);
         v.setOnClickListener(clickListenerDismiss);
-        mFooterBottomButton.setOnClickListener(clickListenerDismiss);
+        footerBottomButton.setOnClickListener(clickListenerDismiss);
 
         return v;
     }
