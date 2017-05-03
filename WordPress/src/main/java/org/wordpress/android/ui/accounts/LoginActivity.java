@@ -10,16 +10,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
-import org.wordpress.android.ui.accounts.login.nav.LoginEvents;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavigationController;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavigationFsmGetter;
-import org.wordpress.android.ui.accounts.login.nav.LoginState;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavController.*;
+import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 
-public class LoginActivity extends AppCompatActivity implements
-        LoginNavigationFsmGetter,
-        LoginNavigationController.ContextImplementation {
+public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, ContextImplementation {
 
-    LoginNavigationController mLoginNavigationController;
+    LoginNavController mLoginNavController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +30,7 @@ public class LoginActivity extends AppCompatActivity implements
             addLoginPrologueFragment();
         }
 
-        mLoginNavigationController = new LoginNavigationController(LoginState.PROLOGUE, this);
+        mLoginNavController = new LoginNavController(LoginNav.Prologue.class, this);
     }
 
     protected void addLoginPrologueFragment() {
@@ -43,18 +41,18 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public LoginEvents.LoginNavPrologue getLoginNavPrologue() {
-        return mLoginNavigationController.getLoginNavPrologue();
+    public LoginNav.Prologue getLoginNavPrologue() {
+        return mLoginNavController.getLoginNavPrologue();
     }
 
     @Override
-    public LoginEvents.LoginNavInputEmail getLoginNavInputEmail() {
-        return mLoginNavigationController.getLoginNavInputEmail();
+    public LoginNav.InputEmail getLoginNavInputEmail() {
+        return mLoginNavController.getLoginNavInputEmail();
     }
 
     @Override
-    public LoginEvents.LoginNavInputSiteAddress getLoginNavInputSiteAddress() {
-        return mLoginNavigationController.getLoginNavInputSiteAddress();
+    public LoginNav.InputSiteAddress getLoginNavInputSiteAddress() {
+        return mLoginNavController.getLoginNavInputSiteAddress();
     }
 
     private void slideInFragment(Fragment fragment, String tag) {

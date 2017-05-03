@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.accounts.login.nav;
 
-public class LoginEvents {
-    public interface LoginNavPrologue {
+public interface LoginNav {
+    interface Prologue extends LoginNav {
         void doStartLogin();
         void doStartSignup();
     }
 
-    public interface LoginNavInputEmail {
+    interface InputEmail extends LoginNav {
         void gotEmail(String email);
         void loginViaUsernamePassword();
     }
 
-    public interface LoginNavInputSiteAddress {
+    interface InputSiteAddress extends LoginNav {
         void gotSiteAddress(String siteAddress);
     }
 }

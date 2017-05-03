@@ -30,8 +30,8 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
-import org.wordpress.android.ui.accounts.login.nav.LoginEvents;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavigationFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -59,7 +59,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
 
-    private LoginEvents.LoginNavInputEmail mLoginNavInputEmail;
+    private LoginNav.InputEmail mLoginNavInputEmail;
 
     public String getEmail() {
         return mEmail;
@@ -120,10 +120,10 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginNavigationFsmGetter) {
-            mLoginNavInputEmail = ((LoginNavigationFsmGetter) context).getLoginNavInputEmail();
+        if (context instanceof LoginFsmGetter) {
+            mLoginNavInputEmail = ((LoginFsmGetter) context).getLoginNavInputEmail();
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginNavigationFsmGetter");
+            throw new RuntimeException(context.toString() + " must implement LoginFsmGetter");
         }
     }
 
