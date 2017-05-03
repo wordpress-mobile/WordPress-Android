@@ -101,7 +101,6 @@ public class MediaGalleryPickerActivity extends AppCompatActivity
         }
 
         setContentView(R.layout.media_gallery_picker_layout);
-        setTitle(R.string.select_from_media_library);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
