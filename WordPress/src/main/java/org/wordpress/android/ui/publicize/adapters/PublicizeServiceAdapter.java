@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
@@ -23,6 +23,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.inject.Inject;
+
 public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServiceAdapter.SharingViewHolder> {
 
     public interface OnAdapterLoadedListener {
@@ -31,6 +33,8 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     public interface OnServiceClickListener {
         void onServiceClicked(PublicizeService service);
     }
+
+    @Inject AccountStore mAccountStore;
 
     private final PublicizeServiceList mServices = new PublicizeServiceList();
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
@@ -50,7 +54,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
         mSiteId = siteId;
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
-        mCurrentUserId = AccountHelper.getDefaultAccount().getUserId();
+        mCurrentUserId = mAccountStore.getAccount().getUserId();
 
         mColorConnected = context.getResources().getColor(R.color.grey_dark);
         mColorNotConnected = context.getResources().getColor(R.color.grey_lighten_10);
