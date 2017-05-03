@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -8,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -637,10 +637,10 @@ public class StatsActivity extends AppCompatActivity
         // Should we display the widget promo?
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         if (counter == 3 || counter == 1000 || counter == 10000) {
-            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.stats_widget_promo_header,
+            AppCompatDialogFragment newFragment = PromoDialog.newInstance(R.drawable.stats_widget_promo_header,
                     R.string.stats_widget_promo_title, R.string.stats_widget_promo_desc,
                     R.string.stats_widget_promo_ok_btn_label);
-            newFragment.show(getFragmentManager(), "promote_widget_dialog");
+            newFragment.show(getSupportFragmentManager(), "promote_widget_dialog");
         }
     }
 

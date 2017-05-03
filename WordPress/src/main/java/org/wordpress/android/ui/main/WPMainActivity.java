@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.animation.ObjectAnimator;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -260,10 +260,10 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void showVisualEditorPromoDialogIfNeeded() {
         if (AppPrefs.isVisualEditorPromoRequired() && AppPrefs.isVisualEditorEnabled()) {
-            DialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
+            AppCompatDialogFragment newFragment = PromoDialog.newInstance(R.drawable.new_editor_promo_header,
                     R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
                     R.string.new_editor_promo_button_label);
-            newFragment.show(getFragmentManager(), "visual-editor-promo");
+            newFragment.show(getSupportFragmentManager(), "visual-editor-promo");
             AppPrefs.setVisualEditorPromoRequired(false);
         }
     }
