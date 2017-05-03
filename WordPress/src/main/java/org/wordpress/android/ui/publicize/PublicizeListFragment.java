@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -15,7 +16,6 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnSer
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.WPButton;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
     public interface PublicizeManageConnectionsListener {
@@ -27,7 +27,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
-    private WPButton mManageButton;
+    private Button mManageButton;
 
     public static PublicizeListFragment newInstance(int siteId) {
         Bundle args = new Bundle();
@@ -64,7 +64,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
         getAdapter().refresh();
         setTitle(R.string.sharing);
-        setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        setNavigationIcon(R.drawable.ic_arrow_left);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
-        mManageButton = (WPButton) rootView.findViewById(R.id.manage_button);
+        mManageButton = (Button) rootView.findViewById(R.id.manage_button);
 
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
