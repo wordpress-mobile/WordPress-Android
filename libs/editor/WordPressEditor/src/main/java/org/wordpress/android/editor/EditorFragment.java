@@ -1700,7 +1700,18 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             Matcher matcher = pattern.matcher(postContent);
             postContent = matcher.replaceAll(replacementHtml);
         } else {
-            // TODO: Implement video replacement
+            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            String posterUrl = Utils.escapeQuotes(StringUtils.notNullStr(mediaFile.getThumbnailURL()));
+            String replacementShortcode;
+            if (TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                replacementShortcode = "[video src=\"" + remoteUrl + "\" poster=\"" + posterUrl + "\"][/video]";
+            } else {
+                replacementShortcode = mediaFile.getVideoPressShortCode();
+            }
+
+            Pattern pattern = Pattern.compile("<span id=\"video_container_" + mediaFile.getId() + "\".*?<img.*?></span>");
+            Matcher matcher = pattern.matcher(postContent);
+            postContent = matcher.replaceAll(replacementShortcode);
         }
 
         return postContent;

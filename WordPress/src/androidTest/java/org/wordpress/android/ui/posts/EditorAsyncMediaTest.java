@@ -158,6 +158,101 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals("Some text\n" + expectedTag + "\nMore text" + expectedSecondTag, modifiedContent);
     }
 
+    public void testHybridEditorUploadingVideoSwapVideopress() {
+        MediaFile mediaFile = generateSampleUploadedVideoMediaFileVideopress();
+
+        String expectedTag = mediaFile.getVideoPressShortCode();
+
+        String uploadingVideoHtml = "<span id=\"video_container_87\" class=\"video_container\">" +
+                "<progress id=\"progress_87\" value=\"0.09\" class=\"wp_media_indicator\" contenteditable=\"false\">" +
+                "</progress><img data-video_wpid=\"87\" src=\"/data/user/0/org.wordpress" +
+                ".android.beta/cache/thumb-67374471.png\" alt=\"\" class=\"uploading\"></span>";
+
+        // --- Single video post with no other content ---
+        String originalContent = "Some text\n" + uploadingVideoHtml + "\nMore text";
+        String modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
+
+        // --- Single video with surrounding text ---
+        originalContent = "Some text\n" + uploadingVideoHtml + "\nMore text";
+        modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
+
+        // --- Post with no media ---
+        originalContent = "Some text\nMore text";
+        modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals(originalContent, modifiedContent);
+
+        // --- Empty post ---
+        originalContent = "";
+        modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals(originalContent, modifiedContent);
+    }
+
+    public void testHybridEditorUploadingVideoSwapSelfHosted() {
+        MediaFile mediaFile = generateSampleUploadedVideoMediaFile();
+
+        String expectedTag = String.format(Locale.US, "[video src=\"%s\" poster=\"%s\"][/video]",
+                mediaFile.getFileURL(), mediaFile.getThumbnailURL());
+
+        String uploadingVideoHtml = "<span id=\"video_container_76\" class=\"video_container\">" +
+                "<progress id=\"progress_76\" value=\"0.09\" class=\"wp_media_indicator\" contenteditable=\"false\">" +
+                "</progress><img data-video_wpid=\"76\" src=\"/data/user/0/org.wordpress" +
+                ".android.beta/cache/thumb-67374471.png\" alt=\"\" class=\"uploading\"></span>";
+
+        // --- Single video post with no other content ---
+        String originalContent = "Some text\n" + uploadingVideoHtml + "\nMore text";
+        String modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
+
+        // --- Single video with surrounding text ---
+        originalContent = "Some text\n" + uploadingVideoHtml + "\nMore text";
+        modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
+
+        // --- Post with no media ---
+        originalContent = "Some text\nMore text";
+        modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals(originalContent, modifiedContent);
+
+        // --- Empty post ---
+        originalContent = "";
+        modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals(originalContent, modifiedContent);
+    }
+
+    public void testHybridEditorUploadingVideoSwapOldApis() {
+        MediaFile mediaFile = generateSampleUploadedVideoMediaFileVideopress();
+
+        String expectedTag = mediaFile.getVideoPressShortCode();
+
+        // Pre-API19, we use nested spans for an 'Uploading...' overlay instead of a progress element
+        String uploadingImageHtmlOldApis = "<span id=\"video_container_87\" class=\"video_container compat\">" +
+                "<span class=\"upload-overlay\">Uploading…</span><span class=\"upload-overlay-bg\"></span>"+
+                "<img data-video_wpid=\"87\" src=\"/storage/emulated/0/Android/data/image.jpg\" alt=\"\"" +
+                " class=\"uploading\"></span>";
+
+        // --- Single video post with no other content ---
+        String originalContent = "Some text\n" + uploadingImageHtmlOldApis + "\nMore text";
+        String modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
+
+        // --- Single video with surrounding text ---
+        originalContent = "Some text\n" + uploadingImageHtmlOldApis + "\nMore text";
+        modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
+
+        assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
+    }
+
     private static MediaFile generateSampleUploadedMediaFile1() {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setId(54);
@@ -176,6 +271,33 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         mediaFile.setFileURL("http://mysite.wordpress.com/something2.jpg");
         mediaFile.setWidth(400);
         mediaFile.setHeight(800);
+
+        return mediaFile;
+    }
+
+    private static MediaFile generateSampleUploadedVideoMediaFile() {
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setId(76);
+        mediaFile.setMediaId("679");
+        mediaFile.setFileURL("http://mysite.wordpress.com/something2.mp4");
+        mediaFile.setThumbnailURL("http://mysite.wordpress.com/something2-thumb.png");
+        mediaFile.setWidth(400);
+        mediaFile.setHeight(800);
+        mediaFile.setVideo(true);
+
+        return mediaFile;
+    }
+
+    private static MediaFile generateSampleUploadedVideoMediaFileVideopress() {
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setId(87);
+        mediaFile.setMediaId("679");
+        mediaFile.setFileURL("http://mysite.wordpress.com/something2.mp4");
+        mediaFile.setThumbnailURL("http://mysite.wordpress.com/something2-thumb.png");
+        mediaFile.setWidth(400);
+        mediaFile.setHeight(800);
+        mediaFile.setVideo(true);
+        mediaFile.setVideoPressShortCode("[wpvideo 225325]");
 
         return mediaFile;
     }
