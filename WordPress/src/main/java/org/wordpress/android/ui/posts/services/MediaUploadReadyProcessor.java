@@ -23,9 +23,8 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
                         localMediaId, mediaFile);
             } else if (showNewEditor) {
                 post.setContent(EditorFragment.replaceMediaFileWithUrl(post.getContent(), mediaFile));
-            } else {
-                // TODO implement legacy editor implementation to update image/video in post
             }
+            // No implementation necessary for the legacy editor as it doesn't support uploading media while editing
         }
 
         return post;
