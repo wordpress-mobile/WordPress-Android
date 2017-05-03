@@ -17,16 +17,15 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
@@ -309,9 +308,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                     int position = getAdapterPosition();
                     PhotoPickerItem item = getItemAtPosition(position);
                     if (item != null) {
-                        Map<String, Object> properties = new HashMap<>();
-                        properties.put("is_video", item.isVideo);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
+                        trackOpenPreviewScreenEvent(item);
                         MediaPreviewActivity.showPreview(
                                 mContext,
                                 imgThumbnail,
@@ -322,6 +319,21 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             });
         }
     }
+
+    private void trackOpenPreviewScreenEvent(final PhotoPickerItem item) {
+        if (item == null) {
+            return;
+        }
+
+        new Thread(new Runnable() {
+            public void run() {
+                Map<String, Object> properties = AnalyticsUtils.getMediaProperties(mContext, item.isVideo, item.uri, null);
+                properties.put("is_video", item.isVideo);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
+            }
+        }).start();
+    }
+
 
     /*
      * builds the list of media items from the device
