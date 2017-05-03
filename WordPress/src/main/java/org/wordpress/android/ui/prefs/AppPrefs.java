@@ -106,9 +106,6 @@ public class AppPrefs {
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
 
-        // When we need to show the Visual Editor Promo Dialog
-        VISUAL_EDITOR_PROMO_REQUIRED,
-
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
 
@@ -433,14 +430,6 @@ public class AppPrefs {
 
     public static boolean isVisualEditorEnabled() {
         return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
-    }
-
-    public static boolean isVisualEditorPromoRequired() {
-        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, true);
-    }
-
-    public static void setVisualEditorPromoRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, required);
     }
 
     public static boolean isGravatarChangePromoRequired() {
