@@ -139,6 +139,12 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
     }
 
+    public static void viewBlogSharing(Context context, SiteModel site) {
+        Intent intent = new Intent(context, PublicizeListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
         if (site == null) {
             Toast.makeText(context, context.getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();

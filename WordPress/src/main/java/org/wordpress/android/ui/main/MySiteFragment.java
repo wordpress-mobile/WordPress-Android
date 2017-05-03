@@ -249,7 +249,7 @@ public class MySiteFragment extends Fragment
         mSharingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSharing(getActivity(), WordPress.getBlog(mBlogLocalId));
+                ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
             }
         });
 
