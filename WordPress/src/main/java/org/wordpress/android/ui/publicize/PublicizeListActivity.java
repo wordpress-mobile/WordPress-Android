@@ -15,9 +15,9 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
@@ -37,6 +37,8 @@ public class PublicizeListActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
+
         setContentView(R.layout.publicize_list_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -48,9 +50,11 @@ public class PublicizeListActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        final SiteModel site;
         if (savedInstanceState == null) {
+            site = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             PublicizeTable.createTables(WordPress.wpDB.getDatabase());
-            mSiteId = getIntent().getIntExtra(PublicizeConstants.ARG_SITE_ID, 0);
+            mSiteId = site.getId();
             showListFragment(mSiteId);
             PublicizeUpdateService.updateConnectionsForSite(this, mSiteId);
         } else {
