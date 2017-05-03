@@ -8,9 +8,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -27,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
@@ -91,6 +95,13 @@ public class SiteSettingsFragment extends PreferenceFragment
 
 
     /**
+     * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
+     *
+     * Used to format user-facing {@link String}'s in certain preferences.
+     */
+    public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
+
+    /**
      * url that points to wordpress.com purchases
      */
     public static final String WORDPRESS_PURCHASES_URL = "https://wordpress.com/purchases";
@@ -132,6 +143,9 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     // Reference to the list of items being edited in the current list editor
     private List<String> mEditingList;
+
+    // Used to ensure that settings are only fetched once throughout the lifecycle of the fragment
+    private boolean mShouldFetch;
 
     // General settings
     private EditTextPreference mTitlePref;
@@ -325,6 +339,22 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        // use a wrapper to apply the Calypso theme
+        Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
+        LayoutInflater localInflater = inflater.cloneInContext(themer);
+        View view = super.onCreateView(localInflater, container, savedInstanceState);
+
+        if (view != null) {
+            setupPreferenceList((ListView) view.findViewById(android.R.id.list), getResources());
+        }
+
+        return view;
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         removeMoreScreenToolbar();
         super.onSaveInstanceState(outState);
@@ -336,6 +366,24 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) setupMorePreferenceScreen();
+    }
+
+    @Override
+    public void onChildViewAdded(View parent, View child) {
+        if (child.getId() == android.R.id.title && child instanceof TextView) {
+            // style preference category title views
+            TextView title = (TextView) child;
+            WPPrefUtils.layoutAsBody2(title);
+        } else {
+            // style preference title views
+            TextView title = (TextView) child.findViewById(android.R.id.title);
+            if (title != null) WPPrefUtils.layoutAsSubhead(title);
+        }
+    }
+
+    @Override
+    public void onChildViewRemoved(View parent, View child) {
+        // NOP
     }
 
     @Override
@@ -596,8 +644,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
-    @Override
-    protected void initPreferences() {
+    private void initPreferences() {
         mTitlePref = (EditTextPreference) getChangePref(R.string.pref_key_site_title);
         mTaglinePref = (EditTextPreference) getChangePref(R.string.pref_key_site_tagline);
         mAddressPref = (EditTextPreference) getChangePref(R.string.pref_key_site_address);
@@ -664,7 +711,6 @@ public class SiteSettingsFragment extends PreferenceFragment
                 getLabelForImageQualityValue(mSiteSettings.getImageQuality()));
     }
 
-    @Override
     public void setEditingEnabled(boolean enabled) {
         // excludes mAddressPref, mMorePreference
         final Preference[] editablePreference = {
@@ -963,11 +1009,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
     }
 
-    @Override
-    protected void addPreferencesFromResource() {
-        addPreferencesFromResource(R.xml.site_settings);
-    }
-
     private void setCategories() {
         // Ignore if there are no changes
         if (mSiteSettings.isSameCategoryList(mCategoryPref.getEntryValues())) {
@@ -1034,6 +1075,27 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSiteSettings.setReceivePingbacks(newValue);
         mReceivePingbacksPref.setChecked(newValue);
         mReceivePingbacksNested.setChecked(newValue);
+    }
+
+    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
+        pref.setValue(value);
+        pref.setSummary(summary);
+        pref.refreshAdapter();
+    }
+
+    /**
+     * Helper method to perform validation and set multiple properties on an EditTextPreference.
+     * If newValue is equal to the current preference text no action will be taken.
+     */
+    private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
+        if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
+
+        if (!newValue.equals(pref.getSummary())) {
+            String formattedValue = StringUtils.unescapeHTML(newValue.replaceFirst(ADDRESS_FORMAT_REGEX, ""));
+
+            pref.setText(formattedValue);
+            pref.setSummary(formattedValue);
+        }
     }
 
     /**
