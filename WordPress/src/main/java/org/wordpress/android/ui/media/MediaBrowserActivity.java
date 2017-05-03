@@ -64,6 +64,7 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -667,7 +668,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 @Override
                 protected Uri doInBackground(Uri... uris) {
                     Uri imageUri = uris[0];
-                    return MediaUtils.downloadExternalMedia(MediaBrowserActivity.this, imageUri);
+                    try {
+                        return MediaUtils.downloadExternalMedia(MediaBrowserActivity.this, imageUri);
+                    } catch (IllegalStateException e) {
+                        // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                        AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + imageUri.toString(), e);
+                        CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + imageUri.toString() +
+                                " See issue #5823");
+                        return null;
+                    }
                 }
 
                 protected void onPostExecute(Uri uri) {
