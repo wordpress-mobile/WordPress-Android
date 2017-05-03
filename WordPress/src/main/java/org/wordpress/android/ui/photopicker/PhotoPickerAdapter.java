@@ -15,15 +15,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
@@ -305,6 +309,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                     int position = getAdapterPosition();
                     PhotoPickerItem item = getItemAtPosition(position);
                     if (item != null) {
+                        Map<String, Object> properties = new HashMap<>();
+                        properties.put("is_video", item.isVideo);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
                         MediaPreviewActivity.showPreview(
                                 mContext,
                                 imgThumbnail,
