@@ -28,6 +28,10 @@ public class LoginLogicTest {
         public void toast(String message) {
             mLastToastMessage = message;
         }
+
+        @Override
+        public void showEmailLoginScreen() {
+        }
     };
 
     @Rule
@@ -78,11 +82,10 @@ public class LoginLogicTest {
         LoginNavigationController loginNavigationController = new LoginNavigationController(LoginState.PROLOGUE,
                 mContextImplementation);
         LoginEvents.LoginNavPrologue loginNavPrologue = loginNavigationController.getLoginNavPrologue();
+
         loginNavPrologue.doStartLogin();
 
-        // login is not implemented yet so, we should still be in the prologue state
-        loginNavigationController.ensureState(LoginState.PROLOGUE);
-        Assert.assertEquals("Login is not implemented yet", mLastToastMessage);
+        loginNavigationController.ensureState(LoginState.INPUT_EMAIL);
     }
 
     @Test
@@ -147,6 +150,20 @@ public class LoginLogicTest {
         // email input is not implemented yet so, we should still be in the INPUT_EMAIL state
         loginNavigationController.ensureState(LoginState.INPUT_EMAIL);
         Assert.assertEquals("Input email is not implemented yet. Input email: a@b.com", mLastToastMessage);
+    }
+
+    @Test
+    public void inputEmailFallbackUsernamePasswordTest() {
+        LoginNavigationController loginNavigationController = new LoginNavigationController(LoginState.INPUT_EMAIL,
+                mContextImplementation);
+        loginNavigationController.ensureState(LoginState.INPUT_EMAIL);
+
+        LoginEvents.LoginNavInputEmail loginNavInputEmail = loginNavigationController.getLoginNavInputEmail();
+        loginNavInputEmail.loginViaUsernamePassword();
+
+        // fall back to username/password is not implemented yet so, we should still be in the InputEmail state
+        loginNavigationController.ensureState(LoginState.INPUT_EMAIL);
+        Assert.assertEquals("Fall back to username/password is not implemented yet.", mLastToastMessage);
     }
 
     @Test

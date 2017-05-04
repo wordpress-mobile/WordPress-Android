@@ -8,6 +8,7 @@ public class LoginEvents {
 
     public interface LoginNavInputEmail {
         void gotEmail(String email);
+        void loginViaUsernamePassword();
     }
 
     public interface LoginNavInputSiteAddress {

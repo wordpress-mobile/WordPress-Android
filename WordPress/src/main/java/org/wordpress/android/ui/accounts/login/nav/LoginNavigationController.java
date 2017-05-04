@@ -4,6 +4,7 @@ public class LoginNavigationController implements LoginNavigationFsmGetter {
 
     public interface ContextImplementation {
         void toast(String message);
+        void showEmailLoginScreen();
     }
 
     private PrologueHandler mPrologueHandler = new PrologueHandler();
@@ -35,19 +36,17 @@ public class LoginNavigationController implements LoginNavigationFsmGetter {
         @Override
         public void doStartLogin() {
             ensureState(LoginState.PROLOGUE);
+            gotoState(LoginState.INPUT_EMAIL);
 
-            mContextImplementation.toast("Login is not implemented yet");
-
-            gotoState(LoginState.PROLOGUE);
+            mContextImplementation.showEmailLoginScreen();
         }
 
         @Override
         public void doStartSignup() {
             ensureState(LoginState.PROLOGUE);
+            gotoState(LoginState.PROLOGUE);
 
             mContextImplementation.toast("Signup is not implemented yet");
-
-            gotoState(LoginState.PROLOGUE);
         }
     }
 
@@ -55,10 +54,17 @@ public class LoginNavigationController implements LoginNavigationFsmGetter {
         @Override
         public void gotEmail(String email) {
             ensureState(LoginState.INPUT_EMAIL);
+            gotoState(LoginState.INPUT_EMAIL);
 
             mContextImplementation.toast("Input email is not implemented yet. Input email: " + email);
+        }
 
+        @Override
+        public void loginViaUsernamePassword() {
+            ensureState(LoginState.INPUT_EMAIL);
             gotoState(LoginState.INPUT_EMAIL);
+
+            mContextImplementation.toast("Fall back to username/password is not implemented yet.");
         }
     }
 
@@ -66,10 +72,9 @@ public class LoginNavigationController implements LoginNavigationFsmGetter {
         @Override
         public void gotSiteAddress(String siteAddress) {
             ensureState(LoginState.INPUT_SITE_ADDRESS);
+            gotoState(LoginState.INPUT_SITE_ADDRESS);
 
             mContextImplementation.toast("Input site address is not implemented yet. Input site address: " + siteAddress);
-
-            gotoState(LoginState.INPUT_SITE_ADDRESS);
         }
     }
 
