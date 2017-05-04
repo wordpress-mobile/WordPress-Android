@@ -177,14 +177,14 @@ public class AniUtils {
         return fadeIn;
     }
 
-    private static ObjectAnimator getFadeOutAnim(final View target, Duration duration) {
+    private static ObjectAnimator getFadeOutAnim(final View target, Duration duration, final int endVisibility) {
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(target, View.ALPHA, 1.0f, 0.0f);
         fadeOut.setDuration(duration.toMillis(target.getContext()));
         fadeOut.setInterpolator(new LinearInterpolator());
         fadeOut.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                target.setVisibility(View.GONE);
+                target.setVisibility(endVisibility);
             }
         });
         return fadeOut;
@@ -197,8 +197,12 @@ public class AniUtils {
     }
 
     public static void fadeOut(final View target, Duration duration) {
+        fadeOut(target, duration, View.GONE);
+    }
+
+    public static void fadeOut(final View target, Duration duration, int endVisibility) {
         if (target != null && duration != null) {
-            getFadeOutAnim(target, duration).start();
+            getFadeOutAnim(target, duration, endVisibility).start();
         }
     }
 

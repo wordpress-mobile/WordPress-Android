@@ -31,6 +31,7 @@ import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -102,6 +103,10 @@ public class CommentsActivity extends AppCompatActivity
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
             mComment = (CommentModel) savedInstanceState.getSerializable(KEY_SELECTED_COMMENT);
+        }
+
+        if (savedInstanceState == null) {
+            SmartToast.show(this, SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
         }
     }
 
