@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateWPComSite;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteXMLRPCClientTest {

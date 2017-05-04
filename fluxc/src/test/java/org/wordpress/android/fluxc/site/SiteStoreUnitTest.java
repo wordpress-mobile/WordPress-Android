@@ -36,13 +36,13 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverRestOnly;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateJetpackSiteOverXMLRPC;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generatePostFormats;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedNonJPSite;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateSelfHostedSiteFutureJetpack;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateTestSite;
-import static org.wordpress.android.fluxc.utils.SiteUtils.generateWPComSite;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateJetpackSiteOverRestOnly;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateJetpackSiteOverXMLRPC;
+import static org.wordpress.android.fluxc.site.SiteUtils.generatePostFormats;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedSiteFutureJetpack;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateTestSite;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteStoreUnitTest {
