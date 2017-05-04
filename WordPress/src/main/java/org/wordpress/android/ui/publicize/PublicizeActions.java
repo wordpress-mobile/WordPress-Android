@@ -78,7 +78,7 @@ public class PublicizeActions {
      * step one in creating a publicize connection: request the list of keyring connections
      * and find the one for the passed service
      */
-    private static void connectStepOne(final int siteId, final String serviceId, long currentUserId) {
+    private static void connectStepOne(final int siteId, final String serviceId, final long currentUserId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
