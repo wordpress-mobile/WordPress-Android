@@ -14,8 +14,8 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PublicizeButton;
+import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.DetailListPreference;
-import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
 import org.wordpress.android.util.AppLog;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class PublicizeManageConnectionsFragment extends SettingsFragment {
+public class PublicizeManageConnectionsFragment extends AccountSettingsFragment {
     private static final String TWITTER_PREFIX = "@";
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
     public static final String TWITTER_ID = "twitter";
