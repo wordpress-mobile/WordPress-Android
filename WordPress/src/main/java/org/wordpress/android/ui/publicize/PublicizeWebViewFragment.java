@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -141,9 +140,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         String postData = WPWebViewActivity.getAuthenticationPostData(
                 WPWebViewActivity.WPCOM_LOGIN_URL,
                 connectUrl,
-                AccountHelper.getDefaultAccount().getUserName(),
+                mAccountStore.getAccount().getUserName(),
                 "",
-                AccountHelper.getDefaultAccount().getAccessToken());
+                mAccountStore.getAccessToken());
 
         mWebView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, postData.getBytes());
     }
