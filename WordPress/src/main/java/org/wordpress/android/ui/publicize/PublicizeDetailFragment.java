@@ -88,7 +88,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     public void onResume() {
         super.onResume();
         loadData();
-        setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
     }
 
     public void loadData() {

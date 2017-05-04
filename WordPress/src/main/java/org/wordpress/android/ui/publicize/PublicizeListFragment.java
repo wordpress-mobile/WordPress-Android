@@ -64,7 +64,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
         getAdapter().refresh();
         setTitle(R.string.sharing);
-        setNavigationIcon(R.drawable.ic_arrow_left);
+        setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
     }
 
     @Override
