@@ -33,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -103,7 +104,8 @@ public class EditPostSettingsFragment extends Fragment
     private SiteModel mSite;
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
-    private EditText mPasswordEditText, mExcerptEditText;
+    private EditText mPasswordEditText;
+    private TextView mExcerptTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -213,7 +215,7 @@ public class EditPostSettingsFragment extends Fragment
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
 
-        mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
+        mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -256,8 +258,17 @@ public class EditPostSettingsFragment extends Fragment
             mFeaturedImageButton.setVisibility(View.GONE);
         }
 
+        final LinearLayout excerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
+        excerptContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO: open the post excerpt dialog
+                excerptContainer.setVisibility(View.GONE);
+            }
+        });
+
         if (mPost.isPage()) { // remove post specific views
-            mExcerptEditText.setVisibility(View.GONE);
+            excerptContainer.setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
             rootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
@@ -351,7 +362,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        mExcerptEditText.setText(mPost.getExcerpt());
+        mExcerptTextView.setText(mPost.getExcerpt());
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -622,7 +633,10 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String password = EditTextUtils.getText(mPasswordEditText);
-        String excerpt = EditTextUtils.getText(mExcerptEditText);
+        String excerpt = mExcerptTextView.toString();
+        if (excerpt.equals(getString(R.string.not_set))) {
+            excerpt = "";
+        }
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";

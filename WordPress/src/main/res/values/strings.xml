@@ -278,13 +278,16 @@
     <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
     <string name="download">Downloading media</string>
-    <string name="post_settings">Post settings</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
+
+    <!--post settings-->
+    <string name="post_settings">Post settings</string>
+    <string name="not_set">Not Set</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
