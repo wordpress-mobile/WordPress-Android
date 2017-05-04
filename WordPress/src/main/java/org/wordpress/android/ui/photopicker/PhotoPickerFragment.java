@@ -266,7 +266,7 @@ public class PhotoPickerFragment extends Fragment {
                 List<Uri> uriList = new ArrayList<>();
                 uriList.add(mediaUri);
                 mListener.onPhotoPickerMediaChosen(uriList);
-                trackAddMediaFromDeviceEvents(uriList);
+                trackAddRecentMediaEvent(uriList);
             }
         }
 
@@ -380,7 +380,7 @@ public class PhotoPickerFragment extends Fragment {
             if (item.getItemId() == R.id.mnu_confirm_selection && mListener != null) {
                 ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
                 mListener.onPhotoPickerMediaChosen(uriList);
-                trackAddMediaFromDeviceEvents(uriList);
+                trackAddRecentMediaEvent(uriList);
                 return true;
             }
             return false;
@@ -395,7 +395,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
 
-    private void trackAddMediaFromDeviceEvents(List<Uri> uriList) {
+    private void trackAddRecentMediaEvent(List<Uri> uriList) {
         if (uriList == null) {
             AppLog.e(AppLog.T.MEDIA, "Cannot track new media events if uriList is null!!");
             return;
