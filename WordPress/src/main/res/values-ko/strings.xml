@@ -281,9 +281,9 @@ Language: ko_KR
 	<string name="error_refresh_comments_showing_older">지금은 댓글을 새로 고칠 수 없습니다. 이전 댓글을 표시 중입니다.</string>
 	<string name="editor_post_settings_set_featured_image">특성 이미지 설정</string>
 	<string name="editor_post_settings_featured_image">특성 이미지</string>
-	<string name="new_editor_promo_desc">Android용 워드프레스 앱에 멋진\n 편집기. 새 글을 작성하면서 사용해 보세요.</string>
+	<string name="new_editor_promo_description">Android용 워드프레스 앱에 멋진\n 편집기. 새 글을 작성하면서 사용해 보세요.</string>
 	<string name="new_editor_promo_title">완전히 새로운 편집기</string>
-	<string name="new_editor_promo_button_label">네, 확인했습니다.</string>
+	<string name="new_editor_promo_button">네, 확인했습니다.</string>
 	<string name="visual_editor_enabled">비주얼 편집기 사용 설정됨</string>
 	<string name="editor_content_placeholder">여기서 스토리 공유…</string>
 	<string name="editor_page_title_placeholder">페이지 제목</string>

@@ -248,9 +248,9 @@ Language: ar
 	<string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
 	<string name="editor_post_settings_set_featured_image">تعيين الصورة المميزة</string>
 	<string name="editor_post_settings_featured_image">الصورة المميزة</string>
-	<string name="new_editor_promo_desc">يتضمن الآن تطبيق وردبرس.كوم الخاص بنظام Android رؤية جديدة رائعة\n المحرر. جرِّبه من خلال إنشاء مقالة جديدة.</string>
+	<string name="new_editor_promo_description">يتضمن الآن تطبيق وردبرس.كوم الخاص بنظام Android رؤية جديدة رائعة\n المحرر. جرِّبه من خلال إنشاء مقالة جديدة.</string>
 	<string name="new_editor_promo_title">محرر جديد تمامًا</string>
-	<string name="new_editor_promo_button_label">رائع، شكرًا!</string>
+	<string name="new_editor_promo_button">رائع، شكرًا!</string>
 	<string name="visual_editor_enabled">تم تمكين محرر مرئي</string>
 	<string name="editor_content_placeholder">شارك قصتك هنا…</string>
 	<string name="editor_page_title_placeholder">عنوان الصفحة</string>

@@ -266,9 +266,9 @@ Language: ru
 	<string name="error_refresh_comments_showing_older">Не удалось обновить ленту комментариев — отображены старые комментарии</string>
 	<string name="editor_post_settings_set_featured_image">Настроить избранное изображение</string>
 	<string name="editor_post_settings_featured_image">Избранное изображение</string>
-	<string name="new_editor_promo_desc">Приложение WordPress для Android теперь имеет новое визуальное оформление\n редактор. Попробуйте с его помощью создать новую запись.</string>
+	<string name="new_editor_promo_description">Приложение WordPress для Android теперь имеет новое визуальное оформление\n редактор. Попробуйте с его помощью создать новую запись.</string>
 	<string name="new_editor_promo_title">Новый редактор</string>
-	<string name="new_editor_promo_button_label">Спасибо!</string>
+	<string name="new_editor_promo_button">Спасибо!</string>
 	<string name="visual_editor_enabled">Визуальный редактор включен</string>
 	<string name="editor_content_placeholder">Поделитесь своей историей здесь…</string>
 	<string name="editor_page_title_placeholder">Заголовок страницы</string>

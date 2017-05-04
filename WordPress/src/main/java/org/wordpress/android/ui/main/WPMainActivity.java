@@ -260,9 +260,12 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void showNewEditorPromoDialogIfNeeded() {
         if (AppPrefs.isNewEditorPromoRequired() && AppPrefs.isAztecEditorEnabled()) {
-            AppCompatDialogFragment newFragment = PromoDialog.newInstance(R.drawable.img_promo_editor,
-                    R.string.new_editor_promo_title, R.string.new_editor_promo_desc,
-                    R.string.new_editor_promo_button_label);
+            AppCompatDialogFragment newFragment = PromoDialog.newInstance(
+                    R.drawable.img_promo_editor,
+                    R.string.new_editor_promo_title,
+                    R.string.new_editor_promo_description,
+                    R.string.new_editor_promo_button
+            );
             newFragment.show(getSupportFragmentManager(), "new-editor-promo");
             AppPrefs.setNewEditorPromoRequired(false);
         }

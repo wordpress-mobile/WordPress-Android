@@ -333,9 +333,9 @@ Language: pt_BR
 	<string name="error_refresh_comments_showing_older">Não foi possível atualizar os comentários no momento. Comentários mais antigos estão sendo exibidos</string>
 	<string name="editor_post_settings_set_featured_image">Configurar imagem destacada</string>
 	<string name="editor_post_settings_featured_image">Imagem destacada</string>
-	<string name="new_editor_promo_desc">O aplicativo do WordPress para Android agora inclui um belo visual repaginado.\n editor. Experimente criando um novo post.</string>
+	<string name="new_editor_promo_description">O aplicativo do WordPress para Android agora inclui um belo visual repaginado.\n editor. Experimente criando um novo post.</string>
 	<string name="new_editor_promo_title">Novo editor</string>
-	<string name="new_editor_promo_button_label">Ótimo, obrigado!</string>
+	<string name="new_editor_promo_button">Ótimo, obrigado!</string>
 	<string name="visual_editor_enabled">Editor visual ativado</string>
 	<string name="editor_content_placeholder">Compartilhe sua história aqui...</string>
 	<string name="editor_page_title_placeholder">Título da página</string>

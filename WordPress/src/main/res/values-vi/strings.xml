@@ -202,9 +202,9 @@ Language: vi_VN
 	<string name="error_refresh_comments_showing_older">Các bình luận không thể làm mới tại thời điểm này - hiện các bình luận cũ hơn</string>
 	<string name="editor_post_settings_set_featured_image">Đặt hình ảnh đặc trưng</string>
 	<string name="editor_post_settings_featured_image">Hình ảnh đặc trưng</string>
-	<string name="new_editor_promo_desc">Ứng dụng WordPress cho Android bây giờ bao gồm trình biên tập trực quan mới đẹp mắt.\n Thử nó ngay bằng cách tạo một bài viết mới.</string>
+	<string name="new_editor_promo_description">Ứng dụng WordPress cho Android bây giờ bao gồm trình biên tập trực quan mới đẹp mắt.\n Thử nó ngay bằng cách tạo một bài viết mới.</string>
 	<string name="new_editor_promo_title">Brand trình soạn thảo mới</string>
-	<string name="new_editor_promo_button_label">Tuyệt, cảm ơn!</string>
+	<string name="new_editor_promo_button">Tuyệt, cảm ơn!</string>
 	<string name="visual_editor_enabled">Trình biên tập trực quan đã bật</string>
 	<string name="editor_content_placeholder">Chia sẻ câu chuyện của bạn ở đây</string>
 	<string name="editor_page_title_placeholder">Tiêu đề Trang</string>

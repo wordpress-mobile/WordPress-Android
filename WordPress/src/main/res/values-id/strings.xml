@@ -327,9 +327,9 @@ Language: id
 	<string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
 	<string name="editor_post_settings_set_featured_image">Atur Gambar Unggulan</string>
 	<string name="editor_post_settings_featured_image">Gambar Unggulan</string>
-	<string name="new_editor_promo_desc">Aplikasi WordPress untuk Android sekarang berisi visual baru yang cantik\n penyunting Cobalah dengan membuat pos baru.</string>
+	<string name="new_editor_promo_description">Aplikasi WordPress untuk Android sekarang berisi visual baru yang cantik\n penyunting Cobalah dengan membuat pos baru.</string>
 	<string name="new_editor_promo_title">Penyunting baru</string>
-	<string name="new_editor_promo_button_label">Bagus, terima kasih!</string>
+	<string name="new_editor_promo_button">Bagus, terima kasih!</string>
 	<string name="visual_editor_enabled">Editor Visual diaktifkan</string>
 	<string name="editor_content_placeholder">Editor Visual diaktifkan</string>
 	<string name="editor_page_title_placeholder">Judul Halaman</string>

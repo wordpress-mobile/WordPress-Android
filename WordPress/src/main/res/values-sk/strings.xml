@@ -170,7 +170,7 @@ Language: sk
 	<string name="editor_post_settings_set_featured_image">Nastaviť ilustračný obrázok</string>
 	<string name="editor_post_settings_featured_image">Ilustračný obrázok</string>
 	<string name="new_editor_promo_title">Úplne nový editor</string>
-	<string name="new_editor_promo_button_label">Skvelé, ďakujem!</string>
+	<string name="new_editor_promo_button">Skvelé, ďakujem!</string>
 	<string name="visual_editor_enabled">Vizuálny editor povolený</string>
 	<string name="editor_page_title_placeholder">Nadpis stránky</string>
 	<string name="editor_post_title_placeholder">Nadpis článku</string>

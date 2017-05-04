@@ -324,9 +324,9 @@ Language: cy_GB
 	<string name="error_refresh_comments_showing_older">Nid oes modd adnewyddu sylwadau ar hyn o bryd - yn dangos sylwadau hŷn</string>
 	<string name="editor_post_settings_set_featured_image">Gosod Delwedd Nodwedd</string>
 	<string name="editor_post_settings_featured_image">Delwedd Nodwedd</string>
-	<string name="new_editor_promo_desc">Mae\'r ap WordPress Android bellach yn cynnwys golygydd  gweledol\n  newydd hardd. Rhowch gynnig arno drwy greu cofnod newydd.</string>
+	<string name="new_editor_promo_description">Mae\'r ap WordPress Android bellach yn cynnwys golygydd  gweledol\n  newydd hardd. Rhowch gynnig arno drwy greu cofnod newydd.</string>
 	<string name="new_editor_promo_title">Golygydd newydd sbon</string>
-	<string name="new_editor_promo_button_label">Gwych, diolch!</string>
+	<string name="new_editor_promo_button">Gwych, diolch!</string>
 	<string name="visual_editor_enabled">Galluogwyd y Golygydd Gweledol</string>
 	<string name="editor_content_placeholder">Rhanwch eich stori yma…</string>
 	<string name="editor_page_title_placeholder">Teitl Tudalen</string>
