@@ -65,7 +65,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         if (response != null && response instanceof Map) {
-                            PostModel postModel = postResponseObjectToPostModel(response, site, post.isPage());
+                            PostModel postModel = postResponseObjectToPostModel(response, site);
                             FetchPostResponsePayload payload;
                             if (postModel != null) {
                                 if (origin == PostAction.PUSH_POST) {
@@ -131,7 +131,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                             canLoadMore = true;
                         }
 
-                        PostsModel posts = postsResponseToPostsModel(response, site, getPages);
+                        PostsModel posts = postsResponseToPostsModel(response, site);
 
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
                                 offset > 0, canLoadMore);
@@ -274,7 +274,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site, boolean isPage) {
+    private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site) {
         List<Map<?, ?>> postsList = new ArrayList<>();
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
@@ -285,7 +285,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         PostModel post;
 
         for (Object postObject : postsList) {
-            post = postResponseObjectToPostModel(postObject, site, isPage);
+            post = postResponseObjectToPostModel(postObject, site);
             if (post != null) {
                 postArray.add(post);
             }
@@ -298,7 +298,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return new PostsModel(postArray);
     }
 
-    private static PostModel postResponseObjectToPostModel(Object postObject, SiteModel site, boolean isPage) {
+    private static PostModel postResponseObjectToPostModel(Object postObject, SiteModel site) {
         // Sanity checks
         if (!(postObject instanceof Map)) {
             return null;
@@ -373,8 +373,11 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         post.setPassword(MapUtils.getMapStr(postMap, "post_password"));
         post.setStatus(MapUtils.getMapStr(postMap, "post_status"));
 
-        if (isPage) {
+        if ("page".equals(MapUtils.getMapStr(postMap, "post_type"))) {
             post.setIsPage(true);
+        }
+
+        if (post.isPage()) {
             post.setParentId(MapUtils.getMapLong(postMap, "wp_page_parent_id"));
             post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
             post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
@@ -402,7 +405,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             }
         }
 
-        contentStruct.put("post_type", "post");
+        contentStruct.put("post_type", post.isPage() ? "page" : "post");
         contentStruct.put("post_title", post.getTitle());
 
         if (post.getDateCreated() != null) {
