@@ -32,10 +32,19 @@ public class PlanUpdateService extends Service {
     private SiteModel mSite;
     private final List<Plan> mSitePlans = new ArrayList<>();
 
-    public static void startService(Context context, SiteModel site) {
+    public static boolean startService(Context context, SiteModel site) {
+        if (context == null) {
+            AppLog.e(AppLog.T.PLANS, "Context is null, can't download plans!");
+            return false;
+        }
+        if (site == null) {
+            AppLog.e(AppLog.T.PLANS, "Can't download plans for an empty site!");
+            return false;
+        }
         Intent intent = new Intent(context, PlanUpdateService.class);
         intent.putExtra(WordPress.SITE, site);
         context.startService(intent);
+        return true;
     }
 
     public static void stopService(Context context) {
@@ -65,6 +74,11 @@ public class PlanUpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+        if (mSite == null) {
+            AppLog.e(AppLog.T.PLANS, "PlanUpdateService was started with an empty site.");
+            requestFailed();
+            return START_NOT_STICKY;
+        }
 
         mNumActiveRequests = 2;
         downloadPlanFeatures();
