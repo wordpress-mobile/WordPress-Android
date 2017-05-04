@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-49"
-        versionCode 388
+        versionName "7.3-rc-5"
+        versionCode 402
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -116,6 +116,10 @@ dependencies {
     }
     compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.robolectric:robolectric:3.3.2'
+    testCompile 'org.robolectric:shadows-multidex:3.3.2'
+
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestCompile 'org.objenesis:objenesis:2.1'
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
@@ -132,7 +136,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:37205a24a937b606e39f1a1e6f5d5b0c9b570cb9') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:e46255029b6afa886b3e0ebb8ed96b4f57872e77') {
         exclude group: "com.android.volley";
     }
 

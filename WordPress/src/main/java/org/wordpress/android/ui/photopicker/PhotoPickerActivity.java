@@ -133,7 +133,7 @@ public class PhotoPickerActivity extends AppCompatActivity
             case RequestCodes.PICTURE_LIBRARY:
                 if (data != null) {
                     Uri imageUri = data.getData();
-                    pictureSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
+                    mediaSelected(imageUri, PhotoPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
             // user took a photo with the device camera
@@ -141,7 +141,7 @@ public class PhotoPickerActivity extends AppCompatActivity
                 try {
                     File f = new File(mMediaCapturePath);
                     Uri capturedImageUri = Uri.fromFile(f);
-                    pictureSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
+                    mediaSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
                 } catch (RuntimeException e) {
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
@@ -165,7 +165,7 @@ public class PhotoPickerActivity extends AppCompatActivity
         AppLockManager.getInstance().setExtendedTimeout();
     }
 
-    private void pictureSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
+    private void mediaSelected(@NonNull Uri mediaUri, @NonNull PhotoPickerMediaSource source) {
         Intent intent = new Intent()
                 .putExtra(EXTRA_MEDIA_URI, mediaUri.toString())
                 .putExtra(EXTRA_MEDIA_SOURCE, source.name());
@@ -176,21 +176,19 @@ public class PhotoPickerActivity extends AppCompatActivity
     @Override
     public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
         if (uriList.size() > 0) {
-            pictureSelected(uriList.get(0), PhotoPickerMediaSource.APP_PICKER);
+            mediaSelected(uriList.get(0), PhotoPickerMediaSource.APP_PICKER);
         }
     }
 
     @Override
     public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon) {
         switch (icon) {
-            case ANDROID_CAMERA:
+            case ANDROID_CAPTURE_PHOTO:
                 launchCamera();
                 break;
-            case ANDROID_PICKER:
+            case ANDROID_CHOOSE_PHOTO:
                 launchPictureLibrary();
                 break;
         }
     }
-
-
 }
