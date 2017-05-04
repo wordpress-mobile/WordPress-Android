@@ -405,7 +405,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             }
         }
 
-        contentStruct.put("post_type", "post");
+        contentStruct.put("post_type", post.isPage() ? "page" : "post");
         contentStruct.put("post_title", post.getTitle());
 
         if (post.getDateCreated() != null) {
