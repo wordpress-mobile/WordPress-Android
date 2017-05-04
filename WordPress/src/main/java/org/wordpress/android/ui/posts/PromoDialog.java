@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
-public class PromoDialog extends DialogFragment {
+public class PromoDialog extends AppCompatDialogFragment {
     private int mDrawableId;
     private int mTitleId;
     private int mDescriptionId;
