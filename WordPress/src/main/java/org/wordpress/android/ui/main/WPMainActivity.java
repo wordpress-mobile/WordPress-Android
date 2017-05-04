@@ -701,7 +701,7 @@ public class WPMainActivity extends AppCompatActivity {
             return;
         }
 
-        // When we select a site, we want to update its informations or options
+        // When we select a site, we want to update its information or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
 
         // Make selected site visible
