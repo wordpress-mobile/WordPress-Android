@@ -1,13 +1,18 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android;
 
-import android.test.AndroidTestCase;
-
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.Locale;
 
-public class EditorAsyncMediaTest extends AndroidTestCase {
+import static org.junit.Assert.assertEquals;
+
+@RunWith(RobolectricTestRunner.class)
+public class EditorAsyncMediaTest {
+    @Test
     public void testHybridEditorUploadingImageSwap() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
@@ -45,6 +50,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals(originalContent, modifiedContent);
     }
 
+    @Test
     public void testHybridEditorUploadingImageSwapMultiple() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
@@ -88,6 +94,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals("Some text\n" + expectedTag + "\nMore text" + expectedSecondTag, modifiedContent);
     }
 
+    @Test
     public void testHybridEditorUploadingImageSwapOldApis() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
@@ -114,6 +121,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals("Some text\n" + expectedTag + "\nMore text", modifiedContent);
     }
 
+    @Test
     public void testHybridEditorUploadingImageSwapOldApisMultiple() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
@@ -158,6 +166,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals("Some text\n" + expectedTag + "\nMore text" + expectedSecondTag, modifiedContent);
     }
 
+    @Test
     public void testHybridEditorUploadingVideoSwapVideopress() {
         MediaFile mediaFile = generateSampleUploadedVideoVideopress();
 
@@ -193,6 +202,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals(originalContent, modifiedContent);
     }
 
+    @Test
     public void testHybridEditorUploadingVideoSwapSelfHosted() {
         MediaFile mediaFile = generateSampleUploadedVideo();
 
@@ -229,6 +239,7 @@ public class EditorAsyncMediaTest extends AndroidTestCase {
         assertEquals(originalContent, modifiedContent);
     }
 
+    @Test
     public void testHybridEditorUploadingVideoSwapOldApis() {
         MediaFile mediaFile = generateSampleUploadedVideoVideopress();
 
