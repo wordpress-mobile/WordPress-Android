@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.accounts.login.nav;
 
+import java.util.Stack;
+
 public class LoginNavController implements LoginFsmGetter {
 
     public interface ContextImplementation {
@@ -8,21 +10,35 @@ public class LoginNavController implements LoginFsmGetter {
         void showEmailLoginScreen();
     }
 
-    private PrologueHandler mPrologueHandler = new PrologueHandler();
-    private InputEmailHandler mInputEmailHandler = new InputEmailHandler();
-    private InputSiteAddressHandler mInputSiteAddressHandler = new InputSiteAddressHandler();
     private ContextImplementation mContextImplementation;
 
-    public LoginNavController(Class<? extends LoginNav> initialLoginNav, ContextImplementation contextImplementation) {
-        mCurrentLoginNav = initialLoginNav;
+    public LoginNavController(Class<? extends LoginNav> initialLoginNav,
+            ContextImplementation contextImplementation) {
+        mLoginNavStack.push(newNavHandler(initialLoginNav));
 
         mContextImplementation = contextImplementation;
     }
 
-    private Class<? extends LoginNav> mCurrentLoginNav = LoginNav.Prologue.class;
+    private Object newNavHandler(Class<? extends LoginNav> loginNav) {
+        if (loginNav.isAssignableFrom(LoginNav.Prologue.class)) {
+            return new PrologueHandler();
+        }
+
+        if (loginNav.isAssignableFrom(LoginNav.InputEmail.class)) {
+            return new InputEmailHandler();
+        }
+
+        if (loginNav.isAssignableFrom(LoginNav.InputSiteAddress.class)) {
+            return new InputSiteAddressHandler();
+        }
+
+        throw new RuntimeException("Unsupported login state " + loginNav.getSimpleName());
+    }
+
+    private Stack<Object> mLoginNavStack = new Stack<>();
 
     private boolean isInState(Class<? extends LoginNav> loginNav) {
-        return mCurrentLoginNav != null && loginNav.isAssignableFrom(mCurrentLoginNav);
+        return !mLoginNavStack.empty() && loginNav.isAssignableFrom(mLoginNavStack.peek().getClass());
     }
 
     public void ensureState(Class<? extends LoginNav> loginNav) {
@@ -33,11 +49,27 @@ public class LoginNavController implements LoginFsmGetter {
 
     private void gotoState(Class<? extends LoginNav> loginNav) {
         if (!isInState(loginNav)) {
-            mCurrentLoginNav = loginNav;
+            mLoginNavStack.push(newNavHandler(loginNav));
         }
     }
 
-    // Implementation of LoginNav.PROLOGUE
+    public void goBack() {
+        if (mLoginNavStack.isEmpty()) {
+            throw new RuntimeException("Navigation stack is empty! Can't go back.");
+        }
+
+        mLoginNavStack.pop();
+    }
+
+    public boolean isNavStackEmpty() {
+        return mLoginNavStack.isEmpty();
+    }
+
+    // available for testing purposes. Don't use otherwise
+    public void force(Class<? extends LoginNav> loginNav) {
+        mLoginNavStack.push(newNavHandler(loginNav));
+    }
+
     private class PrologueHandler implements LoginNav.Prologue {
         @Override
         public void doStartLogin() {
@@ -86,16 +118,28 @@ public class LoginNavController implements LoginFsmGetter {
 
     @Override
     public LoginNav.Prologue getLoginNavPrologue() {
-        return mPrologueHandler;
+        try {
+            return (PrologueHandler) mLoginNavStack.peek();
+        } catch (ClassCastException cce) {
+            throw new RuntimeException("Not in state " + LoginNav.Prologue.class.getSimpleName());
+        }
     }
 
     @Override
     public LoginNav.InputEmail getLoginNavInputEmail() {
-        return mInputEmailHandler;
+        try {
+            return (InputEmailHandler) mLoginNavStack.peek();
+        } catch (ClassCastException cce) {
+            throw new RuntimeException("Not in state " + LoginNav.InputEmail.class.getSimpleName());
+        }
     }
 
     @Override
     public LoginNav.InputSiteAddress getLoginNavInputSiteAddress() {
-        return mInputSiteAddressHandler;
+        try {
+            return (InputSiteAddressHandler) mLoginNavStack.peek();
+        } catch (ClassCastException cce) {
+            throw new RuntimeException("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName());
+        }
     }
 }

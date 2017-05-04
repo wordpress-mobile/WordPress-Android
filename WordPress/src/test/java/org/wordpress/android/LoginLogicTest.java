@@ -70,7 +70,7 @@ public class LoginLogicTest {
 
     /////////////////////////////////////////////////
     ///
-    /// PROLOGUE state tests
+    /// PROLOGUE nav tests
     ///
     /////////////////////////////////////////////////
 
@@ -81,6 +81,9 @@ public class LoginLogicTest {
         loginNavController.getLoginNavPrologue().doStartLogin();
 
         loginNavController.ensureState(LoginNav.InputEmail.class);
+
+        loginNavController.goBack();
+        loginNavController.ensureState(LoginNav.Prologue.class);
     }
 
     @Test
@@ -92,38 +95,68 @@ public class LoginLogicTest {
         // login is not implemented yet so, we should still be in the prologue state
         loginNavController.ensureState(LoginNav.Prologue.class);
         Assert.assertEquals("Signup is not implemented yet", mLastToastMessage);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
     }
 
     @Test
     public void prologueInvalidEventsTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mContextImplementation);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class,
+                mContextImplementation);
 
-        {
-            // `gotEmail` event is now allowed while in this state
-            try {
-                loginNavController.getLoginNavInputEmail().gotEmail("a@b.com");
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.InputEmail.class.getSimpleName(), re.getMessage());
-            }
+        // get a reference to LoginNav InputEmail for later use
+        LoginNav.InputEmail loginNavInputEmail = loginNavController.getLoginNavInputEmail();
+
+        // force LoginNav InputSiteAddress
+        loginNavController.goBack();
+        loginNavController.force(LoginNav.InputSiteAddress.class);
+        // get a reference to LoginNav InputSiteAddress for later use
+        LoginNav.InputSiteAddress loginNavInputSiteAddress = loginNavController.getLoginNavInputSiteAddress();
+
+        // force the state we want to test
+        loginNavController.goBack();
+        loginNavController.force(LoginNav.Prologue.class);
+        loginNavController.ensureState(LoginNav.Prologue.class);
+
+        // we shouldn't be able to obtain a reference to LoginNav InputEmail in this state
+        try {
+            loginNavInputEmail = loginNavController.getLoginNavInputEmail();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputEmail.class.getSimpleName(), re.getMessage());
         }
 
-        {
-            try {
-                // `gotSiteAddress` event is now allowed while in this state
-                loginNavController.getLoginNavInputSiteAddress().gotSiteAddress("test.wordpress.com");
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName(),
-                        re.getMessage());
-            }
+        // `gotEmail` event is now allowed while in this state
+        try {
+            loginNavInputEmail.gotEmail("a@b.com");
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputEmail.class.getSimpleName(), re.getMessage());
+        }
+
+        // we shouldn't be able to obtain a reference to LoginNav InputSiteAddress in this state
+        try {
+            loginNavInputSiteAddress = loginNavController.getLoginNavInputSiteAddress();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName(), re.getMessage());
+        }
+
+        // `gotSiteAddress` event is now allowed while in this state
+        try {
+            loginNavInputSiteAddress.gotSiteAddress("test.wordpress.com");
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName(), re.getMessage());
         }
 
         // we should still be in the Prologue state
         loginNavController.ensureState(LoginNav.Prologue.class);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
     }
 
     /////////////////////////////////////////////////
     ///
-    /// INPUT_EMAIL state tests
+    /// INPUT_EMAIL nav tests
     ///
     /////////////////////////////////////////////////
 
@@ -137,6 +170,9 @@ public class LoginLogicTest {
         // email input is not implemented yet so, we should still be in the InputEmail state
         loginNavController.ensureState(LoginNav.InputEmail.class);
         Assert.assertEquals("Input email is not implemented yet. Input email: a@b.com", mLastToastMessage);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
     }
 
     @Test
@@ -149,44 +185,72 @@ public class LoginLogicTest {
         // fall back to username/password is not implemented yet so, we should still be in the InputEmail state
         loginNavController.ensureState(LoginNav.InputEmail.class);
         Assert.assertEquals("Fall back to username/password is not implemented yet.", mLastToastMessage);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
     }
 
     @Test
     public void inputEmailInvalidEventsTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class, mContextImplementation);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mContextImplementation);
 
-        {
-            // `doStartLogin` event is now allowed while in state INPUT_EMAIL
-            try {
-                loginNavController.getLoginNavPrologue().doStartLogin();
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
-            }
+        // get a reference to LoginNav Prologue for later use
+        LoginNav.Prologue loginNavPrologue = loginNavController.getLoginNavPrologue();
 
-            // `doStartSignup` event is now allowed while in state INPUT_EMAIL
-            try {
-                loginNavController.getLoginNavPrologue().doStartSignup();
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
-            }
+        // force LoginNav InputSiteAddress state
+        loginNavController.goBack();
+        loginNavController.force(LoginNav.InputSiteAddress.class);
+        // get a reference to LoginNav InputSiteAddress for later use
+        LoginNav.InputSiteAddress loginNavInputSiteAddress = loginNavController.getLoginNavInputSiteAddress();
+
+        // force the state we want to test
+        loginNavController.goBack();
+        loginNavController.force(LoginNav.InputEmail.class);
+        loginNavController.ensureState(LoginNav.InputEmail.class);
+
+        // we shouldn't be able to obtain a reference to LoginNav Prologue in this state
+        try {
+            loginNavPrologue = loginNavController.getLoginNavPrologue();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
         }
 
-        {
-            // `gotSiteAddress` event is now allowed while in state INPUT_EMAIL
-            try {
-                loginNavController.getLoginNavInputSiteAddress().gotSiteAddress("test.wordpress.com");
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName(), re.getMessage());
-            }
+        // `doStartLogin` and `doStartSignup` events is now allowed while in this state
+        try {
+            loginNavPrologue.doStartLogin();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
+        }
+        try {
+            loginNavPrologue.doStartSignup();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
+        }
+
+        // we shouldn't be able to obtain a reference to LoginNav InputSiteAddress in this state
+        try {
+            loginNavInputSiteAddress = loginNavController.getLoginNavInputSiteAddress();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName(), re.getMessage());
+        }
+
+        // `gotSiteAddress` event is now allowed while in this state
+        try {
+            loginNavInputSiteAddress.gotSiteAddress("test.wordpress.com");
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName(), re.getMessage());
         }
 
         // we should still be in the InputEmail state
         loginNavController.ensureState(LoginNav.InputEmail.class);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
     }
 
     /////////////////////////////////////////////////
     ///
-    /// INPUT_SITE_ADDRESS state tests
+    /// INPUT_SITE_ADDRESS nav tests
     ///
     /////////////////////////////////////////////////
 
@@ -201,39 +265,66 @@ public class LoginLogicTest {
         loginNavController.ensureState(LoginNav.InputSiteAddress.class);
         Assert.assertEquals("Input site address is not implemented yet. Input site address: test.wordpress.com",
                 mLastToastMessage);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
     }
 
     @Test
     public void inputSiteAddressInvalidEventsTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.InputSiteAddress.class, mContextImplementation);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mContextImplementation);
 
-        {
+        // get a reference to LoginNav Prologue for later use
+        LoginNav.Prologue loginNavPrologue = loginNavController.getLoginNavPrologue();
 
-            // `doStartLogin` event is now allowed while in this state
-            try {
-                loginNavController.getLoginNavPrologue().doStartLogin();
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
-            }
+        // force LoginNav InputEmail state
+        loginNavController.goBack();
+        loginNavController.force(LoginNav.InputEmail.class);
+        // get a reference to LoginNav InputEmail for later use
+        LoginNav.InputEmail loginNavInputEmail = loginNavController.getLoginNavInputEmail();
 
-            // ``doStartSignup` event is now allowed while in this state
-            try {
-                loginNavController.getLoginNavPrologue().doStartSignup();
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
-            }
+        // force the state we want to test
+        loginNavController.goBack();
+        loginNavController.force(LoginNav.InputSiteAddress.class);
+        loginNavController.ensureState(LoginNav.InputSiteAddress.class);
+
+        // we shouldn't be able to obtain a reference to LoginNav Prologue in this state
+        try {
+            loginNavPrologue = loginNavController.getLoginNavPrologue();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
         }
 
-        {
-            // `gotEmail` event is now allowed while in this state
-            try {
-                loginNavController.getLoginNavInputEmail().gotEmail("a@b.com");
-            } catch (RuntimeException re) {
-                Assert.assertEquals("Not in state " + LoginNav.InputEmail.class.getSimpleName(), re.getMessage());
-            }
+        // `doStartLogin` and `doStartSignup` events is now allowed while in this state
+        try {
+            loginNavPrologue.doStartLogin();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
+        }
+        try {
+            loginNavPrologue.doStartSignup();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.Prologue.class.getSimpleName(), re.getMessage());
+        }
+
+        // we shouldn't be able to obtain a reference to LoginNav InputEmail in this state
+        try {
+            loginNavInputEmail = loginNavController.getLoginNavInputEmail();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputEmail.class.getSimpleName(), re.getMessage());
+        }
+
+        // `gotEmail` event is now allowed while in this state
+        try {
+            loginNavInputEmail.gotEmail("a@b.com");
+        } catch (RuntimeException re) {
+            Assert.assertEquals("Not in state " + LoginNav.InputEmail.class.getSimpleName(), re.getMessage());
         }
 
         // we should still be in the InputSiteAddress state
         loginNavController.ensureState(LoginNav.InputSiteAddress.class);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
     }
 }

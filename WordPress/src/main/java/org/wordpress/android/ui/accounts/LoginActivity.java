@@ -33,6 +33,13 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
         mLoginNavController = new LoginNavController(LoginNav.Prologue.class, this);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        mLoginNavController.goBack();
+    }
+
     protected void addLoginPrologueFragment() {
         LogInOrSignUpFragment loginSignupFragment = new LogInOrSignUpFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
