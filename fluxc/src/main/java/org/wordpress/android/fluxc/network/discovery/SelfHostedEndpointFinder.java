@@ -343,8 +343,12 @@ public class SelfHostedEndpointFinder {
             throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
         }
 
-        // Convert IDN names to punycode if necessary
-        url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
+        try {
+            // Convert IDN names to punycode if necessary
+            url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
+        } catch (IllegalArgumentException e) {
+            throw new DiscoveryException(DiscoveryError.INVALID_URL, siteUrl);
+        }
 
         // Add http to the beginning of the URL if needed
         url = UrlUtils.addUrlSchemeIfNeeded(UrlUtils.removeScheme(url), addHttps);
