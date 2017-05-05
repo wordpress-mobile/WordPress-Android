@@ -836,7 +836,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void signInAndFetchBlogListWPOrg() {
         startProgress(getString(R.string.signing_in));
         String url = EditTextUtils.getText(mUrlEditText).trim();
-        url = url.replace("\n", "").replace("\r", "");
+        url = url.replace("\r|\n", "");
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
         mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(url));
     }
