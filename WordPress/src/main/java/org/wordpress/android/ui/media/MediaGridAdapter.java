@@ -143,7 +143,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 if (SiteUtils.isPhotonCapable(mSite)) {
                     thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
                 } else {
-                    thumbUrl = UrlUtils.removeQuery(media.getUrl()) + "?w=" + mThumbWidth + "&h=" + mThumbHeight;
+                    thumbUrl = UrlUtils.removeQuery(media.getUrl());
                 }
                 WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }

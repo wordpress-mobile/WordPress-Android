@@ -76,6 +76,8 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -431,7 +433,7 @@ public class EditPostSettingsFragment extends Fragment
             if (mFeaturedImageId > 0) {
                 MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mFeaturedImageId);
 
-                if (media == null) {
+                if (media == null || getActivity() == null) {
                     return;
                 }
 
@@ -439,12 +441,16 @@ public class EditPostSettingsFragment extends Fragment
                 mFeaturedImageButton.setVisibility(View.GONE);
 
                 // Get max width for photon thumbnail
-                int maxWidth = getResources().getDisplayMetrics().widthPixels;
-                int padding = DisplayUtils.dpToPx(getActivity(), 16);
-                int imageWidth = (maxWidth - padding);
+                int width = DisplayUtils.getDisplayPixelWidth(getActivity());
+                int height = DisplayUtils.getDisplayPixelHeight(getActivity());
+                int size = Math.max(width, height);
 
-                WordPressMediaUtils.loadNetworkImage(media.getThumbnailUrl() + "?w=" + imageWidth, mFeaturedImageView,
-                        mImageLoader);
+                String mediaUri = media.getThumbnailUrl();
+                if (SiteUtils.isPhotonCapable(mSite)) {
+                    mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+                }
+
+                WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
             } else {
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageButton.setVisibility(View.VISIBLE);
