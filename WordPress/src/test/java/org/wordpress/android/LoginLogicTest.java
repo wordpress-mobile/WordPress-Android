@@ -191,6 +191,21 @@ public class LoginLogicTest {
     }
 
     @Test
+    public void inputEmailHelpTest() {
+        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class, mContextImplementation);
+        loginNavController.ensureState(LoginNav.InputEmail.class);
+
+        loginNavController.getLoginNavInputEmail().help();
+
+        // help is not implemented yet so, we should still be in the InputEmail state
+        loginNavController.ensureState(LoginNav.InputEmail.class);
+        Assert.assertEquals("Help is not implemented yet.", mLastToastMessage);
+
+        loginNavController.goBack();
+        Assert.assertTrue(loginNavController.isNavStackEmpty());
+    }
+
+    @Test
     public void inputEmailInvalidEventsTest() {
         LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mContextImplementation);
 

@@ -104,6 +104,14 @@ public class LoginNavController implements LoginFsmGetter {
 
             mContextImplementation.toast("Fall back to username/password is not implemented yet.");
         }
+
+        @Override
+        public void help() {
+            ensureState(LoginNav.InputEmail.class);
+            gotoState(LoginNav.InputEmail.class);
+
+            mContextImplementation.toast("Help is not implemented yet.");
+        }
     }
 
     private class InputSiteAddressHandler implements LoginNav.InputSiteAddress {

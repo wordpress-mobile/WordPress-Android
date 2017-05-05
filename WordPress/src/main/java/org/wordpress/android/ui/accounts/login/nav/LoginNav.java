@@ -9,6 +9,8 @@ public interface LoginNav {
     interface InputEmail extends LoginNav {
         void gotEmail(String email);
         void loginViaUsernamePassword();
+
+        void help();
     }
 
     interface InputSiteAddress extends LoginNav {
