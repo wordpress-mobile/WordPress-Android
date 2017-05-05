@@ -17,7 +17,7 @@ import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 
 public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, ContextImplementation {
 
-    LoginNavController mLoginNavController;
+    LoginNavController mLoginNavController = new LoginNavController(LoginNav.Prologue.class, this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,6 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
         if (savedInstanceState == null) {
             addLoginPrologueFragment();
         }
-
-        mLoginNavController = new LoginNavController(LoginNav.Prologue.class, this);
     }
 
     @Override
