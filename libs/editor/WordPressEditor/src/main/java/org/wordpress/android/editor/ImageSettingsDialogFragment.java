@@ -20,10 +20,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +34,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALIGN;
 import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_CAPTION;
@@ -40,7 +41,6 @@ import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ID_IMAGE_
 import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_URL_LINK;
 import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_ENABLED_AZTEC;
 import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_FEATURED;
-import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_HEADER;
 import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_FEATURED;
 import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_META;
 import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_MAX_WIDTH;
@@ -63,6 +63,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
     private JSONObject mImageMeta;
     private int mMaxImageWidth;
+    private ImageLoader mImageLoader;
 
     private EditText mTitleText;
     private EditText mCaptionText;
@@ -74,8 +75,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     private CheckBox mFeaturedCheckBox;
 
     private boolean mIsFeatured;
-
-    private Map<String, String> mHttpHeaders;
 
     private CharSequence mPreviousActionBarTitle;
     private boolean mPreviousHomeAsUpEnabled;
@@ -146,7 +145,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_image_options, container, false);
 
-        ImageView thumbnailImage = (ImageView) view.findViewById(R.id.image_thumbnail);
+        NetworkImageView thumbnailImage = (NetworkImageView) view.findViewById(R.id.image_thumbnail);
         TextView filenameLabel = (TextView) view.findViewById(R.id.image_filename);
         mTitleText = (EditText) view.findViewById(R.id.image_title);
         mCaptionText = (EditText) view.findViewById(R.id.image_caption);
@@ -162,8 +161,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         if (bundle != null) {
             try {
                 mImageMeta = new JSONObject(bundle.getString(EXTRA_IMAGE_META));
-
-                mHttpHeaders = (Map) bundle.getSerializable(EXTRA_HEADER);
 
                 final String imageSrc = mImageMeta.getString(ATTR_SRC);
                 final String imageFilename = imageSrc.substring(imageSrc.lastIndexOf("/") + 1);
@@ -292,6 +289,10 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         getFragmentManager().popBackStack();
     }
 
+    public void setImageLoader(ImageLoader imageLoader) {
+        mImageLoader = imageLoader;
+    }
+
     private void restorePreviousActionBar() {
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -352,27 +353,20 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
         return metaData;
     }
+    /**
+     * Loads the given network image URL into the {@link NetworkImageView}.
+     */
+    private void loadThumbnail(String imageUrl, NetworkImageView imageView) {
+        if (imageUrl != null) {
+            Uri uri = Uri.parse(imageUrl);
+            String filepath = uri.getLastPathSegment();
 
-    private void loadThumbnail(final String src, final ImageView thumbnailImage) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded()) {
-                    final Uri localUri = Utils.downloadExternalMedia(getActivity(), Uri.parse(src), mHttpHeaders);
-
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                thumbnailImage.setImageURI(localUri);
-                            }
-                        });
-                    }
-                }
+            if (MediaUtils.isValidImage(filepath)) {
+                imageView.setImageUrl(imageUrl, mImageLoader);
             }
-        });
-
-        thread.start();
+        } else {
+            imageView.setImageResource(0);
+        }
     }
 
     /**
