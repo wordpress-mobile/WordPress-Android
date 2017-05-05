@@ -14,12 +14,12 @@ public class LoginNavController implements LoginFsmGetter {
 
     public LoginNavController(Class<? extends LoginNav> initialLoginNav,
             ContextImplementation contextImplementation) {
-        mLoginNavStack.push(newNavHandler(initialLoginNav));
+        mLoginNavStack.push(initialLoginNav);
 
         mContextImplementation = contextImplementation;
     }
 
-    private Object newNavHandler(Class<? extends LoginNav> loginNav) {
+    private LoginNav newNavHandler(Class<? extends LoginNav> loginNav) {
         if (loginNav.isAssignableFrom(LoginNav.Prologue.class)) {
             return new PrologueHandler();
         }
@@ -35,10 +35,10 @@ public class LoginNavController implements LoginFsmGetter {
         throw new RuntimeException("Unsupported login state " + loginNav.getSimpleName());
     }
 
-    private Stack<Object> mLoginNavStack = new Stack<>();
+    private Stack<Class<? extends LoginNav>> mLoginNavStack = new Stack<>();
 
     private boolean isInState(Class<? extends LoginNav> loginNav) {
-        return !mLoginNavStack.empty() && loginNav.isAssignableFrom(mLoginNavStack.peek().getClass());
+        return !mLoginNavStack.empty() && loginNav.equals(mLoginNavStack.peek());
     }
 
     public void ensureState(Class<? extends LoginNav> loginNav) {
@@ -49,7 +49,7 @@ public class LoginNavController implements LoginFsmGetter {
 
     private void gotoState(Class<? extends LoginNav> loginNav) {
         if (!isInState(loginNav)) {
-            mLoginNavStack.push(newNavHandler(loginNav));
+            mLoginNavStack.push(loginNav);
         }
     }
 
@@ -67,7 +67,7 @@ public class LoginNavController implements LoginFsmGetter {
 
     // available for testing purposes. Don't use otherwise
     public void force(Class<? extends LoginNav> loginNav) {
-        mLoginNavStack.push(newNavHandler(loginNav));
+        mLoginNavStack.push(loginNav);
     }
 
     private class PrologueHandler implements LoginNav.Prologue {
@@ -127,7 +127,7 @@ public class LoginNavController implements LoginFsmGetter {
     @Override
     public LoginNav.Prologue getLoginNavPrologue() {
         try {
-            return (PrologueHandler) mLoginNavStack.peek();
+            return (LoginNav.Prologue) newNavHandler(mLoginNavStack.peek());
         } catch (ClassCastException cce) {
             throw new RuntimeException("Not in state " + LoginNav.Prologue.class.getSimpleName());
         }
@@ -136,7 +136,7 @@ public class LoginNavController implements LoginFsmGetter {
     @Override
     public LoginNav.InputEmail getLoginNavInputEmail() {
         try {
-            return (InputEmailHandler) mLoginNavStack.peek();
+            return (InputEmailHandler) newNavHandler(mLoginNavStack.peek());
         } catch (ClassCastException cce) {
             throw new RuntimeException("Not in state " + LoginNav.InputEmail.class.getSimpleName());
         }
@@ -145,7 +145,7 @@ public class LoginNavController implements LoginFsmGetter {
     @Override
     public LoginNav.InputSiteAddress getLoginNavInputSiteAddress() {
         try {
-            return (InputSiteAddressHandler) mLoginNavStack.peek();
+            return (InputSiteAddressHandler) newNavHandler(mLoginNavStack.peek());
         } catch (ClassCastException cce) {
             throw new RuntimeException("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName());
         }
