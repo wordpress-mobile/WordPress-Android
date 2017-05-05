@@ -54,7 +54,7 @@
     </style>
 
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorAccent">@color/blue_wordpress</item>
+        <item name="colorAccent">@color/wp_blue_medium</item>
 
         <item name="android:statusBarColor">@color/status_bar_tint</item>
         <item name="android:windowBackground">@color/white</item>
@@ -66,8 +66,6 @@
     </style>
 
     <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:colorButtonNormal">@color/blue_wordpress</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
     </style>
 
