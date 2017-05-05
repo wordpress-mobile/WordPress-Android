@@ -432,6 +432,10 @@ public class AccountStore extends Store {
     }
 
     private void handleFetchAccountCompleted(AccountRestPayload payload) {
+        if (!hasAccessToken()) {
+            emitAccountChangeError(AccountErrorType.ACCOUNT_FETCH_ERROR);
+            return;
+        }
         if (!checkError(payload, "Error fetching Account via REST API (/me)")) {
             mAccount.copyAccountAttributes(payload.account);
             updateDefaultAccount(mAccount, AccountAction.FETCH_ACCOUNT);
@@ -441,6 +445,10 @@ public class AccountStore extends Store {
     }
 
     private void handleFetchSettingsCompleted(AccountRestPayload payload) {
+        if (!hasAccessToken()) {
+            emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
+            return;
+        }
         if (!checkError(payload, "Error fetching Account Settings via REST API (/me/settings)")) {
             mAccount.copyAccountSettingsAttributes(payload.account);
             updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
@@ -459,6 +467,10 @@ public class AccountStore extends Store {
     }
 
     private void handlePushSettingsCompleted(AccountPushSettingsResponsePayload payload) {
+        if (!hasAccessToken()) {
+            emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
+            return;
+        }
         if (!payload.isError()) {
             boolean updated = AccountRestClient.updateAccountModelFromPushSettingsResponse(mAccount, payload.settings);
             if (updated) {
