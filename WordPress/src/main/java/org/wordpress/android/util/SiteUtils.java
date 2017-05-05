@@ -34,7 +34,7 @@ public class SiteUtils {
     }
 
     public static boolean isAccessibleViaWPComAPI(SiteModel site) {
-        return site.isWPCom() || site.isJetpackConnected();
+        return site.getOrigin() == SiteModel.ORIGIN_WPCOM_REST;
     }
 
     public static String getSiteIconUrl(SiteModel site, int size) {
