@@ -17,7 +17,7 @@ public class LoginActivity extends AppCompatActivity implements
         LoginNavigationFsmGetter,
         LoginNavigationController.ContextImplementation {
 
-    LoginNavigationController mLoginNavigationController;
+    LoginNavigationController mLoginNavigationController = new LoginNavigationController(LoginState.PROLOGUE, this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,6 @@ public class LoginActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             addLoginPrologueFragment();
         }
-
-        mLoginNavigationController = new LoginNavigationController(LoginState.PROLOGUE, this);
     }
 
     protected void addLoginPrologueFragment() {
