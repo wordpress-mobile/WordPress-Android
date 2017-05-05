@@ -42,9 +42,6 @@ public class PostExcerptDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        LayoutInflater factory = LayoutInflater.from(getActivity());
-        View textEntryView = factory.inflate(R.layout.post_excerpt_dialog, null);
-        builder.setView(textEntryView);
         builder.setTitle(R.string.post_excerpt);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -52,9 +49,13 @@ public class PostExcerptDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-        AlertDialog dialog = builder.create();
-        EditText editText = (EditText) textEntryView.findViewById(R.id.post_excerpt_dialog_edit_text);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        View dialogView = layoutInflater.inflate(R.layout.post_excerpt_dialog, null);
+        builder.setView(dialogView);
+        EditText editText = (EditText) dialogView.findViewById(R.id.post_excerpt_dialog_edit_text);
         editText.setText(mPostExcerpt);
-        return dialog;
+
+        return builder.create();
     }
 }
