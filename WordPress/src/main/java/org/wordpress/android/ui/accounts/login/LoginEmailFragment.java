@@ -2,13 +2,21 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -45,6 +53,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
+    protected TextInputLayout mEmailEditTextLayout;
     protected EditText mEmailEditText;
 
     protected boolean mEmailAutoCorrected;
@@ -67,6 +76,8 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -75,6 +86,9 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
 
         mEmailEditText = (EditText) rootView.findViewById(R.id.login_email);
         mEmailEditText.addTextChangedListener(this);
+
+        mEmailEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_email_layout);
+
         mNextButton = (Button) rootView.findViewById(R.id.login_email_next_button);
         mNextButton.setOnClickListener(mNextClickListener);
         mUsernamePasswordButton = rootView.findViewById(R.id.login_email_username_password);
@@ -114,6 +128,20 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof LoginFsmGetter) {
@@ -126,6 +154,21 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_login, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.help) {
+            mLoginNavInputEmail.help();
+            return true;
+        }
+
+        return false;
     }
 
     /*
@@ -225,7 +268,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         } else {
             mNextButton.setEnabled(false);
         }
-        mEmailEditText.setError(null);
+        mEmailEditTextLayout.setError(null);
     }
 
     private boolean fieldsFilled() {
@@ -237,8 +280,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         boolean retValue = true;
 
         if (TextUtils.isEmpty(email)) {
-            mEmailEditText.setError(getString(R.string.required_field));
-            mEmailEditText.requestFocus();
+            showEmailError(R.string.required_field);
             retValue = false;
         }
 
@@ -246,8 +288,13 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     private void showEmailError(int messageId) {
-        mEmailEditText.setError(getString(messageId));
-        mEmailEditText.requestFocus();
+        mEmailEditTextLayout.setError(getString(messageId));
+        mEmailEditText.post(new Runnable() {
+            @Override
+            public void run() {
+                mEmailEditText.requestFocus();
+            }
+        });
     }
 
     @Override
@@ -300,7 +347,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
                 mLoginNavInputEmail.gotEmail(mEmail);
             }
         } else {
-            showEmailError(R.string.email_not_found);
+            showEmailError(R.string.email_not_registered_wpcom);
         }
     }
 }

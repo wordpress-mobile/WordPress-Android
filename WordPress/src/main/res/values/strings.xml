@@ -1698,8 +1698,9 @@
     <string name="log_in">Log In</string>
     <string name="create_wordpress_site">Create WordPress site</string>
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
-    <string name="enter_email_wordpress_com">Enter the email address associated with your WordPress.com account</string>
+    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites</string>
     <string name="next">Next</string>
-    <string name="enter_username_password_instead">Enter a username and password instead</string>
+    <string name="enter_username_password_instead">Log in to your site by entering your site address instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
+    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
 </resources>

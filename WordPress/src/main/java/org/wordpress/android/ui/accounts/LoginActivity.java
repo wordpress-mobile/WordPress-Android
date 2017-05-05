@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        setContentView(R.layout.welcome_activity);
+        setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
             addLoginPrologueFragment();

@@ -108,8 +108,8 @@
 
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/SignInTheme">
-        </activity>
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.accounts.NewBlogActivity"
