@@ -355,7 +355,7 @@ Language: sq_AL
 	<string name="error_refresh_comments_showing_older">Komentet s&amp;#8217;u freskuan dot këtë herë - po shfaqen komente më të vjetër</string>
 	<string name="editor_post_settings_set_featured_image">Vëre Si Figurë të Zgjedhur</string>
 	<string name="editor_post_settings_featured_image">Figurë e Zgjedhur</string>
-	<string name="new_editor_promo_description">WordPress-i për Android tani përfshin një përpunues pamor të ri.\n    Provojeni duke krijuar një postim të ri.</string>
+	<string name="new_editor_promo_desc">WordPress-i për Android tani përfshin një përpunues pamor të ri.\n    Provojeni duke krijuar një postim të ri.</string>
 	<string name="new_editor_promo_title">Përpunues i ri fringo</string>
 	<string name="new_editor_promo_button">Bukur, faleminderit!</string>
 	<string name="visual_editor_enabled">Përpunuesi Pamor u aktivizua</string>

@@ -355,7 +355,7 @@ Language: pl
 	<string name="error_refresh_comments_showing_older">Odświeżenie komentarzy nie było możliwe - pokazane są starsze komentarze</string>
 	<string name="editor_post_settings_set_featured_image">Ustaw obrazek wyróżniający</string>
 	<string name="editor_post_settings_featured_image">Obrazek wyróżniający</string>
-	<string name="new_editor_promo_description">Aplikacja WordPress dla Androida zawiera nowy, piękny edytor wizualny. Wypróbuj go tworząc nowy wpis.  </string>
+	<string name="new_editor_promo_desc">Aplikacja WordPress dla Androida zawiera nowy, piękny edytor wizualny. Wypróbuj go tworząc nowy wpis.  </string>
 	<string name="new_editor_promo_title">Całkiem nowy edytor</string>
 	<string name="new_editor_promo_button">Wielkie dzięki!</string>
 	<string name="visual_editor_enabled">Edytor wizualny włączony</string>

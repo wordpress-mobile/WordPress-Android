@@ -355,7 +355,7 @@ Language: sv_SE
 	<string name="error_refresh_comments_showing_older">Kommentarer kan inte uppdateras just nu – visar äldre kommentarer</string>
 	<string name="editor_post_settings_set_featured_image">Ange utvald bild</string>
 	<string name="editor_post_settings_featured_image">Utvald bild</string>
-	<string name="new_editor_promo_description">I WordPress-appen för Android ingår nu en ny, fantastisk, visuell\n redigerare. Prova gärna genom att skapa ett nytt inlägg.</string>
+	<string name="new_editor_promo_desc">I WordPress-appen för Android ingår nu en ny, fantastisk, visuell\n redigerare. Prova gärna genom att skapa ett nytt inlägg.</string>
 	<string name="new_editor_promo_title">Helt ny redigerare</string>
 	<string name="new_editor_promo_button">Tack!</string>
 	<string name="visual_editor_enabled">Visuell redigerare aktiverad</string>

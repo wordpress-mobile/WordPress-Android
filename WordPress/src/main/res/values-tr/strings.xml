@@ -355,7 +355,7 @@ Language: tr
 	<string name="error_refresh_comments_showing_older">Yorumlar şu anda yenilenemiyor, eski yorumlar gösteriliyor</string>
 	<string name="editor_post_settings_set_featured_image">Öne çıkarılan görsel ayarla</string>
 	<string name="editor_post_settings_featured_image">Öne Çıkan Görüntü</string>
-	<string name="new_editor_promo_description">Android için WordPress uygulaması artık yeni ve güzel bir görsel düzenleyici\n içeriyor. Yeni bir gönderi oluşturarak deneyin.</string>
+	<string name="new_editor_promo_desc">Android için WordPress uygulaması artık yeni ve güzel bir görsel düzenleyici\n içeriyor. Yeni bir gönderi oluşturarak deneyin.</string>
 	<string name="new_editor_promo_title">Yepyeni bir düzenleyici</string>
 	<string name="new_editor_promo_button">Harika, teşekkürler!</string>
 	<string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>

@@ -290,7 +290,7 @@ Language: he_IL
 	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
 	<string name="editor_post_settings_set_featured_image">קביעת תמונה מרכזית</string>
 	<string name="editor_post_settings_featured_image">תמונה מרכזית</string>
-	<string name="new_editor_promo_description">אפליקציית WordPress עבור Android כוללת כעת עורך ויזואלי חדש\n ויפהפה. ניתן להתנסות בו על ידי יצירת פוסט חדש.</string>
+	<string name="new_editor_promo_desc">אפליקציית WordPress עבור Android כוללת כעת עורך ויזואלי חדש\n ויפהפה. ניתן להתנסות בו על ידי יצירת פוסט חדש.</string>
 	<string name="new_editor_promo_title">עורך חדש ומחודש</string>
 	<string name="new_editor_promo_button">נהדר, תודה!</string>
 	<string name="visual_editor_enabled">עורך ויזואלי מופעל</string>

@@ -355,7 +355,7 @@ Language: ro
 	<string name="error_refresh_comments_showing_older">Comentariile nu pot fi reîmprospătate acum - sunt arătate comentarii mai vechi</string>
 	<string name="editor_post_settings_set_featured_image">Setează imaginea reprezentativă</string>
 	<string name="editor_post_settings_featured_image">Imagine reprezentativă</string>
-	<string name="new_editor_promo_description">aplicația WordPress pentru Android include acum un un nou și frumos \neditor vizual. Încearcă-l creând un nou articol.</string>
+	<string name="new_editor_promo_desc">aplicația WordPress pentru Android include acum un un nou și frumos \neditor vizual. Încearcă-l creând un nou articol.</string>
 	<string name="new_editor_promo_title">Editor nou nouț</string>
 	<string name="new_editor_promo_button">Super, mulțumesc!</string>
 	<string name="visual_editor_enabled">Editor vizual validat</string>
