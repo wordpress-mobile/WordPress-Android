@@ -288,6 +288,7 @@
     <!--post settings-->
     <string name="post_settings">Post settings</string>
     <string name="not_set">Not Set</string>
+    <string name="post_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>

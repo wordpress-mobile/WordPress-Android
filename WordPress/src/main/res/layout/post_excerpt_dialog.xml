@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <EditText
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <org.wordpress.android.util.widgets.WPEditText
         android:id="@+id/post_excerpt_dialog_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:maxLines="6"
+        android:padding="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/post_excerpt_dialog_edit_text_side_margin"
+        android:layout_marginEnd="@dimen/post_excerpt_dialog_edit_text_side_margin"
+        android:layout_marginStart="@dimen/post_excerpt_dialog_edit_text_side_margin"
+        android:layout_marginRight="@dimen/post_excerpt_dialog_edit_text_side_margin"/>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/post_excerpt_dialog_hint"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginLeft="@dimen/post_excerpt_dialog_hint_side_margin"
+        android:layout_marginEnd="@dimen/post_excerpt_dialog_hint_side_margin"
+        android:layout_marginStart="@dimen/post_excerpt_dialog_hint_side_margin"
+        android:layout_marginRight="@dimen/post_excerpt_dialog_hint_side_margin"/>
 
 </LinearLayout>
