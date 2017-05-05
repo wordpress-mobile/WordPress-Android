@@ -1883,23 +1883,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Create an AsyncTask to download the file
-            new AsyncTask<Uri, Integer, Uri>() {
-                @Override
-                protected Uri doInBackground(Uri... uris) {
-                    Uri imageUri = uris[0];
-                    return MediaUtils.downloadExternalMedia(EditPostActivity.this, imageUri);
-                }
-
-                protected void onPostExecute(Uri uri) {
-                    if (uri != null) {
-                        addMedia(uri);
-                    } else {
-                        Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = null;
+            try {
+                downloadedUri = MediaUtils.downloadExternalMedia(EditPostActivity.this, mediaUri);
+            } catch (IllegalStateException e) {
+                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
+                        " See issue #5823");
+            }
+            if (downloadedUri != null) {
+                addMedia(downloadedUri);
+            } else {
+                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
             addMedia(mediaUri);
         }
