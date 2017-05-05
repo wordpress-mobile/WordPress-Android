@@ -14,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -625,12 +626,10 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // User signed out
-            resetFragments();
-            ActivityLauncher.showSignInForResult(this);
+        // Sign-out is handled in `handleSiteRemoved`, no need to show the `SignInActivity` here
+        if (mAccountStore.hasAccessToken()) {
+            mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
         }
-        mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
     }
 
     @SuppressWarnings("unused")
@@ -662,6 +661,8 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            // User signed-out or removed the last self-hosted site, show `SignInActivity`
+            resetFragments();
             ActivityLauncher.showSignInForResult(this);
         } else {
             SiteModel site = getSelectedSite();
