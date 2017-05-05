@@ -264,7 +264,7 @@ public class WPMainActivity extends AppCompatActivity {
                     R.drawable.img_promo_editor,
                     R.string.new_editor_promo_title,
                     R.string.new_editor_promo_description,
-                    R.string.new_editor_promo_button
+                    android.R.string.ok
             );
             newFragment.show(getSupportFragmentManager(), "new-editor-promo");
             AppPrefs.setNewEditorPromoRequired(false);
