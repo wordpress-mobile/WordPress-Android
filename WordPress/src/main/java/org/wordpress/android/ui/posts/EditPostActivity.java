@@ -1343,6 +1343,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
+                    mEditorFragment.setImageLoader(mImageLoader);
+
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
 
