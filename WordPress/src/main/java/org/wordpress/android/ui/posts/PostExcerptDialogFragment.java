@@ -16,6 +16,16 @@ public class PostExcerptDialogFragment extends DialogFragment {
     private String mPostExcerpt;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPostExcerpt = savedInstanceState.getString(EXCERPT_TAG, "");
+        } else if (getArguments() != null) {
+            mPostExcerpt = getArguments().getString(EXCERPT_TAG, "");
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(EXCERPT_TAG, mPostExcerpt);
@@ -31,10 +41,6 @@ public class PostExcerptDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mPostExcerpt = savedInstanceState.getString(EXCERPT_TAG, "");
-        }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         LayoutInflater factory = LayoutInflater.from(getActivity());
         View textEntryView = factory.inflate(R.layout.post_excerpt_dialog, null);
