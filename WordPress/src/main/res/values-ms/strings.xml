@@ -470,7 +470,6 @@ Language: ms
 	<string name="media_file_name">Nama fail: %s</string>
 	<string name="media_uploaded_on">Muat naik pada: %s</string>
 	<string name="media_file_type">Jenis fail: %s</string>
-	<string name="upload_queued">Digilirkan</string>
 	<string name="reader_label_gap_marker">Muatkan lebih banyak kiriman</string>
 	<string name="notifications_no_search_results">Tiada laman sepadan dengan \'%s\'</string>
 	<string name="search_sites">Cari laman</string>
@@ -602,7 +601,6 @@ Language: ms
 	<string name="show">Tunjuk</string>
 	<string name="select_all">Pilih semua</string>
 	<string name="stats_generic_error">Statistik Yang Diperlukan tidak dapat dimuatkan</string>
-	<string name="error_publish_no_network">Tidak boleh menerbit semasa tiada sambungan. Disimpan sebagai draf.</string>
 	<string name="two_step_sms_sent">Periksa mesej teks anda untuk kod pengesahan.</string>
 	<string name="device">Peranti</string>
 	<string name="two_step_footer_label">Masukkan kod dari aplikasi pengesah anda.</string>
@@ -990,7 +988,6 @@ Language: ms
 	<string name="select_from_media_library">Pilih dari perpustakaan media</string>
 	<string name="jetpack_not_found">Pemalam Jetpack tidak dijumpai</string>
 	<string name="reader_untitled_post">(Tanpa tajuk)</string>
-	<string name="reader_share_subject">Dikongsi dari %s</string>
 	<string name="reader_btn_share">Kongsi</string>
 	<string name="reader_btn_follow">Ikut</string>
 	<string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>

@@ -81,7 +81,7 @@ public class PostPreviewActivity extends AppCompatActivity {
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
-        if (mSite == null) {
+        if (mSite == null || mPost == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
@@ -97,7 +97,10 @@ public class PostPreviewActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
 
-        mPost = mPostStore.getPostByLocalPostId(mPost.getId());
+        if (mPost == null || (mPost = mPostStore.getPostByLocalPostId(mPost.getId())) == null) {
+            finish();
+            return;
+        }
         if (hasPreviewFragment()) {
             refreshPreview();
         } else {

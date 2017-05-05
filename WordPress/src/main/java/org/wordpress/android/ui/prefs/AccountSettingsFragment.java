@@ -287,7 +287,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
         @Override
         protected Void doInBackground(Void... params) {
-            List<SiteModel> sites = mSiteStore.getWPComAndJetpackSites();
+            List<SiteModel> sites = mSiteStore.getSitesAccessedViaWPComRest();
             mPrimarySitePreference.setEntries(getSiteNamesFromSites(sites));
             mPrimarySitePreference.setEntryValues(getSiteIdsFromSites(sites));
             mPrimarySitePreference.setDetails(getHomeURLOrHostNamesFromSites(sites));

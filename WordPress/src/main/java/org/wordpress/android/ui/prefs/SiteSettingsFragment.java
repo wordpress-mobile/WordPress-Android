@@ -1318,9 +1318,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_start_over_screen);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_export_site);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_delete_site);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
     }
 
     private void removeNonJetpackPreferences() {

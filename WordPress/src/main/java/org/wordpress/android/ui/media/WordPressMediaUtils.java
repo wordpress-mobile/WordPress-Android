@@ -167,6 +167,10 @@ public class WordPressMediaUtils {
         } catch (IllegalArgumentException e) {
             AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media", e);
             throw new IOException("Cannot access the file planned to store the new media");
+        } catch (NullPointerException e) {
+            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media - " +
+                    "FileProvider.getUriForFile cannot find a valid provider for the authority: " + applicationId + ".provider", e);
+            throw new IOException("Cannot access the file planned to store the new media");
         }
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
