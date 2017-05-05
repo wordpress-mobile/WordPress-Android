@@ -227,7 +227,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         // Configure the allowed URLs if available
         ArrayList<String> allowedURL = null;
-        if (extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
+        if (extras != null && extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
             String addressToLoad = extras.getString(URL_TO_LOAD);
             String authURL = extras.getString(AUTHENTICATION_URL);
             allowedURL = new ArrayList<>();
@@ -254,6 +254,10 @@ public class WPWebViewActivity extends WebViewActivity {
             }
             webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
+            if (allowedURL == null || allowedURL.size() == 0) {
+                AppLog.e(AppLog.T.UTILS, "No valid urls passed to WPWebViewActivity");
+                finish();
+            }
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
 
