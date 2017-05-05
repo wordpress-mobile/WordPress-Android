@@ -11,17 +11,35 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavController.*;
 import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavController.ContextImplementation;
+
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, ContextImplementation {
+    private static final String KEY_NAV_HISTORY = "KEY_NAV_HISTORY";
 
-    LoginNavController mLoginNavController = new LoginNavController(LoginNav.Prologue.class, this);
+    LoginNavController mLoginNavController;
+
+    @SuppressWarnings("unchecked")
+    private void initLoginNavController(Bundle savedInstanceState) {
+        // perform the Nav history loading first so updated fragments can find their expected state there.
+        if (savedInstanceState == null) {
+            mLoginNavController = new LoginNavController(LoginNav.Prologue.class, this);
+        } else {
+            ArrayList<Class<? extends LoginNav>> history =
+                    (ArrayList<Class<? extends LoginNav>>) savedInstanceState.getSerializable(KEY_NAV_HISTORY);
+            mLoginNavController = new LoginNavController(history, this);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // perform the Nav history loading first so updated fragments can find their expected state there.
+        initLoginNavController(savedInstanceState);
+
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
@@ -30,6 +48,14 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
         if (savedInstanceState == null) {
             addLoginPrologueFragment();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        ArrayList<Class<? extends LoginNav>> navHistory = mLoginNavController.getNavHistory();
+        outState.putSerializable(KEY_NAV_HISTORY, navHistory);
     }
 
     @Override
@@ -43,9 +69,10 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
+        // perform the Nav back first so updated fragments can find their expected state there.
         mLoginNavController.goBack();
+
+        super.onBackPressed();
     }
 
     protected void addLoginPrologueFragment() {
