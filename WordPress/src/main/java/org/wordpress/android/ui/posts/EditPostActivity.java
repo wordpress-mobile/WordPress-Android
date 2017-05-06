@@ -1786,6 +1786,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (optimizedMedia != null) {
             uri = optimizedMedia;
             path = MediaUtils.getRealPathFromURI(this, uri);
+        } else {
+            // Fix the rotation of the picture see https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            // TODO: find a better implementation
+            Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+            if (rotatedMedia != null) {
+                uri = rotatedMedia;
+                path = MediaUtils.getRealPathFromURI(this, uri);
+            }
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
