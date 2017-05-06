@@ -1177,11 +1177,6 @@
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
 
-    <!-- Default tags -->
-    <string name="reader_discover_default_tag">Discover</string>
-    <string name="reader_followed_default_tag">Followed Sites</string>
-    <string name="reader_liked_default_tag">Posts I Like</string>
-
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>
     <string name="reader_menu_block_blog">Block this blog</string>
