@@ -243,7 +243,7 @@ Language: zh_TW
 	<string name="editor_post_settings_featured_image">特色圖片</string>
 	<string name="new_editor_promo_desc">Android 版 WordPress 應用程式現已包含美觀的全新視覺化\n編輯器。建立新的文章，即可試用編輯器。</string>
 	<string name="new_editor_promo_title">全新編輯器</string>
-	<string name="new_editor_promo_button">太棒了，謝謝！</string>
+	<string name="new_editor_promo_button_label">太棒了，謝謝！</string>
 	<string name="visual_editor_enabled">視覺化編輯器已啟用</string>
 	<string name="editor_content_placeholder">在此分享你的故事...</string>
 	<string name="editor_page_title_placeholder">頁面標題</string>

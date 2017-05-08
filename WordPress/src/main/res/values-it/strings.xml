@@ -329,7 +329,7 @@ Language: it
 	<string name="editor_post_settings_featured_image">Immagine in evidenza</string>
 	<string name="new_editor_promo_desc">L\'app WordPress per Android ora include un nuovo bellissimo editor\n visuale. Provalo creando un nuovo articolo.</string>
 	<string name="new_editor_promo_title">Un editor completamente nuovo</string>
-	<string name="new_editor_promo_button">Fantastico, grazie!</string>
+	<string name="new_editor_promo_button_label">Fantastico, grazie!</string>
 	<string name="visual_editor_enabled">Editor visuale abilitato</string>
 	<string name="editor_content_placeholder">Condividi la tua storia qui...</string>
 	<string name="editor_page_title_placeholder">Titolo della pagina</string>

@@ -357,7 +357,7 @@ Language: fr
 	<string name="editor_post_settings_featured_image">Image à la une</string>
 	<string name="new_editor_promo_desc">L\'application WordPress for Android inclus un nouveau et superbe éditeur visuel. Essayez-le en créant un nouvel article !</string>
 	<string name="new_editor_promo_title">Tout nouvel éditeur</string>
-	<string name="new_editor_promo_button">Super, merci !</string>
+	<string name="new_editor_promo_button_label">Super, merci !</string>
 	<string name="visual_editor_enabled">Éditeur visuel activé</string>
 	<string name="editor_content_placeholder">Partagez ici votre histoire...</string>
 	<string name="editor_page_title_placeholder">Titre de la page</string>

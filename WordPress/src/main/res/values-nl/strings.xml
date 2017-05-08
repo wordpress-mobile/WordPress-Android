@@ -357,7 +357,7 @@ Language: nl
 	<string name="editor_post_settings_featured_image">Aanbevolen afbeelding</string>
 	<string name="new_editor_promo_desc">De WordPress-app voor Android bevat een prachtige nieuwe visual\n editor. Probeer hem uit door een nieuw bericht te maken.</string>
 	<string name="new_editor_promo_title">Volledig nieuwe editor</string>
-	<string name="new_editor_promo_button">Geweldig, bedankt!</string>
+	<string name="new_editor_promo_button_label">Geweldig, bedankt!</string>
 	<string name="visual_editor_enabled">Visual Editor ingeschakeld</string>
 	<string name="editor_content_placeholder">Deel hier je verhaal...</string>
 	<string name="editor_page_title_placeholder">Paginatitel</string>

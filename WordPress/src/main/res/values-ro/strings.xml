@@ -357,7 +357,7 @@ Language: ro
 	<string name="editor_post_settings_featured_image">Imagine reprezentativă</string>
 	<string name="new_editor_promo_desc">aplicația WordPress pentru Android include acum un un nou și frumos \neditor vizual. Încearcă-l creând un nou articol.</string>
 	<string name="new_editor_promo_title">Editor nou nouț</string>
-	<string name="new_editor_promo_button">Super, mulțumesc!</string>
+	<string name="new_editor_promo_button_label">Super, mulțumesc!</string>
 	<string name="visual_editor_enabled">Editor vizual validat</string>
 	<string name="editor_content_placeholder">Partajează aici povestea ta...</string>
 	<string name="editor_page_title_placeholder">Titlu pagină</string>

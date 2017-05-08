@@ -357,7 +357,7 @@ Language: pl
 	<string name="editor_post_settings_featured_image">Obrazek wyróżniający</string>
 	<string name="new_editor_promo_desc">Aplikacja WordPress dla Androida zawiera nowy, piękny edytor wizualny. Wypróbuj go tworząc nowy wpis.  </string>
 	<string name="new_editor_promo_title">Całkiem nowy edytor</string>
-	<string name="new_editor_promo_button">Wielkie dzięki!</string>
+	<string name="new_editor_promo_button_label">Wielkie dzięki!</string>
 	<string name="visual_editor_enabled">Edytor wizualny włączony</string>
 	<string name="editor_content_placeholder">Podziel się swoją historią...</string>
 	<string name="editor_page_title_placeholder">Tytuł strony</string>

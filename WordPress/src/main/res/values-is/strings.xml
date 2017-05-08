@@ -357,7 +357,7 @@ Language: is
 	<string name="editor_post_settings_featured_image">Einkennismynd</string>
 	<string name="new_editor_promo_desc">WordPress forritið fyrir Android inniheldur nú fallegan nýjan sjónrænan\n	ritil. Prófaðu hann með því að rita nýja færslu.</string>
 	<string name="new_editor_promo_title">Glænýr ritill</string>
-	<string name="new_editor_promo_button">Frábært, takk!</string>
+	<string name="new_editor_promo_button_label">Frábært, takk!</string>
 	<string name="visual_editor_enabled">Sjónrænn ritill virkjaður</string>
 	<string name="editor_content_placeholder">Deildu sögunni þinni hér...</string>
 	<string name="editor_page_title_placeholder">Titill síðu</string>

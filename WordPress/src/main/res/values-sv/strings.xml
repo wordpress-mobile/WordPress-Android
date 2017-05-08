@@ -357,7 +357,7 @@ Language: sv_SE
 	<string name="editor_post_settings_featured_image">Utvald bild</string>
 	<string name="new_editor_promo_desc">I WordPress-appen för Android ingår nu en ny, fantastisk, visuell\n redigerare. Prova gärna genom att skapa ett nytt inlägg.</string>
 	<string name="new_editor_promo_title">Helt ny redigerare</string>
-	<string name="new_editor_promo_button">Tack!</string>
+	<string name="new_editor_promo_button_label">Tack!</string>
 	<string name="visual_editor_enabled">Visuell redigerare aktiverad</string>
 	<string name="editor_content_placeholder">Berätta din historia här...</string>
 	<string name="editor_page_title_placeholder">Sidans rubrik</string>

@@ -357,7 +357,7 @@ Language: sq_AL
 	<string name="editor_post_settings_featured_image">Figurë e Zgjedhur</string>
 	<string name="new_editor_promo_desc">WordPress-i për Android tani përfshin një përpunues pamor të ri.\n    Provojeni duke krijuar një postim të ri.</string>
 	<string name="new_editor_promo_title">Përpunues i ri fringo</string>
-	<string name="new_editor_promo_button">Bukur, faleminderit!</string>
+	<string name="new_editor_promo_button_label">Bukur, faleminderit!</string>
 	<string name="visual_editor_enabled">Përpunuesi Pamor u aktivizua</string>
 	<string name="editor_content_placeholder">Ndajeni shembullin tuaj me ta…</string>
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>

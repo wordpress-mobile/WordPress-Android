@@ -357,7 +357,7 @@ Language: tr
 	<string name="editor_post_settings_featured_image">Öne Çıkan Görüntü</string>
 	<string name="new_editor_promo_desc">Android için WordPress uygulaması artık yeni ve güzel bir görsel düzenleyici\n içeriyor. Yeni bir gönderi oluşturarak deneyin.</string>
 	<string name="new_editor_promo_title">Yepyeni bir düzenleyici</string>
-	<string name="new_editor_promo_button">Harika, teşekkürler!</string>
+	<string name="new_editor_promo_button_label">Harika, teşekkürler!</string>
 	<string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>
 	<string name="editor_content_placeholder">Hikayenizi burada paylaşın...</string>
 	<string name="editor_page_title_placeholder">Sayfa Başlığı</string>
