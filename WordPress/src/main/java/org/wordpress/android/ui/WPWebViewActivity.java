@@ -254,10 +254,6 @@ public class WPWebViewActivity extends WebViewActivity {
             }
             webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
-            if (allowedURL == null || allowedURL.size() == 0) {
-                AppLog.e(AppLog.T.UTILS, "No valid urls passed to WPWebViewActivity");
-                finish();
-            }
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
 
