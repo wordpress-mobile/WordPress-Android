@@ -360,7 +360,11 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        mExcerptTextView.setText(mPost.getExcerpt());
+        if (!TextUtils.isEmpty(mPost.getExcerpt())) {
+            mExcerptTextView.setText(mPost.getExcerpt());
+        } else {
+            mExcerptTextView.setText(getString(R.string.not_set));
+        }
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
