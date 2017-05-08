@@ -5,12 +5,6 @@ import java.util.Stack;
 
 public class LoginNavController implements LoginFsmGetter {
 
-    public interface ContextImplementation {
-        void toast(String message);
-
-        void showEmailLoginScreen();
-    }
-
     private ContextImplementation mContextImplementation;
 
     public LoginNavController(ArrayList<Class<? extends LoginNav>> initialLoginNav,

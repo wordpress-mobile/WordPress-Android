@@ -9,9 +9,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavController.*;
+import org.wordpress.android.ui.accounts.login.nav.ContextImplementation;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
 
 /**
  * Testing Login related logic
@@ -22,7 +22,7 @@ public class LoginLogicTest {
 
     private String mLastToastMessage;
 
-    private ContextImplementation mContextImplementation = new LoginNavController.ContextImplementation() {
+    private ContextImplementation mContextImplementation = new ContextImplementation() {
         @Override
         public void toast(String message) {
             mLastToastMessage = message;

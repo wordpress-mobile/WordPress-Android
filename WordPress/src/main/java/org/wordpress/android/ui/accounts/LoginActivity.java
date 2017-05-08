@@ -11,10 +11,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
+import org.wordpress.android.ui.accounts.login.nav.ContextImplementation;
 import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavController.ContextImplementation;
 
 import java.util.ArrayList;
 
