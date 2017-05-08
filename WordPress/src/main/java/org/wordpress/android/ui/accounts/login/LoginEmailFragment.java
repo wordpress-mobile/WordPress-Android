@@ -31,13 +31,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
-import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
+import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -62,8 +60,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected Button mNextButton;
     protected View mUsernamePasswordButton;
 
-    protected @Inject SiteStore mSiteStore;
-    protected @Inject AccountStore mAccountStore;
     protected @Inject Dispatcher mDispatcher;
 
     private LoginNav.InputEmail mLoginNavInputEmail;
@@ -337,7 +333,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
      * Handler for an email availability event. If a user enters an email address for their
      * username an API checks to see if it belongs to a wpcom account.  If it exists the magic links
      * flow is followed. Otherwise the self-hosted sign in form is shown.
-     * @param event
+     * @param event the event emitted
      */
     private void handleEmailAvailabilityEvent(OnAvailabilityChecked event) {
         if (!event.isAvailable) {
