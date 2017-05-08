@@ -200,8 +200,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
         if (rootView == null || mPost == null) {
@@ -262,8 +261,7 @@ public class EditPostSettingsFragment extends Fragment
         excerptContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: open the post excerpt dialog
-                excerptContainer.setVisibility(View.GONE);
+                showPostExcerptDialog();
             }
         });
 
@@ -972,6 +970,17 @@ public class EditPostSettingsFragment extends Fragment
 
     private void updateLocationText(String locationName) {
         mLocationText.setText(locationName);
+    }
+
+    private void showPostExcerptDialog() {
+        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(mPost.getExcerpt());
+        dialog.setPostExcerptDialogListener(new PostExcerptDialogFragment.PostExcerptDialogListener() {
+            @Override
+            public void onPostExcerptUpdated(String postExcerpt) {
+                mExcerptTextView.setText(postExcerpt);
+            }
+        });
+        dialog.show(getFragmentManager(), null);
     }
 
     /*
