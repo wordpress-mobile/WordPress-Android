@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -54,7 +55,11 @@ public class PostExcerptDialogFragment extends DialogFragment {
         View dialogView = layoutInflater.inflate(R.layout.post_excerpt_dialog, null);
         builder.setView(dialogView);
         EditText editText = (EditText) dialogView.findViewById(R.id.post_excerpt_dialog_edit_text);
-        editText.setText(mPostExcerpt);
+        if (!TextUtils.isEmpty(mPostExcerpt)) {
+            editText.setText(mPostExcerpt);
+            // move the cursor to the end
+            editText.setSelection(mPostExcerpt.length());
+        }
 
         return builder.create();
     }
