@@ -626,6 +626,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         }
         mRestoredScrollNoteID = getFirstVisibleItemID(); // Remember the ID of the first note visible on the screen
         getNotesAdapter().reloadNotesFromDBAsync();
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.hasUnseenNotes) {
             showNewUnseenNotificationsUI();
         }
