@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.accounts.login.nav;
 
-public interface LoginFsmGetter {
+public interface LoginStateGetter {
     interface FsmGetter {
-        LoginFsmGetter get();
+        LoginStateGetter getLoginStateGetter();
     }
 
     LoginNav.Prologue getLoginNavPrologue();

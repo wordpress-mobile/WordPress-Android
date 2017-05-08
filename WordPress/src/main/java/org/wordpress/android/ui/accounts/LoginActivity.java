@@ -13,9 +13,9 @@ import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginNavFragment;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavHandler;
-import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 
-public class LoginActivity extends AppCompatActivity implements LoginNavHandler, LoginFsmGetter.FsmGetter {
+public class LoginActivity extends AppCompatActivity implements LoginNavHandler, LoginStateGetter.FsmGetter {
     private static final String TAG_LOGIN_NAV_FRAGMENT = "TAG_LOGIN_NAV_FRAGMENT";
 
     @Override
@@ -93,8 +93,8 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
     }
 
     @Override
-    public LoginFsmGetter get() {
-        return retrieveLoginNavFragment().get();
+    public LoginStateGetter getLoginStateGetter() {
+        return retrieveLoginNavFragment().getLoginStateGetter();
     }
 
     @Override

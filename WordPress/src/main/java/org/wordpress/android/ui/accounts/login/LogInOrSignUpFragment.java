@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 
 public class LogInOrSignUpFragment extends Fragment {
@@ -50,10 +50,10 @@ public class LogInOrSignUpFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginFsmGetter.FsmGetter) {
-            mLoginStatePrologue = ((LoginFsmGetter.FsmGetter) context).get().getLoginNavPrologue();
+        if (context instanceof LoginStateGetter.FsmGetter) {
+            mLoginStatePrologue = ((LoginStateGetter.FsmGetter) context).getLoginStateGetter().getLoginNavPrologue();
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginFsmGetter.FsmGetter");
+            throw new RuntimeException(context.toString() + " must implement LoginStateGetter.FsmGetter");
         }
     }
 

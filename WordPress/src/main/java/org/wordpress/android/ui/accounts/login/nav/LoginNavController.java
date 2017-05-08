@@ -2,7 +2,7 @@ package org.wordpress.android.ui.accounts.login.nav;
 
 import java.util.Stack;
 
-public class LoginNavController implements LoginFsmGetter {
+public class LoginNavController implements LoginStateGetter {
 
     private LoginNavHandler mLoginNavHandler;
 

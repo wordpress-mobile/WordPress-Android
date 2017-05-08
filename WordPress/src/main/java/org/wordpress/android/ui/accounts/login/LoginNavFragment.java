@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavHandler;
 
-public class LoginNavFragment extends Fragment implements LoginFsmGetter.FsmGetter {
+public class LoginNavFragment extends Fragment implements LoginStateGetter.FsmGetter {
     private LoginNavController mLoginNavController;
 
     @Override
@@ -37,7 +37,7 @@ public class LoginNavFragment extends Fragment implements LoginFsmGetter.FsmGett
     }
 
     @Override
-    public LoginFsmGetter get() {
+    public LoginStateGetter getLoginStateGetter() {
         return mLoginNavController;
     }
 

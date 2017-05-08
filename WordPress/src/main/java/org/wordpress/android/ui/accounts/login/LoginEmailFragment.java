@@ -36,7 +36,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
-import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -144,10 +144,10 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginFsmGetter.FsmGetter) {
-            mLoginNavInputEmail = ((LoginFsmGetter.FsmGetter) context).get().getLoginNavInputEmail();
+        if (context instanceof LoginStateGetter.FsmGetter) {
+            mLoginNavInputEmail = ((LoginStateGetter.FsmGetter) context).getLoginStateGetter().getLoginNavInputEmail();
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginFsmGetter.FsmGetter");
+            throw new RuntimeException(context.toString() + " must implement LoginStateGetter.FsmGetter");
         }
     }
 
