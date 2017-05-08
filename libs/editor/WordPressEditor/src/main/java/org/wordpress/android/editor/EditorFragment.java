@@ -1100,7 +1100,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onMediaUploadSucceeded(final String localMediaId, final MediaType mediaType, final MediaFile mediaFile) {
+    public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if(!isAdded()) {
             return;
         }

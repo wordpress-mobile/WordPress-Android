@@ -631,15 +631,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadSucceeded(final String localMediaId, final MediaType mediaType, final MediaFile mediaFile) {
+    public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
         if(!isAdded() || content == null || !mAztecReady) {
             return;
         }
-        if (mediaType != null) {
+
+        if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
 
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
+            MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
             if (mediaType.equals(MediaType.IMAGE)) {
 
                 // clear overlay

@@ -840,15 +840,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void onUploadSuccess(MediaModel media) {
         if (mEditorMediaUploadListener != null && media != null) {
             mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                    getEditorMimeType(media.isVideo()),
                     FluxCUtils.mediaFileFromMediaModel(media));
         }
         removeMediaFromPendingList(media);
-    }
-
-    private EditorFragmentAbstract.MediaType getEditorMimeType(boolean isVideo) {
-        return isVideo ? EditorFragmentAbstract.MediaType.VIDEO :
-                EditorFragmentAbstract.MediaType.IMAGE;
     }
 
     private void onUploadCanceled(MediaModel media) {
@@ -882,7 +876,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
-                    getEditorMimeType(media.isVideo()), errorMessage);
+                    EditorFragmentAbstract.getEditorMimeType(mf), errorMessage);
         }
 
         removeMediaFromPendingList(media);
@@ -2281,7 +2275,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                        getEditorMimeType(media.isVideo()),
                         FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
