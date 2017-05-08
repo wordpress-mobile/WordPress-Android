@@ -193,7 +193,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         final XMLRPC method = post.isLocalDraft() ? XMLRPC.NEW_POST : XMLRPC.EDIT_POST;
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         if (method.equals(XMLRPC.NEW_POST) && response instanceof String) {
@@ -242,7 +242,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         params.add(post.getRemotePostId());
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         RemotePostPayload payload = new RemotePostPayload(post, site);
