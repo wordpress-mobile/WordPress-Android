@@ -148,8 +148,9 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDetach() {
+        super.onDetach();
+        mLoginNavInputEmail = null;
     }
 
     @Override
