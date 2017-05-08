@@ -156,7 +156,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         params.add(contentStruct);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.NEW_TERM, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         term.setRemoteTermId(Long.valueOf((String) response));

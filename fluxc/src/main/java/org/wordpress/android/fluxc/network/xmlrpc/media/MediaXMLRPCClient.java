@@ -46,6 +46,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +86,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         List<Object> params = getBasicParams(site, media);
         params.add(getEditMediaFields(media));
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         // response should be a boolean indicating result of push request
@@ -249,16 +250,17 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         params.add(queryParams);
 
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_LIBRARY, params,
-                new Listener() {
+                new Listener<Object[]>() {
                     @Override
-                    public void onResponse(Object response) {
+                    public void onResponse(Object[] response) {
                         List<MediaModel> mediaList = getMediaListFromXmlrpcResponse(response, site.getId());
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
                             boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
                             notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
                         } else {
-                            AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: " + response);
+                            AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
+                                    + Arrays.toString(response));
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
                             notifyMediaListFetched(site, error);
                         }
@@ -296,7 +298,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
         List<Object> params = getBasicParams(site, media);
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_MEDIA_ITEM, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         AppLog.v(T.MEDIA, "Fetched media for site via XMLRPC.GET_MEDIA_ITEM");
@@ -352,7 +354,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
         List<Object> params = getBasicParams(site, media);
         add(new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         // response should be a boolean indicating result of push request
@@ -460,12 +462,11 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     //
 
     // media list responses should be of type Object[] with each media item in the array represented by a HashMap
-    private List<MediaModel> getMediaListFromXmlrpcResponse(Object response, int localSiteId) {
-        if (response == null || !(response instanceof Object[])) return null;
+    private List<MediaModel> getMediaListFromXmlrpcResponse(Object[] response, int localSiteId) {
+        if (response == null) return null;
 
-        Object[] responseArray = (Object[]) response;
         List<MediaModel> responseMedia = new ArrayList<>();
-        for (Object mediaObject : responseArray) {
+        for (Object mediaObject : response) {
             if (!(mediaObject instanceof HashMap)) continue;
             MediaModel media = getMediaFromXmlrpcResponse((HashMap) mediaObject);
             if (media != null) {
