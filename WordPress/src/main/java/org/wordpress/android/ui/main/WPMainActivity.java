@@ -52,6 +52,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -257,6 +258,19 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
+    private void showNewEditorPromoDialogIfNeeded() {
+        if (AppPrefs.isNewEditorPromoRequired() && AppPrefs.isAztecEditorEnabled()) {
+            AppCompatDialogFragment newFragment = PromoDialog.newInstance(
+                    R.drawable.img_promo_editor,
+                    R.string.new_editor_promo_title,
+                    R.string.new_editor_promo_description,
+                    android.R.string.ok
+            );
+            newFragment.show(getSupportFragmentManager(), "new-editor-promo");
+            AppPrefs.setNewEditorPromoRequired(false);
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -446,6 +460,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
+        if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
+            showNewEditorPromoDialogIfNeeded();
+        }
+
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
