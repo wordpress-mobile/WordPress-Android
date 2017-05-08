@@ -11,51 +11,25 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
+import org.wordpress.android.ui.accounts.login.LoginNavFragment;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavHandler;
 import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
-import org.wordpress.android.ui.accounts.login.nav.LoginNav;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
 
-import java.util.ArrayList;
-
-public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, LoginNavHandler {
-    private static final String KEY_NAV_HISTORY = "KEY_NAV_HISTORY";
-
-    LoginNavController mLoginNavController;
-
-    @SuppressWarnings("unchecked")
-    private void initLoginNavController(Bundle savedInstanceState) {
-        // perform the Nav history loading first so updated fragments can find their expected state there.
-        if (savedInstanceState == null) {
-            mLoginNavController = new LoginNavController(LoginNav.Prologue.class, this);
-        } else {
-            ArrayList<Class<? extends LoginNav>> history =
-                    (ArrayList<Class<? extends LoginNav>>) savedInstanceState.getSerializable(KEY_NAV_HISTORY);
-            mLoginNavController = new LoginNavController(history, this);
-        }
-    }
+public class LoginActivity extends AppCompatActivity implements LoginNavHandler, LoginFsmGetter.FsmGetter {
+    private static final String TAG_LOGIN_NAV_FRAGMENT = "TAG_LOGIN_NAV_FRAGMENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // perform the Nav history loading first so updated fragments can find their expected state there.
-        initLoginNavController(savedInstanceState);
-
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.login_activity);
 
+        addLoginNavFragment();
+
         if (savedInstanceState == null) {
             addLoginPrologueFragment();
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        ArrayList<Class<? extends LoginNav>> navHistory = mLoginNavController.getNavHistory();
-        outState.putSerializable(KEY_NAV_HISTORY, navHistory);
     }
 
     @Override
@@ -70,9 +44,30 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
     @Override
     public void onBackPressed() {
         // perform the Nav back first so updated fragments can find their expected state there.
-        mLoginNavController.goBack();
+        retrieveLoginNavFragment().goBack();
 
         super.onBackPressed();
+    }
+
+    private LoginNavFragment retrieveLoginNavFragment() {
+        Fragment loginNavFragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_NAV_FRAGMENT);
+        if (loginNavFragment == null) {
+            return null;
+        } else {
+            return (LoginNavFragment) loginNavFragment;
+        }
+    }
+
+    private void addLoginNavFragment() {
+        LoginNavFragment loginNavFragment = retrieveLoginNavFragment();
+
+        if (loginNavFragment == null) {
+            loginNavFragment = new LoginNavFragment();
+
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(loginNavFragment, TAG_LOGIN_NAV_FRAGMENT);
+            fragmentTransaction.commit();
+        }
     }
 
     protected void addLoginPrologueFragment() {
@@ -80,21 +75,6 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LogInOrSignUpFragment.TAG);
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public LoginNav.Prologue getLoginNavPrologue() {
-        return mLoginNavController.getLoginNavPrologue();
-    }
-
-    @Override
-    public LoginNav.InputEmail getLoginNavInputEmail() {
-        return mLoginNavController.getLoginNavInputEmail();
-    }
-
-    @Override
-    public LoginNav.InputSiteAddress getLoginNavInputSiteAddress() {
-        return mLoginNavController.getLoginNavInputSiteAddress();
     }
 
     private void slideInFragment(Fragment fragment, String tag) {
@@ -110,6 +90,11 @@ public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, 
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public LoginFsmGetter get() {
+        return retrieveLoginNavFragment().get();
     }
 
     @Override

@@ -144,10 +144,10 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginFsmGetter) {
-            mLoginNavInputEmail = ((LoginFsmGetter) context).getLoginNavInputEmail();
+        if (context instanceof LoginFsmGetter.FsmGetter) {
+            mLoginNavInputEmail = ((LoginFsmGetter.FsmGetter) context).get().getLoginNavInputEmail();
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginFsmGetter");
+            throw new RuntimeException(context.toString() + " must implement LoginFsmGetter.FsmGetter");
         }
     }
 

@@ -45,13 +45,15 @@ public class LoginLogicTest {
     @Test
     public void initialStatePrologue() {
         // this shouldn't throw
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class)
+                .setLoginNavHandler(mLoginNavHandler);
         loginNavController.ensureState(LoginNav.Prologue.class);
     }
 
     @Test
     public void initialStateNotInputEmail() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class)
+                .setLoginNavHandler(mLoginNavHandler);
 
         exception.expect(RuntimeException.class);
         exception.expectMessage("Not in state " + LoginNav.InputEmail.class.getSimpleName());
@@ -60,7 +62,8 @@ public class LoginLogicTest {
 
     @Test
     public void initialStateNotInputUrl() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class)
+                .setLoginNavHandler(mLoginNavHandler);
 
         exception.expect(RuntimeException.class);
         exception.expectMessage("Not in state " + LoginNav.InputSiteAddress.class.getSimpleName());
@@ -75,7 +78,8 @@ public class LoginLogicTest {
 
     @Test
     public void prologueLoginTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class)
+                .setLoginNavHandler(mLoginNavHandler);
 
         loginNavController.getLoginNavPrologue().doStartLogin();
 
@@ -87,7 +91,8 @@ public class LoginLogicTest {
 
     @Test
     public void prologueSignupTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class)
+                .setLoginNavHandler(mLoginNavHandler);
 
         loginNavController.getLoginNavPrologue().doStartSignup();
 
@@ -101,7 +106,8 @@ public class LoginLogicTest {
 
     @Test
     public void prologueInvalidEventsTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class)
+                .setLoginNavHandler(mLoginNavHandler);
 
         // get a reference to LoginNav InputEmail for later use
         LoginNav.InputEmail loginNavInputEmail = loginNavController.getLoginNavInputEmail();
@@ -160,7 +166,8 @@ public class LoginLogicTest {
 
     @Test
     public void inputEmailGotEmailTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class)
+                .setLoginNavHandler(mLoginNavHandler);
         loginNavController.ensureState(LoginNav.InputEmail.class);
 
         loginNavController.getLoginNavInputEmail().gotEmail("a@b.com");
@@ -175,7 +182,8 @@ public class LoginLogicTest {
 
     @Test
     public void inputEmailFallbackUsernamePasswordTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class)
+                .setLoginNavHandler(mLoginNavHandler);
         loginNavController.ensureState(LoginNav.InputEmail.class);
 
         loginNavController.getLoginNavInputEmail().loginViaUsernamePassword();
@@ -190,7 +198,8 @@ public class LoginLogicTest {
 
     @Test
     public void inputEmailHelpTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.InputEmail.class)
+                .setLoginNavHandler(mLoginNavHandler);
         loginNavController.ensureState(LoginNav.InputEmail.class);
 
         loginNavController.getLoginNavInputEmail().help();
@@ -205,7 +214,8 @@ public class LoginLogicTest {
 
     @Test
     public void inputEmailInvalidEventsTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class)
+                .setLoginNavHandler(mLoginNavHandler);
 
         // get a reference to LoginNav Prologue for later use
         LoginNav.Prologue loginNavPrologue = loginNavController.getLoginNavPrologue();
@@ -269,7 +279,8 @@ public class LoginLogicTest {
 
     @Test
     public void inputSiteAddressGotEmailTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.InputSiteAddress.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.InputSiteAddress.class)
+                .setLoginNavHandler(mLoginNavHandler);
         loginNavController.ensureState(LoginNav.InputSiteAddress.class);
 
         loginNavController.getLoginNavInputSiteAddress().gotSiteAddress("test.wordpress.com");
@@ -285,7 +296,8 @@ public class LoginLogicTest {
 
     @Test
     public void inputSiteAddressInvalidEventsTest() {
-        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class, mLoginNavHandler);
+        LoginNavController loginNavController = new LoginNavController(LoginNav.Prologue.class)
+                .setLoginNavHandler(mLoginNavHandler);
 
         // get a reference to LoginNav Prologue for later use
         LoginNav.Prologue loginNavPrologue = loginNavController.getLoginNavPrologue();

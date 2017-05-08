@@ -1,24 +1,19 @@
 package org.wordpress.android.ui.accounts.login.nav;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class LoginNavController implements LoginFsmGetter {
 
     private LoginNavHandler mLoginNavHandler;
 
-    public LoginNavController(ArrayList<Class<? extends LoginNav>> initialLoginNav,
-            LoginNavHandler loginNavHandler) {
-        mLoginNavStack.addAll(initialLoginNav);
-
-        mLoginNavHandler = loginNavHandler;
+    public LoginNavController(Class<? extends LoginNav> initialLoginNav) {
+        mLoginNavStack.push(initialLoginNav);
     }
 
-    public LoginNavController(Class<? extends LoginNav> initialLoginNav,
-            LoginNavHandler loginNavHandler) {
-        mLoginNavStack.push(initialLoginNav);
-
+    public LoginNavController setLoginNavHandler(LoginNavHandler loginNavHandler) {
         mLoginNavHandler = loginNavHandler;
+
+        return this;
     }
 
     private LoginNav newNavHandler(Class<? extends LoginNav> loginNav) {
@@ -38,10 +33,6 @@ public class LoginNavController implements LoginFsmGetter {
     }
 
     private Stack<Class<? extends LoginNav>> mLoginNavStack = new Stack<>();
-
-    public ArrayList<Class<? extends LoginNav>> getNavHistory() {
-        return new ArrayList<>(mLoginNavStack);
-    }
 
     private boolean isInState(Class<? extends LoginNav> loginNav) {
         return !mLoginNavStack.empty() && loginNav.equals(mLoginNavStack.peek());

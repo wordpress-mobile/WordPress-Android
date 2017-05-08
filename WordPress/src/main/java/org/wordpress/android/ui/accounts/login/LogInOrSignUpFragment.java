@@ -50,10 +50,10 @@ public class LogInOrSignUpFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginFsmGetter) {
-            mLoginStatePrologue = ((LoginFsmGetter) context).getLoginNavPrologue();
+        if (context instanceof LoginFsmGetter.FsmGetter) {
+            mLoginStatePrologue = ((LoginFsmGetter.FsmGetter) context).get().getLoginNavPrologue();
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginFsmGetter");
+            throw new RuntimeException(context.toString() + " must implement LoginFsmGetter.FsmGetter");
         }
     }
 
