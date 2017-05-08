@@ -107,7 +107,7 @@ public class AppPrefs {
         VISUAL_EDITOR_AVAILABLE,
 
         // When we need to show the new editor promo dialog
-        NEW_EDITOR_PROMO_REQUIRED,
+        AZTEC_EDITOR_PROMO_REQUIRED,
 
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
@@ -441,11 +441,11 @@ public class AppPrefs {
     }
 
    public static boolean isNewEditorPromoRequired() {
-       return getBoolean(UndeletablePrefKey.NEW_EDITOR_PROMO_REQUIRED, true);
+       return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
    }
 
    public static void setNewEditorPromoRequired(boolean required) {
-       setBoolean(UndeletablePrefKey.NEW_EDITOR_PROMO_REQUIRED, required);
+       setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
    }
 
     public static boolean isGravatarChangePromoRequired() {
