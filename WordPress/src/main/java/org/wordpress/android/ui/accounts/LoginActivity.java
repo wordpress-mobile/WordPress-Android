@@ -11,14 +11,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
-import org.wordpress.android.ui.accounts.login.nav.ContextImplementation;
+import org.wordpress.android.ui.accounts.login.nav.LoginNavHandler;
 import org.wordpress.android.ui.accounts.login.nav.LoginFsmGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavController;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, ContextImplementation {
+public class LoginActivity extends AppCompatActivity implements LoginFsmGetter, LoginNavHandler {
     private static final String KEY_NAV_HISTORY = "KEY_NAV_HISTORY";
 
     LoginNavController mLoginNavController;

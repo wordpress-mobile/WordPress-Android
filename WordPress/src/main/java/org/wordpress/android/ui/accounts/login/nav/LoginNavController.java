@@ -5,20 +5,20 @@ import java.util.Stack;
 
 public class LoginNavController implements LoginFsmGetter {
 
-    private ContextImplementation mContextImplementation;
+    private LoginNavHandler mLoginNavHandler;
 
     public LoginNavController(ArrayList<Class<? extends LoginNav>> initialLoginNav,
-            ContextImplementation contextImplementation) {
+            LoginNavHandler loginNavHandler) {
         mLoginNavStack.addAll(initialLoginNav);
 
-        mContextImplementation = contextImplementation;
+        mLoginNavHandler = loginNavHandler;
     }
 
     public LoginNavController(Class<? extends LoginNav> initialLoginNav,
-            ContextImplementation contextImplementation) {
+            LoginNavHandler loginNavHandler) {
         mLoginNavStack.push(initialLoginNav);
 
-        mContextImplementation = contextImplementation;
+        mLoginNavHandler = loginNavHandler;
     }
 
     private LoginNav newNavHandler(Class<? extends LoginNav> loginNav) {
@@ -82,7 +82,7 @@ public class LoginNavController implements LoginFsmGetter {
             ensureState(LoginNav.Prologue.class);
             gotoState(LoginNav.InputEmail.class);
 
-            mContextImplementation.showEmailLoginScreen();
+            mLoginNavHandler.showEmailLoginScreen();
         }
 
         @Override
@@ -90,7 +90,7 @@ public class LoginNavController implements LoginFsmGetter {
             ensureState(LoginNav.Prologue.class);
             gotoState(LoginNav.Prologue.class);
 
-            mContextImplementation.toast("Signup is not implemented yet");
+            mLoginNavHandler.toast("Signup is not implemented yet");
         }
     }
 
@@ -100,7 +100,7 @@ public class LoginNavController implements LoginFsmGetter {
             ensureState(LoginNav.InputEmail.class);
             gotoState(LoginNav.InputEmail.class);
 
-            mContextImplementation.toast("Input email is not implemented yet. Input email: " + email);
+            mLoginNavHandler.toast("Input email is not implemented yet. Input email: " + email);
         }
 
         @Override
@@ -108,7 +108,7 @@ public class LoginNavController implements LoginFsmGetter {
             ensureState(LoginNav.InputEmail.class);
             gotoState(LoginNav.InputEmail.class);
 
-            mContextImplementation.toast("Fall back to username/password is not implemented yet.");
+            mLoginNavHandler.toast("Fall back to username/password is not implemented yet.");
         }
 
         @Override
@@ -116,7 +116,7 @@ public class LoginNavController implements LoginFsmGetter {
             ensureState(LoginNav.InputEmail.class);
             gotoState(LoginNav.InputEmail.class);
 
-            mContextImplementation.toast("Help is not implemented yet.");
+            mLoginNavHandler.toast("Help is not implemented yet.");
         }
     }
 
@@ -126,7 +126,7 @@ public class LoginNavController implements LoginFsmGetter {
             ensureState(LoginNav.InputSiteAddress.class);
             gotoState(LoginNav.InputSiteAddress.class);
 
-            mContextImplementation.toast("Input site address is not implemented yet. Input site address: " + siteAddress);
+            mLoginNavHandler.toast("Input site address is not implemented yet. Input site address: " + siteAddress);
         }
     }
 

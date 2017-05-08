@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.accounts.login.nav;
 
-public interface ContextImplementation {
+public interface LoginNavHandler {
     void toast(String message);
 
     void showEmailLoginScreen();
