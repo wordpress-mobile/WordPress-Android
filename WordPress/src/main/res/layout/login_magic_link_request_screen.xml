@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="180dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/toolbar"
+        android:scaleType="centerInside"
+        android:src="@drawable/login_magiclink_request"/>
+
+    <TextView
+        android:id="@+id/label"
+        style="@style/Base.TextAppearance.AppCompat.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/image"
+        android:padding="@dimen/margin_extra_large"
+        android:text="@string/login_magic_links_label"/>
+
+    <Button
+        android:theme="@style/LoginTheme.Button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:id="@+id/login_request_magic_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/label"
+        android:layout_centerHorizontal="true"
+        android:text="@string/send_link" />
+
+    <TextView
+        android:id="@+id/login_enter_password"
+        style="@style/Base.TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_request_magic_link"
+        android:layout_marginTop="@dimen/margin_extra_extra_large"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/blue_wordpress"
+        android:text="@string/enter_your_password_instead" />
+
+</RelativeLayout>

@@ -9,6 +9,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
+import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.util.ToastUtils;
 
@@ -58,13 +59,24 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void gotEmail(String email) {
-        ToastUtils.showToast(this, "Input email is not implemented yet. Input email: " + email);
+    public void showMagicLinkRequestScreen(String email) {
+        LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
+        slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
     }
 
     @Override
     public void loginViaUsernamePassword() {
         ToastUtils.showToast(this, "Fall back to username/password is not implemented yet.");
+    }
+
+    @Override
+    public void sendMagicLinkRequest(String email) {
+        ToastUtils.showToast(this, "Request magic link is not implemented yet. Email: " + email);
+    }
+
+    @Override
+    public void usePasswordInstead(String email) {
+        ToastUtils.showToast(this, "Fall back to password is not implemented yet. Email: " + email);
     }
 
     @Override

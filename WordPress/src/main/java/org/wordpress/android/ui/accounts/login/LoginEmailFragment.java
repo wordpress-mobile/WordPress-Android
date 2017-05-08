@@ -312,7 +312,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                     // email address is available on wpcom, so apparently the user can't login with that one.
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
-                    mLoginListener.gotEmail(event.value);
+                    mLoginListener.showMagicLinkRequestScreen(event.value);
                 }
                 break;
             default:
