@@ -2441,7 +2441,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             onUploadSuccess(event.media);
         }
         else {
-            AppLog.w(AppLog.T.MEDIA, "EDITPOSTACTIVITY: " + event.media.getId() + " - " + event.progress);
             onUploadProgress(event.media, event.progress);
         }
     }
