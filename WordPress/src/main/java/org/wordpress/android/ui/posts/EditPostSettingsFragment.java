@@ -631,7 +631,7 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String password = EditTextUtils.getText(mPasswordEditText);
-        String excerpt = mExcerptTextView.toString();
+        String excerpt = mExcerptTextView.getText().toString();
         if (excerpt.equals(getString(R.string.not_set))) {
             excerpt = "";
         }
