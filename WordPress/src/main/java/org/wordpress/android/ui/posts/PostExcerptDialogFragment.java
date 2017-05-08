@@ -13,8 +13,13 @@ import android.widget.EditText;
 import org.wordpress.android.R;
 
 public class PostExcerptDialogFragment extends DialogFragment {
+    interface PostExcerptDialogListener {
+        void onPostExcerptUpdated(String postExcerpt);
+    }
+
     private static final String EXCERPT_TAG = "excerpt";
     private String mPostExcerpt;
+    private PostExcerptDialogListener mPostExcerptDialogListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,24 +48,32 @@ public class PostExcerptDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        builder.setTitle(R.string.post_excerpt);
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         View dialogView = layoutInflater.inflate(R.layout.post_excerpt_dialog, null);
         builder.setView(dialogView);
-        EditText editText = (EditText) dialogView.findViewById(R.id.post_excerpt_dialog_edit_text);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.post_excerpt_dialog_edit_text);
         if (!TextUtils.isEmpty(mPostExcerpt)) {
             editText.setText(mPostExcerpt);
             // move the cursor to the end
             editText.setSelection(mPostExcerpt.length());
         }
 
+        builder.setTitle(R.string.post_excerpt);
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mPostExcerpt = editText.getText().toString();
+                if (mPostExcerptDialogListener != null) {
+                    mPostExcerptDialogListener.onPostExcerptUpdated(mPostExcerpt);
+                }
+            }
+        });
+
         return builder.create();
+    }
+
+    public void setPostExcerptDialogListener(PostExcerptDialogListener postExcerptDialogListener) {
+        mPostExcerptDialogListener = postExcerptDialogListener;
     }
 }
