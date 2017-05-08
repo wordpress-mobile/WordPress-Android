@@ -379,7 +379,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded() || mSite == null || !SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (!isAdded() || mSite == null || !SiteUtils.isAccessedViaWPComRest(mSite)) {
             return;
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
@@ -730,7 +730,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // the post this comment is on can only be requested if this is a .com blog or a
         // jetpack-enabled self-hosted blog, and we have valid .com credentials
-        boolean canRequestPost = SiteUtils.isAccessibleViaWPComAPI(site) && mAccountStore.hasAccessToken();
+        boolean canRequestPost = SiteUtils.isAccessedViaWPComRest(site) && mAccountStore.hasAccessToken();
 
         final String title;
         final boolean hasTitle;

@@ -17,7 +17,7 @@ public class SuggestionUtils {
     public static SuggestionAdapter setupSuggestions(SiteModel site, Context context,
                                                      SuggestionServiceConnectionManager serviceConnectionManager) {
         return SuggestionUtils.setupSuggestions(site.getSiteId(), context, serviceConnectionManager,
-                SiteUtils.isAccessibleViaWPComAPI(site));
+                SiteUtils.isAccessedViaWPComRest(site));
     }
 
     public static SuggestionAdapter setupSuggestions(final long siteId, Context context,
@@ -41,7 +41,7 @@ public class SuggestionUtils {
     public static TagSuggestionAdapter setupTagSuggestions(SiteModel site, Context context,
                                                            SuggestionServiceConnectionManager serviceConnectionManager) {
         return SuggestionUtils.setupTagSuggestions(site.getSiteId(), context, serviceConnectionManager,
-                SiteUtils.isAccessibleViaWPComAPI(site));
+                SiteUtils.isAccessedViaWPComRest(site));
     }
 
     public static TagSuggestionAdapter setupTagSuggestions(final long siteId, Context context,
