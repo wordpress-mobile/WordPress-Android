@@ -407,37 +407,6 @@ public class ImageUtils {
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
     }
 
-    private static String getRealFilePath(Context context, Uri imageUri) {
-        if (context == null || imageUri == null) {
-            return null;
-        }
-
-        String filePath = null;
-        if (imageUri.toString().contains("content:")) {
-            String[] projection = new String[] { MediaStore.Images.Media.DATA };
-            Cursor cur = null;
-            try {
-                cur = context.getContentResolver().query(imageUri, projection, null, null, null);
-                if (cur != null && cur.moveToFirst()) {
-                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-                    filePath = cur.getString(dataColumn);
-                }
-            } catch (IllegalStateException stateException) {
-                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + imageUri);
-            } finally {
-                SqlUtils.closeCursor(cur);
-            }
-        }
-
-        if (TextUtils.isEmpty(filePath)) {
-            //access the file directly
-            filePath = imageUri.toString().replace("content://media", "");
-            filePath = filePath.replace("file://", "");
-        }
-
-        return  filePath;
-    }
-
     private static boolean resizeImageAndWriteToStream(Context context,
                                                     Uri imageUri,
                                                     String fileExtension,
@@ -446,7 +415,7 @@ public class ImageUtils {
                                                     int quality,
                                                     OutputStream outStream) throws OutOfMemoryError, IOException {
 
-        String realFilePath = getRealFilePath(context, imageUri);
+        String realFilePath = MediaUtils.getRealPathFromURI(context, imageUri);
 
         // get just the image bounds
         BitmapFactory.Options optBounds = new BitmapFactory.Options();
@@ -744,6 +713,12 @@ public class ImageUtils {
             return null;
         }
 
+        int orientation = getImageOrientation(context, path);
+        // Do not rotate portrait pictures
+        if (orientation == 0) {
+            return  null;
+        }
+
         String mimeType = MediaUtils.getMediaFileMimeType(file);
         if (mimeType.equals("image/gif")) {
             // Don't rotate gifs to maintain their quality
@@ -764,18 +739,26 @@ public class ImageUtils {
             return null;
         }
 
-        int orientation = getImageOrientation(context, path);
-        // Do not rotate portrait pictures
-        if (orientation == 0) {
-            return  null;
-        }
-
-        File resizedImageFile;
+        File rotatedImageFile;
         FileOutputStream out;
 
         try {
-            resizedImageFile = File.createTempFile("wp-image-", "." + fileExtension);
-            out = new FileOutputStream(resizedImageFile);
+            // try to re-use the same name as prefix of the temp file
+            String prefix;
+            int dotPos = fileName.indexOf('.');
+            if (dotPos > 0) {
+                prefix = fileName.substring(0, dotPos) + "-";
+            } else {
+                prefix = fileName + "-";
+            }
+
+            if (prefix.length() < 3) {
+                // prefix must be at least 3 characters
+                prefix = "wp-image";
+            }
+
+            rotatedImageFile = File.createTempFile(prefix, "." + fileExtension);
+            out = new FileOutputStream(rotatedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage.");
             return null;
@@ -806,7 +789,7 @@ public class ImageUtils {
             }
         }
 
-        String tempFilePath = resizedImageFile.getPath();
+        String tempFilePath = rotatedImageFile.getPath();
         if (!TextUtils.isEmpty(tempFilePath)) {
             return tempFilePath;
         } else {
