@@ -110,6 +110,8 @@ public class SmartLockHelper {
         // need username and password fields for Smart Lock
         // https://github.com/wordpress-mobile/WordPress-Android/issues/5850
         if (TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
+            AppLog.i(T.MAIN, String.format(
+                    "Cannot save Smart Lock credentials, username (%s) or password (%s) is empty", username, password));
             return;
         }
 
