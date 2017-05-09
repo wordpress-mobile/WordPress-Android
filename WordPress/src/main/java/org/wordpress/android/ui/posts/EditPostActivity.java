@@ -25,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -97,6 +98,7 @@ import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUt
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOption;
+import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
@@ -117,6 +119,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -560,6 +563,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
             initPhotoPicker();
+            SmartToast.show(this, SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
         }
 
         // hide soft keyboard
@@ -610,7 +614,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
         hidePhotoPicker();
         for (Uri uri: uriList) {
-            addMedia(uri);
+            if (addMedia(uri)) {
+                boolean isVideo = MediaUtils.isVideo(uri.toString());
+                trackAddMediaFromDeviceEvents(false, isVideo, uri);
+            }
         }
     }
 
@@ -828,23 +835,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish) {
         new SavePostOnlineAndFinishTask(isFirstTimePublish).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private boolean hasFailedMedia() {
-        // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
-        if (mEditorFragment.hasFailedMediaUploads()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.editor_toast_failed_uploads)
-                    .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Clear failed uploads
-                            mEditorFragment.removeAllFailedMediaUploads();
-                        }
-                    }).setNegativeButton(android.R.string.cancel, null);
-            builder.create().show();
-            return true;
-        }
-        return false;
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -1152,69 +1142,123 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        boolean isPublishable = PostUtils.isPublishable(mPost);
+        // Update post, save to db and publish in its own Thread, because 1. update can be pretty slow with a lot of
+        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
+        // on API 16 (and 21) with the visual editor.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isFirstTimePublish = isFirstTimePublish();
 
-        // if post was modified or has unsaved local changes and is publishable, save it
-        saveResult(isPublishable, false);
-
-        if (isPublishable) {
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                if (!hasFailedMedia()) {
-                    savePostOnlineAndFinishAsync(isFirstTimePublish);
+                boolean postUpdateSuccessful = updatePostObject();
+                if (!postUpdateSuccessful) {
+                    // just return, since the only case updatePostObject() can fail is when the editor
+                    // fragment is not added to the activity
+                    return;
                 }
-            } else {
-                savePostLocallyAndFinishAsync();
+
+                boolean isPublishable = PostUtils.isPublishable(mPost);
+
+                // if post was modified or has unsaved local changes and is publishable, save it
+                saveResult(isPublishable, false);
+
+                if (isPublishable) {
+                    if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                        // Show an Alert Dialog asking the user if they want to remove all failed media before upload
+                        if (mEditorFragment.hasFailedMediaUploads()) {
+                            EditPostActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showRemoveFailedUploadsDialog();
+                                }
+                            });
+                        } else {
+                            savePostOnlineAndFinishAsync(isFirstTimePublish);
+                        }
+                    } else {
+                        savePostLocallyAndFinishAsync();
+                    }
+                } else {
+                    EditPostActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
+                        }
+                    });
+                }
             }
-        } else {
-            ToastUtils.showToast(EditPostActivity.this, R.string.error_publish_empty_post, Duration.SHORT);
-        }
+        }).start();
+    }
+
+    private void showRemoveFailedUploadsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.editor_toast_failed_uploads)
+                .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Clear failed uploads
+                        mEditorFragment.removeAllFailedMediaUploads();
+                    }
+                }).setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
     }
 
     private void savePostAndFinish() {
+        // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
+        // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
+        // on API 16 (and 21) with the visual editor.
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // check if the opened post had some unsaved local changes
+                boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
+                boolean isFirstTimePublish = isFirstTimePublish();
 
-        // check if the opened post had some unsaved local changes
-        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
-        boolean isFirstTimePublish = isFirstTimePublish();
+                boolean postUpdateSuccessful = updatePostObject();
+                if (!postUpdateSuccessful) {
+                    // just return, since the only case updatePostObject() can fail is when the editor
+                    // fragment is not added to the activity
+                    return;
+                }
 
-        boolean postUpdateSuccessful = updatePostObject();
-        if (!postUpdateSuccessful) {
-            // just return, since the only case updatePostObject() can fail is when the editor
-            // fragment is not added to the activity
-            return;
-        }
+                boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+                boolean isPublishable = PostUtils.isPublishable(mPost);
+                boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
+                        isPublishable && hasLocalChanges;
 
-        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
-        boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
-                isPublishable && hasLocalChanges;
+                // if post was modified or has unsaved local changes and is publishable, save it
+                boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
+                saveResult(shouldSave, false);
 
-        // if post was modified or has unsaved local changes and is publishable, save it
-        boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
-        saveResult(shouldSave, false);
+                if (shouldSave) {
+                    if (isNewPost()) {
+                        // new post - user just left the editor without publishing, they probably want
+                        // to keep the post as a draft
+                        mPost.setStatus(PostStatus.DRAFT.toString());
+                        if (mEditPostSettingsFragment != null) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mEditPostSettingsFragment.updateStatusSpinner();
+                                }
+                            });
+                        }
+                    }
 
-        if (shouldSave) {
-            if (isNewPost()) {
-                // new post - user just left the editor without publishing, they probably want
-                // to keep the post as a draft
-                mPost.setStatus(PostStatus.DRAFT.toString());
-                if (mEditPostSettingsFragment != null) {
-                    mEditPostSettingsFragment.updateStatusSpinner();
+                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
+                            && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                        savePostOnlineAndFinishAsync(isFirstTimePublish);
+                    } else {
+                        savePostLocallyAndFinishAsync();
+                    }
+                } else {
+                    // discard post if new & empty
+                    if (!isPublishable && isNewPost()) {
+                        mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
+                    }
+                    finish();
                 }
             }
-
-            if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
-                    && NetworkUtils.isNetworkAvailable(this)) {
-                savePostOnlineAndFinishAsync(isFirstTimePublish);
-            } else {
-                savePostLocallyAndFinishAsync();
-            }
-        } else {
-            // discard post if new & empty
-            if (!isPublishable && isNewPost()) {
-                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
-            }
-            finish();
-        }
+        }).start();
     }
 
     private boolean isFirstTimePublish() {
@@ -1299,6 +1343,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
+                    mEditorFragment.setImageLoader(mImageLoader);
+
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
 
@@ -1548,7 +1594,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             // needed by the legacy editor to save local drafts
             try {
                 postContent = new SpannableStringBuilder(mEditorFragment.getSpannedContent());
-            } catch (IndexOutOfBoundsException e) {
+            } catch (RuntimeException e) {
                 // A core android bug might cause an out of bounds exception, if so we'll just use the current editable
                 // See https://code.google.com/p/android/issues/detail?id=5164
                 postContent = new SpannableStringBuilder(StringUtils.notNullStr((String) mEditorFragment.getContent()));
@@ -1687,7 +1733,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
 
-        AnalyticsTracker.track(currentStat, properties);
+        AnalyticsUtils.trackWithSiteDetails(currentStat, mSite, properties);
     }
 
     /**
@@ -1703,9 +1749,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (isVideo) {
-            AnalyticsTracker.track(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY, mSite,  null);
         } else {
-            AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+            AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY, mSite,  null);
         }
     }
 
@@ -1729,13 +1775,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
-        String path;
-        if (uri.toString().contains("content:")) {
-            path = MediaUtils.getPath(this, uri);
-        } else {
-            // File is not in media library
-            path = uri.toString().replace("file://", "");
-        }
+        String path = MediaUtils.getRealPathFromURI(this, uri);
 
         if (path == null) {
             ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
@@ -1745,6 +1785,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
+            path = MediaUtils.getRealPathFromURI(this, uri);
+        } else {
+            // Fix the rotation of the picture see https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            // TODO: find a better implementation
+            Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+            if (rotatedMedia != null) {
+                uri = rotatedMedia;
+                path = MediaUtils.getRealPathFromURI(this, uri);
+            }
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
@@ -1763,7 +1812,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else {
             mediaModel.setTitle(ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath()));
         }
-        mediaModel.setPostId(mPost.getId());
+        mediaModel.setLocalPostId(mPost.getId());
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
 
@@ -1837,23 +1886,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Create an AsyncTask to download the file
-            new AsyncTask<Uri, Integer, Uri>() {
-                @Override
-                protected Uri doInBackground(Uri... uris) {
-                    Uri imageUri = uris[0];
-                    return MediaUtils.downloadExternalMedia(EditPostActivity.this, imageUri);
-                }
-
-                protected void onPostExecute(Uri uri) {
-                    if (uri != null) {
-                        addMedia(uri);
-                    } else {
-                        Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = null;
+            try {
+                downloadedUri = MediaUtils.downloadExternalMedia(EditPostActivity.this, mediaUri);
+            } catch (IllegalStateException e) {
+                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
+                        " See issue #5823");
+            }
+            if (downloadedUri != null) {
+                addMedia(downloadedUri);
+            } else {
+                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
             addMedia(mediaUri);
         }
@@ -1925,16 +1973,43 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        // if only one item was chosen insert it as a media object, otherwise create a gallery
-        // from the selected items
+        // if only one item was chosen insert it as a media object, otherwise show the insert
+        // media dialog so the user can choose how to insert the items
         if (ids.size() == 1) {
             long mediaId = ids.get(0);
             addExistingMediaToEditor(mediaId);
         } else {
-            MediaGallery gallery = new MediaGallery();
-            gallery.setIds(ids);
-            mEditorFragment.appendGallery(gallery);
+            showInsertMediaDialog(ids);
         }
+    }
+
+    /*
+     * called after user selects multiple photos from WP media library
+     */
+    private void showInsertMediaDialog(final ArrayList<Long> mediaIds) {
+        InsertMediaCallback callback = new InsertMediaCallback() {
+            @Override
+            public void onCompleted(@NonNull InsertMediaDialog dialog) {
+                switch (dialog.getInsertType()) {
+                    case GALLERY:
+                        MediaGallery gallery = new MediaGallery();
+                        gallery.setType(dialog.getGalleryType().toString());
+                        gallery.setNumColumns(dialog.getNumColumns());
+                        gallery.setIds(mediaIds);
+                        mEditorFragment.appendGallery(gallery);
+                        break;
+                    case INDIVIDUALLY:
+                        for (Long id: mediaIds) {
+                            addExistingMediaToEditor(id);
+                        }
+                        break;
+                }
+            }
+        };
+        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(dialog, "insert_media");
+        ft.commitAllowingStateLoss();
     }
 
     private void handleMediaGalleryResult(Intent data) {
@@ -2122,6 +2197,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setMimeType(mimeType);
         media.setUploadState(startingState.name());
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
+        if (!mPost.isLocalDraft()) {
+            media.setPostId(mPost.getRemotePostId());
+        }
 
         return media;
     }

@@ -124,7 +124,7 @@ public abstract class SiteSettingsInterface {
     public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
         if (host == null || site == null) return null;
 
-        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (SiteUtils.isAccessedViaWPComRest(site)) {
             return new DotComSiteSettings(host, site, listener);
         }
 
@@ -798,7 +798,7 @@ public abstract class SiteSettingsInterface {
         }
 
         // Self hosted always read account data from the main table
-        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());
         }

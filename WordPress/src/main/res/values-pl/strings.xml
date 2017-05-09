@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-23 20:37:42+0000
+Translation-Revision-Date: 2017-05-03 20:39:51+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">Wyślij email ponownie</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Wysłaliśmy email na adres %s podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
+	<string name="editor_confirm_email_prompt_message">Wysłaliśmy email na twój adres podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
+	<string name="editor_confirm_email_prompt_title">Proszę potwierdzić swój adres email</string>
+	<string name="toast_verification_email_send_error">Błąd podczas wysyłki emaila weryfikacyjnego. Czy już dokonałeś weryfikacji?</string>
+	<string name="toast_verification_email_sent">Wysłano email weryfikacyjny, sprawdź swoją skrzynkę</string>
+	<string name="toast_saving_post_as_draft">Zapisywanie wpisu jako szkic</string>
+	<string name="photo_picker_capture_video">Nagraj film</string>
+	<string name="photo_picker_capture_photo">Wykonaj zdjęcie</string>
+	<string name="photo_picker_choose_video">Wybierz film</string>
+	<string name="photo_picker_choose_photo">Wybierz zdjęcie</string>
+	<string name="delete_site_warning_subtitle">Uwaga! Usunięcie witryny to proces nieodwracalny.</string>
+	<string name="delete_site_warning">Wszystkie twoje wpisy, zdjęcia oraz dane zostaną usunięte. Adres twojej witryny (%s) również zostanie skasowany. </string>
+	<string name="delete_site_warning_title">Usunąć witrynę?</string>
+	<string name="start_over_email_intent_error">Nie można wysłać e-maila</string>
+	<string name="start_over_email_body">Chcę zacząć od nowa i stworzyć witrynę %s od początku</string>
+	<string name="start_over_email_subject">Zacznij jeszcze raz i stwórz od początku witrynę %s</string>
+	<string name="site_picker_remove_site_error">Błąd usuwania witryny, spróbuj ponownie później</string>
+	<string name="editor_post_saved_locally_unfinished_media">Wpis ma niezakończone próby przesyłania mediów i nie został zapisany lokalnie</string>
+	<string name="sure_to_remove_account">Usunąć tą witrynę z aplikacji?</string>
 	<string name="photo_picker_title">Wybierz obrazek</string>
 	<string name="error_publish_no_network">Urządzenie jest offline. Zmiany zapisywane lokalnie.</string>
 	<string name="editor_post_saved_online_not_published">Wpis został zapisany online jako szkic. Rozważ opublikowanie.</string>
@@ -63,8 +83,8 @@ Language: pl
 	<string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do punktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu.</string>
 	<string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST - aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
 	<string name="reader_liked_default_tag">Polubione wpisy</string>
-	<string name="reader_discover_default_tag">Odkrywaj</string>
 	<string name="reader_followed_default_tag">Obserwowane witryny</string>
+	<string name="reader_discover_default_tag">Odkrywaj</string>
 	<string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria wyszukiwania</string>
 	<string name="reader_hint_search_followed_sites">Przeszukaj obserwowane witryny</string>
 	<string name="visual_editor_disabled">Edytor wizualny został wyłączony </string>
@@ -178,7 +198,6 @@ Language: pl
 	<string name="image_caption">Podpis pod obrazkiem</string>
 	<string name="image_settings_save_toast">Zmiany zostały zapisane</string>
 	<string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
-	<string name="stop_upload_button">Zatrzymaj przesyłanie</string>
 	<string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
 	<string name="alert_error_adding_media">Błąd podczas wstawiania mediów</string>
 	<string name="alert_action_while_uploading">Przesyłasz właśnie media. Poczekaj aż to zadanie się zakończy.</string>
@@ -272,7 +291,6 @@ Language: pl
 	<string name="delete_site_progress">Usuwanie witryny...</string>
 	<string name="delete_site_hint">Usuń witrynę</string>
 	<string name="delete_site_summary">Nie można cofnąć tego działania. Usunięcie tej witryny usunie całą zawartość, wszystkich współpracowników i domeny tej witryny.</string>
-	<string name="are_you_sure">Czy jesteś pewien?</string>
 	<string name="export_site_hint">Wyeksportuj swoją witrynę do pliku XML</string>
 	<string name="export_site_summary">Jeśli jesteś pewien, upewnij się iż wyeksportowałeś zawartość swojej witryny. Późniejsze odzyskanie zawartości nie będzie możliwe.</string>
 	<string name="keep_your_content">Zachowaj zawartość swojej witryny</string>
@@ -775,8 +793,6 @@ Language: pl
 	<string name="stats_for">Statystyki dla %s</string>
 	<string name="themes_fetching">Pobieranie motywów...</string>
 	<string name="ssl_certificate_details">Szczegóły</string>
-	<string name="sure_to_remove_account">Usunąć tego bloga?</string>
-	<string name="media_gallery_date_range">Wyświetlanie mediów z okresu od %1$s do %2$s</string>
 	<string name="cab_selected">Liczba zaznaczonych: %d</string>
 	<string name="confirm_delete_media">Usunąć zaznaczony element?</string>
 	<string name="confirm_delete_multi_media">Usunąć zaznaczone elementy?</string>
@@ -933,7 +949,6 @@ Language: pl
 	<string name="required_field">Wymagane pole</string>
 	<string name="reader_toast_err_remove_tag">Nie udało się usunąć tagu</string>
 	<string name="reader_toast_err_add_tag">Nie udało się dodać tagu</string>
-	<string name="reader_share_link">Udostępnij link</string>
 	<string name="reader_title_applog">Dziennik aplikacji</string>
 	<string name="jetpack_message_not_admin">Wymagana jest wtyczka Jetpack. Skontaktuj się z administratorem witryny.</string>
 	<string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
@@ -1083,7 +1098,6 @@ Language: pl
 	<string name="jetpack_not_found">Wtyczka Jetpack nie została znaleziona</string>
 	<string name="select_from_media_library">Wybierz z biblioteki mediów</string>
 	<string name="empty_list_default">Lista jest pusta</string>
-	<string name="media_add_new_media_gallery">Tworzenie galerii</string>
 	<string name="media_add_popup_title">Dodaj do biblioteki mediów</string>
 	<string name="passcode_turn_on">Włącz blokadę PIN</string>
 	<string name="passcode_turn_off">Wyłącz blokadę PIN</string>
@@ -1171,7 +1185,6 @@ Language: pl
 	<string name="no_network_title">Brak dostępnej sieci</string>
 	<string name="featured_in_post">Załącz obraz w treści wpisu</string>
 	<string name="featured">Ustaw jako obrazek wyróżniający</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">nazwa użytkownika blogu</string>
 	<string name="scaled_image">Szerokosć obrazka przeskalowanego</string>
 	<string name="upload_scaled_image">Załaduj i wprowadź odnośnik do przeskalowanego obrazka</string>

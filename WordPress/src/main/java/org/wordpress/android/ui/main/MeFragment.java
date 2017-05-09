@@ -541,8 +541,13 @@ public class MeFragment extends Fragment {
 
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Create an AsyncTask to download the file
-            new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = MediaUtils.downloadExternalMedia(getActivity(), mediaUri);
+            if (downloadedUri != null) {
+                startGravatarUpload(getRealPathFromURI(downloadedUri));
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+            }
         } else {
             // It is a regular local media file
             startGravatarUpload(getRealPathFromURI(mediaUri));
@@ -587,26 +592,6 @@ public class MeFragment extends Fragment {
 
         cursor.close();
         return path;
-    }
-
-    private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-        @Override
-        protected Uri doInBackground(Uri... uris) {
-            Uri imageUri = uris[0];
-            return MediaUtils.downloadExternalMedia(getActivity(), imageUri);
-        }
-
-        protected void onPostExecute(Uri newUri) {
-            if (getActivity() == null)
-                return;
-
-            if (newUri != null) {
-                String path = getRealPathFromURI(newUri);
-                startGravatarUpload(path);
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     private void startGravatarUpload(final String filePath) {

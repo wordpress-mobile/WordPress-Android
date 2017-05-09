@@ -30,11 +30,11 @@ public class SiteUtils {
      * @return true if the site is WPCom or Jetpack and is not private
      */
     public static boolean isPhotonCapable(SiteModel site) {
-        return SiteUtils.isAccessibleViaWPComAPI(site) && !site.isPrivate();
+        return SiteUtils.isAccessedViaWPComRest(site) && !site.isPrivate();
     }
 
-    public static boolean isAccessibleViaWPComAPI(SiteModel site) {
-        return site.isWPCom() || site.isJetpackConnected();
+    public static boolean isAccessedViaWPComRest(SiteModel site) {
+        return site.getOrigin() == SiteModel.ORIGIN_WPCOM_REST;
     }
 
     public static String getSiteIconUrl(SiteModel site, int size) {
