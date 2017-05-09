@@ -106,6 +106,12 @@ public class SmartLockHelper {
 
     public void saveCredentialsInSmartLock(@NonNull final String username, @NonNull final String password,
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
+        // need username and password fields for Smart Lock
+        // https://github.com/wordpress-mobile/WordPress-Android/issues/5850
+        if (password.isEmpty() || username.isEmpty()) {
+            return;
+        }
+
         Activity activity = getActivityAndCheckAvailability();
         if (activity == null || mCredentialsClient == null || !mCredentialsClient.isConnected()) {
             return;
