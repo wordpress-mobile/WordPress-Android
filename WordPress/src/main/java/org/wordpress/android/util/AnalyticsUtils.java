@@ -329,12 +329,7 @@ public class AnalyticsUtils {
         }
 
         if(mediaURI != null) {
-            if (mediaURI.toString().contains("content:")) {
-                path = MediaUtils.getPath(context, mediaURI);
-            } else {
-                // File is not in media library
-                path = mediaURI.toString().replace("file://", "");
-            }
+            path = MediaUtils.getRealPathFromURI(context, mediaURI);
         }
 
         if (TextUtils.isEmpty(path) ) {
