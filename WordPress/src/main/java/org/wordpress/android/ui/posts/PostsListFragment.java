@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.helpshift.support.util.ListUtils;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -94,6 +96,7 @@ public class PostsListFragment extends Fragment
 
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
+    private final List<PostModel> mSearchResults = new ArrayList<>();
     private String mSearchTerm;
     private Handler mHandler;
 
@@ -455,7 +458,10 @@ public class PostsListFragment extends Fragment
     @Override
     public void onLoadMore() {
         if (mCanLoadMorePosts && !mIsFetchingPosts) {
-            requestPosts(true);
+            if (mSearchResults.isEmpty()) {
+                requestPosts(true);
+            } else {
+            }
         }
     }
 
@@ -515,14 +521,14 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    private void showSearchResults(List<PostModel> posts) {
-        if (posts == null || posts.isEmpty()) {
+    private void showSearchResults() {
+        if (mSearchResults.isEmpty()) {
             mRecyclerView.setAdapter(null);
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
             return;
         }
         PostsListAdapter adapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
-        adapter.setPosts(posts);
+        adapter.setPosts(mSearchResults);
         adapter.setOnPostButtonClickListener(this);
         mRecyclerView.setAdapter(adapter);
         hideEmptyView();
@@ -716,8 +722,11 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        List<PostModel> results = event.searchResults == null ? null : event.searchResults.getPosts();
-        showSearchResults(results);
+        // add new posts to results list
+        if (event.searchResults != null && !ListUtils.isEmpty(event.searchResults.getPosts())) {
+            mSearchResults.addAll(event.searchResults.getPosts());
+        }
+        showSearchResults();
     }
 
     /*
