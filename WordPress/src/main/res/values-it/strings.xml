@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-19 11:53:08+0000
+Translation-Revision-Date: 2017-05-07 12:43:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">Invia di nuovo l\'e-mail</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Ti abbiamo inviato un\'e-mail a %s la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
+	<string name="editor_confirm_email_prompt_message">Ti abbiamo inviato un\'e-mail la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
+	<string name="editor_confirm_email_prompt_title">Conferma il tuo indirizzo e-mail</string>
+	<string name="toast_verification_email_send_error">Errore durante l\'invio dell\'e-mail di verifica. Hai già ricevuto l\'e-mail di verifica?</string>
+	<string name="toast_verification_email_sent">E-mail di verifica inviata, controlla la posta in arrivo</string>
+	<string name="toast_saving_post_as_draft">Salvataggio dell\'articolo come bozza</string>
+	<string name="photo_picker_capture_video">Fai un video</string>
+	<string name="photo_picker_capture_photo">Fai una foto</string>
+	<string name="photo_picker_choose_video">Scegli video</string>
+	<string name="photo_picker_choose_photo">Scegli foto</string>
+	<string name="delete_site_warning_subtitle">Attenzione! Una volta eliminato, un sito non potrà essere recuperato. Verifica prima di procedere.</string>
+	<string name="delete_site_warning">Tutti i tuoi articoli, le immagini e i dati saranno eliminati. L\'indirizzo del sito (%s) andrà perso.</string>
+	<string name="delete_site_warning_title">Eliminare sito?</string>
+	<string name="start_over_email_intent_error">Impossibile inviare un\'e-mail</string>
+	<string name="start_over_email_body">Voglio ricominciare con il sito %s</string>
+	<string name="start_over_email_subject">Ricomincia con il sito %s</string>
+	<string name="site_picker_remove_site_error">Errore durante la rimozione del sito. Riprova più tardi</string>
+	<string name="editor_post_saved_locally_unfinished_media">L\'articolo è stato salvato sul dispositivo locale, poiché il caricamento dei file multimediali non è stato completato</string>
+	<string name="sure_to_remove_account">Rimuovere questo sito dall\'app?</string>
 	<string name="photo_picker_title">Scegli foto</string>
 	<string name="error_publish_no_network">Il dispositivo è offline. Le modifiche sono state salvate a livello locale.</string>
 	<string name="editor_post_saved_online_not_published">L\'articolo è stato salvato online come bozza. Prendi in considerazione la possibilità di pubblicarlo.</string>
@@ -150,7 +170,6 @@ Language: it
 	<string name="image_width">Larghezza</string>
 	<string name="format_bar_description_bold">Grassetto</string>
 	<string name="image_settings_dismiss_dialog_title">Elimina le modifiche non salvate?</string>
-	<string name="stop_upload_button">Ferma il caricamento</string>
 	<string name="stop_upload_dialog_title">Ferma il caricamento?</string>
 	<string name="alert_error_adding_media">Durante l\'inserimento di un elemento multimediale si è verificato un errore.</string>
 	<string name="alert_action_while_uploading">Stai attualmente caricando un elemento multimediale. Attendi il suo completamento.</string>
@@ -245,7 +264,6 @@ Language: it
 	<string name="delete_site_summary">Questa azione è irreversibile. Cancellando il tuo sito rimuoverai tutti i contenuti, collaboratori, e domini.</string>
 	<string name="delete_site_hint">Elimina il sito</string>
 	<string name="export_site_hint">Esporta il sito in un file XML</string>
-	<string name="are_you_sure">Sei sicuro?</string>
 	<string name="export_site_summary">Se sei sicuro, esporta prima i contenuti perchè non potranno più essere recuperati.</string>
 	<string name="keep_your_content">Mantieni il tuo contenuto</string>
 	<string name="domain_removal_hint">I domini non funzioneranno più una volta che avrai rimosso il sito</string>
@@ -618,7 +636,6 @@ Language: it
 	<string name="stats_insights">Approfondimenti</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Per vedere le tue statistiche, accedi con l\'account WordPress.com che hai usato per connettere Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Stai cercando le tue altre statististiche recenti? Le abbiamo spostaste nella pagina insights.</string>
-	<string name="me_disconnect_from_wordpress_com">Disconnettiti da WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Connettiti a WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" non è stato nascosto perchè è il sito corrente</string>
@@ -747,14 +764,12 @@ Language: it
 	<string name="stats_for">Statistiche per %s</string>
 	<string name="themes_fetching">Recupero temi…</string>
 	<string name="ssl_certificate_details">Dettagli</string>
-	<string name="sure_to_remove_account">Rimuovere questo sito?</string>
 	<string name="delete_sure_post">Cancella questo articolo</string>
 	<string name="delete_sure">Cancella questa bozza</string>
 	<string name="delete_sure_page">Cancella questa pagina</string>
 	<string name="confirm_delete_multi_media">Cancellare gli elementi selezionati?</string>
 	<string name="confirm_delete_media">Cancellare l\'elemento selezionato?</string>
 	<string name="cab_selected">%d selezionati</string>
-	<string name="media_gallery_date_range">Visualizzazione elementi media da %1$s a %2$s</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_empty_comments">Ancora nessun commento</string>
 	<string name="reader_label_comment_count_multi">%,d commenti</string>
@@ -983,7 +998,6 @@ Language: it
 	<string name="error_blog_hidden">Questo blog è nascosto e non può essere caricato. Abilitalo nuovamente nelle impostazioni e riprova.</string>
 	<string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
 	<string name="reader_title_applog">Registro applicazione</string>
-	<string name="reader_share_link">Condividi il link</string>
 	<string name="reader_toast_err_add_tag">Impossibile aggiungere questo tag</string>
 	<string name="reader_toast_err_remove_tag">Impossibile rimuovere questo tag</string>
 	<string name="required_field">Campo obbligatorio</string>
@@ -1030,7 +1044,6 @@ Language: it
 	<string name="nux_oops_not_selfhosted_blog">Accedi a WordPress.com</string>
 	<string name="signing_in">Connessione in corso...</string>
 	<string name="media_add_popup_title">Aggiungi alla libreria multimediale</string>
-	<string name="media_add_new_media_gallery">Crea una galleria</string>
 	<string name="empty_list_default">Questo elenco è vuoto</string>
 	<string name="select_from_media_library">Seleziona dalla libreria multimediale</string>
 	<string name="jetpack_not_found">Il plugin Jetpack non è stato trovato</string>
@@ -1142,7 +1155,6 @@ Language: it
 	<string name="anonymous">Anonimo</string>
 	<string name="page">Pagina</string>
 	<string name="post">Articolo</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">nomeutenteblog</string>
 	<string name="upload_scaled_image">Carica e inserisci link all\'immagine ridimensionata</string>
 	<string name="scaled_image">Larghezza immagine ridimensionata</string>

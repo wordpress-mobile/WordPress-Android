@@ -25,7 +25,6 @@ Language: da_DK
 	<string name="exporting_content_progress">Eksporterer indhold...</string>
 	<string name="show_purchases">Vis køb</string>
 	<string name="delete_site_progress">Sletter websted...</string>
-	<string name="are_you_sure">Er du sikker?</string>
 	<string name="export_site_hint">Eksporter dit websted til en XML-fil</string>
 	<string name="keep_your_content">Behold dit indhold</string>
 	<string name="primary_domain">Primært domæne</string>
@@ -180,14 +179,12 @@ Language: da_DK
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
 	<string name="stats_comments_total_comments_followers">Total antal indlæg med kommentarfølgere: %1$s</string>
 	<string name="ssl_certificate_details">Detaljer</string>
-	<string name="sure_to_remove_account">Fjern dette websted?</string>
 	<string name="delete_sure_post">Slet dette indlæg</string>
 	<string name="delete_sure">Slet denne kladde</string>
 	<string name="delete_sure_page">Slet denne side</string>
 	<string name="confirm_delete_multi_media">Slet markerede elementer</string>
 	<string name="confirm_delete_media">Slet markerede element?</string>
 	<string name="cab_selected">%d markeret</string>
-	<string name="media_gallery_date_range">Viser medier fra %1$s til %2$s</string>
 	<string name="mnu_comment_liked">Synes godt om</string>
 	<string name="stats_no_blog">Statistiken kunne ikke hentes for den valgte blog</string>
 	<string name="pages_empty_list">Endnu ingen sider! Hvorfor ikke lave en?</string>
@@ -352,7 +349,6 @@ Language: da_DK
 	<string name="required_field">Påkrævet felt</string>
 	<string name="content_required">Kommentar er påkrævet</string>
 	<string name="email_hint">E-mailadresse</string>
-	<string name="reader_share_link">Del link</string>
 	<string name="image_settings">Billedeindstillinger</string>
 	<string name="add_account_blog_url">Blog-adresse</string>
 	<string name="privacy_policy">Privatlivspolitik</string>
@@ -452,7 +448,6 @@ Language: da_DK
 	<string name="jetpack_not_found">Jetpack-pluginnet blev ikke fundet</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
 	<string name="media_add_popup_title">Tilføj til mediebibliotek</string>
-	<string name="media_add_new_media_gallery">Opret galleri</string>
 	<string name="empty_list_default">Listen er tom</string>
 	<string name="select_from_media_library">Vælg fra mediebiblioteket</string>
 	<string name="reader_label_added_tag">Tilføjede %s</string>
@@ -546,7 +541,6 @@ Language: da_DK
 	<string name="posts">Indlæg</string>
 	<string name="pages">Sider</string>
 	<string name="width">Bredde</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">blogusername</string>
 	<string name="upload_scaled_image">Upload og link til skalerede billede</string>
 	<string name="scaled_image">Bredde på skalerede billede</string>
