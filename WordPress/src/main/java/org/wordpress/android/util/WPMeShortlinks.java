@@ -64,7 +64,7 @@ public class WPMeShortlinks {
             return null;
         }
 
-        if (!SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (!SiteUtils.isAccessedViaWPComRest(site)) {
             return null;
         }
 

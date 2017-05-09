@@ -55,7 +55,7 @@ public class PromoDialog extends AppCompatDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btn = (Button) view.findViewById(R.id.promo_dialog_cancel_button);
+        Button btn = (Button) view.findViewById(R.id.promo_dialog_button);
         btn.setText(mButtonLabelId);
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
         Drawable drawable = VectorDrawableCompat.create(getResources(), mDrawableId, null);

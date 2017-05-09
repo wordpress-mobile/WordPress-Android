@@ -280,7 +280,7 @@ public class StatsActivity extends AppCompatActivity
 
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
         // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
-        if (!SiteUtils.isAccessibleViaWPComAPI(mSite)) {
+        if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
             if (!site.isJetpackInstalled()) {
                 JetpackUtils.showInstallJetpackAlert(this, site);
                 return false;
