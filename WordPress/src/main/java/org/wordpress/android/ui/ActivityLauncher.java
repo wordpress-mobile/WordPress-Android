@@ -193,7 +193,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_POST, post);
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

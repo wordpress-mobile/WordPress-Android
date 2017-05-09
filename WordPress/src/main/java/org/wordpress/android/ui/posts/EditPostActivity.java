@@ -154,6 +154,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         PhotoPickerFragment.PhotoPickerListener {
     public static final String EXTRA_POST = "postModel";
+    public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
@@ -273,7 +274,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
-            if (!getIntent().hasExtra(EXTRA_POST)
+            if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                     || Intent.ACTION_SEND.equals(action)
                     || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
@@ -311,7 +312,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
-                mPost = (PostModel) extras.getSerializable(EXTRA_POST);
+                mPost = mPostStore.getPostByLocalPostId(extras.getLong(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
                     mIsPage = mPost.isPage();
@@ -1102,7 +1103,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         i.putExtra(EXTRA_HAS_UNFINISHED_MEDIA, hasUnfinishedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
-        i.putExtra(EXTRA_POST, mPost);
+        i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         setResult(RESULT_OK, i);
     }
 
