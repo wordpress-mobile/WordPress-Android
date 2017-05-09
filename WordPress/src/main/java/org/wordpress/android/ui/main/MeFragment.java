@@ -555,6 +555,11 @@ public class MeFragment extends Fragment {
     }
 
     private void startGravatarUpload(final String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         File file = new File(filePath);
         if (!file.exists()) {
             Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
