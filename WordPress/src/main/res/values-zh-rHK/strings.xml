@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-19 08:50:36+0000
+Translation-Revision-Date: 2017-05-07 12:46:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">重新傳送電子郵件</string>
+	<string name="editor_confirm_email_prompt_message_with_email">你第一次註冊時，我們已寄送電子郵件至 %s。請開啟信件，並按一下藍色按鈕以啟用發佈。</string>
+	<string name="editor_confirm_email_prompt_message">你第一次註冊時，我們已寄送電子郵件給你。請開啟信件，並按一下藍色按鈕以啟用發佈。</string>
+	<string name="editor_confirm_email_prompt_title">請確認你的電子郵件地址</string>
+	<string name="toast_verification_email_send_error">傳送驗證電子郵件時發生錯誤。你已經驗證了嗎？</string>
+	<string name="toast_verification_email_sent">驗證電子郵件已寄出，請查看收件匣</string>
+	<string name="toast_saving_post_as_draft">儲存文章為草稿</string>
+	<string name="photo_picker_capture_video">拍攝影片</string>
+	<string name="photo_picker_capture_photo">拍照</string>
+	<string name="photo_picker_choose_video">選擇影片</string>
+	<string name="photo_picker_choose_photo">選擇相片</string>
+	<string name="delete_site_warning_subtitle">注意！網站一旦刪除便無法還原。請考慮清楚再繼續。</string>
+	<string name="delete_site_warning">我們將會刪除你所有的文章、圖片和資料。此網站的網址 (%s) 也將不復存在。</string>
+	<string name="delete_site_warning_title">刪除網站？</string>
+	<string name="start_over_email_intent_error">無法傳送電子郵件</string>
+	<string name="start_over_email_body">我想重新開始設計網站 %s</string>
+	<string name="start_over_email_subject">重新開始設計網站 %s</string>
+	<string name="site_picker_remove_site_error">移除網站時發生錯誤，請稍後再試</string>
+	<string name="editor_post_saved_locally_unfinished_media">此文章尚未完成媒體上傳，但已儲存到本機</string>
+	<string name="sure_to_remove_account">從應用程式移除此網站？</string>
 	<string name="photo_picker_title">選擇照片</string>
 	<string name="error_publish_no_network">裝置已離線。變更已儲存到本機。</string>
 	<string name="editor_post_saved_online_not_published">文章已在線上儲存為草稿。考慮發佈。</string>
@@ -76,7 +96,6 @@ Language: zh_TW
 	<string name="format_bar_description_bold">粗體</string>
 	<string name="image_settings_dismiss_dialog_title">要捨棄未儲存的變更嗎？</string>
 	<string name="stop_upload_dialog_title">停止上傳？</string>
-	<string name="stop_upload_button">停止上傳</string>
 	<string name="alert_error_adding_media">插入媒體時發生錯誤</string>
 	<string name="alert_action_while_uploading">你目前正在上傳媒體。請等待此項作業完成。</string>
 	<string name="alert_insert_image_html_mode">無法直接在 HTML 模式中插入媒體。請切換回視覺化模式。</string>
@@ -160,7 +179,6 @@ Language: zh_TW
 	<string name="delete_site_summary">此動作無法復原。刪除網站將一併移除網站上的所有內容、參與者及網域。</string>
 	<string name="delete_site_hint">刪除網站</string>
 	<string name="export_site_hint">將網站匯出為 XML 檔案</string>
-	<string name="are_you_sure">你確定？</string>
 	<string name="export_site_summary">如果確定，現在請務必花點時間匯出你的內容。日後將無法還原內容。</string>
 	<string name="keep_your_content">保留你的內容</string>
 	<string name="domain_removal_hint">移除網站後便無法再運作的網域</string>
@@ -651,14 +669,12 @@ Language: zh_TW
 	<string name="stats_other_recent_stats_label">其他近期統計資料</string>
 	<string name="themes_fetching">正在擷取佈景主題...</string>
 	<string name="ssl_certificate_details">詳細資料</string>
-	<string name="sure_to_remove_account">移除此網站？</string>
 	<string name="delete_sure_post">刪除此文章</string>
 	<string name="delete_sure">刪除此草稿</string>
 	<string name="delete_sure_page">刪除此頁面</string>
 	<string name="confirm_delete_multi_media">要刪除選取的項目嗎？</string>
 	<string name="confirm_delete_media">要刪除選取的項目嗎？</string>
 	<string name="cab_selected">已選取：%d</string>
-	<string name="media_gallery_date_range">顯示自 %1$s 到 %2$s 的媒體</string>
 	<string name="reader_empty_posts_liked">你未對任何文章按讚</string>
 	<string name="faq_button">常見問題集</string>
 	<string name="browse_our_faq_button">瀏覽常見問題集</string>
@@ -885,7 +901,6 @@ Language: zh_TW
 	<string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
 	<string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
 	<string name="reader_title_applog">應用程式記錄檔</string>
-	<string name="reader_share_link">分享連結</string>
 	<string name="reader_toast_err_add_tag">無法新增此標籤</string>
 	<string name="reader_toast_err_remove_tag">無法移除此標籤</string>
 	<string name="required_field">必填欄位</string>
@@ -930,7 +945,6 @@ Language: zh_TW
 	<string name="nux_welcome_create_account">建立帳號</string>
 	<string name="nux_add_selfhosted_blog">新增自助託管的網站</string>
 	<string name="media_add_popup_title">增加媒體庫</string>
-	<string name="media_add_new_media_gallery">創建藝廊</string>
 	<string name="empty_list_default">清單是空的</string>
 	<string name="select_from_media_library">從媒體庫選擇</string>
 	<string name="jetpack_not_found">找不到 Jetpack</string>
@@ -1040,7 +1054,6 @@ Language: zh_TW
 	<string name="featured">選為精選圖片</string>
 	<string name="featured_in_post">文章內容包含圖片</string>
 	<string name="no_network_title">沒有網路連線</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">網誌使用者帳號</string>
 	<string name="upload_scaled_image">上傳並建立縮圖連結</string>
 	<string name="scaled_image">圖片縮放寬度</string>

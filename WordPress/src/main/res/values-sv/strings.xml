@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-13 06:27:44+0000
+Translation-Revision-Date: 2017-04-30 07:05:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">Skicka e-post en gång till</string>
+	<string name="editor_confirm_email_prompt_message_with_email">När du registrerade dig skickade vi e-post till %s. Öppna det meddelandet och klicka på den blå knappen för att göra det möjligt att publicera.</string>
+	<string name="editor_confirm_email_prompt_message">När du registrerade dig skickade vi e-post. Öppna det meddelandet och klicka på den blå knappen för att göra det möjligt att publicera.</string>
+	<string name="editor_confirm_email_prompt_title">Vi ber dig bekräfta din e-postadress</string>
+	<string name="toast_verification_email_send_error">Ett fel inträffade när vi skulle sända e-post för bekräftelse. Kanske din adress redan är bekräftad?</string>
+	<string name="toast_verification_email_sent">E-post för bekräftelse har sänts. Kolla dina inkommande meddelanden</string>
+	<string name="toast_saving_post_as_draft">Inlägget sparas som utkast</string>
+	<string name="photo_picker_capture_video">Spela in en video</string>
+	<string name="photo_picker_capture_photo">Ta ett foto</string>
+	<string name="photo_picker_choose_video">Välj video</string>
+	<string name="photo_picker_choose_photo">Välj foto</string>
+	<string name="delete_site_warning_subtitle">Var försiktig! När en webbplats väl har raderats kan den inte återskapas. Fortsätt bara om du verkligen är säker.</string>
+	<string name="delete_site_warning">Alla dina inlägg, bilder och data kommer att raderas. Dessutom förlorar du adressen (%s) till denna webbplats.</string>
+	<string name="delete_site_warning_title">Radera webbplatsen?</string>
+	<string name="start_over_email_intent_error">Kan inte sända e-post</string>
+	<string name="start_over_email_body">Jag vill börja om med webbplatsen %s</string>
+	<string name="start_over_email_subject">Börja om med webbplatsen %s</string>
+	<string name="site_picker_remove_site_error">Ett fel inträffade när webbplatsen skulle tas bort. Försök igen senare</string>
+	<string name="editor_post_saved_locally_unfinished_media">Inlägget innehåller media som inte laddats upp färdigt och har därför sparats på enheten</string>
+	<string name="sure_to_remove_account">Ta bort denna webbplats från appen?</string>
 	<string name="error_publish_no_network">Enheten är off-line. Ändringarna har sparats lokalt.</string>
 	<string name="photo_picker_title">Välj foto</string>
 	<string name="editor_post_saved_online_not_published">Inlägget är sparat on-line som ett utkast. Du kanske vill publicera det?</string>
@@ -179,7 +199,6 @@ Language: sv_SE
 	<string name="format_bar_description_bold">Fetstil</string>
 	<string name="image_settings_dismiss_dialog_title">Förkasta ändringar som inte sparats?</string>
 	<string name="stop_upload_dialog_title">Stoppa uppladdning?</string>
-	<string name="stop_upload_button">Stoppa uppladdning</string>
 	<string name="alert_error_adding_media">Ett fel uppstod när media skulle infogas</string>
 	<string name="alert_action_while_uploading">Du laddar för närvarande upp media. Vänligen vänta till det är klart.</string>
 	<string name="alert_insert_image_html_mode">Media kan inte infogas direkt i HTML-läget. Vänligen växla tillbaka till det visuella läget.</string>
@@ -273,7 +292,6 @@ Language: sv_SE
 	<string name="delete_site_summary">Denna handling kan inte ångras. När du raderar din webbplats raderas allt innehåll, alla författare, och alla domäner från din webbplats.</string>
 	<string name="delete_site_hint">Radera webbplats</string>
 	<string name="export_site_hint">Exportera din webbplats till XML-fil</string>
-	<string name="are_you_sure">Är du säker?</string>
 	<string name="export_site_summary">Om du är säker, vänligen se till att du tar dig tid att exportera ditt innehåll nu. Ditt innehåll kan inte återskapas i framtiden.</string>
 	<string name="keep_your_content">Spara ditt innehåll</string>
 	<string name="domain_removal_hint">Domänerna som inte kommer att fungera efter att du raderat din webbplats</string>
@@ -775,14 +793,12 @@ Language: sv_SE
 	<string name="stats_for">Statistik för %s</string>
 	<string name="themes_fetching">Hämtar teman...</string>
 	<string name="ssl_certificate_details">Detaljer</string>
-	<string name="sure_to_remove_account">Ta bort denna webbplats?</string>
 	<string name="delete_sure_post">Radera detta inlägg</string>
 	<string name="delete_sure">Radera detta utkast</string>
 	<string name="delete_sure_page">Radera denna sida</string>
 	<string name="confirm_delete_multi_media">Radera valda  poster?</string>
 	<string name="confirm_delete_media">Radera vald post?</string>
 	<string name="cab_selected">%d valda</string>
-	<string name="media_gallery_date_range">Visa media från %1$s till %2$s</string>
 	<string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
 	<string name="faq_button">Vanliga frågor</string>
 	<string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
@@ -995,7 +1011,6 @@ Language: sv_SE
 	<string name="preview_page">Förhandsgranska sida</string>
 	<string name="category_desc">Kategoribeskrivning (valfri)</string>
 	<string name="open_source_licenses">Öppen källkodslicens</string>
-	<string name="reader_share_link">Dela länk</string>
 	<string name="required_field">Obligatoriskt fält</string>
 	<string name="blog_name_invalid">Ogiltig webbplatsadress</string>
 	<string name="blog_title_invalid">Ogiltig webbplatstitel</string>
@@ -1059,7 +1074,6 @@ Language: sv_SE
 	<string name="nux_oops_not_selfhosted_blog">Logga in på WordPress.com</string>
 	<string name="signing_in">Loggar in...</string>
 	<string name="media_add_popup_title">Lägg till i mediebiblioteket</string>
-	<string name="media_add_new_media_gallery">Skapa galleri</string>
 	<string name="empty_list_default">Listan är tom</string>
 	<string name="select_from_media_library">Välj från mediebiblioteket</string>
 	<string name="jetpack_not_found">Jetpack-tillägget kunde inte hittas</string>
@@ -1172,7 +1186,6 @@ Language: sv_SE
 	<string name="page">Sida</string>
 	<string name="post">Inlägg</string>
 	<string name="blogusername">användarnamn</string>
-	<string name="ok">OK</string>
 	<string name="scaled_image">Välj bredd för bild</string>
 	<string name="upload_scaled_image">Ladda upp och länka till skalad bild</string>
 	<string name="scheduled">Tidsinställt</string>
