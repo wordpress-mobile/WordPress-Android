@@ -645,6 +645,7 @@ public class PostsListFragment extends Fragment
                 setRefreshing(false);
                 hideLoadMoreProgress();
                 if (!event.isError()) {
+                    mCanLoadMorePosts = event.canLoadMore;
                     int count;
                     if (mIsPage) {
                         count = mPostStore.getPagesCountForSite(mSite);
