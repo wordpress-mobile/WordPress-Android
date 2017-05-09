@@ -319,7 +319,7 @@ public class PostStore extends Store {
     /**
      * Given a local ID for a post, returns that post as a {@link PostModel}.
      */
-    public PostModel getPostByLocalPostId(long localId) {
+    public PostModel getPostByLocalPostId(int localId) {
         List<PostModel> result = WellSql.select(PostModel.class)
                 .where().equals(PostModelTable.ID, localId).endWhere()
                 .getAsModel();
