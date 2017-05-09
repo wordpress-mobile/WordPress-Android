@@ -53,7 +53,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected EditText mEmailEditText;
 
     protected boolean mEmailAutoCorrected;
-    protected String mEmail;
 
     protected Button mNextButton;
     protected View mUsernamePasswordButton;
@@ -61,10 +60,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected @Inject Dispatcher mDispatcher;
 
     private LoginListener mLoginListener;
-
-    public String getEmail() {
-        return mEmail;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +96,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event))) {
-                    next();
+                    next(getEmail());
                     return true;
                 } else {
                     return false;
@@ -202,7 +197,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     protected void onDoneAction() {
-        next();
+        next(getEmail());
     }
 
     private boolean checkNetworkConnectivity() {
@@ -220,31 +215,34 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         return true;
     }
 
-    protected void next() {
+    protected void next(String email) {
         if (!checkNetworkConnectivity()) {
             return;
         }
 
-        if (isUsernameEmail()) {
+        if (isValidEmail(email)) {
             startProgress(getActivity().getString(R.string.checking_email));
-            mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(mEmail));
+            mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {
             showEmailError(R.string.email_invalid);
         }
     }
 
-    private boolean isUsernameEmail() {
-        mEmail = EditTextUtils.getText(mEmailEditText).trim();
-        Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
-        Matcher matcher = emailRegExPattern.matcher(mEmail);
+    private String getEmail() {
+        return EditTextUtils.getText(mEmailEditText).trim();
+    }
 
-        return matcher.find() && mEmail.length() <= MAX_EMAIL_LENGTH;
+    private boolean isValidEmail(String email) {
+        Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
+        Matcher matcher = emailRegExPattern.matcher(email);
+
+        return matcher.find() && email.length() <= MAX_EMAIL_LENGTH;
     }
 
     private final OnClickListener mNextClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            next();
+            next(getEmail());
         }
     };
 
@@ -334,7 +332,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
             // TODO: Email address exists in WordPress.com so, goto magic link offer screen
             // Email address exists in WordPress.com
             if (mLoginListener != null) {
-                mLoginListener.gotEmail(mEmail);
+                mLoginListener.gotEmail(event.value);
             }
         } else {
             showEmailError(R.string.email_not_registered_wpcom);
