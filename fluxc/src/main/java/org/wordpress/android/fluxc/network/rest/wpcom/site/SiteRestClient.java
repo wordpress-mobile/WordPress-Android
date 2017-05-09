@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.ConnectSiteInfo;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -126,19 +127,33 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<ConnectSiteInfoResponse>() {
                     @Override
                     public void onResponse(ConnectSiteInfoResponse response) {
-                        mDispatcher.dispatch(SiteActionBuilder.newConnectSiteInfoAction(response));
+                        ConnectSiteInfo info = connectSiteInfoFromResponse(response);
+                        info.url = testedUrl;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        ConnectSiteInfoResponse payload = new ConnectSiteInfoResponse();
-                        payload.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newConnectSiteInfoAction(payload));
+                        ConnectSiteInfo info = new ConnectSiteInfo();
+                        info.error = error;
+                        info.url = testedUrl;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 }
         );
         add(request);
+    }
+
+    ConnectSiteInfo connectSiteInfoFromResponse(ConnectSiteInfoResponse response) {
+        ConnectSiteInfo info = new ConnectSiteInfo();
+        info.exists = response.exists;
+        info.hasJetpack = response.hasJetpack;
+        info.isJetpackActive = response.isJetpackActive;
+        info.isJetpackConnected = response.isJetpackConnected;
+        info.isWordPress = response.isWordPress;
+        info.isWordPressDotCom = response.isWordPressDotCom;
+        return info;
     }
 
     public void checkUrlIsWPCom(@NonNull final String testedUrl) {

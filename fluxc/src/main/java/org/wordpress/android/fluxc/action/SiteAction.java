@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.action;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.ConnectSiteInfo;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.ConnectSiteInfoResponse;
@@ -37,8 +38,8 @@ public enum SiteAction implements IAction {
     IS_WPCOM_URL,
     @Action(payloadType = SuggestDomainsPayload.class)
     SUGGEST_DOMAINS,
-    @Action(payloadType = ConnectSiteInfoResponse.class)
-    CONNECT_SITE_INFO,
+    @Action(payloadType = String.class)
+    FETCH_CONNECT_SITE_INFO,
 
     // Remote responses
     @Action(payloadType = NewSiteResponsePayload.class)
@@ -68,5 +69,7 @@ public enum SiteAction implements IAction {
     @Action(payloadType = IsWPComResponsePayload.class)
     CHECKED_IS_WPCOM_URL,
     @Action(payloadType = SuggestDomainsResponsePayload.class)
-    SUGGESTED_DOMAINS
+    SUGGESTED_DOMAINS,
+    @Action(payloadType = ConnectSiteInfo.class)
+    FETCHED_CONNECT_SITE_INFO,
 }
