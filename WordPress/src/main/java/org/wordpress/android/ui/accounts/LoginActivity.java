@@ -10,6 +10,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
+import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.util.ToastUtils;
 
@@ -70,8 +71,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void sendMagicLinkRequest(String email) {
-        ToastUtils.showToast(this, "Request magic link is not implemented yet. Email: " + email);
+    public void showMagicLinkSentScreen(String email) {
+        LoginMagicLinkSentFragment loginMagicLinkSentFragment = LoginMagicLinkSentFragment.newInstance(email);
+        slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
+    }
+
+    @Override
+    public void openEmailClient() {
+        ToastUtils.showToast(this, "Open email client is not implemented yet.");
     }
 
     @Override
