@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.ConnectSiteInfo;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -203,6 +204,13 @@ public class SiteStore extends Store {
         public boolean isWPCom;
         public OnURLChecked(@NonNull String url) {
             this.url = url;
+        }
+    }
+
+    public static class OnConnectSiteInfoChecked extends OnChanged<SiteError> {
+        public ConnectSiteInfo info;
+        public OnConnectSiteInfoChecked(@NonNull ConnectSiteInfo info) {
+            this.info = info;
         }
     }
 
@@ -664,6 +672,9 @@ public class SiteStore extends Store {
             case CREATE_NEW_SITE:
                 createNewSite((NewSitePayload) action.getPayload());
                 break;
+            case FETCH_CONNECT_SITE_INFO:
+                fetchConnectSiteInfo((String) action.getPayload());
+                break;
             case IS_WPCOM_URL:
                 checkUrlIsWPCom((String) action.getPayload());
                 break;
@@ -684,6 +695,9 @@ public class SiteStore extends Store {
                 break;
             case EXPORTED_SITE:
                 handleExportedSite((ExportSiteResponsePayload) action.getPayload());
+                break;
+            case FETCHED_CONNECT_SITE_INFO:
+                handleFetchedConnectSiteInfo((ConnectSiteInfo) action.getPayload());
                 break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
@@ -821,6 +835,18 @@ public class SiteStore extends Store {
         if (payload.isError()) {
             // TODO: what kind of error could we get here?
             event.error = new ExportSiteError(ExportSiteErrorType.GENERIC_ERROR);
+        }
+        emitChange(event);
+    }
+
+    private void fetchConnectSiteInfo(String payload) {
+        mSiteRestClient.fetchConnectSiteInfo(payload);
+    }
+
+    private void handleFetchedConnectSiteInfo(ConnectSiteInfo payload) {
+        OnConnectSiteInfoChecked event = new OnConnectSiteInfoChecked(payload);
+        if (payload.isError()) {
+            event.error = new SiteError(SiteErrorType.INVALID_SITE);
         }
         emitChange(event);
     }
