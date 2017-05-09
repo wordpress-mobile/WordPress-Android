@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -108,7 +109,7 @@ public class SmartLockHelper {
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
         // need username and password fields for Smart Lock
         // https://github.com/wordpress-mobile/WordPress-Android/issues/5850
-        if (password.isEmpty() || username.isEmpty()) {
+        if (TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
             return;
         }
 
