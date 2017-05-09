@@ -316,10 +316,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     mOriginalPost = mPost.clone();
                     mIsPage = mPost.isPage();
                 }
-            } else {
-                // A postId extra must be passed to this activity
-                showErrorAndFinish(R.string.post_not_found);
-                return;
             }
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
