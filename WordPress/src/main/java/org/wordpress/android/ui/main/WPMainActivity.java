@@ -243,6 +243,10 @@ public class WPMainActivity extends AppCompatActivity {
 
         // monitor whether we're not the default app
         trackDefaultApp();
+
+        // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
+        mDispatcher.register(this);
+        EventBus.getDefault().register(this);
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -386,17 +390,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-        EventBus.getDefault().register(this);
+        super.onDestroy();
     }
 
     @Override
@@ -708,7 +705,7 @@ public class WPMainActivity extends AppCompatActivity {
             return;
         }
 
-        // When we select a site, we want to update its informations or options
+        // When we select a site, we want to update its information or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
 
         // Make selected site visible
