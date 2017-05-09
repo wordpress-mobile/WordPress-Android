@@ -1775,13 +1775,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
-        String path;
-        if (uri.toString().contains("content:")) {
-            path = MediaUtils.getPath(this, uri);
-        } else {
-            // File is not in media library
-            path = uri.toString().replace("file://", "");
-        }
+        String path = MediaUtils.getRealPathFromURI(this, uri);
 
         if (path == null) {
             ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
@@ -1791,6 +1785,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
+            path = MediaUtils.getRealPathFromURI(this, uri);
+        } else {
+            // Fix the rotation of the picture see https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            // TODO: find a better implementation
+            Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+            if (rotatedMedia != null) {
+                uri = rotatedMedia;
+                path = MediaUtils.getRealPathFromURI(this, uri);
+            }
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
