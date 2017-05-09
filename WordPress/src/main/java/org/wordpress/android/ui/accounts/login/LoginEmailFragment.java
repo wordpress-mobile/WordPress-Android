@@ -297,11 +297,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     @Override
     public void onStart() {
         super.onStart();
-        // Autofill username / password if string fields are set (only useful after an error in sign up).
-        // This can't be done in onCreateView
-        if (mEmail != null) {
-            mEmailEditText.setText(mEmail);
-        }
         mDispatcher.register(this);
     }
 
