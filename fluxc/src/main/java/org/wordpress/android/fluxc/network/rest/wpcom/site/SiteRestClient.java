@@ -33,7 +33,9 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.util.UrlUtils;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +105,36 @@ public class SiteRestClient extends BaseWPComRestClient {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchConnectSiteInfo(@NonNull final String testedUrl) {
+        // Get a proper URI to reliably retrieve the scheme.
+        URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(testedUrl, false));
+
+        // Sanitize and encode the Url for the API call.
+        String sanitizedURL = UrlUtils.removeScheme(testedUrl);
+        sanitizedURL = sanitizedURL.replace("\\", "::");
+
+        // Make the call.
+        String url = WPCOMREST.connect.site_info.protocol(uri.getScheme()).address(sanitizedURL).getUrlV1_1();
+        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                ConnectSiteInfoResponse.class,
+                new Listener<ConnectSiteInfoResponse>() {
+                    @Override
+                    public void onResponse(ConnectSiteInfoResponse response) {
+                        mDispatcher.dispatch(SiteActionBuilder.newConnectSiteInfoAction(response));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        ConnectSiteInfoResponse payload = new ConnectSiteInfoResponse();
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newConnectSiteInfoAction(payload));
                     }
                 }
         );
