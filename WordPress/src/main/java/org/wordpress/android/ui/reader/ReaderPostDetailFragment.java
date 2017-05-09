@@ -231,6 +231,15 @@ public class ReaderPostDetailFragment extends Fragment
         mReaderWebView.setCustomViewListener(this);
         mReaderWebView.setUrlClickListener(this);
         mReaderWebView.setPageFinishedListener(this);
+        mReaderWebView.setHapticFeedbackEnabled(false);
+        mReaderWebView.setOnLongClickListener(
+            new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return true;
+                }
+            }
+        );
 
         // hide footer and scrollView until the post is loaded
         mLayoutFooter.setVisibility(View.INVISIBLE);
