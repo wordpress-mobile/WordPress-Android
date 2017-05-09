@@ -1797,6 +1797,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             } else {
                 // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
+                // All the other editors read EXIF data
                 if (mShowNewEditor) {
                     Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
                     if (rotatedMedia != null) {

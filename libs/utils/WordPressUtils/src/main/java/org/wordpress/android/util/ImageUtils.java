@@ -747,9 +747,9 @@ public class ImageUtils {
             String prefix;
             int dotPos = fileName.indexOf('.');
             if (dotPos > 0) {
-                prefix = fileName.substring(0, dotPos) + "-";
+                prefix = fileName.substring(0, dotPos);
             } else {
-                prefix = fileName + "-";
+                prefix = fileName;
             }
 
             if (prefix.length() < 3) {

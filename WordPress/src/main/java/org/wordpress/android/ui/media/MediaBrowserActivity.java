@@ -685,7 +685,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, filePath, false);
         if (optimizedMedia != null) {
             return optimizedMedia;
+        } else {
+            // Optimization is OFF. Make sure the picture is in portrait for .org site
+            // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            if (!mSite.isWPCom()) {
+                // If it's not wpcom we must rotate the picture locally
+                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, filePath, false);
+                if (rotatedMedia != null) {
+                    return rotatedMedia;
+                }
+            }
         }
+
         return originalUri;
     }
 
