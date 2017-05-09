@@ -50,6 +50,8 @@ public enum SiteAction implements IAction {
     DELETED_SITE,
     @Action(payloadType = ExportSiteResponsePayload.class)
     EXPORTED_SITE,
+    @Action(payloadType = ConnectSiteInfo.class)
+    FETCHED_CONNECT_SITE_INFO,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
@@ -70,6 +72,4 @@ public enum SiteAction implements IAction {
     CHECKED_IS_WPCOM_URL,
     @Action(payloadType = SuggestDomainsResponsePayload.class)
     SUGGESTED_DOMAINS,
-    @Action(payloadType = ConnectSiteInfo.class)
-    FETCHED_CONNECT_SITE_INFO,
 }
