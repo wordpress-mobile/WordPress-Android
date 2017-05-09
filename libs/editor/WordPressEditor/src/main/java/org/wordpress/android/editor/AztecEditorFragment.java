@@ -1218,7 +1218,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // remove then uploading class
                 AttributesWithClass attributesWithClass = new AttributesWithClass(
                         content.getElementAttributes(predicate));
-                attributesWithClass.removeClass("uploading");
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
 
                 // add then new src property with the remoteUrl
                 AztecAttributes attrs = attributesWithClass.getAttributes();
