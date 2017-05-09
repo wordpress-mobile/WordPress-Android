@@ -809,7 +809,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mListener!= null) {
             // Should never be null
             SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
-            if (site != null && SiteUtils.isAccessibleViaWPComAPI(site)) {
+            if (site != null && SiteUtils.isAccessedViaWPComRest(site)) {
                 mListener.onDateChanged(site.getSiteId(), getTimeframe(), calculatedDate);
             }
         }

@@ -50,6 +50,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.text.SimpleDateFormat;
@@ -311,7 +312,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         if (mediaUri.startsWith("http")) {
             showProgress(true);
-            String imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+            String imageUrl = mediaUri;
+            if (SiteUtils.isPhotonCapable(mSite)) {
+                imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+            }
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
@@ -412,7 +416,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
     }
-    
+
     private void loadMetaData(@NonNull final MediaModel media) {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
 
