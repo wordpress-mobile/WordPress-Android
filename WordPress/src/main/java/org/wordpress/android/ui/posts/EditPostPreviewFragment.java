@@ -52,6 +52,7 @@ public class EditPostPreviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         updateSiteOrFinishActivity(savedInstanceState);
     }
 
