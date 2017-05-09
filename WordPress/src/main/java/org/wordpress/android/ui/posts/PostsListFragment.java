@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -709,6 +710,7 @@ public class PostsListFragment extends Fragment
         hideLoadMoreProgress();
 
         if (event.isError()) {
+            AppLog.w(AppLog.T.POSTS, "Error searching posts: " + event.error.message);
             ToastUtils.showToast(getActivity(), "Error searching posts: " + event.error.type);
             return;
         }
