@@ -16,11 +16,16 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 
+import javax.inject.Inject;
+
 public class EditPostPreviewFragment extends Fragment {
+    @Inject PostStore mPostStore;
+
     private WebView mWebView;
     private TextView mTextView;
     private LoadPostPreviewTask mLoadTask;
@@ -32,7 +37,7 @@ public class EditPostPreviewFragment extends Fragment {
         EditPostPreviewFragment fragment = new EditPostPreviewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putSerializable(EditPostActivity.EXTRA_POST, post);
+        bundle.putInt(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -41,7 +46,7 @@ public class EditPostPreviewFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(EditPostActivity.EXTRA_POST, mPost);
+        outState.putInt(EditPostActivity.EXTRA_POST_LOCAL_ID, mPost.getId());
     }
 
     @Override
@@ -54,14 +59,15 @@ public class EditPostPreviewFragment extends Fragment {
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mPost = (PostModel) getArguments().getSerializable(EditPostActivity.EXTRA_POST);
+                mPost = mPostStore.getPostByLocalPostId(getArguments().getInt(EditPostActivity.EXTRA_POST_LOCAL_ID));
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(EditPostActivity.EXTRA_POST);
+                mPost = mPostStore.getPostByLocalPostId(getActivity().getIntent()
+                        .getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mPost = (PostModel) savedInstanceState.getSerializable(EditPostActivity.EXTRA_POST);
+            mPost = mPostStore.getPostByLocalPostId(savedInstanceState.getInt(EditPostActivity.EXTRA_POST_LOCAL_ID));
         }
 
         if (mSite == null) {

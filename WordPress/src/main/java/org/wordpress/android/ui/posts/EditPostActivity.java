@@ -153,7 +153,6 @@ import de.greenrobot.event.EventBus;
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         PhotoPickerFragment.PhotoPickerListener {
-    public static final String EXTRA_POST = "postModel";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";

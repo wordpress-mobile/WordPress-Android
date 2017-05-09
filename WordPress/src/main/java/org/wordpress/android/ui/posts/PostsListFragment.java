@@ -192,7 +192,8 @@ public class PostsListFragment extends Fragment
         if (resultCode == Activity.RESULT_OK && data != null && isAdded()) {
 
             boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
-            final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
+            final PostModel post = mPostStore.
+                    getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
             boolean isPublishable = post != null && PostUtils.isPublishable(post);
             boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
             boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
