@@ -72,6 +72,7 @@ public class PostsListFragment extends Fragment
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
+    // delay between user typing and performing network search
     private static final long SEARCH_DELAY_MS = 1000L;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
