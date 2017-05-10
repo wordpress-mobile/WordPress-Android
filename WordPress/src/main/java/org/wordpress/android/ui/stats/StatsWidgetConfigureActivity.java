@@ -144,7 +144,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
             return;
         }
 
-        if (!SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (!SiteUtils.isAccessedViaWPComRest(site)) {
             // The blog could be a self-hosted blog with NO Jetpack installed on it
             // Or a Jetpack blog whose options are not yet synched in the app
             // In both of these cases show a generic message that encourages the user to refresh

@@ -26,7 +26,6 @@ Language: uz
 	<string name="pick_video">Video tanlang</string>
 	<string name="nux_tap_continue">Davom</string>
 	<string name="nux_welcome_create_account">Akkaunt ochish</string>
-	<string name="media_add_new_media_gallery">Yangi galereya</string>
 	<string name="reader_untitled_post">(Nomsiz)</string>
 	<string name="jetpack_not_found">Jetpack plagini topilmadi</string>
 	<string name="media_add_popup_title">Media kutubxonasiga qo‘sh</string>
@@ -134,7 +133,6 @@ Language: uz
 	<string name="post">Post</string>
 	<string name="caption">Titr (ixtiyoriy)</string>
 	<string name="blogusername">blogusername</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Rasm yuklab, hajmi moslashtirilgan (kichiklashtirilgan) nusxasiga havola berish</string>
 	<string name="scaled_image">Yangi hajm uchun en qiymati</string>
 	<string name="scheduled">Jadvalga kiritildi</string>

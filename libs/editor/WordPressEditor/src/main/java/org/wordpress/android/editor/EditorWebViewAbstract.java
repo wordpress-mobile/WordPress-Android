@@ -21,14 +21,14 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HTTPUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +38,8 @@ import java.util.Map;
  */
 public abstract class EditorWebViewAbstract extends WebView {
     public abstract void execJavaScriptFromString(String javaScript);
+
+    public static final int REQUEST_TIMEOUT_MS = 30000;
 
     private OnImeBackListener mOnImeBackListener;
     private AuthHeaderRequestListener mAuthHeaderRequestListener;
@@ -111,7 +113,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                         }
                         headerMap.put("Authorization", authHeader);
 
-                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, headerMap);
+                        URLConnection conn = setupUrlConnection(url, headerMap);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
@@ -143,7 +145,7 @@ public abstract class EditorWebViewAbstract extends WebView {
                         Map<String, String> headerMap = new HashMap<>(mHeaderMap);
                         headerMap.put("Authorization", authHeader);
 
-                        HttpURLConnection conn = HTTPUtils.setupUrlConnection(url, headerMap);
+                        URLConnection conn = setupUrlConnection(url, headerMap);
                         return new WebResourceResponse(conn.getContentType(), conn.getContentEncoding(),
                                 conn.getInputStream());
                     } catch (IOException e) {
@@ -264,5 +266,17 @@ public abstract class EditorWebViewAbstract extends WebView {
     public interface ErrorListener {
         void onJavaScriptError(String sourceFile, int lineNumber, String message);
         void onJavaScriptAlert(String url, String message);
+    }
+
+    private static URLConnection setupUrlConnection(String url, Map<String, String> headers) throws IOException {
+        URLConnection conn = new URL(url).openConnection();
+        conn.setReadTimeout(REQUEST_TIMEOUT_MS);
+        conn.setConnectTimeout(REQUEST_TIMEOUT_MS);
+
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            conn.setRequestProperty(entry.getKey(), entry.getValue());
+        }
+
+        return conn;
     }
 }

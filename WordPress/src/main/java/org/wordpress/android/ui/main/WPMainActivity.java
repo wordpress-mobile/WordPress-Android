@@ -52,6 +52,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -242,6 +243,10 @@ public class WPMainActivity extends AppCompatActivity {
 
         // monitor whether we're not the default app
         trackDefaultApp();
+
+        // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
+        mDispatcher.register(this);
+        EventBus.getDefault().register(this);
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -254,6 +259,19 @@ public class WPMainActivity extends AppCompatActivity {
                         .setDuration(1000L)
                         .start();
             }
+        }
+    }
+
+    private void showNewEditorPromoDialogIfNeeded() {
+        if (AppPrefs.isNewEditorPromoRequired() && AppPrefs.isAztecEditorEnabled()) {
+            AppCompatDialogFragment newFragment = PromoDialog.newInstance(
+                    R.drawable.img_promo_editor,
+                    R.string.new_editor_promo_title,
+                    R.string.new_editor_promo_description,
+                    android.R.string.ok
+            );
+            newFragment.show(getSupportFragmentManager(), "new-editor-promo");
+            AppPrefs.setNewEditorPromoRequired(false);
         }
     }
 
@@ -372,17 +390,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-        EventBus.getDefault().register(this);
+        super.onDestroy();
     }
 
     @Override
@@ -446,6 +457,10 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
+        if (position ==  WPMainTabAdapter.TAB_MY_SITE) {
+            showNewEditorPromoDialogIfNeeded();
+        }
+
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
@@ -626,12 +641,10 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // User signed out
-            resetFragments();
-            ActivityLauncher.showSignInForResult(this);
+        // Sign-out is handled in `handleSiteRemoved`, no need to show the `SignInActivity` here
+        if (mAccountStore.hasAccessToken()) {
+            mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
         }
-        mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
     }
 
     @SuppressWarnings("unused")
@@ -663,6 +676,8 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            // User signed-out or removed the last self-hosted site, show `SignInActivity`
+            resetFragments();
             ActivityLauncher.showSignInForResult(this);
         } else {
             SiteModel site = getSelectedSite();
@@ -690,7 +705,7 @@ public class WPMainActivity extends AppCompatActivity {
             return;
         }
 
-        // When we select a site, we want to update its informations or options
+        // When we select a site, we want to update its information or options
         mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(selectedSite));
 
         // Make selected site visible

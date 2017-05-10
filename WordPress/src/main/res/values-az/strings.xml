@@ -182,8 +182,6 @@ Language: az
 	<string name="confirm_delete_multi_media">Seçilmiş maddələr silinsinmi?</string>
 	<string name="confirm_delete_media">Seçilmiş maddə silinsinmi?</string>
 	<string name="cab_selected">%d seçildi</string>
-	<string name="media_gallery_date_range">%1$s və %2$s arası media faylları göstərilir</string>
-	<string name="sure_to_remove_account">Bu sayt silinsinmi?</string>
 	<string name="faq_button">ÇVS</string>
 	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
 	<string name="new_blog_wpcom_created">WordPress.com blou yaradıldı!</string>
@@ -334,7 +332,6 @@ Language: az
 	<string name="email_reserved">Bu e-poçt ünvanından artıq istifadə edilmişdir. Daxil olan poçt qutunuzu aktivasiya e-poçtu üçün yoxlayın. Əgər aktivasiya etməsəniz, bir neçə gün ərzində təkrar yoxlaya bilərsiniz.</string>
 	<string name="blog_name_must_include_letters">Sayt ünvanı ən az bir ədəd hərfə sahib (a-z) olmalıdır</string>
 	<string name="reader_title_applog">Proqram jurnalı</string>
-	<string name="reader_share_link">Bağlantını paylaş</string>
 	<string name="reader_toast_err_add_tag">Bu etiket əlavə edilə bilmir</string>
 	<string name="reader_toast_err_remove_tag">Bu etiket silinə bilmir</string>
 	<string name="required_field">Gərəkli sahə</string>
@@ -450,7 +447,6 @@ Language: az
 	<string name="password_invalid">Sizə daha etibarlı parol lazımdır. 7 simvoldan artıq böyük və kiçik hərflərin, rəqəm və ya özəl simvolların qarışığından istifadə edin.</string>
 	<string name="nux_add_selfhosted_blog">Öz-xostinq saytını əlavə et</string>
 	<string name="media_add_popup_title">Media kitabxanasına əlavə et</string>
-	<string name="media_add_new_media_gallery">Qalereya yarat</string>
 	<string name="empty_list_default">Bu siyahı boşdur</string>
 	<string name="reader_btn_share">Paylaş</string>
 	<string name="jetpack_not_found">Jetpack plaqini tapılmadı</string>
@@ -559,7 +555,6 @@ Language: az
 	<string name="width">genişlik</string>
 	<string name="featured">Fərdi təsvir olaraq istifadə edin</string>
 	<string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">bloqistifadəçiadı</string>
 	<string name="upload_scaled_image">Ölçüləndirilmiş təsviri yüklə və bağlantı ver</string>
 	<string name="scaled_image">Mütənasib təsvirin genişliyi</string>
