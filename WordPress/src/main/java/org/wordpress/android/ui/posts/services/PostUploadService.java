@@ -660,8 +660,46 @@ public class PostUploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.media == null) {
+            return;
+        }
+        if (!mUseLegacyMode) {
+            handleMediaUploadCompleted(event);
+        } else {
+            handleMediaUploadCompletedLegacy(event);
+        }
+    }
+
+    private void handleMediaUploadCompleted(OnMediaUploaded event) {
+        if (event.media.getLocalPostId() == 0) {
+            // Only interested in media attached to local posts
+            return;
+        }
+
+        if (event.isError()) {
+            // TODO: Find the associated post, mark it as failed, update upload messaging, and remove it from the queue
+            AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
+                    event.error.type + ": " + event.error.message);
+            return;
+        }
+
+        if (event.canceled) {
+            // TODO: If a media upload for a post was cancelled, we might want to cancel the post upload, too
+            // Not implemented
+            return;
+        }
+
+        if (event.completed) {
+            AppLog.i(T.MEDIA, "Media upload completed for post. Media id: " + event.media.getId()
+                    + ", post id: " + event.media.getLocalPostId());
+            // The media item might belong to a post in our queue, so check if any waiting posts can now be uploaded
+            uploadNextPost();
+        }
+    }
+
+    private void handleMediaUploadCompletedLegacy(OnMediaUploaded event) {
         // Event for unknown media, ignoring
-        if (event.media == null || mCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
+        if (mCurrentUploadingPost == null || mMediaLatchMap.get(event.media.getId()) == null) {
             AppLog.w(T.MEDIA, "Media event not recognized: " + event.media);
             return;
         }
