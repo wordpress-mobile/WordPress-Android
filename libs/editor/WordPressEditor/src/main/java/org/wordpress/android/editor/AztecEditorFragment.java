@@ -409,7 +409,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
             String localMediaId = attrs.getValue("data-wpid");
             if (!TextUtils.isEmpty(localMediaId)) {
-                mUploadingMediaProgressMax.put(localMediaId, new Float(0));
+                mUploadingMediaProgressMax.put(localMediaId, 0f);
             }
         }
     }
@@ -582,7 +582,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // set intermediate shade overlay
                 overlayProgressingMedia(localMediaId);
 
-                mUploadingMediaProgressMax.put(localMediaId, new Float(0));
+                mUploadingMediaProgressMax.put(localMediaId, 0f);
             }
         }
     }
@@ -1042,7 +1042,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         // TODO: unmark video failed
                 }
                 mFailedMediaIds.remove(localMediaId);
-                mUploadingMediaProgressMax.put(localMediaId, new Float(0));
+                mUploadingMediaProgressMax.put(localMediaId, 0f);
                 break;
             default:
                 if (!mediaType.equals(MediaType.IMAGE)) {
