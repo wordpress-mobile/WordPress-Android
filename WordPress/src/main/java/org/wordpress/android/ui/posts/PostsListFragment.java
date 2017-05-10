@@ -220,6 +220,7 @@ public class PostsListFragment extends Fragment
 
         boolean isPublishable = post != null && PostUtils.isPublishable(post);
         boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+        boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
         if (isPublishable) {
             View.OnClickListener publishPostListener = new View.OnClickListener() {
                 @Override
@@ -228,7 +229,7 @@ public class PostsListFragment extends Fragment
                 }
             };
             int message;
-            if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
+            if (isDraft) {
                 message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
             } else {
                 message =  savedLocally ? R.string.editor_post_saved_locally : R.string.editor_post_saved_online;
