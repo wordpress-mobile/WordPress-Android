@@ -179,7 +179,6 @@ Language: sq_AL
 	<string name="image_width">Gjerësi</string>
 	<string name="image_settings_dismiss_dialog_title">Të hidhen tej ndryshimet e paruajtura?</string>
 	<string name="stop_upload_dialog_title">Të ndalet ngarkimi?</string>
-	<string name="stop_upload_button">Ndale Ngarkimin</string>
 	<string name="alert_error_adding_media">Ndodhi një gabim gjatë futjes së medias</string>
 	<string name="alert_action_while_uploading">Po ngarkoni media. Ju lutemi, pritni deri sa kjo të plotësohet.</string>
 	<string name="alert_insert_image_html_mode">S&amp;#8217;futen dot media drejt e nën mënyrën HTML. Ju lutemi, kaloni nën mënyrën pamore.</string>
@@ -273,7 +272,6 @@ Language: sq_AL
 	<string name="delete_site_summary">Ky veprim s&amp;#8217;mund të zhbëhet. Fshirja e sajtit tuaj do të thotë heqje e krejt lëndës, kontribuesve dhe e përkatësive.</string>
 	<string name="delete_site_hint">Fshije sajtin</string>
 	<string name="export_site_hint">Eksportojeni sajtin tuaj si një kartelë XML</string>
-	<string name="are_you_sure">Jeni i Sigurt?</string>
 	<string name="export_site_summary">Nëse jeni i sigurt, ju lutemi, mos harroni të eksportoni lëndën tuaj tani. Nuk mund të rimerret më në të ardhmen.</string>
 	<string name="keep_your_content">Ruani Lëndën Tuaj</string>
 	<string name="domain_removal_hint">Përkatësitë që nuk do të funksionojnë më, pasi të hiqni sajtin tuaj</string>
@@ -646,7 +644,6 @@ Language: sq_AL
 	<string name="stats_insights">Tendenca</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Që të shihni statistikat tuaja, bëni hyrjen te llogaria WordPress.com që përdorët për t&amp;#8217;ia përshoqëruar Jetpack-ut.</string>
 	<string name="stats_other_recent_stats_moved_label">Po kërkoni për të Tjera Statistika tuajat Së Fundi? I kemi kaluar te faqja Tendeca.</string>
-	<string name="me_disconnect_from_wordpress_com">Dil nga WordPress.com</string>
 	<string name="me_btn_login_logout">Hyrje/Dalje</string>
 	<string name="me_connect_to_wordpress_com">Hyni te WordPress.com</string>
 	<string name="account_settings">Rregullime Llogarie</string>
@@ -780,8 +777,6 @@ Language: sq_AL
 	<string name="delete_sure_page">Fshije këtë faqe</string>
 	<string name="confirm_delete_multi_media">Të fshihen objektet e përzgjedhur?</string>
 	<string name="confirm_delete_media">Të fshihet objekti i përzgjedhur?</string>
-	<string name="media_gallery_date_range">Po shfaqen mediat nga %1$s në %2$s</string>
-	<string name="sure_to_remove_account">Të hiqet ky sajt?</string>
 	<string name="cab_selected">%d të përzgjedhur</string>
 	<string name="reader_empty_posts_liked">S\'keni pëlqyer ende ndonjë postim</string>
 	<string name="faq_button">FAQ</string>
@@ -997,7 +992,6 @@ Language: sq_AL
 	<string name="wordpress_blog">Blog WordPress</string>
 	<string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
 	<string name="reader_title_applog">Regjistër aplikacioni</string>
-	<string name="reader_share_link">Ndani lidhjen me të tjerët</string>
 	<string name="reader_toast_err_add_tag">I pazoti të shtojë këtë etiketë</string>
 	<string name="reader_toast_err_remove_tag">I pazoti ta heqë këtë etiketë</string>
 	<string name="required_field">Fushë e domosdoshme</string>
@@ -1059,7 +1053,6 @@ Language: sq_AL
 	<string name="password_invalid">Ju duhet një fjalëkalim më i sigurt. Sigurohuni se përdorni 7 shenja e sipër, shkronja të mëdha dhe të vogla, numra ose shenja speciale.</string>
 	<string name="nux_oops_not_selfhosted_blog">Hyni te WordPress.com</string>
 	<string name="media_add_popup_title">Shtojeni te mediateka</string>
-	<string name="media_add_new_media_gallery">Krijo galeri</string>
 	<string name="empty_list_default">Kjo listë është e zbrazët</string>
 	<string name="select_from_media_library">Përzgjidhni nga mediateka</string>
 	<string name="reader_untitled_post">(Pa titull)</string>
@@ -1171,7 +1164,6 @@ Language: sq_AL
 	<string name="page">Faqe</string>
 	<string name="post">Postim</string>
 	<string name="no_network_title">S&amp;#8217;ka rrjet gati</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">emërpërdoruesiblogu</string>
 	<string name="upload_scaled_image">Ngarkoje dhe lidhe te figura e ripërmasuar</string>
 	<string name="scaled_image">Gjerësi figure të ripërmasuar</string>

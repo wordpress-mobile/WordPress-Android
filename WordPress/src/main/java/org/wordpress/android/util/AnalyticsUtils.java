@@ -114,13 +114,13 @@ public class AnalyticsUtils {
      */
     public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
                                             Map<String, Object> properties) {
-        if (site == null || !SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
             AnalyticsTracker.track(stat, properties);
             return;
         }
 
-        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (SiteUtils.isAccessedViaWPComRest(site)) {
             if (properties == null) {
                 properties = new HashMap<>();
             }
@@ -329,12 +329,7 @@ public class AnalyticsUtils {
         }
 
         if(mediaURI != null) {
-            if (mediaURI.toString().contains("content:")) {
-                path = MediaUtils.getPath(context, mediaURI);
-            } else {
-                // File is not in media library
-                path = mediaURI.toString().replace("file://", "");
-            }
+            path = MediaUtils.getRealPathFromURI(context, mediaURI);
         }
 
         if (TextUtils.isEmpty(path) ) {

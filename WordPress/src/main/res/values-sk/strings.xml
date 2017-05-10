@@ -60,7 +60,6 @@ Language: sk
 	<string name="image_caption">Titulok</string>
 	<string name="image_alt_text">Alt text</string>
 	<string name="image_settings_dismiss_dialog_title">Zahodiť neuložené zmeny?</string>
-	<string name="stop_upload_button">Zastaviť nahrávanie</string>
 	<string name="stop_upload_dialog_title">Zastaviť nahrávanie?</string>
 	<string name="alert_error_adding_media">Nastala chyba pri vkladaní súboru</string>
 	<string name="alert_action_while_uploading">Práve nahrávate súbory. Počkajte na dokončenie.</string>
@@ -120,7 +119,6 @@ Language: sk
 	<string name="exporting_content_progress">Exportujem obsah...</string>
 	<string name="export_email_sent">Exportovaný email odoslaný!</string>
 	<string name="delete_site_progress">Mazanie stránky...</string>
-	<string name="are_you_sure">Ste si istý?</string>
 	<string name="export_site_hint">Exportovať Vašu stránku ako XML súbor</string>
 	<string name="keep_your_content">Ponechať Váš obsah</string>
 	<string name="site_settings_export_content_title">Exportovať obsah</string>
@@ -488,14 +486,12 @@ Language: sk
 	<string name="stats_empty_clicks_title">Nie sú zaznamenané žiadne kliknutia</string>
 	<string name="stats_comments_total_comments_followers">Celkový počet článkov s odberateľmi: %1$s</string>
 	<string name="ssl_certificate_details">Detaily</string>
-	<string name="media_gallery_date_range">Zobrazuje médiá od %1$s do %2$s</string>
 	<string name="delete_sure_page">Zmazať túto podstránku</string>
 	<string name="delete_sure">Vymazať tento koncept</string>
 	<string name="delete_sure_post">Vymazať tento príspevok</string>
 	<string name="cab_selected">%d vybraných</string>
 	<string name="confirm_delete_media">Zmazať vybranú položku?</string>
 	<string name="confirm_delete_multi_media">Zmazať vybrané položky?</string>
-	<string name="sure_to_remove_account">Odstrániť webovú stránku?</string>
 	<string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
 	<string name="reader_label_comment_count_multi">odpovedí: %,d</string>
 	<string name="pages_empty_list">Zatiaľ nemáte žiadnu stránku. Želáte si nejakú vytvoriť?</string>
@@ -671,7 +667,6 @@ Language: sk
 	<string name="email_hint">Emailová adresa</string>
 	<string name="reader_toast_err_remove_tag">Túto značku nie je možné odstrániť</string>
 	<string name="reader_toast_err_add_tag">Túto značku nie je možné pridať</string>
-	<string name="reader_share_link">Zdieľať odkaz</string>
 	<string name="add_account_blog_url">Adresa blogu</string>
 	<string name="image_settings">Nastavenie obrázka</string>
 	<string name="http_authorization_required">Požaduje sa autorizácia</string>
@@ -785,7 +780,6 @@ Language: sk
 	<string name="reader_toast_err_url_intent">Nie je možné otvoriť %s</string>
 	<string name="reader_btn_share">Zdielať</string>
 	<string name="empty_list_default">Tento zoznam je prázdny</string>
-	<string name="media_add_new_media_gallery">Vytvoriť galériu</string>
 	<string name="media_add_popup_title">Pridať do knižnice súborov</string>
 	<string name="create_account_wpcom">Vytvoriť účet na WordPress.com</string>
 	<string name="reader_hint_comment_on_comment">Odpovedajte na komentár...</string>
@@ -874,7 +868,6 @@ Language: sk
 	<string name="page">Stránka</string>
 	<string name="featured">Použiť ilustračný obrázok</string>
 	<string name="blogusername">Používateľské meno</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Nahrať a zobraziť odkaz na zmenšený obrázok</string>
 	<string name="scaled_image">Šírka zmenšeného obrázku</string>
 	<string name="scheduled">Načasované</string>

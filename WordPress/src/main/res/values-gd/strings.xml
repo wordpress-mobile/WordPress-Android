@@ -48,7 +48,6 @@ Language: gd_GB
 	<string name="format_bar_description_bold">Trom</string>
 	<string name="image_settings_dismiss_dialog_title">A bheil thu airson na h-atharraichean nach deach a shàbhaladh a thilgeil air falbh?</string>
 	<string name="stop_upload_dialog_title">A bheil thu airson sgur dhen luchdadh suas?</string>
-	<string name="stop_upload_button">Sguir dhen luchdadh suas</string>
 	<string name="alert_error_adding_media">Thachair mearachd fhad ’s a bha sinn a’ cur a-steach a’ mheadhain</string>
 	<string name="alert_action_while_uploading">Tha thu a’ luchdadh suas meadhanan. Fuirich ort gus am bi sin deiseil.</string>
 	<string name="alert_insert_image_html_mode">Chan urrainn dhut meadhanan a chur a-steach mar sin sa mhodh HTML. Cleachd am modh lèirsinneach airson sin.</string>
@@ -197,8 +196,6 @@ Language: gd_GB
 	<string name="stats_other_recent_stats_label">Stats ùra eile</string>
 	<string name="themes_fetching">A’ faighinn nan ùrlaran…</string>
 	<string name="ssl_certificate_details">Mion-fhiosrachadh</string>
-	<string name="sure_to_remove_account">A bheil thu airson an làrach seo a thoirt air falbh?</string>
-	<string name="media_gallery_date_range">A’ sealltainn nam meadhanan %1$s gu %2$s</string>
 	<string name="cab_selected">%d air a thaghadh</string>
 	<string name="confirm_delete_media">A bheil thu airson an rud a thagh thu a sguabadh às?</string>
 	<string name="delete_sure">Sguab às an dreachd seo</string>
@@ -353,7 +350,6 @@ Language: gd_GB
 	<string name="required_field">Raon air a bheil feum</string>
 	<string name="reader_toast_err_add_tag">Cha ghabh an taga seo a chur ris</string>
 	<string name="reader_toast_err_remove_tag">Cha ghabh an taga seo a thoirt air falbh</string>
-	<string name="reader_share_link">Co-roinn an ceangal</string>
 	<string name="reader_title_applog">Loga na h-aplacaid</string>
 	<string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr-dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
 	<string name="error_blog_hidden">’S e bloga falaichte a tha ann is cha b’ urrainn dhuinn a luchdadh. Cuir an comas e sna roghainnean is feuch ris a-rithist.</string>
@@ -476,7 +472,6 @@ Language: gd_GB
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
 	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
-	<string name="media_add_new_media_gallery">Cruthaich gailearaidh</string>
 	<string name="select_from_media_library">Tagh o leabhar-lann nam meadhanan</string>
 	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
@@ -587,7 +582,6 @@ Language: gd_GB
 	<string name="page">Duilleag</string>
 	<string name="post">Post</string>
 	<string name="blogusername">ainm cleachdaiche a\' bhloga</string>
-	<string name="ok">Ceart ma-thà</string>
 	<string name="upload_scaled_image">Luchdaich suas is dèan ceangal ris an dealbh sgèilichte</string>
 	<string name="scaled_image">Leud an deilbh sgèilichte</string>
 	<string name="scheduled">Air an sgeideal</string>

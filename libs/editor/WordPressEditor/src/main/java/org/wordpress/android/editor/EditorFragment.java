@@ -406,15 +406,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     }
 
     @Override
-    public void onDetach() {
-        // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMedia.keySet()) {
-            mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
-        }
-        super.onDetach();
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (mDomHasLoaded) {
             mWebView.notifyVisibilityChanged(isVisibleToUser);
@@ -1150,21 +1141,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return;
         }
 
-        final MediaType mediaType = mUploadingMedia.get(mediaId);
-        if (mediaType != null) {
-            mWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    String progressString = String.format(Locale.US, "%.1f", progress);
-                    mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnMedia(" + mediaId + ", " +
-                            progressString + ");");
-                }
-            });
-        }
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                String progressString = String.format(Locale.US, "%.1f", progress);
+                mWebView.execJavaScriptFromString("ZSSEditor.setProgressOnMedia(" + mediaId + ", " +
+                        progressString + ");");
+            }
+        });
     }
 
     @Override
-    public void onMediaUploadFailed(final String mediaId, final String errorMessage) {
+    public void onMediaUploadFailed(final String mediaId, final EditorFragmentAbstract.MediaType
+            mediaType, final String errorMessage) {
         if(!isAdded()) {
             return;
         }
@@ -1404,6 +1393,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 }
                 mEditorFragmentListener.onTrackableEvent(TrackableEvent.IMAGE_EDITED);
                 ImageSettingsDialogFragment imageSettingsDialogFragment = new ImageSettingsDialogFragment();
+                imageSettingsDialogFragment.setImageLoader(mImageLoader);
                 imageSettingsDialogFragment.setTargetFragment(this,
                         ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_REQUEST_CODE);
 
@@ -1412,25 +1402,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 dialogBundle.putString(EXTRA_MAX_WIDTH, mBlogSettingMaxImageWidth);
                 dialogBundle.putBoolean(EXTRA_IMAGE_FEATURED, mFeaturedImageSupported);
 
-                // Request and add an authorization header for HTTPS images
-                // Use https:// when requesting the auth header, in case the image is incorrectly using http://.
-                // If an auth header is returned, force https:// for the actual HTTP request.
-                HashMap<String, String> headerMap = new HashMap<>();
-                if (mCustomHttpHeaders != null) {
-                    headerMap.putAll(mCustomHttpHeaders);
-                }
-
                 try {
+                    // Use https:// when requesting the auth header, in case the image is incorrectly using http://
+                    // If an auth header is returned, force https:// for the actual HTTP request
                     final String imageSrc = meta.getString(ATTR_SRC);
                     String authHeader = mEditorFragmentListener.onAuthHeaderRequested(UrlUtils.makeHttps(imageSrc));
                     if (authHeader.length() > 0) {
                         meta.put(ATTR_SRC, UrlUtils.makeHttps(imageSrc));
-                        headerMap.put("Authorization", authHeader);
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.EDITOR, "Could not retrieve image url from JSON metadata");
                 }
-                dialogBundle.putSerializable(EXTRA_HEADER, headerMap);
 
                 dialogBundle.putString(EXTRA_IMAGE_META, meta.toString());
 

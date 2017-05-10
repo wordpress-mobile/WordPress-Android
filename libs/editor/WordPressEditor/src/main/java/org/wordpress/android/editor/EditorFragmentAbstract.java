@@ -157,6 +157,15 @@ public abstract class EditorFragmentAbstract extends Fragment {
         // Not unused in the new editor
     }
 
+    public static MediaType getEditorMimeType(MediaFile mediaFile) {
+        if (mediaFile == null) {
+            // default to image
+            return MediaType.IMAGE;
+        }
+        return mediaFile.isVideo() ? MediaType.VIDEO :
+                MediaType.IMAGE;
+    }
+
     /**
      * Callbacks used to communicate with the parent Activity
      */
