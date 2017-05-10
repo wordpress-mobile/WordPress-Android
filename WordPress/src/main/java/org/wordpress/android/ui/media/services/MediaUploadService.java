@@ -43,8 +43,8 @@ import javax.inject.Inject;
 public class MediaUploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
-    private List<MediaModel> mPendingUploads = new ArrayList<>();
-    private List<MediaModel> mInProgressUploads = new ArrayList<>();
+    private static List<MediaModel> mPendingUploads = new ArrayList<>();
+    private static List<MediaModel> mInProgressUploads = new ArrayList<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -355,6 +355,21 @@ public class MediaUploadService extends Service {
                     queuedMedia.getLocalSiteId());
             if (queuedMedia.getLocalSiteId() == mediaModel.getLocalSiteId() &&
                     StringUtils.equals(queuedMedia.getFilePath(), mediaModel.getFilePath())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
+        for (MediaModel queuedMedia : mInProgressUploads) {
+            if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                return true;
+            }
+        }
+
+        for (MediaModel queuedMedia : mPendingUploads) {
+            if (queuedMedia.getLocalPostId() == postModel.getId()) {
                 return true;
             }
         }
