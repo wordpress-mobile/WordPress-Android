@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.annotations;
 
+import org.wordpress.android.fluxc.annotations.action.NoPayload;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
@@ -9,5 +11,5 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 public @interface Action {
-    Class payloadType() default org.wordpress.android.fluxc.annotations.action.NoPayload.class;
+    Class payloadType() default NoPayload.class;
 }
