@@ -19,9 +19,8 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             boolean showNewEditor = AppPrefs.isVisualEditorEnabled();
 
             if (showAztecEditor) {
-                String modifiedContents = AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
-                        localMediaId, mediaFile);
-                post.setContent(modifiedContents);
+                post.setContent(AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
+                        localMediaId, mediaFile));
             } else if (showNewEditor) {
                 post.setContent(EditorFragment.replaceMediaFileWithUrl(post.getContent(), mediaFile));
             }
