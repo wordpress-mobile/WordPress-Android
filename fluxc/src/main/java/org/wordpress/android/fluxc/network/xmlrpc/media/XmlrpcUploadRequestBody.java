@@ -7,10 +7,8 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 
-import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Locale;
 
 import okhttp3.MediaType;
@@ -82,12 +80,16 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
     }
 
     private long getMediaBase64EncodedSize() throws IOException {
-        InputStream is = new DataInputStream(new FileInputStream(getMedia().getFilePath()));
-        byte[] buffer = new byte[3600];
-        int length;
+        FileInputStream fis = new FileInputStream(getMedia().getFilePath());
         int totalSize = 0;
-        while ((length = is.read(buffer)) > 0) {
-            totalSize += Base64.encodeToString(buffer, 0, length, Base64.DEFAULT).length();
+        try {
+            byte[] buffer = new byte[3600];
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                totalSize += Base64.encodeToString(buffer, 0, length, Base64.DEFAULT).length();
+            }
+        } finally {
+            fis.close();
         }
         return totalSize;
     }
@@ -101,16 +103,20 @@ public class XmlrpcUploadRequestBody extends BaseUploadRequestBody {
         bufferedSink.writeUtf8(mPrependString);
 
         // write file to xml
-        InputStream is = new DataInputStream(new FileInputStream(getMedia().getFilePath()));
-        byte[] buffer = new byte[3600]; // you must use a 24bit multiple
-        int length;
-        String chunk;
-        while ((length = is.read(buffer)) > 0) {
-            chunk = Base64.encodeToString(buffer, 0, length, Base64.DEFAULT);
-            mMediaBytesWritten += length;
-            bufferedSink.writeUtf8(chunk);
+
+        FileInputStream fis = new FileInputStream(getMedia().getFilePath());
+        try {
+            byte[] buffer = new byte[3600]; // you must use a 24bit multiple
+            int length;
+            String chunk;
+            while ((length = fis.read(buffer)) > 0) {
+                chunk = Base64.encodeToString(buffer, 0, length, Base64.DEFAULT);
+                mMediaBytesWritten += length;
+                bufferedSink.writeUtf8(chunk);
+            }
+        } finally {
+            fis.close();
         }
-        is.close();
 
         // write remainder or XML
         bufferedSink.writeUtf8(APPEND_XML);
