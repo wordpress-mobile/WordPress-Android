@@ -189,50 +189,57 @@ public class PostsListFragment extends Fragment
     }
 
     public void handleEditPostResult(int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && data != null && isAdded()) {
+        if (resultCode != Activity.RESULT_OK || data == null || !isAdded()) {
+            return;
+        }
+        boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+        if (!hasChanges) {
+            // if there are no changes, we don't need to do anything
+            return;
+        }
 
-            boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
-            final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
-            boolean isPublishable = post != null && PostUtils.isPublishable(post);
-            boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
-            boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
-            boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+        boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
+        if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
+            // The network is not available, we can't do anything
+            ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
+                    ToastUtils.Duration.SHORT);
+            return;
+        }
 
-            if (hasChanges) {
-                if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
-                    ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
-                            ToastUtils.Duration.SHORT);
-                } else {
-                    if (isPublishable) {
-                        View.OnClickListener publishPostListener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                publishPost(post);
-                            }
-                        };
-                        if (hasUnfinishedMedia) {
-                            showSnackbar(R.string.editor_post_saved_locally_unfinished_media, R.string.button_edit,
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
-                                        }
-                            });
-                        } else if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
-                            showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish,
-                                    publishPostListener);
-                        } else if (savedLocally) {
-                            int buttonLabel = isScheduledPost ? R.string.button_sync : R.string.button_publish;
-                            showSnackbar(R.string.editor_post_saved_locally, buttonLabel,publishPostListener);
+        final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
+        boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
+        if (hasUnfinishedMedia) {
+            showSnackbar(R.string.editor_post_saved_locally_unfinished_media, R.string.button_edit,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                         }
-                    } else {
-                        if (savedLocally) {
-                            ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
-                        } else {
-                            ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
-                        }
-                    }
+                    });
+        }
+
+        boolean isPublishable = post != null && PostUtils.isPublishable(post);
+        boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+        if (isPublishable) {
+            View.OnClickListener publishPostListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    publishPost(post);
                 }
+            };
+            int message;
+            if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
+                message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
+            } else {
+                message =  savedLocally ? R.string.editor_post_saved_locally : R.string.editor_post_saved_online;
+            }
+            int buttonLabel = isScheduledPost ? R.string.button_sync : R.string.button_publish;
+            showSnackbar(message, buttonLabel, publishPostListener);
+        } else {
+            if (savedLocally) {
+                ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
+            } else {
+                ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
             }
         }
     }
