@@ -433,7 +433,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_SAVE);
+            holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
         } else {
             holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
         }
