@@ -1045,7 +1045,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
