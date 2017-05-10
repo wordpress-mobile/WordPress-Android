@@ -230,27 +230,30 @@ public class PostsListFragment extends Fragment
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
                 showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
-            } else {
-                ToastUtils.showToast(getActivity(), R.string.editor_scheduled_post_saved_online);
             }
             return;
         }
 
-        boolean isPublishable = post != null && PostUtils.isPublishable(post);
-        boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
-        if (isPublishable) {
-            int message;
-            if (isDraft) {
-                message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
-            } else {
-                message =  savedLocally ? R.string.editor_post_saved_locally : R.string.editor_post_saved_online;
-            }
-            showSnackbar(message, R.string.button_publish, publishPostListener);
-        } else {
+        boolean isPublished = post != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED;
+        if (isPublished) {
+            // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
-                ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
+                showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+            }
+            return;
+        }
+
+        boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
+        if (isDraft) {
+            if (PostUtils.isPublishable(post)) {
+                int message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
+                showSnackbar(message, R.string.button_publish, publishPostListener);
             } else {
-                ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
+                if (savedLocally) {
+                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
+                }
             }
         }
     }
