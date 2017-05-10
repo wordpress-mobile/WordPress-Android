@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.AztecEditorFragment;
+import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -18,14 +19,12 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             boolean showNewEditor = AppPrefs.isVisualEditorEnabled();
 
             if (showAztecEditor) {
-                String modifiedContents = AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
-                        localMediaId, mediaFile);
-                post.setContent(modifiedContents);
+                post.setContent(AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
+                        localMediaId, mediaFile));
             } else if (showNewEditor) {
-                // TODO implement visual editor implementation to update image/video in post
-            } else {
-                // TODO implement legacy editor implementation to update image/video in post
+                post.setContent(EditorFragment.replaceMediaFileWithUrl(post.getContent(), mediaFile));
             }
+            // No implementation necessary for the legacy editor as it doesn't support uploading media while editing
         }
 
         return post;
