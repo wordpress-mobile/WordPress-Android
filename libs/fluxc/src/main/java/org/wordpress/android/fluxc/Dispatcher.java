@@ -1,12 +1,12 @@
 package org.wordpress.android.fluxc;
 
 import org.greenrobot.eventbus.EventBus;
+import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.store.Store;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import javax.inject.Singleton;
-
 
 @Singleton
 public class Dispatcher {
@@ -31,7 +31,7 @@ public class Dispatcher {
         mBus.unregister(object);
     }
 
-    public void dispatch(org.wordpress.android.fluxc.annotations.action.Action action) {
+    public void dispatch(Action action) {
         AppLog.d(T.API, "Dispatching action: " + action.getType().getClass().getSimpleName()
                 + "-" + action.getType().name());
         post(action);
