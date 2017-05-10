@@ -690,7 +690,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        if(!isAdded() || content == null || !mAztecReady) {
+        if(!isAdded() || content == null || !mAztecReady || TextUtils.isEmpty(localMediaId)) {
+            return;
+        }
+
+        // check a previous maximum for this localMediaId exists
+        // if there is not, we've probably already gotten the upload fail/success signal, thus
+        // we already removed this id from the array. Nothing left to do, disregard this event.
+        if (mUploadingMediaProgressMax.get(localMediaId) == null) {
             return;
         }
 
