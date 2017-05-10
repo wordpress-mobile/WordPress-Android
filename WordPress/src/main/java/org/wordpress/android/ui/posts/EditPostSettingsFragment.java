@@ -635,10 +635,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String password = EditTextUtils.getText(mPasswordEditText);
-        String excerpt = mExcerptTextView.getText().toString();
-        if (excerpt.equals(getString(R.string.not_set))) {
-            excerpt = "";
-        }
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
@@ -694,7 +690,7 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setExcerpt(excerpt);
+        post.setExcerpt(getPostExcerptFromTextView());
         post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
@@ -977,11 +973,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostExcerptDialog() {
-        String excerpt = mExcerptTextView.getText().toString();
-        if (excerpt.equals(getString(R.string.not_set))) {
-            excerpt = "";
-        }
-        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(excerpt);
+        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(getPostExcerptFromTextView());
         dialog.setPostExcerptDialogListener(new PostExcerptDialogFragment.PostExcerptDialogListener() {
             @Override
             public void onPostExcerptUpdated(String postExcerpt) {
@@ -989,6 +981,14 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
         dialog.show(getFragmentManager(), null);
+    }
+
+    private String getPostExcerptFromTextView() {
+        String excerpt = mExcerptTextView.getText().toString();
+        if (excerpt.equals(getString(R.string.not_set))) {
+            excerpt = "";
+        }
+        return excerpt;
     }
 
     /*
