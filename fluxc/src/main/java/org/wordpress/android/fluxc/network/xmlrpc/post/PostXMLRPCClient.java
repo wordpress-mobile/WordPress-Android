@@ -408,15 +408,13 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         contentStruct.put("post_type", post.isPage() ? "page" : "post");
         contentStruct.put("post_title", post.getTitle());
 
-        if (post.getDateCreated() != null) {
-            String dateCreated = post.getDateCreated();
-            Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
-            if (date != null) {
-                contentStruct.put("post_date", date);
-                // Redundant, but left in just in case
-                // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
-                contentStruct.put("post_date_gmt", date);
-            }
+        String dateCreated = post.getDateCreated();
+        Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
+        if (date != null) {
+            contentStruct.put("post_date", date);
+            // Redundant, but left in just in case
+            // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
+            contentStruct.put("post_date_gmt", date);
         }
 
         String content = post.getContent();
