@@ -218,23 +218,18 @@ public class PostsListFragment extends Fragment
                                             ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                                         }
                             });
-                        } else if (savedLocally) {
-                            if (isScheduledPost) {
-                                showSnackbar(R.string.editor_scheduled_post_saved_locally, R.string.button_save,
-                                        publishPostListener);
-                            } else {
-                                showSnackbar(R.string.editor_post_saved_locally_not_published, R.string.button_publish,
-                                        publishPostListener);
-                            }
                         } else if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
-                            showSnackbar(R.string.editor_post_saved_online_not_published, R.string.button_publish,
+                            showSnackbar(R.string.editor_draft_saved_online, R.string.button_publish,
                                     publishPostListener);
+                        } else if (savedLocally) {
+                            int buttonLabel = isScheduledPost ? R.string.button_sync : R.string.button_publish;
+                            showSnackbar(R.string.editor_post_saved_locally, buttonLabel,publishPostListener);
                         }
                     } else {
                         if (savedLocally) {
-                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_locally);
+                            ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
                         } else {
-                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_online);
+                            ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
                         }
                     }
                 }
