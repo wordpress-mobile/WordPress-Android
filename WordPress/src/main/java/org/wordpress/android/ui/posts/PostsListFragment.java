@@ -216,26 +216,36 @@ public class PostsListFragment extends Fragment
                             ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                         }
                     });
+            return;
+        }
+
+        View.OnClickListener publishPostListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publishPost(post);
+            }
+        };
+        boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+        if (isScheduledPost) {
+            // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
+            if (savedLocally) {
+                showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+            } else {
+                ToastUtils.showToast(getActivity(), R.string.editor_scheduled_post_saved_online);
+            }
+            return;
         }
 
         boolean isPublishable = post != null && PostUtils.isPublishable(post);
-        boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
         boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
         if (isPublishable) {
-            View.OnClickListener publishPostListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    publishPost(post);
-                }
-            };
             int message;
             if (isDraft) {
                 message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
             } else {
                 message =  savedLocally ? R.string.editor_post_saved_locally : R.string.editor_post_saved_online;
             }
-            int buttonLabel = isScheduledPost ? R.string.button_sync : R.string.button_publish;
-            showSnackbar(message, buttonLabel, publishPostListener);
+            showSnackbar(message, R.string.button_publish, publishPostListener);
         } else {
             if (savedLocally) {
                 ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
