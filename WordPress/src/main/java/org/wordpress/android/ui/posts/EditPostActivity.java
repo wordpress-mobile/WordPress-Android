@@ -875,7 +875,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId, errorMessage);
+            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
+                    EditorFragmentAbstract.getEditorMimeType(mf), errorMessage);
         }
 
         removeMediaFromPendingList(media);
