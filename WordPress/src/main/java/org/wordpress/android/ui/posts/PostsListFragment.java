@@ -605,6 +605,10 @@ public class PostsListFragment extends Fragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
         switch (event.causeOfChange) {
+            // if a Post is updated, let's refresh the whole list, because we can't really know
+            // from FluxC which post has changed, or when. So to make sure, we go to the source,
+            // which is the FkuxC PostStore.
+            case UPDATE_POST:
             case FETCH_POSTS:
             case FETCH_PAGES:
                 mIsFetchingPosts = false;

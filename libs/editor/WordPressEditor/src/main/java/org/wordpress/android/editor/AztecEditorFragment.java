@@ -65,7 +65,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -102,6 +101,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private AztecText title;
     private AztecText content;
+    private boolean mAztecReady;
     private SourceViewEditText source;
     private AztecToolbar formattingToolbar;
     private Html.ImageGetter imageLoader;
@@ -109,7 +109,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private Handler invalidateOptionsHandler;
     private Runnable invalidateOptionsRunnable;
 
-    private Map<String, MediaType> mUploadingMedia;
+    private HashMap<String, Float> mUploadingMediaProgressMax;
     private Set<String> mFailedMediaIds;
 
     private long mActionStartedAt = -1;
@@ -137,7 +137,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
-        mUploadingMedia = new HashMap<>();
+        mUploadingMediaProgressMax = new HashMap<>();
         mFailedMediaIds = new HashSet<>();
 
         title = (AztecText) view.findViewById(R.id.title);
@@ -182,6 +182,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
+        content.refreshText();
+
+        mAztecReady = true;
+
         return view;
     }
 
@@ -220,15 +224,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        // Soft cancel (delete flag off) all media uploads currently in progress
-        for (String mediaId : mUploadingMedia.keySet()) {
-            mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, false);
-        }
-        super.onDetach();
     }
 
     @Override
@@ -322,8 +317,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void setContent(CharSequence text) {
         content.fromHtml(text.toString());
+
         updateFailedMediaList();
         overlayFailedMedia();
+
+        updateUploadingMediaList();
+        overlayProgressingMedia();
+
+        mAztecReady = true;
     }
 
     /**
@@ -377,7 +378,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
 
         // Don't switch to HTML mode if currently uploading media
-        if (!mUploadingMedia.isEmpty() || isActionInProgress()) {
+        if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
         }
@@ -399,20 +400,70 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
     }
 
-    private void updateFailedMediaList() {
-        AztecText.AttributePredicate failedPredicate = new AztecText.AttributePredicate() {
+    private void updateUploadingMediaList() {
+        AztecText.AttributePredicate uploadingPredicate = getPredicateWithClass("uploading");
+
+        mUploadingMediaProgressMax.clear();
+
+        // update all items with upload progress of zero
+        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
+            String localMediaId = attrs.getValue("data-wpid");
+            if (!TextUtils.isEmpty(localMediaId)) {
+                mUploadingMediaProgressMax.put(localMediaId, 0f);
+            }
+        }
+    }
+
+    private void safeAddMediaIdToSet(Set<String> setToAddTo, String wpId){
+        if (!TextUtils.isEmpty(wpId)) {
+            setToAddTo.add(wpId);
+        }
+    }
+
+    private AztecText.AttributePredicate getPredicateWithClass(final String classToUse) {
+        AztecText.AttributePredicate predicate = new AztecText.AttributePredicate() {
             @Override
             public boolean matches(@NonNull Attributes attrs) {
                 AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
-                return attributesWithClass.hasClass(ATTR_STATUS_FAILED);
+                return attributesWithClass.hasClass(classToUse);
             }
         };
+
+        return predicate;
+    }
+
+    private void updateFailedMediaList() {
+        AztecText.AttributePredicate failedPredicate = getPredicateWithClass(ATTR_STATUS_FAILED);
 
         mFailedMediaIds.clear();
 
         for (Attributes attrs : content.getAllElementAttributes(failedPredicate)) {
-            mFailedMediaIds.add(attrs.getValue(ATTR_ID_WP));
+            String localMediaId = attrs.getValue(ATTR_ID_WP);
+            safeAddMediaIdToSet(mFailedMediaIds, localMediaId);
         }
+    }
+
+    private void overlayProgressingMedia() {
+        for (String localMediaId : mUploadingMediaProgressMax.keySet()) {
+            overlayProgressingMedia(localMediaId);
+        }
+    }
+
+    private void overlayProgressingMedia(String localMediaId) {
+        // set intermediate shade overlay
+        ImagePredicate predicate =  ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+        content.setOverlay(predicate, 0,
+                new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
+                Gravity.FILL);
+
+        Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
+        // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
+        progressDrawable.setBounds(0, 0, 0, 4);
+
+        content.setOverlay(predicate, 1, progressDrawable,
+                Gravity.FILL_HORIZONTAL | Gravity.TOP);
+
+        content.refreshText();
     }
 
     private void overlayFailedMedia() {
@@ -529,23 +580,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 // set intermediate shade overlay
-                AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
-                content.setOverlay(localMediaIdPredicate, 0,
-                        new ColorDrawable(getResources().getColor(R.color.media_shade_overlay_color)),
-                        Gravity.FILL);
+                overlayProgressingMedia(localMediaId);
 
-                Drawable progressDrawable = getResources().getDrawable(android.R.drawable.progress_horizontal);
-                // set the height of the progress bar to 2 (it's in dp since the drawable will be adjusted by the span)
-                progressDrawable.setBounds(0, 0, 0, 4);
-
-                content.setOverlay(localMediaIdPredicate, 1, progressDrawable,
-                        Gravity.FILL_HORIZONTAL | Gravity.TOP);
-
-                content.updateElementAttributes(localMediaIdPredicate, attrs);
-
-                content.refreshText();
-
-                mUploadingMedia.put(localMediaId, MediaType.IMAGE);
+                mUploadingMediaProgressMax.put(localMediaId, 0f);
             }
         }
     }
@@ -561,7 +598,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public boolean isUploadingMedia() {
-        return (mUploadingMedia.size() > 0);
+        return (mUploadingMediaProgressMax.size() > 0);
     }
 
     @Override
@@ -577,6 +614,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 return new AttributesWithClass(attrs).hasClass(ATTR_STATUS_FAILED);
             }
         });
+        mFailedMediaIds.clear();
     }
 
     @Override
@@ -594,27 +632,37 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadSucceeded(final String localMediaId, final MediaFile mediaFile) {
-        if(!isAdded()) {
+        if(!isAdded() || content == null || !mAztecReady) {
             return;
         }
-        final MediaType mediaType = mUploadingMedia.get(localMediaId);
-        if (mediaType != null) {
+
+        if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
 
             // we still need to refresh the screen visually, no matter whether the service already
             // saved the post to Db or not
+            MediaType mediaType = EditorFragmentAbstract.getEditorMimeType(mediaFile);
             if (mediaType.equals(MediaType.IMAGE)) {
-
-                AztecAttributes attrs = new AztecAttributes();
-                attrs.setValue(ATTR_SRC, remoteUrl);
 
                 // clear overlay
                 ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+
+                // remove the uploading class
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(predicate));
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+
+                // add then new src property with the remoteUrl
+                AztecAttributes attrs = attributesWithClass.getAttributes();
+                attrs.setValue("src", remoteUrl);
+
+                // clear overlay
                 content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attrs);
                 content.refreshText();
 
-                mUploadingMedia.remove(localMediaId);
+
+                mUploadingMediaProgressMax.remove(localMediaId);
             } else if (mediaType.equals(MediaType.VIDEO)) {
                 // TODO: update video element
             }
@@ -642,23 +690,53 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        if(!isAdded()) {
+        if(!isAdded() || content == null || !mAztecReady || TextUtils.isEmpty(localMediaId)) {
             return;
         }
-        final MediaType mediaType = mUploadingMedia.get(localMediaId);
-        if (mediaType != null) {
-            AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
-            content.setOverlayLevel(localMediaIdPredicate, 1, (int)(progress * 10000));
-            content.refreshText();
+
+        // check a previous maximum for this localMediaId exists
+        // if there is not, we've probably already gotten the upload fail/success signal, thus
+        // we already removed this id from the array. Nothing left to do, disregard this event.
+        if (mUploadingMediaProgressMax.get(localMediaId) == null) {
+            return;
+        }
+
+        // first obtain the latest maximum
+        float maxProgressForLocalMediaId = mUploadingMediaProgressMax.get(localMediaId);
+
+        // only update if the new progress value is greater than the latest maximum reflected on the
+        // screen
+        if (progress > maxProgressForLocalMediaId) {
+
+            synchronized (AztecEditorFragment.this) {
+                maxProgressForLocalMediaId = progress;
+                mUploadingMediaProgressMax.put(localMediaId, maxProgressForLocalMediaId);
+
+                try {
+                    AztecText.AttributePredicate localMediaIdPredicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+                    content.setOverlayLevel(localMediaIdPredicate, 1, (int) (progress * 10000));
+                    content.refreshText();
+                } catch (IndexOutOfBoundsException ex) {
+                    /*
+                     * it could happen that the localMediaId is not found, because FluxC events are not
+                     * guaranteed to be received in order, so we might have received the `upload
+                     * finished` event (thus clearing the id from within the Post html), and then
+                     * still receive some more progress events for the same file, which we can't
+                     * avoid but disregard.
+                     * ex.printStackTrace();
+                     */
+                    AppLog.d(AppLog.T.EDITOR, localMediaId + " - not found trying to update progress ");
+                }
+            }
         }
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
-        if(!isAdded()) {
+    public void onMediaUploadFailed(final String localMediaId, final EditorFragmentAbstract.MediaType
+            mediaType, final String errorMessage) {
+        if(!isAdded() || content == null) {
             return;
         }
-        MediaType mediaType = mUploadingMedia.get(localMediaId);
         if (mediaType != null) {
             switch (mediaType) {
                 case IMAGE:
@@ -675,7 +753,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     // TODO: mark media as upload-failed
             }
             mFailedMediaIds.add(localMediaId);
-            mUploadingMedia.remove(localMediaId);
+            mUploadingMediaProgressMax.remove(localMediaId);
         }
     }
 
@@ -915,7 +993,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        if (mUploadingMedia.containsKey(localMediaId)) {
+                        if (mUploadingMediaProgressMax.containsKey(localMediaId)) {
                             mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
 
                             switch (mediaType) {
@@ -925,7 +1003,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                 case VIDEO:
                                     // TODO: remove video
                             }
-                            mUploadingMedia.remove(localMediaId);
+                            mUploadingMediaProgressMax.remove(localMediaId);
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
                         }
@@ -971,7 +1049,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         // TODO: unmark video failed
                 }
                 mFailedMediaIds.remove(localMediaId);
-                mUploadingMedia.put(localMediaId, mediaType);
+                mUploadingMediaProgressMax.put(localMediaId, 0f);
                 break;
             default:
                 if (!mediaType.equals(MediaType.IMAGE)) {
@@ -1137,13 +1215,23 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             if (!mediaFile.isVideo()) {
-                AztecAttributes attrs = new AztecAttributes();
+
+                // fill in Aztec with the post's content
+                AztecText content = new AztecText(context);
+                content.fromHtml(postContent);
+
+                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
+
+                // remove then uploading class
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(predicate));
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+
+                // add then new src property with the remoteUrl
+                AztecAttributes attrs = attributesWithClass.getAttributes();
                 attrs.setValue("src", remoteUrl);
 
                 // clear overlay
-                AztecText content = new AztecText(context);
-                content.fromHtml(postContent);
-                ImagePredicate predicate = ImagePredicate.getLocalMediaIdPredicate(localMediaId);
                 content.clearOverlays(predicate);
                 content.updateElementAttributes(predicate, attrs);
                 content.refreshText();
