@@ -104,9 +104,7 @@ public class PostUploadService extends Service {
         synchronized (mFirstPublishPosts) {
             mFirstPublishPosts.add(post.getId());
         }
-        synchronized (mPostsList) {
-            mPostsList.add(post);
-        }
+        addPostToUpload(post);
     }
 
     public static void setLegacyMode(boolean enabled) {
