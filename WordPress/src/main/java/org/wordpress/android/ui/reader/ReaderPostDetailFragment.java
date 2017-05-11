@@ -26,7 +26,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
@@ -301,12 +300,7 @@ public class ReaderPostDetailFragment extends Fragment
         int i = item.getItemId();
         if (i == R.id.menu_browse) {
             if (hasPost()) {
-                String url = mPost.getUrl();
-                SiteModel siteModel = mSiteStore.getSiteBySiteId(mPost.blogId);
-                if (siteModel != null && siteModel.isWPCom() && !TextUtils.isEmpty(siteModel.getUnmappedUrl())) {
-                    url = url.replace(siteModel.getUrl(), siteModel.getUnmappedUrl());
-                }
-                ReaderActivityLauncher.openUrl(getActivity(), url, OpenUrlType.EXTERNAL);
+                ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
             } else if (mInterceptedUri != null) {
                 AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK, mInterceptedUri);
                 ReaderActivityLauncher.openUrl(getActivity(), mInterceptedUri, OpenUrlType.EXTERNAL);

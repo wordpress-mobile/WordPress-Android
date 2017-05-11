@@ -208,10 +208,6 @@ public class ActivityLauncher {
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
         if (site.isWPCom()) {
-            if (!TextUtils.isEmpty(site.getUnmappedUrl())) {
-                // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
-                url = url.replace(site.getUrl(), site.getUnmappedUrl());
-            }
             WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity.openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
