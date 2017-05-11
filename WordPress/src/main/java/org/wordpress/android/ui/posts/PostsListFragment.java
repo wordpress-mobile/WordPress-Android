@@ -529,6 +529,7 @@ public class PostsListFragment extends Fragment
         }
         PostsListAdapter adapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
         adapter.setOnLoadMoreListener(this);
+        adapter.setOnPostSelectedListener(this);
         adapter.setPosts(mSearchResults);
         adapter.setOnPostButtonClickListener(this);
         mRecyclerView.setAdapter(adapter);
