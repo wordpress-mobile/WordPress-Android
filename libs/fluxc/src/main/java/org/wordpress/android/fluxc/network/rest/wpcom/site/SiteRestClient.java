@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.model.ConnectSiteInfo;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -28,6 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
@@ -127,7 +127,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<ConnectSiteInfoResponse>() {
                     @Override
                     public void onResponse(ConnectSiteInfoResponse response) {
-                        ConnectSiteInfo info = connectSiteInfoFromResponse(response);
+                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(testedUrl, response);
                         info.url = testedUrl;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
@@ -135,9 +135,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        ConnectSiteInfo info = new ConnectSiteInfo();
-                        info.error = error;
-                        info.url = testedUrl;
+                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(testedUrl, error);
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 }
@@ -145,14 +143,17 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    ConnectSiteInfo connectSiteInfoFromResponse(ConnectSiteInfoResponse response) {
-        ConnectSiteInfo info = new ConnectSiteInfo();
+    private ConnectSiteInfoPayload connectSiteInfoFromResponse(String url, ConnectSiteInfoResponse response) {
+        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(url, null);
+        info.url = url;
         info.exists = response.exists;
         info.hasJetpack = response.hasJetpack;
         info.isJetpackActive = response.isJetpackActive;
         info.isJetpackConnected = response.isJetpackConnected;
         info.isWordPress = response.isWordPress;
-        info.isWordPressDotCom = response.isWordPressDotCom;
+        // CHECKSTYLE IGNORE RegexpSingleline
+        info.isWPCom = response.isWordPressDotCom;
+        // CHECKSTYLE END IGNORE RegexpSingleline
         return info;
     }
 
