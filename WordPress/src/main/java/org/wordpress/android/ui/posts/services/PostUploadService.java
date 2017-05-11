@@ -219,7 +219,7 @@ public class PostUploadService extends Service {
         for (PostModel postModel : mPostsList) {
             if (MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
                 if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
-                    mPostUploadNotifier.updateNotificationNewPost(postModel, getString(R.string.uploading_post_media));
+                    mPostUploadNotifier.createNotificationForPost(postModel, getString(R.string.uploading_post_media));
                 }
             }
         }
@@ -285,7 +285,7 @@ public class PostUploadService extends Service {
             if (mPostUploadNotifier.isDisplayingNotificationForPost(mPost)) {
                 mPostUploadNotifier.updateNotificationMessage(mPost, uploadingPostMessage);
             } else {
-                mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostMessage);
+                mPostUploadNotifier.createNotificationForPost(mPost, uploadingPostMessage);
             }
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
