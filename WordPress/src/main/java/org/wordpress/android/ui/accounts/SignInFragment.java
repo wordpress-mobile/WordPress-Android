@@ -836,6 +836,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private void signInAndFetchBlogListWPOrg() {
         startProgress(getString(R.string.signing_in));
         String url = EditTextUtils.getText(mUrlEditText).trim();
+        url = url.replaceAll("\r|\n", "");
         // Self Hosted don't have any "Authentication" request, try to list sites with user/password
         mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(url));
     }
@@ -1148,7 +1149,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 errorMessage, R.drawable.ic_notice_white_64dp, 3,
                 getString(R.string.cancel), getString(R.string.reader_title_applog), thirdButtonLabel,
-                SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT,
                 SignInDialogFragment.ACTION_OPEN_APPLICATION_LOG,
                 faqAction, faqId, faqSection);
         Bundle bundle = nuxAlert.getArguments();

@@ -361,7 +361,7 @@ public class MySiteFragment extends Fragment
         mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site
-        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessibleViaWPComAPI(site);
+        boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessedViaWPComRest(site);
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
 

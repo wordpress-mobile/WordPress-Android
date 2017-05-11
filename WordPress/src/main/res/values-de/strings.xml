@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-19 08:45:58+0000
+Translation-Revision-Date: 2017-05-07 12:46:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">E-Mail erneut senden</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Bei deiner Registrierung haben wir eine E-Mail an %s gesendet. Öffne diese Nachricht und klicke auf den blauen Button, um die Veröffentlichung zu aktivieren.</string>
+	<string name="editor_confirm_email_prompt_message">Bei deiner Registrierung haben wir eine E-Mail an dich gesendet. Öffne diese Nachricht und klicke auf den blauen Button, um die Veröffentlichung zu aktivieren.</string>
+	<string name="editor_confirm_email_prompt_title">Bitte bestätige deine E-Mail-Adresse</string>
+	<string name="toast_verification_email_send_error">Beim Senden der Verifizierungs-E-Mail ist ein Fehler aufgetreten. Wurdest du bereits verifiziert?</string>
+	<string name="toast_verification_email_sent">Es wurde eine Verifizierungs-E-Mail gesendet. Überprüfe deinen Posteingang.</string>
+	<string name="toast_saving_post_as_draft">Beitrag wird als Entwurf gespeichert</string>
+	<string name="photo_picker_capture_video">Video aufnehmen</string>
+	<string name="photo_picker_capture_photo">Foto aufnehmen</string>
+	<string name="photo_picker_choose_video">Video auswählen</string>
+	<string name="photo_picker_choose_photo">Foto auswählen</string>
+	<string name="delete_site_warning_subtitle">Vorsicht! Nachdem eine Website gelöscht wurde, kann sie nicht wiederhergestellt werden. Sei dir sicher, bevor du fortfährst.</string>
+	<string name="delete_site_warning">Alle deine Beiträge, Bilder und Daten werden gelöscht. Und die Adresse dieser Website (%s) geht verloren.</string>
+	<string name="delete_site_warning_title">Website löschen?</string>
+	<string name="start_over_email_intent_error">Es kann keine E-Mail gesendet werden</string>
+	<string name="start_over_email_body">Ich möchte mit der Website %s neu beginnen.</string>
+	<string name="start_over_email_subject">Mit der Website %s neu beginnen</string>
+	<string name="site_picker_remove_site_error">Beim Entfernen der Website ist ein Fehler aufgetreten. Bitte versuche es später erneut.</string>
+	<string name="editor_post_saved_locally_unfinished_media">Es befinden sich nicht fertiggestellte Medien-Uploads im Beitrag; er wurde lokal gespeichert.</string>
+	<string name="sure_to_remove_account">Möchtest du diese Website aus der App entfernen?</string>
 	<string name="editor_post_saved_online_not_published">Der Beitrag wurde online als Entwurf gespeichert. Vielleicht möchtest du ihn veröffentlichen?</string>
 	<string name="editor_post_saved_locally_not_published">Der Beitrag wurde nur lokal gespeichert. Vielleicht möchtest du ihn veröffentlichen?</string>
 	<string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
@@ -138,7 +158,6 @@ Language: de
 	<string name="image_link_to">Link zu</string>
 	<string name="image_settings_dismiss_dialog_title">Ungespeicherte Änderungen verwerfen?</string>
 	<string name="stop_upload_dialog_title">Hochladen stoppen?</string>
-	<string name="stop_upload_button">Upload abbrechen</string>
 	<string name="alert_error_adding_media">Beim Einfügen von Medien ist ein Fehler aufgetreten</string>
 	<string name="alert_action_while_uploading">Derzeit lädst du noch Medien hoch. Bitte warte bis der Vorgang abgeschlossen ist.</string>
 	<string name="alert_insert_image_html_mode">Du kannst keine Medien im HTML-Modus einfügen. Bitte wechsle zurück in den Visuellen Editor und versuche es erneut.</string>
@@ -231,7 +250,6 @@ Language: de
 	<string name="delete_site_progress">Website wird gelöscht &amp;hellip;</string>
 	<string name="delete_site_summary">Diese Aktion kann nicht rückgängig gemacht werden. Wenn du die Website löschst, werden alle Inhalte, Mitarbeiter und Domains von der Website entfernt.</string>
 	<string name="delete_site_hint">Website löschen</string>
-	<string name="are_you_sure">Bist du sicher?</string>
 	<string name="export_site_hint">Exportiere deine Website in eine XML-Datei</string>
 	<string name="export_site_summary">Wenn du dir sicher bist, nimm dir jetzt bitte Zeit zum Exportieren deiner Inhalte. Später kannst du sie nicht mehr wiederherstellen.</string>
 	<string name="keep_your_content">Deine Inhalte behalten</string>
@@ -605,7 +623,6 @@ Language: de
 	<string name="stats_insights">Einsichten</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Um deine Statistiken anzuzeigen, melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendest.</string>
 	<string name="stats_other_recent_stats_moved_label">Suchst du nach deinen anderen, aktuellen Statistiken? Die findest du jetzt auf der Seite Einsichten.</string>
-	<string name="me_disconnect_from_wordpress_com">Bei WordPress.com abmelden</string>
 	<string name="me_btn_login_logout">Anmelden/Abmelden</string>
 	<string name="me_connect_to_wordpress_com">Bei WordPress.com anmelden</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
@@ -734,14 +751,12 @@ Language: de
 	<string name="stats_for">Statistiken für %s</string>
 	<string name="themes_fetching">Themes werden abgerufen…</string>
 	<string name="ssl_certificate_details">Details</string>
-	<string name="sure_to_remove_account">Diese Website entfernen?</string>
 	<string name="cab_selected">%d ausgewählt</string>
 	<string name="confirm_delete_media">Ausgewähltes Objekt löschen?</string>
 	<string name="confirm_delete_multi_media">Ausgewählte Objekte löschen?</string>
 	<string name="delete_sure_page">Lösche diese Seite</string>
 	<string name="delete_sure_post">Lösche diesen Beitrag</string>
 	<string name="delete_sure">Lösche diesen Entwurf</string>
-	<string name="media_gallery_date_range">Zeige Medien von %1$s bis %2$s</string>
 	<string name="reader_empty_posts_liked">Du hast bisher noch keine Beiträge mit „gefällt mir“ markiert.</string>
 	<string name="faq_button">FAQ</string>
 	<string name="browse_our_faq_button">Die FAQ durchsuchen</string>
@@ -933,7 +948,6 @@ Language: de
 	<string name="trash_no">Nicht löschen</string>
 	<string name="hint_comment_content">Kommentar</string>
 	<string name="comment_status_trash">Gelöscht</string>
-	<string name="reader_share_link">Link teilen</string>
 	<string name="sure_to_cancel_edit_comment">Bearbeiten des Kommentars abbrechen?</string>
 	<string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktivierte ihn erneut in den Einstellungen und versuche es nochmal.</string>
 	<string name="scaled_image_error">Gib eine gültige Breite ein</string>
@@ -1016,7 +1030,6 @@ Language: de
 	<string name="nux_oops_not_selfhosted_blog">Bei WordPress.com anmelden</string>
 	<string name="nux_add_selfhosted_blog">Selbst-gehostete Website hinzufügen</string>
 	<string name="signing_in">Anmelden ...</string>
-	<string name="media_add_new_media_gallery">Erstelle Galerie</string>
 	<string name="reader_label_added_tag">%s hinzugefügt</string>
 	<string name="reader_label_removed_tag">%s entfernt</string>
 	<string name="reader_likes_one">Einer Person gefällt das</string>
@@ -1129,7 +1142,6 @@ Language: de
 	<string name="posts">Beiträge</string>
 	<string name="featured">Als Beitragsbild nutzen</string>
 	<string name="featured_in_post">Bild im Beitragsinhalt verwenden</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Skalierte Bildbreite</string>
 	<string name="upload_scaled_image">Hochladen und zum skalierten Bild verlinken</string>

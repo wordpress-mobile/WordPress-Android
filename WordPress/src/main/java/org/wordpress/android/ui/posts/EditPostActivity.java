@@ -1343,6 +1343,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             switch (position) {
                 case 0:
                     mEditorFragment = (EditorFragmentAbstract) fragment;
+                    mEditorFragment.setImageLoader(mImageLoader);
+
                     if (mEditorFragment instanceof EditorMediaUploadListener) {
                         mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
 
@@ -1773,13 +1775,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
-        String path;
-        if (uri.toString().contains("content:")) {
-            path = MediaUtils.getPath(this, uri);
-        } else {
-            // File is not in media library
-            path = uri.toString().replace("file://", "");
-        }
+        String path = MediaUtils.getRealPathFromURI(this, uri);
 
         if (path == null) {
             ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
@@ -1789,6 +1785,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
+            path = MediaUtils.getRealPathFromURI(this, uri);
+        } else {
+            // Fix the rotation of the picture see https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            // TODO: find a better implementation
+            Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+            if (rotatedMedia != null) {
+                uri = rotatedMedia;
+                path = MediaUtils.getRealPathFromURI(this, uri);
+            }
         }
 
         MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
@@ -1881,23 +1886,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Create an AsyncTask to download the file
-            new AsyncTask<Uri, Integer, Uri>() {
-                @Override
-                protected Uri doInBackground(Uri... uris) {
-                    Uri imageUri = uris[0];
-                    return MediaUtils.downloadExternalMedia(EditPostActivity.this, imageUri);
-                }
-
-                protected void onPostExecute(Uri uri) {
-                    if (uri != null) {
-                        addMedia(uri);
-                    } else {
-                        Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = null;
+            try {
+                downloadedUri = MediaUtils.downloadExternalMedia(EditPostActivity.this, mediaUri);
+            } catch (IllegalStateException e) {
+                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
+                        " See issue #5823");
+            }
+            if (downloadedUri != null) {
+                addMedia(downloadedUri);
+            } else {
+                Toast.makeText(EditPostActivity.this, getString(R.string.error_downloading_image),
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
             addMedia(mediaUri);
         }

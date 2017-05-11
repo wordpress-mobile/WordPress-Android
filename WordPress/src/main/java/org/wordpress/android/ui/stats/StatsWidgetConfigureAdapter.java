@@ -246,7 +246,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             homeURL = SiteUtils.getHomeURLOrHostName(site);
             url = site.getUrl();
             blavatarUrl = SiteUtils.getSiteIconUrl(site, mBlavatarSz);
-            isDotComOrJetpack = SiteUtils.isAccessibleViaWPComAPI(site);
+            isDotComOrJetpack = SiteUtils.isAccessedViaWPComRest(site);
             isHidden = !site.isVisible();
         }
 
