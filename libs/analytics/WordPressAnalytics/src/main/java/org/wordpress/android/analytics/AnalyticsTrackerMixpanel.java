@@ -510,20 +510,20 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_edited_image");
                 instructions.setCurrentDateForPeopleProperty("last_time_edited_image");
                 break;
-            case EDITOR_ENABLED_NEW_VERSION:
+            case EDITOR_HYBRID_ENABLED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Enabled New Version");
-                instructions.addSuperPropertyToFlag("enabled_new_editor");
+                        mixpanelInstructionsForEventName("Editor - Enabled Hybrid Editor");
+                instructions.addSuperPropertyToFlag("enabled_hybrid_editor");
                 break;
-            case EDITOR_TOGGLED_ON:
+            case EDITOR_HYBRID_TOGGLED_ON:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Toggled New Editor On");
-                instructions.setPeoplePropertyToValue("enabled_new_editor", true);
+                        mixpanelInstructionsForEventName("Editor - Toggled Hybrid Editor On");
+                instructions.setPeoplePropertyToValue("enabled_hybrid_editor", true);
                 break;
-            case EDITOR_TOGGLED_OFF:
+            case EDITOR_HYBRID_TOGGLED_OFF:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Editor - Toggled New Editor Off");
-                instructions.setPeoplePropertyToValue("enabled_new_editor", false);
+                        mixpanelInstructionsForEventName("Editor - Toggled Hybrid Editor Off");
+                instructions.setPeoplePropertyToValue("enabled_hybrid_editor", false);
                 break;
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
