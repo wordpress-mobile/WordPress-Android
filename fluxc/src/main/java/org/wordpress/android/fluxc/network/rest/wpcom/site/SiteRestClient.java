@@ -143,20 +143,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    private ConnectSiteInfoPayload connectSiteInfoFromResponse(String url, ConnectSiteInfoResponse response) {
-        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(url, null);
-        info.url = url;
-        info.exists = response.exists;
-        info.hasJetpack = response.hasJetpack;
-        info.isJetpackActive = response.isJetpackActive;
-        info.isJetpackConnected = response.isJetpackConnected;
-        info.isWordPress = response.isWordPress;
-        // CHECKSTYLE IGNORE RegexpSingleline
-        info.isWPCom = response.isWordPressDotCom;
-        // CHECKSTYLE END IGNORE RegexpSingleline
-        return info;
-    }
-
     public void checkUrlIsWPCom(@NonNull final String testedUrl) {
         String url = WPCOMREST.sites.getUrlV1_1() + testedUrl;
         final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
@@ -455,5 +441,19 @@ public class SiteRestClient extends BaseWPComRestClient {
             }
         }
         return payload;
+    }
+
+    private ConnectSiteInfoPayload connectSiteInfoFromResponse(String url, ConnectSiteInfoResponse response) {
+        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(url, null);
+        info.url = url;
+        info.exists = response.exists;
+        info.hasJetpack = response.hasJetpack;
+        info.isJetpackActive = response.isJetpackActive;
+        info.isJetpackConnected = response.isJetpackConnected;
+        info.isWordPress = response.isWordPress;
+        // CHECKSTYLE IGNORE RegexpSingleline
+        info.isWPCom = response.isWordPressDotCom;
+        // CHECKSTYLE END IGNORE RegexpSingleline
+        return info;
     }
 }
