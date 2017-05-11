@@ -33,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -103,7 +104,8 @@ public class EditPostSettingsFragment extends Fragment
     private SiteModel mSite;
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
-    private EditText mPasswordEditText, mExcerptEditText;
+    private EditText mPasswordEditText;
+    private TextView mExcerptTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -198,8 +200,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
         if (rootView == null || mPost == null) {
@@ -213,7 +214,7 @@ public class EditPostSettingsFragment extends Fragment
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
 
-        mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
+        mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -256,8 +257,16 @@ public class EditPostSettingsFragment extends Fragment
             mFeaturedImageButton.setVisibility(View.GONE);
         }
 
+        final LinearLayout excerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
+        excerptContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostExcerptDialog();
+            }
+        });
+
         if (mPost.isPage()) { // remove post specific views
-            mExcerptEditText.setVisibility(View.GONE);
+            excerptContainer.setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
             rootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
@@ -351,7 +360,11 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        mExcerptEditText.setText(mPost.getExcerpt());
+        if (!TextUtils.isEmpty(mPost.getExcerpt())) {
+            mExcerptTextView.setText(mPost.getExcerpt());
+        } else {
+            setPostExcerptToNotSet();
+        }
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -622,7 +635,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         String password = EditTextUtils.getText(mPasswordEditText);
-        String excerpt = EditTextUtils.getText(mExcerptEditText);
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
@@ -678,7 +690,7 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setExcerpt(excerpt);
+        post.setExcerpt(getPostExcerptFromTextView());
         post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
@@ -958,6 +970,33 @@ public class EditPostSettingsFragment extends Fragment
 
     private void updateLocationText(String locationName) {
         mLocationText.setText(locationName);
+    }
+
+    private void showPostExcerptDialog() {
+        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(getPostExcerptFromTextView());
+        dialog.setPostExcerptDialogListener(new PostExcerptDialogFragment.PostExcerptDialogListener() {
+            @Override
+            public void onPostExcerptUpdated(String postExcerpt) {
+                if (TextUtils.isEmpty(postExcerpt)) {
+                    setPostExcerptToNotSet();
+                } else {
+                    mExcerptTextView.setText(postExcerpt);
+                }
+            }
+        });
+        dialog.show(getFragmentManager(), null);
+    }
+
+    private String getPostExcerptFromTextView() {
+        String excerpt = mExcerptTextView.getText().toString();
+        if (excerpt.equals(getString(R.string.not_set))) {
+            excerpt = "";
+        }
+        return excerpt;
+    }
+
+    private void setPostExcerptToNotSet() {
+        mExcerptTextView.setText(R.string.not_set);
     }
 
     /*

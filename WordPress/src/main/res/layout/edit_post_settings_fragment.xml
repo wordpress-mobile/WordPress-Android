@@ -14,6 +14,27 @@
         android:paddingRight="@dimen/margin_extra_large"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/post_excerpt_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
+                android:text="@string/post_excerpt"/>
+
+            <TextView
+                android:id="@+id/post_excerpt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_darken_10"
+                android:text="@string/not_set"/>
+
+        </LinearLayout>
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/statusLabel"
             style="@style/WordPressSubHeader"
@@ -94,19 +115,6 @@
                 android:hint="@string/tags_separate_with_commas"
                 android:inputType="textMultiLine" />
         </LinearLayout>
-
-        <EditText
-            android:id="@+id/postExcerpt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
-            android:textSize="@dimen/text_sz_large"
-            android:gravity="top"
-            android:hint="@string/post_excerpt"
-            android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-            android:minLines="1" />
 
         <EditText
             android:id="@+id/post_password"

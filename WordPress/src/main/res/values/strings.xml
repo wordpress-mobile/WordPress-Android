@@ -278,7 +278,6 @@
     <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
     <string name="download">Downloading media</string>
-    <string name="post_settings">Post settings</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
@@ -976,6 +975,9 @@
         automatically disabled.</string>
 
     <!-- editor post settings -->
+    <string name="post_settings">Post settings</string>
+    <string name="not_set">Not Set</string>
+    <string name="post_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
 

@@ -297,4 +297,8 @@
     <dimen name="photo_picker_video_overlay">36dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>
+
+    <!--post settings-->
+    <dimen name="post_excerpt_dialog_edit_text_side_margin">20dp</dimen>
+    <dimen name="post_excerpt_dialog_hint_side_margin">24dp</dimen>
 </resources>
