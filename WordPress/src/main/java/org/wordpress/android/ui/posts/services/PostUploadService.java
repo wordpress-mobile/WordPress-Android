@@ -288,7 +288,11 @@ public class PostUploadService extends Service {
                     mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
             );
 
-            mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostTitle, uploadingPostMessage);
+            if (mPostUploadNotifier.isDisplayingNotificationForPost(mPost)) {
+                mPostUploadNotifier.updateNotificationMessage(mPost, uploadingPostMessage);
+            } else {
+                mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostTitle, uploadingPostMessage);
+            }
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
