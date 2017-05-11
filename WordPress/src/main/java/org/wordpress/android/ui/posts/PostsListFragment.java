@@ -519,6 +519,7 @@ public class PostsListFragment extends Fragment
         // cancel scheduled search runnable
         mHandler.removeCallbacks(mSearchRunnable);
         mSearchOffset = 0;
+        mSearchResults.clear();
 
         if (!TextUtils.isEmpty(searchTerm)) {
             showLoadMoreProgress();
