@@ -101,6 +101,7 @@ public class PostsListFragment extends Fragment
     private Handler mHandler;
     private boolean mIsSearching;
     private boolean mCanSearchMore = true;
+    private int mSearchOffset;
 
     private SiteModel mSite;
 
@@ -466,6 +467,7 @@ public class PostsListFragment extends Fragment
         } else {
             if (mCanSearchMore && !mIsSearching) {
                 showLoadMoreProgress();
+                mSearchOffset = mSearchResults.size();
                 mHandler.post(mSearchRunnable);
             }
         }
@@ -516,6 +518,7 @@ public class PostsListFragment extends Fragment
     public void filterPosts(final String searchTerm) {
         // cancel scheduled search runnable
         mHandler.removeCallbacks(mSearchRunnable);
+        mSearchOffset = 0;
 
         if (!TextUtils.isEmpty(searchTerm)) {
             showLoadMoreProgress();
@@ -702,7 +705,7 @@ public class PostsListFragment extends Fragment
     private final Runnable mSearchRunnable = new Runnable() {
         @Override
         public void run() {
-            SearchPostsPayload payload = new SearchPostsPayload(mSite, mSearchTerm);
+            SearchPostsPayload payload = new SearchPostsPayload(mSite, mSearchTerm, mSearchOffset);
             if (mIsPage) {
                 mDispatcher.dispatch(PostActionBuilder.newSearchPagesAction(payload));
             } else {
