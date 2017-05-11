@@ -2300,9 +2300,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
             }
         } else {
-            // Passed mediaId is incorrect: cancel all uploads
+            // Passed mediaId is incorrect: cancel all uploads for this post
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
-            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(true));
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(mPost));
         }
     }
 
