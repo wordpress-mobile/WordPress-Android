@@ -719,6 +719,9 @@ public class PostUploadService extends Service {
             PostModel postToCancel = removeQueuedPostByLocalId(event.media.getLocalPostId());
             if (postToCancel == null) return;
 
+            SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
+            String message = getErrorMessage(postToCancel, getErrorMessageFromMediaError(event.error));
+            mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
             mFirstPublishPosts.remove(postToCancel.getId());
             EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
             finishUpload();
