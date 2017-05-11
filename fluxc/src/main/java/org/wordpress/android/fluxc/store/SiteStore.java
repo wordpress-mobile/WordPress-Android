@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.ConnectSiteInfo;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -105,6 +104,26 @@ public class SiteStore extends Store {
         public SuggestDomainsResponsePayload(@NonNull String query, ArrayList<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
+        }
+    }
+
+    public static class ConnectSiteInfoPayload extends Payload {
+        public String url;
+        public boolean exists;
+        public boolean isWordPress;
+        public boolean hasJetpack;
+        public boolean isJetpackActive;
+        public boolean isJetpackConnected;
+        public boolean isWPCom;
+
+        public ConnectSiteInfoPayload(@NonNull String url, BaseNetworkError error) {
+            this.url = url;
+            this.error = error;
+        }
+
+        public String description() {
+            return String.format("url: %s, e: %b, wp: %b, jp: %b, wpcom: %b",
+                    url, exists, isWordPress, hasJetpack, isWPCom);
         }
     }
 
@@ -208,8 +227,8 @@ public class SiteStore extends Store {
     }
 
     public static class OnConnectSiteInfoChecked extends OnChanged<SiteError> {
-        public ConnectSiteInfo info;
-        public OnConnectSiteInfoChecked(@NonNull ConnectSiteInfo info) {
+        public ConnectSiteInfoPayload info;
+        public OnConnectSiteInfoChecked(@NonNull ConnectSiteInfoPayload info) {
             this.info = info;
         }
     }
@@ -697,7 +716,7 @@ public class SiteStore extends Store {
                 handleExportedSite((ExportSiteResponsePayload) action.getPayload());
                 break;
             case FETCHED_CONNECT_SITE_INFO:
-                handleFetchedConnectSiteInfo((ConnectSiteInfo) action.getPayload());
+                handleFetchedConnectSiteInfo((ConnectSiteInfoPayload) action.getPayload());
                 break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
@@ -843,7 +862,7 @@ public class SiteStore extends Store {
         mSiteRestClient.fetchConnectSiteInfo(payload);
     }
 
-    private void handleFetchedConnectSiteInfo(ConnectSiteInfo payload) {
+    private void handleFetchedConnectSiteInfo(ConnectSiteInfoPayload payload) {
         OnConnectSiteInfoChecked event = new OnConnectSiteInfoChecked(payload);
         if (payload.isError()) {
             event.error = new SiteError(SiteErrorType.INVALID_SITE);
