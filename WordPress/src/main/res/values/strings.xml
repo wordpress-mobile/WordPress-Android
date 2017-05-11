@@ -285,11 +285,6 @@
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 
-    <!--post settings-->
-    <string name="post_settings">Post settings</string>
-    <string name="not_set">Not Set</string>
-    <string name="post_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
-
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -978,6 +973,9 @@
         automatically disabled.</string>
 
     <!-- editor post settings -->
+    <string name="post_settings">Post settings</string>
+    <string name="not_set">Not Set</string>
+    <string name="post_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
 
