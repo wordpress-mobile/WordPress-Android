@@ -433,7 +433,7 @@ public class EditPostSettingsFragment extends Fragment
             if (mFeaturedImageId > 0) {
                 MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mFeaturedImageId);
 
-                if (media == null || getActivity() == null) {
+                if (media == null || !isAdded()) {
                     return;
                 }
 
