@@ -99,6 +99,8 @@ public class PostsListFragment extends Fragment
     private final List<PostModel> mSearchResults = new ArrayList<>();
     private String mSearchTerm;
     private Handler mHandler;
+    private boolean mIsSearching;
+    private boolean mCanSearchMore = true;
 
     private SiteModel mSite;
 
@@ -457,10 +459,14 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onLoadMore() {
-        if (mCanLoadMorePosts && !mIsFetchingPosts) {
-            if (mSearchResults.isEmpty()) {
+        if (TextUtils.isEmpty(mSearchTerm)) {
+            if (mCanLoadMorePosts && !mIsFetchingPosts) {
                 requestPosts(true);
-            } else {
+            }
+        } else {
+            if (mCanSearchMore && !mIsSearching) {
+                showLoadMoreProgress();
+                mHandler.post(mSearchRunnable);
             }
         }
     }
@@ -716,6 +722,7 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostsSearched(OnPostsSearched event) {
+        mIsSearching = false;
         hideLoadMoreProgress();
 
         if (event.isError()) {
@@ -728,6 +735,7 @@ public class PostsListFragment extends Fragment
         if (event.searchResults != null && !ListUtils.isEmpty(event.searchResults.getPosts())) {
             mSearchResults.addAll(event.searchResults.getPosts());
         }
+        mCanSearchMore = event.canLoadMore;
         showSearchResults();
     }
 
