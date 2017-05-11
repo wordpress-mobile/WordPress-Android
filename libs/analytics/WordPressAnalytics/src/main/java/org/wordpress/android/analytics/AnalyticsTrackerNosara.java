@@ -366,6 +366,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_hybrid_toggled_off";
             case EDITOR_HYBRID_TOGGLED_ON:
                 return "editor_hybrid_toggled_on";
+            case EDITOR_AZTEC_ENABLED:
+                return "editor_aztec_enabled";
+            case EDITOR_AZTEC_TOGGLED_OFF:
+                return "editor_aztec_toggled_off";
+            case EDITOR_AZTEC_TOGGLED_ON:
+                return "editor_aztec_toggled_on";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:

@@ -525,6 +525,21 @@ public class AnalyticsTrackerMixpanel extends Tracker {
                         mixpanelInstructionsForEventName("Editor - Toggled Hybrid Editor Off");
                 instructions.setPeoplePropertyToValue("enabled_hybrid_editor", false);
                 break;
+            case EDITOR_AZTEC_ENABLED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Enabled Aztec Editor");
+                instructions.addSuperPropertyToFlag("enabled_aztec_editor");
+                break;
+            case EDITOR_AZTEC_TOGGLED_ON:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Toggled Aztec Editor On");
+                instructions.setPeoplePropertyToValue("enabled_aztec_editor", true);
+                break;
+            case EDITOR_AZTEC_TOGGLED_OFF:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Toggled Aztec Editor Off");
+                instructions.setPeoplePropertyToValue("enabled_aztec_editor", false);
+                break;
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Upload Media Failed");
