@@ -964,7 +964,7 @@
     <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
     <string name="editor_post_saved_online">The post was saved online</string>
     <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
-    <string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
+    <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
