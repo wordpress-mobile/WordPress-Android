@@ -2292,10 +2292,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
-        if (!TextUtils.isEmpty(mediaId)) {
-            int localMediaId = Integer.valueOf(mediaId);
-            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId));
+    public void onMediaUploadCancelClicked(String localMediaId, boolean delete) {
+        if (!TextUtils.isEmpty(localMediaId)) {
+            MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
+            if (mediaModel != null) {
+                MediaPayload payload = new MediaPayload(mSite, mediaModel);
+                mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
+            }
         } else {
             // Passed mediaId is incorrect: cancel all uploads
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
