@@ -214,6 +214,24 @@ public class PostUploadService extends Service {
         return null;
     }
 
+    /**
+     * Removes a post from the queued post list given its local ID.
+     * @return the post that was removed - if no post was removed, returns null
+     */
+    private PostModel removeQueuedPostByLocalId(int localPostId) {
+        synchronized (mPostsList) {
+            Iterator<PostModel> iterator = mPostsList.iterator();
+            while (iterator.hasNext()) {
+                PostModel postModel = iterator.next();
+                if (postModel.getId() == localPostId) {
+                    iterator.remove();
+                    return postModel;
+                }
+            }
+        }
+        return null;
+    }
+
     private void finishUpload() {
         synchronized (mPostsList) {
             mCurrentTask = null;
@@ -678,6 +696,12 @@ public class PostUploadService extends Service {
             // TODO: Find the associated post, mark it as failed, update upload messaging, and remove it from the queue
             AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
                     event.error.type + ": " + event.error.message);
+
+            PostModel postToCancel = removeQueuedPostByLocalId(event.media.getLocalPostId());
+            if (postToCancel == null) return;
+
+            mFirstPublishPosts.remove(postToCancel.getId());
+            finishUpload();
             return;
         }
 
