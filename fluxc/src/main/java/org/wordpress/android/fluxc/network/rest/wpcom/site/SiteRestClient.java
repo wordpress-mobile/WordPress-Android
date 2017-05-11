@@ -118,7 +118,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
         // Sanitize and encode the Url for the API call.
         String sanitizedURL = UrlUtils.removeScheme(testedUrl);
-        sanitizedURL = sanitizedURL.replace("\\", "::");
+        sanitizedURL = sanitizedURL.replace("/", "::");
 
         // Make the call.
         String url = WPCOMREST.connect.site_info.protocol(uri.getScheme()).address(sanitizedURL).getUrlV1_1();
