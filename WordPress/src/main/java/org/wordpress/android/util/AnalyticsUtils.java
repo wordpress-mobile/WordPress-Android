@@ -59,12 +59,21 @@ public class AnalyticsUtils {
         metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
         metadata.setUserConnected(FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore));
         metadata.setWordPressComUser(accountStore.hasAccessToken());
-        metadata.setJetpackUser(siteStore.hasJetpackSite());
+        metadata.setJetpackUser(isJetpackUser(siteStore));
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
 
         AnalyticsTracker.refreshMetadata(metadata);
+    }
+
+    /***
+     * @return true if the siteStore has sites accessed via the WPCom Rest API that are not WPCom sites. This only
+     * counts Jetpack sites connected via WPCom Rest API. If there are Jetpack sites in the site store and they're
+     * all accessed via XMLRPC, this method returns false.
+     */
+    private static boolean isJetpackUser(SiteStore siteStore) {
+        return siteStore.getSitesAccessedViaWPComRestCount() - siteStore.getWPComSitesCount() > 0;
     }
 
     public static void refreshMetadataNewUser(String username, String email) {
@@ -105,13 +114,13 @@ public class AnalyticsUtils {
      */
     public static void trackWithSiteDetails(AnalyticsTracker.Stat stat, SiteModel site,
                                             Map<String, Object> properties) {
-        if (site == null || !SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack. Tracking analytics without blog info");
             AnalyticsTracker.track(stat, properties);
             return;
         }
 
-        if (SiteUtils.isAccessibleViaWPComAPI(site)) {
+        if (SiteUtils.isAccessedViaWPComRest(site)) {
             if (properties == null) {
                 properties = new HashMap<>();
             }
@@ -320,12 +329,7 @@ public class AnalyticsUtils {
         }
 
         if(mediaURI != null) {
-            if (mediaURI.toString().contains("content:")) {
-                path = MediaUtils.getPath(context, mediaURI);
-            } else {
-                // File is not in media library
-                path = mediaURI.toString().replace("file://", "");
-            }
+            path = MediaUtils.getRealPathFromURI(context, mediaURI);
         }
 
         if (TextUtils.isEmpty(path) ) {

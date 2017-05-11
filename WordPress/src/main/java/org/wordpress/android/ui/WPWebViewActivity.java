@@ -227,7 +227,7 @@ public class WPWebViewActivity extends WebViewActivity {
 
         // Configure the allowed URLs if available
         ArrayList<String> allowedURL = null;
-        if (extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
+        if (extras != null && extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
             String addressToLoad = extras.getString(URL_TO_LOAD);
             String authURL = extras.getString(AUTHENTICATION_URL);
             allowedURL = new ArrayList<>();

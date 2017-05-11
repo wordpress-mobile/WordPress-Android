@@ -64,10 +64,12 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -140,7 +142,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.media);
         }
 
         FragmentManager fm = getFragmentManager();
@@ -151,6 +152,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // if media was shared add it to the library
         handleSharedMedia();
+
+        if (savedInstanceState == null) {
+            SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
+        }
     }
 
     @Override
@@ -658,23 +663,22 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void fetchMedia(Uri mediaUri, final String mimeType) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Create an AsyncTask to download the file
-            new AsyncTask<Uri, Integer, Uri>() {
-                @Override
-                protected Uri doInBackground(Uri... uris) {
-                    Uri imageUri = uris[0];
-                    return MediaUtils.downloadExternalMedia(MediaBrowserActivity.this, imageUri);
-                }
-
-                protected void onPostExecute(Uri uri) {
-                    if (uri != null) {
-                        queueFileForUpload(uri, mimeType);
-                    } else {
-                        Toast.makeText(MediaBrowserActivity.this, getString(R.string.error_downloading_image),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = null;
+            try {
+                downloadedUri = MediaUtils.downloadExternalMedia(MediaBrowserActivity.this, mediaUri);
+            } catch (IllegalStateException e) {
+                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
+                        " See issue #5823");
+            }
+            if (downloadedUri != null) {
+                queueFileForUpload(downloadedUri, mimeType);
+            } else {
+                Toast.makeText(MediaBrowserActivity.this, getString(R.string.error_downloading_image),
+                        Toast.LENGTH_SHORT).show();
+            }
         } else {
             queueFileForUpload(mediaUri, mimeType);
         }
@@ -694,7 +698,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void queueFileForUpload(Uri uri, String mimeType) {
         // It is a regular local media file
-        String path = getRealPathFromURI(uri);
+        String path = MediaUtils.getRealPathFromURI(this,uri);
 
         if (path == null || path.equals("")) {
             Toast.makeText(this, "Error opening file", Toast.LENGTH_SHORT).show();
@@ -780,18 +784,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             startService(intent);
         }
-    }
-
-    private String getRealPathFromURI(Uri uri) {
-        String path;
-        if ("content".equals(uri.getScheme())) {
-            path = MediaUtils.getPath(this, uri);
-        } else if ("file".equals(uri.getScheme())) {
-            path = uri.getPath();
-        } else {
-            path = uri.toString();
-        }
-        return path;
     }
 
     private void updateViews() {

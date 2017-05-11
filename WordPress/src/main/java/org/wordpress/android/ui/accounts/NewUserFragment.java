@@ -569,7 +569,7 @@ public class NewUserFragment extends AbstractFragment {
         mUsernameTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && isAdded()) {
                     getDomainSuggestionsFromTitle();
                 }
             }
@@ -578,7 +578,7 @@ public class NewUserFragment extends AbstractFragment {
         mSiteUrlTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+                if (hasFocus && isAdded()) {
                     mSiteUrlTextField.showDropDown();
                 }
             }
@@ -586,7 +586,7 @@ public class NewUserFragment extends AbstractFragment {
 
         mEmailTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && isAdded()) {
                     autocorrectEmail();
                 }
             }

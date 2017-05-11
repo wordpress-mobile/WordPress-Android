@@ -19,7 +19,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="@dimen/image_settings_dialog_thumbnail_container_margin_bottom">
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/image_thumbnail"
                 android:contentDescription="@string/image_thumbnail"
                 android:layout_width="@dimen/image_settings_dialog_thumbnail_size"
