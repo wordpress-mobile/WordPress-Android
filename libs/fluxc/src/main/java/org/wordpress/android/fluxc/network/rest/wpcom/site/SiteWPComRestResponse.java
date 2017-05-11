@@ -1,11 +1,10 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
-import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.network.Response;
 
 import java.util.List;
 
-public class SiteWPComRestResponse extends Payload implements Response {
+public class SiteWPComRestResponse implements Response {
     public class SitesResponse {
         public List<SiteWPComRestResponse> sites;
     }
