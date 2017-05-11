@@ -46,11 +46,14 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         PeopleManagementActivity.InvitationSender {
     private static final String URL_USER_ROLES_DOCUMENTATION = "https://en.support.wordpress.com/user-roles/";
     private static final String FLAG_SUCCESS = "SUCCESS";
+    private static final String KEY_USERNAMES = "usernames";
+    private static final String KEY_SELECTED_ROLE = "selected-role";
     private static final int MAX_NUMBER_OF_INVITEES = 10;
     private static final String[] USERNAME_DELIMITERS = {" ", ","};
     private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
     private final HashMap<String, String> mUsernameResults = new HashMap<>();
     private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
+    private ArrayList<String> mUsernames = new ArrayList<>();
     private ViewGroup mUsernamesContainer;
     private MultiUsernameEditText mUsernameEditText;
     private TextView mRoleTextView;
@@ -69,15 +72,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         return peopleInviteFragment;
     }
 
-    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-            }
+    private void updateSiteOrFinishActivity() {
+        if (getArguments() != null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
         }
 
         if (mSite == null) {
@@ -99,9 +98,32 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mRole != null) {
+            outState.putString(KEY_SELECTED_ROLE, mRole.toString());
+        }
+        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        updateSiteOrFinishActivity(savedInstanceState);
+        updateSiteOrFinishActivity();
+
+        if (savedInstanceState != null) {
+            String roleValue = savedInstanceState.getString(KEY_SELECTED_ROLE);
+            if (!TextUtils.isEmpty(roleValue)) {
+                mRole = Role.fromString(roleValue);
+            }
+            ArrayList<String> retainedUsernames = savedInstanceState.getStringArrayList(KEY_USERNAMES);
+            if (retainedUsernames != null) {
+                mUsernames.clear();
+                mUsernames.addAll(retainedUsernames);
+            }
+        }
+
         // retain this fragment across configuration changes
         // WARNING: use setRetainInstance wisely. In this case we need this to be able to get the
         // results of network connections in the same fragment if going through a configuration change
@@ -203,9 +225,14 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         });
 
 
-        if (mUsernameButtons.size() > 0) {
-            ArrayList<String> usernames = new ArrayList<>(mUsernameButtons.keySet());
-            populateUsernameButtons(usernames);
+        // if mUsernameButtons is not empty, this means fragment retained itself
+        // if mUsernameButtons is empty, but we have manually retained usernames, this means that fragment was destroyed
+        // and we need to recreate manually added views and revalidate usernames
+        if (!mUsernameButtons.isEmpty()) {
+            mUsernameErrorViews.clear();
+            populateUsernameButtons(new ArrayList<>(mUsernameButtons.keySet()));
+        } else if (!mUsernames.isEmpty()) {
+            populateUsernameButtons(new ArrayList<>(mUsernames));
         }
 
         mRoleTextView = (TextView) view.findViewById(R.id.role);
