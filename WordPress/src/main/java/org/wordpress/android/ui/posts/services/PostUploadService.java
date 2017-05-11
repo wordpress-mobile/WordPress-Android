@@ -219,11 +219,7 @@ public class PostUploadService extends Service {
         for (PostModel postModel : mPostsList) {
             if (MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
                 if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
-                    String postTitle = TextUtils.isEmpty(postModel.getTitle()) ? getString(R.string.untitled)
-                            : postModel.getTitle();
-                    String uploadingPostTitle = String.format(getString(R.string.posting_post), postTitle);
-                    String uploadingPostMessage = mContext.getString(R.string.uploading_post_media);
-                    mPostUploadNotifier.updateNotificationNewPost(postModel, uploadingPostTitle, uploadingPostMessage);
+                    mPostUploadNotifier.updateNotificationNewPost(postModel, getString(R.string.uploading_post_media));
                 }
             }
         }
@@ -281,8 +277,6 @@ public class PostUploadService extends Service {
         protected Boolean doInBackground(PostModel... posts) {
             mPost = posts[0];
 
-            String postTitle = TextUtils.isEmpty(mPost.getTitle()) ? getString(R.string.untitled) : mPost.getTitle();
-            String uploadingPostTitle = String.format(getString(R.string.posting_post), postTitle);
             String uploadingPostMessage = String.format(
                     getString(R.string.sending_content),
                     mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
@@ -291,7 +285,7 @@ public class PostUploadService extends Service {
             if (mPostUploadNotifier.isDisplayingNotificationForPost(mPost)) {
                 mPostUploadNotifier.updateNotificationMessage(mPost, uploadingPostMessage);
             } else {
-                mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostTitle, uploadingPostMessage);
+                mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostMessage);
             }
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());

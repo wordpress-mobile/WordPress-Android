@@ -55,10 +55,8 @@ public class PostUploadNotifier {
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
     }
 
-    public void updateNotificationNewPost(PostModel post, String title, String message) {
-        if (title != null) {
-            mNotificationBuilder.setContentTitle(title);
-        }
+    public void updateNotificationNewPost(@NonNull PostModel post, String message) {
+        mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
         if (message != null) {
             mNotificationBuilder.setContentText(message);
         }
@@ -242,5 +240,10 @@ public class PostUploadNotifier {
 
         mNotificationBuilder.setContentText(String.format(mContext.getString(R.string.uploading_total),
                 currentItem, notificationData.totalMediaItems));
+    }
+
+    private String buildNotificationTitleForPost(PostModel post) {
+        String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
+        return String.format(mContext.getString(R.string.posting_post), postTitle);
     }
 }
