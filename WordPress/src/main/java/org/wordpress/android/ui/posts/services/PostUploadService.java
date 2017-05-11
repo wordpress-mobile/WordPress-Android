@@ -701,6 +701,7 @@ public class PostUploadService extends Service {
             if (postToCancel == null) return;
 
             mFirstPublishPosts.remove(postToCancel.getId());
+            EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
             finishUpload();
             return;
         }

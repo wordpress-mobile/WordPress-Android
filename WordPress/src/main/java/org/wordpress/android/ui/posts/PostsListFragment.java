@@ -364,11 +364,21 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * upload start, reload so correct status on uploading post appears
+     * Upload started, reload so correct status on uploading post appears
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
         if (isAdded() && mSite.getId() == event.mLocalBlogId) {
+            loadPosts(LoadMode.FORCED);
+        }
+    }
+
+    /*
+    * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
+    */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostUploadCanceled event) {
+        if (isAdded() && mSite.getId() == event.localSiteId) {
             loadPosts(LoadMode.FORCED);
         }
     }
