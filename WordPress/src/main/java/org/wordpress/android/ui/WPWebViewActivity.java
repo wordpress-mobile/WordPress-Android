@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -32,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -289,10 +289,13 @@ public class WPWebViewActivity extends WebViewActivity {
             username = mAccountStore.getAccount().getUserName();
 
             // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-            if (selectedSite != null && selectedSite.isWPCom() && !TextUtils.isEmpty(selectedSite.getUnmappedUrl())) {
-                addressToLoad = addressToLoad.replace(selectedSite.getUrl(), selectedSite.getUnmappedUrl());
+            List<SiteModel> wpComSites = mSiteStore.getWPComSites();
+            for (SiteModel siteModel : wpComSites) {
+                // Only replace the url if we know the unmapped url and if it's a custom domain
+                if (!TextUtils.isEmpty(siteModel.getUnmappedUrl())
+                        && !siteModel.getUrl().contains("wordpress.com")) {
+                    addressToLoad = addressToLoad.replace(siteModel.getUrl(), siteModel.getUnmappedUrl());
+                }
             }
         }
 
