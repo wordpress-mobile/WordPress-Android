@@ -395,6 +395,18 @@ public class MediaUtils {
         return fileExtensionFromMimeType.toLowerCase();
     }
 
+    public static String getRealPathFromURI(final Context context, Uri uri) {
+        String path;
+        if ("content".equals(uri.getScheme())) {
+            path = MediaUtils.getPath(context, uri);
+        } else if ("file".equals(uri.getScheme())) {
+            path = uri.getPath();
+        } else {
+            path = uri.toString();
+        }
+        return path;
+    }
+
     /**
      * Get a file path from a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
@@ -405,7 +417,7 @@ public class MediaUtils {
      * @param context The context.
      * @param uri The Uri to query.
      */
-    public static String getPath(final Context context, final Uri uri) {
+    private static String getPath(final Context context, final Uri uri) {
         String path = getDocumentProviderPathKitkatOrHigher(context, uri);
 
         if (path != null) {

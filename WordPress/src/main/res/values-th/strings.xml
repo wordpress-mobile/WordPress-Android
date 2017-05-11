@@ -246,7 +246,6 @@ Language: th
 	<string name="stats_insights">แบบละเอียด</string>
 	<string name="stats_sign_in_jetpack_different_com_account">เพื่อดูสถิติของคุณ  เข้าสู่ระบบบัญชี WordPress.com  ที่คุณเคยเชื่อมต่อ Jetpack</string>
 	<string name="stats_other_recent_stats_moved_label">กำลังหาสถิติล่าสุดอื่น ๆ ของคุณ?  เราได้ย้ายมันไปยังหน้ารายละเอียด (insight page)</string>
-	<string name="me_disconnect_from_wordpress_com">ตัดการติดต่อกับ WordPress.com</string>
 	<string name="me_btn_login_logout">เข้าสู่ระบบ/ออกจากระบบ</string>
 	<string name="me_connect_to_wordpress_com">เชื่อมต่อกับ WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน "%s" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
@@ -375,12 +374,10 @@ Language: th
 	<string name="stats_view_top_posts_and_pages">เรื่องและหน้า</string>
 	<string name="stats_entry_clicks_link">ลิงก์</string>
 	<string name="ssl_certificate_details">รายละเอียด</string>
-	<string name="sure_to_remove_account">ลบเว็บนี้?</string>
 	<string name="delete_sure_post">ลบเรื่องนี้</string>
 	<string name="delete_sure">ลบฉบับร่างนี้</string>
 	<string name="delete_sure_page">ลบหน้านี้</string>
 	<string name="cab_selected">%d ถูกเลือก</string>
-	<string name="media_gallery_date_range">กำลังแสดงไฟล์สื่อจาก %1$s ถึง %2$s</string>
 	<string name="confirm_delete_multi_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
 	<string name="confirm_delete_media">ลบสิ่งที่ถูกเลือกหรือไม่?</string>
 	<string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
@@ -526,7 +523,6 @@ Language: th
 	<string name="blog_name_must_include_letters">ที่อยู่เว็บต้องมีตัวอักษรอย่างน้อย 1 ตัว (a-z)</string>
 	<string name="blog_name_invalid">ที่อยู่เว็บไม่ถูกต้อง</string>
 	<string name="blog_title_invalid">หัวข้อเว็บไม่ถูกต้อง</string>
-	<string name="reader_share_link">แบ่งปันลิงก์</string>
 	<string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
 	<string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
 	<string name="required_field">ช่องที่ต้องการ</string>
@@ -676,7 +672,6 @@ Language: th
 	<string name="jetpack_not_found">ไม่พบปลั๊กอิน Jetpack</string>
 	<string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
 	<string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>
-	<string name="media_add_new_media_gallery">สร้างคลังรูปภาพ</string>
 	<string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>
 	<string name="select_from_media_library">เลือกจากคลังสื่อ</string>
 	<string name="limit_reached">มาถึงขีดจำกัดแล้ว คุณสามารถลองใหม่อีกหนึ่งนาทีภายหลัง  การลองใหม่ก่อนหน้าหนึ่งนาทีจะเพิ่มเวลาที่คุณต้องรอก่อนพ้นการแบนให้ยาวไปอีก  ถ้าคุณคิดว่าสิ่งนี้เป็นความผิดพลาด  โปรดติดต่อฝ่ายช่วยเหลือ</string>
@@ -769,7 +764,6 @@ Language: th
 	<string name="featured">ใช้เป็นรูปเด่น</string>
 	<string name="featured_in_post">รวมรูปภาพในเนื้อหาเรื่อง</string>
 	<string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
-	<string name="ok">ตกลง</string>
 	<string name="blogusername">บล็อกชื่อผู้ใช้</string>
 	<string name="upload_scaled_image">อัปโหลดและลิงก์ไปยังภาพที่ปรับขนาด</string>
 	<string name="scaled_image">ปรับขนาดความกว้างรูปภาพแล้ว</string>

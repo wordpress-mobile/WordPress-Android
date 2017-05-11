@@ -98,7 +98,6 @@ Language: es_VE
 	<string name="image_settings_save_toast">Cambios guardados</string>
 	<string name="image_width">Ancho</string>
 	<string name="image_settings_dismiss_dialog_title">¿Descartar cambios sin guardar?</string>
-	<string name="stop_upload_button">Para la subida</string>
 	<string name="stop_upload_dialog_title">¿Parar la subida?</string>
 	<string name="alert_error_adding_media">Hubo un error al insertar el archivo multimedia</string>
 	<string name="alert_action_while_uploading">Ahora mismo estás subiendo medios. Por favor, espera hasta que termine.</string>
@@ -193,7 +192,6 @@ Language: es_VE
 	<string name="delete_site_summary">Esta acción no se puede deshacer. Eliminar tu sitio eliminará todo el contenido, contribuidores y dominios de tu sitio.</string>
 	<string name="delete_site_hint">Eliminar el sitio</string>
 	<string name="export_site_hint">Exportar tu sitio a un archivo XML</string>
-	<string name="are_you_sure">¿Estás seguro?</string>
 	<string name="export_site_summary">Si estás seguro, por favor asegúrate de invertir tiempo en exportar tu contenido ahora. No podrá ser recuperado en el futuro.</string>
 	<string name="keep_your_content">Manten tu contenido</string>
 	<string name="domain_removal_hint">Una vez que hayas eliminado tu sitio, los dominios no funcionarán.</string>
@@ -566,7 +564,6 @@ Language: es_VE
 	<string name="stats_insights">Detalles</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Para ver tus estadísticas, accede a la cuenta de WordPress.com que has usado para conectar con Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página "Detalles".</string>
-	<string name="me_disconnect_from_wordpress_com">Salir de WordPress.com</string>
 	<string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
 	<string name="me_connect_to_wordpress_com">Acceder a WordPress.com</string>
 	<string name="account_settings">Configuración de la cuenta</string>
@@ -695,13 +692,11 @@ Language: es_VE
 	<string name="stats_followers_days">%1$d días</string>
 	<string name="stats_followers_years">%1$d años</string>
 	<string name="ssl_certificate_details">Detalles</string>
-	<string name="media_gallery_date_range">Mostrando elementos multimedia desde %1$s a %2$s</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
 	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
-	<string name="sure_to_remove_account">¿Deseas eliminar este sitio?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="nux_help_description">Visita el centro de ayuda para obtener respuestas a las preguntas habituales o visita los foros para hacer preguntas nuevas.</string>
 	<string name="reader_label_view_original">Ver artículo original</string>
@@ -929,7 +924,6 @@ Language: es_VE
 	<string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
-	<string name="reader_share_link">Compartir enlace</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
 	<string name="required_field">Campo obligatorio</string>
 	<string name="email_hint">Correo electrónico</string>
@@ -978,7 +972,6 @@ Language: es_VE
 	<string name="signing_in">Accediendo...</string>
 	<string name="nux_oops_not_selfhosted_blog">Accede a WordPress.com</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
-	<string name="media_add_new_media_gallery">Crear galería</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
@@ -1091,7 +1084,6 @@ Language: es_VE
 	<string name="page">Página</string>
 	<string name="post">Entrada</string>
 	<string name="blogusername">Usuario del blog</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Subir y enlazar a la imagen escalada</string>
 	<string name="scaled_image">Ancho de la imagen en escala</string>
 	<string name="scheduled">Programado</string>

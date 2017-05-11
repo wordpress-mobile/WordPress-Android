@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-21 09:01:14+0000
+Translation-Revision-Date: 2017-05-01 23:08:27+0000
 Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
 Generator: GlotPress/2.4.0-alpha
 Language: is
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">Endursenda tölvupóst</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Við sendum tölvupóst á %s þegar þú skráðir þig fyrst. Opnaðu vinsamlegast skilaboðin og smelltu á bláa hnappinn til þess að virkja birtingu.</string>
+	<string name="editor_confirm_email_prompt_message">Við sendum þér tölvupóst þegar þú skráðir þig fyrst. Opnaðu vinsamlegast skilaboðin og smelltu á bláa hnappinn til þess að virkja birtingar.</string>
+	<string name="editor_confirm_email_prompt_title">Vinsamlega staðfestu netfangið þitt.</string>
+	<string name="toast_verification_email_send_error">Villa við að senda staðfestingarpóst. Ertu nú þegar staðfest(ur)?</string>
+	<string name="toast_verification_email_sent">Staðfestingartölvupóstur sendur, skoðaðu innhólfið þitt</string>
+	<string name="toast_saving_post_as_draft">Vista færslu sem drög</string>
+	<string name="photo_picker_capture_video">Taka upp myndband</string>
+	<string name="photo_picker_capture_photo">Taka mynd</string>
+	<string name="photo_picker_choose_video">Velja myndband</string>
+	<string name="photo_picker_choose_photo">Veldu mynd</string>
+	<string name="delete_site_warning_subtitle">Farðu varlega! Þegar vef hefur verið eytt verður ekki hægt að endurvekja hann. Vertu viss um að þú viljir halda áfram.</string>
+	<string name="delete_site_warning">Öllum færslum, myndum og gögnum verður eytt. Veffang þessa vefs (%s) tapast.</string>
+	<string name="delete_site_warning_title">Eyða vef?</string>
+	<string name="start_over_email_intent_error">Gat ekki sent tölvupóst</string>
+	<string name="start_over_email_body">Ég vil byrja upp á nýtt með vefinn %s</string>
+	<string name="start_over_email_subject">Byrja upp á nýtt með vefinn %s</string>
+	<string name="site_picker_remove_site_error">Villa við að eyða vef, reyndu aftur síðar</string>
+	<string name="editor_post_saved_locally_unfinished_media">Færslan inniheldur ókláraðar skráarupphleðslur og hefur verið vistuð staðvært</string>
+	<string name="sure_to_remove_account">Fjarlægja þennan vef úr appinu?</string>
 	<string name="photo_picker_title">Veldu mynd</string>
 	<string name="error_publish_no_network">Tæki er ónettengt. Breytingar vistaðar staðbundið.</string>
 	<string name="editor_post_saved_online_not_published">Færslan var vistuð á netinu sem drög. Hugleiddu hvort þú viljir birta hana.</string>
@@ -63,8 +83,8 @@ Language: is
 	<string name="xmlrpc_endpoint_forbidden_error">Gat ekki tengst. Við fengum 403 villu þegar við reyndum að tengjast\n       XMLRPC endapunkti vefsins þíns. Forritið þarfnast hans til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess\n        að leysa úr þessu vandamáli.</string>
 	<string name="xmlrpc_post_blocked_error">Gat ekki tengst. Vefþjónninn þinn lokar á POST fyrirspurnir og forritið þarfnast þeirra\n        til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess að leysa úr þessu vandamáli.</string>
 	<string name="reader_liked_default_tag">Færslur sem mér líkar við</string>
-	<string name="reader_discover_default_tag">Uppgötva</string>
 	<string name="reader_followed_default_tag">Vefir sem ég fylgi</string>
+	<string name="reader_discover_default_tag">Uppgötva</string>
 	<string name="reader_empty_followed_blogs_search_title">Engir vefir fundust</string>
 	<string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
 	<string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
@@ -178,7 +198,6 @@ Language: is
 	<string name="image_caption">Myndatexti</string>
 	<string name="image_settings_save_toast">Breytingar vistaðar</string>
 	<string name="image_settings_dismiss_dialog_title">Hætta við óvistaðar breytingar?</string>
-	<string name="stop_upload_button">Hætta upphleðslu</string>
 	<string name="stop_upload_dialog_title">Hætta upphleðslu?</string>
 	<string name="alert_error_adding_media">Villa kom upp við að fella inn skrá</string>
 	<string name="alert_action_while_uploading">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
@@ -272,7 +291,6 @@ Language: is
 	<string name="delete_site_progress">Eyði vef...</string>
 	<string name="delete_site_hint">Eyða vef</string>
 	<string name="delete_site_summary">Það verður ekki mögulegt að afturkalla þessa aðgerð. Þegar vefnum þínum er eytt verður allt efni, þátttakendur og lén fjarlægð úr vefnum.</string>
-	<string name="are_you_sure">Ertu viss?</string>
 	<string name="export_site_hint">Flytja vefinn þinn út sem XML skrá</string>
 	<string name="export_site_summary">Ef þú ert viss, athugaðu það að gefa þér tíma í að flytja út allt efnið þitt núna. Það verður ekki hægt að bjarga því í framtíðinni.</string>
 	<string name="keep_your_content">Halda efninu þínu</string>
@@ -646,7 +664,7 @@ Language: is
 	<string name="stats_insights">Innsýn</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Til þess að skoða tölfræðina þína skráðu þig inn í WordPress.com reikninginn sem þú notaðir til þess að tengja Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Ertu að leita að annarri nýlegri tölfræði? Við færðum hana yfir á síðuna innsýn.</string>
-	<string name="me_disconnect_from_wordpress_com">Skrá út úr WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Útskráning frá WordPress.com</string>
 	<string name="me_btn_login_logout">Innskrá/útskrá</string>
 	<string name="me_connect_to_wordpress_com">WordPress.com innskráning</string>
 	<string name="site_picker_cant_hide_current_site">"%s" var ekki falið þar sem það er núverandi vefur</string>
@@ -775,8 +793,6 @@ Language: is
 	<string name="stats_for">Tölfræði fyrir %s</string>
 	<string name="themes_fetching">Sæki þemu...</string>
 	<string name="ssl_certificate_details">Upplýsingar</string>
-	<string name="sure_to_remove_account">Fjarlægja þennan vef?</string>
-	<string name="media_gallery_date_range">Birti skrá frá %1$s til %2$s</string>
 	<string name="cab_selected">%d valið</string>
 	<string name="confirm_delete_media">Eyða völdu atriði?</string>
 	<string name="confirm_delete_multi_media">Eyða völdum atriðum?</string>
@@ -933,7 +949,6 @@ Language: is
 	<string name="required_field">Nauðsynlegir reitir</string>
 	<string name="reader_toast_err_remove_tag">Gat ekki fjarlægt þetta merki</string>
 	<string name="reader_toast_err_add_tag">Gat ekki bætt þessu merki við</string>
-	<string name="reader_share_link">Deila tengli</string>
 	<string name="reader_title_applog">Atburðarskrá forrits</string>
 	<string name="jetpack_message_not_admin">Jetpack viðbótin er nauðsynleg. Hafðu samband við vefstjóra.</string>
 	<string name="fatal_db_error">Villa kom upp við að stofna gagnagrunn smáforrits. Reyndu að setja smáforritið aftur upp.</string>
@@ -1083,7 +1098,6 @@ Language: is
 	<string name="jetpack_not_found">Jetpack viðbót finnst ekki</string>
 	<string name="select_from_media_library">Veldu úr skráarsafni</string>
 	<string name="empty_list_default">Þessi listi er tómur</string>
-	<string name="media_add_new_media_gallery">Búa til myndasafn</string>
 	<string name="media_add_popup_title">Bæta í skráarsafn</string>
 	<string name="passcode_turn_on">Kveikja á PIN læsingu</string>
 	<string name="passcode_turn_off">Slökkva á PIN læsingu</string>
@@ -1171,7 +1185,6 @@ Language: is
 	<string name="no_network_title">Ekkert net tiltækt</string>
 	<string name="featured_in_post">Hafa mynd með í efni færslu</string>
 	<string name="featured">Nota sem einkennismynd</string>
-	<string name="ok">Í lagi</string>
 	<string name="blogusername">bloggnotandanafn</string>
 	<string name="scaled_image">Breidd minnkaðrar myndar</string>
 	<string name="upload_scaled_image">Hlaða upp og tengja við minnkaða mynd</string>

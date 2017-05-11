@@ -27,26 +27,16 @@ import javax.inject.Inject;
 public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
-    private static String ARG_FOOTER = "footer";
     private static String ARG_IMAGE = "image";
     private static String ARG_NUMBER_OF_BUTTONS = "number-of-buttons";
     private static String ARG_FIRST_BUTTON_LABEL = "first-btn-label";
     private static String ARG_SECOND_BUTTON_LABEL = "second-btn-label";
     private static String ARG_THIRD_BUTTON_LABEL = "third-btn-label";
-    private static String ARG_FIRST_BUTTON_ACTION = "first-btn-action";
     private static String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
     private static String ARG_THIRD_BUTTON_ACTION = "third-btn-action";
-    private static String ARG_TELL_ME_MORE_BUTTON_ACTION = "tell-me-more-btn-action";
     private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID = "tell-me-more-btn-param-name-faq-id";
     private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID = "tell-me-more-btn-param-name-section-id";
     public static String ARG_OPEN_URL_PARAM = "open-url-param";
-
-    private ImageView mImageView;
-    private WPTextView mTitleTextView;
-    private WPTextView mDescriptionTextView;
-    private WPTextView mFooterBottomButton;
-    private WPTextView mFooterCenterButton;
-    private WPTextView mFooterTopButton;
 
     public static final int ACTION_FINISH = 1;
     public static final int ACTION_OPEN_URL = 2;
@@ -68,7 +58,7 @@ public class SignInDialogFragment extends DialogFragment {
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
-        return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0, 0, "", "");
+        return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0, "", "");
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
@@ -76,16 +66,14 @@ public class SignInDialogFragment extends DialogFragment {
                                                    String thirdButtonLabel, int secondButtonAction,
                                                    int thirdButtonAction) {
         return newInstance(title, message, imageSource, numberOfButtons, firstButtonLabel, secondButtonLabel,
-                thirdButtonLabel, 0, secondButtonAction, thirdButtonAction, "", "");
+                thirdButtonLabel, secondButtonAction, thirdButtonAction, "", "");
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
-                                                String firstButtonLabel, String secondButtonLabel,
-                                                String thirdButtonLabel, int firstButtonAction,
-                                                   int secondButtonAction,
-                                                   int thirdButtonAction,
-                                                   String tellMeMoreButtonFaqId,
-                                                   String tellMeMoreButtonSectionId) {
+                                                   String firstButtonLabel, String secondButtonLabel,
+                                                   String thirdButtonLabel,
+                                                   int secondButtonAction, int thirdButtonAction,
+                                                   String tellMeMoreButtonFaqId, String tellMeMoreButtonSectionId) {
         SignInDialogFragment adf = new SignInDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
@@ -95,7 +83,6 @@ public class SignInDialogFragment extends DialogFragment {
         bundle.putString(ARG_FIRST_BUTTON_LABEL, firstButtonLabel);
         bundle.putString(ARG_SECOND_BUTTON_LABEL, secondButtonLabel);
         bundle.putString(ARG_THIRD_BUTTON_LABEL, thirdButtonLabel);
-        bundle.putInt(ARG_FIRST_BUTTON_ACTION, firstButtonAction);
         bundle.putInt(ARG_SECOND_BUTTON_ACTION, secondButtonAction);
         bundle.putInt(ARG_THIRD_BUTTON_ACTION, thirdButtonAction);
         bundle.putString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID, tellMeMoreButtonFaqId);
@@ -109,20 +96,22 @@ public class SignInDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.nux_alert_bg));
+        if (getDialog().getWindow() != null) {
+            getDialog().getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.nux_alert_bg));
+        }
         View v = inflater.inflate(R.layout.signin_dialog_fragment, container, false);
 
-        mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
-        mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
-        mDescriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
-        mFooterBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_first_button);
-        mFooterTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_third_button);
-        mFooterCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_second_button);
+        ImageView imageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
+        WPTextView titleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
+        WPTextView descriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
+        WPTextView footerBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_first_button);
+        WPTextView footerTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_third_button);
+        WPTextView footerCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_second_button);
         final Bundle arguments = getArguments();
 
-        mTitleTextView.setText(arguments.getString(ARG_TITLE));
-        mDescriptionTextView.setText(arguments.getString(ARG_DESCRIPTION));
-        mImageView.setImageResource(arguments.getInt(ARG_IMAGE));
+        titleTextView.setText(arguments.getString(ARG_TITLE));
+        descriptionTextView.setText(arguments.getString(ARG_DESCRIPTION));
+        imageView.setImageResource(arguments.getInt(ARG_IMAGE));
 
         View.OnClickListener clickListenerDismiss = new View.OnClickListener() {
             @Override
@@ -148,29 +137,29 @@ public class SignInDialogFragment extends DialogFragment {
         switch (arguments.getInt(ARG_NUMBER_OF_BUTTONS, 1)) {
             case 1:
                 // One button: we keep only the centered button
-                mFooterCenterButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
-                mFooterCenterButton.setOnClickListener(clickListenerDismiss);
-                mFooterBottomButton.setVisibility(View.GONE);
-                mFooterTopButton.setVisibility(View.GONE);
+                footerCenterButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                footerCenterButton.setOnClickListener(clickListenerDismiss);
+                footerBottomButton.setVisibility(View.GONE);
+                footerTopButton.setVisibility(View.GONE);
                 break;
             case 2:
                 // Two buttons: we keep only the left and right buttons
-                mFooterBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
-                mFooterTopButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
-                mFooterCenterButton.setVisibility(View.GONE);
-                mFooterTopButton.setOnClickListener(clickListenerSecondButton);
+                footerBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                footerTopButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
+                footerCenterButton.setVisibility(View.GONE);
+                footerTopButton.setOnClickListener(clickListenerSecondButton);
                 break;
             case 3:
-                mFooterBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
-                mFooterCenterButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
-                mFooterCenterButton.setOnClickListener(clickListenerSecondButton);
-                mFooterTopButton.setText(arguments.getString(ARG_THIRD_BUTTON_LABEL));
-                mFooterTopButton.setOnClickListener(clickListenerThirdButton);
+                footerBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                footerCenterButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
+                footerCenterButton.setOnClickListener(clickListenerSecondButton);
+                footerTopButton.setText(arguments.getString(ARG_THIRD_BUTTON_LABEL));
+                footerTopButton.setOnClickListener(clickListenerThirdButton);
                 break;
         }
         v.setClickable(true);
         v.setOnClickListener(clickListenerDismiss);
-        mFooterBottomButton.setOnClickListener(clickListenerDismiss);
+        footerBottomButton.setOnClickListener(clickListenerDismiss);
 
         return v;
     }
@@ -202,12 +191,12 @@ public class SignInDialogFragment extends DialogFragment {
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_FAQ_PAGE:
-                String faqid = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID);
-                String sectionid = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID);
-                if (faqid != null) {
-                    Support.showSingleFAQ(getActivity(), faqid);
-                } else if (sectionid != null) {
-                    Support.showFAQSection(getActivity(), sectionid);
+                String faqId = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID);
+                String sectionId = arguments.getString(ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID);
+                if (faqId != null) {
+                    Support.showSingleFAQ(getActivity(), faqId);
+                } else if (sectionId != null) {
+                    Support.showFAQSection(getActivity(), sectionId);
                 }
                 break;
             default:

@@ -634,10 +634,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         sortLanguages();
 
-        boolean isAccessibleViaWPComAPI = SiteUtils.isAccessibleViaWPComAPI(mSite);
+        boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
-        if (!isAccessibleViaWPComAPI) {
+        if (!isAccessedViaWPComRest) {
             // self-hosted, non-jetpack site
             removeNonSelfHostedPreferences();
         } else if (mSite.isJetpackConnected()) {
@@ -649,8 +649,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide Admin options depending of capabilities on this site
-        if ((!isAccessibleViaWPComAPI && !mSite.isSelfHostedAdmin())
-            || (isAccessibleViaWPComAPI && !mSite.getHasCapabilityManageOptions())) {
+        if ((!isAccessedViaWPComRest && !mSite.isSelfHostedAdmin())
+            || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
 

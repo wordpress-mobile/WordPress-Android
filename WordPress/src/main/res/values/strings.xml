@@ -970,10 +970,8 @@
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
     <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
     <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
-    <string name="new_editor_promo_button_label">Great, thanks!</string>
-    <string name="new_editor_promo_title">Brand new editor</string>
-    <string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual
-    editor. Try it out by creating a new post.</string>
+    <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post.</string>
+    <string name="new_editor_promo_title">New editor</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
@@ -1180,11 +1178,6 @@
     <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
-
-    <!-- Default tags -->
-    <string name="reader_discover_default_tag">Discover</string>
-    <string name="reader_followed_default_tag">Followed Sites</string>
-    <string name="reader_liked_default_tag">Posts I Like</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>
