@@ -167,6 +167,7 @@ public class PostUploadService extends Service {
         }
 
         uploadNextPost();
+        showNotificationsForPendingMediaPosts();
         // We want this service to continue running until it is explicitly stopped, so return sticky.
         return START_STICKY;
     }
@@ -212,6 +213,20 @@ public class PostUploadService extends Service {
         }
         AppLog.d(T.POSTS, "All posts queued for upload have pending media");
         return null;
+    }
+
+    private void showNotificationsForPendingMediaPosts() {
+        for (PostModel postModel : mPostsList) {
+            if (MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
+                if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
+                    String postTitle = TextUtils.isEmpty(postModel.getTitle()) ? getString(R.string.untitled)
+                            : postModel.getTitle();
+                    String uploadingPostTitle = String.format(getString(R.string.posting_post), postTitle);
+                    String uploadingPostMessage = mContext.getString(R.string.uploading_post_media);
+                    mPostUploadNotifier.updateNotificationNewPost(postModel, uploadingPostTitle, uploadingPostMessage);
+                }
+            }
+        }
     }
 
     /**

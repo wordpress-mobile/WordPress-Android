@@ -391,6 +391,7 @@
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
+    <string name="uploading_post_media">Uploading media…</string>
 
     <!-- new account view -->
     <string name="signing_in">Logging in…</string>
