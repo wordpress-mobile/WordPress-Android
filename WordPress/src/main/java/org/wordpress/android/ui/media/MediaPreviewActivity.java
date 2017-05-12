@@ -290,7 +290,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         mnuEdit.setVisible(mShowEditMenuItem);
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
-        mnuSave.setVisible(mMediaId != 0 && !mIsVideo && !mSite.isPrivate());
+        mnuSave.setVisible(mMediaId != 0 && !mSite.isPrivate());
         mnuSave.setEnabled(mDownloadId == 0);
 
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
@@ -595,20 +595,18 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(mDownloadId);
-                int reason = DownloadManager.STATUS_SUCCESSFUL;
                 Cursor cursor = dm.query(query);
+                int reason = 0;
                 if (cursor.moveToFirst()) {
                     reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
                 }
-                if (reason == DownloadManager.STATUS_SUCCESSFUL) {
-                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.media_saved_to_device);
-                    mDownloadId = 0;
-                    invalidateOptionsMenu();
-                } else if (reason == DownloadManager.STATUS_FAILED) {
+                if (reason == DownloadManager.STATUS_FAILED) {
                     ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
-                    mDownloadId = 0;
-                    invalidateOptionsMenu();
+                } else {
+                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.media_saved_to_device);
                 }
+                mDownloadId = 0;
+                invalidateOptionsMenu();
             }
         }
     };
