@@ -585,14 +585,17 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
     }
 
+    /*
+     * receives download completion broadcasts from the DownloadManager
+     */
     private final BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             long thisId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if (thisId == mDownloadId) {
-                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 DownloadManager.Query query = new DownloadManager.Query();
                 query.setFilterById(mDownloadId);
+                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 Cursor cursor = dm.query(query);
                 int reason = 0;
                 if (cursor.moveToFirst()) {
@@ -609,6 +612,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
     };
 
+    /*
+     * saves the media to the local device using the Android DownloadManager
+     */
     private void saveMedia() {
         // must request permissions even though they're already defined in the manifest
         String[] permissionList = {
