@@ -127,36 +127,38 @@ public class MediaEditFragment extends Fragment {
     public void loadMedia() {
         if (isAdded()) {
             MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
-            refreshViews(media);
-        }
-    }
-
-    public void saveChanges() {
-        MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
-        if (media != null && isAdded()) {
-            boolean isDirty = !StringUtils.equals(media.getTitle(), mTitleView.getText().toString())
-                    || !StringUtils.equals(media.getCaption(), mCaptionView.getText().toString())
-                    || !StringUtils.equals(media.getDescription(), mDescriptionView.getText().toString());
-            if (isDirty) {
-                AppLog.d(AppLog.T.MEDIA, "MediaEditFragment > Saving changes");
-                media.setTitle(mTitleView.getText().toString());
-                media.setDescription(mDescriptionView.getText().toString());
-                media.setCaption(mCaptionView.getText().toString());
-                mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, media)));
+            if (media != null) {
+                mTitleView.setText(media.getTitle());
+                mTitleView.requestFocus();
+                mTitleView.setSelection(mTitleView.getText().length());
+                mCaptionView.setText(media.getCaption());
+                mDescriptionView.setText(media.getDescription());
             }
         }
     }
 
-    private void refreshViews(MediaModel mediaModel) {
-        if (mediaModel == null || !isAdded()) {
+    public void saveChanges() {
+        if (!isAdded()) {
             return;
         }
 
-        mTitleView.setText(mediaModel.getTitle());
-        mTitleView.requestFocus();
-        mTitleView.setSelection(mTitleView.getText().length());
-        mCaptionView.setText(mediaModel.getCaption());
-        mDescriptionView.setText(mediaModel.getDescription());
+        MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
+        if (media == null) {
+            AppLog.w(AppLog.T.MEDIA, "MediaEditFragment > Cannot save null media");
+            ToastUtils.showToast(getActivity(), R.string.media_edit_failure);
+            return;
+        }
+
+        boolean isDirty = !StringUtils.equals(media.getTitle(), mTitleView.getText().toString())
+                || !StringUtils.equals(media.getCaption(), mCaptionView.getText().toString())
+                || !StringUtils.equals(media.getDescription(), mDescriptionView.getText().toString());
+        if (isDirty) {
+            AppLog.d(AppLog.T.MEDIA, "MediaEditFragment > Saving changes");
+            media.setTitle(mTitleView.getText().toString());
+            media.setDescription(mDescriptionView.getText().toString());
+            media.setCaption(mCaptionView.getText().toString());
+            mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, media)));
+        }
     }
 
     @SuppressWarnings("unused")
