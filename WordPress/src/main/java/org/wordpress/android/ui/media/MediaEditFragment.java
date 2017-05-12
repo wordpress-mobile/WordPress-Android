@@ -43,10 +43,6 @@ public class MediaEditFragment extends Fragment {
     private EditText mCaptionView;
     private EditText mDescriptionView;
 
-    private String mTitleOriginal;
-    private String mDescriptionOriginal;
-    private String mCaptionOriginal;
-
     private int mLocalMediaId;
     private SiteModel mSite;
 
@@ -164,10 +160,6 @@ public class MediaEditFragment extends Fragment {
         mTitleView.setEnabled(!isLocal);
         mCaptionView.setEnabled(!isLocal);
         mDescriptionView.setEnabled(!isLocal);
-
-        mTitleOriginal = mediaModel.getTitle();
-        mCaptionOriginal = mediaModel.getCaption();
-        mDescriptionOriginal = mediaModel.getDescription();
 
         mTitleView.setText(mediaModel.getTitle());
         mTitleView.requestFocus();
