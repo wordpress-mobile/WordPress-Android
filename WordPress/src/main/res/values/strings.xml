@@ -1694,4 +1694,10 @@
     <!-- smart toasts -->
     <string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
     <string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
+
+    <!-- Login -->
+    <string name="log_in">Log In</string>
+    <string name="create_wordpress_site">Create WordPress site</string>
+
+    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
 </resources>
