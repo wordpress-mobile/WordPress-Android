@@ -698,7 +698,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void queueFileForUpload(Uri uri, String mimeType) {
         // It is a regular local media file
-        String path = getRealPathFromURI(uri);
+        String path = MediaUtils.getRealPathFromURI(this,uri);
 
         if (path == null || path.equals("")) {
             Toast.makeText(this, "Error opening file", Toast.LENGTH_SHORT).show();
@@ -784,18 +784,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
             startService(intent);
         }
-    }
-
-    private String getRealPathFromURI(Uri uri) {
-        String path;
-        if ("content".equals(uri.getScheme())) {
-            path = MediaUtils.getPath(this, uri);
-        } else if ("file".equals(uri.getScheme())) {
-            path = uri.getPath();
-        } else {
-            path = uri.toString();
-        }
-        return path;
     }
 
     private void updateViews() {

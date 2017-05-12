@@ -74,7 +74,6 @@ Language: ar
 	<string name="image_width">العرض</string>
 	<string name="image_settings_dismiss_dialog_title">تجاهل التغييرات الغير محفوظة؟</string>
 	<string name="stop_upload_dialog_title">إيقاف الرفع؟</string>
-	<string name="stop_upload_button">إيقاف الرفع</string>
 	<string name="alert_error_adding_media">خطأ ما قد حدث أثناء إدراج الوسائط</string>
 	<string name="alert_action_while_uploading">أنت تقوم برفع وسائط حاليًا. يرجى الانتظار حتى يكتمل هذا.</string>
 	<string name="alert_insert_image_html_mode">لا يمكن إدراج الوسائط مباشرة في وضع HTML. يرجى التبديل إلى الوضع المرئي.</string>
@@ -166,7 +165,6 @@ Language: ar
 	<string name="delete_site_summary">يتعذر التراجع عن هذا الإجراء. سيؤدي حذف موقعك إلى إزالة جميع المحتويات والمساهمين والنطاقات من الموقع.</string>
 	<string name="delete_site_hint">حذف الموقع</string>
 	<string name="export_site_hint">تصدير موقعك إلى ملف XML</string>
-	<string name="are_you_sure">هل أنت متأكد؟</string>
 	<string name="export_site_summary">إذا كنت متأكدًا، فاستغرق وقتًا، من فضلك، وقم بتصدير المحتوى الآن. سيتعذر استرداده في المستقبل.</string>
 	<string name="keep_your_content">الاحتفاظ بالمحتويات</string>
 	<string name="domain_removal_hint">النطاقات التي لن تعمل بمجرد إزالة موقعك</string>
@@ -658,14 +656,12 @@ Language: ar
 	<string name="stats_for">إحصاءات %s</string>
 	<string name="themes_fetching">جارٍ إحضار القوالب…</string>
 	<string name="ssl_certificate_details">تفاصيل</string>
-	<string name="sure_to_remove_account">هل ترغب في إزالة هذا الموقع؟</string>
 	<string name="delete_sure_post">حذف هذه المقالة</string>
 	<string name="delete_sure">حذف هذه المسودة</string>
 	<string name="delete_sure_page">حذف هذه الصفحة</string>
 	<string name="confirm_delete_media">هل تريد حذف العنصر المحدد؟</string>
 	<string name="confirm_delete_multi_media">هل تريد حذف العناصر المحددة؟</string>
 	<string name="cab_selected">تم تحديد %d</string>
-	<string name="media_gallery_date_range">عرض الوسائط من %1$s إلى %2$s</string>
 	<string name="reader_empty_posts_liked">لم تُعجب بأي مقالات</string>
 	<string name="faq_button">الأسئلة المتكررّة</string>
 	<string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
@@ -872,7 +868,6 @@ Language: ar
 	<string name="category_desc">وصف التصنيف ( اختياري )</string>
 	<string name="category_parent">التصنيف الأصل ( اختياري )</string>
 	<string name="file_error_create">تعذر إنشاء ملف مؤقت لرفع الوسائط. تأكد من وجود مساحة حرة كافية على الجهاز.</string>
-	<string name="reader_share_link">مشاركة رابط</string>
 	<string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الوسم</string>
 	<string name="reader_toast_err_remove_tag">غير قادر على حذف هذا الوسم</string>
 	<string name="site_address">عنوانك المستضاف ذاتيًا ( URL )</string>
@@ -944,7 +939,6 @@ Language: ar
 	<string name="reader_likes_only_you">انت معجب بهذا</string>
 	<string name="reader_btn_share">مشاركة</string>
 	<string name="reader_untitled_post">( بدون اسم )</string>
-	<string name="media_add_new_media_gallery">انشاء معرض</string>
 	<string name="create_account_wpcom">إنشاء حساب على ووردبريس.كوم</string>
 	<string name="reader_empty_followed_tags">لا تتابع أي وسوم</string>
 	<string name="reader_btn_follow">تابع</string>
@@ -1048,7 +1042,6 @@ Language: ar
 	<string name="featured">استخدام كصورة بارزة</string>
 	<string name="featured_in_post">إدراج الصورة في محتوى المقالة</string>
 	<string name="blogusername">blogusername</string>
-	<string name="ok">موافق</string>
 	<string name="scaled_image">تحجيم عرض الصورة</string>
 	<string name="upload_scaled_image">الرفع والربط بالصورة المحجمة</string>
 	<string name="scheduled">مجدول</string>

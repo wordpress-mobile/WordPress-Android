@@ -201,13 +201,11 @@ Language: sr_RS
 	<string name="stats_comments_total_comments_followers">Укупан број чланака са пратиоцима коментара: %1$s</string>
 	<string name="ssl_certificate_details">Детаљи</string>
 	<string name="delete_sure_page">Обриши ову страну</string>
-	<string name="media_gallery_date_range">Приказ медија од %1$s до %2$s</string>
 	<string name="cab_selected">%d изабрано</string>
 	<string name="confirm_delete_media">Обрисати изабрану ставку?</string>
 	<string name="confirm_delete_multi_media">Обрисати изабране ставке?</string>
 	<string name="delete_sure">Обриши овај нацрт</string>
 	<string name="delete_sure_post">Обриши овај чланак</string>
-	<string name="sure_to_remove_account">Уклонити ово веб место?</string>
 	<string name="browse_our_faq_button">Прегледајте наша ЧПП</string>
 	<string name="agree_terms_of_service">Прављењем налога прихватате фасцинантне %1$sУслове сервиса%2$s</string>
 	<string name="faq_button">ЧПП</string>
@@ -375,7 +373,6 @@ Language: sr_RS
 	<string name="required_field">Неопходно поље</string>
 	<string name="reader_toast_err_remove_tag">Није могуће уклонити ову ознаку</string>
 	<string name="reader_toast_err_add_tag">Није могуће додати ову ознаку</string>
-	<string name="reader_share_link">Подели везу</string>
 	<string name="wordpress_blog">Вордпрес блог</string>
 	<string name="error_blog_hidden">Овај блог је сакривен и не може се учитати. У подешавањима поново омогућите да буде видљив и пробајте поново.</string>
 	<string name="add_account_blog_url">Адреса блога</string>
@@ -477,7 +474,6 @@ Language: sr_RS
 	<string name="reader_empty_followed_tags">Не пратите ниједну ознаку</string>
 	<string name="limit_reached">Ограничење достигнуто. Пробајте поново за 1 минут. Покушавање пре тога ће само повећати време које ћете морати да сачекате пре него што забрана истекне. Уколико мислите да је ово грешка, контактирајте службу за подршку.</string>
 	<string name="empty_list_default">Овај списак је празан</string>
-	<string name="media_add_new_media_gallery">Направи галерију</string>
 	<string name="nux_tutorial_get_started_title">Почните!</string>
 	<string name="username_invalid">Неисправно корисничко име</string>
 	<string name="create_account_wpcom">Направите налог на WordPress.com</string>
@@ -583,7 +579,6 @@ Language: sr_RS
 	<string name="pages">Стране</string>
 	<string name="page">Страна</string>
 	<string name="blogusername">korisnickoimebloga</string>
-	<string name="ok">У реду</string>
 	<string name="scaled_image">Ширина сразмерне слике</string>
 	<string name="upload_scaled_image">Отпреми и повежи са сразмерном сликом</string>
 	<string name="scheduled">Заказано</string>

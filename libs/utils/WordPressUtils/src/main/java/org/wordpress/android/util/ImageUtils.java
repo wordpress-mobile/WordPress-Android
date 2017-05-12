@@ -719,4 +719,92 @@ public class ImageUtils {
         maximumThumbnailWidthForEditor -= padding;
         return maximumThumbnailWidthForEditor;
     }
+
+    /**
+     * Given the path to an image, rotate it by using EXIF info
+     * @param context the passed context
+     * @param path the path to the original image
+     * @return the path to the rotated image or null
+     */
+    public static String rotateImageIfNecessary(Context context, String path) {
+        if (context == null || TextUtils.isEmpty(path)) {
+            return null;
+        }
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        if (mimeType.equals("image/gif")) {
+            // Don't rotate gifs to maintain their quality
+            return null;
+        }
+
+        Uri srcImageUri = Uri.parse(path);
+        if (srcImageUri == null) {
+            return null;
+        }
+
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+
+        int selectedWidth = getImageSize(srcImageUri, context)[0];
+        if (selectedWidth == 0) {
+            // Can't read the src dimensions.
+            return null;
+        }
+
+        int orientation = getImageOrientation(context, path);
+        // Do not rotate portrait pictures
+        if (orientation == 0) {
+            return  null;
+        }
+
+        File resizedImageFile;
+        FileOutputStream out;
+
+        try {
+            resizedImageFile = File.createTempFile("wp-image-", "." + fileExtension);
+            out = new FileOutputStream(resizedImageFile);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage.");
+            return null;
+        } catch (SecurityException e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't write the tmp file due to security restrictions.");
+            return null;
+        }
+
+        try {
+            boolean res = resizeImageAndWriteToStream(context, srcImageUri, fileExtension, selectedWidth, orientation, 85, out);
+            if (!res) {
+                AppLog.w(AppLog.T.MEDIA, "Failed to compress the rotates image.");
+                return null;
+            }
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.MEDIA, "Failed to create rotated image.");
+            return null;
+        } catch (OutOfMemoryError e) {
+            AppLog.e(AppLog.T.MEDIA, "Can't rotate the picture due to low memory.");
+            return null;
+        } finally {
+            // close the stream
+            try {
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                //nope
+            }
+        }
+
+        String tempFilePath = resizedImageFile.getPath();
+        if (!TextUtils.isEmpty(tempFilePath)) {
+            return tempFilePath;
+        } else {
+            AppLog.e(AppLog.T.MEDIA, "Failed to create rotated image.");
+        }
+
+        return null;
+    }
 }

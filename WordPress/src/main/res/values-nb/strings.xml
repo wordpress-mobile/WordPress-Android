@@ -161,7 +161,6 @@ Language: nb_NO
 	<string name="comment_status_spam">Useriøst</string>
 	<string name="share_action_post">Nytt innlegg</string>
 	<string name="new_post">Nytt innlegg</string>
-	<string name="reader_share_link">Del lenke</string>
 	<string name="mnu_comment_spam">Useriøs</string>
 	<string name="local_changes">Lokale endringer</string>
 	<string name="hint_comment_content">Kommentar</string>
@@ -223,7 +222,6 @@ Language: nb_NO
 	<string name="nux_tutorial_get_started_title">Kom igang!</string>
 	<string name="username_invalid">Ugyldig brukernavn</string>
 	<string name="create_account_wpcom">Opprett en konto på WordPress.com</string>
-	<string name="media_add_new_media_gallery">Lag nytt galleri</string>
 	<string name="reader_btn_unfollow">Følger</string>
 	<string name="reader_likes_only_you">Du liker dette</string>
 	<string name="reader_empty_followed_tags">Du følger ingen stikkord</string>
@@ -317,7 +315,6 @@ Language: nb_NO
 	<string name="anonymous">Anonym</string>
 	<string name="page">Side</string>
 	<string name="blogusername">brukernavn</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Last og og lenk til det redigerte bildet</string>
 	<string name="scaled_image">Bildebredde</string>
 	<string name="scheduled">Planlagt</string>
