@@ -81,6 +81,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     private long mDownloadId;
     private boolean mIsVideo;
     private boolean mEnableMetadata;
+    private boolean mIsClosable;
 
     private SiteModel mSite;
 
@@ -283,7 +284,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean showEditMenu  = mMediaId != 0 && mSite != null && mEnableMetadata && !hasEditFragment();
+        boolean showEditMenu  = mMediaId != 0 && mSite != null && mEnableMetadata && !mIsClosable;
         boolean showSaveMenu  = mMediaId != 0 && mSite != null && !mSite.isPrivate();
         boolean showShareMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
 
@@ -559,6 +560,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     }
 
     private void setLookClosable(boolean lookClosable) {
+        mIsClosable = lookClosable;
         if (mToolbar != null) {
             mToolbar.setNavigationIcon(lookClosable ? R.drawable.ic_close_white_24dp : R.drawable.ic_arrow_left_white_24dp);
         }
