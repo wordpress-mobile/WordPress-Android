@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MediaUtils;
@@ -48,7 +49,6 @@ public class MediaEditFragment extends Fragment {
 
     private int mLocalMediaId;
     private SiteModel mSite;
-    private MediaModel mMediaModel;
 
     public static MediaEditFragment newInstance(SiteModel site, int localMediaId) {
         MediaEditFragment fragment = new MediaEditFragment();
@@ -132,17 +132,24 @@ public class MediaEditFragment extends Fragment {
 
     public void loadMedia() {
         if (isAdded()) {
-            mMediaModel = mMediaStore.getMediaWithLocalId(mLocalMediaId);
-            refreshViews(mMediaModel);
+            MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
+            refreshViews(media);
         }
     }
 
     public void saveChanges() {
-        if (isAdded() && isDirty() && mMediaModel != null) {
-            mMediaModel.setTitle(mTitleView.getText().toString());
-            mMediaModel.setDescription(mDescriptionView.getText().toString());
-            mMediaModel.setCaption(mCaptionView.getText().toString());
-            mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, mMediaModel)));
+        MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
+        if (media != null && isAdded()) {
+            boolean isDirty = !StringUtils.equals(media.getTitle(), mTitleView.getText().toString())
+                    || !StringUtils.equals(media.getCaption(), mCaptionView.getText().toString())
+                    || !StringUtils.equals(media.getDescription(), mDescriptionView.getText().toString());
+            if (isDirty) {
+                AppLog.d(AppLog.T.MEDIA, "MediaEditFragment > Saving changes");
+                media.setTitle(mTitleView.getText().toString());
+                media.setDescription(mDescriptionView.getText().toString());
+                media.setCaption(mCaptionView.getText().toString());
+                mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, media)));
+            }
         }
     }
 
@@ -167,13 +174,6 @@ public class MediaEditFragment extends Fragment {
         mTitleView.setSelection(mTitleView.getText().length());
         mCaptionView.setText(mediaModel.getCaption());
         mDescriptionView.setText(mediaModel.getDescription());
-    }
-
-    private boolean isDirty() {
-        return mLocalMediaId != MISSING_MEDIA_ID &&
-                (!StringUtils.equals(mTitleOriginal, mTitleView.getText().toString())
-                || !StringUtils.equals(mCaptionOriginal, mCaptionView.getText().toString())
-                || !StringUtils.equals(mDescriptionOriginal, mDescriptionView.getText().toString()));
     }
 
     @SuppressWarnings("unused")
