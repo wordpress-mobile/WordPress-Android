@@ -81,7 +81,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     private long mDownloadId;
     private boolean mIsVideo;
     private boolean mEnableMetadata;
-    private boolean mShowEditMenuItem;
 
     private SiteModel mSite;
 
@@ -213,8 +212,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
-        mShowEditMenuItem = mEnableMetadata && mSite != null && !hasEditFragment;
-
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo(mediaUri);
@@ -273,7 +270,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
 
         setLookClosable(false);
-        showEditMenuItem(true);
+        invalidateOptionsMenu();
 
         super.onBackPressed();
     }
@@ -286,22 +283,21 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean showEditMenu  = mMediaId != 0 && mSite != null && mEnableMetadata && !hasEditFragment();
+        boolean showSaveMenu  = mMediaId != 0 && mSite != null && !mSite.isPrivate();
+        boolean showShareMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
+
         MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
-        mnuEdit.setVisible(mShowEditMenuItem);
+        mnuEdit.setVisible(showEditMenu);
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
-        mnuSave.setVisible(mMediaId != 0 && !mSite.isPrivate());
+        mnuSave.setVisible(showSaveMenu);
         mnuSave.setEnabled(mDownloadId == 0);
 
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
-        mnuShare.setVisible(mMediaId != 0);
+        mnuShare.setVisible(showShareMenu);
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    private void showEditMenuItem(boolean show) {
-        mShowEditMenuItem = show;
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -558,7 +554,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
 
         setLookClosable(true);
-        showEditMenuItem(false);
+        invalidateOptionsMenu();
         fadeOutMetadata();
     }
 
