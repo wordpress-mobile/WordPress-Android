@@ -148,7 +148,7 @@ public class MediaEditFragment extends Fragment {
     }
 
     public void saveChanges() {
-        if (isDirty()) {
+        if (isAdded() && mMediaModel != null && isDirty()) {
             mMediaModel.setTitle(mTitleView.getText().toString());
             mMediaModel.setDescription(mDescriptionView.getText().toString());
             mMediaModel.setCaption(mCaptionView.getText().toString());
