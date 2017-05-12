@@ -46,8 +46,7 @@ public class MediaEditFragment extends Fragment {
     private String mDescriptionOriginal;
     private String mCaptionOriginal;
 
-    private int mLocalMediaId = MISSING_MEDIA_ID;
-
+    private int mLocalMediaId;
     private SiteModel mSite;
     private MediaModel mMediaModel;
 
@@ -65,14 +64,9 @@ public class MediaEditFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-            }
-        } else {
+        if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mLocalMediaId = savedInstanceState.getInt(ARGS_MEDIA_ID);
         }
 
         if (mSite == null) {
@@ -87,6 +81,15 @@ public class MediaEditFragment extends Fragment {
     }
 
     @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+        if (args != null) {
+            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+            mLocalMediaId = args.getInt(ARGS_MEDIA_ID);
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
@@ -98,17 +101,6 @@ public class MediaEditFragment extends Fragment {
         super.onStop();
     }
 
-    private int getLocalMediaId() {
-        if (mLocalMediaId != MISSING_MEDIA_ID) {
-            return mLocalMediaId;
-        } else if (getArguments() != null) {
-            mLocalMediaId = getArguments().getInt(ARGS_MEDIA_ID);
-            return mLocalMediaId;
-        } else {
-            return MISSING_MEDIA_ID;
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.media_edit_fragment, container, false);
@@ -117,7 +109,7 @@ public class MediaEditFragment extends Fragment {
         mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
         mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
 
-        loadMedia(getLocalMediaId());
+        loadMedia(mLocalMediaId);
 
         return view;
     }
@@ -135,20 +127,19 @@ public class MediaEditFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putInt(ARGS_MEDIA_ID, mLocalMediaId);
     }
 
     public void loadMedia(int localMediaId) {
         mLocalMediaId = localMediaId;
-        if (getActivity() != null && mLocalMediaId != MISSING_MEDIA_ID) {
+        if (isAdded()) {
             mMediaModel = mMediaStore.getMediaWithLocalId(mLocalMediaId);
             refreshViews(mMediaModel);
-        } else {
-            refreshViews(null);
         }
     }
 
     public void saveChanges() {
-        if (isDirty()) {
+        if (isAdded() && isDirty() && mMediaModel != null) {
             mMediaModel.setTitle(mTitleView.getText().toString());
             mMediaModel.setDescription(mDescriptionView.getText().toString());
             mMediaModel.setCaption(mCaptionView.getText().toString());
@@ -157,7 +148,7 @@ public class MediaEditFragment extends Fragment {
     }
 
     private void refreshViews(MediaModel mediaModel) {
-        if (mediaModel == null) {
+        if (mediaModel == null || !isAdded()) {
             return;
         }
 
