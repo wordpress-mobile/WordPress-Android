@@ -34,7 +34,6 @@ public class MediaEditFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
     // also appears in the layouts, from the strings.xml
     public static final String TAG = "MediaEditFragment";
-    private static final int MISSING_MEDIA_ID = -1;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
