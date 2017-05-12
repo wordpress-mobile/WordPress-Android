@@ -349,8 +349,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         @Override
         protected Bitmap doInBackground(Void... params) {
+            int orientation = ImageUtils.getImageOrientation(MediaPreviewActivity.this, mMediaUri);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
-                    MediaPreviewActivity.this, Uri.parse(mMediaUri), mSize, null, 0);
+                    MediaPreviewActivity.this, Uri.parse(mMediaUri), mSize, null, orientation);
             if (bytes != null) {
                 return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             }

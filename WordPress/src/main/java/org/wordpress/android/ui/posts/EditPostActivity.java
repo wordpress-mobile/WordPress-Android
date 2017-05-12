@@ -1787,12 +1787,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             uri = optimizedMedia;
             path = MediaUtils.getRealPathFromURI(this, uri);
         } else {
-            // Fix the rotation of the picture see https://github.com/wordpress-mobile/WordPress-Android/issues/5737
-            // TODO: find a better implementation
-            Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
-            if (rotatedMedia != null) {
-                uri = rotatedMedia;
-                path = MediaUtils.getRealPathFromURI(this, uri);
+            // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            if (!mSite.isWPCom()) {
+                // If it's not wpcom we must rotate the picture locally
+                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+                if (rotatedMedia != null) {
+                    uri = rotatedMedia;
+                    path = MediaUtils.getRealPathFromURI(this, uri);
+                }
+            } else {
+                // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
+                // All the other editors read EXIF data
+                if (mShowNewEditor) {
+                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+                    if (rotatedMedia != null) {
+                        // The uri variable should remain the same since wpcom rotates the picture server side
+                        path = MediaUtils.getRealPathFromURI(this, rotatedMedia);
+                    }
+                }
             }
         }
 
