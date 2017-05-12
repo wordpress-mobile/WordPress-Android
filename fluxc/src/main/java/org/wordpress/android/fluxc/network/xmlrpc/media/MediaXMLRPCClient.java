@@ -503,10 +503,29 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             Map metadataMap = (Map) metadataObject;
             media.setWidth(MapUtils.getMapInt(metadataMap, "width"));
             media.setHeight(MapUtils.getMapInt(metadataMap, "height"));
+            media.setFileNameMediumSize(getFileForSize(metadataMap, "medium"));
+            media.setFileNameMediumLargeSize(getFileForSize(metadataMap, "medium_large"));
+            media.setFileNameLargeSize(getFileForSize(metadataMap, "large"));
         }
 
         media.setUploadState(MediaModel.UploadState.UPLOADED.toString());
         return media;
+    }
+
+    private String getFileForSize(Map metadataMap, String size) {
+        if (metadataMap == null) {
+            return null;
+        }
+        Object sizesObject = metadataMap.get("sizes");
+        if (sizesObject instanceof Map) {
+            Map sizesMap = (Map) sizesObject;
+            Object requestedSizeObject = sizesMap.get(size);
+            if (requestedSizeObject instanceof Map) {
+                Map requestedSizeMap = (Map) requestedSizeObject;
+                return MapUtils.getMapStr(requestedSizeMap, "file");
+            }
+        }
+        return null;
     }
 
     private MediaError getMediaErrorFromXMLRPCException(XMLRPCException exception) {
