@@ -607,18 +607,21 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             return;
         }
 
-        File galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         String filename = media.getFileName();
         OutputStream out = null;
-        File file = new File(galleryPath, filename);
+        File file = new File(path, filename);
         try {
             try {
                 if (!file.exists()) {
                     file.createNewFile();
                 }
                 out = new FileOutputStream(file);
-                bmp.compress(Bitmap.CompressFormat.JPEG, 85, out);
-                ToastUtils.showToast(this, R.string.media_saved_to_device);
+                if (bmp.compress(Bitmap.CompressFormat.JPEG, 85, out)) {
+                    ToastUtils.showToast(this, R.string.media_saved_to_device);
+                } else {
+                    ToastUtils.showToast(this, R.string.error_media_save);
+                }
             } catch (IOException e) {
                 AppLog.e(AppLog.T.MEDIA, e);
                 ToastUtils.showToast(this, R.string.error_media_save);
