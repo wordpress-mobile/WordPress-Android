@@ -95,7 +95,6 @@ Language: gl_ES
 	<string name="image_width">Largo</string>
 	<string name="format_bar_description_bold">Grosa</string>
 	<string name="image_settings_dismiss_dialog_title">Descartar os cambios sen gardar?</string>
-	<string name="stop_upload_button">Deter a carga</string>
 	<string name="stop_upload_dialog_title">Suspender a carga?</string>
 	<string name="alert_error_adding_media">Houbo un erro na inserción do ficheiro</string>
 	<string name="alert_action_while_uploading">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
@@ -190,7 +189,6 @@ Language: gl_ES
 	<string name="delete_site_summary">Esta acción non se pode desfacer. Eliminar o sitio implica borrar todos os contidos, colaboradores y dominios do sitio.</string>
 	<string name="delete_site_hint">Eliminar o sitio</string>
 	<string name="export_site_hint">Exportar o sitio a un ficheiro XML</string>
-	<string name="are_you_sure">Estás seguro?</string>
 	<string name="export_site_summary">Se estás seguro, aproveita a ocasión para exportar os teus contidos agora. Máis adiante vai ser imposible recuperalos.</string>
 	<string name="keep_your_content">Garda os teus contidos</string>
 	<string name="domain_removal_hint">Dominios que deixarán de funcionar cando elimines o teu sitio</string>
@@ -563,7 +561,6 @@ Language: gl_ES
 	<string name="stats_insights">Información</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Para ver as estatísticas, inicia sesión na conta de WordPress.com que utilizaches para conectar a Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Estás a buscar outras estatísticas recentes? Trasladámolas á páxina "Información".</string>
-	<string name="me_disconnect_from_wordpress_com">Desconectarse de WordPress.com</string>
 	<string name="me_btn_login_logout">Entrar/Saír</string>
 	<string name="me_connect_to_wordpress_com">Conectarse a WordPress.com</string>
 	<string name="account_settings">Configuración da conta</string>
@@ -695,10 +692,8 @@ Language: gl_ES
 	<string name="delete_sure_post">Eliminar este artigo</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta páxina</string>
-	<string name="media_gallery_date_range">Mostrando ficheiros do %1$s ao %2$s</string>
 	<string name="confirm_delete_multi_media">Borrar os elementos seleccionados?</string>
 	<string name="confirm_delete_media">Borrar o elemento seleccionado?</string>
-	<string name="sure_to_remove_account">Borrar este sitio?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="reader_empty_followed_blogs_title">Non estas a seguir sitio ningún aínda</string>
 	<string name="faq_button">FAQ</string>
@@ -939,7 +934,6 @@ Language: gl_ES
 	<string name="media_gallery_settings_title">Configuración da Galería</string>
 	<string name="media_gallery_image_order">Orde das imaxes</string>
 	<string name="media_gallery_num_columns">Número de columnas</string>
-	<string name="reader_share_link">Enlace para compartir</string>
 	<string name="site_address">Enderezo (URL) do teu sitio autoaloxado</string>
 	<string name="deleting_page">Eliminando a páxina</string>
 	<string name="deleting_post">Eliminando o artigo</string>
@@ -992,7 +986,6 @@ Language: gl_ES
 	<string name="reader_label_removed_tag">%s eliminado</string>
 	<string name="reader_toast_err_comment_failed">Non foi posible enviar o comentario</string>
 	<string name="media_add_popup_title">Engadir á Biblioteca Multimedia</string>
-	<string name="media_add_new_media_gallery">Crear unha Galería</string>
 	<string name="empty_list_default">Esta lista está baleira</string>
 	<string name="reader_likes_one">A unha persoa gustoulle isto</string>
 	<string name="reader_likes_only_you">Gústache isto</string>
@@ -1088,7 +1081,6 @@ Language: gl_ES
 	<string name="featured_in_post">Incluír una imaxe no contido do artigo</string>
 	<string name="no_network_title">Non hai rede dispoñible</string>
 	<string name="blogusername">usuario</string>
-	<string name="ok">Vale</string>
 	<string name="scaled_image">Largo da imaxe escalada</string>
 	<string name="upload_scaled_image">Cargar e ligar á imaxe escalada</string>
 	<string name="scheduled">Programado</string>

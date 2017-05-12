@@ -26,7 +26,6 @@ Language: vi_VN
 	<string name="image_caption">Tiêu đề</string>
 	<string name="image_settings_save_toast">Các thay đổi đã lưu</string>
 	<string name="image_settings_dismiss_dialog_title">Hủy các thay đổi chưa lưu?</string>
-	<string name="stop_upload_button">Ngừng tải lên</string>
 	<string name="stop_upload_dialog_title">Ngừng tải lên?</string>
 	<string name="alert_error_adding_media">Một lỗi đã xảy ra trong khi chèn media</string>
 	<string name="alert_action_while_uploading">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
@@ -119,7 +118,6 @@ Language: vi_VN
 	<string name="delete_site_progress">Đang xóa site...</string>
 	<string name="delete_site_hint">Xóa site</string>
 	<string name="delete_site_summary">Hành động này không thể hoàn nguyên. Xóa site của bạn sẽ loại bỏ tất cả nội dung, người đóng góp, và tên miền từ site.</string>
-	<string name="are_you_sure">Bạn có chắc không?</string>
 	<string name="export_site_hint">Xuất site của bạn sang tập tin XML</string>
 	<string name="export_site_summary">Nếu bạn chắc chắn, hãy chắc chắn để dành thời gian và xuất nội dung của bạn bây giờ. Nó không thể được phục hồi trong tương lai.</string>
 	<string name="keep_your_content">Giữ nội dung của bạn</string>
@@ -493,7 +491,6 @@ Language: vi_VN
 	<string name="stats_insights">Phân tích</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Để xem thống kê của bạn, đăng nhập vào tài khoản WordPress.com bạn dùng để kết nối Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Tìm kiếm Thống kê gần đây khác của bạn ? Chúng tôi đã chuyển chúng tới trang thông tin chi tiết.</string>
-	<string name="me_disconnect_from_wordpress_com">Mất kế nối với WordPress.com</string>
 	<string name="me_btn_login_logout">Đăng nhập/Đăng xuất</string>
 	<string name="me_connect_to_wordpress_com">Kết nối đến Wordpress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" không được ẩn vì đó là trang web hiện tại</string>
@@ -622,8 +619,6 @@ Language: vi_VN
 	<string name="stats_for">Thống kê cho %s</string>
 	<string name="themes_fetching">Đang tìm nạp chủ đề...</string>
 	<string name="ssl_certificate_details">Chi tiết</string>
-	<string name="sure_to_remove_account">Loại bỏ site này?</string>
-	<string name="media_gallery_date_range">Hiển thị media từ %1$s tới %2$s</string>
 	<string name="cab_selected">%d đã chọn</string>
 	<string name="confirm_delete_media">Xóa mục đã chọn?</string>
 	<string name="confirm_delete_multi_media">Xóa các mục đã chọn?</string>
@@ -779,7 +774,6 @@ Language: vi_VN
 	<string name="required_field">Dòng bắt buộc</string>
 	<string name="reader_toast_err_remove_tag">Không thể loại bỏ thẻ này</string>
 	<string name="reader_toast_err_add_tag">Không thể thêm thẻ này</string>
-	<string name="reader_share_link">Chia sẻ liên kết</string>
 	<string name="reader_title_applog">Nhật kí ứng dụng</string>
 	<string name="fatal_db_error">Một lỗi đã xảy ra trong khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
 	<string name="error_blog_hidden">Blog này bị ẩn và không thể tải được. Bật nó lên trong thiết đặt và thử lại.</string>
@@ -928,7 +922,6 @@ Language: vi_VN
 	<string name="jetpack_not_found">Plugin Jetpack không tìm thấy</string>
 	<string name="select_from_media_library">Chọn từ thư viện media</string>
 	<string name="empty_list_default">Danh sách này trống rỗng</string>
-	<string name="media_add_new_media_gallery">Tạo bộ sưu tập</string>
 	<string name="media_add_popup_title">Thêm vào thư viện media</string>
 	<string name="passcode_turn_on">Bật khóa mã PIN</string>
 	<string name="passcode_turn_off">Tắt khóa mã PIN</string>
@@ -1016,7 +1009,6 @@ Language: vi_VN
 	<string name="no_network_title">Không có mạng</string>
 	<string name="featured_in_post">Bao gồm ảnh trong nội dung bài viết</string>
 	<string name="featured">Sử dụng như là hình ảnh đặc trưng</string>
-	<string name="ok">Đồng ý</string>
 	<string name="blogusername">tên người dùng blog</string>
 	<string name="scaled_image">Chiều rộng hình ảnh thu nhỏ</string>
 	<string name="upload_scaled_image">Tải lên và liên kết đến hình ảnh được thu nhỏ</string>

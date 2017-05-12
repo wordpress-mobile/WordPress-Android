@@ -99,7 +99,6 @@ Language: bg
 	<string name="image_caption">Описание</string>
 	<string name="image_settings_dismiss_dialog_title">Отказ от промените?</string>
 	<string name="stop_upload_dialog_title">Спиране на качването?</string>
-	<string name="stop_upload_button">Спиране на качването</string>
 	<string name="alert_error_adding_media">Грешка при добавянето на файла</string>
 	<string name="alert_action_while_uploading">В момента качвате файл. Изчакайте докато процесът приключи.</string>
 	<string name="alert_insert_image_html_mode">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
@@ -193,7 +192,6 @@ Language: bg
 	<string name="delete_site_hint">Изтриване на сайт</string>
 	<string name="delete_site_summary">Това действие е необратимо. При изтриване на вашия сайт, всички домейни, сътрудници и съдържание ще бъдат премахнати.</string>
 	<string name="export_site_hint">Експортиране на вашия сайт в XML файл</string>
-	<string name="are_you_sure">Сигурни ли сте?</string>
 	<string name="export_site_summary">Ако сте сигурни, отделете малко време и направете експорт на съдържанието си, за да го запазите. Няма да можете да го възстановите после.</string>
 	<string name="keep_your_content">Запазете съдържанието си</string>
 	<string name="domain_removal_hint">Домейните, които няма да работят ако премахнете сайта си</string>
@@ -566,7 +564,6 @@ Language: bg
 	<string name="stats_insights">Данни</string>
 	<string name="stats_sign_in_jetpack_different_com_account">За да прегледате статистиката, влезте в профила си в WordPress.com, който използвате за връзка с Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Търсите другите скорошни статистики? Преместихме ги в страницата за проникновения.</string>
-	<string name="me_disconnect_from_wordpress_com">Излизане от WordPress.com</string>
 	<string name="me_btn_login_logout">Вход/Изход</string>
 	<string name="me_connect_to_wordpress_com">Влизане в WordPress.com</string>
 	<string name="account_settings">Настройки на профила</string>
@@ -698,11 +695,9 @@ Language: bg
 	<string name="confirm_delete_multi_media">Изтриване на избраните елементи?</string>
 	<string name="confirm_delete_media">Изтриване на отбелязания елемент?</string>
 	<string name="cab_selected">%d избрани</string>
-	<string name="sure_to_remove_account">Изтриване на този уебсайт?</string>
 	<string name="delete_sure_post">Изтриване на публикацията</string>
 	<string name="delete_sure">Изтриване на черновата</string>
 	<string name="delete_sure_page">Изтриване на страницата</string>
-	<string name="media_gallery_date_range">Показване на файл от %1$s до %2$s</string>
 	<string name="reader_empty_posts_liked">Не сте харесали нито една публикация</string>
 	<string name="error_refresh_unauthorized_pages">Нямате нужните права за да преглеждате или редактирате страници</string>
 	<string name="mnu_comment_liked">Харесано</string>
@@ -935,7 +930,6 @@ Language: bg
 	<string name="privacy_policy">Политика за поверителност</string>
 	<string name="wordpress_blog">Блог от вида WordPress</string>
 	<string name="reader_title_applog">Дневник на приложението</string>
-	<string name="reader_share_link">Споделяне на връзка</string>
 	<string name="reader_toast_err_add_tag">Етикетът не може да бъде добавен</string>
 	<string name="reader_toast_err_remove_tag">Етикетът не може да бъде махнат</string>
 	<string name="email_hint">Електронна поща</string>
@@ -990,7 +984,6 @@ Language: bg
 	<string name="reader_hint_comment_on_comment">Отговор на коментар...</string>
 	<string name="limit_reached">Достигнахте ограничение. Пробвайте отново след 1 минута. Ако пробвате по-скоро от една минута ще увеличите продължителността на ограничението. В случай, че това е грешка, трябва да се свържете с поддръжката.</string>
 	<string name="media_add_popup_title">Добавяне в библиотеката с файлове</string>
-	<string name="media_add_new_media_gallery">Създаване на галерия</string>
 	<string name="empty_list_default">Списъкът е празен</string>
 	<string name="select_from_media_library">Избор от медийната библиотека</string>
 	<string name="reader_btn_share">Споделяне</string>
@@ -1091,7 +1084,6 @@ Language: bg
 	<string name="featured">Задаване като основно изображение на публикацията</string>
 	<string name="featured_in_post">Използване на снимката в съдържанието на публикацията</string>
 	<string name="blogusername">потребителско име</string>
-	<string name="ok">ОК</string>
 	<string name="upload_scaled_image">Качване и свързване с оразмерено изображение</string>
 	<string name="scaled_image">Оразмеряване ширината на изображението</string>
 	<string name="scheduled">Планирана</string>

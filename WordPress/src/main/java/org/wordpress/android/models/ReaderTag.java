@@ -2,8 +2,6 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -11,17 +9,16 @@ import java.io.Serializable;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
+    private static final String TAG_TITLE_DISCOVER = "Discover";
+    public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
+
     private String tagSlug;         // tag for API calls
     private String tagDisplayName;  // tag for display, usually the same as the slug
     private String tagTitle;        // title, used for default tags
     private String endpoint;        // endpoint for updating posts with this tag
-    public final ReaderTagType tagType;
 
-    // these are the default tags, which aren't localized in the /read/menu/ response
-    private static final String TAG_TITLE_LIKED = "Posts I Like";
-    private static final String TAG_TITLE_DISCOVER = "Discover";
-    public  static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
-    public  static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
+    public final ReaderTagType tagType;
 
     public ReaderTag(String slug,
                      String displayName,
@@ -129,18 +126,6 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return endpoint.substring(start, end);
     }
 
-    /*
-     * is the passed string one of the default tags?
-     */
-    public static boolean isDefaultTagTitle(String title) {
-        if (TextUtils.isEmpty(title)) {
-            return false;
-        }
-        return (title.equalsIgnoreCase(TAG_TITLE_FOLLOWED_SITES)
-                || title.equalsIgnoreCase(TAG_TITLE_DISCOVER)
-                || title.equalsIgnoreCase(TAG_TITLE_LIKED));
-    }
-
     public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
         if (tag1 == null || tag2 == null) {
             return false;
@@ -175,19 +160,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
      */
     @Override
     public String getLabel() {
-        if (tagType == ReaderTagType.DEFAULT) {
-            // translate default tags
-            // ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5240
-            if (isDiscover()) {
-                return WordPress.getContext().getString(R.string.reader_discover_default_tag);
-            } else if (isFollowedSites()) {
-                return WordPress.getContext().getString(R.string.reader_followed_default_tag);
-            } else if (isPostsILike()) {
-                return WordPress.getContext().getString(R.string.reader_liked_default_tag);
-            } else {
-                return getTagTitle();
-            }
-        } else if (isTagDisplayNameAlphaNumeric()) {
+        if (isTagDisplayNameAlphaNumeric()) {
             return getTagDisplayName().toLowerCase();
         } else if (hasTagTitle()) {
             return getTagTitle();

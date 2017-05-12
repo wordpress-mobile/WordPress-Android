@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-12 18:13:33+0000
+Translation-Revision-Date: 2017-05-07 12:45:31+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_message_with_email">Enviamos um e-mail para %s quando você se cadastrou. Abra a mensagem e clique no botão azul para permitir publicações.</string>
+	<string name="editor_confirm_email_prompt_message">Enviamos um e-mail quando você se cadastrou. Abra a mensagem e clique no botão azul para permitir publicações.</string>
+	<string name="toast_verification_email_send_error">Ocorreu um erro ao enviar o e-mail de verificação. Você já foi verificado?</string>
+	<string name="toast_verification_email_sent">E-mail de verificação enviado, veja sua caixa de entrada</string>
+	<string name="photo_picker_capture_photo">Fotografar</string>
+	<string name="delete_site_warning_subtitle">Cuidado! Depois de excluído, o site não pode mais ser recuperado. Tenha certeza antes de prosseguir.</string>
+	<string name="delete_site_warning">Todos os seus posts, imagens e dados serão excluídos. E o endereço desse site (%s) será perdido.</string>
+	<string name="start_over_email_intent_error">Não foi possível enviar um e-mail</string>
+	<string name="site_picker_remove_site_error">Ocorreu um erro ao remover o site, tente mais tarde novamente</string>
+	<string name="editor_post_saved_locally_unfinished_media">O post tem uploads de mídias não concluídos e foi salvo localmente</string>
+	<string name="sure_to_remove_account">Remover esse site do aplicativo?</string>
 	<string name="error_all_media_upload_canceled">Todos os uploads de mídia foram cancelados devido a um erro desconhecido. Tente fazer upload novamente</string>
 	<string name="error_unknown_post_type">Formato de post desconhecido</string>
 	<string name="error_unknown_post">Post desconhecido, a cópia local desse post pode não estar sincronizada com o servidor</string>
@@ -157,7 +168,6 @@ Language: pt_BR
 	<string name="format_bar_description_bold">Negrito</string>
 	<string name="image_settings_dismiss_dialog_title">Descartar alterações não salvas?</string>
 	<string name="stop_upload_dialog_title">Parar envio?</string>
-	<string name="stop_upload_button">Parar envio</string>
 	<string name="alert_error_adding_media">Um erro ocorreu algo inserir o arquivo de mídia</string>
 	<string name="alert_action_while_uploading">Você esta no momento enviando um arquivo de mídia. Aguarde até o processo ser completo.</string>
 	<string name="alert_insert_image_html_mode">Não é possível inserir arquivo de mídia diretamente no modo HTML. Mude de volta para o modo visual.</string>
@@ -250,7 +260,6 @@ Language: pt_BR
 	<string name="delete_site_progress">Excluindo site...</string>
 	<string name="delete_site_summary">Essa ação não pode ser desfeita. Excluir seu site irá remover todo o conteúdo, contribuidores e domínios desse site.</string>
 	<string name="delete_site_hint">Excluir site</string>
-	<string name="are_you_sure">Você tem certeza?</string>
 	<string name="export_site_hint">Exporte seu conteúdo para um arquivo XML</string>
 	<string name="export_site_summary">Caso tenha certeza, por favor, invista algum tempo agora para exportar seu conteúdo. Não será possível recuperá-lo no futuro.</string>
 	<string name="keep_your_content">Mantenha seu conteúdo</string>
@@ -624,7 +633,6 @@ Language: pt_BR
 	<string name="stats_insights">Informações</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Para visualizar suas estatísticas, faça login na conta do WordPress.com que você usou para se conectar ao Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Buscando suas outras estatísticas recentes? Nós as movemos para a página Informações.</string>
-	<string name="me_disconnect_from_wordpress_com">Fazer logout do WordPress.com</string>
 	<string name="me_btn_login_logout">Entrar/Sair</string>
 	<string name="me_connect_to_wordpress_com">Fazer login no WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" não está escondido porque é o site atual</string>
@@ -753,14 +761,12 @@ Language: pt_BR
 	<string name="stats_followers_email_selector">E-mail</string>
 	<string name="stats_followers_total_email">Total de seguidores por e-mail: %1$s</string>
 	<string name="ssl_certificate_details">Detalhes</string>
-	<string name="sure_to_remove_account">Remover este site?</string>
 	<string name="delete_sure_post">Excluir este post</string>
 	<string name="delete_sure">Excluir este rascunho</string>
 	<string name="delete_sure_page">Excluir esta página</string>
 	<string name="confirm_delete_multi_media">Excluir itens selecionados?</string>
 	<string name="confirm_delete_media">Excluir item selecionado?</string>
 	<string name="cab_selected">%d selecionados</string>
-	<string name="media_gallery_date_range">Exibindo mídias de %1$s a %2$s</string>
 	<string name="faq_button">Perguntas frequentes</string>
 	<string name="agree_terms_of_service">Ao criar sua conta, você está concordando com os nossos %1$sTermos de Serviço%2$s</string>
 	<string name="create_new_blog_wpcom">Crie um blog do WordPress.com</string>
@@ -949,7 +955,6 @@ Language: pt_BR
 	<string name="image_settings">Configurações de imagem</string>
 	<string name="add_account_blog_url">Endereço do blog</string>
 	<string name="reader_title_applog">Log do aplicativo</string>
-	<string name="reader_share_link">Compartilhar link</string>
 	<string name="required_field">Campo obrigatório</string>
 	<string name="blog_name_invalid">Endereço de site inválido</string>
 	<string name="xmlrpc_error">Não foi possível conectar. Digite o caminho completo para xmlrpc.php em seu site e tente novamente.</string>
@@ -1037,7 +1042,6 @@ Language: pt_BR
 	<string name="signing_in">Entrando...</string>
 	<string name="nux_oops_not_selfhosted_blog">Fazer login no WordPress.com</string>
 	<string name="media_add_popup_title">Adicionar à biblioteca de mídia</string>
-	<string name="media_add_new_media_gallery">Criar galeria</string>
 	<string name="select_from_media_library">Selecione a partir de biblioteca de mídia</string>
 	<string name="jetpack_not_found">Plugin Jetpack não encontrado</string>
 	<string name="reader_btn_follow">Seguir </string>
@@ -1149,7 +1153,6 @@ Language: pt_BR
 	<string name="post">Post</string>
 	<string name="no_network_title">Não há rede disponível </string>
 	<string name="featured">Usar uma Imagem Destacada</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">usrenamedoblog</string>
 	<string name="scaled_image">Largura da imagem</string>
 	<string name="upload_scaled_image">Enviar e link para a imagem redimensionada</string>
