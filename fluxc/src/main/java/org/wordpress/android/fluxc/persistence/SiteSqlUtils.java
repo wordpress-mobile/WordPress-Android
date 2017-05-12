@@ -4,12 +4,14 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 
+import com.wellsql.generated.AccountModelTable;
 import com.wellsql.generated.PostFormatModelTable;
 import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AppLog;
@@ -64,6 +66,21 @@ public class SiteSqlUtils {
     public static int insertOrUpdateSite(SiteModel site) throws DuplicateSiteException {
         if (site == null) {
             return 0;
+        }
+
+        // If we're inserting or updating a WP.com REST API site, validate that we actually have a WordPress.com
+        // AccountModel present
+        // This prevents a late UPDATE_SITES action from re-populating the database after sign out from WordPress.com
+        if (site.isUsingWpComRestApi()) {
+            List<AccountModel> accountModel = WellSql.select(AccountModel.class)
+                    .where()
+                    .not().equals(AccountModelTable.USER_ID, 0)
+                    .endWhere()
+                    .getAsModel();
+            if (accountModel.isEmpty()) {
+                AppLog.w(T.DB, "Can't insert WP.com site " + site.getUrl() + ", missing user account");
+                return 0;
+            }
         }
 
         // If the site already exist and has an id, we want to update it.
