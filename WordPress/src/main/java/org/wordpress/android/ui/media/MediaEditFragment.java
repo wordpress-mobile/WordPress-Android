@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -152,13 +151,6 @@ public class MediaEditFragment extends Fragment {
         if (mediaModel == null || !isAdded()) {
             return;
         }
-
-        boolean isLocal = MediaUtils.isLocalFile(mediaModel.getUploadState());
-
-        // user can't edit local files
-        mTitleView.setEnabled(!isLocal);
-        mCaptionView.setEnabled(!isLocal);
-        mDescriptionView.setEnabled(!isLocal);
 
         mTitleView.setText(mediaModel.getTitle());
         mTitleView.requestFocus();
