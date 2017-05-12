@@ -293,7 +293,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_edit) {
-            showEditFragment(mMediaId);
+            showEditFragment();
             return true;
         } else if (item.getItemId() == R.id.menu_share) {
             shareMedia();
@@ -521,10 +521,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
         return null;
     }
 
-    private void showEditFragment(int localMediaId) {
+    private void showEditFragment() {
         MediaEditFragment fragment = getEditFragment();
         if (fragment == null) {
-            fragment = MediaEditFragment.newInstance(mSite, localMediaId);
+            fragment = MediaEditFragment.newInstance(mSite, mMediaId);
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaEditFragment.TAG)
@@ -532,7 +532,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commitAllowingStateLoss();
         } else {
-            fragment.loadMedia(localMediaId);
+            fragment.loadMedia();
         }
 
         setLookClosable(true);

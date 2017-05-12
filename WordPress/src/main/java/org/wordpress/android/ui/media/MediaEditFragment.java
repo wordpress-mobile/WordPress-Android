@@ -109,7 +109,7 @@ public class MediaEditFragment extends Fragment {
         mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
         mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
 
-        loadMedia(mLocalMediaId);
+        loadMedia();
 
         return view;
     }
@@ -130,8 +130,7 @@ public class MediaEditFragment extends Fragment {
         outState.putInt(ARGS_MEDIA_ID, mLocalMediaId);
     }
 
-    public void loadMedia(int localMediaId) {
-        mLocalMediaId = localMediaId;
+    public void loadMedia() {
         if (isAdded()) {
             mMediaModel = mMediaStore.getMediaWithLocalId(mLocalMediaId);
             refreshViews(mMediaModel);
