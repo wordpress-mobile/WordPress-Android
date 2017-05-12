@@ -19,7 +19,7 @@ public class PermissionUtils {
      *
      * @return true if permissions are already granted, else request them and return false.
      */
-    private static boolean checkAndRequestPermissions(Activity activity, int requestCode, String[] permissionList) {
+    public static boolean checkAndRequestPermissions(Activity activity, int requestCode, String[] permissionList) {
         List<String> toRequest = new ArrayList<>();
         for (String permission : permissionList) {
             if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {

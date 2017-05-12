@@ -1,17 +1,21 @@
 package org.wordpress.android.ui.media;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,10 +53,15 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -60,11 +69,13 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class MediaPreviewActivity extends AppCompatActivity {
+public class MediaPreviewActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_IS_VIDEO = "is_video";
+
+    private static final int SAVE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private String mContentUri;
     private int mMediaId;
@@ -276,6 +287,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
         MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
         mnuEdit.setVisible(mShowEditMenuItem);
 
+        MenuItem mnuSave = menu.findItem(R.id.menu_save);
+        mnuSave.setVisible(mMediaId != 0);
+        mnuSave.setEnabled(mImageView.getDrawable() != null);
+
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
         mnuShare.setVisible(mMediaId != 0);
 
@@ -295,8 +310,12 @@ public class MediaPreviewActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.menu_edit) {
             showEditFragment(mMediaId);
             return true;
+        } else if (item.getItemId() == R.id.menu_save) {
+            saveMedia();
+            return true;
         } else if (item.getItemId() == R.id.menu_share) {
             shareMedia();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -388,6 +407,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         mImageView.setImageBitmap(bmp);
+        invalidateOptionsMenu();
     }
 
     /*
@@ -543,6 +563,75 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void setLookClosable(boolean lookClosable) {
         if (mToolbar != null) {
             mToolbar.setNavigationIcon(lookClosable ? R.drawable.ic_close_white_24dp : R.drawable.ic_arrow_left_white_24dp);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
+            boolean canSaveMedia = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    canSaveMedia = false;
+                }
+            }
+            if (canSaveMedia) {
+                saveMedia();
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_insufficient_fs_permissions);
+            }
+        }
+    }
+
+    private void saveMedia() {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+            return;
+        }
+
+        Bitmap bmp = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+        if (bmp == null) {
+            ToastUtils.showToast(this, R.string.error_media_save);
+            return;
+        }
+
+        // must request permissions even though they're already defined in the manifest
+        String[] permissionList = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
+            return;
+        }
+
+        File galleryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String filename = media.getFileName();
+        OutputStream out = null;
+        File file = new File(galleryPath, filename);
+        try {
+            try {
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                out = new FileOutputStream(file);
+                bmp.compress(Bitmap.CompressFormat.JPEG, 85, out);
+                ToastUtils.showToast(this, R.string.media_saved_to_device);
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.MEDIA, e);
+                ToastUtils.showToast(this, R.string.error_media_save);
+            }
+        } finally {
+            if (out != null) {
+                try {
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
