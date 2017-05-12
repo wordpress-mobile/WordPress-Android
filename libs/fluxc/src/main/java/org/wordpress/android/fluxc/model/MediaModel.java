@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model;
 
+import android.text.TextUtils;
+
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -61,6 +63,11 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     // Local only
     @Column private String mUploadState;
 
+    // Other Sizes. Image files only
+    @Column private String mFileNameMediumSize;
+    @Column private String mFileNameMediumLargeSize;
+    @Column private String mFileNameLargeSize;
+
     //
     // Legacy
     //
@@ -106,7 +113,10 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
                 && StringUtils.equals(getCaption(), otherMedia.getCaption())
                 && StringUtils.equals(getAlt(), otherMedia.getAlt())
                 && StringUtils.equals(getVideoPressGuid(), otherMedia.getVideoPressGuid())
-                && StringUtils.equals(getUploadState(), otherMedia.getUploadState());
+                && StringUtils.equals(getUploadState(), otherMedia.getUploadState())
+                && StringUtils.equals(getFileNameMediumSize(), otherMedia.getFileNameMediumSize())
+                && StringUtils.equals(getFileNameMediumLargeSize(), otherMedia.getFileNameMediumLargeSize())
+                && StringUtils.equals(getFileNameLargeSize(), otherMedia.getFileNameLargeSize());
     }
 
     @Override
@@ -357,5 +367,38 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     public void setUploadCancelled(boolean uploadCancelled) {
         mUploadCancelled = uploadCancelled;
+    }
+
+    public void setFileNameMediumSize(String file) {
+        mFileNameMediumSize = file;
+    }
+
+    public String getFileNameMediumSize() {
+        return mFileNameMediumSize;
+    }
+
+    public void setFileNameMediumLargeSize(String file) {
+        mFileNameMediumLargeSize = file;
+    }
+
+    public String getFileNameMediumLargeSize() {
+        return mFileNameMediumLargeSize;
+    }
+
+    public void setFileNameLargeSize(String file) {
+        mFileNameLargeSize = file;
+    }
+
+    public String getFileNameLargeSize() {
+        return mFileNameLargeSize;
+    }
+
+    public String getFilePathLargeSize() {
+        String thumbPath = getThumbnailUrl();
+        if (TextUtils.isEmpty(getFileNameLargeSize())
+                || TextUtils.isEmpty(thumbPath) || !thumbPath.contains("/")) return null;
+        if (thumbPath.lastIndexOf("/") + 1 >= thumbPath.length()) return null;
+
+        return thumbPath.substring(0, thumbPath.lastIndexOf("/") + 1) + getFileNameLargeSize();
     }
 }
