@@ -3,12 +3,12 @@ package org.wordpress.android.fluxc.network.rest.wpcom.site;
 import org.wordpress.android.fluxc.network.Response;
 
 public class ConnectSiteInfoResponse implements Response {
-    public boolean exists = false;
-    public boolean isWordPress = false;
-    public boolean hasJetpack = false;
-    public boolean isJetpackActive = false;
-    public boolean isJetpackConnected = false;
+    public boolean exists;
+    public boolean isWordPress;
+    public boolean hasJetpack;
+    public boolean isJetpackActive;
+    public boolean isJetpackConnected;
     // CHECKSTYLE IGNORE RegexpSingleline
-    public boolean isWordPressDotCom = false;
+    public boolean isWordPressDotCom;
     // CHECKSTYLE END IGNORE RegexpSingleline
 }
