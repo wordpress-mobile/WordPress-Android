@@ -4,13 +4,11 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.github.dcendents.android-maven'
 
 repositories {
@@ -67,11 +65,11 @@ dependencies {
 
     // Custom WellSql version
     compile 'org.wordpress:wellsql:1.1.3'
-    apt 'org.wordpress:wellsql-processor:1.1.3'
+    annotationProcessor 'org.wordpress:wellsql-processor:1.1.3'
 
     // FluxC annotations
     compile project(':fluxc-annotations')
-    apt project(':fluxc-processor')
+    annotationProcessor project(':fluxc-processor')
 
     // External libs
     compile 'org.greenrobot:eventbus:3.0.0'
@@ -80,7 +78,7 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.dagger:dagger:2.0.2'
-    apt 'com.google.dagger:dagger-compiler:2.0.2'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support:appcompat-v7:25.1.1'
 }
