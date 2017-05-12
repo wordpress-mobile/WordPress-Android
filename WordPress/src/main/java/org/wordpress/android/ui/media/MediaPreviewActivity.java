@@ -1,16 +1,19 @@
 package org.wordpress.android.ui.media;
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -58,10 +61,6 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -79,6 +78,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
 
     private String mContentUri;
     private int mMediaId;
+    private long mDownloadId;
     private boolean mIsVideo;
     private boolean mEnableMetadata;
     private boolean mShowEditMenuItem;
@@ -237,11 +237,13 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     @Override
     public void onStart() {
         super.onStart();
+        registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
+        unregisterReceiver(mDownloadReceiver);
         mDispatcher.unregister(this);
         super.onStop();
     }
@@ -288,8 +290,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         mnuEdit.setVisible(mShowEditMenuItem);
 
         MenuItem mnuSave = menu.findItem(R.id.menu_save);
-        mnuSave.setVisible(mMediaId != 0);
-        mnuSave.setEnabled(mImageView.getDrawable() != null);
+        mnuSave.setVisible(mMediaId != 0 && !mIsVideo && !mSite.isPrivate());
+        mnuSave.setEnabled(mDownloadId == 0);
 
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
         mnuShare.setVisible(mMediaId != 0);
@@ -585,19 +587,33 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
     }
 
+    BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long thisId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            if (thisId == mDownloadId) {
+                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(mDownloadId);
+                int reason = DownloadManager.STATUS_SUCCESSFUL;
+                Cursor cursor = dm.query(query);
+                if (cursor.moveToFirst()) {
+                    reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                }
+                if (reason == DownloadManager.STATUS_SUCCESSFUL) {
+                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.media_saved_to_device);
+                    mDownloadId = 0;
+                    invalidateOptionsMenu();
+                } else if (reason == DownloadManager.STATUS_FAILED) {
+                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
+                    mDownloadId = 0;
+                    invalidateOptionsMenu();
+                }
+            }
+        }
+    };
+
     private void saveMedia() {
-        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
-        if (media == null) {
-            ToastUtils.showToast(this, R.string.error_media_not_found);
-            return;
-        }
-
-        Bitmap bmp = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
-        if (bmp == null) {
-            ToastUtils.showToast(this, R.string.error_media_save);
-            return;
-        }
-
         // must request permissions even though they're already defined in the manifest
         String[] permissionList = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -607,35 +623,20 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             return;
         }
 
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        String filename = media.getFileName();
-        OutputStream out = null;
-        File file = new File(path, filename);
-        try {
-            try {
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                out = new FileOutputStream(file);
-                if (bmp.compress(Bitmap.CompressFormat.JPEG, 85, out)) {
-                    ToastUtils.showToast(this, R.string.media_saved_to_device);
-                } else {
-                    ToastUtils.showToast(this, R.string.error_media_save);
-                }
-            } catch (IOException e) {
-                AppLog.e(AppLog.T.MEDIA, e);
-                ToastUtils.showToast(this, R.string.error_media_save);
-            }
-        } finally {
-            if (out != null) {
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+            return;
         }
+
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.getFileName());
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+
+        mDownloadId = dm.enqueue(request);
+        invalidateOptionsMenu();
     }
 
     private void shareMedia() {

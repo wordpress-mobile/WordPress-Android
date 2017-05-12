@@ -468,9 +468,6 @@
             android:name=".ui.media.services.MediaDeleteService"
             android:label="Media Delete Service" />
         <service
-            android:name=".ui.media.services.MediaDownloadService"
-            android:label="Media Download Service" />
-        <service
             android:name=".ui.stats.service.StatsService"
             android:exported="false"
             android:label="Stats Update Service" />
