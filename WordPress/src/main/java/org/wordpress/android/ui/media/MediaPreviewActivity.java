@@ -583,7 +583,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
     }
 
-    BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             long thisId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
