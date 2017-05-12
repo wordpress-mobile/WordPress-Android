@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.utils;
+package org.wordpress.android.fluxc.site;
 
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
