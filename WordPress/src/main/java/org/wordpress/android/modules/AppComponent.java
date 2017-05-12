@@ -36,6 +36,7 @@ import org.wordpress.android.ui.media.MediaGalleryEditFragment;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.media.services.MediaDownloadService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -185,6 +186,7 @@ public interface AppComponent {
 
     void inject(MediaUploadService object);
     void inject(MediaDeleteService object);
+    void inject(MediaDownloadService object);
 
     void inject(SelectCategoriesActivity object);
     void inject(AddCategoryActivity object);
