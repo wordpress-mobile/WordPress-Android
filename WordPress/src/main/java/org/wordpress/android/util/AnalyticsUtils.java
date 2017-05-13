@@ -343,6 +343,11 @@ public class AnalyticsUtils {
                 AppLog.e(AppLog.T.MEDIA, "Can't access the media file. It doesn't exists anymore!! Properties are not being tracked.");
                 return properties;
             }
+
+            if (file.lastModified() > 0L) {
+                long ageMS = System.currentTimeMillis() - file.lastModified();
+                properties.put("age_ms", ageMS);
+            }
         } catch (SecurityException e) {
             AppLog.e(AppLog.T.MEDIA, "Can't access the media file. Properties are not being tracked.", e);
             return properties;

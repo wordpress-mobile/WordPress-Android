@@ -19,13 +19,18 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.MediaUtils;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PhotoPickerFragment extends Fragment {
 
@@ -133,6 +138,7 @@ public class PhotoPickerFragment extends Fragment {
                 if (mPhotosOnly) {
                     if (mListener != null) {
                         mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                        trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
                     }
                 } else {
                     showCameraPopupMenu(v);
@@ -145,6 +151,7 @@ public class PhotoPickerFragment extends Fragment {
                 if (mPhotosOnly) {
                     if (mListener != null) {
                         mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                        trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
                     }
                 } else {
                     showPickerPopupMenu(v);
@@ -162,6 +169,7 @@ public class PhotoPickerFragment extends Fragment {
                 public void onClick(View v) {
                     if (mListener != null) {
                         mListener.onPhotoPickerIconClicked(PhotoPickerIcon.WP_MEDIA);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
                     }
                 }
             });
@@ -181,6 +189,7 @@ public class PhotoPickerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (mListener != null) {
                     mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
                 }
                 return true;
             }
@@ -192,6 +201,7 @@ public class PhotoPickerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (mListener != null) {
                     mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
+                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, true);
                 }
                 return true;
             }
@@ -209,6 +219,7 @@ public class PhotoPickerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (mListener != null) {
                     mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
                 }
                 return true;
             }
@@ -220,6 +231,7 @@ public class PhotoPickerFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (mListener != null) {
                     mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
+                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, true);
                 }
                 return true;
             }
@@ -254,6 +266,7 @@ public class PhotoPickerFragment extends Fragment {
                 List<Uri> uriList = new ArrayList<>();
                 uriList.add(mediaUri);
                 mListener.onPhotoPickerMediaChosen(uriList);
+                trackAddRecentMediaEvent(uriList);
             }
         }
 
@@ -367,6 +380,7 @@ public class PhotoPickerFragment extends Fragment {
             if (item.getItemId() == R.id.mnu_confirm_selection && mListener != null) {
                 ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
                 mListener.onPhotoPickerMediaChosen(uriList);
+                trackAddRecentMediaEvent(uriList);
                 return true;
             }
             return false;
@@ -378,5 +392,33 @@ public class PhotoPickerFragment extends Fragment {
             mActionMode = null;
             showBottomBar();
         }
+    }
+
+
+    private void trackAddRecentMediaEvent(List<Uri> uriList) {
+        if (uriList == null) {
+            AppLog.e(AppLog.T.MEDIA, "Cannot track new media events if uriList is null!!");
+            return;
+        }
+
+        boolean isMultiselection = uriList.size() > 1;
+
+        for (Uri mediaUri : uriList) {
+            if (mediaUri != null) {
+                boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
+                Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getActivity(), isVideo, mediaUri, null);
+                properties.put("is_part_of_multiselection", isMultiselection);
+                if (isMultiselection) {
+                    properties.put("number_of_media_selected", uriList.size());
+                }
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties);
+            }
+        }
+    }
+
+    private void trackSelectedOtherSourceEvents(AnalyticsTracker.Stat stat, boolean isVideo) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("is_video", isVideo);
+        AnalyticsTracker.track(stat, properties);
     }
 }
