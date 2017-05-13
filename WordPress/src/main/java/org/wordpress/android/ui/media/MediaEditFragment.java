@@ -31,7 +31,7 @@ import javax.inject.Inject;
  * A fragment for editing media on the Media tab
  */
 public class MediaEditFragment extends Fragment {
-    private static final String ARGS_MEDIA_ID = "media_id";
+    private static final String ARGS_LOCAL_MEDIA_ID = "media_id";
     static final String TAG = "MediaEditFragment";
 
     @Inject Dispatcher mDispatcher;
@@ -47,7 +47,7 @@ public class MediaEditFragment extends Fragment {
     public static MediaEditFragment newInstance(@NonNull SiteModel site, int localMediaId) {
         MediaEditFragment fragment = new MediaEditFragment();
         Bundle args = new Bundle();
-        args.putInt(ARGS_MEDIA_ID, localMediaId);
+        args.putInt(ARGS_LOCAL_MEDIA_ID, localMediaId);
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
@@ -58,24 +58,15 @@ public class MediaEditFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (savedInstanceState != null) {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mLocalMediaId = savedInstanceState.getInt(ARGS_MEDIA_ID);
+        if (getArguments() != null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            mLocalMediaId = getArguments().getInt(ARGS_LOCAL_MEDIA_ID);
         }
 
         setHasOptionsMenu(true);
 
         // retain this fragment across configuration changes
-        setRetainInstance(true);
-    }
-
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-        if (args != null) {
-            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-            mLocalMediaId = args.getInt(ARGS_MEDIA_ID);
-        }
+        //setRetainInstance(true);
     }
 
     @Override
@@ -111,13 +102,6 @@ public class MediaEditFragment extends Fragment {
         }
 
         loadMedia();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
-        outState.putInt(ARGS_MEDIA_ID, mLocalMediaId);
     }
 
     public void loadMedia() {
