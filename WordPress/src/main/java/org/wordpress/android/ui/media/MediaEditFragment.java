@@ -63,11 +63,6 @@ public class MediaEditFragment extends Fragment {
             mLocalMediaId = savedInstanceState.getInt(ARGS_MEDIA_ID);
         }
 
-        if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getActivity().finish();
-        }
-
         setHasOptionsMenu(true);
 
         // retain this fragment across configuration changes
@@ -103,18 +98,19 @@ public class MediaEditFragment extends Fragment {
         mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
         mDescriptionView = (EditText) view.findViewById(R.id.media_edit_fragment_description);
 
-        loadMedia();
-
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         // force the keyboard to appear on the title when activity is created (but not in landscape)
         if (savedInstanceState == null && !DisplayUtils.isLandscape(getActivity())) {
             EditTextUtils.showSoftInput(mTitleView);
         }
+
+        loadMedia();
     }
 
     @Override
@@ -125,22 +121,20 @@ public class MediaEditFragment extends Fragment {
     }
 
     public void loadMedia() {
-        if (isAdded()) {
-            MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
-            if (media != null) {
-                mTitleView.setText(media.getTitle());
-                mTitleView.requestFocus();
-                mTitleView.setSelection(mTitleView.getText().length());
-                mCaptionView.setText(media.getCaption());
-                mDescriptionView.setText(media.getDescription());
-            }
+        if (!isAdded()) return;
+
+        MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
+        if (media != null) {
+            mTitleView.setText(media.getTitle());
+            mTitleView.requestFocus();
+            mTitleView.setSelection(mTitleView.getText().length());
+            mCaptionView.setText(media.getCaption());
+            mDescriptionView.setText(media.getDescription());
         }
     }
 
     public void saveChanges() {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded()) return;
 
         MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
         if (media == null) {
