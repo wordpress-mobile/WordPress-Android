@@ -161,7 +161,7 @@ configurations.all {
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = file("${rootDir}/WordPress/gradle.properties")
+    def inputFile = file("${rootDir}/gradle.properties")
     if (!inputFile.exists()) {
         throw new StopActionException("Build configuration file:" + inputFile
                 + " doesn't exist, follow README instructions")
