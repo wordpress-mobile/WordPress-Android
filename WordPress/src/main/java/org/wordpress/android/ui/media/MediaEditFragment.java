@@ -59,9 +59,6 @@ public class MediaEditFragment extends Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         setHasOptionsMenu(true);
-
-        // retain this fragment across configuration changes
-        setRetainInstance(true);
     }
 
     @Override
