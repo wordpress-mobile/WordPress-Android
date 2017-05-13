@@ -31,8 +31,7 @@ import javax.inject.Inject;
  */
 public class MediaEditFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
-    // also appears in the layouts, from the strings.xml
-    public static final String TAG = "MediaEditFragment";
+    static final String TAG = "MediaEditFragment";
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -126,10 +125,11 @@ public class MediaEditFragment extends Fragment {
         MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
         if (media != null) {
             mTitleView.setText(media.getTitle());
-            mTitleView.requestFocus();
-            mTitleView.setSelection(mTitleView.getText().length());
             mCaptionView.setText(media.getCaption());
             mDescriptionView.setText(media.getDescription());
+
+            mTitleView.requestFocus();
+            mTitleView.setSelection(mTitleView.getText().length());
         }
     }
 
