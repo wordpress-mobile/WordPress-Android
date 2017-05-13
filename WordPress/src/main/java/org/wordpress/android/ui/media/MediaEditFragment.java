@@ -2,6 +2,7 @@ package org.wordpress.android.ui.media;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class MediaEditFragment extends Fragment {
     private int mLocalMediaId;
     private SiteModel mSite;
 
-    public static MediaEditFragment newInstance(SiteModel site, int localMediaId) {
+    public static MediaEditFragment newInstance(@NonNull SiteModel site, int localMediaId) {
         MediaEditFragment fragment = new MediaEditFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_MEDIA_ID, localMediaId);
@@ -143,14 +144,18 @@ public class MediaEditFragment extends Fragment {
             return;
         }
 
-        boolean isDirty = !StringUtils.equals(media.getTitle(), mTitleView.getText().toString())
-                || !StringUtils.equals(media.getCaption(), mCaptionView.getText().toString())
-                || !StringUtils.equals(media.getDescription(), mDescriptionView.getText().toString());
-        if (isDirty) {
+        String thisTitle = EditTextUtils.getText(mTitleView);
+        String thisCaption = EditTextUtils.getText(mCaptionView);
+        String thisDescription = EditTextUtils.getText(mDescriptionView);
+
+        boolean hasChanged = !StringUtils.equals(media.getTitle(), thisTitle)
+                || !StringUtils.equals(media.getCaption(), thisCaption)
+                || !StringUtils.equals(media.getDescription(), thisDescription);
+        if (hasChanged) {
             AppLog.d(AppLog.T.MEDIA, "MediaEditFragment > Saving changes");
-            media.setTitle(mTitleView.getText().toString());
-            media.setDescription(mDescriptionView.getText().toString());
-            media.setCaption(mCaptionView.getText().toString());
+            media.setTitle(thisTitle);
+            media.setCaption(thisCaption);
+            media.setDescription(thisDescription);
             mDispatcher.dispatch(MediaActionBuilder.newPushMediaAction(new MediaPayload(mSite, media)));
         }
     }
