@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -609,34 +608,33 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void setupAddMenuPopup() {
-        String capturePhoto = getString(R.string.media_add_popup_capture_photo);
-        String captureVideo = getString(R.string.media_add_popup_capture_video);
-        String pickPhotoFromGallery = getString(R.string.photo_picker_choose_photo);
-        String pickVideoFromGallery = getString(R.string.photo_picker_choose_video);
-        String[] items = new String[] {
-                capturePhoto, captureVideo, pickPhotoFromGallery, pickVideoFromGallery
+        String[] items = new String[]{
+                getString(R.string.photo_picker_capture_photo),
+                getString(R.string.photo_picker_capture_video),
+                getString(R.string.photo_picker_choose_photo),
+                getString(R.string.photo_picker_choose_video)
         };
 
         @SuppressLint("InflateParams")
         View menuView = getLayoutInflater().inflate(R.layout.actionbar_add_media, null, false);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.actionbar_add_media_cell, items);
         ListView listView = (ListView) menuView.findViewById(R.id.actionbar_add_media_listview);
-        listView.setAdapter(adapter);
+        listView.setAdapter(new ArrayAdapter<>(this, R.layout.actionbar_add_media_cell, items));
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.notifyDataSetChanged();
-
-                if (position == 0) {
-                    MediaBrowserActivity enclosingActivity = MediaBrowserActivity.this;
-                    WordPressMediaUtils.launchCamera(enclosingActivity, BuildConfig.APPLICATION_ID, enclosingActivity);
-                } else if (position == 1) {
-                    WordPressMediaUtils.launchVideoCamera(MediaBrowserActivity.this);
-                } else if (position == 2) {
-                    WordPressMediaUtils.launchPictureLibrary(MediaBrowserActivity.this);
-                } else if (position == 3) {
-                    WordPressMediaUtils.launchVideoLibrary(MediaBrowserActivity.this);
+                switch (position) {
+                    case 0:
+                        WordPressMediaUtils.launchCamera(MediaBrowserActivity.this, BuildConfig.APPLICATION_ID, MediaBrowserActivity.this);
+                        break;
+                    case 1:
+                        WordPressMediaUtils.launchVideoCamera(MediaBrowserActivity.this);
+                        break;
+                    case 2:
+                        WordPressMediaUtils.launchPictureLibrary(MediaBrowserActivity.this);
+                        break;
+                    case 3:
+                        WordPressMediaUtils.launchVideoLibrary(MediaBrowserActivity.this);
+                        break;
                 }
-
                 mAddMediaPopup.dismiss();
             }
         });

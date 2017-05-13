@@ -109,8 +109,6 @@
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
-    <string name="media_add_popup_capture_photo">Capture photo</string>
-    <string name="media_add_popup_capture_video">Capture video</string>
 
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
