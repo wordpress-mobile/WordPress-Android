@@ -292,7 +292,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
         }
 
-        showAddMediaMenu();
+        showAddMediaPopup();
     }
 
     @Override
@@ -326,7 +326,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case R.id.menu_new_media:
                 AppLockManager.getInstance().setExtendedTimeout();
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                    showAddMediaMenu();
+                    showAddMediaPopup();
                 }
                 return true;
             case R.id.menu_search:
@@ -605,7 +605,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     };
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
-    private void createAddMenuPopup() {
+    private void createAddMediaPopup() {
         String[] items = new String[]{
                 getString(R.string.photo_picker_capture_photo),
                 getString(R.string.photo_picker_capture_video),
@@ -641,9 +641,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
     }
 
-    private void showAddMediaMenu() {
+    private void showAddMediaPopup() {
         if (mAddMediaPopup == null) {
-            createAddMenuPopup();
+            createAddMediaPopup();
         }
 
         View view = findViewById(R.id.menu_new_media);
