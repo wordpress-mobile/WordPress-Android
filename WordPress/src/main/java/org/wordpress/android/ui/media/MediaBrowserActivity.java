@@ -611,8 +611,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void setupAddMenuPopup() {
         String capturePhoto = getString(R.string.media_add_popup_capture_photo);
         String captureVideo = getString(R.string.media_add_popup_capture_video);
-        String pickPhotoFromGallery = getString(R.string.select_photo);
-        String pickVideoFromGallery = getString(R.string.select_video);
+        String pickPhotoFromGallery = getString(R.string.photo_picker_choose_photo);
+        String pickVideoFromGallery = getString(R.string.photo_picker_choose_video);
         String[] items = new String[] {
                 capturePhoto, captureVideo, pickPhotoFromGallery, pickVideoFromGallery
         };
