@@ -147,7 +147,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-        setupAddMenuPopup();
 
         // if media was shared add it to the library
         handleSharedMedia();
@@ -645,6 +644,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void showNewMediaMenu() {
+        if (mAddMediaPopup == null) {
+            setupAddMenuPopup();
+        }
+
         View view = findViewById(R.id.menu_new_media);
         if (view != null) {
             int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
