@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -293,7 +292,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
         }
 
-        showNewMediaMenu();
+        showAddMediaMenu();
     }
 
     @Override
@@ -327,7 +326,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case R.id.menu_new_media:
                 AppLockManager.getInstance().setExtendedTimeout();
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                    showNewMediaMenu();
+                    showAddMediaMenu();
                 }
                 return true;
             case R.id.menu_search:
@@ -606,7 +605,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     };
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
-    private void setupAddMenuPopup() {
+    private void createAddMenuPopup() {
         String[] items = new String[]{
                 getString(R.string.photo_picker_capture_photo),
                 getString(R.string.photo_picker_capture_video),
@@ -640,12 +639,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
         mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        mAddMediaPopup.setBackgroundDrawable(new ColorDrawable());
     }
 
-    private void showNewMediaMenu() {
+    private void showAddMediaMenu() {
         if (mAddMediaPopup == null) {
-            setupAddMenuPopup();
+            createAddMenuPopup();
         }
 
         View view = findViewById(R.id.menu_new_media);
@@ -653,7 +651,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
             int[] loc = new int[2];
             view.getLocationOnScreen(loc);
-            mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.START, loc[0],
+            mAddMediaPopup.showAtLocation(
+                    view,
+                    Gravity.TOP | Gravity.START,
+                    loc[0],
                     loc[1] + view.getHeight() + y_offset);
         } else {
             // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
