@@ -58,15 +58,10 @@ public class MediaEditFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (getArguments() != null) {
-            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            mLocalMediaId = getArguments().getInt(ARGS_LOCAL_MEDIA_ID);
-        }
-
         setHasOptionsMenu(true);
 
         // retain this fragment across configuration changes
-        //setRetainInstance(true);
+        setRetainInstance(true);
     }
 
     @Override
@@ -101,10 +96,16 @@ public class MediaEditFragment extends Fragment {
             EditTextUtils.showSoftInput(mTitleView);
         }
 
+        // getArguments() should never be null but let's check anyway
+        if (getArguments() != null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            mLocalMediaId = getArguments().getInt(ARGS_LOCAL_MEDIA_ID);
+        }
+
         loadMedia();
     }
 
-    public void loadMedia() {
+    void loadMedia() {
         if (!isAdded()) return;
 
         MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
@@ -115,6 +116,8 @@ public class MediaEditFragment extends Fragment {
 
             mTitleView.requestFocus();
             mTitleView.setSelection(mTitleView.getText().length());
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_media_load);
         }
     }
 
