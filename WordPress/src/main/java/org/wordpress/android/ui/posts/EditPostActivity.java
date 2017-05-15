@@ -2006,7 +2006,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         };
-        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback);
+        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback, mSite);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(dialog, "insert_media");
         ft.commitAllowingStateLoss();
