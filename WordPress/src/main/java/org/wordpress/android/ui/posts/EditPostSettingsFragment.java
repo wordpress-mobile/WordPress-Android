@@ -108,6 +108,7 @@ public class EditPostSettingsFragment extends Fragment
     private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
+    private TextView mSlugTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -217,6 +218,7 @@ public class EditPostSettingsFragment extends Fragment
         mMinute = c.get(Calendar.MINUTE);
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
+        mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -264,6 +266,13 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showPostExcerptDialog();
+            }
+        });
+
+        final LinearLayout slugContainer = (LinearLayout) rootView.findViewById(R.id.post_slug_container);
+        slugContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
             }
         });
 
