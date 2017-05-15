@@ -1,5 +1,7 @@
 /auth/send-login-email/
 
+/connect/site-info/$protocol#String/$address#String
+
 /is-available/blog/
 /is-available/domain/
 /is-available/email/
