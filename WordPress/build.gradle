@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-56"
-        versionCode 406
+        versionName "alpha-57"
+        versionCode 409
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -162,7 +162,7 @@ configurations.all {
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = file("${rootDir}/WordPress/gradle.properties")
+    def inputFile = file("${rootDir}/gradle.properties")
     if (!inputFile.exists()) {
         throw new StopActionException("Build configuration file:" + inputFile
                 + " doesn't exist, follow README instructions")
