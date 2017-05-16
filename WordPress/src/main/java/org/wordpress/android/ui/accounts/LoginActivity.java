@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         }
     }
 
-    protected void addLoginPrologueFragment() {
+    private void addLoginPrologueFragment() {
         LogInOrSignUpFragment loginSignupFragment = new LogInOrSignUpFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LogInOrSignUpFragment.TAG);
