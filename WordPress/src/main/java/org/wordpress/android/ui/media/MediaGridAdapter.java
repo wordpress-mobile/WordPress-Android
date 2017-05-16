@@ -122,15 +122,25 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private String getBestImageUrl(@NonNull MediaModel media) {
         // return photon-ized url if the site allows it
         if (SiteUtils.isPhotonCapable(mSite)) {
-            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
+            // TODO: UNCOMMENT
+            //return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
         }
 
-        // can't use photon, so try the large image
-        if (!TextUtils.isEmpty(media.getFileNameLargeSize())) {
-            return media.getFilePathLargeSize() + media.getFileNameLargeSize();
+        // can't use photon, so try the mediume-large and large images
+        String path = media.getUrl().substring(0, media.getUrl().lastIndexOf("/") + 1);
+        if (!TextUtils.isEmpty(media.getFileNameMediumLargeSize())) {
+            return path + media.getFileNameMediumLargeSize();
+        } else if (!TextUtils.isEmpty(media.getFileNameLargeSize())) {
+            return path + media.getFileNameLargeSize();
         }
 
-        // last resort, return the image url
+        // next stop is to return the thumbnail, which will look pixelated in the grid but it's
+        // better than eating bandwidth showing the full-sized image
+        if (!TextUtils.isEmpty(media.getThumbnailUrl())) {
+            return media.getThumbnailUrl();
+        }
+
+        // last resort, return the full-sized image url
         return UrlUtils.removeQuery(media.getUrl());
     }
 
