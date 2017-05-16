@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.model;
 
-import android.text.TextUtils;
-
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
@@ -391,14 +389,5 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     public String getFileNameLargeSize() {
         return mFileNameLargeSize;
-    }
-
-    public String getFilePathLargeSize() {
-        String thumbPath = getThumbnailUrl();
-        if (TextUtils.isEmpty(getFileNameLargeSize())
-                || TextUtils.isEmpty(thumbPath) || !thumbPath.contains("/")) return null;
-        if (thumbPath.lastIndexOf("/") + 1 >= thumbPath.length()) return null;
-
-        return thumbPath.substring(0, thumbPath.lastIndexOf("/") + 1) + getFileNameLargeSize();
     }
 }
