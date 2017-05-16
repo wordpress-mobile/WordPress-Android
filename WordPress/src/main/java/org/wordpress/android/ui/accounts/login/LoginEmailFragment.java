@@ -53,19 +53,16 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
-    protected TextInputLayout mEmailEditTextLayout;
-    protected EditText mEmailEditText;
-
-    protected boolean mEmailAutoCorrected;
-
-    protected Button mNextButton;
-    protected View mUsernamePasswordButton;
-
-    protected @Inject Dispatcher mDispatcher;
+    private TextInputLayout mEmailEditTextLayout;
+    private EditText mEmailEditText;
+    private Button mNextButton;
+    private View mUsernamePasswordButton;
+    private ProgressDialog mProgressDialog;
 
     private LoginListener mLoginListener;
+    private boolean mEmailAutoCorrected;
 
-    private ProgressDialog mProgressDialog;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
