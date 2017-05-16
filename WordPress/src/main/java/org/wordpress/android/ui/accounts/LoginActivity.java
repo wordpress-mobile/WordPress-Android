@@ -7,10 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
 
@@ -27,9 +27,9 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     private void addLoginPrologueFragment() {
-        LogInOrSignUpFragment loginSignupFragment = new LogInOrSignUpFragment();
+        LoginPrologueFragment loginSignupFragment = new LoginPrologueFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LogInOrSignUpFragment.TAG);
+        fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LoginPrologueFragment.TAG);
         fragmentTransaction.commit();
     }
 

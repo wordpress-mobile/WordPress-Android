@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 
-public class LogInOrSignUpFragment extends Fragment {
+public class LoginPrologueFragment extends Fragment {
 
-    public static final String TAG = "login_or_signup_fragment_tag";
+    public static final String TAG = "login_prologue_fragment_tag";
 
     LoginListener mLoginListener;
 
