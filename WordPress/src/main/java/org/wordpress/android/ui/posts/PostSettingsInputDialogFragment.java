@@ -12,35 +12,35 @@ import android.widget.EditText;
 
 import org.wordpress.android.R;
 
-public class PostExcerptDialogFragment extends DialogFragment {
-    interface PostExcerptDialogListener {
-        void onPostExcerptUpdated(String postExcerpt);
+public class PostSettingsInputDialogFragment extends DialogFragment {
+    interface PostSettingsInputDialogListener {
+        void onInputUpdated(String input);
     }
 
-    private static final String EXCERPT_TAG = "excerpt";
-    private String mPostExcerpt;
-    private PostExcerptDialogListener mPostExcerptDialogListener;
+    private static final String INPUT_TAG = "input";
+    private String mCurrentInput;
+    private PostSettingsInputDialogListener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            mPostExcerpt = savedInstanceState.getString(EXCERPT_TAG, "");
+            mCurrentInput = savedInstanceState.getString(INPUT_TAG, "");
         } else if (getArguments() != null) {
-            mPostExcerpt = getArguments().getString(EXCERPT_TAG, "");
+            mCurrentInput = getArguments().getString(INPUT_TAG, "");
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(EXCERPT_TAG, mPostExcerpt);
+        outState.putSerializable(INPUT_TAG, mCurrentInput);
     }
 
-    public static PostExcerptDialogFragment newInstance(String postExcerpt) {
-        PostExcerptDialogFragment dialogFragment = new PostExcerptDialogFragment();
+    public static PostSettingsInputDialogFragment newInstance(String currentText) {
+        PostSettingsInputDialogFragment dialogFragment = new PostSettingsInputDialogFragment();
         Bundle args = new Bundle();
-        args.putString(EXCERPT_TAG, postExcerpt);
+        args.putString(INPUT_TAG, currentText);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -49,13 +49,13 @@ public class PostExcerptDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        View dialogView = layoutInflater.inflate(R.layout.post_excerpt_dialog, null);
+        View dialogView = layoutInflater.inflate(R.layout.post_settings_input_dialog, null);
         builder.setView(dialogView);
-        final EditText editText = (EditText) dialogView.findViewById(R.id.post_excerpt_dialog_edit_text);
-        if (!TextUtils.isEmpty(mPostExcerpt)) {
-            editText.setText(mPostExcerpt);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.post_settings_input_dialog_edit_text);
+        if (!TextUtils.isEmpty(mCurrentInput)) {
+            editText.setText(mCurrentInput);
             // move the cursor to the end
-            editText.setSelection(mPostExcerpt.length());
+            editText.setSelection(mCurrentInput.length());
         }
 
         builder.setTitle(R.string.post_excerpt);
@@ -63,9 +63,9 @@ public class PostExcerptDialogFragment extends DialogFragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mPostExcerpt = editText.getText().toString();
-                if (mPostExcerptDialogListener != null) {
-                    mPostExcerptDialogListener.onPostExcerptUpdated(mPostExcerpt);
+                mCurrentInput = editText.getText().toString();
+                if (mListener != null) {
+                    mListener.onInputUpdated(mCurrentInput);
                 }
             }
         });
@@ -73,7 +73,7 @@ public class PostExcerptDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void setPostExcerptDialogListener(PostExcerptDialogListener postExcerptDialogListener) {
-        mPostExcerptDialogListener = postExcerptDialogListener;
+    public void setPostExcerptDialogListener(PostSettingsInputDialogListener listener) {
+        mListener = listener;
     }
 }

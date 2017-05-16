@@ -987,11 +987,11 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostExcerptDialog() {
         String currentExcerpt = getTextFromTextView(mExcerptTextView);
-        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(currentExcerpt);
-        dialog.setPostExcerptDialogListener(new PostExcerptDialogFragment.PostExcerptDialogListener() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(currentExcerpt);
+        dialog.setPostExcerptDialogListener(new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
             @Override
-            public void onPostExcerptUpdated(String postExcerpt) {
-                setTextIfPresent(mExcerptTextView, postExcerpt);
+            public void onInputUpdated(String input) {
+                setTextIfPresent(mExcerptTextView, input);
             }
         });
         dialog.show(getFragmentManager(), null);
