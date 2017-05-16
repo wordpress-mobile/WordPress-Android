@@ -88,6 +88,7 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
         dialog.setCallback(callback);
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
+        dialog.setArguments(args);
         return dialog;
     }
 
