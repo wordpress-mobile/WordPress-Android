@@ -83,7 +83,12 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         mEmailEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_email_layout);
 
         mNextButton = (Button) rootView.findViewById(R.id.login_email_next_button);
-        mNextButton.setOnClickListener(mNextClickListener);
+        mNextButton.setOnClickListener(new OnClickListener() {
+                public void onClick(View v) {
+                    next(getEmail());
+                }
+        });
+
 
         mEmailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -255,13 +260,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
 
         return matcher.find() && email.length() <= MAX_EMAIL_LENGTH;
     }
-
-    private final OnClickListener mNextClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            next(getEmail());
-        }
-    };
 
     @Override
     public void afterTextChanged(Editable s) {
