@@ -109,8 +109,6 @@
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
-    <string name="media_add_popup_capture_photo">Capture photo</string>
-    <string name="media_add_popup_capture_video">Capture video</string>
 
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
@@ -403,8 +401,6 @@
     <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
         address. Check the site address (URL) you entered.</string>
     <!-- media selection -->
-    <string name="select_photo">Select a photo from gallery</string>
-    <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
 
     <!-- category management -->
