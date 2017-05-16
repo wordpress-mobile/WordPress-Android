@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +50,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public class LoginEmailFragment extends AbstractFragment implements TextWatcher {
+public class LoginEmailFragment extends Fragment implements TextWatcher {
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
 
     public static final String TAG = "login_email_fragment_tag";
@@ -103,7 +104,8 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((didPressNextKey(actionId, event) || didPressEnterKey(actionId, event))) {
+                if ((AbstractFragment.didPressNextKey(actionId, event)
+                        || AbstractFragment.didPressEnterKey(actionId, event))) {
                     next(getEmail());
                     return true;
                 } else {
@@ -218,10 +220,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         }
     }
 
-    protected void onDoneAction() {
-        next(getEmail());
-    }
-
     private boolean checkNetworkConnectivity() {
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -279,18 +277,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         mNextButton.setEnabled(getEmail().length() > 0);
     }
 
-    protected boolean isUserDataValid() {
-        final String email = getEmail();
-        boolean retValue = true;
-
-        if (TextUtils.isEmpty(email)) {
-            showEmailError(R.string.required_field);
-            retValue = false;
-        }
-
-        return retValue;
-    }
-
     private void showEmailError(int messageId) {
         mEmailEditTextLayout.setError(getString(messageId));
         mEmailEditText.post(new Runnable() {
@@ -317,8 +303,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         startProgress(getActivity().getString(R.string.checking_email));
     }
 
-    @Override
-    protected void startProgress(String message) {
+    private void startProgress(String message) {
         mNextButton.setEnabled(false);
         mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
                 new DialogInterface.OnCancelListener() {
@@ -329,8 +314,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         });
     }
 
-    @Override
-    protected void endProgress() {
+    private void endProgress() {
         if (mProgressDialog != null) {
             mProgressDialog.cancel();
         }

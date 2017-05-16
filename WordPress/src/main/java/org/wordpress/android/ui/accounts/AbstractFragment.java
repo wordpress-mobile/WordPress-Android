@@ -63,12 +63,12 @@ public abstract class AbstractFragment extends Fragment {
         return false;
     }
 
-    protected boolean didPressNextKey(int actionId, KeyEvent event) {
+    public static boolean didPressNextKey(int actionId, KeyEvent event) {
         return actionId == EditorInfo.IME_ACTION_NEXT || event != null && (event.getAction() == KeyEvent.ACTION_DOWN
                 && event.getKeyCode() == KeyEvent.KEYCODE_NAVIGATE_NEXT);
     }
 
-    protected boolean didPressEnterKey(int actionId, KeyEvent event) {
+    public static boolean didPressEnterKey(int actionId, KeyEvent event) {
         return actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN
                 && event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
     }
