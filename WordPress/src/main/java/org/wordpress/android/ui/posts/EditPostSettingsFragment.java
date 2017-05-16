@@ -273,6 +273,7 @@ public class EditPostSettingsFragment extends Fragment
         slugContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showSlugDialog();
             }
         });
 
@@ -994,6 +995,20 @@ public class EditPostSettingsFragment extends Fragment
                     @Override
                     public void onInputUpdated(String input) {
                         setTextIfPresent(mExcerptTextView, input);
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
+    }
+
+    private void showSlugDialog() {
+        String currentSlug = getTextFromTextView(mSlugTextView);
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                currentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint));
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        setTextIfPresent(mSlugTextView, input);
                     }
                 });
         dialog.show(getFragmentManager(), null);
