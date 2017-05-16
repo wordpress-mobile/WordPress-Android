@@ -19,7 +19,11 @@ public class PostSettingsInputDialogFragment extends DialogFragment {
     }
 
     private static final String INPUT_TAG = "input";
+    private static final String TITLE_TAG = "title";
+    private static final String HINT_TAG = "hint";
     private String mCurrentInput;
+    private String mTitle;
+    private String mHint;
     private PostSettingsInputDialogListener mListener;
 
     @Override
@@ -27,8 +31,12 @@ public class PostSettingsInputDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mCurrentInput = savedInstanceState.getString(INPUT_TAG, "");
+            mTitle = savedInstanceState.getString(TITLE_TAG, "");
+            mHint = savedInstanceState.getString(HINT_TAG, "");
         } else if (getArguments() != null) {
             mCurrentInput = getArguments().getString(INPUT_TAG, "");
+            mTitle = getArguments().getString(TITLE_TAG, "");
+            mHint = getArguments().getString(HINT_TAG, "");
         }
     }
 
@@ -36,12 +44,16 @@ public class PostSettingsInputDialogFragment extends DialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(INPUT_TAG, mCurrentInput);
+        outState.putSerializable(TITLE_TAG, mTitle);
+        outState.putSerializable(HINT_TAG, mHint);
     }
 
-    public static PostSettingsInputDialogFragment newInstance(String currentText) {
+    public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint) {
         PostSettingsInputDialogFragment dialogFragment = new PostSettingsInputDialogFragment();
         Bundle args = new Bundle();
         args.putString(INPUT_TAG, currentText);
+        args.putString(TITLE_TAG, title);
+        args.putString(HINT_TAG, hint);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -59,9 +71,9 @@ public class PostSettingsInputDialogFragment extends DialogFragment {
             editText.setSelection(mCurrentInput.length());
         }
         TextView hintTextView = (TextView) dialogView.findViewById(R.id.post_settings_input_dialog_hint);
-        hintTextView.setText(R.string.post_excerpt_dialog_hint);
+        hintTextView.setText(mHint);
 
-        builder.setTitle(R.string.post_excerpt);
+        builder.setTitle(mTitle);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
