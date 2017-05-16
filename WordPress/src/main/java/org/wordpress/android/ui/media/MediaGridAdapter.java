@@ -117,16 +117,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     /*
-     * returns the best image url to display here
+     * returns the most optimal url to use when retrieving a media image for display here
      */
     private String getBestImageUrl(@NonNull MediaModel media) {
-        // return photon-ized url if the site allows it
+        // return photon-ized url if the site allows it since this gives us the image at the
+        // exact size we need here
         if (SiteUtils.isPhotonCapable(mSite)) {
-            // TODO: UNCOMMENT
-            //return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
+            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
         }
 
-        // can't use photon, so try the mediume-large and large images
+        // can't use photon, so try the various image sizes - note we favor medium-large over large
+        // because it's more bandwidth-friendly
         String path = media.getUrl().substring(0, media.getUrl().lastIndexOf("/") + 1);
         if (!TextUtils.isEmpty(media.getFileNameMediumLargeSize())) {
             return path + media.getFileNameMediumLargeSize();
