@@ -58,7 +58,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     private TextInputLayout mEmailEditTextLayout;
     private EditText mEmailEditText;
     private Button mNextButton;
-    private View mUsernamePasswordButton;
     private ProgressDialog mProgressDialog;
 
     private LoginNav.InputEmail mLoginNavInputEmail;
@@ -85,7 +84,6 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
 
         mNextButton = (Button) rootView.findViewById(R.id.login_email_next_button);
         mNextButton.setOnClickListener(mNextClickListener);
-        mUsernamePasswordButton = rootView.findViewById(R.id.login_email_username_password);
 
         mEmailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -109,7 +107,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
             }
         });
 
-        mUsernamePasswordButton.setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_email_username_password).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginNavInputEmail != null) {
