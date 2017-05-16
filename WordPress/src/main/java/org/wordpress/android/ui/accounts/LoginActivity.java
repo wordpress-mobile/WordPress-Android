@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.login.LogInOrSignUpFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
+import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginNavFragment;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavHandler;
 import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
@@ -71,9 +71,9 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
     }
 
     private void addLoginPrologueFragment() {
-        LogInOrSignUpFragment loginSignupFragment = new LogInOrSignUpFragment();
+        LoginPrologueFragment loginSignupFragment = new LoginPrologueFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LogInOrSignUpFragment.TAG);
+        fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LoginPrologueFragment.TAG);
         fragmentTransaction.commit();
     }
 

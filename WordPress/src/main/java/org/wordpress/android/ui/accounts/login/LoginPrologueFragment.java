@@ -11,7 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 
-public class LogInOrSignUpFragment extends Fragment {
+public class LoginPrologueFragment extends Fragment {
 
     public static final String TAG = "login_or_signup_fragment_tag";
 
