@@ -85,7 +85,6 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                 }
         });
 
-
         autoFillFromBuildConfig();
 
         mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
