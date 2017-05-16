@@ -33,6 +33,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
@@ -303,34 +304,25 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         endProgress();
 
         if (event.isError()) {
+            // report the error but don't bail yet.
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }
 
-        switch(event.type) {
-            case EMAIL:
-                handleEmailAvailabilityEvent(event);
-                break;
-            default:
-                // TODO: we're not expecting any other availability check so, we should never have reached this line
-                break;
-        }
-    }
+        if (event.type != AccountRestClient.IsAvailable.EMAIL) {
+            AppLog.e(T.API, "OnAvailabilityChecked type other than email! Type: " + event.error.type);
 
-    /**
-     * Handler for an email availability event. If a user enters an email address for their
-     * username an API checks to see if it belongs to a wpcom account.  If it exists the magic links
-     * flow is followed. Otherwise the self-hosted sign in form is shown.
-     * @param event the event emitted
-     */
-    private void handleEmailAvailabilityEvent(OnAvailabilityChecked event) {
-        if (!event.isAvailable) {
-            // TODO: Email address exists in WordPress.com so, goto magic link offer screen
-            // Email address exists in WordPress.com
-            if (mLoginNavInputEmail != null) {
-                mLoginNavInputEmail.gotEmail(event.value);
-            }
-        } else {
+            // just bail on unexpected availability check type
+            return;
+        }
+
+        if (event.isAvailable) {
+            // email address is available on wpcom so, apparently the user can't login with that one.
             showEmailError(R.string.email_not_registered_wpcom);
+            return;
+        }
+
+        if (mLoginNavInputEmail != null) {
+            mLoginNavInputEmail.gotEmail(event.value);
         }
     }
 }
