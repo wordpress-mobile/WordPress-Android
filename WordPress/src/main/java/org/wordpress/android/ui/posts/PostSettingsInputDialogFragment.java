@@ -88,7 +88,7 @@ public class PostSettingsInputDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void setPostExcerptDialogListener(PostSettingsInputDialogListener listener) {
+    public void setPostSettingsInputDialogListener(PostSettingsInputDialogListener listener) {
         mListener = listener;
     }
 }

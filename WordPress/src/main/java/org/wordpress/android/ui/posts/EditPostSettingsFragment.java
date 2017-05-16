@@ -989,12 +989,13 @@ public class EditPostSettingsFragment extends Fragment
         String currentExcerpt = getTextFromTextView(mExcerptTextView);
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 currentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint));
-        dialog.setPostExcerptDialogListener(new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
-            @Override
-            public void onInputUpdated(String input) {
-                setTextIfPresent(mExcerptTextView, input);
-            }
-        });
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        setTextIfPresent(mExcerptTextView, input);
+                    }
+                });
         dialog.show(getFragmentManager(), null);
     }
 
