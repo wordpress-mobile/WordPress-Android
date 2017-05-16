@@ -126,11 +126,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
         }
 
-        // can't use photon, so try the various image sizes - note we favor medium-large over large
-        // because it's more bandwidth-friendly
+        // can't use photon, so try the various image sizes - note we favor medium-large and
+        // medium because they're more bandwidth-friendly than large
         String path = media.getUrl().substring(0, media.getUrl().lastIndexOf("/") + 1);
         if (!TextUtils.isEmpty(media.getFileNameMediumLargeSize())) {
             return path + media.getFileNameMediumLargeSize();
+        } else if (!TextUtils.isEmpty(media.getFileNameMediumSize())) {
+            return path + media.getFileNameMediumSize();
         } else if (!TextUtils.isEmpty(media.getFileNameLargeSize())) {
             return path + media.getFileNameLargeSize();
         }
