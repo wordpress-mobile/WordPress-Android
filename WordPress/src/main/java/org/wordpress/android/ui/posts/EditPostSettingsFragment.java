@@ -371,11 +371,8 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        if (!TextUtils.isEmpty(mPost.getExcerpt())) {
-            mExcerptTextView.setText(mPost.getExcerpt());
-        } else {
-            setPostExcerptToNotSet();
-        }
+        setTextIfPresent(mExcerptTextView, mPost.getExcerpt());
+        setTextIfPresent(mSlugTextView, mPost.getSlug());
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -992,11 +989,7 @@ public class EditPostSettingsFragment extends Fragment
         dialog.setPostExcerptDialogListener(new PostExcerptDialogFragment.PostExcerptDialogListener() {
             @Override
             public void onPostExcerptUpdated(String postExcerpt) {
-                if (TextUtils.isEmpty(postExcerpt)) {
-                    setPostExcerptToNotSet();
-                } else {
-                    mExcerptTextView.setText(postExcerpt);
-                }
+                setTextIfPresent(mExcerptTextView, postExcerpt);
             }
         });
         dialog.show(getFragmentManager(), null);
@@ -1010,8 +1003,12 @@ public class EditPostSettingsFragment extends Fragment
         return excerpt;
     }
 
-    private void setPostExcerptToNotSet() {
-        mExcerptTextView.setText(R.string.not_set);
+    private void setTextIfPresent(TextView textView, String text) {
+        if (!TextUtils.isEmpty(text)) {
+            textView.setText(text);
+        } else {
+            textView.setText(R.string.not_set);
+        }
     }
 
     /*
