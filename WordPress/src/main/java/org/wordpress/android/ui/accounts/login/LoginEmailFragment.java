@@ -34,7 +34,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
-import org.wordpress.android.ui.accounts.AbstractFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -87,26 +86,19 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         });
 
 
-        mEmailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    autoCorrectEmail();
-                }
-            }
-        });
-
         autoFillFromBuildConfig();
 
         mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((AbstractFragment.didPressNextKey(actionId, event)
-                        || AbstractFragment.didPressEnterKey(actionId, event))) {
+                if (event != null
+                        && event.getAction() == KeyEvent.ACTION_UP
+                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     next(getCleanedEmail());
-                    return true;
-                } else {
-                    return false;
                 }
+
+                // always consume the event so the focus stays in the EditText
+                return true;
             }
         });
 
@@ -226,6 +218,8 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             return;
         }
 
+        autoCorrectEmail();
+
         if (isValidEmail(email)) {
             showEmailCheckProgressDialog();
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
@@ -265,12 +259,6 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     private void showEmailError(int messageId) {
         mEmailEditTextLayout.setError(getString(messageId));
-        mEmailEditText.post(new Runnable() {
-            @Override
-            public void run() {
-                mEmailEditText.requestFocus();
-            }
-        });
     }
 
     @Override
