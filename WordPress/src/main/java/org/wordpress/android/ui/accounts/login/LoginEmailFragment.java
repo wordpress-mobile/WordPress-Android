@@ -252,11 +252,11 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        UpdateNextButton();
+        updateNextButton();
         mEmailEditTextLayout.setError(null);
     }
 
-    private void UpdateNextButton() {
+    private void updateNextButton() {
         mNextButton.setEnabled(getCleanedEmail().length() > 0);
     }
 
@@ -292,7 +292,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                 new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                UpdateNextButton();
+                updateNextButton();
             }
         });
     }
@@ -305,7 +305,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         // nullify the reference to denote there is no operation in progress
         mProgressDialog = null;
 
-        UpdateNextButton();
+        updateNextButton();
     }
 
     // OnChanged events
