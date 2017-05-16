@@ -82,7 +82,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         mNextButton = (Button) rootView.findViewById(R.id.login_email_next_button);
         mNextButton.setOnClickListener(new OnClickListener() {
                 public void onClick(View v) {
-                    next(getEmail());
+                    next(getCleanedEmail());
                 }
         });
 
@@ -102,7 +102,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((AbstractFragment.didPressNextKey(actionId, event)
                         || AbstractFragment.didPressEnterKey(actionId, event))) {
-                    next(getEmail());
+                    next(getCleanedEmail());
                     return true;
                 } else {
                     return false;
@@ -205,7 +205,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         if (mEmailAutoCorrected) {
             return;
         }
-        final String email = getEmail();
+        final String email = getCleanedEmail();
         // Check if the username looks like an email address
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
@@ -234,7 +234,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         }
     }
 
-    private String getEmail() {
+    private String getCleanedEmail() {
         return EditTextUtils.getText(mEmailEditText).trim();
     }
 
@@ -260,7 +260,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     }
 
     private void UpdateNextButton() {
-        mNextButton.setEnabled(getEmail().length() > 0);
+        mNextButton.setEnabled(getCleanedEmail().length() > 0);
     }
 
     private void showEmailError(int messageId) {
