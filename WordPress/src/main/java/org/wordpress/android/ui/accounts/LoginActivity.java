@@ -25,7 +25,9 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
 
         setContentView(R.layout.login_activity);
 
-        addLoginNavFragment();
+        if (!hasLoginNavFragment()) {
+            addLoginNavFragment();
+        }
 
         if (savedInstanceState == null) {
             addLoginPrologueFragment();
@@ -44,30 +46,28 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
     @Override
     public void onBackPressed() {
         // perform the Nav back first so updated fragments can find their expected state there.
-        retrieveLoginNavFragment().goBack();
+        getLoginNavFragment().goBack();
 
         super.onBackPressed();
     }
 
-    private LoginNavFragment retrieveLoginNavFragment() {
-        Fragment loginNavFragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_NAV_FRAGMENT);
-        if (loginNavFragment == null) {
-            return null;
-        } else {
-            return (LoginNavFragment) loginNavFragment;
-        }
+    /**
+     * Retrieves the login navigation fragment from the FragmentManager.
+     *  **NOTE** Should not be used too early before the navigation fragment has been added to the FragmentManager.
+     * @return the login navigation fragment instance or null if not found
+     */
+    private LoginNavFragment getLoginNavFragment() {
+        return (LoginNavFragment) getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_NAV_FRAGMENT);
+    }
+
+    private boolean hasLoginNavFragment() {
+        return getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_NAV_FRAGMENT) != null;
     }
 
     private void addLoginNavFragment() {
-        LoginNavFragment loginNavFragment = retrieveLoginNavFragment();
-
-        if (loginNavFragment == null) {
-            loginNavFragment = new LoginNavFragment();
-
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(loginNavFragment, TAG_LOGIN_NAV_FRAGMENT);
-            fragmentTransaction.commit();
-        }
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(new LoginNavFragment(), TAG_LOGIN_NAV_FRAGMENT);
+        fragmentTransaction.commit();
     }
 
     protected void addLoginPrologueFragment() {
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
 
     @Override
     public LoginStateGetter getLoginStateGetter() {
-        return retrieveLoginNavFragment().getLoginStateGetter();
+        return getLoginNavFragment().getLoginStateGetter();
     }
 
     @Override
