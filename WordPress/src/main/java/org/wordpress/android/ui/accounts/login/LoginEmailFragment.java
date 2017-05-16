@@ -276,15 +276,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     private void UpdateNextButton() {
-        if (fieldsFilled()) {
-            mNextButton.setEnabled(true);
-        } else {
-            mNextButton.setEnabled(false);
-        }
-    }
-
-    private boolean fieldsFilled() {
-        return getEmail().length() > 0;
+        mNextButton.setEnabled(getEmail().length() > 0);
     }
 
     protected boolean isUserDataValid() {
