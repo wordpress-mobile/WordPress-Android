@@ -702,7 +702,8 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setExcerpt(getPostExcerptFromTextView());
+        post.setExcerpt(getTextFromTextView(mExcerptTextView));
+        post.setSlug(getTextFromTextView(mSlugTextView));
         post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
@@ -985,7 +986,8 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostExcerptDialog() {
-        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(getPostExcerptFromTextView());
+        String currentExcerpt = getTextFromTextView(mExcerptTextView);
+        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(currentExcerpt);
         dialog.setPostExcerptDialogListener(new PostExcerptDialogFragment.PostExcerptDialogListener() {
             @Override
             public void onPostExcerptUpdated(String postExcerpt) {
@@ -995,12 +997,12 @@ public class EditPostSettingsFragment extends Fragment
         dialog.show(getFragmentManager(), null);
     }
 
-    private String getPostExcerptFromTextView() {
-        String excerpt = mExcerptTextView.getText().toString();
-        if (excerpt.equals(getString(R.string.not_set))) {
-            excerpt = "";
+    private String getTextFromTextView(TextView textView) {
+        String text = textView.getText().toString();
+        if (text.equals(getString(R.string.not_set))) {
+            text = "";
         }
-        return excerpt;
+        return text;
     }
 
     private void setTextIfPresent(TextView textView, String text) {
