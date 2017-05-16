@@ -116,6 +116,24 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return new GridViewHolder(view);
     }
 
+    /*
+     * returns the best image url to display here
+     */
+    private String getBestImageUrl(@NonNull MediaModel media) {
+        // return photon-ized url if the site allows it
+        if (SiteUtils.isPhotonCapable(mSite)) {
+            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
+        }
+
+        // can't use photon, so try the large image
+        if (!TextUtils.isEmpty(media.getFileNameLargeSize())) {
+            return media.getFilePathLargeSize() + media.getFileNameLargeSize();
+        }
+
+        // last resort, return the image url
+        return UrlUtils.removeQuery(media.getUrl());
+    }
+
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
         if (!isValidPosition(position)) {
@@ -137,15 +155,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                // if this isn't a private site use Photon to request the image at the exact size,
-                // otherwise append the standard wp query params to request the desired size
-                String thumbUrl;
-                if (SiteUtils.isPhotonCapable(mSite)) {
-                    thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
-                } else {
-                    thumbUrl = UrlUtils.removeQuery(media.getUrl());
-                }
-                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView, mImageLoader);
             }
         } else {
             // not an image, so show file name and file type
