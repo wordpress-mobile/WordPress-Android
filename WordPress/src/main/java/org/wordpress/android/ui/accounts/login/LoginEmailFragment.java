@@ -205,7 +205,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         if (mEmailAutoCorrected) {
             return;
         }
-        final String email = EditTextUtils.getText(mEmailEditText).trim();
+        final String email = getEmail();
         // Check if the username looks like an email address
         final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = emailRegExPattern.matcher(email);
@@ -287,11 +287,11 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     private boolean fieldsFilled() {
-        return EditTextUtils.getText(mEmailEditText).trim().length() > 0;
+        return getEmail().length() > 0;
     }
 
     protected boolean isUserDataValid() {
-        final String email = EditTextUtils.getText(mEmailEditText).trim();
+        final String email = getEmail();
         boolean retValue = true;
 
         if (TextUtils.isEmpty(email)) {
