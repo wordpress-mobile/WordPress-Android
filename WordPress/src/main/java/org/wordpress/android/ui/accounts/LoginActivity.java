@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
         fragmentTransaction.commit();
     }
 
-    protected void addLoginPrologueFragment() {
+    private void addLoginPrologueFragment() {
         LogInOrSignUpFragment loginSignupFragment = new LogInOrSignUpFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginSignupFragment, LogInOrSignUpFragment.TAG);
