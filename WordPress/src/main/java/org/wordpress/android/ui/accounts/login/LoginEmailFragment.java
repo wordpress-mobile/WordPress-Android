@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,7 +35,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.ui.accounts.AbstractFragment;
-import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.util.AppLog;
@@ -220,23 +218,8 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         }
     }
 
-    private boolean checkNetworkConnectivity() {
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            SignInDialogFragment nuxAlert;
-            nuxAlert = SignInDialogFragment.newInstance(getString(R.string.no_network_title),
-                    getString(R.string.no_network_message),
-                    R.drawable.ic_notice_white_64dp,
-                    getString(R.string.cancel));
-            ft.add(nuxAlert, "alert");
-            ft.commitAllowingStateLoss();
-            return false;
-        }
-        return true;
-    }
-
     protected void next(String email) {
-        if (!checkNetworkConnectivity()) {
+        if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
