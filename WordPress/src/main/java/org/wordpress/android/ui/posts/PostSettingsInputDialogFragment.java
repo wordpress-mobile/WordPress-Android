@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 
@@ -57,6 +58,8 @@ public class PostSettingsInputDialogFragment extends DialogFragment {
             // move the cursor to the end
             editText.setSelection(mCurrentInput.length());
         }
+        TextView hintTextView = (TextView) dialogView.findViewById(R.id.post_settings_input_dialog_hint);
+        hintTextView.setText(R.string.post_excerpt_dialog_hint);
 
         builder.setTitle(R.string.post_excerpt);
         builder.setNegativeButton(R.string.cancel, null);
