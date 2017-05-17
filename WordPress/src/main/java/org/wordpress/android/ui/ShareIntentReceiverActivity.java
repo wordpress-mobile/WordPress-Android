@@ -236,23 +236,17 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
      * Start the correct activity if permissions are granted.
      */
     private void shareIt() {
-        Intent intent = null;
         if (!isSharingText()) {
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
             if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return;
             }
         }
-        if (mActionIndex == ADD_TO_NEW_POST) {
-            // new post
-            intent = new Intent(this, EditPostActivity.class);
-        } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
-            // add to media gallery
-            intent = new Intent(this, MediaBrowserActivity.class);
-        }
 
-        if (intent != null) {
-            startActivityAndFinish(intent);
+        if (mActionIndex == ADD_TO_NEW_POST) {
+            startActivityAndFinish(new Intent(this, EditPostActivity.class));
+        } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
+            startActivityAndFinish(new Intent(this, MediaBrowserActivity.class));
         } else {
             ToastUtils.showToast(this, R.string.cant_share_unknown_action);
             finish();
