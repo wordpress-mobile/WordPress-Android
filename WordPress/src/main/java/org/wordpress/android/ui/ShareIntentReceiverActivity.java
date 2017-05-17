@@ -103,12 +103,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
-    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.blog_spinner) {
             mSelectedSiteLocalId = mSiteIds[position];
