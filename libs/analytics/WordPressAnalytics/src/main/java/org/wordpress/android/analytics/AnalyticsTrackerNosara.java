@@ -360,12 +360,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_discarded_changes";
             case EDITOR_EDITED_IMAGE:
                 return "editor_image_edited";
-            case EDITOR_ENABLED_NEW_VERSION:
-                return "editor_enabled_new_version";
-            case EDITOR_TOGGLED_OFF:
-                return "editor_toggled_off";
-            case EDITOR_TOGGLED_ON:
-                return "editor_toggled_on";
+            case EDITOR_HYBRID_ENABLED:
+                return "editor_hybrid_enabled";
+            case EDITOR_HYBRID_TOGGLED_OFF:
+                return "editor_hybrid_toggled_off";
+            case EDITOR_HYBRID_TOGGLED_ON:
+                return "editor_hybrid_toggled_on";
+            case EDITOR_AZTEC_ENABLED:
+                return "editor_aztec_enabled";
+            case EDITOR_AZTEC_TOGGLED_OFF:
+                return "editor_aztec_toggled_off";
+            case EDITOR_AZTEC_TOGGLED_ON:
+                return "editor_aztec_toggled_on";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:

@@ -2006,7 +2006,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         };
-        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback);
+        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback, mSite);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(dialog, "insert_media");
         ft.commitAllowingStateLoss();
@@ -2249,7 +2249,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             AppLog.e(T.MEDIA, "Invalid media id passed to onMediaRetryClicked");
             return;
         }
-        MediaModel media = mMediaStore.getMediaWithLocalId(Integer.valueOf(mediaId));
+        MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
             return;
