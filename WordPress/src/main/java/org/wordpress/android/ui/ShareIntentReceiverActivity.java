@@ -93,11 +93,10 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
                 startActivityAndFinish(new Intent(this, EditPostActivity.class));
             }
         } else {
-            String[] actions = new String[]{getString(R.string.share_action_post), getString(
-                    R.string.share_action_media)};
-            ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(this,
-                    R.layout.spinner_menu_dropdown_item, actions);
-            mActionSpinner.setAdapter(actionAdapter);
+            String[] actions = new String[] {
+                    getString(R.string.share_action_post), getString(R.string.share_action_media)
+            };
+            mActionSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_menu_dropdown_item, actions));
             mActionSpinner.setOnItemSelectedListener(this);
         }
         loadLastUsed();
@@ -110,13 +109,50 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     }
 
     @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.blog_spinner) {
+            mSelectedSiteLocalId = mSiteIds[position];
+        } else if (parent.getId() == R.id.action_spinner) {
+            mActionIndex = position;
+        }
+    }
+
+    @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        // noop
+        // nop
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        if (requestCode == SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
+            for (int grantResult : grantResults) {
+                if (grantResult == PackageManager.PERMISSION_DENIED) {
+                    ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
+                    return;
+                }
+            }
+            shareIt();
+        }
+    }
+
+    /**
+     * Callback for "Share" button.
+     */
+    public void onShareClicked(View view) {
+        shareIt();
+    }
+
+    /**
+     * Callback for "Cancel" button.
+     */
+    public void onCancelClicked(View view) {
+        finish();
     }
 
     private void finishIfNoVisibleBlogs() {
-        // If not logged in, then ask to log in, else inform the user to set at least one blog
-        // visible
+        // If not logged in, then ask to log in, else inform the user to set at least one blog visible
         if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
@@ -171,15 +207,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.blog_spinner) {
-            mSelectedSiteLocalId = mSiteIds[position];
-        } else if (parent.getId() == R.id.action_spinner) {
-            mActionIndex = position;
-        }
-    }
-
     private void startActivityAndFinish(Intent intent) {
         String action = getIntent().getAction();
         if (intent != null) {
@@ -204,14 +231,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             startActivity(intent);
             finish();
         }
-    }
-
-    public void onShareClicked(View view) {
-        shareIt();
-    }
-
-    public void onCancelClicked(View view) {
-        finish();
     }
 
     /**
@@ -246,23 +265,5 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId);
         editor.putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex);
         editor.apply();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case SHARE_MEDIA_PERMISSION_REQUEST_CODE:
-                for (int grantResult : grantResults) {
-                    if (grantResult == PackageManager.PERMISSION_DENIED) {
-                        ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
-                        return;
-                    }
-                }
-                shareIt();
-                break;
-            default:
-                break;
-        }
     }
 }
