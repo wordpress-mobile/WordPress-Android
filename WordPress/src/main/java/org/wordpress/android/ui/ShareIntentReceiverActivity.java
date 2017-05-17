@@ -55,7 +55,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private String mSiteNames[];
     private int mSiteIds[];
     private int mSelectedSiteLocalId;
-    private TextView mBlogSpinnerTitle;
     private int mActionIndex;
 
     @Override
@@ -65,7 +64,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         setContentView(R.layout.share_intent_receiver_dialog);
 
-        mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
+        TextView blogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
         initSiteLists();
 
@@ -76,7 +75,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         if (mSiteNames.length == 1) {
             mBlogSpinner.setVisibility(View.GONE);
-            mBlogSpinnerTitle.setVisibility(View.GONE);
+            blogSpinnerTitle.setVisibility(View.GONE);
         } else {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_menu_dropdown_item, mSiteNames);
             mBlogSpinner.setAdapter(adapter);
