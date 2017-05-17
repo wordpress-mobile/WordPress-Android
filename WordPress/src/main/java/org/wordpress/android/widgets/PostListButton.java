@@ -27,9 +27,10 @@ public class PostListButton extends LinearLayout {
     public static final int BUTTON_TRASH    = 5;
     public static final int BUTTON_DELETE   = 6;
     public static final int BUTTON_PUBLISH  = 7;
-    public static final int BUTTON_MORE     = 8;
-    public static final int BUTTON_BACK     = 9;
-    public static final int BUTTON_SUBMIT   = 10;
+    public static final int BUTTON_SYNC     = 8;
+    public static final int BUTTON_MORE     = 9;
+    public static final int BUTTON_BACK     = 10;
+    public static final int BUTTON_SUBMIT   = 11;
 
     public PostListButton(Context context){
         super(context);
@@ -99,6 +100,8 @@ public class PostListButton extends LinearLayout {
                 return R.string.button_delete;
             case BUTTON_PUBLISH:
                 return R.string.button_publish;
+            case BUTTON_SYNC:
+                return R.string.button_sync;
             case BUTTON_MORE:
                 return R.string.button_more;
             case BUTTON_BACK:
@@ -125,6 +128,7 @@ public class PostListButton extends LinearLayout {
             case BUTTON_DELETE:
                 return R.drawable.ic_trash_blue_wordpress_18dp;
             case BUTTON_PUBLISH:
+            case BUTTON_SYNC:
             case BUTTON_SUBMIT:
                 return R.drawable.ic_reader_blue_wordpress_18dp;
             case BUTTON_MORE:
