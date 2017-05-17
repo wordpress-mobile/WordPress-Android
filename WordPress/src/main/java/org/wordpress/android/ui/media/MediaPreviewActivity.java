@@ -56,6 +56,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -622,6 +623,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(this)) {
             return;
         }
 
