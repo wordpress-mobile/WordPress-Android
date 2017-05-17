@@ -220,7 +220,14 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             Uri extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
             intent.putExtra(Intent.EXTRA_STREAM, extra);
         }
-        savePreferences();
+
+        // save preferences
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId)
+                .putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex)
+                .apply();
+
         startActivity(intent);
         finish();
     }
@@ -250,15 +257,5 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             ToastUtils.showToast(this, R.string.cant_share_unknown_action);
             finish();
         }
-    }
-
-    private void savePreferences() {
-        // If current blog is not set don't save preferences
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-
-        // Save last used settings
-        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId);
-        editor.putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex);
-        editor.apply();
     }
 }
