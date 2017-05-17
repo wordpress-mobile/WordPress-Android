@@ -10,6 +10,14 @@
     android:minWidth="@dimen/default_dialog_width"
     android:orientation="vertical">
 
+    <org.wordpress.android.widgets.WPTextView
+        style="@style/Calypso.TextAppearance.AlertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_large"
+        android:text="@string/share_action" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
