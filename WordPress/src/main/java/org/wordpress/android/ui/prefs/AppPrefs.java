@@ -422,13 +422,13 @@ public class AppPrefs {
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
-        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_TOGGLED_ON : Stat.EDITOR_TOGGLED_OFF);
+        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
     }
 
     public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
         setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
         if (visualEditorAvailable) {
-            AnalyticsTracker.track(Stat.EDITOR_ENABLED_NEW_VERSION);
+            AnalyticsTracker.track(Stat.EDITOR_HYBRID_ENABLED);
         }
     }
 
