@@ -10,8 +10,8 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
-import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginNavFragment;
+import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.nav.LoginNavHandler;
 import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 
@@ -46,18 +46,25 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
     @Override
     public void onBackPressed() {
         // perform the Nav back first so updated fragments can find their expected state there.
-        getLoginNavFragment().goBack();
+        getLoginNavFragmentOrThrow().goBack();
 
         super.onBackPressed();
     }
 
     /**
      * Retrieves the login navigation fragment from the FragmentManager.
-     *  **NOTE** Should not be used too early before the navigation fragment has been added to the FragmentManager.
-     * @return the login navigation fragment instance or null if not found
+     *
+     *  **NOTE** Will throw a RTE if the nav fragment is not added already.
+     *
+     * @return the login navigation fragment instance or throw a RTE if not found
      */
-    private LoginNavFragment getLoginNavFragment() {
-        return (LoginNavFragment) getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_NAV_FRAGMENT);
+    private LoginNavFragment getLoginNavFragmentOrThrow() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_NAV_FRAGMENT);
+        if (fragment == null) {
+            throw new RuntimeException("The Login navigation state fragment is missing!");
+        }
+
+        return (LoginNavFragment) fragment;
     }
 
     private boolean hasLoginNavFragment() {
@@ -94,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
 
     @Override
     public LoginStateGetter getLoginStateGetter() {
-        return getLoginNavFragment().getLoginStateGetter();
+        return getLoginNavFragmentOrThrow().getLoginStateGetter();
     }
 
     @Override
