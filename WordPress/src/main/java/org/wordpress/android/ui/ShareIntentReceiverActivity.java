@@ -207,43 +207,39 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         }
     }
 
-    private void startActivityAndFinish(Intent intent) {
+    private void startActivityAndFinish(@NonNull Intent intent) {
         String action = getIntent().getAction();
-        if (intent != null) {
-            intent.setAction(action);
-            intent.setType(getIntent().getType());
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setAction(action);
+        intent.setType(getIntent().getType());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSelectedSiteLocalId));
+        intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSelectedSiteLocalId));
 
-            intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
-            intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
+        intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
+        intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));
 
-            if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                ArrayList<Uri> extra = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-                intent.putExtra(Intent.EXTRA_STREAM, extra);
-            } else {
-                Uri extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-                intent.putExtra(Intent.EXTRA_STREAM, extra);
-            }
-            savePreferences();
-            startActivity(intent);
-            finish();
+        if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            ArrayList<Uri> extra = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+            intent.putExtra(Intent.EXTRA_STREAM, extra);
+        } else {
+            Uri extra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+            intent.putExtra(Intent.EXTRA_STREAM, extra);
         }
+        savePreferences();
+        startActivity(intent);
+        finish();
     }
 
     /**
-     * Start the correct activity if permissions are granted
-     *
-     * @return true if the activity has been started, false else.
+     * Start the correct activity if permissions are granted.
      */
-    private boolean shareIt() {
+    private void shareIt() {
         Intent intent = null;
         if (!isSharingText()) {
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
             if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
-                return false;
+                return;
             }
         }
         if (mActionIndex == ADD_TO_NEW_POST) {
@@ -253,8 +249,12 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             // add to media gallery
             intent = new Intent(this, MediaBrowserActivity.class);
         }
-        startActivityAndFinish(intent);
-        return true;
+
+        if (intent != null) {
+            startActivityAndFinish(intent);
+        } else {
+            finish();
+        }
     }
 
     private void savePreferences() {
