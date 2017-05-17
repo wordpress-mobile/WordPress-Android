@@ -418,7 +418,7 @@
 
     <!-- action from share intents -->
     <string name="select_a_blog">Select a WordPress site</string>
-    <string name="share_action_title">Add to …</string>
+    <string name="share_action_title">Add to</string>
     <string name="share_action_post">New post</string>
     <string name="share_action_media">Media library</string>
     <string name="share_action">Share</string>
