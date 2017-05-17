@@ -211,6 +211,10 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         shareIt();
     }
 
+    public void onCancelClicked(View view) {
+        finish();
+    }
+
     /**
      * Start the correct activity if permissions are granted
      *

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:background="@drawable/dialog_full_holo_light"
-              android:minWidth="@dimen/default_dialog_width"
-              android:orientation="vertical">
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_full_holo_light"
+    android:minWidth="@dimen/default_dialog_width"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -45,14 +47,31 @@
                 style="@style/DropDownNav.WordPress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
         </LinearLayout>
+
     </ScrollView>
 
-    <Button
-        android:id="@+id/share_intent_receiver_button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="onShareClicked"
-        android:text="@string/share_action"/>
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/share_intent_receiver_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCancelClicked"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/share_intent_receiver_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onShareClicked"
+            android:text="@string/share_action" />
+
+    </LinearLayout>
+
 </LinearLayout>
