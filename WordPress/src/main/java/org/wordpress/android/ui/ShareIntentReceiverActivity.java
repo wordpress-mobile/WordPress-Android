@@ -253,6 +253,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         if (intent != null) {
             startActivityAndFinish(intent);
         } else {
+            ToastUtils.showToast(this, R.string.cant_share_unknown_action);
             finish();
         }
     }

@@ -422,6 +422,7 @@
     <string name="share_action_media">Media library</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
+    <string name="cant_share_unknown_action">Unrecognized action requested, ignoring</string>
     <string name="no_account">No WordPress account found, add an account and try again</string>
 
     <!-- file errors -->
