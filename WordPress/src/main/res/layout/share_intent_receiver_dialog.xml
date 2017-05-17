@@ -29,33 +29,33 @@
             android:layout_margin="@dimen/margin_large"
             android:orientation="vertical">
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/blog_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/select_a_blog"
                 android:textAllCaps="true"
-                android:textSize="@dimen/text_sz_small"/>
+                android:textSize="@dimen/text_sz_small" />
 
             <Spinner
                 android:id="@+id/blog_spinner"
                 style="@style/DropDownNav.WordPress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/action_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/share_action_title"
                 android:textAllCaps="true"
-                android:textSize="@dimen/text_sz_small"/>
+                android:textSize="@dimen/text_sz_small" />
 
             <Spinner
                 android:id="@+id/action_spinner"
                 style="@style/DropDownNav.WordPress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
