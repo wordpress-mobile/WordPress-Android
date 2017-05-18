@@ -6,12 +6,14 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -43,19 +45,17 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
 
-    public static final int ADD_TO_NEW_POST = 0;
-    public static final int ADD_TO_MEDIA_LIBRARY = 1;
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
     private Spinner mBlogSpinner;
-    private Spinner mActionSpinner;
+    private RadioGroup mActionGroup;
     private String mSiteNames[];
     private int mSiteIds[];
     private int mSelectedSiteLocalId;
-    private int mActionIndex;
+    private int mActionId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +83,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         }
 
         // If type is text/plain hide Media Gallery option
-        mActionSpinner = (Spinner) findViewById(R.id.action_spinner);
+        mActionGroup = (RadioGroup) findViewById(R.id.share_actions);
         if (isSharingText()) {
-            mActionSpinner.setVisibility(View.GONE);
+            mActionGroup.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
             // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
             if (mSiteNames.length == 1) {
@@ -93,11 +93,12 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
                 startActivityAndFinish(new Intent(this, EditPostActivity.class));
             }
         } else {
-            String[] actions = new String[] {
-                    getString(R.string.share_action_post), getString(R.string.share_action_media)
-            };
-            mActionSpinner.setAdapter(new ArrayAdapter<>(this, R.layout.spinner_menu_dropdown_item, actions));
-            mActionSpinner.setOnItemSelectedListener(this);
+            mActionGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                    mActionId = checkedId;
+                }
+            });
         }
         loadLastUsed();
     }
@@ -106,8 +107,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.blog_spinner) {
             mSelectedSiteLocalId = mSiteIds[position];
-        } else if (parent.getId() == R.id.action_spinner) {
-            mActionIndex = position;
         }
     }
 
@@ -169,15 +168,15 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void loadLastUsed() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         int localBlogId = settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
-        int actionPosition = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, -1);
+        int actionId = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, -1);
         if (localBlogId != -1) {
             int position = getPositionBySiteId(localBlogId);
             if (position != -1) {
                 mBlogSpinner.setSelection(position);
             }
         }
-        if (actionPosition >= 0 && actionPosition < mActionSpinner.getCount()) {
-            mActionSpinner.setSelection(actionPosition);
+        if (actionId != -1) {
+            mActionGroup.check(actionId);
         }
     }
 
@@ -225,7 +224,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         PreferenceManager.getDefaultSharedPreferences(this)
                 .edit()
                 .putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId)
-                .putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex)
+                .putInt(SHARE_LAST_USED_ADDTO_KEY, mActionId)
                 .apply();
 
         startActivity(intent);
@@ -243,9 +242,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
         }
 
-        if (mActionIndex == ADD_TO_NEW_POST) {
+        if (mActionId == R.id.new_post_share_action) {
             startActivityAndFinish(new Intent(this, EditPostActivity.class));
-        } else if (mActionIndex == ADD_TO_MEDIA_LIBRARY) {
+        } else if (mActionId == R.id.media_library_share_action) {
             startActivityAndFinish(new Intent(this, MediaBrowserActivity.class));
         } else {
             ToastUtils.showToast(this, R.string.cant_share_unknown_action);

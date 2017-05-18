@@ -2,7 +2,6 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:theme="@style/Calypso.AlertDialog"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -43,11 +42,26 @@
                 android:textAllCaps="true"
                 android:textSize="@dimen/text_sz_small" />
 
-            <Spinner
-                android:id="@+id/action_spinner"
-                style="@style/DropDownNav.WordPress"
+            <RadioGroup
+                android:id="@+id/share_actions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/new_post_share_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/share_action_post" />
+
+                <RadioButton
+                    android:id="@+id/media_library_share_action"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/share_action_media" />
+
+            </RadioGroup>
 
         </LinearLayout>
 
@@ -60,7 +74,7 @@
         android:gravity="end">
 
         <Button
-            style="@style/Helpshift.Style.BorderlessButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:id="@+id/share_intent_receiver_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +82,7 @@
             android:text="@string/cancel" />
 
         <Button
-            style="@style/Helpshift.Style.BorderlessButton"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:id="@+id/share_intent_receiver_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
