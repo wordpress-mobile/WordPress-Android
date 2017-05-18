@@ -26,12 +26,15 @@
                 android:id="@+id/blog_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingStart="@dimen/margin_small"
                 android:text="@string/select_a_blog"
                 android:textColor="@color/wp_grey_darken_10"
                 android:textSize="@dimen/text_sz_small" />
 
             <android.support.v7.widget.AppCompatSpinner
-                style="@style/DropDownNav.WordPress"
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:id="@+id/blog_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -41,6 +44,10 @@
                 android:id="@+id/action_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_medium"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingStart="@dimen/margin_small"
                 android:text="@string/share_action_title"
                 android:textColor="@color/wp_grey_darken_10"
                 android:textSize="@dimen/text_sz_small" />
@@ -52,21 +59,21 @@
 
                 <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/new_post_share_action"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical|end"
+                    android:gravity="center_vertical"
                     android:textColor="@color/grey_dark"
                     android:text="@string/share_action_post"
-                    app:buttonTint="@color/blue_wordpress" />
+                    app:buttonTint="@color/wp_blue_medium" />
 
                 <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/media_library_share_action"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical|end"
+                    android:gravity="center_vertical"
                     android:textColor="@color/grey_dark"
                     android:text="@string/share_action_media"
-                    app:buttonTint="@color/blue_wordpress" />
+                    app:buttonTint="@color/wp_blue_medium" />
 
             </RadioGroup>
 
