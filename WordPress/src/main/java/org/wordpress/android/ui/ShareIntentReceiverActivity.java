@@ -168,7 +168,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void loadLastUsed() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         int localBlogId = settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
-        int actionId = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, -1);
+        int actionId = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, R.id.new_post_share_action);
         if (localBlogId != -1) {
             int position = getPositionBySiteId(localBlogId);
             if (position != -1) {
