@@ -61,6 +61,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     private LoginNav.InputEmail mLoginNavInputEmail;
     private boolean mEmailAutoCorrected;
+    private boolean mInProgress;
 
     @Inject Dispatcher mDispatcher;
 
@@ -130,8 +131,9 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         }
 
         if (savedInstanceState != null) {
-            boolean isInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
-            if (isInProgress) {
+            mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
+
+            if (mInProgress) {
                 showEmailCheckProgressDialog();
             }
         }
@@ -157,7 +159,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_IN_PROGRESS, mProgressDialog != null);
+        outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
     }
 
     @Override
@@ -283,6 +285,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                 updateNextButton();
             }
         });
+        mInProgress = true;
     }
 
     private void endProgress() {
@@ -290,8 +293,10 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             mProgressDialog.cancel();
         }
 
-        // nullify the reference to denote there is no operation in progress
+        // nullify the reference to cleanup
         mProgressDialog = null;
+
+        mInProgress = false;
 
         updateNextButton();
     }
