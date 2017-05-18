@@ -66,9 +66,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -81,7 +78,6 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,9 +111,6 @@ public class EditPostSettingsFragment extends Fragment
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
-    private SuggestionAutoCompleteText mTagsEditText;
-
-    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private long mFeaturedImageId;
 
@@ -197,9 +190,6 @@ public class EditPostSettingsFragment extends Fragment
 
     @Override
     public void onDestroy() {
-        if (mSuggestionServiceConnectionManager != null) {
-            mSuggestionServiceConnectionManager.unbindFromService();
-        }
         mDispatcher.unregister(this);
         super.onDestroy();
     }
@@ -333,13 +323,6 @@ public class EditPostSettingsFragment extends Fragment
                         }
                     }
             );
-
-            mTagsEditText = (SuggestionAutoCompleteText) rootView.findViewById(R.id.tags);
-            if (mTagsEditText != null) {
-                mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
-
-                setupSuggestionServiceAndAdapter();
-            }
         }
 
         initSettingsFields();
@@ -367,18 +350,6 @@ public class EditPostSettingsFragment extends Fragment
                 return true;
             default:
                 return false;
-        }
-    }
-
-    private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded()) return;
-
-        long remoteBlogId = mSite.getSiteId();
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
-        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(mSite, getActivity(),
-                mSuggestionServiceConnectionManager);
-        if (tagSuggestionAdapter != null) {
-            mTagsEditText.setAdapter(tagSuggestionAdapter);
         }
     }
 
@@ -442,11 +413,6 @@ public class EditPostSettingsFragment extends Fragment
             case PRIVATE:
                 mStatusSpinner.setSelection(3, true);
                 break;
-        }
-
-        String tags = TextUtils.join(",", mPost.getTagNameList());
-        if (!tags.equals("") && mTagsEditText != null) {
-            mTagsEditText.setText(tags);
         }
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
@@ -674,12 +640,8 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setDateCreated(publicationDateIso8601);
 
-        String tags = "", postFormat = "";
+        String postFormat = "";
         if (!post.isPage()) {
-            tags = EditTextUtils.getText(mTagsEditText);
-            // since mTagsEditText is a `textMultiLine` field, we should replace "\n" with space
-            tags = tags.replace("\n", " ");
-
             // post format
             if (mPostFormatKeys != null && mPostFormatSpinner != null &&
                 mPostFormatSpinner.getSelectedItemPosition() < mPostFormatKeys.size()) {
@@ -716,7 +678,6 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setExcerpt(getTextFromTextView(mExcerptTextView));
         post.setSlug(getTextFromTextView(mSlugTextView));
-        post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
         post.setPostFormat(postFormat);
@@ -1027,6 +988,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showTagsActivity() {
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
+        tagsIntent.putExtra(WordPress.SITE, mSite);
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 

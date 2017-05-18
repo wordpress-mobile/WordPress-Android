@@ -7,12 +7,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 public class PostSettingsTagsActivity extends AppCompatActivity {
+    private SiteModel mSite;
+
+    private SuggestionAutoCompleteText mTagsEditText;
+    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
 
         setContentView(R.layout.post_settings_tags_fragment);
 
@@ -21,6 +43,27 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mTagsEditText = (SuggestionAutoCompleteText) findViewById(R.id.tags_edit_text);
+        if (mTagsEditText != null) {
+            mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
+
+            setupSuggestionServiceAndAdapter();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mSuggestionServiceConnectionManager != null) {
+            mSuggestionServiceConnectionManager.unbindFromService();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -41,8 +84,20 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
     }
 
     private void saveAndFinish() {
+        Bundle bundle = new Bundle();
         Intent intent = new Intent();
+        intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void setupSuggestionServiceAndAdapter() {
+        long remoteSiteId = mSite.getSiteId();
+        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteSiteId);
+        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(mSite, this,
+                mSuggestionServiceConnectionManager);
+        if (tagSuggestionAdapter != null) {
+            mTagsEditText.setAdapter(tagSuggestionAdapter);
+        }
     }
 }

@@ -4,4 +4,15 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <org.wordpress.android.widgets.SuggestionAutoCompleteText
+        android:id="@+id/tags_edit_text"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_sz_large"
+        android:hint="@string/tags_separate_with_commas"
+        android:inputType="textMultiLine" />
+
 </LinearLayout>
