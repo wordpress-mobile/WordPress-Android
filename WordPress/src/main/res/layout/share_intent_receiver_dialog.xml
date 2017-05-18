@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:background="@drawable/dialog_full_holo_light"
     android:minWidth="@dimen/default_dialog_width"
@@ -21,25 +22,27 @@
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
+                style="@style/Calypso.Text.Header"
                 android:id="@+id/blog_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/select_a_blog"
-                android:textAllCaps="true"
+                android:textColor="@color/wp_grey_darken_10"
                 android:textSize="@dimen/text_sz_small" />
 
-            <Spinner
-                android:id="@+id/blog_spinner"
+            <android.support.v7.widget.AppCompatSpinner
                 style="@style/DropDownNav.WordPress"
+                android:id="@+id/blog_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <org.wordpress.android.widgets.WPTextView
+                style="@style/Calypso.Text.Header"
                 android:id="@+id/action_spinner_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/share_action_title"
-                android:textAllCaps="true"
+                android:textColor="@color/wp_grey_darken_10"
                 android:textSize="@dimen/text_sz_small" />
 
             <RadioGroup
@@ -47,19 +50,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <RadioButton
+                <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/new_post_share_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/share_action_post" />
+                    android:gravity="center_vertical|end"
+                    android:textColor="@color/grey_dark"
+                    android:text="@string/share_action_post"
+                    app:buttonTint="@color/blue_wordpress" />
 
-                <RadioButton
+                <android.support.v7.widget.AppCompatRadioButton
                     android:id="@+id/media_library_share_action"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="@string/share_action_media" />
+                    android:gravity="center_vertical|end"
+                    android:textColor="@color/grey_dark"
+                    android:text="@string/share_action_media"
+                    app:buttonTint="@color/blue_wordpress" />
 
             </RadioGroup>
 
@@ -79,6 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onCancelClicked"
+            android:textColor="@color/blue_wordpress"
             android:text="@string/cancel" />
 
         <Button
@@ -87,6 +95,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onShareClicked"
+            android:textStyle="b"
+            android:textColor="@color/blue_wordpress"
             android:text="@string/share_action" />
 
     </LinearLayout>
