@@ -205,59 +205,78 @@ public class PostsListFragment extends Fragment
     }
 
     public void handleEditPostResult(int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && data != null && isAdded()) {
+        if (resultCode != Activity.RESULT_OK || data == null || !isAdded()) {
+            return;
+        }
+        boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+        if (!hasChanges) {
+            // if there are no changes, we don't need to do anything
+            return;
+        }
 
-            boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
-            final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
-            boolean isPublishable = post != null && PostUtils.isPublishable(post);
-            boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
-            boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
+        boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
+        if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
+            // The network is not available, we can't do anything
+            ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
+                    ToastUtils.Duration.SHORT);
+            return;
+        }
 
-            if (hasChanges) {
-                if (savedLocally && !NetworkUtils.isNetworkAvailable(getActivity())) {
-                    ToastUtils.showToast(getActivity(), R.string.error_publish_no_network,
-                            ToastUtils.Duration.SHORT);
+        final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
+        boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
+        if (hasUnfinishedMedia) {
+            showSnackbar(R.string.editor_post_saved_locally_unfinished_media, R.string.button_edit,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+                        }
+                    });
+            return;
+        }
+
+        View.OnClickListener publishPostListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                publishPost(post);
+            }
+        };
+        boolean isScheduledPost = post != null && PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+        if (isScheduledPost) {
+            // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
+            if (savedLocally) {
+                showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+            }
+            return;
+        }
+
+        boolean isPublished = post != null && PostStatus.fromPost(post) == PostStatus.PUBLISHED;
+        if (isPublished) {
+            // if it's a published post, we only want to show a "Sync" button if it's locally saved
+            if (savedLocally) {
+                showSnackbar(R.string.editor_post_saved_locally, R.string.button_sync, publishPostListener);
+            }
+            return;
+        }
+
+        boolean isDraft = post != null && PostStatus.fromPost(post) == PostStatus.DRAFT;
+        if (isDraft) {
+            if (PostUtils.isPublishable(post)) {
+                int message =  savedLocally ? R.string.editor_draft_saved_locally : R.string.editor_draft_saved_online;
+                showSnackbar(message, R.string.button_publish, publishPostListener);
+            } else {
+                if (savedLocally) {
+                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_locally);
                 } else {
-                    if (isPublishable) {
-                        if (hasUnfinishedMedia) {
-                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                    R.string.editor_post_saved_locally_unfinished_media, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_edit, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
-                                        }
-                                    }).show();
-                        } else if (savedLocally) {
-                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                    R.string.editor_post_saved_locally_not_published, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_publish, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            publishPost(post);
-                                        }
-                                    }).show();
-                        } else if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
-                            Snackbar.make(getActivity().findViewById(R.id.coordinator),
-                                    R.string.editor_post_saved_online_not_published, Snackbar.LENGTH_LONG)
-                                    .setAction(R.string.button_publish, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            publishPost(post);
-                                        }
-                                    }).show();
-                        }
-                    } else {
-                        if (savedLocally) {
-                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_locally);
-                        } else {
-                            ToastUtils.showToast(getActivity(), R.string.editor_post_saved_online);
-                        }
-                    }
+                    ToastUtils.showToast(getActivity(), R.string.editor_draft_saved_online);
                 }
             }
         }
+    }
 
+    private void showSnackbar(int messageRes, int buttonTitleRes, View.OnClickListener onClickListener) {
+        Snackbar.make(getActivity().findViewById(R.id.coordinator), messageRes, Snackbar.LENGTH_LONG)
+                .setAction(buttonTitleRes, onClickListener).show();
     }
 
     private void initSwipeToRefreshHelper(View view) {
@@ -493,6 +512,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_SUBMIT:
+            case PostListButton.BUTTON_SYNC:
             case PostListButton.BUTTON_PUBLISH:
                 publishPost(post);
                 break;

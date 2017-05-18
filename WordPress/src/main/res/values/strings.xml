@@ -109,8 +109,6 @@
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
-    <string name="media_add_popup_capture_photo">Capture photo</string>
-    <string name="media_add_popup_capture_video">Capture video</string>
 
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
@@ -136,6 +134,7 @@
     <string name="media_insert_title">Add multiple photos</string>
     <string name="media_insert_individually">Add individually</string>
     <string name="media_insert_as_gallery">Add as gallery</string>
+    <string name="media_saved_to_device">Media saved to this device</string>
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
@@ -240,6 +239,7 @@
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
     <string name="button_publish">Publish</string>
+    <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
     <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
@@ -403,8 +403,6 @@
     <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
         address. Check the site address (URL) you entered.</string>
     <!-- media selection -->
-    <string name="select_photo">Select a photo from gallery</string>
-    <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
 
     <!-- category management -->
@@ -960,10 +958,11 @@
     <string name="editor_post_title_placeholder">Post Title</string>
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
-    <string name="editor_post_saved_locally">The post was saved on your device</string>
-    <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
-    <string name="editor_post_saved_online">The post was saved online</string>
-    <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
+    <string name="editor_post_saved_online">Post saved online</string>
+    <string name="editor_post_saved_locally">Post saved on device</string>
+    <string name="editor_draft_saved_online">Draft saved online</string>
+    <string name="editor_draft_saved_locally">Draft saved on device</string>
+    <string name="editor_scheduled_post_saved_online">Post scheduled</string>
     <string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
@@ -1095,6 +1094,7 @@
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
+    <string name="error_media_save">Unable to save media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>

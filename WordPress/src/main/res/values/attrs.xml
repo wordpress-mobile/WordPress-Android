@@ -79,8 +79,9 @@
             <enum name="trash" value="5" />
             <enum name="delete" value="6" />
             <enum name="publish" value="7" />
-            <enum name="more" value="8" />
-            <enum name="back" value="9" />
+            <enum name="sync" value="8" />
+            <enum name="more" value="9" />
+            <enum name="back" value="10" />
         </attr>
     </declare-styleable>
 
