@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -95,6 +96,7 @@ public class ReaderCommentActions {
                 ReaderComment newComment = ReaderComment.fromJson(jsonObject, post.blogId);
                 newComment.pageNumber = pageNumber;
                 ReaderCommentTable.addOrUpdateComment(newComment);
+                ReaderPostTable.incNumCommentsForPost(post.blogId, post.postId);
                 if (actionListener != null) {
                     actionListener.onActionResult(true, newComment);
                 }
