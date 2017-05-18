@@ -5,11 +5,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -90,7 +88,6 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
@@ -437,12 +434,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onPause() {
         super.onPause();
 
-        try {
-            unregisterReceiver(mGalleryReceiver);
-        } catch (IllegalArgumentException e) {
-            AppLog.d(T.EDITOR, "Illegal state! Can't unregister receiver that was no registered");
-        }
-
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
     }
@@ -727,8 +718,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                                 shouldShowContextMenu = false;
                             } else {
-                                registerReceiver(mGalleryReceiver,
-                                        new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
                                 refreshBlogMedia();
                             }
                             break;
@@ -1568,10 +1557,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void startMediaGalleryActivity(MediaGallery mediaGallery) {
-        ActivityLauncher.viewMediaGalleryForSiteAndGallery(this, mSite, mediaGallery);
-    }
-
     private void prepareMediaPost() {
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
         ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
@@ -1831,10 +1816,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
-                case MediaGalleryActivity.REQUEST_CODE:
-                    handleMediaGalleryResult(data);
-                    // TODO: No analytics here?
-                    break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
                     handleMediaGalleryPickerResult(data);
                     // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
@@ -2011,25 +1992,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ft.add(dialog, "insert_media");
         ft.commitAllowingStateLoss();
     }
-
-    private void handleMediaGalleryResult(Intent data) {
-        MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
-
-        // if blank gallery returned, don't add to span
-        if (gallery == null || gallery.getIds().size() == 0) {
-            return;
-        }
-        mEditorFragment.appendGallery(gallery);
-    }
-
-    private BroadcastReceiver mGalleryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED.equals(intent.getAction())) {
-                startMediaGalleryActivity((MediaGallery)intent.getSerializableExtra(LegacyEditorFragment.EXTRA_MEDIA_GALLERY));
-            }
-        }
-    };
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {

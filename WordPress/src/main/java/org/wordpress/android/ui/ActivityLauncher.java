@@ -24,7 +24,6 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -311,17 +310,6 @@ public class ActivityLauncher {
             intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
         }
         activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-    }
-
-    public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,
-                                               @Nullable MediaGallery mediaGallery) {
-        Intent intent = new Intent(activity, MediaGalleryActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
-        if (mediaGallery == null) {
-            intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
-        }
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
