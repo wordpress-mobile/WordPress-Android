@@ -66,6 +66,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
         TextView blogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
+        mActionGroup = (RadioGroup) findViewById(R.id.share_actions);
+
         initSiteLists();
 
         if (mSiteNames == null) {
@@ -82,9 +84,11 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             mBlogSpinner.setOnItemSelectedListener(this);
         }
 
+        loadLastUsed();
+
         // If type is text/plain hide Media Gallery option
-        mActionGroup = (RadioGroup) findViewById(R.id.share_actions);
         if (isSharingText()) {
+            mActionId = R.id.new_post_share_action;
             mActionGroup.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
             // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
@@ -100,7 +104,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
                 }
             });
         }
-        loadLastUsed();
     }
 
     @Override
@@ -168,16 +171,14 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void loadLastUsed() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         int localBlogId = settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
-        int actionId = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, R.id.new_post_share_action);
         if (localBlogId != -1) {
             int position = getPositionBySiteId(localBlogId);
             if (position != -1) {
                 mBlogSpinner.setSelection(position);
             }
         }
-        if (actionId != -1) {
-            mActionGroup.check(actionId);
-        }
+        mActionId = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, R.id.new_post_share_action);
+        mActionGroup.check(mActionId);
     }
 
     private boolean isSharingText() {
