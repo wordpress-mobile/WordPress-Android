@@ -95,7 +95,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onShareClicked"
-            android:textStyle="b"
             android:textColor="@color/blue_wordpress"
             android:text="@string/share_action" />
 
