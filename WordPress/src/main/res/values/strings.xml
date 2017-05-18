@@ -278,6 +278,7 @@
     <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
     <string name="post_slug">Slug</string>
+    <string name="post_tags">Tags</string>
     <string name="download">Downloading media</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>

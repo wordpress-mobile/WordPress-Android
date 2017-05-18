@@ -109,6 +109,7 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
+    private TextView mTagsTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -219,6 +220,7 @@ public class EditPostSettingsFragment extends Fragment
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
+        mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
