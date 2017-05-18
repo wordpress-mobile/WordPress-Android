@@ -278,7 +278,7 @@ public class LoginLogicTest {
     /////////////////////////////////////////////////
 
     @Test
-    public void inputSiteAddressGotEmailTest() {
+    public void inputSiteAddressGotSiteAddressTest() {
         LoginNavController loginNavController = new LoginNavController(LoginNav.InputSiteAddress.class)
                 .setLoginNavHandler(mLoginNavHandler);
         loginNavController.ensureState(LoginNav.InputSiteAddress.class);
