@@ -98,6 +98,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
+    private static final int ACTIVITY_REQUEST_CODE_SELECT_TAGS = 6;
 
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
@@ -276,6 +277,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showSlugDialog();
+            }
+        });
+
+        final LinearLayout tagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
+        tagsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTagsActivity();
             }
         });
 
@@ -1014,6 +1023,11 @@ public class EditPostSettingsFragment extends Fragment
                     }
                 });
         dialog.show(getFragmentManager(), null);
+    }
+
+    private void showTagsActivity() {
+        Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
+        startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 
     private String getTextFromTextView(TextView textView) {
