@@ -134,6 +134,7 @@
     <string name="media_insert_title">Add multiple photos</string>
     <string name="media_insert_individually">Add individually</string>
     <string name="media_insert_as_gallery">Add as gallery</string>
+    <string name="media_saved_to_device">Media saved to this device</string>
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
@@ -1093,6 +1094,7 @@
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
+    <string name="error_media_save">Unable to save media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
