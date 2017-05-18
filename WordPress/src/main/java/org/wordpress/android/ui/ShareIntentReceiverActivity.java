@@ -149,7 +149,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
     private void finishIfNoVisibleBlogs() {
         // If not logged in, then ask to log in, else inform the user to set at least one blog visible
-        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             ToastUtils.showToast(getBaseContext(), R.string.no_account, ToastUtils.Duration.LONG);
             startActivity(new Intent(this, SignInActivity.class));
             finish();
