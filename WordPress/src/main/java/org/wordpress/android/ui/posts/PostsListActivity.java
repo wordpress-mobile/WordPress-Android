@@ -89,7 +89,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // don't add search for self-hosted sites
-        if (!mSite.isWPCom()) {
+        if (!mSite.isUsingWpComRestApi()) {
             return true;
         }
 
