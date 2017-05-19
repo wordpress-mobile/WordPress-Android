@@ -418,12 +418,13 @@
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 
     <!-- action from share intents -->
-    <string name="select_a_blog">Select a WordPress site</string>
-    <string name="share_action_title">Add to …</string>
+    <string name="select_a_blog">Choose a WordPress site</string>
+    <string name="share_action_title">Add to</string>
     <string name="share_action_post">New post</string>
     <string name="share_action_media">Media library</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
+    <string name="cant_share_unknown_action">Unrecognized action requested, ignoring</string>
     <string name="no_account">No WordPress account found, add an account and try again</string>
 
     <!-- file errors -->
