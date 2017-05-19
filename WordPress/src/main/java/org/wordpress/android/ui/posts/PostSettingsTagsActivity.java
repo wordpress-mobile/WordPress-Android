@@ -8,7 +8,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PostSettingsTagsActivity extends AppCompatActivity {
+public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher {
     public static final String KEY_TAG_LIST = "KEY_TAG_LIST";
     private SiteModel mSite;
     private List<String> mTagList;
@@ -72,6 +74,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
         String tags = TextUtils.join(",", mTagList);
         if (!tags.equals("") && mTagsEditText != null) {
             mTagsEditText.setText(tags);
+            mTagsEditText.addTextChangedListener(this);
         }
     }
 
@@ -104,6 +107,21 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        // No-op
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        mAdapter.filter(mTagsEditText.getText().toString());
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        // No-op
     }
 
     private class TagsRecyclerViewAdapter extends RecyclerView.Adapter<TagsRecyclerViewAdapter.TagViewHolder> {
