@@ -118,6 +118,8 @@ public class EditPostSettingsFragment extends Fragment
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private long mFeaturedImageId;
+    private String mCurrentSlug;
+    private String mCurrentExcerpt;
 
     private List<TermModel> mCategories;
 
@@ -372,8 +374,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        setTextIfPresent(mExcerptTextView, mPost.getExcerpt());
-        setTextIfPresent(mSlugTextView, mPost.getSlug());
+        mCurrentExcerpt = mPost.getExcerpt();
+        mCurrentSlug = mPost.getSlug();
+        setTextIfPresent(mExcerptTextView, mCurrentExcerpt);
+        setTextIfPresent(mSlugTextView, mCurrentSlug);
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -703,8 +707,8 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setExcerpt(getTextFromTextView(mExcerptTextView));
-        post.setSlug(getTextFromTextView(mSlugTextView));
+        post.setExcerpt(mCurrentExcerpt);
+        post.setSlug(mCurrentSlug);
         post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
@@ -987,39 +991,31 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostExcerptDialog() {
-        String currentExcerpt = getTextFromTextView(mExcerptTextView);
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                currentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint));
+                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint));
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        setTextIfPresent(mExcerptTextView, input);
+                        mCurrentExcerpt = input;
+                        setTextIfPresent(mExcerptTextView, mCurrentExcerpt);
                     }
                 });
         dialog.show(getFragmentManager(), null);
     }
 
     private void showSlugDialog() {
-        String currentSlug = getTextFromTextView(mSlugTextView);
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                currentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint));
+                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint));
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        setTextIfPresent(mSlugTextView, input);
+                        mCurrentSlug = input;
+                        setTextIfPresent(mSlugTextView, mCurrentSlug);
                     }
                 });
         dialog.show(getFragmentManager(), null);
-    }
-
-    private String getTextFromTextView(TextView textView) {
-        String text = textView.getText().toString();
-        if (text.equals(getString(R.string.not_set))) {
-            text = "";
-        }
-        return text;
     }
 
     private void setTextIfPresent(TextView textView, String text) {
