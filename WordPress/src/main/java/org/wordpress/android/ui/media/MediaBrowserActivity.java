@@ -321,6 +321,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSearchView.setQuery(mQuery, true);
         }
 
+        // hide "add media" if this is used as a media picker
+        if (mIsPicker) {
+            menu.findItem(R.id.menu_new_media).setVisible(false);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 

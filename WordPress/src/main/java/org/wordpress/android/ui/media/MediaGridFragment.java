@@ -81,6 +81,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
+    private boolean mIsPicker;
     private ActionMode mActionMode;
     private String mSearchTerm;
 
@@ -136,11 +137,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mIsPicker = getArguments().getBoolean(MediaBrowserActivity.ARG_IS_PICKER);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mIsPicker = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IS_PICKER, false);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsPicker = savedInstanceState.getBoolean(MediaBrowserActivity.ARG_IS_PICKER);
         }
 
         if (mSite == null) {
@@ -416,6 +420,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(MediaBrowserActivity.ARG_IS_PICKER, mIsPicker);
     }
 
     private void setupSpinnerAdapter() {
