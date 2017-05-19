@@ -4,15 +4,17 @@ import android.support.annotation.NonNull;
 
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
+import org.wordpress.android.util.AppLog;
 
-/**
- *
+/*
+ * builds a new list from the passed one with child comments placed under their parents and
+ * indent levels applied
  */
 
-public class ReaderCommentTree {
+public class ReaderCommentLeveler {
     private final ReaderCommentList mComments;
 
-    public ReaderCommentTree(@NonNull ReaderCommentList comments) {
+    public ReaderCommentLeveler(@NonNull ReaderCommentList comments) {
         mComments = comments;
     }
 
@@ -27,16 +29,29 @@ public class ReaderCommentTree {
             }
         }
 
-        // add children
+        // add children at each level
         int level = 0;
-        while (walkCommentsAtLevel(level, result)) {
+        while (walkCommentsAtLevel(result, level)) {
             level++;
+        }
+
+        // handle orphans (child comments whose parents weren't found above)
+        for (ReaderComment comment : result) {
+            if (comment.level == 0 && comment.parentId != 0) {
+                comment.level = 1; // give it a non-zero level so it's indented by ReaderCommentAdapter
+                result.add(comment);
+                AppLog.d(AppLog.T.READER, "Orphan comment encountered");
+            }
         }
 
         return result;
     }
 
-    private boolean walkCommentsAtLevel(int level, @NonNull ReaderCommentList comments) {
+    /*
+     * walk comments in the passed list that have the passed level and add their children
+     * beneath them
+     */
+    private boolean walkCommentsAtLevel(@NonNull ReaderCommentList comments, int level) {
         boolean hasChanges = false;
         for (int index = 0; index < comments.size(); index++) {
             ReaderComment parent = comments.get(index);

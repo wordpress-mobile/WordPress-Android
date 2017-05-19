@@ -29,7 +29,7 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
-import org.wordpress.android.ui.reader.utils.ReaderCommentTree;
+import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
@@ -532,7 +532,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (result) {
                 // assign the comments with children sorted under their parents and indent levels applied
-                mComments = new ReaderCommentTree(tmpComments).createLevelList();
+                mComments = new ReaderCommentLeveler(tmpComments).createLevelList();
                 notifyDataSetChanged();
             }
             if (mDataLoadedListener != null) {
