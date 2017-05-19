@@ -1,15 +1,23 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -114,6 +122,70 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
                 mSuggestionServiceConnectionManager);
         if (tagSuggestionAdapter != null) {
             mTagsEditText.setAdapter(tagSuggestionAdapter);
+        }
+    }
+
+    private class TagsRecyclerViewAdapter extends RecyclerView.Adapter<TagsRecyclerViewAdapter.TagViewHolder> {
+        private List<TermModel> mAllTags;
+        private List<TermModel> mFilteredTags;
+        private Context mContext;
+
+        public TagsRecyclerViewAdapter(Context context, List<TermModel> allTags) {
+            mContext = context;
+            mAllTags = allTags;
+            mFilteredTags = new ArrayList<>();
+            mFilteredTags.addAll(mAllTags);
+        }
+
+        @Override
+        public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tags_list_row, parent, false);
+            return new TagViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final TagViewHolder holder, int position) {
+            holder.nameTextView.setText(mFilteredTags.get(position).getName());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mFilteredTags.size();
+        }
+
+        public void filter(final String text) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mFilteredTags.clear();
+                    if (TextUtils.isEmpty(text)) {
+                        mFilteredTags.addAll(mAllTags);
+                    } else {
+                        for (TermModel tag : mAllTags) {
+                            if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
+                                mFilteredTags.add(tag);
+                            }
+                        }
+                    }
+
+                    ((Activity) mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
+
+        }
+
+        class TagViewHolder extends RecyclerView.ViewHolder {
+            private final TextView nameTextView;
+
+            TagViewHolder(View view) {
+                super(view);
+                nameTextView = (TextView) view.findViewById(R.id.tag_name);
+            }
         }
     }
 }
