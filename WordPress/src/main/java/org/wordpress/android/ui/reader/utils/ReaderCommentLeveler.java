@@ -7,8 +7,8 @@ import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.util.AppLog;
 
 /*
- * builds a new list from the passed one with child comments placed under their parents and
- * indent levels applied
+ * utility class which accepts a list of comments and then creates a "level list" from it
+ * which places child comments below their parents with indentation levels applied
  */
 
 public class ReaderCommentLeveler {
@@ -35,10 +35,11 @@ public class ReaderCommentLeveler {
             level++;
         }
 
-        // handle orphans (child comments whose parents weren't found above)
+        // check for orphans (child comments whose parents weren't found above) and give them
+        // a non-zero level so they're indented by ReaderCommentAdapter
         for (ReaderComment comment : result) {
             if (comment.level == 0 && comment.parentId != 0) {
-                comment.level = 1; // give it a non-zero level so it's indented by ReaderCommentAdapter
+                comment.level = 1;
                 result.add(comment);
                 AppLog.d(AppLog.T.READER, "Orphan comment encountered");
             }
@@ -56,10 +57,13 @@ public class ReaderCommentLeveler {
         for (int index = 0; index < comments.size(); index++) {
             ReaderComment parent = comments.get(index);
             if (parent.level == level && hasChildren(parent.commentId)) {
+                // get children for this comment, set their level, then add them below the parent
                 ReaderCommentList children = getChildren(parent.commentId);
                 setLevel(children, level + 1);
                 comments.addAll(index + 1, children);
                 hasChanges = true;
+                // skip past the children we just added
+                index += children.size();
             }
         }
         return hasChanges;
