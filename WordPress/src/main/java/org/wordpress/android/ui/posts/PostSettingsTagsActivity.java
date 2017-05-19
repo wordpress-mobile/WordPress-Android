@@ -20,32 +20,42 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher {
-    public static final String KEY_TAG_LIST = "KEY_TAG_LIST";
+    public static final String KEY_LOCAL_POST_ID = "KEY_POST_ID";
     private SiteModel mSite;
+    private PostModel mPost;
 
     private EditText mTagsEditText;
     private TagsRecyclerViewAdapter mAdapter;
 
+    @Inject PostStore mPostStore;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplicationContext()).component().inject(this);
 
-        String[] tagsArray = null;
+        int localPostId;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            tagsArray = getIntent().getStringArrayExtra(KEY_TAG_LIST);
+            localPostId = getIntent().getIntExtra(KEY_LOCAL_POST_ID, 0);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            localPostId = savedInstanceState.getInt(KEY_LOCAL_POST_ID, 0);
         }
+        mPost = mPostStore.getPostByLocalPostId(localPostId);
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
@@ -70,7 +80,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
         if (mTagsEditText != null) {
             mTagsEditText.addTextChangedListener(this);
-            String tags = TextUtils.join(",", tagsArray);
+            String tags = TextUtils.join(",", mPost.getTagNameList());
             if (!tags.equals("")) {
                 mTagsEditText.setText(tags);
             }
@@ -81,6 +91,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putInt(KEY_LOCAL_POST_ID, mPost.getId());
     }
 
     @Override
