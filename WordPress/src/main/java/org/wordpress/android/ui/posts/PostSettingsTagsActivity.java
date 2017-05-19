@@ -21,6 +21,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
@@ -125,12 +126,13 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     }
 
     private class TagsRecyclerViewAdapter extends RecyclerView.Adapter<TagsRecyclerViewAdapter.TagViewHolder> {
-        private List<String> mFilteredTags;
+        private List<TermModel> mAllTags;
+        private List<TermModel> mFilteredTags;
         private Context mContext;
 
         TagsRecyclerViewAdapter(Context context) {
             mContext = context;
-            mFilteredTags = new ArrayList<>(mTagList);
+            mFilteredTags = new ArrayList<>();
         }
 
         @Override
@@ -141,12 +143,16 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
         @Override
         public void onBindViewHolder(final TagViewHolder holder, int position) {
-            holder.nameTextView.setText(mFilteredTags.get(position));
+            holder.nameTextView.setText(mFilteredTags.get(position).getName());
         }
 
         @Override
         public int getItemCount() {
             return mFilteredTags.size();
+        }
+
+        public void setAllTags(List<TermModel> allTags) {
+            mAllTags = allTags;
         }
 
         public void filter(final String text) {
@@ -155,10 +161,10 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                 public void run() {
                     mFilteredTags.clear();
                     if (TextUtils.isEmpty(text)) {
-                        mFilteredTags.addAll(mTagList);
+                        mFilteredTags.addAll(mAllTags);
                     } else {
-                        for (String tag : mTagList) {
-                            if (tag.toLowerCase().contains(text.toLowerCase())) {
+                        for (TermModel tag : mAllTags) {
+                            if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
                                 mFilteredTags.add(tag);
                             }
                         }
