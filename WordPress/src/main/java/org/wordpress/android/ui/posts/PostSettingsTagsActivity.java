@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -59,6 +60,11 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
             mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
             setupSuggestionServiceAndAdapter();
+        }
+
+        String tags = TextUtils.join(",", mTagList);
+        if (!tags.equals("") && mTagsEditText != null) {
+            mTagsEditText.setText(tags);
         }
     }
 
