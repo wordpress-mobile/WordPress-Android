@@ -23,7 +23,6 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -293,11 +292,11 @@ public class ActivityLauncher {
         context.startActivity(statsPostViewIntent);
     }
 
-    public static void viewMediaGalleryPickerForSite(Activity activity, @NonNull SiteModel site) {
-        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
+    public static void viewMediaPickerForSite(Activity activity, @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, false);
-        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+        intent.putExtra(MediaBrowserActivity.ARG_IS_PICKER, true);
+        activity.startActivityForResult(intent, RequestCodes.MEDIA_PICKER);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {

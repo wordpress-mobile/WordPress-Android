@@ -1816,7 +1816,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
-                case MediaGalleryPickerActivity.REQUEST_CODE:
+                case RequestCodes.MEDIA_PICKER:
                     handleMediaGalleryPickerResult(data);
                     // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
                     break;
@@ -1945,7 +1945,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private void startMediaGalleryAddActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
+        ActivityLauncher.viewMediaPickerForSite(this, mSite);
     }
 
     private void handleMediaGalleryPickerResult(Intent data) {

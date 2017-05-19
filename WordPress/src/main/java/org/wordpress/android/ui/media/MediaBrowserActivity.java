@@ -88,8 +88,10 @@ import javax.inject.Inject;
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
         WordPressMediaUtils.LaunchCameraCallback {
+
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
+    public static final String ARG_IS_PICKER = "is_picker";
     private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
 
@@ -111,6 +113,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private boolean mDeleteServiceBound;
 
+    private boolean mIsPicker;
     private String mQuery;
     private String mMediaCapturePath;
 
@@ -122,8 +125,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mIsPicker = getIntent().getBooleanExtra(ARG_IS_PICKER, false);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsPicker = savedInstanceState.getBoolean(ARG_IS_PICKER);
         }
 
         if (mSite == null) {
@@ -199,6 +204,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(ARG_IS_PICKER, mIsPicker);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
@@ -211,6 +217,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
+        mIsPicker = savedInstanceState.getBoolean(ARG_IS_PICKER);
     }
 
     @Override
