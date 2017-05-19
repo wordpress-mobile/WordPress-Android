@@ -15,8 +15,14 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class PostSettingsTagsActivity extends AppCompatActivity {
+    public static final String KEY_TAG_LIST = "KEY_TAG_LIST";
     private SiteModel mSite;
+    private List<String> mTagList;
 
     private SuggestionAutoCompleteText mTagsEditText;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
@@ -25,11 +31,15 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String[] tagsArray;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            tagsArray = getIntent().getStringArrayExtra(KEY_TAG_LIST);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            tagsArray = savedInstanceState.getStringArray(KEY_TAG_LIST);
         }
+        mTagList = tagsArray != null ? Arrays.asList(tagsArray) : new ArrayList<String>();
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();

@@ -989,6 +989,7 @@ public class EditPostSettingsFragment extends Fragment
     private void showTagsActivity() {
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
         tagsIntent.putExtra(WordPress.SITE, mSite);
+        tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAG_LIST, mPost.getTagNameList().toArray());
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 
