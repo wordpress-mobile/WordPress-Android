@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -34,6 +34,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
     private List<String> mTagList;
 
     private SuggestionAutoCompleteText mTagsEditText;
+    private TagsRecyclerViewAdapter mAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     @Override
@@ -64,6 +65,12 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
         }
 
         mTagsEditText = (SuggestionAutoCompleteText) findViewById(R.id.tags_edit_text);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.tags_suggestion_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mAdapter = new TagsRecyclerViewAdapter(this);
+        recyclerView.setAdapter(mAdapter);
         if (mTagsEditText != null) {
             mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
 
@@ -126,15 +133,12 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
     }
 
     private class TagsRecyclerViewAdapter extends RecyclerView.Adapter<TagsRecyclerViewAdapter.TagViewHolder> {
-        private List<TermModel> mAllTags;
-        private List<TermModel> mFilteredTags;
+        private List<String> mFilteredTags;
         private Context mContext;
 
-        public TagsRecyclerViewAdapter(Context context, List<TermModel> allTags) {
+        TagsRecyclerViewAdapter(Context context) {
             mContext = context;
-            mAllTags = allTags;
-            mFilteredTags = new ArrayList<>();
-            mFilteredTags.addAll(mAllTags);
+            mFilteredTags = new ArrayList<>(mTagList);
         }
 
         @Override
@@ -145,7 +149,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final TagViewHolder holder, int position) {
-            holder.nameTextView.setText(mFilteredTags.get(position).getName());
+            holder.nameTextView.setText(mFilteredTags.get(position));
         }
 
         @Override
@@ -159,10 +163,10 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
                 public void run() {
                     mFilteredTags.clear();
                     if (TextUtils.isEmpty(text)) {
-                        mFilteredTags.addAll(mAllTags);
+                        mFilteredTags.addAll(mTagList);
                     } else {
-                        for (TermModel tag : mAllTags) {
-                            if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
+                        for (String tag : mTagList) {
+                            if (tag.toLowerCase().contains(text.toLowerCase())) {
                                 mFilteredTags.add(tag);
                             }
                         }

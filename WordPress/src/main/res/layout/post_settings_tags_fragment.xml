@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <org.wordpress.android.widgets.SuggestionAutoCompleteText
         android:id="@+id/tags_edit_text"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/margin_small"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_large"
+        android:layout_marginTop="@dimen/margin_small"
         android:hint="@string/tags_separate_with_commas"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:textSize="@dimen/text_sz_large"/>
 
-</LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tags_suggestion_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tags_edit_text"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
