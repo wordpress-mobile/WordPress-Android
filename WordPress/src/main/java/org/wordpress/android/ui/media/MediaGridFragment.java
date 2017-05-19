@@ -6,6 +6,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -54,6 +55,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * The grid displaying the media items.
@@ -203,7 +206,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
 
         mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
-        mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
+        mSpinner.setVisibility(mIsPicker ? View.GONE : View.VISIBLE);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
@@ -222,7 +225,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     }
                 });
         restoreState(savedInstanceState);
-        setupSpinnerAdapter();
+
+        if (!mIsPicker) {
+            mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
+            setupSpinnerAdapter();
+        }
 
         return view;
     }
@@ -575,6 +582,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    private void setResultIdsAndFinish() {
+        Intent intent = new Intent();
+        if (mGridAdapter.getSelectedItemCount() > 0) {
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            for (Integer localId : mGridAdapter.getSelectedItems()) {
+                MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                if (media != null) {
+                    remoteMediaIds.add(media.getMediaId());
+                }
+            }
+            intent.putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+        }
+        getActivity().setResult(RESULT_OK, intent);
+        getActivity().finish();
+    }
+
+
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -590,15 +614,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            MenuItem mnuTrash = menu.findItem(R.id.media_multiselect_actionbar_trash);
+            mnuTrash.setVisible(!mIsPicker);
+
+            MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
+            mnuConfirm.setVisible(mIsPicker);
+
             return true;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            int i = item.getItemId();
-            if (i == R.id.media_multiselect_actionbar_trash) {
+            if (item.getItemId() == R.id.media_multiselect_actionbar_trash) {
                 handleMultiSelectDelete();
-                return true;
+            } else if (item.getItemId() == R.id.mnu_confirm_selection) {
+                setResultIdsAndFinish();
             }
             return true;
         }

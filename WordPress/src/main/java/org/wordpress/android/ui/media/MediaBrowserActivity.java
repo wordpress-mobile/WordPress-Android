@@ -64,6 +64,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -92,6 +93,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     public static final String ARG_IS_PICKER = "is_picker";
+    public static final String RESULT_IDS = "result_ids";
+
     private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
 
@@ -414,14 +417,27 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onMediaItemSelected(View sourceView, int localMediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-        if (media != null) {
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_load);
+            return;
+        }
+
+        // if this is being used as a media picker return the selected item and finish, otherwise
+        // preview the selected item
+        if (mIsPicker) {
+            Intent intent = new Intent();
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            remoteMediaIds.add(media.getMediaId());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
             // TODO: right now only images & videos are supported
             String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-            if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
-                return;
+            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
+                MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
             }
         }
-        MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
     }
 
     @Override
