@@ -13,14 +13,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
@@ -33,9 +31,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
     private SiteModel mSite;
     private List<String> mTagList;
 
-    private SuggestionAutoCompleteText mTagsEditText;
+    private EditText mTagsEditText;
     private TagsRecyclerViewAdapter mAdapter;
-    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,24 +68,11 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
 
         mAdapter = new TagsRecyclerViewAdapter(this);
         recyclerView.setAdapter(mAdapter);
-        if (mTagsEditText != null) {
-            mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
-
-            setupSuggestionServiceAndAdapter();
-        }
 
         String tags = TextUtils.join(",", mTagList);
         if (!tags.equals("") && mTagsEditText != null) {
             mTagsEditText.setText(tags);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mSuggestionServiceConnectionManager != null) {
-            mSuggestionServiceConnectionManager.unbindFromService();
-        }
-        super.onDestroy();
     }
 
     @Override
@@ -120,16 +104,6 @@ public class PostSettingsTagsActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
-    }
-
-    private void setupSuggestionServiceAndAdapter() {
-        long remoteSiteId = mSite.getSiteId();
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, remoteSiteId);
-        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(mSite, this,
-                mSuggestionServiceConnectionManager);
-        if (tagSuggestionAdapter != null) {
-            mTagsEditText.setAdapter(tagSuggestionAdapter);
-        }
     }
 
     private class TagsRecyclerViewAdapter extends RecyclerView.Adapter<TagsRecyclerViewAdapter.TagViewHolder> {
