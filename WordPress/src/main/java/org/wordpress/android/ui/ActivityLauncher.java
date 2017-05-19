@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -51,7 +50,6 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
@@ -299,16 +297,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, false);
-        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-    }
-
-    public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
-                                                     @NonNull ArrayList<Long> mediaIds) {
-        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        if (mediaIds != null && !mediaIds.isEmpty()) {
-            intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
-        }
         activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
     }
 
