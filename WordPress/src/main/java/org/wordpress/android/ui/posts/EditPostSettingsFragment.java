@@ -987,6 +987,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showTagsActivity() {
+        // Fetch/refresh the tags in preparation for the the PostSettingsTagsActivity
+        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
+
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
         tagsIntent.putExtra(WordPress.SITE, mSite);
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_LOCAL_POST_ID, mPost.getId());

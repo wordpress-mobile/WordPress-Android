@@ -18,12 +18,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
@@ -40,6 +44,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     private EditText mTagsEditText;
     private TagsRecyclerViewAdapter mAdapter;
 
+    @Inject Dispatcher mDispatcher;
+    @Inject TaxonomyStore mTaxonomyStore;
     @Inject PostStore mPostStore;
 
     @Override
@@ -76,6 +82,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new TagsRecyclerViewAdapter(this);
+        mAdapter.setAllTags(mTaxonomyStore.getTagsForPost(mPost, mSite));
         recyclerView.setAdapter(mAdapter);
 
         if (mTagsEditText != null) {
@@ -85,6 +92,18 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                 mTagsEditText.setText(tags);
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -126,12 +145,27 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        mAdapter.filter(mTagsEditText.getText().toString());
+        filterListForCurrentText();
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
         // No-op
+    }
+
+    private void filterListForCurrentText() {
+        mAdapter.filter(mTagsEditText.getText().toString());
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
+        switch (event.causeOfChange) {
+            case FETCH_TAGS:
+                mAdapter.setAllTags(mTaxonomyStore.getTagsForPost(mPost, mSite));
+                filterListForCurrentText();
+                break;
+        }
     }
 
     private class TagsRecyclerViewAdapter extends RecyclerView.Adapter<TagsRecyclerViewAdapter.TagViewHolder> {
@@ -160,7 +194,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             return mFilteredTags.size();
         }
 
-        public void setAllTags(List<TermModel> allTags) {
+        void setAllTags(List<TermModel> allTags) {
             mAllTags = allTags;
         }
 
