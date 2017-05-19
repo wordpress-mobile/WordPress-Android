@@ -16,7 +16,7 @@ public class ReaderCommentTree {
         mComments = comments;
     }
 
-    public ReaderCommentList getLevelList() {
+    public ReaderCommentList createLevelList() {
         ReaderCommentList result = new ReaderCommentList();
 
         // reset all levels, and add root comments to result
@@ -27,21 +27,27 @@ public class ReaderCommentTree {
             }
         }
 
-        boolean done = false;
-        while (!done) {
-            done = true;
-            for (ReaderComment parent: result) {
-                if (parent.level == 0 && hasChildren(parent.commentId)) {
-                    ReaderCommentList children = getChildren(parent.commentId);
-                    setLevel(children, parent.level + 1);
-                    int index = result.indexOfCommentId(parent.commentId);
-                    result.addAll(index + 1, children);
-                    done = false;
-                }
-            }
+        // add children
+        int level = 0;
+        while (walkCommentsAtLevel(level, result)) {
+            level++;
         }
 
         return result;
+    }
+
+    private boolean walkCommentsAtLevel(int level, @NonNull ReaderCommentList comments) {
+        boolean hasChanges = false;
+        for (int index = 0; index < comments.size(); index++) {
+            ReaderComment parent = comments.get(index);
+            if (parent.level == level && hasChildren(parent.commentId)) {
+                ReaderCommentList children = getChildren(parent.commentId);
+                setLevel(children, level + 1);
+                comments.addAll(index + 1, children);
+                hasChanges = true;
+            }
+        }
+        return hasChanges;
     }
 
     private boolean hasChildren(long commentId) {
