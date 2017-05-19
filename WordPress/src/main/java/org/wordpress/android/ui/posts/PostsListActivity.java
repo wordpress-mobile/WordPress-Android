@@ -142,14 +142,14 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     public boolean onQueryTextSubmit(String query) {
         mPostList.filterPosts(query);
         setActionBarTitle("'" + query + "'");
-        return false;
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
         mCurrentSearch = query;
         mPostList.filterPosts(query);
-        return false;
+        return true;
     }
 
     public boolean isRefreshing() {
