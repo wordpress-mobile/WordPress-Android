@@ -128,7 +128,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private String mQuery;
     private String mMediaCapturePath;
-    private MediaBrowserType mBrowserType = MediaBrowserType.BROWSER;
+    private MediaBrowserType mBrowserType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
