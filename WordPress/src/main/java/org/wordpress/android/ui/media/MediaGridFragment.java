@@ -140,13 +140,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mBrowserType = (MediaBrowserType) getArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mBrowserType = (MediaBrowserType) getActivity().getIntent().getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            }
+            mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) getActivity().getIntent().getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
