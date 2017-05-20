@@ -633,7 +633,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForSite(this, mSite);
+                ActivityLauncher.viewMediaPickerForSite(this, mSite, false);
                 break;
         }
     }

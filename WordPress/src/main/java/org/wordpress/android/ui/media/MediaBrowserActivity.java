@@ -93,6 +93,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     public static final String ARG_IS_PICKER = "is_picker";
+    public static final String ARG_IS_SINGLE_SELECT = "is_single_select";
     public static final String RESULT_IDS = "result_ids";
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -117,6 +118,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private boolean mDeleteServiceBound;
 
     private boolean mIsPicker;
+    private boolean mIsSingleSelect;
+
     private String mQuery;
     private String mMediaCapturePath;
 
@@ -129,9 +132,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mIsPicker = getIntent().getBooleanExtra(ARG_IS_PICKER, false);
+            mIsSingleSelect = getIntent().getBooleanExtra(ARG_IS_SINGLE_SELECT, false);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsPicker = savedInstanceState.getBoolean(ARG_IS_PICKER);
+            mIsSingleSelect = savedInstanceState.getBoolean(ARG_IS_SINGLE_SELECT);
         }
 
         if (mSite == null) {
@@ -208,6 +213,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putBoolean(ARG_IS_PICKER, mIsPicker);
+        outState.putBoolean(ARG_IS_SINGLE_SELECT, mIsSingleSelect);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
@@ -221,6 +227,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
         mIsPicker = savedInstanceState.getBoolean(ARG_IS_PICKER);
+        mIsSingleSelect = savedInstanceState.getBoolean(ARG_IS_SINGLE_SELECT);
     }
 
     @Override

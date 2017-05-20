@@ -85,6 +85,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
     private boolean mIsPicker;
+    private boolean mIsSingleSelect;
+
     private ActionMode mActionMode;
     private String mSearchTerm;
 
@@ -141,13 +143,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
                 mIsPicker = getArguments().getBoolean(MediaBrowserActivity.ARG_IS_PICKER);
+                mIsSingleSelect = getArguments().getBoolean(MediaBrowserActivity.ARG_IS_SINGLE_SELECT);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
                 mIsPicker = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IS_PICKER, false);
+                mIsSingleSelect = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IS_SINGLE_SELECT, false);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsPicker = savedInstanceState.getBoolean(MediaBrowserActivity.ARG_IS_PICKER);
+            mIsSingleSelect = savedInstanceState.getBoolean(MediaBrowserActivity.ARG_IS_SINGLE_SELECT);
         }
 
         if (mSite == null) {
@@ -265,6 +270,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
+        if (mIsSingleSelect) {
+            return;
+        }
+
         if (count == 0 && mActionMode != null) {
             mActionMode.finish();
         } else if (mActionMode == null) {
@@ -428,6 +437,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putBoolean(MediaBrowserActivity.ARG_IS_PICKER, mIsPicker);
+        outState.putBoolean(MediaBrowserActivity.ARG_IS_SINGLE_SELECT, mIsSingleSelect);
     }
 
     private void setupSpinnerAdapter() {

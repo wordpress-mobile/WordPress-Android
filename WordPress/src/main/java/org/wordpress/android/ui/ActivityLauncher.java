@@ -292,10 +292,11 @@ public class ActivityLauncher {
         context.startActivity(statsPostViewIntent);
     }
 
-    public static void viewMediaPickerForSite(Activity activity, @NonNull SiteModel site) {
+    public static void viewMediaPickerForSite(Activity activity, @NonNull SiteModel site, boolean isSingleSelect) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaBrowserActivity.ARG_IS_PICKER, true);
+        intent.putExtra(MediaBrowserActivity.ARG_IS_SINGLE_SELECT, isSingleSelect);
         activity.startActivityForResult(intent, RequestCodes.MEDIA_PICKER);
     }
 
