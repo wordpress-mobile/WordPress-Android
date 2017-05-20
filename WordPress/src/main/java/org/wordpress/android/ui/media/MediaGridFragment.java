@@ -77,7 +77,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
-    private MediaBrowserType mBrowserType = MediaBrowserType.BROWSER;
+    private MediaBrowserType mBrowserType;
 
     private RecyclerView mRecycler;
     private GridLayoutManager mGridManager;
@@ -194,7 +194,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
-        mGridAdapter.setAllowMultiselect(true);
+        mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
         mRecycler.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
