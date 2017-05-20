@@ -63,6 +63,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
@@ -459,7 +460,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void launchMediaGalleryActivity() {
-        ActivityLauncher.viewMediaPickerForSite(getActivity(), mSite, true);
+        ActivityLauncher.viewMediaPickerForSite(getActivity(), mSite, MediaBrowserType.SINGLE_SELECT_PICKER);
     }
 
     private PostStatus getPostStatusForSpinnerPosition(int position) {

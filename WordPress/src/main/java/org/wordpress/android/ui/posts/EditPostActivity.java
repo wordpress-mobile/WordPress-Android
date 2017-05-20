@@ -89,6 +89,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -633,7 +634,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                ActivityLauncher.viewMediaPickerForSite(this, mSite, false);
+                ActivityLauncher.viewMediaPickerForSite(this, mSite, MediaBrowserType.MULTI_SELECT_PICKER);
                 break;
         }
     }

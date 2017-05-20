@@ -90,10 +90,19 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         OnQueryTextListener, OnActionExpandListener,
         WordPressMediaUtils.LaunchCameraCallback {
 
+    public enum MediaBrowserType {
+        BROWSER,
+        MULTI_SELECT_PICKER,
+        SINGLE_SELECT_PICKER;
+
+        public boolean isPicker() {
+            return this == MULTI_SELECT_PICKER || this == SINGLE_SELECT_PICKER;
+        }
+    }
+
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
-    public static final String ARG_IS_PICKER = "is_picker";
-    public static final String ARG_IS_SINGLE_SELECT = "is_single_select";
+    public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String RESULT_IDS = "result_ids";
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -117,11 +126,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private boolean mDeleteServiceBound;
 
-    private boolean mIsPicker;
-    private boolean mIsSingleSelect;
-
     private String mQuery;
     private String mMediaCapturePath;
+    private MediaBrowserType mBrowserType = MediaBrowserType.BROWSER;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,12 +138,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            mIsPicker = getIntent().getBooleanExtra(ARG_IS_PICKER, false);
-            mIsSingleSelect = getIntent().getBooleanExtra(ARG_IS_SINGLE_SELECT, false);
+            mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mIsPicker = savedInstanceState.getBoolean(ARG_IS_PICKER);
-            mIsSingleSelect = savedInstanceState.getBoolean(ARG_IS_SINGLE_SELECT);
+            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
         }
 
         if (mSite == null) {
@@ -212,8 +217,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putBoolean(ARG_IS_PICKER, mIsPicker);
-        outState.putBoolean(ARG_IS_SINGLE_SELECT, mIsSingleSelect);
+        outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
@@ -226,8 +230,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
-        mIsPicker = savedInstanceState.getBoolean(ARG_IS_PICKER);
-        mIsSingleSelect = savedInstanceState.getBoolean(ARG_IS_SINGLE_SELECT);
+        mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
     }
 
     @Override
@@ -332,7 +335,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         // hide "add media" if this is used as a media picker
-        if (mIsPicker) {
+        if (mBrowserType.isPicker()) {
             menu.findItem(R.id.menu_new_media).setVisible(false);
         }
 
@@ -431,7 +434,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         // if this is being used as a media picker return the selected item and finish, otherwise
         // preview the selected item
-        if (mIsPicker) {
+        if (mBrowserType.isPicker()) {
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());

@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
@@ -76,6 +77,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
+    private MediaBrowserType mBrowserType = MediaBrowserType.BROWSER;
 
     private RecyclerView mRecycler;
     private GridLayoutManager mGridManager;
@@ -84,8 +86,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
-    private boolean mIsPicker;
-    private boolean mIsSingleSelect;
 
     private ActionMode mActionMode;
     private String mSearchTerm;
@@ -142,17 +142,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mIsPicker = getArguments().getBoolean(MediaBrowserActivity.ARG_IS_PICKER);
-                mIsSingleSelect = getArguments().getBoolean(MediaBrowserActivity.ARG_IS_SINGLE_SELECT);
+                mBrowserType = (MediaBrowserType) getArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mIsPicker = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IS_PICKER, false);
-                mIsSingleSelect = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IS_SINGLE_SELECT, false);
+                mBrowserType = (MediaBrowserType) getActivity().getIntent().getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mIsPicker = savedInstanceState.getBoolean(MediaBrowserActivity.ARG_IS_PICKER);
-            mIsSingleSelect = savedInstanceState.getBoolean(MediaBrowserActivity.ARG_IS_SINGLE_SELECT);
+            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
         }
 
         if (mSite == null) {
@@ -211,7 +208,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
 
         mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
-        mSpinner.setVisibility(mIsPicker ? View.GONE : View.VISIBLE);
+        mSpinner.setVisibility(mBrowserType.isPicker() ? View.GONE : View.VISIBLE);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
@@ -231,7 +228,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 });
         restoreState(savedInstanceState);
 
-        if (!mIsPicker) {
+        if (!mBrowserType.isPicker()) {
             mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
             setupSpinnerAdapter();
         }
@@ -270,7 +267,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mIsSingleSelect) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_PICKER) {
             return;
         }
 
@@ -436,8 +433,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putBoolean(MediaBrowserActivity.ARG_IS_PICKER, mIsPicker);
-        outState.putBoolean(MediaBrowserActivity.ARG_IS_SINGLE_SELECT, mIsSingleSelect);
+        outState.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, mBrowserType);
     }
 
     private void setupSpinnerAdapter() {
@@ -625,10 +621,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             MenuItem mnuTrash = menu.findItem(R.id.media_multiselect_actionbar_trash);
-            mnuTrash.setVisible(!mIsPicker);
+            mnuTrash.setVisible(!mBrowserType.isPicker());
 
             MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
-            mnuConfirm.setVisible(mIsPicker);
+            mnuConfirm.setVisible(mBrowserType.isPicker());
 
             return true;
         }
