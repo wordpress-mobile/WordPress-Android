@@ -48,6 +48,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
+    private boolean mImagesOnly;
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
@@ -99,15 +100,28 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mImageLoader = imageLoader;
     }
 
-    public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        if (isSameList(mediaList)) {
-            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
-            return;
-        }
+    public void setShowImagesOnly(boolean imagesOnly) {
+        mImagesOnly = imagesOnly;
+    }
 
-        mMediaList.clear();
-        mMediaList.addAll(mediaList);
-        notifyDataSetChanged();
+    public void setMediaList(@NonNull List<MediaModel> mediaList) {
+        if (mImagesOnly) {
+            List<MediaModel> images = new ArrayList<>();
+            for (MediaModel media: mediaList) {
+                if (media.getMimeType() != null && media.getMimeType().startsWith("image")) {
+                    images.add(media);
+                }
+            }
+            if (!isSameList(images)) {
+                mMediaList.clear();
+                mMediaList.addAll(images);
+                notifyDataSetChanged();
+            }
+        } else if (!isSameList(mediaList)) {
+            mMediaList.clear();
+            mMediaList.addAll(mediaList);
+            notifyDataSetChanged();
+        }
     }
 
     @Override

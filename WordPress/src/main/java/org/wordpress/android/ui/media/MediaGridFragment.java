@@ -194,7 +194,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
-        mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
+        mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER);
+        mGridAdapter.setShowImagesOnly(mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER);
         mRecycler.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
@@ -262,7 +263,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
-        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_PICKER) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER) {
             return;
         }
 

@@ -93,10 +93,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public enum MediaBrowserType {
         BROWSER,
         MULTI_SELECT_PICKER,
-        SINGLE_SELECT_PICKER;
+        SINGLE_SELECT_IMAGE_PICKER;
 
         public boolean isPicker() {
-            return this == MULTI_SELECT_PICKER || this == SINGLE_SELECT_PICKER;
+            return this == MULTI_SELECT_PICKER
+                    || this == SINGLE_SELECT_IMAGE_PICKER;
         }
     }
 

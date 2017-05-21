@@ -462,7 +462,7 @@ public class EditPostSettingsFragment extends Fragment
     private void launchFeaturedMediaPicker() {
         Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_IMAGE_PICKER);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
