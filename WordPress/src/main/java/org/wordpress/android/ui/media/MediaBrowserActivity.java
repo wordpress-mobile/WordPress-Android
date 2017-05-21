@@ -91,9 +91,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         WordPressMediaUtils.LaunchCameraCallback {
 
     public enum MediaBrowserType {
-        BROWSER,
-        MULTI_SELECT_PICKER,
-        SINGLE_SELECT_IMAGE_PICKER;
+        BROWSER,                        // browse & manage media
+        MULTI_SELECT_PICKER,            // select multiple media items
+        SINGLE_SELECT_IMAGE_PICKER;     // select a single image media item
 
         public boolean isPicker() {
             return this == MULTI_SELECT_PICKER
