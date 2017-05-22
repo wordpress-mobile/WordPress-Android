@@ -376,8 +376,8 @@ public class EditPostSettingsFragment extends Fragment
     private void initSettingsFields() {
         mCurrentExcerpt = mPost.getExcerpt();
         mCurrentSlug = mPost.getSlug();
-        setTextIfPresent(mExcerptTextView, mCurrentExcerpt);
-        setTextIfPresent(mSlugTextView, mCurrentSlug);
+        mExcerptTextView.setText(mCurrentExcerpt);
+        mSlugTextView.setText(mCurrentSlug);
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -998,7 +998,7 @@ public class EditPostSettingsFragment extends Fragment
                     @Override
                     public void onInputUpdated(String input) {
                         mCurrentExcerpt = input;
-                        setTextIfPresent(mExcerptTextView, mCurrentExcerpt);
+                        mExcerptTextView.setText(mCurrentExcerpt);
                     }
                 });
         dialog.show(getFragmentManager(), null);
@@ -1012,18 +1012,10 @@ public class EditPostSettingsFragment extends Fragment
                     @Override
                     public void onInputUpdated(String input) {
                         mCurrentSlug = input;
-                        setTextIfPresent(mSlugTextView, mCurrentSlug);
+                        mSlugTextView.setText(mCurrentSlug);
                     }
                 });
         dialog.show(getFragmentManager(), null);
-    }
-
-    private void setTextIfPresent(TextView textView, String text) {
-        if (!TextUtils.isEmpty(text)) {
-            textView.setText(text);
-        } else {
-            textView.setText(R.string.not_set);
-        }
     }
 
     /*
