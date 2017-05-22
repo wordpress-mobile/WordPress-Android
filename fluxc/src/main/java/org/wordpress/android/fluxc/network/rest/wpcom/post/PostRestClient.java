@@ -227,6 +227,7 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
         params.put("offset", String.valueOf(offset));
         params.put("search", searchTerm);
+        params.put("status", "any");
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
