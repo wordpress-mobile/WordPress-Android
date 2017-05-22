@@ -29,7 +29,6 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +75,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mTagsEditText = (SuggestionAutoCompleteText) findViewById(R.id.tags_edit_text);
+        mTagsEditText = (EditText) findViewById(R.id.tags_edit_text);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.tags_suggestion_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
