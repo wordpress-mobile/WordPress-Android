@@ -1225,9 +1225,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
                         isPublishable && hasLocalChanges;
 
-                // if post was modified or has unsaved local changes and is publishable, save it
-                boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
-                saveResult(shouldSave, false);
+                // if post was modified or has unpublished local changes, save it
+                boolean shouldSave = hasChanges || hasUnpublishedLocalDraftChanges;
+                // if post is publishable or not new, sync it
+                boolean shouldSync = isPublishable || !isNewPost();
+
+                saveResult(shouldSave && shouldSync, false);
 
                 if (shouldSave) {
                     if (isNewPost()) {
