@@ -103,6 +103,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
+    public static final String ARG_IMAGES_ONLY = "images_only";
     public static final String RESULT_IDS = "result_ids";
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -128,6 +129,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private String mQuery;
     private String mMediaCapturePath;
+    private boolean mImagesOnly;
     private MediaBrowserType mBrowserType;
 
     @Override
@@ -139,9 +141,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
+            mImagesOnly = getIntent().getBooleanExtra(ARG_IMAGES_ONLY, false);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
+            mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
         }
 
         if (mSite == null) {
@@ -218,6 +222,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
+        outState.putBoolean(ARG_IMAGES_ONLY, mImagesOnly);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
@@ -231,6 +236,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
         mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
+        mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
     }
 
     @Override
