@@ -61,7 +61,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            setActionBarTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -106,7 +106,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                    setActionBarTitle(getString(mIsPage ? R.string.pages : R.string.posts));
                     return true;
                 }
             });
@@ -141,7 +140,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     @Override
     public boolean onQueryTextSubmit(String query) {
         mPostList.filterPosts(query);
-        setActionBarTitle("'" + query + "'");
         return true;
     }
 
@@ -154,13 +152,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
     public boolean isRefreshing() {
         return mPostList.isRefreshing();
-    }
-
-    private void setActionBarTitle(String title) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(title);
-        }
     }
 
     private void unpackIntent(@NonNull Intent intent) {
