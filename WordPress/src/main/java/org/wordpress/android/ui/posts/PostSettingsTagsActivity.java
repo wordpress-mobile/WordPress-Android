@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -169,6 +171,22 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         }
     }
 
+    private void onTagSelected(@NonNull String selectedTag){
+        String text = mTagsEditText.getText().toString();
+        String updatedText;
+        int endIndex = text.lastIndexOf(",");
+        if (endIndex == -1) {
+            // no "," found, replace the current text with the selectedTag
+            updatedText = selectedTag;
+        } else {
+            // there are multiple tags already, only update the text after the last ","
+            updatedText = text.substring(0, endIndex + 1) + selectedTag;
+        }
+        updatedText += ",";
+        mTagsEditText.setText(updatedText);
+        mTagsEditText.setSelection(mTagsEditText.length());
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
@@ -242,6 +260,13 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             TagViewHolder(View view) {
                 super(view);
                 nameTextView = (TextView) view.findViewById(R.id.tag_name);
+                LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.tags_list_row_container);
+                linearLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onTagSelected(nameTextView.getText().toString());
+                    }
+                });
             }
         }
     }
