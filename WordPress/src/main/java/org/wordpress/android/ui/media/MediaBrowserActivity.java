@@ -253,13 +253,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri uri;
-                    Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, mMediaCapturePath, false);
-                    if (optimizedMedia != null) {
-                        uri = optimizedMedia;
-                    } else {
-                        uri = Uri.parse(mMediaCapturePath);
-                    }
+                    Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
                     mMediaCapturePath = null;
                     queueFileForUpload(uri, getContentResolver().getType(uri));
                     trackAddMediaFromDeviceEvents(true, false, uri);
@@ -714,14 +708,37 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                         " See issue #5823");
             }
             if (downloadedUri != null) {
-                queueFileForUpload(downloadedUri, mimeType);
+                queueFileForUpload(getOptimizedPictureIfNecessary(downloadedUri), mimeType);
             } else {
                 Toast.makeText(MediaBrowserActivity.this, getString(R.string.error_downloading_image),
                         Toast.LENGTH_SHORT).show();
             }
         } else {
-            queueFileForUpload(mediaUri, mimeType);
+            queueFileForUpload(getOptimizedPictureIfNecessary(mediaUri), mimeType);
         }
+    }
+
+    private Uri getOptimizedPictureIfNecessary(Uri originalUri) {
+        String filePath = MediaUtils.getRealPathFromURI(this, originalUri);
+        if (TextUtils.isEmpty(filePath)) {
+            return originalUri;
+        }
+        Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, filePath, false);
+        if (optimizedMedia != null) {
+            return optimizedMedia;
+        } else {
+            // Optimization is OFF. Make sure the picture is in portrait for .org site
+            // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            if (!mSite.isWPCom()) {
+                // If it's not wpcom we must rotate the picture locally
+                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, filePath, false);
+                if (rotatedMedia != null) {
+                    return rotatedMedia;
+                }
+            }
+        }
+
+        return originalUri;
     }
 
     private void addMediaToUploadService(@NonNull MediaModel media) {
@@ -740,8 +757,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // It is a regular local media file
         String path = MediaUtils.getRealPathFromURI(this,uri);
 
-        if (path == null || path.equals("")) {
-            Toast.makeText(this, "Error opening file", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(path)) {
+            Toast.makeText(this, getString(R.string.file_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
 
