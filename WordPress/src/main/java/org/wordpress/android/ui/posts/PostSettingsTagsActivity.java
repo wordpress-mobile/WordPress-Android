@@ -89,7 +89,10 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             mTagsEditText.addTextChangedListener(this);
             String tags = TextUtils.join(",", mPost.getTagNameList());
             if (!tags.equals("")) {
+                // add a , at the end so the user can start typing a new tag
+                tags += ",";
                 mTagsEditText.setText(tags);
+                mTagsEditText.setSelection(mTagsEditText.length());
             }
         }
     }
