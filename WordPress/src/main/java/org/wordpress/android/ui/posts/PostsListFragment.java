@@ -726,6 +726,11 @@ public class PostsListFragment extends Fragment
     private final Runnable mSearchRunnable = new Runnable() {
         @Override
         public void run() {
+            if (TextUtils.isEmpty(mSearchTerm)) {
+                hideLoadMoreProgress();
+                return;
+            }
+
             SearchPostsPayload payload = new SearchPostsPayload(mSite, mSearchTerm, mSearchOffset);
             if (mIsPage) {
                 mDispatcher.dispatch(PostActionBuilder.newSearchPagesAction(payload));
