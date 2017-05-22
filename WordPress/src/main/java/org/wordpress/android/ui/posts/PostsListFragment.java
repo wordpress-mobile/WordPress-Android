@@ -684,21 +684,6 @@ public class PostsListFragment extends Fragment
                 hideLoadMoreProgress();
                 if (!event.isError()) {
                     mCanLoadMorePosts = event.canLoadMore;
-                    int count;
-                    if (mIsPage) {
-                        count = mPostStore.getPagesCountForSite(mSite);
-                    } else {
-                        count = mPostStore.getPostsCountForSite(mSite);
-                    }
-                    if (count > 0) {
-                        hideEmptyView();
-                    } else {
-                        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-                        } else {
-                            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                        }
-                    }
                     loadPosts(LoadMode.IF_CHANGED);
                 } else {
                     PostError error = event.error;
