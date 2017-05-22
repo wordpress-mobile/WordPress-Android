@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ImageUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Executors;
@@ -94,11 +95,10 @@ class ThumbnailLoader {
                         MediaStore.Video.Thumbnails.MINI_KIND,
                         null);
             } else {
-                mThumbnail = MediaStore.Images.Thumbnails.getThumbnail(
+                mThumbnail = ImageUtils.getThumbnail(
                         mContext.getContentResolver(),
                         mImageId,
-                        MediaStore.Images.Thumbnails.MINI_KIND,
-                        null);
+                        MediaStore.Images.Thumbnails.MINI_KIND);
             }
             mHandler.post(new Runnable() {
                 @Override
