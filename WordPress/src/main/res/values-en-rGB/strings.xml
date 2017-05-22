@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-30 06:52:46+0000
+Translation-Revision-Date: 2017-05-11 13:44:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
+	<string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
+	<string name="photo_picker_choose_video">Choose video from device</string>
+	<string name="photo_picker_choose_photo">Choose photo from device</string>
+	<string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post.</string>
+	<string name="wp_media_title">WordPress media</string>
+	<string name="media_insert_as_gallery">Add as gallery</string>
+	<string name="media_insert_individually">Add individually</string>
+	<string name="media_insert_title">Add multiple photos</string>
+	<string name="media_gallery_column_count_multi">%d columns</string>
+	<string name="media_gallery_column_count_single">1 column</string>
 	<string name="editor_confirm_email_prompt_negative">Resend Email</string>
 	<string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
 	<string name="editor_confirm_email_prompt_message">We sent you an email when you first signed up. Please open the message and click the blue button to enable publishing.</string>
@@ -15,8 +26,6 @@ Language: en_GB
 	<string name="toast_saving_post_as_draft">Saving post as draft</string>
 	<string name="photo_picker_capture_video">Take video</string>
 	<string name="photo_picker_capture_photo">Take photo</string>
-	<string name="photo_picker_choose_video">Choose video</string>
-	<string name="photo_picker_choose_photo">Choose photo</string>
 	<string name="delete_site_warning_subtitle">Be careful! Once a site is deleted, it cannot be recovered. Please be sure before you proceed.</string>
 	<string name="delete_site_warning">All your posts, images, and data will be deleted. And this site’s address (%s) will be lost.</string>
 	<string name="delete_site_warning_title">Delete site?</string>
@@ -373,9 +382,7 @@ Language: en_GB
 	<string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
 	<string name="editor_post_settings_set_featured_image">Set Featured Image</string>
 	<string name="editor_post_settings_featured_image">Featured Image</string>
-	<string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual\n    editor. Try it out by creating a new post.</string>
-	<string name="new_editor_promo_title">Brand new editor</string>
-	<string name="new_editor_promo_button_label">Great, thanks!</string>
+	<string name="new_editor_promo_title">New editor</string>
 	<string name="visual_editor_enabled">Visual Editor enabled</string>
 	<string name="editor_content_placeholder">Share your story here…</string>
 	<string name="editor_page_title_placeholder">Page Title</string>

@@ -273,9 +273,6 @@ Language: bg
 	<string name="error_refresh_comments_showing_older">Коментарите не могат да бъдат обновени в момента - показват се по-стари коментари</string>
 	<string name="editor_post_settings_set_featured_image">Задаване на основно изображение</string>
 	<string name="editor_post_settings_featured_image">Основно изображение</string>
-	<string name="new_editor_promo_desc">WordPress приложението за Андроид включва прекрасен нов визуален\nредактор. Пробвайте го като създадете нова публикация.</string>
-	<string name="new_editor_promo_title">Чисто нов редактор</string>
-	<string name="new_editor_promo_button_label">Чудесно, благодаря!</string>
 	<string name="visual_editor_enabled">Визуалният редактор е активиран</string>
 	<string name="editor_content_placeholder">Споделете вашата история тук...</string>
 	<string name="editor_page_title_placeholder">Заглавие на страницата</string>

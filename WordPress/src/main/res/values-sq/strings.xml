@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-13 09:49:34+0000
+Translation-Revision-Date: 2017-05-16 10:15:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Që të përzgjidhni disa komente njëherësh, prekeni dhe mbajeni të prekur </string>
+	<string name="smart_toast_photo_long_press">Që të përzgjidhni disa foto njëherësh, prekeni dhe mbajeni të prekur </string>
+	<string name="photo_picker_choose_video">Zgjidhni video prej pajisjes</string>
+	<string name="photo_picker_choose_photo">Zgjidhni foto prej pajisjes</string>
+	<string name="new_editor_promo_description">Aplikacioni WordPress tani përmban një përpunues të ri të hijshëm. Provojeni duke krijuar një postim të ri.</string>
+	<string name="wp_media_title">Media WordPress</string>
+	<string name="media_insert_as_gallery">Shtoji si galeri</string>
+	<string name="media_insert_individually">Shtoji tek e tek</string>
+	<string name="media_insert_title">Shtoni disa foto njëherësh</string>
+	<string name="media_gallery_column_count_multi">%d shtylla</string>
+	<string name="media_gallery_column_count_single">1 shtyllë</string>
+	<string name="editor_confirm_email_prompt_negative">Ridërgo Email</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Dërguam një email te %s kur u regjistruat fillimisht. Që të aktivizohet botimi, ju lutemi hapeni mesazhin dhe klikoni mbi butonin blu.</string>
+	<string name="editor_confirm_email_prompt_message">Dërguam një email kur u regjistruat fillimisht. Që të aktivizohet botimi, ju lutemi hapeni mesazhin dhe klikoni mbi butonin blu.</string>
+	<string name="editor_confirm_email_prompt_title">Ju lutemi, ripohoni adresën tuaj email</string>
+	<string name="toast_verification_email_send_error">Gabim në dërgimin e email-it të verifikimit. E keni bërë verifikimin një herë?</string>
+	<string name="toast_verification_email_sent">Email-i i verifikimit u dërgua, kontrolloni mesazhet e marrë</string>
+	<string name="toast_saving_post_as_draft">Po ruhet postimi si skicë</string>
+	<string name="photo_picker_capture_video">Bëni një video</string>
+	<string name="photo_picker_capture_photo">Bëni një foto</string>
+	<string name="delete_site_warning_subtitle">Hapni sytë! Pasi fshihet një sajt, s’mund të rikthehet më. Ju lutemi, sigurohuni përpara se të vazhdoni më tej.</string>
+	<string name="delete_site_warning">Do të fshihen krejt postimet, figurat dhe të dhënat tuaja. Dhe adresa e këtij sajti (%s) do të humbë.</string>
+	<string name="delete_site_warning_title">Të fshihet sajti?</string>
+	<string name="start_over_email_intent_error">S’arrihet të dërgohet email</string>
+	<string name="start_over_email_body">Dua t’ia filloj nga e para me sajtin %s</string>
+	<string name="start_over_email_subject">Fillojani nga e para me sajtin %s</string>
+	<string name="site_picker_remove_site_error">Gabim në heqjen e sajtit, riprovoni më vonë</string>
+	<string name="editor_post_saved_locally_unfinished_media">Postimi ka ngarkime mediash të papërfunduar dhe u ruajt lokalisht</string>
+	<string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
 	<string name="photo_picker_title">Zgjidhni foto</string>
 	<string name="error_publish_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
 	<string name="editor_post_saved_online_not_published">Postimi u ruaj si skicë në internet. Shihni mundësinë e botimit të tij.</string>
@@ -353,9 +382,7 @@ Language: sq_AL
 	<string name="error_refresh_comments_showing_older">Komentet s&amp;#8217;u freskuan dot këtë herë - po shfaqen komente më të vjetër</string>
 	<string name="editor_post_settings_set_featured_image">Vëre Si Figurë të Zgjedhur</string>
 	<string name="editor_post_settings_featured_image">Figurë e Zgjedhur</string>
-	<string name="new_editor_promo_desc">WordPress-i për Android tani përfshin një përpunues pamor të ri.\n    Provojeni duke krijuar një postim të ri.</string>
-	<string name="new_editor_promo_title">Përpunues i ri fringo</string>
-	<string name="new_editor_promo_button_label">Bukur, faleminderit!</string>
+	<string name="new_editor_promo_title">Përpunues i ri</string>
 	<string name="visual_editor_enabled">Përpunuesi Pamor u aktivizua</string>
 	<string name="editor_content_placeholder">Ndajeni shembullin tuaj me ta…</string>
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>
@@ -644,6 +671,7 @@ Language: sq_AL
 	<string name="stats_insights">Tendenca</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Që të shihni statistikat tuaja, bëni hyrjen te llogaria WordPress.com që përdorët për t&amp;#8217;ia përshoqëruar Jetpack-ut.</string>
 	<string name="stats_other_recent_stats_moved_label">Po kërkoni për të Tjera Statistika tuajat Së Fundi? I kemi kaluar te faqja Tendeca.</string>
+	<string name="me_disconnect_from_wordpress_com">Dil nga WordPress.com</string>
 	<string name="me_btn_login_logout">Hyrje/Dalje</string>
 	<string name="me_connect_to_wordpress_com">Hyni te WordPress.com</string>
 	<string name="account_settings">Rregullime Llogarie</string>

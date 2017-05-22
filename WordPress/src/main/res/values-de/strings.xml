@@ -15,8 +15,6 @@ Language: de
 	<string name="toast_saving_post_as_draft">Beitrag wird als Entwurf gespeichert</string>
 	<string name="photo_picker_capture_video">Video aufnehmen</string>
 	<string name="photo_picker_capture_photo">Foto aufnehmen</string>
-	<string name="photo_picker_choose_video">Video auswählen</string>
-	<string name="photo_picker_choose_photo">Foto auswählen</string>
 	<string name="delete_site_warning_subtitle">Vorsicht! Nachdem eine Website gelöscht wurde, kann sie nicht wiederhergestellt werden. Sei dir sicher, bevor du fortfährst.</string>
 	<string name="delete_site_warning">Alle deine Beiträge, Bilder und Daten werden gelöscht. Und die Adresse dieser Website (%s) geht verloren.</string>
 	<string name="delete_site_warning_title">Website löschen?</string>
@@ -332,9 +330,6 @@ Language: de
 	<string name="error_refresh_comments_showing_older">Die Kommentare konnten nicht aktualisiert werden. Es werden ältere Kommentare angezeigt.</string>
 	<string name="editor_post_settings_set_featured_image">Beitragsbild festlegen</string>
 	<string name="editor_post_settings_featured_image">Beitragsbild</string>
-	<string name="new_editor_promo_desc">Die WordPress-App für Android verfügt nun über einen tollen neuen visuellen\n Editor. Probier ihn aus, indem du einen neuen Beitrag erstellst.</string>
-	<string name="new_editor_promo_title">Komplett neuer Editor</string>
-	<string name="new_editor_promo_button_label">Super, danke!</string>
 	<string name="visual_editor_enabled">Visueller Editor aktiviert</string>
 	<string name="editor_content_placeholder">Teile deine Geschichte hier …</string>
 	<string name="editor_page_title_placeholder">Seitentitel</string>
