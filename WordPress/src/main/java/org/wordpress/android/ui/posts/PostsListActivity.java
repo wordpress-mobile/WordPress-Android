@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -42,10 +41,17 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         ((WordPress) getApplication()).component().inject(this);
 
         // init
-        unpackIntent(getIntent());
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsPage = savedInstanceState.getBoolean(EXTRA_VIEW_PAGES);
             mCurrentSearch = savedInstanceState.getString(EXTRA_SEARCH_TERM, null);
+        } else if (getIntent() != null) {
+            if (getIntent().hasExtra(WordPress.SITE)) {
+                mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            }
+            if (getIntent().hasExtra(EXTRA_VIEW_PAGES)) {
+                mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
+            }
         }
 
         // need a Site to continue
@@ -132,6 +138,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(EXTRA_VIEW_PAGES, mIsPage);
         if (!TextUtils.isEmpty(mCurrentSearch)) {
             outState.putString(EXTRA_SEARCH_TERM, mCurrentSearch);
         }
@@ -152,15 +159,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
     public boolean isRefreshing() {
         return mPostList.isRefreshing();
-    }
-
-    private void unpackIntent(@NonNull Intent intent) {
-        if (intent.hasExtra(WordPress.SITE)) {
-            mSite = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
-        }
-        if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
-            mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
-        }
     }
 
     /**
