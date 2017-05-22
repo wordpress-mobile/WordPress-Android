@@ -311,8 +311,8 @@ public class PostsListFragment extends Fragment
         return mPostsListAdapter;
     }
 
-    private boolean isPostAdapterEmpty() {
-        return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
+    private boolean isRecyclerViewAdapterEmpty() {
+        return mRecyclerView.getAdapter() == null || mRecyclerView.getAdapter().getItemCount() == 0;
     }
 
     private void loadPosts(LoadMode mode) {
@@ -434,7 +434,7 @@ public class PostsListFragment extends Fragment
         mEmptyViewTitle.setText(getText(stringId));
         mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE :
                 View.GONE);
-        mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(isRecyclerViewAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void hideEmptyView() {
