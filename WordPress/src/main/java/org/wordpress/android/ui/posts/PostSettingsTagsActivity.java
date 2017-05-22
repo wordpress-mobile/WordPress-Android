@@ -156,8 +156,18 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         // No-op
     }
 
+    // Find the text after the last occurrence of "," and filter with it
     private void filterListForCurrentText() {
-        mAdapter.filter(mTagsEditText.getText().toString());
+        String text = mTagsEditText.getText().toString();
+        if (!TextUtils.isEmpty(text)) {
+            int endIndex = text.lastIndexOf(",");
+            if (endIndex == -1) {
+                mAdapter.filter(text);
+            } else if (endIndex + 1 <= text.length()) {
+                String textToFilter = text.substring(endIndex + 1);
+                mAdapter.filter(textToFilter);
+            }
+        }
     }
 
     @SuppressWarnings("unused")
