@@ -270,9 +270,6 @@ Language: gl_ES
 	<string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
 	<string name="editor_post_settings_set_featured_image">Poñer como imaxe destacada</string>
 	<string name="editor_post_settings_featured_image">Imaxe destacada</string>
-	<string name="new_editor_promo_desc">A aplicación de WordPress para Android inclúe agora un novo editor\n visual. Próbao creando unha entrada nova.</string>
-	<string name="new_editor_promo_title">Editor novo</string>
-	<string name="new_editor_promo_button_label">Estupendo, grazas!</string>
 	<string name="visual_editor_enabled">Editor visual habilitado</string>
 	<string name="editor_content_placeholder">Comparte aquí as túas anécdotas...</string>
 	<string name="editor_page_title_placeholder">Título da páxina</string>

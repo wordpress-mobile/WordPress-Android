@@ -317,9 +317,6 @@ Language: el_GR
 	<string name="error_refresh_comments_showing_older">Δεν ήταν δυνατή η ανανέωση των σχολίων αυτή τη στιγμή - εμφάνιση παλαιότερων σχολίων</string>
 	<string name="editor_post_settings_set_featured_image">Ορισμός προβαλλόμενης εικόνας</string>
 	<string name="editor_post_settings_featured_image">Προβαλλόμενη Εικόνα</string>
-	<string name="new_editor_promo_desc">Η εφαρμογή του WordPress για Android περιλαμβάνει τώρα έναν όμορφο νέο\nεπεξεργαστή. Δοκιμάστε τον δημιουργώντας ένα νέο άρθρο.</string>
-	<string name="new_editor_promo_title">Ολοκαίνουριος επεξεργαστής κειμένου</string>
-	<string name="new_editor_promo_button_label">Σπουδαία, ευχαριστούμε!</string>
 	<string name="visual_editor_enabled">Ο οπτικοποιημένος επεξεργαστής ενεργοποιήθηκε</string>
 	<string name="editor_content_placeholder">Μοιραστείτε την ιστορία σας εδώ...</string>
 	<string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
