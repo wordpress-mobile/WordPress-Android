@@ -15,8 +15,6 @@ Language: zh_CN
 	<string name="toast_saving_post_as_draft">将文章保存为草稿</string>
 	<string name="photo_picker_capture_video">拍摄视频</string>
 	<string name="photo_picker_capture_photo">拍照</string>
-	<string name="photo_picker_choose_video">选择视频</string>
-	<string name="photo_picker_choose_photo">选择照片</string>
 	<string name="delete_site_warning_subtitle">注意！站点删除后无法恢复。请确认是否要继续操作。</string>
 	<string name="delete_site_warning">您的所有文章、图片和数据都将被删除。而且，此站点的地址 (%s) 将会丢失。</string>
 	<string name="delete_site_warning_title">删除站点？</string>
@@ -273,9 +271,6 @@ Language: zh_CN
 	<string name="error_refresh_comments_showing_older">目前无法刷新评论 – 显示的是旧评论</string>
 	<string name="editor_post_settings_set_featured_image">设置推荐图像</string>
 	<string name="editor_post_settings_featured_image">推荐图像</string>
-	<string name="new_editor_promo_desc">适用于 Android 的 WordPress 应用程序现在包含美观的全新可视化\n编辑器。请创建一篇新文章试试看。</string>
-	<string name="new_editor_promo_title">全新的编辑器</string>
-	<string name="new_editor_promo_button_label">太棒了，谢谢！</string>
 	<string name="visual_editor_enabled">已启用可视化编辑器</string>
 	<string name="editor_content_placeholder">在此处分享您的故事…</string>
 	<string name="editor_page_title_placeholder">页面标题</string>

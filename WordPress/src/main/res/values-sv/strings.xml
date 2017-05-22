@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-30 07:05:41+0000
+Translation-Revision-Date: 2017-05-11 12:48:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Peka länge för att välja flera kommentarer</string>
+	<string name="smart_toast_photo_long_press">Peka länge för att välja flera foton</string>
+	<string name="photo_picker_choose_video">Välj video från din enhet</string>
+	<string name="photo_picker_choose_photo">Välj foto från din enhet</string>
+	<string name="new_editor_promo_description">WordPress-appen innehåller nu en vacker ny redigerare. Prova den genom att skapa ett nytt inlägg.</string>
+	<string name="wp_media_title">WordPress-media</string>
+	<string name="media_insert_as_gallery">Lägg till som galleri</string>
+	<string name="media_insert_individually">Lägg till enstaka</string>
+	<string name="media_insert_title">Lägg till flera foton</string>
+	<string name="media_gallery_column_count_multi">%d kolumner</string>
+	<string name="media_gallery_column_count_single">1 column</string>
 	<string name="editor_confirm_email_prompt_negative">Skicka e-post en gång till</string>
 	<string name="editor_confirm_email_prompt_message_with_email">När du registrerade dig skickade vi e-post till %s. Öppna det meddelandet och klicka på den blå knappen för att göra det möjligt att publicera.</string>
 	<string name="editor_confirm_email_prompt_message">När du registrerade dig skickade vi e-post. Öppna det meddelandet och klicka på den blå knappen för att göra det möjligt att publicera.</string>
@@ -15,8 +26,6 @@ Language: sv_SE
 	<string name="toast_saving_post_as_draft">Inlägget sparas som utkast</string>
 	<string name="photo_picker_capture_video">Spela in en video</string>
 	<string name="photo_picker_capture_photo">Ta ett foto</string>
-	<string name="photo_picker_choose_video">Välj video</string>
-	<string name="photo_picker_choose_photo">Välj foto</string>
 	<string name="delete_site_warning_subtitle">Var försiktig! När en webbplats väl har raderats kan den inte återskapas. Fortsätt bara om du verkligen är säker.</string>
 	<string name="delete_site_warning">Alla dina inlägg, bilder och data kommer att raderas. Dessutom förlorar du adressen (%s) till denna webbplats.</string>
 	<string name="delete_site_warning_title">Radera webbplatsen?</string>
@@ -87,9 +96,9 @@ Language: sv_SE
 	<string name="reader_discover_default_tag">Upptäck</string>
 	<string name="reader_empty_followed_blogs_search_title">Inga matchande webbplatser</string>
 	<string name="reader_hint_search_followed_sites">Sök följda webbplatser</string>
-	<string name="preference_editor_legacy">Klassisk</string>
 	<string name="preference_editor_type">Ställ in redigeringsverktyg</string>
 	<string name="preference_editor_visual">Visuell</string>
+	<string name="preference_editor_legacy">Klassisk</string>
 	<string name="visual_editor_disabled">Visuell redigerare inaktiverad</string>
 	<string name="pending_draft_one_generic">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
 	<string name="pending_draft_one_month">Dröj inte längre, \'%1$s\' vill bli publicerad!</string>
@@ -373,9 +382,7 @@ Language: sv_SE
 	<string name="error_refresh_comments_showing_older">Kommentarer kan inte uppdateras just nu – visar äldre kommentarer</string>
 	<string name="editor_post_settings_set_featured_image">Ange utvald bild</string>
 	<string name="editor_post_settings_featured_image">Utvald bild</string>
-	<string name="new_editor_promo_desc">I WordPress-appen för Android ingår nu en ny, fantastisk, visuell\n redigerare. Prova gärna genom att skapa ett nytt inlägg.</string>
-	<string name="new_editor_promo_title">Helt ny redigerare</string>
-	<string name="new_editor_promo_button_label">Tack!</string>
+	<string name="new_editor_promo_title">Ny redigerare</string>
 	<string name="visual_editor_enabled">Visuell redigerare aktiverad</string>
 	<string name="editor_content_placeholder">Berätta din historia här...</string>
 	<string name="editor_page_title_placeholder">Sidans rubrik</string>
