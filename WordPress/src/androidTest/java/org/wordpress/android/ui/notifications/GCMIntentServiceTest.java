@@ -6,9 +6,8 @@ import android.test.RenamingDelegatingContext;
 import android.test.ServiceTestCase;
 
 import org.wordpress.android.FactoryUtils;
-import org.wordpress.android.GCMMessageService;
 import org.wordpress.android.TestUtils;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.push.GCMMessageService;
 
 public class GCMIntentServiceTest extends ServiceTestCase<GCMMessageService> {
     protected Context mTargetContext;
@@ -28,22 +27,13 @@ public class GCMIntentServiceTest extends ServiceTestCase<GCMMessageService> {
         setupService();
     }
 
-    public void testShouldCircularizeNoteIcon() {
-        GCMMessageService intentService = new GCMMessageService();
-
-        String type = "c";
-        assertTrue(intentService.shouldCircularizeNoteIcon(type));
-
-        assertFalse(intentService.shouldCircularizeNoteIcon(null));
-
-        type = "invalidType";
-        assertFalse(intentService.shouldCircularizeNoteIcon(type));
+    @Override
+    protected void tearDown() throws Exception {
+        FactoryUtils.clearFactories();
+        super.tearDown();
     }
 
     public void testOnMessageReceived() throws InterruptedException {
-        org.wordpress.android.models.Account account = AccountHelper.getDefaultAccount();
-        account.setAccessToken("secret token");
-        account.setUserId(1);
         final Bundle bundle = new Bundle();
         bundle.putString("user", "1");
         for (int i = 0; i < 1000; i++) {

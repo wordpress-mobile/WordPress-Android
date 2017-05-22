@@ -36,14 +36,4 @@ public enum StatsTimeframe {
                 return "day";
         }
     }
-
-    public static String[] toStringArray(StatsTimeframe[] timeframes) {
-        String[] titles = new String[timeframes.length];
-
-        for (int i = 0; i < timeframes.length; i++) {
-            titles[i] = timeframes[i].getLabel();
-        }
-
-        return titles;
-    }
 }

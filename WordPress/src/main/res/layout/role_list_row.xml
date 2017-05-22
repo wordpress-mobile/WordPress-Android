@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/dlp_padding_bottom"
+    android:paddingEnd="@dimen/dlp_padding_end"
+    android:paddingLeft="@dimen/dlp_padding_start"
+    android:paddingRight="@dimen/dlp_padding_end"
+    android:paddingStart="@dimen/dlp_padding_start"
+    android:paddingTop="@dimen/dlp_padding_top">
+
+    <RadioButton
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:buttonTint="@color/dialog_compound_button"
+        tools:targetApi="LOLLIPOP"/>
+
+    <TextView
+        android:id="@+id/role_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/dlp_text_margin_end"
+        android:layout_marginLeft="@dimen/dlp_text_margin_start"
+        android:layout_marginRight="@dimen/dlp_text_margin_end"
+        android:layout_marginStart="@dimen/dlp_text_margin_start"
+        android:layout_toEndOf="@id/radio"
+        android:layout_toRightOf="@id/radio"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="Main Text"/>
+
+</RelativeLayout>

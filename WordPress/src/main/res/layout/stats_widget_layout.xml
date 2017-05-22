@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/stats_widget_outer_container"
     android:background="@drawable/stats_widget_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:showIn="@layout/stats_widget_info">
+    tools:showIn="@xml/stats_widget_info">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
         <ImageView
             android:layout_width="@dimen/stats_widget_icon_size"
             android:layout_height="@dimen/stats_widget_icon_size"
-            android:src="@drawable/stats_widget_header_icon" />
+            app:srcCompat="@drawable/ic_my_sites_white_32dp" />
 
         <TextView
             android:id="@+id/blog_title"
@@ -71,7 +72,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:src="@drawable/stats_icon_views" />
+                    app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" />
 
                 <TextView
                     android:textColor="@color/grey_dark"
@@ -117,7 +118,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:src="@drawable/stats_icon_visitors" />
+                    app:srcCompat="@drawable/ic_user_grey_dark_12dp" />
 
                 <TextView
                     android:textColor="@color/grey_dark"
@@ -163,7 +164,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:src="@drawable/stats_icon_likes" />
+                    app:srcCompat="@drawable/ic_star_grey_dark_12dp" />
 
                 <TextView
                     android:textColor="@color/grey_dark"
@@ -209,7 +210,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:src="@drawable/stats_icon_comments" />
+                    app:srcCompat="@drawable/ic_comment_grey_dark_12dp" />
 
                 <TextView
                     android:textColor="@color/grey_dark"

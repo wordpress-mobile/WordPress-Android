@@ -25,7 +25,7 @@ public class AuthenticatorRequest {
     }
 
     public String getSiteId() {
-        return extractSiteIdFromUrl(mRequest.getUrl());
+        return extractSiteIdFromUrl(mRestClient.getEndpointURL(), mRequest.getUrl());
     }
 
     /**
@@ -34,15 +34,14 @@ public class AuthenticatorRequest {
      *
      * @return The site ID
      */
-    public String extractSiteIdFromUrl(String url) {
+    public static String extractSiteIdFromUrl(String restEndpointUrl, String url) {
         if (url == null) {
             return null;
         }
 
-        final String restEndpointURL = mRestClient.getEndpointURL();
-        final String sitePrefix = restEndpointURL.endsWith("/") ? restEndpointURL + "sites/" : restEndpointURL + "/sites/";
-        final String batchCallPrefix = restEndpointURL.endsWith("/") ? restEndpointURL + "batch/?urls%5B%5D=%2Fsites%2F"
-                : restEndpointURL + "/batch/?urls%5B%5D=%2Fsites%2F";
+        final String sitePrefix = restEndpointUrl.endsWith("/") ? restEndpointUrl + "sites/" : restEndpointUrl + "/sites/";
+        final String batchCallPrefix = restEndpointUrl.endsWith("/") ? restEndpointUrl + "batch/?urls%5B%5D=%2Fsites%2F"
+                : restEndpointUrl + "/batch/?urls%5B%5D=%2Fsites%2F";
 
         if (url.startsWith(sitePrefix) && !sitePrefix.equals(url)) {
             int marker = sitePrefix.length();
@@ -77,7 +76,7 @@ public class AuthenticatorRequest {
     }
 
     public void sendWithAccessToken(String token){
-        mRequest.setAccessToken(token.toString());
+        mRequest.setAccessToken(token);
         mRestClient.send(mRequest);
     }
 

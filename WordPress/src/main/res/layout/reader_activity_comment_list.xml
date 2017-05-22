@@ -20,13 +20,23 @@
         app:fixWidowWords="true"
         tools:visibility="visible" />
 
-    <org.wordpress.android.ui.reader.views.ReaderRecyclerView
-        android:id="@+id/recycler_view"
+
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layout_bottom"
-        android:layout_below="@+id/toolbar"
-        android:scrollbars="vertical" />
+        android:layout_below="@+id/toolbar">
+
+        <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/margin_extra_extra_large"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/layout_bottom"

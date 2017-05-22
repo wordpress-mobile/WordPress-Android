@@ -42,6 +42,13 @@ public class PhotonUtils {
             return imageUrl;
         }
 
+        // we have encountered some image urls that incorrectly have a # fragment part, which
+        // must be removed before removing the query string
+        int fragmentPos = imageUrl.indexOf("#");
+        if (fragmentPos > 0) {
+            imageUrl = imageUrl.substring(0, fragmentPos);
+        }
+
         // remove existing query string since it may contain params that conflict with the passed ones
         imageUrl = UrlUtils.removeQuery(imageUrl);
 

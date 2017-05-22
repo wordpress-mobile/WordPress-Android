@@ -9,7 +9,6 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +16,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -29,6 +29,7 @@ public class NumberPickerDialog extends DialogFragment
     public static final String SHOW_SWITCH_KEY    = "show-switch";
     public static final String SWITCH_ENABLED_KEY = "switch-enabled";
     public static final String SWITCH_TITLE_KEY   = "switch-title";
+    public static final String SWITCH_DESC_KEY    = "switch-description";
     public static final String TITLE_KEY          = "dialog-title";
     public static final String HEADER_TEXT_KEY    = "header-text";
     public static final String MIN_VALUE_KEY      = "min-value";
@@ -38,9 +39,10 @@ public class NumberPickerDialog extends DialogFragment
     private static final int DEFAULT_MIN_VALUE = 0;
     private static final int DEFAULT_MAX_VALUE = 99;
 
-    private SwitchCompat mSwitch;
+    private Switch mSwitch;
     private TextView mHeaderText;
     private NumberPicker mNumberPicker;
+    private NumberPicker.Formatter mFormat;
     private int mMinValue;
     private int mMaxValue;
     private boolean mConfirmed;
@@ -55,7 +57,7 @@ public class NumberPickerDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         TextView switchText = (TextView) view.findViewById(R.id.number_picker_text);
-        mSwitch = (SwitchCompat) view.findViewById(R.id.number_picker_switch);
+        mSwitch = (Switch) view.findViewById(R.id.number_picker_switch);
         mHeaderText = (TextView) view.findViewById(R.id.number_picker_header);
         mNumberPicker = (NumberPicker) view.findViewById(R.id.number_picker);
         int value = mMinValue;
@@ -72,7 +74,7 @@ public class NumberPickerDialog extends DialogFragment
             } else {
                 mSwitch.setVisibility(View.GONE);
             }
-            switchText.setText(args.getString(SWITCH_TITLE_KEY, ""));
+            switchText.setText(args.getString(SWITCH_DESC_KEY, ""));
             mHeaderText.setText(args.getString(HEADER_TEXT_KEY, ""));
             mMinValue = args.getInt(MIN_VALUE_KEY, DEFAULT_MIN_VALUE);
             mMaxValue = args.getInt(MAX_VALUE_KEY, DEFAULT_MAX_VALUE);
@@ -81,6 +83,7 @@ public class NumberPickerDialog extends DialogFragment
             builder.setCustomTitle(getDialogTitleView(args.getString(TITLE_KEY, "")));
         }
 
+        mNumberPicker.setFormatter(mFormat);
         mNumberPicker.setMinValue(mMinValue);
         mNumberPicker.setMaxValue(mMaxValue);
         mNumberPicker.setValue(value);
@@ -95,7 +98,7 @@ public class NumberPickerDialog extends DialogFragment
             mHeaderText.setVisibility(View.GONE);
         }
 
-        builder.setPositiveButton(R.string.ok, this);
+        builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);
 
@@ -133,6 +136,10 @@ public class NumberPickerDialog extends DialogFragment
         }
 
         super.onDismiss(dialog);
+    }
+
+    public void setNumberFormat(NumberPicker.Formatter format) {
+        mFormat = format;
     }
 
     private View getDialogTitleView(String title) {

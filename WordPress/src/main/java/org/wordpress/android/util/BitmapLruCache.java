@@ -5,9 +5,21 @@ import android.support.v4.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
 
+import java.util.Map;
+
 public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCache {
     public BitmapLruCache(int maxSize) {
         super(maxSize);
+    }
+
+    public void removeSimilar(String keyLike) {
+        Map<String, Bitmap> map = snapshot();
+
+        for (String key : map.keySet()) {
+           if (key.contains(keyLike)) {
+               remove(key);
+           }
+        }
     }
 
     @Override

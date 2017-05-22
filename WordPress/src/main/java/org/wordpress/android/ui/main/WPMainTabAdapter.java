@@ -82,6 +82,9 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
 
     public Fragment getFragment(int position) {
         if (isValidPosition(position)) {
+            if (mFragments.get(position) == null) {
+                return getItem(position);
+            }
             return mFragments.get(position);
         } else {
             return null;

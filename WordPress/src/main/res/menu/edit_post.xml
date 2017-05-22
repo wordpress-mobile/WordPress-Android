@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_preview_post"
-        android:icon="@drawable/ic_remove_red_eye_white_24dp"
+        android:id="@+id/menu_post_settings"
+        android:icon="@drawable/ic_cog_white_24dp"
         app:showAsAction="always"
-        android:title="@string/preview"/>
+        android:title="@string/settings"/>
     <item
         android:id="@+id/menu_save_post"
         app:showAsAction="always"

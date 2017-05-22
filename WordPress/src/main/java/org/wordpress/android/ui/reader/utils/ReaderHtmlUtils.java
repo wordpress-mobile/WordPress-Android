@@ -9,10 +9,18 @@ import java.util.regex.Pattern;
 
 public class ReaderHtmlUtils {
 
-    public static interface HtmlScannerListener {
-        public void onTagFound(String tag, String src, int start, int end);
-        public void onScanCompleted();
+    public interface HtmlScannerListener {
+        void onTagFound(String tag, String src);
     }
+
+    // regex for matching oriwidth attributes in tags
+    private static final Pattern ORIGINAL_WIDTH_ATTR_PATTERN = Pattern.compile(
+            "data-orig-size\\s*=\\s*(?:'|\")(.*?),.*?(?:'|\")",
+            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern ORIGINAL_HEIGHT_ATTR_PATTERN = Pattern.compile(
+            "data-orig-size\\s*=\\s*(?:'|\").*?,(.*?)(?:'|\")",
+            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
     // regex for matching width attributes in tags
     private static final Pattern WIDTH_ATTR_PATTERN = Pattern.compile(
@@ -29,6 +37,35 @@ public class ReaderHtmlUtils {
             "src\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
+
+    /*
+    * returns the integer value from the data-orig-size attribute in the passed html tag
+    */
+    public static int getOriginalWidthAttrValue(final String tag) {
+        if (tag == null) {
+            return 0;
+        }
+
+        Matcher matcher = ORIGINAL_WIDTH_ATTR_PATTERN.matcher(tag);
+        if (matcher.find()) {
+            return StringUtils.stringToInt(matcher.group(1), 0);
+        } else {
+            return 0;
+        }
+    }
+
+    public static int getOriginalHeightAttrValue(final String tag) {
+        if (tag == null) {
+            return 0;
+        }
+
+        Matcher matcher = ORIGINAL_HEIGHT_ATTR_PATTERN.matcher(tag);
+        if (matcher.find()) {
+            return StringUtils.stringToInt(matcher.group(1), 0);
+        } else {
+            return 0;
+        }
+    }
 
     /*
     * returns the integer value from the width attribute in the passed html tag
@@ -81,7 +118,8 @@ public class ReaderHtmlUtils {
      * if the url is invalid, or the param doesn't exist, or the param value could not be
      * converted to an int
      */
-    public static int getIntQueryParam(final String url, final String param) {
+    public static int getIntQueryParam(final String url,
+                                       @SuppressWarnings("SameParameterValue") final String param) {
         if (url == null
                 || param == null
                 || !url.startsWith("http")

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/people_list_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:minHeight="@dimen/people_list_row_height">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/person_avatar"
+        style="@style/PersonAvatar" />
+
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/person_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/people_list_row_role_margin_top"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:maxLines="1"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_small"
+        tools:text="role" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/person_display_name"
+        style="@style/PersonTextView"
+        android:layout_alignTop="@id/person_avatar"
+        android:layout_toEndOf="@id/person_avatar"
+        android:layout_toLeftOf="@id/person_role"
+        android:layout_toRightOf="@id/person_avatar"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="display_name" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/person_username"
+        style="@style/PersonTextView"
+        android:layout_alignLeft="@id/person_display_name"
+        android:layout_alignStart="@id/person_display_name"
+        android:layout_below="@id/person_display_name"
+        android:layout_toLeftOf="@id/person_role"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="username" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/follower_subscribed_date"
+        style="@style/PersonTextView"
+        android:layout_alignLeft="@id/person_display_name"
+        android:layout_alignStart="@id/person_display_name"
+        android:layout_below="@id/person_username"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_toLeftOf="@id/person_role"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/text_sz_small"
+        tools:text="Since {date}" />
+
+
+</RelativeLayout>

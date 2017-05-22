@@ -2,9 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,23 +12,28 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
-    public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
-    public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
-    public static final String EXTRA_BLOG_LOCAL_ID = "EXTRA_BLOG_LOCAL_ID";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
+    private SiteModel mSite;
+
+    @Inject SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.post_list_activity);
 
@@ -47,10 +50,20 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         FragmentManager fm = getFragmentManager();
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
 
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
+        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         showErrorDialogIfNeeded(getIntent().getExtras());
-        showWarningToastIfNeeded(getIntent().getExtras());
     }
 
     @Override
@@ -60,9 +73,12 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RequestCodes.EDIT_POST) {
+            mPostList.handleEditPostResult(resultCode, data);
+        }
     }
 
     /**
@@ -75,8 +91,6 @@ public class PostsListActivity extends AppCompatActivity {
         }
 
         final String errorMessage = extras.getString(EXTRA_ERROR_MSG);
-        final String errorInfoTitle = extras.getString(EXTRA_ERROR_INFO_TITLE);
-        final String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
 
         if (TextUtils.isEmpty(errorMessage)) {
             return;
@@ -85,33 +99,10 @@ public class PostsListActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getText(R.string.error))
                .setMessage(errorMessage)
-               .setPositiveButton(R.string.ok, null)
+               .setPositiveButton(android.R.string.ok, null)
                .setCancelable(true);
 
-        // enable browsing error link if one exists
-        if (!TextUtils.isEmpty(errorInfoTitle) && !TextUtils.isEmpty(errorInfoLink)) {
-            builder.setNeutralButton(errorInfoTitle,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(errorInfoLink)));
-                        }
-                    });
-        }
-
         builder.create().show();
-    }
-
-    /**
-     * Show a toast when the user taps a Post Upload notification referencing a post that's not from the current
-     * selected Blog
-     */
-    private void showWarningToastIfNeeded(Bundle extras) {
-        if (extras == null || !extras.containsKey(EXTRA_BLOG_LOCAL_ID) || isFinishing()) {
-            return;
-        }
-        if (extras.getInt(EXTRA_BLOG_LOCAL_ID, -1) != WordPress.getCurrentLocalTableBlogId()) {
-            ToastUtils.showToast(this, R.string.error_open_list_from_notification);
-        }
     }
 
     public boolean isRefreshing() {
@@ -129,9 +120,7 @@ public class PostsListActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        if (outState.isEmpty()) {
-            outState.putBoolean("bug_19917_fix", true);
-        }
         super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 }

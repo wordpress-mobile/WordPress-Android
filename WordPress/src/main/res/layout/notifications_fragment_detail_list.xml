@@ -8,6 +8,7 @@
         android:id="@+id/notifications_list_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/grey_light"
         android:orientation="vertical">
 
         <ListView

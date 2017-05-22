@@ -4,19 +4,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CommentFollowersModel implements Serializable {
-    private String mBlogID;
+public class CommentFollowersModel extends BaseStatsModel {
+    private long mBlogID;
     private int mPage;
     private int mPages;
     private int mTotal;
     private List<SingleItemModel> mPosts;
 
-    public CommentFollowersModel(String blogID, JSONObject response) throws JSONException {
+    public CommentFollowersModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPage = response.getInt("page");
         this.mPages = response.getInt("pages");
@@ -37,11 +36,11 @@ public class CommentFollowersModel implements Serializable {
         }
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

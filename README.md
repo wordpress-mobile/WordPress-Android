@@ -8,24 +8,19 @@ read on.
 
 ## Build Instructions ##
 
-The [gradle build system][2] will fetch all dependencies and generate
-files you need to build the project. You first need to generate the
-local.properties (replace YOUR_SDK_DIR with your actual android SDK directory)
-file and create the gradle.properties file. The easiest way is to copy
-our example:
+You first need to generate the `local.properties` (replace YOUR_SDK_DIR with
+your actual android SDK directory) file and create the `gradle.properties` file:
 
     $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
-    $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
+    $ cp ./gradle.properties-example ./gradle.properties
 
-Note: this is the default `./WordPress/gradle.properties` file. If you
-want to use WordPress.com functions (login to a WordPress.com account,
+Note: this is the default `./gradle.properties` file. If you
+want to use WordPress.com features (login to a WordPress.com account,
 access the Reader and Stats for example), you'll have to get a WordPress.com
 OAuth2 ID and secret. Please read the
 [OAuth2 Authentication](#oauth2-authentication) section.
 
-The previous command creates a `libs/` directory and clones all dependencies needed
-by the main WordPress for Android project. You can now build, install and
-test the project:
+You can now build, install and test the project:
 
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
     $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
@@ -38,9 +33,9 @@ You can use [Android Studio][3] by importing the project as a Gradle project.
 
     |-- libs                    # dependencies used to build debug variants
     |-- tools                   # script collection
+    |-- gradle.properties       # properties imported by the build script
     `-- WordPress
         |-- build.gradle        # main build script
-        |-- gradle.properties   # properties imported by the build script
         `-- src                 # android specific Java code
             |-- androidTest     # test assets, resources and code
             |-- main            #
@@ -48,7 +43,7 @@ You can use [Android Studio][3] by importing the project as a Gradle project.
             |   |-- java        # main project java code
             |   `-- res         # main project resources
             |-- vanilla         # vanilla variant specific manifest
-            `-- zbetagroup      # beta variant specific resources and manifest
+            `-- wasabi          # wasabi variant specific resources and manifest
 
 ## OAuth2 Authentication ##
 
@@ -63,8 +58,8 @@ application type. The applications manager currently requires a "redirect URL",
 but this isn't used for mobile apps. Just use "https://localhost".
 
 Once you've created your application in the [applications manager][5], you'll
-need to edit the `./WordPress/gradle.properties` file and change the
-`WP.OAUTH.APP.ID` and `WP.OAUTH.APP.SECRET` fields. Then you can compile and
+need to edit the `./gradle.properties` file and change the
+`WP.OAUTH.APP_ID` and `WP.OAUTH.APP_SECRET` fields. Then you can compile and
 run the app on a device or an emulator and try to login with a WordPress.com
 account.
 
@@ -80,31 +75,11 @@ how we're organizing branches in our repository in the
 
 Say hello on our [Slack][4] channel: `#mobile`.
 
-## Alternative Build Instructions ##
-
-WordPress-Android can be compiled with [Buck][8], an alternative to Gradle,
-that makes the build process much faster. You first need to fetch the
-dependencies by doing:
-
-    $ buck fetch wpandroid
-
-This command will fetch all dependencies (`.aar` and `.jar`) needed to build
-the project. Then you can run buck to build the apk:
-
-    $ buck build wpandroid
-
-You can build, install and run the project if you have a device or an emulator
-connected by running the following:
-
-    $ buck install --run wpandroid
-
-It's recommended to install [watchman][9] to take advantage of the Buck
-daemon: `buckd`.
-
 ## FAQ ##
 
 * Q: I can't build/test/package the project because of a `PermGen space` error.
-* A: Create a `build.properties` file in the project root directory with the following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
+* A: Create a `gradle.properties` file in the project root directory with the
+following: `org.gradle.jvmargs=-XX:MaxPermSize=1024m`.
 
 ## License ##
 
@@ -114,11 +89,9 @@ in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
-[2]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [3]: http://developer.android.com/sdk/installing/studio.html
 [4]: https://make.wordpress.org/chat/
 [5]: https://developer.wordpress.com/apps/
 [6]: https://developer.wordpress.com/docs/oauth2/
 [7]: https://developer.wordpress.com/docs/api/
-[8]: https://facebook.github.io/buck
 [9]: https://facebook.github.io/watchman/docs/install.html

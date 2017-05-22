@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.FormatUtils;
 
 /*
  * used when showing comment + comment count, like + like count
@@ -53,16 +53,23 @@ public class ReaderIconCountView extends LinearLayout {
                 mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
                 switch (mIconType) {
                     case ICON_LIKE :
-                        mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_like));
+                        mImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.reader_button_like));
                         break;
                     case ICON_COMMENT :
-                        mImageView.setImageDrawable(context.getResources().getDrawable(R.drawable.reader_button_comment));
+                        mImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.reader_button_comment));
                         break;
                 }
 
             } finally {
                 a.recycle();
             }
+        }
+
+        // move the comment icon down a bit so it aligns with the text baseline
+        if (mIconType == ICON_COMMENT) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mImageView.getLayoutParams();
+            int margin = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_extra_small);
+            params.topMargin = margin;
         }
 
         ReaderUtils.setBackgroundToRoundRipple(mImageView);
@@ -85,10 +92,6 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count) {
-        if (mIconType == ICON_LIKE) {
-            mTextCount.setText(ReaderUtils.getShortLikeLabelText(getContext(), count));
-        } else {
-            mTextCount.setText(FormatUtils.formatInt(count));
-        }
+        mTextCount.setText(count != 0 ? String.valueOf(count) : "");
     }
 }

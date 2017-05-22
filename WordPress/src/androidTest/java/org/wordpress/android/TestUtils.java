@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import com.google.gson.internal.StringMap;
-
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.io.BufferedReader;
@@ -22,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -93,10 +92,10 @@ public class TestUtils {
     }
 
     public static void clearApplicationState(Context context) {
-        WordPress.currentBlog = null;
         if (WordPress.getContext() != null) {
             try {
-                WordPress.WordPressComSignOut(context);
+                WordPress app = (WordPress) context.getApplicationContext();
+                app.wordPressComSignOut();
             } catch (Exception e) {
                 // noop
             }
@@ -110,20 +109,6 @@ public class TestUtils {
         return s.hasNext() ? s.next() : "";
     }
 
-    public static HashMap<String, Object> stringMapToHashMap(StringMap<?> stringMap) {
-        HashMap<String, Object> res = new HashMap<String, Object>();
-        for (String key : stringMap.keySet()) {
-            Object value = stringMap.get(key);
-            if (StringMap.class.isInstance(value)) {
-                HashMap<String, Object> newValue = stringMapToHashMap((StringMap<?>) value);
-                res.put(key, newValue);
-            } else {
-                res.put(key, value);
-            }
-        }
-        return res;
-    }
-
     public static Date gsonStringToJavaDate(final String strDate) {
         try {
             SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss a", Locale.ENGLISH);
@@ -135,7 +120,7 @@ public class TestUtils {
 
     public static Date parseStringToDate(String value) {
         // try do parseit as a Date
-        Date newValue = DateTimeUtils.iso8601ToJavaDate(value);
+        Date newValue = DateTimeUtils.dateFromIso8601(value);
         if (newValue != null) {
             return newValue;
         }
@@ -148,7 +133,7 @@ public class TestUtils {
 
     public static Object castIt(Object value) {
         if (value instanceof HashMap) {
-            return injectDateInHashMap((HashMap<String, Object>) value);
+            return injectDateInMap((Map<String, Object>) value);
         } else if (value instanceof String) {
             Date newValue = parseStringToDate((String) value);
             if (newValue != null) {
@@ -160,8 +145,6 @@ public class TestUtils {
             return (int) Math.round((Double) value);
         } else if (value instanceof Object[]) {
             return injectDateInArray((Object[]) value);
-        } else if (value instanceof StringMap) {
-            return injectDateInHashMap(stringMapToHashMap((StringMap) value));
         }
         return value;
     }
@@ -174,8 +157,8 @@ public class TestUtils {
         return res.toArray();
     }
 
-    public static HashMap<String, Object> injectDateInHashMap(HashMap<String, Object> hashMap) {
-        HashMap<String, Object> res = new HashMap<String, Object>();
+    public static Map<String, Object> injectDateInMap(Map<String, Object> hashMap) {
+        Map<String, Object> res = new HashMap<String, Object>();
         for (String key : hashMap.keySet()) {
             Object value = hashMap.get(key);
             res.put(key, castIt(value));

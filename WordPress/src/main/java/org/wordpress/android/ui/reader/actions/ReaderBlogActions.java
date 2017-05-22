@@ -8,7 +8,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
-import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -24,6 +23,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
+
+import java.net.HttpURLConnection;
 
 public class ReaderBlogActions {
 
@@ -41,9 +42,7 @@ public class ReaderBlogActions {
                                          final boolean isAskingToFollow,
                                          final ActionListener actionListener) {
         if (blogId == 0) {
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
-            }
+            ReaderActions.callActionListener(actionListener, false);
             return false;
         }
 
@@ -51,13 +50,13 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED, blogId);
         } else {
-            AnalyticsUtils.trackWithBlogDetails(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId);
+            AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED, blogId);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-        final String path = "sites/" + blogId + "/follows/" + (isAskingToFollow ? "new" : "mine/delete");
+        final String path = "sites/" + blogId + "/follows/" + (isAskingToFollow ? "new?source=android" : "mine/delete");
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -69,9 +68,7 @@ public class ReaderBlogActions {
                     AppLog.w(T.READER, "blog " + actionName + " failed - " + jsonToString(jsonObject) + " - " + path);
                     localRevertFollowBlogId(blogId, isAskingToFollow);
                 }
-                if (actionListener != null) {
-                    actionListener.onActionResult(success);
-                }
+                ReaderActions.callActionListener(actionListener, success);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -79,15 +76,48 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.w(T.READER, "blog " + actionName + " failed with error");
                 AppLog.e(T.READER, volleyError);
-                localRevertFollowBlogId(blogId, isAskingToFollow);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
+                // check if we get a 403 when unfollowing - this will happen when we attempt
+                // to unfollow a blog that no longer exists - the workaround is to unfollow
+                // by url - note that the v1.2 endpoint will return a 404 in this situation
+                int status = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                if (status == 403 && !isAskingToFollow) {
+                    internalUnfollowBlogByUrl(blogId, actionListener);
+                } else {
+                    localRevertFollowBlogId(blogId, isAskingToFollow);
+                    ReaderActions.callActionListener(actionListener, false);
                 }
             }
         };
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
         return true;
+    }
+
+    private static void internalUnfollowBlogByUrl(long blogId,
+                                                  final ActionListener actionListener) {
+        String blogUrl = ReaderBlogTable.getBlogUrl(blogId);
+        if (TextUtils.isEmpty(blogUrl)) {
+            AppLog.w(T.READER, "URL not found for blogId " + blogId);
+            ReaderActions.callActionListener(actionListener, false);
+            return;
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                ReaderActions.callActionListener(actionListener, true);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AppLog.e(T.READER, error);
+                ReaderActions.callActionListener(actionListener, false);
+            }
+        };
+
+        String path = "/read/following/mine/delete?url=" + UrlUtils.urlEncode(blogUrl);
+        WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
     public static boolean followFeedById(final long feedId,
@@ -107,8 +137,8 @@ public class ReaderBlogActions {
                             blogInfo.getFeedUrl(),
                             isAskingToFollow,
                             actionListener);
-                } else if (actionListener != null) {
-                    actionListener.onActionResult(false);
+                } else {
+                    ReaderActions.callActionListener(actionListener, false);
                 }
             }
         });
@@ -116,37 +146,35 @@ public class ReaderBlogActions {
         return true;
     }
 
-    public static boolean followFeedByUrl(final String feedUrl,
-                                           final boolean isAskingToFollow,
-                                           final ActionListener actionListener) {
+    public static void followFeedByUrl(final String feedUrl,
+                                       final ActionListener actionListener) {
         if (TextUtils.isEmpty(feedUrl)) {
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
-            }
-            return false;
+            ReaderActions.callActionListener(actionListener, false);
+            return;
         }
 
+        // use existing blog info if we can
         ReaderBlog blogInfo = ReaderBlogTable.getFeedInfo(ReaderBlogTable.getFeedIdFromUrl(feedUrl));
         if (blogInfo != null) {
-            return internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), isAskingToFollow, actionListener);
+            internalFollowFeed(blogInfo.feedId, blogInfo.getFeedUrl(), true, actionListener);
+            return;
         }
 
+        // otherwise, look it up via the endpoint
         updateFeedInfo(0, feedUrl, new UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlog blogInfo) {
-                if (blogInfo != null) {
-                    internalFollowFeed(
-                            blogInfo.feedId,
-                            blogInfo.getFeedUrl(),
-                            isAskingToFollow,
-                            actionListener);
-                } else if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
+                // note we attempt to follow even when the look up fails (blogInfo = null) because that
+                // endpoint doesn't perform feed discovery, whereas the endpoint to follow a feed does
+                long feedIdToFollow = blogInfo != null ? blogInfo.feedId : 0;
+                String feedUrlToFollow = (blogInfo != null && blogInfo.hasFeedUrl()) ? blogInfo.getFeedUrl() : feedUrl;
+                internalFollowFeed(
+                        feedIdToFollow,
+                        feedUrlToFollow,
+                        true,
+                        actionListener);
             }
         });
-
-        return true;
     }
 
     private static boolean internalFollowFeed(
@@ -157,9 +185,7 @@ public class ReaderBlogActions {
     {
         // feedUrl is required
         if (TextUtils.isEmpty(feedUrl)) {
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
-            }
+            ReaderActions.callActionListener(actionListener, false);
             return false;
         }
 
@@ -176,8 +202,8 @@ public class ReaderBlogActions {
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
         final String path = "read/following/mine/"
-                + (isAskingToFollow ? "new" : "delete")
-                + "?url=" + UrlUtils.urlEncode(feedUrl);
+                + (isAskingToFollow ? "new?source=android&url=" : "delete?url=")
+                + UrlUtils.urlEncode(feedUrl);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -189,9 +215,7 @@ public class ReaderBlogActions {
                     AppLog.w(T.READER, "feed " + actionName + " failed - " + jsonToString(jsonObject) + " - " + path);
                     localRevertFollowFeedId(feedId, isAskingToFollow);
                 }
-                if (actionListener != null) {
-                    actionListener.onActionResult(success);
-                }
+                ReaderActions.callActionListener(actionListener, success);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -200,9 +224,7 @@ public class ReaderBlogActions {
                 AppLog.w(T.READER, "feed " + actionName + " failed with error");
                 AppLog.e(T.READER, volleyError);
                 localRevertFollowFeedId(feedId, isAskingToFollow);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
+                ReaderActions.callActionListener(actionListener, false);
             }
         };
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
@@ -218,9 +240,7 @@ public class ReaderBlogActions {
                                             ActionListener actionListener) {
         if (post == null) {
             AppLog.w(T.READER, "follow action performed with null post");
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
-            }
+            ReaderActions.callActionListener(actionListener, false);
             return false;
         }
         if (post.feedId != 0) {
@@ -254,17 +274,14 @@ public class ReaderBlogActions {
             return false;
         }
 
-        final boolean isSubscribed;
+        boolean isSubscribed;
         if (json.has("subscribed")) {
             // read/follows/
             isSubscribed = json.optBoolean("subscribed", false);
-        } else if (json.has("is_following")) {
-            // site/$site/follows/
-            isSubscribed = json.optBoolean("is_following", false);
         } else {
-            isSubscribed = false;
+            // site/$site/follows/
+            isSubscribed = json.has("is_following") && json.optBoolean("is_following", false);
         }
-
         return (isSubscribed == isAskingToFollow);
     }
 
@@ -296,7 +313,7 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 // authentication error may indicate that API access has been disabled for this blog
                 int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                boolean isAuthErr = (statusCode == HttpStatus.SC_FORBIDDEN);
+                boolean isAuthErr = (statusCode == HttpURLConnection.HTTP_FORBIDDEN);
                 // if we failed to get the blog info using the id and this isn't an authentication
                 // error, try again using just the domain
                 if (!isAuthErr && hasBlogId && hasBlogUrl) {
@@ -401,7 +418,7 @@ public class ReaderBlogActions {
                 blogUrl,
                 listener,
                 errorListener);
-        WordPress.requestQueue.add(request);
+        WordPress.sRequestQueue.add(request);
     }
 
     /*
@@ -420,9 +437,7 @@ public class ReaderBlogActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-               if (actionListener != null) {
-                    actionListener.onActionResult(true);
-                }
+                ReaderActions.callActionListener(actionListener, true);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -433,9 +448,7 @@ public class ReaderBlogActions {
                 if (blockResult.wasFollowing) {
                     ReaderBlogTable.setIsFollowedBlogId(blogId, true);
                 }
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
+                ReaderActions.callActionListener(actionListener, false);
             }
         };
 

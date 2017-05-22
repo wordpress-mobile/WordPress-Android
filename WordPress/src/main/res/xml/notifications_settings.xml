@@ -2,27 +2,35 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:key="wp_pref_notifications_root">
     <PreferenceCategory
-        android:title="@string/your_sites"
-        android:key="@string/pref_notification_blogs">
+        android:key="@string/pref_notification_blogs"
+        android:title="@string/your_sites">
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="@string/notifications_other"
-        android:key="@string/pref_notification_other_category">
-        <PreferenceScreen android:key="@string/pref_notification_other_blogs"
-            android:title="@string/notifications_comments_other_blogs" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/notifications_sights_and_sounds"
-        android:key="@string/pref_notification_sights_sounds">
+        android:key="@string/pref_notification_other_category"
+        android:title="@string/notifications_other">
+        <PreferenceScreen
+            android:key="@string/pref_notification_other_blogs"
+            android:title="@string/notifications_comments_other_blogs"/>
         <SwitchPreference
-            android:defaultValue="false"
-            android:key="wp_pref_notification_sound"
+            android:defaultValue="true"
+            android:key="@string/pref_key_notification_pending_drafts"
+            android:title="@string/notification_pending_drafts"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="@string/pref_notification_sights_sounds"
+        android:title="@string/notifications_sights_and_sounds">
+        <RingtonePreference
+            android:key="wp_pref_custom_notification_sound"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:defaultValue="content://settings/system/notification_sound"
             android:title="@string/notification_sound"/>
         <SwitchPreference
             android:defaultValue="false"
             android:key="wp_pref_notification_vibrate"
             android:title="@string/notification_vibrate"/>
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="wp_pref_notification_light"
             android:title="@string/notification_blink"/>
     </PreferenceCategory>

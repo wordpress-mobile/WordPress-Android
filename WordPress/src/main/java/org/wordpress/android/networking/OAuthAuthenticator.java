@@ -1,30 +1,18 @@
 package org.wordpress.android.networking;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.util.StringUtils;
 
+// TODO: kill this when we don't need any other rest client than the one in FluxC
 public class OAuthAuthenticator implements Authenticator {
+    private AccessToken mAccessToken;
+
+    public OAuthAuthenticator(AccessToken accessToken) {
+        mAccessToken = accessToken;
+    }
+
     @Override
     public void authenticate(final AuthenticatorRequest request) {
-        String siteId = request.getSiteId();
-        String token = AccountHelper.getDefaultAccount().getAccessToken();
-
-        if (siteId != null) {
-            // Get the token for a Jetpack site if needed
-            Blog blog = WordPress.wpDB.getBlogForDotComBlogId(siteId);
-
-            if (blog != null) {
-                String jetpackToken = blog.getApi_key();
-
-                // valid OAuth tokens are 64 chars
-                if (jetpackToken != null && jetpackToken.length() == 64 && !blog.isDotcomFlag()) {
-                    token = jetpackToken;
-                }
-            }
-        }
-
-        request.sendWithAccessToken(StringUtils.notNullStr(token));
+        request.sendWithAccessToken(StringUtils.notNullStr(mAccessToken.get()));
     }
 }

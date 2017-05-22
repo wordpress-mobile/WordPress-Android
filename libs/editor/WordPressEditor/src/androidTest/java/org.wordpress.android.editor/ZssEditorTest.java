@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.os.Build;
 import android.test.ActivityInstrumentationTestCase2;
 import android.webkit.JavascriptInterface;
 
@@ -46,13 +47,31 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
 
         mSetUpLatch.countDown();
 
-        final String htmlEditor = Utils.getHtmlFromFile(activity, "android-editor.html");
+        String htmlEditor = Utils.getHtmlFromFile(activity, "android-editor.html");
+
+        if (htmlEditor != null) {
+            htmlEditor = htmlEditor.replace("%%TITLE%%", getActivity().getString(R.string.visual_editor));
+            htmlEditor = htmlEditor.replace("%%ANDROID_API_LEVEL%%", String.valueOf(Build.VERSION.SDK_INT));
+            htmlEditor = htmlEditor.replace("%%LOCALIZED_STRING_INIT%%",
+                    "nativeState.localizedStringEdit = '" + getActivity().getString(R.string.edit) + "';\n" +
+                    "nativeState.localizedStringUploading = '" + getActivity().getString(R.string.uploading) + "';\n" +
+                    "nativeState.localizedStringUploadingGallery = '" +
+                            getActivity().getString(R.string.uploading_gallery_placeholder) + "';\n");
+        }
+
+        final String finalHtmlEditor = htmlEditor;
+
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mWebView = new EditorWebView(mInstrumentation.getContext(), null);
-                mWebView.addJavascriptInterface(new MockJsCallbackReceiver(), JS_CALLBACK_HANDLER);
-                mWebView.loadDataWithBaseURL("file:///android_asset/", htmlEditor, "text/html", "utf-8", "");
+                if (Build.VERSION.SDK_INT < 17) {
+                    mWebView.setJsCallbackReceiver(new MockJsCallbackReceiver(new EditorFragmentForTests()));
+                } else {
+                    mWebView.addJavascriptInterface(new MockJsCallbackReceiver(new EditorFragmentForTests()),
+                            JS_CALLBACK_HANDLER);
+                }
+                mWebView.loadDataWithBaseURL("file:///android_asset/", finalHtmlEditor, "text/html", "utf-8", "");
                 mSetUpLatch.countDown();
             }
         });
@@ -74,12 +93,16 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
         Set<String> expectedSet = new HashSet<>();
         expectedSet.add("callback-new-field:id=zss_field_title");
         expectedSet.add("callback-new-field:id=zss_field_content");
-        expectedSet.add("callback-dom-loaded:undefined");
+        expectedSet.add("callback-dom-loaded:");
 
         assertEquals(expectedSet, mCallbackSet);
     }
 
-    private class MockJsCallbackReceiver {
+    private class MockJsCallbackReceiver extends JsCallbackReceiver {
+        public MockJsCallbackReceiver(EditorFragmentAbstract editorFragmentAbstract) {
+            super(editorFragmentAbstract);
+        }
+
         @JavascriptInterface
         public void executeCallback(String callbackId, String params) {
             if (callbackId.equals("callback-dom-loaded")) {
@@ -90,10 +113,12 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
             // Handle callbacks and count down latches according to the currently running test
             switch(mTestMethod) {
                 case INIT:
-                    if (callbackId.equals("callback-new-field") || callbackId.equals("callback-dom-loaded")) {
+                    if (callbackId.equals("callback-dom-loaded")) {
+                        mCallbackSet.add(callbackId + ":");
+                    } else if (callbackId.equals("callback-new-field")) {
                         mCallbackSet.add(callbackId + ":" + params);
-                        mCallbackLatch.countDown();
                     }
+                    mCallbackLatch.countDown();
                     break;
                 default:
                     throw(new RuntimeException("Unknown calling method"));

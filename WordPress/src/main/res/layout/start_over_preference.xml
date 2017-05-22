@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:gravity="center_vertical"
+    android:paddingRight="@dimen/start_over_preference_margin_large"
+    android:paddingLeft="@dimen/start_over_preference_margin_large"
+    android:paddingTop="@dimen/start_over_preference_margin_large"
+    android:paddingBottom="@dimen/start_over_preference_margin_large"
+    android:background="?android:attr/selectableItemBackground"
+    android:baselineAligned="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/pref_icon"
+            android:layout_width="@dimen/start_over_icon_size"
+            android:layout_height="@dimen/start_over_icon_size"
+            android:layout_marginRight="@dimen/start_over_icon_margin_right"
+            android:padding="@dimen/start_over_icon_padding"
+            android:layout_gravity="center_vertical"
+            android:tint="@color/grey_darken_30"/>
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:paddingLeft="@dimen/start_over_title_margin"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@android:id/summary"
+        android:layout_marginTop="@dimen/start_over_preference_margin_medium"
+        android:layout_marginBottom="@dimen/start_over_preference_margin_medium"
+        android:layout_marginLeft="@dimen/start_over_summary_margin"
+        android:paddingLeft="@dimen/start_over_preference_margin_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorSecondary" />
+
+    <LinearLayout
+        android:id="@android:id/widget_frame"
+        android:layout_marginLeft="@dimen/start_over_summary_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical" />
+
+</LinearLayout>

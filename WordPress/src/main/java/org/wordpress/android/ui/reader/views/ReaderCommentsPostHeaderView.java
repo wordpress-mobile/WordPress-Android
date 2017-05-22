@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -51,8 +52,8 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
             txtBlogName.setText(R.string.reader_untitled_post);
         }
 
-        java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(post.getPublished());
-        String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPublished);
+        java.util.Date dtPost = DateTimeUtils.dateFromIso8601(post.getDatePublished());
+        String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPost, WordPress.getContext());
         if (post.isCommentsOpen || post.numReplies > 0) {
             dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(getContext(), post.numReplies);
         }

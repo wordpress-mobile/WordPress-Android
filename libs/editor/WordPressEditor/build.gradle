@@ -3,30 +3,30 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.3.1'
     }
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 repositories {
     jcenter()
+    maven { url "https://jitpack.io" }
 }
 
 android {
     publishNonDefault true
 
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
-        versionCode 4
-        versionName "0.4"
-        minSdkVersion 14
-        targetSdkVersion 23
+        versionCode 13
+        versionName "1.3"
+        minSdkVersion 16
+        targetSdkVersion 25
     }
     buildTypes {
         release {
@@ -46,20 +46,12 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'org.wordpress:analytics:1.0.0'
-    compile 'org.wordpress:utils:1.6.0'
-
-    // Test libraries
-    testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-core:1.10.19'
-    testCompile 'org.robolectric:robolectric:3.0'
-
-    // Workaround for IDE bug
-    // http://stackoverflow.com/questions/22246183/android-studio-doesnt-recognize-espresso-classes
-    provided 'junit:junit:4.11'
-    provided 'org.mockito:mockito-core:1.10.19'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'org.wordpress:utils:1.+'
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v1.0-beta')
 }
 
 signing {
@@ -115,47 +107,5 @@ uploadArchives {
                 }
             }
         }
-    }
-}
-
-//
-// Testing and code coverage
-//
-
-android.testOptions.unitTests.all {
-    include '**/*Test.class'
-    exclude '**/ApplicationTest.class'
-}
-
-jacoco {
-    toolVersion = "0.7.1.201405082137"
-}
-
-// Use these to define which classes to include and exclude from code coverage analysis
-def coverageSourceDirs = [ 'src/main/java' ]
-def coverageExclusions = [ '**/R.class',
-                           '**/R$*.class',
-                           '**/*$ViewInjector*.*',
-                           '**/BuildConfig.*',
-                           '**/Manifest*.*',
-                           '**/Legacy**.class',
-                           '**/legacy/**/*.class' ]
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "testDebug") {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports"
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: coverageExclusions
-    )
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDebug.exec')
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
     }
 }

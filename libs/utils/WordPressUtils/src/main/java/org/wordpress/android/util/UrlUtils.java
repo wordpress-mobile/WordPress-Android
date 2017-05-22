@@ -54,11 +54,11 @@ public class UrlUtils {
     public static String convertUrlToPunycodeIfNeeded(String url) {
         if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
             if (url.toLowerCase().startsWith("http://")) {
-                url = "http://" + IDN.toASCII(url.substring(7));
+                url = "http://" + IDN.toASCII(url.substring(7), IDN.ALLOW_UNASSIGNED);
             } else if (url.toLowerCase().startsWith("https://")) {
-                url = "https://" + IDN.toASCII(url.substring(8));
+                url = "https://" + IDN.toASCII(url.substring(8), IDN.ALLOW_UNASSIGNED);
             } else {
-                url = IDN.toASCII(url);
+                url = IDN.toASCII(url, IDN.ALLOW_UNASSIGNED);
             }
         }
         return url;
@@ -86,25 +86,25 @@ public class UrlUtils {
      * http client will work as expected.
      *
      * @param url url entered by the user or fetched from a server
-     * @param isHTTPS true will make the url starts with https;//
-     * @return transformed url prefixed by its http;// or https;// scheme
+     * @param addHttps true and the url is not starting with http://, it will make the url starts with https://
+     * @return url prefixed by http:// or https://
      */
-    public static String addUrlSchemeIfNeeded(String url, boolean isHTTPS) {
+    public static String addUrlSchemeIfNeeded(String url, boolean addHttps) {
         if (url == null) {
             return null;
         }
 
         // Remove leading double slash (eg. //example.com), needed for some wporg instances configured to
         // switch between http or https
-        url = removeLeadingDoubleSlash(url, (isHTTPS ? "https" : "http") + "://");
+        url = removeLeadingDoubleSlash(url, (addHttps ? "https" : "http") + "://");
 
-        if (!URLUtil.isValidUrl(url)) {
-            if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-                url = (isHTTPS ? "https" : "http") + "://" + url;
-            }
+        // If the URL is a valid http or https URL, we're good to go
+        if (URLUtil.isHttpUrl(url) || URLUtil.isHttpsUrl(url)) {
+            return url;
         }
 
-        return url;
+        // Else, remove the old scheme and prefix it by https:// or http://
+        return (addHttps ? "https" : "http") + "://" + removeScheme(url);
     }
 
     /**
@@ -253,5 +253,22 @@ public class UrlUtils {
             uriBuilder.appendQueryParameter(parameter.getKey(), parameter.getValue());
         }
         return uriBuilder.build().toString();
+    }
+
+    /**
+     * Extracts the subdomain from a domain string.
+     * @param domain A domain is expected. Protocol is optional
+     * @return The subdomain or an empty string.
+     */
+    public static String extractSubDomain(String domain) {
+        String str = UrlUtils.addUrlSchemeIfNeeded(domain, false);
+        String host = UrlUtils.getHost(str);
+        if (host.length() > 0) {
+            String[] parts = host.split("\\.");
+            if (parts.length > 1) { // There should be at least 2 dots for there to be a subdomain.
+                return parts[0];
+            }
+        }
+        return "";
     }
 }

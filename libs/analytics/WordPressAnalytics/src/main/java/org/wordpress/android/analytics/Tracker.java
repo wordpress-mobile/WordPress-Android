@@ -15,8 +15,7 @@ public abstract class Tracker {
     abstract void track(Stat stat, Map<String, ?> properties);
     abstract void endSession();
     abstract void flush();
-    abstract void refreshMetadata(boolean isUserConnected,boolean isWordPressComUser, boolean isJetpackUser,
-                         int sessionCount, int numBlogs, int versionCode, String username, String email);
+    abstract void refreshMetadata(AnalyticsMetadata metadata);
     abstract void registerPushNotificationToken(String regId);
     abstract String getAnonIdPrefKey();
 
@@ -74,5 +73,17 @@ public abstract class Tracker {
 
     void setWordPressComUserName(String userName) {
         mWpcomUserName = userName;
+    }
+
+    public static boolean isValidEvent(Stat stat) {
+        if (stat == null) {
+            try {
+                throw new AnalyticsException("Trying to track a null stat event!");
+            } catch (AnalyticsException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+            return false;
+        }
+        return true;
     }
 }

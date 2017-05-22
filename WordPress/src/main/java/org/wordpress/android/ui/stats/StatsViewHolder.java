@@ -9,12 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -26,6 +25,7 @@ public class StatsViewHolder {
     public final TextView entryTextView;
     public final TextView totalsTextView;
     public final WPNetworkImageView networkImageView;
+    public final TextView alternativeImage;
     public final ImageView chevronImageView;
     public final ImageView linkImageView;
     public final ImageView imgMore;
@@ -38,7 +38,7 @@ public class StatsViewHolder {
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
         linkImageView = (ImageView) view.findViewById(R.id.stats_list_cell_link);
         networkImageView = (WPNetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-
+        alternativeImage = (TextView) view.findViewById(R.id.stats_list_cell_image_alt);
         imgMore = (ImageView) view.findViewById(R.id.image_more);
     }
 
@@ -77,19 +77,11 @@ public class StatsViewHolder {
                             }
                             AppLog.d(AppLog.T.UTILS, "Opening the Authenticated in-app browser : " + url);
                             // Let's try the global wpcom credentials
-                            String statsAuthenticatedUser = AccountHelper.getDefaultAccount().getUserName();
-                            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-                                // Still empty. Do not eat the event, but let's open the default Web Browser.
-
-                            }
-                            WPWebViewActivity.openUrlByUsingWPCOMCredentials(view.getContext(),
-                                    url, statsAuthenticatedUser);
-
+                            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(view.getContext(), url);
                         } else if (url.startsWith("https") || url.startsWith("http")) {
                             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
                             WPWebViewActivity.openURL(view.getContext(), url);
                         }
-
                     }
                 }
         );
@@ -111,12 +103,12 @@ public class StatsViewHolder {
     /*
      * Used by stats fragments to set the entry text, opening the stats details page.
      */
-    public void setEntryTextOpenDetailsPage(final PostModel currentItem) {
+    public void setEntryTextOpenDetailsPage(final StatsPostModel currentItem) {
         if (entryTextView == null) {
             return;
         }
 
-        String name =  StringEscapeUtils.unescapeHtml(currentItem.getTitle());
+        String name =  StringEscapeUtils.unescapeHtml4(currentItem.getTitle());
         entryTextView.setText(name);
         rowContent.setOnClickListener(
                 new View.OnClickListener() {
@@ -133,7 +125,7 @@ public class StatsViewHolder {
      * Opening it with reader if possible.
      *
      */
-    public void setMoreButtonOpenInReader(final PostModel currentItem) {
+    public void setMoreButtonOpenInReader(final StatsPostModel currentItem) {
         if (imgMore == null) {
             return;
         }

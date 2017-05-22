@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-10-17 15:47:12+0000
+Plural-Forms: nplurals=2; plural=n != 1;
+Generator: GlotPress/2.4.0-alpha
+Language: hu
+-->
 <resources>
+	<string name="reader_label_image_count_one">1 kép</string>
+	<string name="timespan_now">most</string>
+	<string name="role_admin">Adminisztrátor</string>
+	<string name="role_editor">Szerkesztő</string>
+	<string name="role_author">Szerző</string>
+	<string name="role_contributor">Közreműködő</string>
+	<string name="role_follower">Követő</string>
+	<string name="two_step_footer_button">Kód küldése szöveges üzenetben</string>
+	<string name="verify">Ellenőrzés</string>
+	<string name="editor_toast_invalid_path">Érvénytelen fájl elérési útvonal</string>
+	<string name="media_details_label_file_name">Fájl neve:</string>
+	<string name="media_details_label_file_type">Fájl típusa:</string>
+	<string name="language">Nyelv</string>
+	<string name="device">Eszköz</string>
+	<string name="two_step_sms_sent">Nézzük meg a szöveges üzeneteink között az ellenőrző kódot</string>
+	<string name="stats_view_authors">Szerzők</string>
+	<string name="publisher">Közzétevő:</string>
+	<string name="pages_fetching">Oldalak betöltése...</string>
+	<string name="media_fetching">Média betöltése...</string>
+	<string name="comments_fetching">Hozzászólások betöltése...</string>
+	<string name="posts_fetching">Bejegyzések betöltése...</string>
+	<string name="reader_empty_posts_in_blog">Ez a blog üres</string>
+	<string name="stats_followers_email_selector">E-mail</string>
+	<string name="stats_followers_wpcom_selector">WordPress.com</string>
+	<string name="stats_followers_seconds_ago">másodpercekkel ezelőtt</string>
+	<string name="stats_followers_a_minute_ago">egy perccel ezelőtt</string>
+	<string name="stats_followers_hours">%1$d óra</string>
+	<string name="stats_followers_a_day">Egy nap</string>
+	<string name="stats_followers_days">%1$d nap</string>
+	<string name="stats_followers_minutes">%1$d perc</string>
+	<string name="stats_followers_an_hour_ago">egy órával ezelőtt</string>
+	<string name="stats_followers_years">%1$d év</string>
+	<string name="stats_followers_a_month">Egy hónap</string>
+	<string name="stats_followers_a_year">Egy év</string>
+	<string name="stats_followers_total_wpcom">WordPress.com követők összesen: %1$s</string>
+	<string name="stats_followers_total_email">Email követők összesen: %1$s</string>
 	<string name="delete_sure_post">Bejegyzés törlése</string>
 	<string name="delete_sure">Vázlat törlése</string>
 	<string name="delete_sure_page">Oldal törlése</string>
@@ -18,10 +60,10 @@
 	<string name="error_refresh_unauthorized_pages">Az oldalak megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
 	<string name="error_refresh_unauthorized_comments">A hozzászólások megtekintéséhez vagy szerkesztéséhez nincs megfelelő jogosultság</string>
 	<string name="older_month">Egy hónapnál régebbi</string>
+	<string name="more">Bövebben</string>
 	<string name="older_two_days">2 napnál régebbi</string>
 	<string name="older_last_week">Egy hétnél régebbi</string>
 	<string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
-	<string name="media_empty_list_custom_date">Ebben az időintervallumban nincs média</string>
 	<string name="reader_menu_block_blog">Blog tiltása</string>
 	<string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
 	<string name="reader_toast_err_block_blog">Nem sikerült a blog letiltása</string>
@@ -34,12 +76,10 @@
 	<string name="hs__conversation_header">Támogató chat</string>
 	<string name="add_location">Hely hozzáadás</string>
 	<string name="current_location">Jelenlegi hely</string>
-	<string name="your_signature">Aláírás:</string>
 	<string name="edit_location">Szerkeszt</string>
 	<string name="search_location">Keresés</string>
 	<string name="search_current_location">Hely meghatározás</string>
 	<string name="preference_send_usage_stats">Statisztika küldés</string>
-	<string name="preference_privacy">Adatvédelem</string>
 	<string name="update_verb">Frissítést</string>
 	<string name="schedule_verb">Időzítés</string>
 	<string name="reader_title_subs">Címkék és blogok</string>
@@ -98,14 +138,11 @@
 	<string name="edit_comment">Hozzászólás szerkesztése</string>
 	<string name="dlg_trashing_comments">Lomtárba küldés</string>
 	<string name="pending_review">Áttekintésre várakozik</string>
-	<string name="always_use_these_settings_to_share">Mindig ezeket a beálitásokat használja</string>
 	<string name="download">Média letöltés folyamatban</string>
-	<string name="media_add_new_media_gallery">Galéria létrehozása</string>
 	<string name="reader_btn_follow">Követés</string>
 	<string name="empty_list_default">Ez a lista üres</string>
 	<string name="themes">Sablonok</string>
 	<string name="all">Összes</string>
-	<string name="custom_date">Egyedi dátum</string>
 	<string name="media_add_popup_capture_photo">Fénykép készítése</string>
 	<string name="media_add_popup_capture_video">Videó készítése</string>
 	<string name="media_gallery_image_order_random">Véletlenszerű</string>
@@ -117,22 +154,18 @@
 	<string name="media_edit_success">Frissítve</string>
 	<string name="theme_activating_button">Aktiválás</string>
 	<string name="post_excerpt">Kivonat</string>
-	<string name="stats_view_comments">Hozzászólások</string>
 	<string name="stats_view_referrers">Hivatkozások</string>
 	<string name="stats_timeframe_today">Ma</string>
 	<string name="stats_timeframe_yesterday">Tegnap</string>
 	<string name="stats_view_clicks">Kattintások</string>
 	<string name="stats_view_tags_and_categories">Címkék és kategóriák</string>
-	<string name="menu_search">Keresés</string>
 	<string name="stats_entry_tags_and_categories">Téma</string>
 	<string name="stats_entry_authors">Szerző</string>
 	<string name="themes_details_label">Részletek</string>
 	<string name="themes_features_label">Funkciók</string>
-	<string name="stats_totals_comments">Hozzászólás</string>
 	<string name="media_gallery_type_squares">Négyzetek</string>
 	<string name="theme_activate_button">Bekapcsolás</string>
 	<string name="media_gallery_type_circles">Körök</string>
-	<string name="media_no_video_title">VideoPress nem érhető el</string>
 	<string name="media_edit_caption_hint">A feliratot itt lehet megadni</string>
 	<string name="media_edit_description_hint">A leírást itt lehet megadni</string>
 	<string name="media_edit_failure">A feltöltés nem sikerült</string>
@@ -160,21 +193,18 @@
 	<string name="media_gallery_type_slideshow">Diavetítés</string>
 	<string name="media_gallery_type_tiled">Mozaik</string>
 	<string name="unattached">Független</string>
-	<string name="media_no_video_message">Fizessünk elő VideoPressre a videó feltöltéséhez!</string>
 	<string name="media_edit_title_text">Cím</string>
 	<string name="images">Kép</string>
 	<string name="theme_auth_error_title">Nem sikerült a sablonok betöltése</string>
 	<string name="stats">Statisztika</string>
 	<string name="passcode_preference_title">Azonosítókód lezárás</string>
 	<string name="upload">Feltöltés</string>
-	<string name="sign_in">Bejelentkezés</string>
+	<string name="discard">Elvetés</string>
 	<string name="notifications">Értesítések</string>
 	<string name="note_reply_successful">Válasz elküldve</string>
 	<string name="new_notifications">%d új értesítés</string>
 	<string name="more_notifications">és %d további.</string>
 	<string name="loading">Betöltés</string>
-	<string name="add_tagline">Aláírás hozzáadása a bejegyzéshez</string>
-	<string name="post_signature">Bejegyzés aláírás</string>
 	<string name="httpuser">HTTP felhasználónév</string>
 	<string name="httppassword">HTTP jelszó</string>
 	<string name="error_media_upload">Hiba történt a média feltöltése közben</string>
@@ -195,22 +225,18 @@
 	<string name="page">Oldal</string>
 	<string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
 	<string name="posts">Bejegyzés</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">honlap-felhasználó</string>
 	<string name="upload_scaled_image">Feltöltés és hivatkozás az átméretezett képre</string>
 	<string name="scaled_image">Átméretezett kép szélessége</string>
-	<string name="remove_location">Eltávolítás</string>
 	<string name="scheduled">Időzítve</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Ez a bejegyzés WordPress for Android alkalmazással készült</string>
 	<string name="tos">Szolgáltatási feltételek</string>
 	<string name="version">verzió</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="about">Névjegy</string>
-	<string name="max_thumbnail_px_width">Alapértelmezett kép szélesség</string>
 	<string name="image_alignment">Kép igazítás</string>
 	<string name="refresh">Frissítés</string>
 	<string name="untitled">Cím nélküli</string>
+	<string name="edit">Szerkesztés</string>
 	<string name="post_id">Bejegyzés</string>
 	<string name="page_id">Oldal</string>
 	<string name="post_password">Jelszó (opcionális)</string>
@@ -229,7 +255,6 @@
 	<string name="categories">Kategóriák</string>
 	<string name="title">Címsor</string>
 	<string name="notification_blink">Figyelmeztető fényjelzés</string>
-	<string name="notification_sound">Figyelmeztető hang lejátszása</string>
 	<string name="notification_vibrate">Rezgés</string>
 	<string name="status">Állapot</string>
 	<string name="sdcard_title">SD kártya szükséges</string>
@@ -237,6 +262,7 @@
 	<string name="location">Földrajzi hely</string>
 	<string name="media">Média</string>
 	<string name="delete">Törlés</string>
+	<string name="approve">Elfogadás</string>
 	<string name="none">Egyik sem</string>
 	<string name="blogs">Honlapok</string>
 	<string name="select_photo">Válasszunk egy képet a galériából</string>
@@ -245,28 +271,9 @@
 	<string name="save">Mentés</string>
 	<string name="add">Hozzáad</string>
 	<string name="category_refresh_error">Kategóriák frissítése sikertelen</string>
-	<string name="tab_comments">Hozzászólások</string>
 	<string name="on"> -</string>
 	<string name="reply">Válasz</string>
 	<string name="yes">Igen</string>
 	<string name="no">Nem</string>
 	<string name="preview">Előnézet</string>
-	<string-array name="alignment_array">
-		<item>Nincs</item>
-		<item>Bal</item>
-		<item>Közép</item>
-		<item>Jobb</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Széljegyzet</item>
-		<item>Audió</item>
-		<item>Chat</item>
-		<item>Galéria</item>
-		<item>Kép</item>
-		<item>Hivatkozás</item>
-		<item>Idézet</item>
-		<item>Általános</item>
-		<item>Állapot</item>
-		<item>Videó</item>
-	</string-array>
 </resources>

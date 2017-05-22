@@ -10,8 +10,11 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -26,10 +29,12 @@ public class ReaderUtils {
                                             int height,
                                             boolean isPrivate,
                                             PhotonUtils.Quality quality) {
+
+        final String unescapedUrl = HtmlUtils.fastUnescapeHtml(imageUrl);
         if (isPrivate) {
-            return getPrivateImageForDisplay(imageUrl, width, height);
+            return getPrivateImageForDisplay(unescapedUrl, width, height);
         } else {
-            return PhotonUtils.getPhotonImageUrl(imageUrl, width, height, quality);
+            return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality);
         }
     }
 
@@ -123,14 +128,6 @@ public class ReaderUtils {
     }
 
     /*
-     * returns true if the reader should provide a "logged out" experience - no likes,
-     * comments, or anything else that requires a wp.com account
-     */
-    public static boolean isLoggedOutReader() {
-        return !AccountHelper.isSignedInWordPressDotCom();
-    }
-
-    /*
      * returns true if a ReaderPost and ReaderComment exist for the passed Ids
      */
     public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
@@ -182,5 +179,32 @@ public class ReaderUtils {
         if (view != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             view.setBackgroundResource(R.drawable.ripple_oval);
         }
+    }
+
+    /*
+     * returns a tag object from the passed tag name - first checks for it in the tag db
+     * (so we can also get its title & endpoint), returns a new tag if that fails
+     */
+    public static ReaderTag getTagFromTagName(String tagName, ReaderTagType tagType) {
+        ReaderTag tag = ReaderTagTable.getTag(tagName, tagType);
+        if (tag != null) {
+            return tag;
+        } else {
+            return createTagFromTagName(tagName, tagType);
+        }
+    }
+
+    public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
+        String tagSlug = sanitizeWithDashes(tagName).toLowerCase();
+        String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
+        return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
+    }
+
+    /*
+     * returns the default tag, which is the one selected by default in the reader when
+     * the user hasn't already chosen one
+     */
+    public static ReaderTag getDefaultTag() {
+        return getTagFromTagName(ReaderTag.TAG_TITLE_DEFAULT, ReaderTagType.DEFAULT);
     }
 }

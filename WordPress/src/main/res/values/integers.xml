@@ -8,8 +8,12 @@
     <integer name="isSW600DP">0</integer>
     <integer name="smallest_width_dp">320</integer>
 
-    <!-- max #chars user can type when adding a new topic to the native reader -->
-    <integer name="reader_max_length_topic_name">96</integer>
+    <!-- max #chars user can type when adding a new topic to the reader -->
+    <integer name="max_length_reader_topic_name">96</integer>
+
+    <!-- max #chars for usernames and passwords -->
+    <integer name="max_length_username">254</integer>
+    <integer name="max_length_password">254</integer>
 
     <!-- MediaPicker -->
     <integer name="num_media_columns">2</integer>
@@ -19,6 +23,10 @@
     <!-- Site Settings -->
     <integer name="max_links_limit">100</integer>
     <integer name="paging_limit">300</integer>
+    <integer name="threading_limit">10</integer>
     <integer name="close_after_limit">365</integer>
+
+    <!-- People Management -->
+    <integer name="invite_message_char_limit">500</integer>
 
 </resources>

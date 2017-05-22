@@ -1,0 +1,191 @@
+{
+  "originalResponse":
+  [
+    {
+      "product_id": 1,
+      "product_name": "WordPress.com Free",
+      "prices": {
+        "USD": 0,
+        "AUD": 0,
+        "CAD": 0,
+        "EUR": 0,
+        "GBP": 0,
+        "JPY": 0
+      },
+      "product_name_short": "Free",
+      "product_slug": "free_plan",
+      "tagline": "Perfect for anyone creating a basic blog or site",
+      "description": "Get a free blog and be on your way to publishing your first post in less than five minutes.",
+      "icon": "https:\/\/s0.wordpress.com\/i\/store\/plan-free.png",
+      "icon_active": "https:\/\/s0.wordpress.com\/i\/store\/plan-free-active.png",
+      "capability": "manage_options",
+      "cost": 0,
+      "apple_sku": "",
+      "android_sku": "",
+      "bill_period": -1,
+      "product_type": "bundle",
+      "available": "yes",
+      "store": 0,
+      "features_highlight": [
+        {
+          "items": [
+            "free-blog",
+            "space",
+            "support"
+          ]
+        }
+      ],
+      "bill_period_label": "for life",
+      "price": "$0",
+      "formatted_price": "$0",
+      "raw_price": 0,
+      "raw_discount": 0,
+      "formatted_discount": "$0"
+    },
+    {
+      "product_id": 1003,
+      "product_name": "WordPress.com Premium",
+      "prices": {
+        "USD": 99,
+        "NZD": 139,
+        "AUD": 129,
+        "CAD": 129,
+        "JPY": 11800,
+        "EUR": 99,
+        "GBP": 85
+      },
+      "product_name_short": "Premium",
+      "product_slug": "value_bundle",
+      "tagline": "Perfect for bloggers, creatives, and other professionals",
+      "description": "Your own domain name, powerful customization options, and lots of space for audio and video.",
+      "icon": "https:\/\/s0.wordpress.com\/i\/store\/plan-premium.png",
+      "icon_active": "https:\/\/s0.wordpress.com\/i\/store\/plan-premium-active.png",
+      "capability": "manage_options",
+      "cost": 99,
+      "apple_sku": "",
+      "android_sku": "",
+      "bill_period": 365,
+      "product_type": "bundle",
+      "available": "yes",
+      "store": 0,
+      "features_highlight": [
+        {
+          "items": [
+            "custom-design",
+            "videopress",
+            "support",
+            "space",
+            "custom-domain",
+            "no-adverts\/no-adverts.php"
+          ]
+        },
+        {
+          "title": "Included with all plans",
+          "items": [
+            "free-blog"
+          ]
+        }
+      ],
+      "width": 500,
+      "height": 250,
+      "multi": 0,
+      "support_document": "bundles",
+      "bundle_product_ids": [
+        9,
+        12,
+        45,
+        15,
+        5,
+        16,
+        6,
+        46,
+        54
+      ],
+      "bill_period_label": "per year",
+      "price": "$99",
+      "formatted_price": "$99",
+      "raw_price": 99,
+      "raw_discount": 0,
+      "formatted_discount": "$0",
+      "current_plan": true,
+      "bundle_subscription_id": "5683566",
+      "expiry": "2017-03-07",
+      "free_trial": false,
+      "user_facing_expiry": "2017-03-04",
+      "subscribed_date": "2016-03-07 08:56:13"
+    },
+    {
+      "product_id": 1008,
+      "product_name": "WordPress.com Business",
+      "prices": {
+        "USD": 299,
+        "NZD": 399,
+        "AUD": 399,
+        "CAD": 389,
+        "JPY": 35800,
+        "EUR": 299,
+        "GBP": 250
+      },
+      "product_name_short": "Business",
+      "product_slug": "business-bundle",
+      "tagline": "Perfect for power users, business websites and blogs",
+      "description": "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.",
+      "icon": "https:\/\/s0.wordpress.com\/i\/store\/plan-business.png",
+      "icon_active": "https:\/\/s0.wordpress.com\/i\/store\/plan-business-active.png",
+      "capability": "manage_options",
+      "cost": 199,
+      "apple_sku": "",
+      "android_sku": "",
+      "features_highlight": [
+        {
+          "items": [
+            "premium-themes",
+            "space",
+            "support"
+          ]
+        },
+        {
+          "title": "Includes WordPress.com Premium features:",
+          "items": [
+            "custom-design",
+            "videopress",
+            "no-adverts\/no-adverts.php",
+            "custom-domain"
+          ]
+        },
+        {
+          "title": "Included with all plans:",
+          "items": [
+            "free-blog"
+          ]
+        }
+      ],
+      "bill_period": 365,
+      "width": 500,
+      "height": 435,
+      "product_type": "bundle",
+      "available": "yes",
+      "bundle_product_ids": [
+        12,
+        45,
+        15,
+        5,
+        48,
+        50,
+        49,
+        16,
+        6,
+        46,
+        54
+      ],
+      "orig_cost": 299,
+      "bill_period_label": "per year",
+      "price": "$199",
+      "formatted_price": "$199",
+      "raw_price": 199,
+      "raw_discount": 100,
+      "formatted_discount": "$100",
+      "can_start_trial": false
+    }
+  ]
+}

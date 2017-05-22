@@ -1,5 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2016-11-21 18:54:29+0000
+Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
+Generator: GlotPress/2.4.0-alpha
+Language: sk
+-->
 <resources>
+	<string name="reader_label_global_related_posts">Viac na WordPress.com</string>
+	<string name="reader_label_local_related_posts">Viac na %s</string>
+	<string name="preference_open_device_settings">Otvoriť nastavenia zariadenia</string>
+	<string name="comment_moderated_unapproved">Komentár neschválený</string>
+	<string name="invite_invalid_email">%s: neplatný email</string>
+	<string name="invite_already_following">%s: už odoberá</string>
+	<string name="invite_username_not_found">%s: používateľ nebol nájdený</string>
+	<string name="invite_already_a_member">%s: je už členom</string>
+	<string name="comment_moderated_approved">Komentár schválený!</string>
+	<string name="like">Lajk</string>
+	<string name="reader_label_image_count_one">1 obrázok</string>
+	<string name="timespan_now">teraz</string>
+	<string name="role_viewer">Návštevník</string>
+	<string name="role_follower">Odberateľ</string>
+	<string name="role_author">Autor</string>
+	<string name="role_editor">Editor</string>
+	<string name="role_admin">Administrátor</string>
+	<string name="role_contributor">Prispievateľ</string>
+	<string name="error_post_my_profile_no_connection">Žiadne pripojenie, nemožno uložiť váš profil</string>
+	<string name="alignment_left">Vľavo</string>
+	<string name="alignment_right">Vpravo</string>
+	<string name="alignment_none">Žiadne</string>
+	<string name="title_email_follower">Email odberateľa</string>
+	<string name="people_empty_list_filtered_viewers">Zatiaľ nemáte žiadnych návštevníkov.</string>
+	<string name="title_follower">Odberateľ</string>
+	<string name="people_empty_list_filtered_email_followers">Zatiaľ nemáte žiadnych odberateľov emailom.</string>
+	<string name="people_empty_list_filtered_followers">Zatiaľ nemáte žiadnych odberateľov.</string>
+	<string name="people_empty_list_filtered_users">Zatiaľ nemáte žiadnych používateľov.</string>
+	<string name="people_dropdown_item_viewers">Návštevníci</string>
+	<string name="people_dropdown_item_followers">Odberatelia</string>
+	<string name="people_dropdown_item_team">Tím</string>
+	<string name="follower_subscribed_since">Od %1$s</string>
+	<string name="reader_label_image_count_multi">%d obrázkov</string>
+	<string name="reader_label_view_gallery">Zobraziť galériu</string>
+	<string name="error_remove_viewer">Nemožno odstrániť návštevníka</string>
+	<string name="error_remove_follower">Nemožno odstrániť odberateľa</string>
+	<string name="format_bar_description_html">HTML mód</string>
+	<string name="visual_editor">Vizuálny editor</string>
+	<string name="format_bar_description_ol">Číslovaný zoznam</string>
+	<string name="format_bar_description_ul">Neočíslovaný zoznam</string>
+	<string name="format_bar_description_media">Priložiť súbor</string>
+	<string name="format_bar_description_more">Priložiť viac</string>
+	<string name="format_bar_description_link">Vložiť odkaz</string>
+	<string name="format_bar_description_strike">Prečiarknutie</string>
+	<string name="format_bar_description_quote">Citát</string>
+	<string name="format_bar_description_underline">Podčiarknutie</string>
+	<string name="format_bar_description_italic">Kurzíva</string>
+	<string name="image_settings_save_toast">Zmeny uložené</string>
+	<string name="format_bar_description_bold">Tučné</string>
+	<string name="image_width">Šírka</string>
+	<string name="image_link_to">Odkaz na</string>
+	<string name="image_caption">Titulok</string>
+	<string name="image_alt_text">Alt text</string>
+	<string name="image_settings_dismiss_dialog_title">Zahodiť neuložené zmeny?</string>
+	<string name="stop_upload_dialog_title">Zastaviť nahrávanie?</string>
+	<string name="alert_error_adding_media">Nastala chyba pri vkladaní súboru</string>
+	<string name="alert_action_while_uploading">Práve nahrávate súbory. Počkajte na dokončenie.</string>
+	<string name="alert_insert_image_html_mode">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
+	<string name="uploading_gallery_placeholder">Nahrávanie galérie...</string>
+	<string name="invite_error_for_username">%1$s: %2$s</string>
+	<string name="invite_sent">Pozvánka úspešne odoslaná</string>
+	<string name="invite_error_no_usernames">Pridajte aspoň jedno používateľské meno</string>
+	<string name="invite_message_remaining_other">%d zostávajúcich znakov</string>
+	<string name="invite_message_remaining_one">1 zostávajúci znak</string>
+	<string name="invite_message_remaining_zero">0 zostávajúcich znakov</string>
+	<string name="invite_message_title">Vlastná správa</string>
+	<string name="invite">Pozvať</string>
+	<string name="invite_names_title">Používateľské mená alebo emaily</string>
+	<string name="invite_people">Pozvať ľudí</string>
+	<string name="my_site_header_external">Externý</string>
+	<string name="send_link">Poslať odkaz</string>
+	<string name="label_clear_search_history">Vyčistiť históriu vyhľadávania</string>
+	<string name="dlg_confirm_clear_search_history">Vyčistiť históriu vyhľadávania?</string>
+	<string name="reader_empty_posts_in_search_description">Nenašli sa žiadne príspevky pre %s vo vašom jazyku</string>
+	<string name="reader_label_post_search_running">Hľadanie...</string>
+	<string name="reader_empty_posts_in_search_title">Nenájdené žiadne články</string>
+	<string name="reader_label_post_search_explainer">Hľadať všetky verejné WordPress.com blogy</string>
+	<string name="reader_hint_post_search">Hľadaj na WordPress.com</string>
+	<string name="reader_title_search_results">Vyhľadávanie pre %s</string>
+	<string name="reader_title_related_post_detail">Podobný článok</string>
+	<string name="preview_screen_links_disabled">Linky sú deaktivované v náhľade</string>
+	<string name="draft_explainer">Tento článok je koncept, ktorý nebol publikovaný</string>
+	<string name="send">Odoslať</string>
+	<string name="person_removed">%1$s úspešne odstránený</string>
+	<string name="user_remove_confirmation_message">Ak odstránite %1$s, tento používateľ nebude môcť vstúpiť na webovú stránku, ale obsah vytvorený používateľom %1$s ostane na stránke.\n\nNaozaj chcete odstrániť tohto používateľa?</string>
+	<string name="person_remove_confirmation_title">Odstrániť %1$s</string>
+	<string name="edit_user">Upraviť používateľa</string>
+	<string name="people">Ľudia</string>
+	<string name="role">Rola</string>
+	<string name="error_remove_user">Nepodarilo sa odstrániť daného používateľa</string>
+	<string name="error_update_role">Nepodarilo sa aktualizovať používateľskú rolu</string>
+	<string name="error_fetch_viewers_list">Nepodarilo sa získať návštevníkov stránky</string>
+	<string name="error_updating_gravatar">Chyba pri nahrávaní vášho Gravatu</string>
+	<string name="error_refreshing_gravatar">Chyba pri znovu nahrávaní vášho Gravatu</string>
+	<string name="error_cropping_image">Chyba pri orezaní obrázku</string>
+	<string name="launch_your_email_app">Spustite vašu emailovú aplikáciu</string>
+	<string name="not_on_wordpress_com">Nie ste na WordPress.com?</string>
+	<string name="checking_email">Kontrola emailu</string>
+	<string name="check_your_email">Skontrolujte si váš email</string>
+	<string name="magic_link_unavailable_error_message">Momentálne nedostupné. Prosím vložte vaše heslo</string>
+	<string name="logging_in">Prihlasovanie</string>
+	<string name="username_email">Email alebo používateľské meno</string>
+	<string name="stats_insights_latest_post_no_title">(žiadny nadpis)</string>
+	<string name="plans_post_purchase_button_themes">Prehladávať témy</string>
+	<string name="plans_post_purchase_title_video">Oživte články s videom</string>
+	<string name="plans_post_purchase_button_customize">Prispôsobiť moju stránku</string>
+	<string name="plans_post_purchase_title_customize">Upravte písmo a farby</string>
+	<string name="plans">Paušály</string>
+	<string name="plan">Paušál</string>
+	<string name="export_your_content">Exportujem Váš obsah...</string>
+	<string name="exporting_content_progress">Exportujem obsah...</string>
+	<string name="export_email_sent">Exportovaný email odoslaný!</string>
+	<string name="delete_site_progress">Mazanie stránky...</string>
+	<string name="export_site_hint">Exportovať Vašu stránku ako XML súbor</string>
+	<string name="keep_your_content">Ponechať Váš obsah</string>
+	<string name="site_settings_export_content_title">Exportovať obsah</string>
+	<string name="contact_support">Kontaktovať podporu</string>
+	<string name="confirm_delete_site">Potvrdiť zmazanie stránky</string>
+	<string name="me_btn_app_settings">Nastavenia aplikácie</string>
+	<string name="editor_remove_failed_uploads">Odstrániť chybné súbory</string>
+	<string name="editor_toast_failed_uploads">Niektoré súbory neboli správne nahrané. V tomto stave nemôžete uložiť ani publikovať váš článok. Chcete odstrániť všetky chybné súbory?</string>
+	<string name="comments_empty_list_filtered_trashed">Žiadne komentáre zahodené</string>
+	<string name="site_settings_advanced_header">Rozšírené</string>
+	<string name="comments_empty_list_filtered_pending">Žiadne čakajúce komentáre</string>
+	<string name="comments_empty_list_filtered_approved">Žiadne komentáre schválené</string>
+	<string name="button_done">Hotovo</string>
+	<string name="button_skip">Preskočiť</string>
+	<string name="post_format_video">Video</string>
+	<string name="theme_all">Všetky</string>
+	<string name="theme_free">Zdarma</string>
+	<string name="alignment_center">Na stred</string>
+	<string name="post_format_status">Status</string>
+	<string name="theme_premium">Prémium</string>
+	<string name="post_format_gallery">Galéria</string>
+	<string name="post_format_image">Obrázok</string>
+	<string name="post_format_link">Odkaz</string>
+	<string name="post_format_chat">Chat</string>
+	<string name="post_format_standard">Štandardné</string>
+	<string name="post_format_quote">Citácia</string>
+	<string name="post_format_audio">Audio</string>
+	<string name="post_format_aside">Poznámka</string>
+	<string name="notif_community">Komunita</string>
+	<string name="notif_research">Výskum</string>
+	<string name="replies_to_my_comments">Odpovede na moje komentáre</string>
+	<string name="likes_on_my_posts">Lajky v mojich článkoch</string>
+	<string name="likes_on_my_comments">Lajky pri mojich komentároch</string>
+	<string name="comments_on_my_site">Komentáre na mojej stránke</string>
+	<string name="site_settings_list_editor_summary_one">1 položka</string>
+	<string name="approve_auto">Všetci používatelia</string>
+	<string name="approve_manual">Žiadny komentár</string>
+	<string name="site_settings_paging_summary_other">počet komentárov na stránku: %d</string>
+	<string name="site_settings_paging_summary_one">1 komentár na stránku</string>
+	<string name="days_quantity_one">1 deň</string>
+	<string name="filter_trashed_posts">Zahodené</string>
+	<string name="days_quantity_other">počet dní: %d</string>
+	<string name="filter_scheduled_posts">Naplánované</string>
+	<string name="filter_draft_posts">Koncepty</string>
+	<string name="filter_published_posts">Publikované</string>
+	<string name="web_address">Webová adresa</string>
+	<string name="editor_post_settings_set_featured_image">Nastaviť ilustračný obrázok</string>
+	<string name="editor_post_settings_featured_image">Ilustračný obrázok</string>
+	<string name="new_editor_promo_title">Úplne nový editor</string>
+	<string name="new_editor_promo_button_label">Skvelé, ďakujem!</string>
+	<string name="visual_editor_enabled">Vizuálny editor povolený</string>
+	<string name="editor_page_title_placeholder">Nadpis stránky</string>
+	<string name="editor_post_title_placeholder">Nadpis článku</string>
+	<string name="email_address">Emailová adresa</string>
+	<string name="preference_editor">Editor</string>
+	<string name="dlg_sure_to_delete_comments">Trvale odstrániť tieto komentáre?</string>
+	<string name="dlg_sure_to_delete_comment">Trvale odstrániť tento komentár?</string>
+	<string name="mnu_comment_delete_permanently">Zmazať</string>
+	<string name="comment_deleted_permanently">Komentár zmazaný</string>
+	<string name="mnu_comment_untrash">Obnoviť</string>
+	<string name="comments_empty_list_filtered_spam">Žiadne spamové komentáre</string>
+	<string name="comment_status_all">Všetky</string>
+	<string name="could_not_load_page">Nebolo možné načítať stránku</string>
+	<string name="off">Vypnúť</string>
+	<string name="about_the_app">O aplikácii</string>
+	<string name="error_post_account_settings">Nepodarilo sa uložiť nastavenia vášho účtu</string>
+	<string name="error_post_my_profile">Nepodarilo sa uložiť váš profil</string>
+	<string name="error_fetch_account_settings">Nepodarilo sa načítať nastavenia vášho účtu</string>
+	<string name="error_fetch_my_profile">Nepodarilo sa načítať váš profil</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, mám to</string>
+	<string name="stats_widget_promo_desc">Ak chcete mať prístup k vašim štatistikám na jeden klik, pridajte widget na domovskú obrazovku.</string>
+	<string name="stats_widget_promo_title">Widget štatistík na domovskej obrazovke</string>
+	<string name="site_settings_unknown_language_code_error">Kód jazyka nebol rozpoznaný</string>
+	<string name="site_settings_threading_dialog_description">Povoliť vnorenie komentárov do vlákien.</string>
+	<string name="site_settings_threading_dialog_header">Vlákna do úrovne</string>
+	<string name="remove">Odstrániť</string>
+	<string name="search">Hľadať</string>
+	<string name="add_category">Pridať kategóriu</string>
+	<string name="disabled">Vypnuté</string>
+	<string name="site_settings_image_original_size">Pôvodná veľkosť</string>
+	<string name="privacy_private">Vaša stránka je viditeľná iba pre vás a vami schválených používateľov</string>
+	<string name="privacy_public_not_indexed">Vaša stránka je viditeľná každému, ale indexovanie vyhľadávačmi nie je povolené</string>
+	<string name="privacy_public">Vaša strána je viditeľná každému a môže byť indexovaná vyhľadávačmi</string>
+	<string name="about_me_hint">Pár slov o vás...</string>
+	<string name="public_display_name_hint">V prípade, že nemáte nastavené zobrazovacie meno, bude použité vaše užívateľské meno</string>
+	<string name="about_me">O mne</string>
+	<string name="public_display_name">Pre návštevníkov zobrazovať meno</string>
+	<string name="my_profile">Profil</string>
+	<string name="first_name">Meno</string>
+	<string name="last_name">Priezvisko</string>
+	<string name="site_privacy_public_desc">Povoliť indexovanie vašej stránky vyhľadávačmi</string>
+	<string name="site_privacy_hidden_desc">Vypnúť indexovanie vašej stránky vyhľadávačmi</string>
+	<string name="site_privacy_private_desc">Rád by som nastavil svoju stránku ako súkromnú, viditeľnú iba používateľom, ktorých vyberiem</string>
+	<string name="cd_related_post_preview_image">Podobný obrázok náhľadu článku</string>
+	<string name="error_post_remote_site_settings">Nepodarilo sa uložiť informácie webovej stránky</string>
+	<string name="error_fetch_remote_site_settings">Nepodarilo sa načítať informácie webovej stránky</string>
+	<string name="error_media_upload_connection">Počas nahrávania sa objavil problém s pripojením</string>
+	<string name="site_settings_disconnected_toast">Odpojený, editovanie zakázané.</string>
+	<string name="site_settings_unsupported_version_error">Nepodporovaná verzia WordPress</string>
+	<string name="site_settings_multiple_links_dialog_description">Podržať komentár vo fronte, ak obsahuje viac odkazov ako toto číslo.</string>
+	<string name="site_settings_close_after_dialog_switch_text">Automaticky uzavrieť</string>
 	<string name="blog_name_no_spaced_allowed">Adresa webovej stránky nemôže obsahovať medzery</string>
 	<string name="invalid_username_no_spaces">Používateľské meno nemôže obsahovať medzery</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Webové stránky, ktoré sledujete v poslednej dobe nezverejnili nič.</string>
@@ -43,7 +263,6 @@
 	<string name="media_file_name">Názov súboru: %s</string>
 	<string name="media_uploaded_on">Nahrané: %s</string>
 	<string name="media_dimensions">Rozmery: %s</string>
-	<string name="upload_queued">Zaradené do fronty</string>
 	<string name="media_file_type">Typ súboru: %s</string>
 	<string name="reader_label_gap_marker">Načítať ďalšie články</string>
 	<string name="notifications_no_search_results">Žiadne stránky sa nezhodujú s \'%s\'</string>
@@ -84,9 +303,7 @@
 	<string name="reader_label_follow_count">počet sledujúcich: %,d</string>
 	<string name="reader_short_like_count_one">1 lajk</string>
 	<string name="reader_short_like_count_none">lajk</string>
-	<string name="reader_label_reading_time_in_minutes">%,d minút</string>
 	<string name="reader_menu_tags">Upraviť značky a blogy</string>
-	<string name="reader_label_word_count">počet slov: %,d</string>
 	<string name="reader_title_post_detail">Článok čítačky</string>
 	<string name="local_draft_explainer">Tento článok je koncept, ktorý nebol zverejnený</string>
 	<string name="local_changes_explainer">Tento má úpravy, ktoré neboli zverejnené</string>
@@ -119,14 +336,12 @@
 	<string name="button_stats">Štatistiky</string>
 	<string name="button_preview">Náhľad</string>
 	<string name="button_view">Zobraziť</string>
-	<string name="button_more">Viac</string>
 	<string name="page_deleted">Stránka vymazaná</string>
 	<string name="button_back">Späť</string>
 	<string name="trashed">Odstránené</string>
 	<string name="page_trashed">Stránka presunutá do koša</string>
 	<string name="stats_no_activity_this_period">Žiadna činnosť v toto obdobie</string>
 	<string name="button_publish">Zverejniť</string>
-	<string name="button_delete">Vymazať</string>
 	<string name="post_deleted">Článok vymazaný</string>
 	<string name="post_trashed">Článok presunutý do koša</string>
 	<string name="my_site_no_sites_view_subtitle">Prajete si pridať ďalšie?</string>
@@ -139,7 +354,6 @@
 	<string name="tabbar_accessibility_label_me">Ja</string>
 	<string name="passcodelock_prompt_message">Zadajte svoj PIN</string>
 	<string name="editor_toast_changes_saved">Zmeny uložené</string>
-	<string name="push_auth_expired">Žiadosť vypršala. Prihláste sa do WordPress.com a skúste znovu.</string>
 	<string name="stats_insights_best_ever">Najlepšie zobrazenia</string>
 	<string name="ignore">Ignorovať</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% zobrazení</string>
@@ -149,12 +363,8 @@
 	<string name="stats_insights_today">Dnešné štatistiky</string>
 	<string name="stats_insights_all_time">Články, zobrazenia a návštevníci počas celej doby</string>
 	<string name="stats_insights">Prehľady</string>
-	<string name="stats_sign_in_jetpack_different_com_account">K zobrazeniu vašej štatistiky sa prihláste s WordPress.com účtom, s ktorým ste sa pripojili k Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Hľadáte ďalšie nedávne štatistiky? Presunuli sme ich na stránku Prehľady.</string>
-	<string name="me_disconnect_from_wordpress_com">Odpojiť z WordPress.com</string>
-	<string name="me_connect_to_wordpress_com">Pripojiť sa k WordPress.com</string>
 	<string name="me_btn_login_logout">Prihlásiť/Odhlásiť</string>
-	<string name="me_btn_settings">Nastavenia účtu</string>
 	<string name="me_btn_support">Pomoc a podpora</string>
 	<string name="site_picker_cant_hide_current_site">"%s" nebola skrytá, pretože to je aktuálna webová stránka</string>
 	<string name="site_picker_create_dotcom">Vytvoriť webovú stránku WordPress.com</string>
@@ -166,57 +376,26 @@
 	<string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
 	<string name="my_site_btn_view_admin">Zobraziť administráciu</string>
 	<string name="my_site_btn_site_settings">Nastavenia</string>
-	<string name="my_site_btn_comments">Komentáre</string>
 	<string name="my_site_header_publish">Zverejniť</string>
 	<string name="my_site_btn_blog_posts">Články blogu</string>
 	<string name="my_site_header_look_and_feel">Vzhľad</string>
 	<string name="my_site_header_configuration">Kanfigurácia</string>
 	<string name="reader_label_new_posts_subtitle">Ťuknite k ich zobrazeniu</string>
-	<string name="my_site_header_admin">Administrácia</string>
-	<string name="notifications_account_required">Prihláste sa do WordPress.com pre upozornenia</string>
 	<string name="stats_unknown_author">Neznámy autor</string>
 	<string name="image_added">Obrázok pridaný</string>
-	<string name="signout">Odpojiť sa</string>
 	<string name="show">Zobraziť</string>
 	<string name="hide">Skryť</string>
 	<string name="deselect_all">Odznačiť všetky</string>
 	<string name="select_all">Vybrať všetky</string>
-	<string name="sign_out_wpcom_confirm">Po odpojení sa vám z účtu vymažú všetky @%s’s WordPress.com údaje z tohto zariadenia, vrátane lokálnych konceptov a zmien.</string>
-	<string name="select_from_new_picker">Viacnásobný výber v novej možnosti výberu</string>
 	<string name="stats_generic_error">Požadované štatistiky nemohli byť načítané</string>
-	<string name="loading_blog_images">Načítavajú sa obrázky</string>
-	<string name="no_media_sources">Nie je možné načítať súbory</string>
-	<string name="loading_blog_videos">Načítavajú sa videá</string>
-	<string name="error_loading_blog_videos">Nie je možné načítať videá</string>
-	<string name="error_loading_videos">Nie je možné načítať videá</string>
-	<string name="error_loading_blog_images">Nie je možné načítať obrázky</string>
-	<string name="error_loading_images">Pri načítavaní videa sa vyskytla chyba</string>
-	<string name="no_device_videos">Žiadne videá</string>
-	<string name="no_blog_videos">Žiadne videá</string>
-	<string name="no_blog_images">Žiadne obrázky</string>
-	<string name="no_device_images">Žiadne obrázky</string>
-	<string name="no_media">Žiadne súbory</string>
-	<string name="loading_images">Nahrávajú sa obrázky</string>
-	<string name="loading_videos">Nahrávajú sa videá</string>
-	<string name="media_picker_title">Vybrať súbory</string>
-	<string name="sign_in_jetpack">Prihláste sa do účtu WordPress.com a pripojte sa na Jetpack.</string>
 	<string name="two_step_sms_sent">Vložte overovací kód z SMS správy.</string>
-	<string name="take_photo">Spraviť fotku</string>
-	<string name="error_publish_no_network">Nedá sa publikovať, nefunguje pripojenie. Uložené ako koncept.</string>
 	<string name="two_step_footer_label">Vložte kód z aplikácie Authenticator.</string>
-	<string name="tab_title_site_images">Obrázky na stránke</string>
-	<string name="take_video">Nahrať video</string>
 	<string name="verify">Overiť</string>
 	<string name="media_details_label_file_type">Typ súboru</string>
-	<string name="auth_required">Pre pokračovanie sa opäť prihlláste.</string>
 	<string name="two_step_footer_button">Odoslanie kódu textovou správou.</string>
 	<string name="verification_code">Overovací kód</string>
 	<string name="invalid_verification_code">Nesprávny overovací kód</string>
 	<string name="editor_toast_invalid_path">Nesprávna cesta súboru</string>
-	<string name="tab_title_site_videos">Videá na stánke</string>
-	<string name="add_to_post">Pridať k príspevku</string>
-	<string name="tab_title_device_images">Obrázky v zariadení</string>
-	<string name="tab_title_device_videos">Videá v zariadení</string>
 	<string name="language">Jazyk</string>
 	<string name="device">Zariadenie</string>
 	<string name="media_details_label_file_name">Názov súboru</string>
@@ -282,7 +461,6 @@
 	<string name="stats_visitors">Návštevníci</string>
 	<string name="stats_views">Zobrazenia</string>
 	<string name="stats_timeframe_years">Roky</string>
-	<string name="stats_comments">Komentáre</string>
 	<string name="stats_view_top_posts_and_pages">Príspevky a stránky</string>
 	<string name="stats_view_countries">Krajiny</string>
 	<string name="stats_view_videos">Videá</string>
@@ -308,14 +486,12 @@
 	<string name="stats_empty_clicks_title">Nie sú zaznamenané žiadne kliknutia</string>
 	<string name="stats_comments_total_comments_followers">Celkový počet článkov s odberateľmi: %1$s</string>
 	<string name="ssl_certificate_details">Detaily</string>
-	<string name="media_gallery_date_range">Zobrazuje médiá od %1$s do %2$s</string>
 	<string name="delete_sure_page">Zmazať túto podstránku</string>
 	<string name="delete_sure">Vymazať tento koncept</string>
 	<string name="delete_sure_post">Vymazať tento príspevok</string>
 	<string name="cab_selected">%d vybraných</string>
 	<string name="confirm_delete_media">Zmazať vybranú položku?</string>
 	<string name="confirm_delete_multi_media">Zmazať vybrané položky?</string>
-	<string name="sure_to_remove_account">Odstrániť webovú stránku?</string>
 	<string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
 	<string name="reader_label_comment_count_multi">odpovedí: %,d</string>
 	<string name="pages_empty_list">Zatiaľ nemáte žiadnu stránku. Želáte si nejakú vytvoriť?</string>
@@ -325,7 +501,6 @@
 	<string name="reader_label_comments_on">Komentáre k</string>
 	<string name="comment">Komentár</string>
 	<string name="sending_content">Nahrávanie obsahu %s</string>
-	<string name="media_empty_list_custom_date">Žiadne súbory v tomto časovom intervale</string>
 	<string name="posting_post">Publikuje sa "%s"</string>
 	<string name="agree_terms_of_service">Založením účtu súhlasíte s našimi okúzľujúcimi %1$sPodmienkami používania%2$s</string>
 	<string name="comment_reply_to_user">Odpovedať užívateľovi %s</string>
@@ -333,11 +508,9 @@
 	<string name="error_publish_empty_post">Nie je možné zverejniť prázdny príspevok</string>
 	<string name="uploading_total">Nahrávanie %1$d z %2$d</string>
 	<string name="stats_no_blog">Nebolo možné načítať štatistiky pre vybraný blog</string>
-	<string name="signing_out">Odhlasuje sa...</string>
 	<string name="comment_trashed">Komentár bol odstránený</string>
 	<string name="reader_label_view_original">Pozrieť originál článku</string>
 	<string name="error_refresh_unauthorized_posts">Nemáte oprávnenie prezerať alebo upravovať príspevky</string>
-	<string name="reader_title_comments">Komentáre</string>
 	<string name="reader_title_photo_viewer">%1$d z %2$d</string>
 	<string name="reader_label_comments_closed">Už nie je možné pridávať komentáre</string>
 	<string name="reader_label_comment_count_single">jeden komentár</string>
@@ -349,6 +522,7 @@
 	<string name="older_month">Staršie ako mesiac</string>
 	<string name="older_last_week">Staršie ako týždeň</string>
 	<string name="older_two_days">Staršie ako 2 dni</string>
+	<string name="more">Viac</string>
 	<string name="new_blog_wpcom_created">WordPress.com blog bol vytvorený!</string>
 	<string name="reader_empty_followed_blogs_title">Nesledujete zatiaľ žiadne webové stránky</string>
 	<string name="reader_label_like">Lajk</string>
@@ -366,13 +540,11 @@
 	<string name="contact_us">Kontaktujte nás</string>
 	<string name="add_location">Pridať lokalitu</string>
 	<string name="current_location">Aktuálna pozícia</string>
-	<string name="your_signature">Váš podpis</string>
 	<string name="search_current_location">Vyhľadať aktuálnu lokalitu</string>
 	<string name="search_location">Hľadať</string>
 	<string name="edit_location">Upraviť</string>
 	<string name="preference_send_usage_stats_summary">Automaticky odosielať štatistiky užívania pre zlepšenie WordPress pre Android</string>
 	<string name="preference_send_usage_stats">Poslať štatistiky</string>
-	<string name="preference_privacy">Súkromie</string>
 	<string name="schedule_verb">Rozvrh</string>
 	<string name="update_verb">Aktualizovať</string>
 	<string name="reader_toast_err_unfollow_blog">Nie je možné sledovať tento blog</string>
@@ -401,7 +573,6 @@
 	<string name="blog_name_reserved_but_may_be_available">Stránka je momentálne rezervovaná, no možno sa o pár dní uvoľní</string>
 	<string name="gallery_error">Súbor nebolo možné načítať</string>
 	<string name="blog_name_cant_be_used">Nemôžete použiť túto adresu stránky</string>
-	<string name="auto_sharing_preference_reset">Resetovať nastavenie automatického zdieľania</string>
 	<string name="username_reserved_but_may_be_available">Toto používateľské meno je momentálne rezervované, no o niekoľko dní môže byť voľné</string>
 	<string name="username_or_password_incorrect">Používateľské meno alebo heslo nie je správne</string>
 	<string name="blog_name_contains_invalid_characters">Adresa stránky nemôže obsahovať znak “_”</string>
@@ -410,12 +581,10 @@
 	<string name="nux_cannot_log_in">Prihlásenie nie je možné</string>
 	<string name="error_delete_post">Počas mazania %s nastala chyba</string>
 	<string name="blog_name_reserved">Táto adresa je obsadená</string>
-	<string name="invalid_url_message">Overte si, či vložená URL adresa je správna</string>
 	<string name="out_of_memory">Nedostatok voľného miesta v pamäti</string>
 	<string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
 	<string name="error_refresh_notifications">Notifikácie nebolo možné znova načítať</string>
 	<string name="blog_name_not_allowed">Táto adresa stránky nie je povolená</string>
-	<string name="error_upload">Počas nahrávania %s nastala chyba</string>
 	<string name="error_moderate_comment">Počas moderovania nastala chyba</string>
 	<string name="error_refresh_stats">Štatistiky nebolo možné znova načítať</string>
 	<string name="error_refresh_comments">Komentáre nebolo možné znova načítať</string>
@@ -443,7 +612,6 @@
 	<string name="cat_name_required">Vložte názov kategórie</string>
 	<string name="adding_cat_success">Kategória bola úspešne pridaná</string>
 	<string name="adding_cat_failed">Chyba pri pridávaní kategórie</string>
-	<string name="no_site_error">Nie je možné pripojiť sa na WordPress stránku</string>
 	<string name="username_must_be_at_least_four_characters">Používateľské meno musí mať aspoň 4 znaky</string>
 	<string name="comments_empty_list">Žiadne komentáre</string>
 	<string name="mnu_comment_unspam">Žiadny spam</string>
@@ -454,7 +622,6 @@
 	<string name="username_must_include_letters">Používatelské meno musí obsahovať min. 1 písmeno (a-z)</string>
 	<string name="email_invalid">Vložte platnú emailovú adresu</string>
 	<string name="stats_empty_comments">Bez komentárov</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Vybraný blog už nie je viditeľný</string>
 	<string name="stats_bar_graph_empty">Štatistiky nie sú dostupné</string>
 	<string name="sdcard_message">Pre nahratie súboru je potrebné vložiť SD kartu</string>
 	<string name="no_account">Účet WordPress nenájdený, vytvorte nový účet</string>
@@ -483,7 +650,6 @@
 	<string name="new_media">Nový súbor</string>
 	<string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
 	<string name="share_action_media">Knižnica súborov</string>
-	<string name="jetpack_message_not_admin">Pre zobrazenie štatistík sa vyžaduje plugin Jetpack. Kontaktujte administrátora stránky.</string>
 	<string name="pending_review">Čaká na vybavenie</string>
 	<string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
 	<string name="privacy_policy">Ochrana osobných údajov</string>
@@ -499,10 +665,8 @@
 	<string name="post_not_published">Príspevok nie je zverejnený</string>
 	<string name="blog_name_invalid">Neplatná adresa</string>
 	<string name="email_hint">Emailová adresa</string>
-	<string name="username_email">Používateľské meno alebo heslo</string>
 	<string name="reader_toast_err_remove_tag">Túto značku nie je možné odstrániť</string>
 	<string name="reader_toast_err_add_tag">Túto značku nie je možné pridať</string>
-	<string name="reader_share_link">Zdieľať odkaz</string>
 	<string name="add_account_blog_url">Adresa blogu</string>
 	<string name="image_settings">Nastavenie obrázka</string>
 	<string name="http_authorization_required">Požaduje sa autorizácia</string>
@@ -512,7 +676,6 @@
 	<string name="location_not_found">Neznáma lokalita</string>
 	<string name="share_action_post">Nový príspevok</string>
 	<string name="category_desc">Popis kategórie (voliteľné)</string>
-	<string name="category_slug">Slug kategórie (voliteľné)</string>
 	<string name="view_in_browser">Pozrieť v prehliadači</string>
 	<string name="add_new_category">Pridať novú kategóriu</string>
 	<string name="category_name">Názov kategórie</string>
@@ -574,17 +737,14 @@
 	<string name="creating_your_account">Váš účet sa vytvára</string>
 	<string name="error_refresh_media">Počas načítania knižnice súborov sa vyskytla chyba, zopakujte to neskôr.</string>
 	<string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
-	<string name="reset_auto_share_preference">Obnoviť nastavenia automatického zdieľania</string>
 	<string name="reader_likes_you_and_multi">Vy a niekoľkí ďalší (%,d) ste to lajkli</string>
 	<string name="reader_likes_multi">počet ľudí, ktorým sa to páči: %,d</string>
 	<string name="download">Sťahujú sa súbory</string>
-	<string name="always_use_these_settings_to_share">Vždy použiť tieto nastavenia</string>
 	<string name="comment_spammed">Komentáre označené ako spam</string>
 	<string name="reader_toast_err_get_comment">Nedá sa nahrať tento komentár</string>
 	<string name="reader_label_reply">Odpovedať</string>
 	<string name="video">Video</string>
 	<string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
-	<string name="share_preference_title">Zdieľať na WordPress</string>
 	<string name="account_two_step_auth_enabled">Tento účet má povolenú dvojkrokové overovanie. Pre vytvorenie hesla pre aplikácie si otvorte bezpečnostné nastavenia na WordPress.com.</string>
 	<string name="reader_likes_you_and_one">Lajkli ste to vy a niekto ďalší</string>
 	<string name="reader_toast_err_get_post">Nie je možné načítať príspevok</string>
@@ -597,14 +757,11 @@
 	<string name="reader_empty_followed_blogs_description">Neznepokojujte sa a ťuknite na ikonu vpravo hore a poznávajte!</string>
 	<string name="password_invalid">Zadajte bezpečnejšie heslo. Uistite sa, že má viac ako 7 znakov a obsahuje veľké písmená, malé písmená a čísla alebo špeciálne znaky.</string>
 	<string name="nux_add_selfhosted_blog">Pridajte vlastnú webovú stránku</string>
-	<string name="signing_in">Prihlasovanie...</string>
 	<string name="nux_welcome_create_account">Vytvoriť účet</string>
 	<string name="nux_tap_continue">Pokračovať</string>
-	<string name="nux_oops_not_selfhosted_blog">Prihlásiť sa do WordPress.com</string>
 	<string name="reader_label_added_tag">pridané: %s</string>
 	<string name="reader_likes_one">Jeden lajk</string>
 	<string name="limit_reached">Dosiahli ste limit. Môžete skúsiť o 1 minútu. Pokus o opakovanie skôr ako o minútu len predĺži čas čakania. Ak si myslíte, že nastala chyba, kontaktujte technickú podporu.</string>
-	<string name="reader_share_subject">Zdieľané z %s</string>
 	<string name="reader_empty_followed_tags">Nesledujete žiadne značky</string>
 	<string name="reader_likes_only_you">Páči sa vám to</string>
 	<string name="nux_tutorial_get_started_title">Začíname!</string>
@@ -619,38 +776,30 @@
 	<string name="reader_toast_err_comment_failed">Váš komentár nemohol byť odoslaný</string>
 	<string name="jetpack_not_found">Modul Jetpack nebol nájdený</string>
 	<string name="reader_label_removed_tag">Odstránené %s</string>
-	<string name="jetpack_message">Pre štatistiky je potrebný modul Jetpack. Chcete nainštalovať Jetpack?</string>
 	<string name="username_invalid">Nesprávne použivateľské meno</string>
 	<string name="reader_toast_err_url_intent">Nie je možné otvoriť %s</string>
 	<string name="reader_btn_share">Zdielať</string>
-	<string name="reader_timespan_now">teraz</string>
 	<string name="empty_list_default">Tento zoznam je prázdny</string>
-	<string name="media_add_new_media_gallery">Vytvoriť galériu</string>
 	<string name="media_add_popup_title">Pridať do knižnice súborov</string>
 	<string name="create_account_wpcom">Vytvoriť účet na WordPress.com</string>
-	<string name="connecting_wpcom">Pripája sa na WordPress.com</string>
 	<string name="reader_hint_comment_on_comment">Odpovedajte na komentár...</string>
 	<string name="stats_view_referrers">Odkazujúci</string>
 	<string name="stats_entry_referrers">Odkazujúci</string>
 	<string name="media_gallery_type_squares">Štvorce</string>
 	<string name="media_gallery_type_tiled">Dlaždice</string>
 	<string name="media_gallery_type_slideshow">Prezent8cia</string>
-	<string name="media_no_video_message">K nahratiu videa aktualizujte VideoPress!</string>
 	<string name="media_gallery_image_order_reverse">Opačné poradie</string>
 	<string name="stats_view_visitors_and_views">Návštevníci a zobrazenia</string>
 	<string name="stats_view_clicks">Kliknutia</string>
 	<string name="media_gallery_type_circles">Kruhy</string>
-	<string name="media_no_video_title">VideoPress nedostupný</string>
 	<string name="post_excerpt">Zhrnutie</string>
 	<string name="media_add_popup_capture_video">Natočiť video</string>
 	<string name="media_gallery_type">Typ</string>
-	<string name="custom_date">Rozsah dátumov</string>
 	<string name="media_add_popup_capture_photo">Spraviť fotku</string>
 	<string name="unattached">Nepriložené</string>
 	<string name="stats">Štatistiky</string>
 	<string name="media_gallery_image_order_random">Náhodné</string>
 	<string name="all">Všetko</string>
-	<string name="stats_view_comments">Komentáre</string>
 	<string name="stats_timeframe_yesterday">Včera</string>
 	<string name="stats_timeframe_today">Dnes</string>
 	<string name="share_action">Zdielať</string>
@@ -669,7 +818,6 @@
 	<string name="media_edit_description_text">Popis</string>
 	<string name="media_edit_caption_text">Titulok</string>
 	<string name="media_edit_title_text">Nadpis</string>
-	<string name="stats_totals_comments">Komentárov</string>
 	<string name="stats_totals_clicks">Kliknutí</string>
 	<string name="stats_totals_plays">Prehratí</string>
 	<string name="stats_totals_views">Zobrazení</string>
@@ -691,20 +839,16 @@
 	<string name="passcode_manage">Spravovať funkciu overovanie PIN kódom</string>
 	<string name="passcode_turn_on">Zapnúť funkciu overovanie PIN kódom</string>
 	<string name="passcode_turn_off">Vypnúť funkciu overovanie PIN kódom</string>
-	<string name="menu_search">Vyhľadávanie</string>
 	<string name="stats_view_tags_and_categories">Značky a kategórie</string>
 	<string name="upload">Nahrať</string>
 	<string name="notifications">Upozornenia</string>
-	<string name="sign_in">Prihlásiť sa</string>
 	<string name="more_notifications">a %d ďalším.</string>
 	<string name="new_notifications">Počet nových upozornení: %d</string>
 	<string name="note_reply_successful">Odpoveď zverejnená</string>
 	<string name="follows">Sledovania</string>
 	<string name="loading">Načítava sa...</string>
-	<string name="post_signature">Pridať podpis</string>
 	<string name="httpuser">HTTP používateľské meno</string>
 	<string name="httppassword">HTTP heslo</string>
-	<string name="add_tagline">Pridať podpis do nových príspevkov</string>
 	<string name="error_media_upload">Pri nahrávaní multimédií sa vyskytla chyba</string>
 	<string name="content_description_add_media">Pridať súbor</string>
 	<string name="post_content">Obsah (kliknutím pridajte text a súbor)</string>
@@ -714,7 +858,6 @@
 	<string name="password">Heslo</string>
 	<string name="reader">Čitateľ</string>
 	<string name="pages">Podstránky</string>
-	<string name="featured">Použiť odporúčaný obrázok</string>
 	<string name="featured_in_post">Vložiť obrázok do príspevku</string>
 	<string name="caption">Titulok (voliteľný)</string>
 	<string name="no_network_title">Sieť nedostupná</string>
@@ -723,22 +866,19 @@
 	<string name="width">Šírka</string>
 	<string name="post">Príspevok</string>
 	<string name="page">Stránka</string>
+	<string name="featured">Použiť ilustračný obrázok</string>
 	<string name="blogusername">Používateľské meno</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Nahrať a zobraziť odkaz na zmenšený obrázok</string>
 	<string name="scaled_image">Šírka zmenšeného obrázku</string>
-	<string name="remove_location">Odstrániť</string>
 	<string name="scheduled">Načasované</string>
 	<string name="link_enter_url">URL adresa</string>
-	<string name="posted_from">Odoslané z WordPress pre Android</string>
 	<string name="version">Verzia</string>
 	<string name="app_title">WordPress pre Android</string>
 	<string name="tos">Zmluvné podmienky</string>
-	<string name="about">O aplikácii</string>
-	<string name="max_thumbnail_px_width">Predvolená šírka miniatúry</string>
 	<string name="image_alignment">Zarovnanie</string>
 	<string name="refresh">Obnoviť</string>
 	<string name="untitled">Bez názvu</string>
+	<string name="edit">Upraviť</string>
 	<string name="page_id">Strana</string>
 	<string name="post_id">Príspevok</string>
 	<string name="immediately">Okamžite</string>
@@ -751,24 +891,23 @@
 	<string name="quickpress_add_error">Názov skratky nemôže byť prázdny</string>
 	<string name="draft">Koncept</string>
 	<string name="post_private">Súkromné</string>
-	<string name="publish_post">Publikovať</string>
+	<string name="publish_post">Zverejniť</string>
 	<string name="upload_full_size_image">Nahrať a odkázať na obrázok v plnom rozlíšení</string>
 	<string name="categories">Kategórie</string>
 	<string name="tags_separate_with_commas">Značky (oddeľte značky čiarkami)</string>
 	<string name="title">Názov</string>
 	<string name="notification_vibrate">Vibrovať</string>
 	<string name="notification_blink">Blikať oznamovacie svetlo</string>
-	<string name="notification_sound">Prehrať oznamovací zvuk</string>
 	<string name="status">Stav</string>
 	<string name="location">Umiestnenie</string>
 	<string name="sdcard_title">Vyžadovaná SD karta</string>
 	<string name="select_video">Vyberte video z galérie</string>
 	<string name="media">Súbory</string>
 	<string name="delete">Zmazať</string>
+	<string name="approve">Schváliť</string>
 	<string name="none">Žiadny</string>
 	<string name="blogs">Blogy</string>
 	<string name="select_photo">Vybrať foografiu z galérie</string>
-	<string name="tab_comments">Komentáre</string>
 	<string name="reply">Odpovedať</string>
 	<string name="preview">Preview</string>
 	<string name="on">na</string>
@@ -780,55 +919,4 @@
 	<string name="no">Nie</string>
 	<string name="error">Chyba</string>
 	<string name="category_refresh_error">Chyba aktualizací kategorií</string>
-	<string-array name="alignment_array">
-		<item>Žiadny</item>
-		<item>Vľavo</item>
-		<item>Do stredu</item>
-		<item>Vpravo</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Komentáre na mojej webovej stránke</item>
-		<item>Počet lajkov na moje komentáre</item>
-		<item>Počet lajkov na moje príspevky</item>
-		<item>Odbery webovej stránky</item>
-		<item>Výsledky webovej stránky</item>
-		<item>Zmienky používateľa</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Odpovede na moje komentáre</item>
-		<item>Počet lajkov na mojich komentároch</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Návrhy</item>
-		<item>Výskum</item>
-		<item>Komunita</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Tipy ako získať čo najviac z WordPress.com.</item>
-		<item>Príležitosti zúčastniť sa výskumu a prieskumov WordPress.com.</item>
-		<item>Informácie o kurzoch a udalostiach WordPress.com (online a osobne).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Zverejnené</item>
-		<item>Koncepty</item>
-		<item>Naplánované</item>
-		<item>Odstránené</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Poznámka na okraj</item>
-		<item>Audio</item>
-		<item>Chat</item>
-		<item>Galéria</item>
-		<item>Obrázok</item>
-		<item>Odkaz</item>
-		<item>Citát</item>
-		<item>Štandard</item>
-		<item>Stav</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Zadarmo</item>
-		<item>Všetky</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

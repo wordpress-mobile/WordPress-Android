@@ -11,22 +11,26 @@ import android.webkit.WebView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Post;
-import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPWebViewClient;
 
-public class PostPreviewFragment extends Fragment {
+import javax.inject.Inject;
 
-    private int mLocalBlogId;
-    private long mLocalPostId;
+public class PostPreviewFragment extends Fragment {
+    private SiteModel mSite;
+    private PostModel mPost;
     private WebView mWebView;
 
-    public static PostPreviewFragment newInstance(int localBlogId, long localPostId) {
+    @Inject AccountStore mAccountStore;
+
+    public static PostPreviewFragment newInstance(SiteModel site, PostModel post) {
         Bundle args = new Bundle();
-        args.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, localBlogId);
-        args.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, localPostId);
+        args.putSerializable(WordPress.SITE, site);
+        args.putSerializable(PostPreviewActivity.EXTRA_POST, post);
         PostPreviewFragment fragment = new PostPreviewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -35,23 +39,25 @@ public class PostPreviewFragment extends Fragment {
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
-        mLocalBlogId = args.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
-        mLocalPostId = args.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
+        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+        mPost = (PostModel) args.getSerializable(PostPreviewActivity.EXTRA_POST);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         if (savedInstanceState != null) {
-            mLocalBlogId = savedInstanceState.getInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID);
-            mLocalPostId = savedInstanceState.getLong(PostPreviewActivity.ARG_LOCAL_POST_ID);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mPost = (PostModel) savedInstanceState.getSerializable(PostPreviewActivity.EXTRA_POST);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(PostPreviewActivity.ARG_LOCAL_BLOG_ID, mLocalBlogId);
-        outState.putLong(PostPreviewActivity.ARG_LOCAL_POST_ID, mLocalPostId);
+        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(PostPreviewActivity.EXTRA_POST, mPost);
         super.onSaveInstanceState(outState);
     }
 
@@ -60,7 +66,7 @@ public class PostPreviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.post_preview_fragment, container, false);
 
         mWebView = (WebView) view.findViewById(R.id.webView);
-        WPWebViewClient client = new WPWebViewClient(WordPress.wpDB.instantiateBlogByLocalId(mLocalBlogId));
+        WPWebViewClient client = new WPWebViewClient(mSite, mAccountStore.getAccessToken());
         mWebView.setWebViewClient(client);
 
         return view;
@@ -72,14 +78,17 @@ public class PostPreviewFragment extends Fragment {
         refreshPreview();
     }
 
+    public void setPost(PostModel post) {
+        mPost = post;
+    }
+
     void refreshPreview() {
         if (!isAdded()) return;
 
         new Thread() {
             @Override
             public void run() {
-                Post post = WordPress.wpDB.getPostForLocalTablePostId(mLocalPostId);
-                final String htmlContent = formatPostContentForWebView(getActivity(), post);
+                final String htmlContent = formatPostContentForWebView(getActivity(), mPost);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -88,7 +97,7 @@ public class PostPreviewFragment extends Fragment {
 
                         if (htmlContent != null) {
                             mWebView.loadDataWithBaseURL(
-                                    null,
+                                    "file:///android_asset/",
                                     htmlContent,
                                     "text/html",
                                     "utf-8",
@@ -102,7 +111,7 @@ public class PostPreviewFragment extends Fragment {
         }.start();
     }
 
-    private String formatPostContentForWebView(Context context, Post post) {
+    private String formatPostContentForWebView(Context context, PostModel post) {
         if (context == null || post == null) {
             return null;
         }
@@ -111,10 +120,7 @@ public class PostPreviewFragment extends Fragment {
                 ? "(" + getResources().getText(R.string.untitled) + ")"
                 : StringUtils.unescapeHTML(post.getTitle()));
 
-        String postContent = PostUtils.collapseShortcodes(post.getDescription());
-        if (!TextUtils.isEmpty(post.getMoreText())) {
-            postContent += "\n\n" + post.getMoreText();
-        }
+        String postContent = PostUtils.collapseShortcodes(post.getContent());
 
         // if this is a local draft, remove src="null" from image tags then replace the "android-uri"
         // tag added for local image with a valid "src" tag so local images can be viewed
@@ -122,27 +128,13 @@ public class PostPreviewFragment extends Fragment {
             postContent = postContent.replace("src=\"null\"", "").replace("android-uri=", "src=");
         }
 
-        String textColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_dark);
-        String linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
-
-        int contentMargin = getResources().getDimensionPixelSize(R.dimen.content_margin);
-        String marginStr = Integer.toString(contentMargin) + "px";
-
         return "<!DOCTYPE html><html><head><meta charset='UTF-8' />"
                 + "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-                + "<link href='file:///android_asset/merriweather.css' rel='stylesheet' type='text/css'>"
-                + "<style type='text/css'>"
-                + "  html { margin-left: " + marginStr + "; margin-right: " + marginStr + "; }"
-                + "  body { font-family: Merriweather, serif; font-weight: 400; padding: 0px; margin: 0px; width: 100%; color: " + textColorStr + "; }"
-                + "  body, p, div { max-width: 100% !important; word-wrap: break-word; }"
-                + "  p, div { line-height: 1.6em; font-size: 0.95em; }"
-                + "  h1 { font-size: 1.2em; font-family: Merriweather, serif; font-weight: 700; }"
-                + "  img { max-width: 100%; height: auto; }"
-                + "  a { text-decoration: none; color: " + linkColorStr + "; }"
-                + "</style></head><body>"
+                + "<link rel='stylesheet' href='editor.css'>"
+                + "<link rel='stylesheet' href='editor-android.css'>"
+                + "</head><body>"
                 + "<h1>" + title + "</h1>"
                 + StringUtils.addPTags(postContent)
                 + "</body></html>";
     }
-
 }

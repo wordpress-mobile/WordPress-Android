@@ -9,7 +9,8 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.models.CommentStatus;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -18,7 +19,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
 
-    private CommentStatus mCommentStatus = CommentStatus.UNKNOWN;
+    private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
     private int mNormalTextColor;
     private int mAgoTextColor;
@@ -28,7 +29,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private boolean mStatusChanged;
 
     public interface OnCommentStatusChangeListener {
-        public void onCommentStatusChanged(CommentStatus newStatus);
+         void onCommentStatusChanged(CommentStatus newStatus);
     }
 
     public CommentUserNoteBlock(Context context, JSONObject noteObject,
@@ -56,7 +57,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder)view.getTag();
 
         noteBlockHolder.nameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
-        noteBlockHolder.agoTextView.setText(DateTimeUtils.timestampToTimeSpan(getTimestamp()));
+        noteBlockHolder.agoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
+                WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.bulletTextView.setVisibility(View.VISIBLE);
             noteBlockHolder.siteTextView.setVisibility(View.VISIBLE);
@@ -185,6 +187,16 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 public void onClick(View v) {
                     if (getOnNoteBlockTextClickListener() != null) {
                         getOnNoteBlockTextClickListener().showSitePreview(getMetaSiteId(), getMetaSiteUrl());
+                    }
+                }
+            });
+
+            // show all comments on this post when user clicks the comment text
+            commentTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getOnNoteBlockTextClickListener() != null) {
+                        getOnNoteBlockTextClickListener().showReaderPostComments();
                     }
                 }
             });

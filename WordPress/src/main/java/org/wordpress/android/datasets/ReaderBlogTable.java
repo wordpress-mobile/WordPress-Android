@@ -148,7 +148,7 @@ public class ReaderBlogTable {
             stmt.bindLong  (9, SqlUtils.boolToSql(blogInfo.isJetpack));
             stmt.bindLong  (10, SqlUtils.boolToSql(blogInfo.isFollowing));
             stmt.bindLong  (11, blogInfo.numSubscribers);
-            stmt.bindString(12, DateTimeUtils.javaDateToIso8601(new Date()));
+            stmt.bindString(12, DateTimeUtils.iso8601FromDate(new Date()));
             stmt.execute();
         } finally {
             SqlUtils.closeStatement(stmt);
@@ -272,6 +272,27 @@ public class ReaderBlogTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
+    public static String getBlogName(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT name FROM tbl_blog_info WHERE blog_id=?",
+                args);
+    }
+
+    public static String getBlogUrl(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT blog_url FROM tbl_blog_info WHERE blog_id=?",
+                args);
+    }
+
+    public static String getFeedName(long feedId) {
+        String[] args = {Long.toString(feedId)};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT name FROM tbl_blog_info WHERE feed_id=?",
+                args);
+    }
+
     public static ReaderRecommendBlogList getRecommendedBlogs() {
         String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY title";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, null);
@@ -371,7 +392,7 @@ public class ReaderBlogTable {
             return NEVER_UPDATED;
         }
 
-        Date dtUpdated = DateTimeUtils.iso8601ToJavaDate(updated);
+        Date dtUpdated = DateTimeUtils.dateFromIso8601(updated);
         if (dtUpdated == null) {
             return 0;
         }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/pref_key_account_settings_root">
+
+    <Preference
+        android:enabled="false"
+        android:key="@string/pref_key_username"
+        android:layout="@layout/preference_layout"
+        android:title="@string/username" />
+
+    <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
+        android:key="@string/pref_key_email"
+        android:layout="@layout/preference_layout"
+        android:title="@string/email_address" />
+
+    <org.wordpress.android.ui.prefs.DetailListPreference
+        android:key="@string/pref_key_primary_site"
+        android:layout="@layout/preference_layout"
+        android:title="@string/primary_site" />
+
+    <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
+        android:key="@string/pref_key_web_address"
+        android:layout="@layout/preference_layout"
+        android:title="@string/web_address" />
+
+</PreferenceScreen>

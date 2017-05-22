@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_medium</dimen>
+</resources>

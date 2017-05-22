@@ -27,10 +27,23 @@ public class ReaderIframeScanner {
             String tag = mContent.substring(matcher.start(), matcher.end());
             String src = ReaderHtmlUtils.getSrcAttrValue(tag);
             if (!TextUtils.isEmpty(src)) {
-                listener.onTagFound(tag, src, matcher.start(), matcher.end());
+                listener.onTagFound(tag, src);
             }
         }
+    }
 
-        listener.onScanCompleted();
+    /*
+     * scans the post for iframes containing usable videos, returns the first one found
+     */
+    public String getFirstUsableVideo() {
+        Matcher matcher = IFRAME_TAG_PATTERN.matcher(mContent);
+        while (matcher.find()) {
+            String tag = mContent.substring(matcher.start(), matcher.end());
+            String src = ReaderHtmlUtils.getSrcAttrValue(tag);
+            if (!TextUtils.isEmpty(src) && ReaderVideoUtils.canShowVideoThumbnail(src)) {
+                return src;
+            }
+        }
+        return null;
     }
 }

@@ -8,70 +8,70 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 import java.util.regex.Pattern;
 
-public class ReaderTag implements Serializable {
-    private String tagName;
-    private String endpoint;
+public class ReaderTag implements Serializable, FilterCriteria {
+    private static final String TAG_TITLE_DISCOVER = "Discover";
+    public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
+
+    private String tagSlug;         // tag for API calls
+    private String tagDisplayName;  // tag for display, usually the same as the slug
+    private String tagTitle;        // title, used for default tags
+    private String endpoint;        // endpoint for updating posts with this tag
+
     public final ReaderTagType tagType;
 
-    // these are the default tag names, which aren't localized in the /read/menu/ response
-    private static final String TAG_NAME_LIKED = "Posts I Like";
-    private static final String TAG_NAME_DISCOVER = "Discover";
-    private static final String TAG_NAME_DEFAULT = TAG_NAME_DISCOVER;
-
-    // as of 15-Sept-2015 this is still "Blogs I Follow" but it will soon be renamed
-    // to "Followed Sites"
-    // TODO: remove TAG_NAME_FOLLOWED_SITES_OLD once backend has been updated
-    public static final String TAG_NAME_FOLLOWED_SITES = "Followed Sites";
-    public static final String TAG_NAME_FOLLOWED_SITES_OLD = "Blogs I Follow";
-
-    public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
-        if (TextUtils.isEmpty(tagName)) {
-            this.setTagName(getTagNameFromEndpoint(endpoint));
+    public ReaderTag(String slug,
+                     String displayName,
+                     String title,
+                     String endpoint,
+                     ReaderTagType tagType) {
+        // we need a slug since it's used to uniquely ID the tag (including setting it as the
+        // primary key in the tag table)
+        if (TextUtils.isEmpty(slug)) {
+            if (!TextUtils.isEmpty(title)) {
+                setTagSlug(ReaderUtils.sanitizeWithDashes(title));
+            } else {
+                setTagSlug(getTagSlugFromEndpoint(endpoint));
+            }
         } else {
-            this.setTagName(tagName);
+            setTagSlug(slug);
         }
-        this.setEndpoint(endpoint);
-        this.tagType = tagType;
-    }
 
-    public ReaderTag(String tagName, ReaderTagType tagType) {
-        this.setTagName(tagName);
+        setTagDisplayName(displayName);
+        setTagTitle(title);
+        setEndpoint(endpoint);
         this.tagType = tagType;
-    }
-
-    public static ReaderTag getDefaultTag() {
-        return new ReaderTag(TAG_NAME_DEFAULT, ReaderTagType.DEFAULT);
     }
 
     public String getEndpoint() {
         return StringUtils.notNullStr(endpoint);
     }
-    void setEndpoint(String endpoint) {
+    private void setEndpoint(String endpoint) {
         this.endpoint = StringUtils.notNullStr(endpoint);
     }
 
-    public String getTagName() {
-        return StringUtils.notNullStr(tagName);
+    public String getTagTitle() {
+        return StringUtils.notNullStr(tagTitle);
     }
-    void setTagName(String name) {
-        this.tagName = StringUtils.notNullStr(name);
+    private void setTagTitle(String title) {
+        this.tagTitle = StringUtils.notNullStr(title);
     }
-    public String getCapitalizedTagName() {
-        if (tagName == null || tagName.length() == 0) {
-            return "";
-        }
-        // If already uppercase, assume correctly formatted
-        if (Character.isUpperCase(tagName.charAt(0))) {
-            return tagName;
-        }
-        // Accounts for iPhone, ePaper, etc.
-        if (tagName.length() > 1 &&
-                Character.isLowerCase(tagName.charAt(0)) &&
-                Character.isUpperCase(tagName.charAt(1))) {
-            return tagName;
-        }
-        // Capitalize anything else.
-        return StringUtils.capitalize(tagName);
+    private boolean hasTagTitle() {
+        return !TextUtils.isEmpty(tagTitle);
+    }
+
+    public String getTagDisplayName() {
+        return StringUtils.notNullStr(tagDisplayName);
+    }
+    private void setTagDisplayName(String displayName) {
+        this.tagDisplayName = StringUtils.notNullStr(displayName);
+    }
+
+    public String getTagSlug() {
+        return StringUtils.notNullStr(tagSlug);
+    }
+    private void setTagSlug(String slug) {
+        this.tagSlug = StringUtils.notNullStr(slug);
     }
 
     /*
@@ -80,15 +80,15 @@ public class ReaderTag implements Serializable {
      * in the log could be considered a privacy issue
      */
     public String getTagNameForLog() {
-        String tagName = getTagName();
+        String tagSlug = getTagSlug();
         if (tagType == ReaderTagType.DEFAULT) {
-            return tagName;
-        } else if (tagName.length() >= 6) {
-            return tagName.substring(0, 3) + "...";
-        } else if (tagName.length() >= 4) {
-            return tagName.substring(0, 2) + "...";
-        } else if (tagName.length() >= 2) {
-            return tagName.substring(0, 1) + "...";
+            return tagSlug;
+        } else if (tagSlug.length() >= 6) {
+            return tagSlug.substring(0, 3) + "...";
+        } else if (tagSlug.length() >= 4) {
+            return tagSlug.substring(0, 2) + "...";
+        } else if (tagSlug.length() >= 2) {
+            return tagSlug.substring(0, 1) + "...";
         } else {
             return "...";
         }
@@ -104,9 +104,9 @@ public class ReaderTag implements Serializable {
     }
 
     /*
-     * extracts the tag name from a valid read/tags/[tagName]/posts endpoint
+     * extracts the tag slug from a valid read/tags/[tagSlug]/posts endpoint
      */
-    private static String getTagNameFromEndpoint(final String endpoint) {
+    private static String getTagSlugFromEndpoint(final String endpoint) {
         if (TextUtils.isEmpty(endpoint))
             return "";
 
@@ -126,39 +126,24 @@ public class ReaderTag implements Serializable {
         return endpoint.substring(start, end);
     }
 
-    /*
-     * is the passed tag name one of the default tags?
-     */
-    public static boolean isDefaultTagName(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
-            return false;
-        }
-        return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWED_SITES)
-                || tagName.equalsIgnoreCase(TAG_NAME_DISCOVER)
-                || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
-    }
-
-    private String getSanitizedTagName() {
-        return ReaderUtils.sanitizeWithDashes(this.tagName);
-    }
-
     public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
         if (tag1 == null || tag2 == null) {
             return false;
         }
         return tag1.tagType == tag2.tagType
-            && tag1.getSanitizedTagName().equalsIgnoreCase(tag2.getSanitizedTagName());
+            && tag1.getTagSlug().equalsIgnoreCase(tag2.getTagSlug());
     }
 
     public boolean isPostsILike() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
     }
+
     public boolean isFollowedSites() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
 
     public boolean isDiscover() {
-        return tagType == ReaderTagType.DEFAULT && getTagName().equals(TAG_NAME_DISCOVER);
+        return tagType == ReaderTagType.DEFAULT && getTagSlug().equals(TAG_TITLE_DISCOVER);
     }
 
     public boolean isTagTopic() {
@@ -168,5 +153,47 @@ public class ReaderTag implements Serializable {
     public boolean isListTopic() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase().contains("/read/list/");
+    }
+
+    /*
+     * the label is the text displayed in the dropdown filter
+     */
+    @Override
+    public String getLabel() {
+        if (isTagDisplayNameAlphaNumeric()) {
+            return getTagDisplayName().toLowerCase();
+        } else if (hasTagTitle()) {
+            return getTagTitle();
+        } else {
+            return getTagDisplayName();
+        }
+    }
+
+    /*
+     * returns true if the tag display name contains only alpha-numeric characters or hyphens
+     */
+    private boolean isTagDisplayNameAlphaNumeric() {
+        if (TextUtils.isEmpty(tagDisplayName)) {
+            return false;
+        }
+
+        for (int i=0; i < tagDisplayName.length(); i++) {
+            char c = tagDisplayName.charAt(i);
+            if (!Character.isLetterOrDigit(c) && c != '-') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if (object instanceof ReaderTag) {
+            ReaderTag tag = (ReaderTag) object;
+            return (tag.tagType == this.tagType && tag.getLabel().equals(this.getLabel()));
+        } else {
+            return false;
+        }
     }
 }

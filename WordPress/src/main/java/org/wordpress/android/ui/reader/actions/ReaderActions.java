@@ -34,6 +34,15 @@ public class ReaderActions {
     }
 
     /*
+     * helper routine for telling an action listener the call succeeded or failed w/o having to null check
+     */
+    public static void callActionListener(ActionListener actionListener, boolean succeeded) {
+        if (actionListener != null) {
+            actionListener.onActionResult(succeeded);
+        }
+    }
+
+    /*
      * listener when the failure status code is required
      */
     public interface OnRequestListener {

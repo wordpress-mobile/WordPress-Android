@@ -2,6 +2,8 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.net.http.SslError;
+import android.os.Build;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,44 @@ import java.util.List;
 public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsGeoviewsFragment.class.getSimpleName();
 
+    private GeoviewsModel mCountries;
+
+    @Override
+    protected boolean hasDataAvailable() {
+        return mCountries != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mCountries);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mCountries = (GeoviewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.CountriesUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mCountries = event.mCountries;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mCountries = null;
+        showErrorUI(event.mError);
+    }
 
     private void hideMap() {
         if (!isAdded()) {
@@ -75,12 +115,15 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 String label = getResources().getString(getTotalsLabelResId());
 
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
+                // Loading the v42 of the Google Charts API, since the latest stable version has a problem with the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
+                // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
                 String htmlPage = "<html>" +
                         "<head>" +
+                        "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
                         "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
                         "<script type=\"text/javascript\">" +
-                            "google.load(\"visualization\", \"1\", {packages:[\"geochart\"]});" +
-                            "google.setOnLoadCallback(drawRegionsMap);" +
+                            "google.charts.load('42', {'packages':['geochart']});" +
+                            "google.charts.setOnLoadCallback(drawRegionsMap);" +
                             "function drawRegionsMap() {" +
                                 "var data = google.visualization.arrayToDataTable(" +
                                 "[" +
@@ -145,12 +188,6 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
-            hideMap();
-            return;
-        }
-
         if (hasCountries()) {
             List<GeoviewModel> countries = getCountries();
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), countries);
@@ -164,21 +201,20 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasCountries() {
-        return !isDataEmpty() && ((GeoviewsModel) mDatamodels[0]).getCountries() != null;
+        return mCountries != null && mCountries.getCountries() != null;
     }
 
     private List<GeoviewModel> getCountries() {
         if (!hasCountries()) {
             return null;
         }
-        return ((GeoviewsModel) mDatamodels[0]).getCountries();
+        return mCountries.getCountries();
     }
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        return (!isDataEmpty()
-                && ((GeoviewsModel) mDatamodels[0]).getCountries() != null
-                && ((GeoviewsModel) mDatamodels[0]).getCountries().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
+        return (hasCountries()
+                && mCountries.getCountries().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     @Override
@@ -215,16 +251,21 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             // fill data
             String entry = currentRowData.getCountryFullName();
             String imageUrl = currentRowData.getFlatFlagIconURL();
-            int total = currentRowData.getViews();
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
             holder.setEntryText(entry);
-            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
-            // image (country flag)
-            holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.headerAvatarSizePx),
-                    WPNetworkImageView.ImageType.BLAVATAR);
-            holder.networkImageView.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // On Android >= 5.0, use the emoji flag
+                holder.alternativeImage.setText(currentRowData.getFlagEmoji());
+                holder.alternativeImage.setVisibility(View.VISIBLE);
+            } else {
+                // On other Android versions, use the Gravatar image
+                holder.networkImageView.setImageUrl(
+                        GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.headerAvatarSizePx),
+                        WPNetworkImageView.ImageType.BLAVATAR);
+                holder.networkImageView.setVisibility(View.VISIBLE);
+            }
 
             return rowView;
         }
@@ -251,7 +292,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.GEO_VIEWS
         };

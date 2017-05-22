@@ -49,7 +49,7 @@ public class ReaderComment {
         comment.text = HtmlUtils.stripScript(JSONUtils.getString(json, "content"));
 
         comment.published = JSONUtils.getString(json, "date");
-        comment.timestamp = DateTimeUtils.iso8601ToTimestamp(comment.published);
+        comment.timestamp = DateTimeUtils.timestampFromIso8601(comment.published);
 
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
@@ -134,5 +134,30 @@ public class ReaderComment {
 
     public boolean hasAuthorAvatar() {
         return !TextUtils.isEmpty(authorAvatar);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        ReaderComment otherComment = (ReaderComment) other;
+        return commentId == otherComment.commentId
+                && blogId == otherComment.blogId
+                && postId == otherComment.postId
+                && parentId == otherComment.parentId
+                && StringUtils.equals(authorName, otherComment.authorName)
+                && StringUtils.equals(authorAvatar, otherComment.authorAvatar)
+                && StringUtils.equals(authorUrl, otherComment.authorUrl)
+                && StringUtils.equals(status, otherComment.status)
+                && StringUtils.equals(text, otherComment.text)
+                && StringUtils.equals(published, otherComment.published)
+                && timestamp == otherComment.timestamp
+                && authorId == otherComment.authorId
+                && authorBlogId == otherComment.authorBlogId
+                && numLikes == otherComment.numLikes
+                && isLikedByCurrentUser == otherComment.isLikedByCurrentUser
+                && pageNumber == otherComment.pageNumber;
     }
 }

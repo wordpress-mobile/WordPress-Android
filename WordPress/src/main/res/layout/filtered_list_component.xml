@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_with_spinner"
+            style="@style/FilteredRecyclerViewToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:focusableInTouchMode="true"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <Spinner
+                android:id="@+id/filter_spinner"
+                style="@style/FilteredRecyclerViewSpinner.WordPress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:overlapAnchor="false" />
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+            android:id="@+id/ptr_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/empty_view"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+            android:layout_marginRight="@dimen/empty_list_title_side_margin"
+            android:gravity="center"
+            android:text="@string/empty_list_default"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/progress_loading"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_extra_large" />
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

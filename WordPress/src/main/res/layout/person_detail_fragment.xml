@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:id="@+id/person_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_primary"
+        android:elevation="@dimen/card_elevation"
+        android:paddingBottom="@dimen/margin_medium"
+        tools:targetApi="LOLLIPOP">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/person_avatar"
+            style="@style/PersonAvatar"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/person_display_name"
+            style="@style/PersonTextView"
+            android:layout_alignTop="@id/person_avatar"
+            android:layout_toEndOf="@id/person_avatar"
+            android:layout_toRightOf="@id/person_avatar"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_extra_large"
+            android:textStyle="bold"
+            tools:text="display_name"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/person_username"
+            style="@style/PersonTextView"
+            android:layout_alignLeft="@id/person_display_name"
+            android:layout_alignStart="@id/person_display_name"
+            android:layout_below="@id/person_display_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="username"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/person_role_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/people_list_row_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/person_details"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/person_role_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="@string/role"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="@string/role"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/person_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="@string/role"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/subscribed_date_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/people_list_row_height"
+        android:layout_alignLeft="@id/person_role_container"
+        android:layout_alignStart="@id/person_role_container"
+        android:layout_below="@id/person_role_container"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/subscribed_date_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="@string/title_follower"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/subscribed_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="Since {date}"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/people_list_divider_height"
+        android:layout_below="@id/person_role_container"
+        android:background="@color/grey_lighten_20"/>
+
+</RelativeLayout>

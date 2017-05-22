@@ -18,6 +18,13 @@
         <attr name="longClickHint" />
     </declare-styleable>
 
+    <declare-styleable name="WPStartOverPreference">
+        <attr name="preficon" format="reference" />
+        <attr name="buttonText" format="string" />
+        <attr name="buttonTextColor" format="reference|color" />
+        <attr name="buttonTextAllCaps" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="FlowLayout">
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />
@@ -31,14 +38,6 @@
         WPTextView attributes
     -->
     <declare-styleable name="WPTextView">
-        <attr name="fontVariation" format="enum">
-            <enum name="normal" value="0" />
-            <enum name="light" value="1" />
-        </attr>
-        <attr name="fontFamily" format="enum">
-            <enum name="openSans" value="0" />
-            <enum name="merriweather" value="1" />
-        </attr>
         <attr name="fixWidowWords" format="boolean"/>
     </declare-styleable>
 
@@ -61,6 +60,13 @@
     </declare-styleable>
 
     <!--
+        ReaderFollowButton attributes
+    -->
+    <declare-styleable name="ReaderFollowButton">
+        <attr name="wpShowFollowButtonCaption" format="boolean" />
+    </declare-styleable>
+
+    <!--
         PostListButton attributes
     -->
     <declare-styleable name="wpPostListButton">
@@ -73,9 +79,14 @@
             <enum name="trash" value="5" />
             <enum name="delete" value="6" />
             <enum name="publish" value="7" />
-            <enum name="more" value="8" />
-            <enum name="back" value="9" />
+            <enum name="sync" value="8" />
+            <enum name="more" value="9" />
+            <enum name="back" value="10" />
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="wpBoundedWidth">
+        <attr name="bounded_width" format="dimension" />
     </declare-styleable>
 
 </resources>

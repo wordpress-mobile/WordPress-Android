@@ -10,8 +10,11 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.EnumSet;
 
 /*
  * custom LinkMovementMethod which shows photo viewer when an image span is tapped
@@ -43,6 +46,7 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
     /*
      * override MovementMethod.getInstance() to ensure our getInstance(false) is used
      */
+    @SuppressWarnings("unused")
     public static ReaderLinkMovementMethod getInstance() {
         return getInstance(false);
     }
@@ -72,13 +76,17 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
 
             ImageSpan[] images = buffer.getSpans(off, off, ImageSpan.class);
             if (images != null && images.length > 0) {
+                EnumSet<PhotoViewerOption> options = EnumSet.noneOf(PhotoViewerOption.class);
+                if (mIsPrivate) {
+                    options.add(ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE);
+                }
                 String imageUrl = StringUtils.notNullStr(images[0].getSource());
                 ReaderActivityLauncher.showReaderPhotoViewer(
                         textView.getContext(),
                         imageUrl,
                         null,
                         textView,
-                        mIsPrivate,
+                        options,
                         (int) event.getX(),
                         (int) event.getY());
                 return true;

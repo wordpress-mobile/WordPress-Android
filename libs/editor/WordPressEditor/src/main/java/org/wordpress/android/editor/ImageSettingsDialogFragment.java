@@ -20,18 +20,36 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
-import java.util.Locale;
+
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALIGN;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_CAPTION;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ID_IMAGE_REMOTE;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_URL_LINK;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_ENABLED_AZTEC;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_FEATURED;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_FEATURED;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_IMAGE_META;
+import static org.wordpress.android.editor.EditorFragmentAbstract.EXTRA_MAX_WIDTH;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_SRC;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALT;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_DIMEN_HEIGHT;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ID_ATTACHMENT;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_TITLE;
+import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_DIMEN_WIDTH;
 
 /**
  * A full-screen DialogFragment with image settings.
@@ -40,19 +58,18 @@ import java.util.Locale;
  * when the fragment is dismissed to restore it.
  */
 public class ImageSettingsDialogFragment extends DialogFragment {
-
     public static final int IMAGE_SETTINGS_DIALOG_REQUEST_CODE = 5;
     public static final String IMAGE_SETTINGS_DIALOG_TAG = "image-settings";
 
-    private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
-
     private JSONObject mImageMeta;
     private int mMaxImageWidth;
+    private ImageLoader mImageLoader;
 
     private EditText mTitleText;
     private EditText mCaptionText;
     private EditText mAltText;
     private Spinner mAlignmentSpinner;
+    private String[] mAlignmentKeyArray;
     private EditText mLinkTo;
     private EditText mWidthText;
     private CheckBox mFeaturedCheckBox;
@@ -100,19 +117,19 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 String imageRemoteId = "";
                 try {
-                    imageRemoteId = mImageMeta.getString("attachment_id");
+                    imageRemoteId = mImageMeta.getString(ATTR_ID_ATTACHMENT);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.EDITOR, "Unable to retrieve featured image id from meta data");
                 }
 
                 Intent intent = new Intent();
-                intent.putExtra("imageMeta", mImageMeta.toString());
+                intent.putExtra(EXTRA_IMAGE_META, mImageMeta.toString());
 
                 mIsFeatured = mFeaturedCheckBox.isChecked();
-                intent.putExtra("isFeatured", mIsFeatured);
+                intent.putExtra(EXTRA_FEATURED, mIsFeatured);
 
                 if (!imageRemoteId.isEmpty()) {
-                    intent.putExtra("imageRemoteId", Integer.parseInt(imageRemoteId));
+                    intent.putExtra(ATTR_ID_IMAGE_REMOTE, Integer.parseInt(imageRemoteId));
                 }
 
                 getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), intent);
@@ -128,7 +145,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_image_options, container, false);
 
-        ImageView thumbnailImage = (ImageView) view.findViewById(R.id.image_thumbnail);
+        NetworkImageView thumbnailImage = (NetworkImageView) view.findViewById(R.id.image_thumbnail);
         TextView filenameLabel = (TextView) view.findViewById(R.id.image_filename);
         mTitleText = (EditText) view.findViewById(R.id.image_title);
         mCaptionText = (EditText) view.findViewById(R.id.image_caption);
@@ -143,43 +160,62 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             try {
-                mImageMeta = new JSONObject(bundle.getString("imageMeta"));
+                mImageMeta = new JSONObject(bundle.getString(EXTRA_IMAGE_META));
 
-                final String imageSrc = mImageMeta.getString("src");
+                final String imageSrc = mImageMeta.getString(ATTR_SRC);
                 final String imageFilename = imageSrc.substring(imageSrc.lastIndexOf("/") + 1);
 
                 loadThumbnail(imageSrc, thumbnailImage);
                 filenameLabel.setText(imageFilename);
 
-                mTitleText.setText(mImageMeta.getString("title"));
-                mCaptionText.setText(mImageMeta.getString("caption"));
-                mAltText.setText(mImageMeta.getString("alt"));
+                mTitleText.setText(mImageMeta.getString(ATTR_TITLE));
+                mCaptionText.setText(mImageMeta.getString(ATTR_CAPTION));
+                mAltText.setText(mImageMeta.getString(ATTR_ALT));
 
-                String alignment = mImageMeta.getString("align");
+                String alignment = mImageMeta.getString(ATTR_ALIGN);
+                mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
+                int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
+                mAlignmentSpinner.setSelection(alignmentIndex == -1 ? 0 : alignmentIndex);
 
-                // Capitalize the alignment value to match the spinner entries
-                alignment = alignment.substring(0, 1).toUpperCase(Locale.US) + alignment.substring(1);
+                mLinkTo.setText(mImageMeta.getString(ATTR_URL_LINK));
 
-                String[] alignmentArray = getResources().getStringArray(R.array.alignment_array);
-                mAlignmentSpinner.setSelection(Arrays.asList(alignmentArray).indexOf(alignment));
+                mMaxImageWidth = MediaUtils.getMaximumImageWidth(mImageMeta.getInt("naturalWidth"),
+                        bundle.getString(EXTRA_MAX_WIDTH));
 
-                mLinkTo.setText(mImageMeta.getString("linkUrl"));
+                setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt(ATTR_DIMEN_WIDTH));
 
-                mMaxImageWidth = getMaximumImageWidth(mImageMeta.getInt("naturalWidth"), bundle.getString("maxWidth"));
-
-                setupWidthSeekBar(widthSeekBar, mWidthText, mImageMeta.getInt("width"));
-
-                boolean featuredImageSupported = bundle.getBoolean("featuredImageSupported");
+                boolean featuredImageSupported = bundle.getBoolean(EXTRA_IMAGE_FEATURED);
                 if (featuredImageSupported) {
                     mFeaturedCheckBox.setVisibility(View.VISIBLE);
-                    mIsFeatured = bundle.getBoolean("isFeatured", false);
+                    mIsFeatured = bundle.getBoolean(EXTRA_FEATURED, false);
                     mFeaturedCheckBox.setChecked(mIsFeatured);
                 }
-
             } catch (JSONException e1) {
                 AppLog.d(AppLog.T.EDITOR, "Missing JSON properties");
             }
+
+            // TODO: Unsupported in Aztec - remove once caption, alignment & link support added
+            if (bundle.getBoolean(EXTRA_ENABLED_AZTEC)) {
+                mCaptionText.setVisibility(View.GONE);
+                View label = view.findViewById(R.id.image_caption_label);
+                if (label != null) {
+                    label.setVisibility(View.GONE);
+                }
+
+                mLinkTo.setVisibility(View.GONE);
+                label = view.findViewById(R.id.image_link_to_label);
+                if (label != null) {
+                    label.setVisibility(View.GONE);
+                }
+
+                mAlignmentSpinner.setVisibility(View.GONE);
+                label = view.findViewById(R.id.alignment_spinner_label);
+                if (label != null) {
+                    label.setVisibility(View.GONE);
+                }
+            }
         }
+
 
         mTitleText.requestFocus();
 
@@ -188,6 +224,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.show();
@@ -213,10 +250,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
     }
 
     private ActionBar getActionBar() {
-        if (!isAdded()) {
-            return null;
-        }
-
         if (getActivity() instanceof AppCompatActivity) {
             return ((AppCompatActivity) getActivity()).getSupportActionBar();
         } else {
@@ -251,8 +284,13 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             AppLog.d(AppLog.T.EDITOR, "Unable to update JSON array");
         }
 
+        getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
         restorePreviousActionBar();
         getFragmentManager().popBackStack();
+    }
+
+    public void setImageLoader(ImageLoader imageLoader) {
+        mImageLoader = imageLoader;
     }
 
     private void restorePreviousActionBar() {
@@ -277,6 +315,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         builder.setTitle(getString(R.string.image_settings_dismiss_dialog_title));
         builder.setPositiveButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                getTargetFragment().onActivityResult(getTargetRequestCode(), getTargetRequestCode(), null);
                 restorePreviousActionBar();
                 getFragmentManager().popBackStack();
             }
@@ -297,42 +336,37 @@ public class ImageSettingsDialogFragment extends DialogFragment {
      */
     private JSONObject extractMetaDataFromFields(JSONObject metaData) {
         try {
-            metaData.put("title", mTitleText.getText().toString());
-            metaData.put("caption", mCaptionText.getText().toString());
-            metaData.put("alt", mAltText.getText().toString());
-            metaData.put("align", mAlignmentSpinner.getSelectedItem().toString().toLowerCase(Locale.US));
-            metaData.put("linkUrl", mLinkTo.getText().toString());
+            metaData.put(ATTR_TITLE, mTitleText.getText().toString());
+            metaData.put(ATTR_CAPTION, mCaptionText.getText().toString());
+            metaData.put(ATTR_ALT, mAltText.getText().toString());
+            if (mAlignmentSpinner.getSelectedItemPosition() < mAlignmentKeyArray.length) {
+                metaData.put(ATTR_ALIGN, mAlignmentKeyArray[mAlignmentSpinner.getSelectedItemPosition()]);
+            }
+            metaData.put(ATTR_URL_LINK, mLinkTo.getText().toString());
 
-            int newWidth = getEditTextIntegerClamped(mWidthText, 10, mMaxImageWidth);
-            metaData.put("width", newWidth);
-            metaData.put("height", getRelativeHeightFromWidth(newWidth));
+            int newWidth = getEditTextIntegerClamped(mWidthText, 1, Integer.MAX_VALUE);
+            metaData.put(ATTR_DIMEN_WIDTH, newWidth);
+            metaData.put(ATTR_DIMEN_HEIGHT, getRelativeHeightFromWidth(newWidth));
         } catch (JSONException e) {
             AppLog.d(AppLog.T.EDITOR, "Unable to build JSON object from new meta data");
         }
 
         return metaData;
     }
+    /**
+     * Loads the given network image URL into the {@link NetworkImageView}.
+     */
+    private void loadThumbnail(String imageUrl, NetworkImageView imageView) {
+        if (imageUrl != null) {
+            Uri uri = Uri.parse(imageUrl);
+            String filepath = uri.getLastPathSegment();
 
-    private void loadThumbnail(final String src, final ImageView thumbnailImage) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded()) {
-                    final Uri localUri = Utils.downloadExternalMedia(getActivity(), Uri.parse(src));
-
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                thumbnailImage.setImageURI(localUri);
-                            }
-                        });
-                    }
-                }
+            if (MediaUtils.isValidImage(filepath)) {
+                imageView.setImageUrl(imageUrl, mImageLoader);
             }
-        });
-
-        thread.start();
+        } else {
+            imageView.setImageResource(0);
+        }
     }
 
     /**
@@ -388,34 +422,6 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 return true;
             }
         });
-    }
-
-    /**
-     * Calculate and return the maximum allowed image width by comparing the width of the image at its full size with
-     * the maximum upload width set in the blog settings
-     * @param naturalImageWidth the image's natural (full) width
-     * @param imageWidthBlogSettingString the maximum upload width set in the blog settings
-     * @return
-     */
-    public static int getMaximumImageWidth(int naturalImageWidth, String imageWidthBlogSettingString) {
-        int imageWidthBlogSetting = Integer.MAX_VALUE;
-
-        if (!imageWidthBlogSettingString.equals("Original Size")) {
-            try {
-                imageWidthBlogSetting = Integer.valueOf(imageWidthBlogSettingString);
-            } catch (NumberFormatException e) {
-                AppLog.e(AppLog.T.EDITOR, e);
-            }
-        }
-
-        int imageWidthPictureSetting = naturalImageWidth == 0 ? Integer.MAX_VALUE : naturalImageWidth;
-
-        if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
-            // Default value in case of errors reading the picture size and the blog settings is set to Original size
-            return DEFAULT_MAX_IMAGE_WIDTH;
-        } else {
-            return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
-        }
     }
 
     /**

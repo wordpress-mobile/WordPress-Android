@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,19 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.NoConnectionError;
-import com.android.volley.VolleyError;
-
 import org.wordpress.android.R;
-import org.wordpress.android.ui.stats.exceptions.StatsError;
-import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.widgets.TypefaceCache;
-
-import java.io.Serializable;
-
-import de.greenrobot.event.EventBus;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
@@ -61,25 +50,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     private LinearLayout mEmptyModulePlaceholder;
 
-    Serializable[] mDatamodels;
-
     SparseBooleanArray mGroupIdToExpandedMap;
 
     protected abstract int getEntryLabelResId();
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract void updateUI();
     protected abstract boolean isExpandableList();
     protected abstract boolean isViewAllOptionAvailable();
-
-    StatsResourceVars mResourceVars;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mResourceVars = new StatsResourceVars(activity);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,72 +102,25 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGroupIdToExpandedMap = new SparseBooleanArray();
-
         if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-                Serializable oldData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
-                if (oldData != null && oldData instanceof Serializable[]) {
-                    mDatamodels = (Serializable[]) oldData;
-                }
-            }
             if (savedInstanceState.containsKey(ARGS_EXPANDED_ROWS)) {
                 mGroupIdToExpandedMap = savedInstanceState.getParcelable(ARGS_EXPANDED_ROWS);
             }
+            mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // Do not serialize VolleyError, but rewrite in a simple stats Exception.
-        // VolleyErrors should be serializable, but for some reason they are not.
-        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
-        if (mDatamodels != null) {
-            for (int i=0; i < mDatamodels.length; i++) {
-                if (mDatamodels[i] != null && mDatamodels[i] instanceof VolleyError) {
-                    VolleyError currentVolleyError = (VolleyError) mDatamodels[i];
-                    mDatamodels[i] = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
-                }
-            }
-        }
-
         if (mGroupIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARGS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mGroupIdToExpandedMap));
         }
-
-        outState.putSerializable(ARG_REST_RESPONSE, mDatamodels);
+        outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Init the UI
-        if (mDatamodels != null) {
-            updateUI();
-        } else {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                showPlaceholderUI();
-                refreshStats();
-            } else {
-                showErrorUI(new NoConnectionError());
-            }
-        }
-    }
-
-    private void showPlaceholderUI() {
+    protected void showPlaceholderUI() {
         mTopPagerContainer.setVisibility(View.GONE);
         mEmptyLabel.setVisibility(View.GONE);
         mListContainer.setVisibility(View.GONE);
@@ -237,14 +168,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         }
     }
 
-    void showErrorUI() {
-        if (!isAdded()) {
-            return;
-        }
-        showErrorUI(mDatamodels[mTopPagerSelectedButtonIndex]);
-    }
-
-    private void showErrorUI(Serializable error) {
+    @Override
+    protected void showErrorUI(String label) {
         if (!isAdded()) {
             return;
         }
@@ -253,19 +178,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mModuleTitleTextView.setVisibility(View.VISIBLE);
         mEmptyModulePlaceholder.setVisibility(View.GONE);
 
-        String label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
-
-        if (error instanceof NoConnectionError) {
-            label += "<br/>" + getString(R.string.no_network_message);
+        // Use the generic error message when the string passed to this method is null.
+        if (TextUtils.isEmpty(label)) {
+            label = "<b>" + getString(R.string.error_refresh_stats) + "</b>";
         }
-
-        // No need to show detailed error messages to the user
-        /*else if (error instanceof VolleyError) {
-            String volleyErrorMsg =   ((VolleyError)error).getMessage();
-            if (org.apache.commons.lang.StringUtils.isNotBlank(volleyErrorMsg)){
-                label += volleyErrorMsg;
-            }
-        }*/
 
         if (label.contains("<")) {
             mEmptyLabel.setText(Html.fromHtml(label));
@@ -275,34 +191,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         mEmptyLabel.setVisibility(View.VISIBLE);
         mListContainer.setVisibility(View.GONE);
         mList.setVisibility(View.GONE);
-    }
-
-    /**
-     * Check if the current datamodel is populated and is NOT an error response.
-     *
-     */
-    boolean isDataEmpty() {
-        return isDataEmpty(mTopPagerSelectedButtonIndex);
-    }
-
-    boolean isDataEmpty(int index) {
-        return mDatamodels == null
-                || mDatamodels[index] == null
-                || isErrorResponse(index);
-    }
-
-    /**
-     * Check if the current datamodel is an error response.
-     *
-     * @return true if it is a Volley Error
-     */
-    boolean isErrorResponse() {
-        return isErrorResponse(mTopPagerSelectedButtonIndex);
-    }
-
-    boolean isErrorResponse(int index) {
-        return mDatamodels != null && mDatamodels[index] != null
-                && (mDatamodels[index] instanceof VolleyError || mDatamodels[index] instanceof StatsError);
     }
 
     private void configureViewAllButton() {
@@ -319,13 +207,12 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                     return; // already in single view
                 }
 
-                // Model cannot be null here
-                if (mDatamodels == null) {
+                if (!hasDataAvailable()) {
                     return;
                 }
 
                 Intent viewAllIntent = new Intent(getActivity(), StatsViewAllActivity.class);
-                viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
+                viewAllIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, getLocalTableBlogID());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, getTimeframe());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, getViewType());
                 viewAllIntent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, getDate());
@@ -352,7 +239,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             params.weight = 1;
-            rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
             if (i == 0) {
                 params.setMargins(0, 0, dp4, 0);
             } else {
@@ -406,46 +292,4 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             updateUI();
         }
     };
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.SectionUpdated event) {
-        if (!isAdded()) {
-            return;
-        }
-
-        if (!getDate().equals(event.mDate)) {
-            return;
-        }
-
-        if (!isSameBlog(event)) {
-            return;
-        }
-
-        if (event.mTimeframe != getTimeframe()) {
-            return;
-        }
-
-        StatsService.StatsEndpointsEnum sectionToUpdate = event.mEndPointName;
-        StatsService.StatsEndpointsEnum[] sectionsToUpdate = getSectionsToUpdate();
-        int indexOfDatamodelMatch = -1;
-        for (int i = 0; i < getSectionsToUpdate().length; i++) {
-            if (sectionToUpdate == sectionsToUpdate[i]) {
-                indexOfDatamodelMatch = i;
-                break;
-            }
-        }
-
-        if (-1 == indexOfDatamodelMatch) {
-            return;
-        }
-
-        mGroupIdToExpandedMap.clear();
-
-        if (mDatamodels == null) {
-            mDatamodels = new Serializable[getSectionsToUpdate().length];
-        }
-
-        mDatamodels[indexOfDatamodelMatch] = event.mResponseObjectModel;
-        updateUI();
-    }
 }

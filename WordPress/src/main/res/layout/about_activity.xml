@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/main_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/nux_background"
-            android:fillViewport="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/nux_background"
+    android:fillViewport="true">
 
     <org.wordpress.android.widgets.WPLinearLayoutSizeBound
         app:maxWidth="@dimen/nux_width"
@@ -26,14 +26,14 @@
                 android:id="@+id/nux_fragment_icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/nux_icon_wp"
+                app:srcCompat="@drawable/ic_my_sites_white_50dp"
                 android:layout_marginTop="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView
                 style="@style/WordPress.NUXTitle"
                 android:id="@+id/about_first_line"
                 android:text="@string/app_title"
-                app:fontVariation="light"
+                android:fontFamily="sans-serif-light"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_marginBottom="@dimen/margin_small"/>
 
@@ -78,7 +78,6 @@
                 android:id="@+id/about_url"
                 android:text="@string/automattic_url"
                 android:clickable="true"
-                android:onClick="onClick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"

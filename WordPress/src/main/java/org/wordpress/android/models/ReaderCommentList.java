@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 public class ReaderCommentList extends ArrayList<ReaderComment> {
 
-    private boolean commentIdExists(long commentId) {
-        return (indexOfCommentId(commentId) > -1);
-    }
-
     public int indexOfCommentId(long commentId) {
         for (int i=0; i < this.size(); i++) {
             if (commentId==this.get(i).commentId)
@@ -24,8 +20,9 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
             return false;
 
         for (ReaderComment comment: comments) {
-            if (!commentIdExists(comment.commentId))
+            if (indexOf(comment) == -1) {
                 return false;
+            }
         }
 
         return true;

@@ -4,11 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 
-
-public class InsightsLatestPostModel implements Serializable {
-    private String mBlogID;
+public class InsightsLatestPostModel extends BaseStatsModel {
+    private long mBlogID;
     private String mPostTitle;
     private String mPostURL;
     private String mPostDate;
@@ -18,7 +16,7 @@ public class InsightsLatestPostModel implements Serializable {
     private int mPostLikeCount;
     private int mPostsFound; // if 0 there are no posts on the blog.
 
-    public InsightsLatestPostModel(String blogID, JSONObject response) throws JSONException {
+    public InsightsLatestPostModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
 
         mPostsFound = response.optInt("found", 0);
@@ -51,7 +49,7 @@ public class InsightsLatestPostModel implements Serializable {
         return mPostsFound > 0;
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 

@@ -10,7 +10,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         }
 
         for (int i = 0; i < size(); i++) {
-            if (tagName.equals(this.get(i).getTagName())) {
+            if (tagName.equals(this.get(i).getTagSlug())) {
                 return i;
             }
         }

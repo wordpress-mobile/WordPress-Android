@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.models.AuthorModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowDataModel;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -26,6 +26,64 @@ import java.util.List;
 
 public class StatsCommentsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
+    static final String ARG_REST_RESPONSE_FOLLOWERS = "ARG_REST_RESPONSE_FOLLOWERS";
+
+    private CommentsModel mCommentsModel;
+    private CommentFollowersModel mCommentFollowersModel;
+
+    @Override
+    protected boolean hasDataAvailable() {
+        return mCommentsModel != null && mCommentFollowersModel != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (mCommentsModel != null) {
+            outState.putSerializable(ARG_REST_RESPONSE, mCommentsModel);
+        }
+        if (mCommentFollowersModel != null) {
+            outState.putSerializable(ARG_REST_RESPONSE_FOLLOWERS, mCommentFollowersModel);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mCommentsModel = (CommentsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE_FOLLOWERS)) {
+            mCommentFollowersModel = (CommentFollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_FOLLOWERS);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.CommentsUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mCommentsModel = event.mComments;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.CommentFollowersUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mCommentFollowersModel = event.mCommentFollowers;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mCommentsModel = null;
+        mCommentFollowersModel = null;
+        showErrorUI(event.mError);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,57 +101,32 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX)) {
-                mTopPagerSelectedButtonIndex = savedInstanceState.getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX);
-            }
-        } else {
-            // first time it's created
-            mTopPagerSelectedButtonIndex = getArguments().getInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //AppLog.d(AppLog.T.STATS, this.getTag() + " > saving instance state");
-        outState.putInt(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     protected void updateUI() {
+        // This module is a kind of exception to the normal way we build page interface.
+        // In this module only the first rest endpoint StatsService.StatsEndpointsEnum.COMMENTS
+        // is used to populate 99% of the UI even if there is a tab on the top.
+        // Switching to a different tab on the UI doesn't switch the underlying datamodel index as in all other modules.
+
         if (!isAdded()) {
+            return;
+        }
+
+        if (mCommentsModel == null && mCommentFollowersModel == null) {
+            showHideNoResultsUI(true);
+            mTotalsLabel.setVisibility(View.GONE);
+            mTopPagerContainer.setVisibility(View.GONE);
             return;
         }
 
         mTopPagerContainer.setVisibility(View.VISIBLE);
 
-        if (mDatamodels == null) {
-            showHideNoResultsUI(true);
-            mTotalsLabel.setVisibility(View.GONE);
-            return;
-        }
-
-        // This module is a kind of exception to the normal way we build page interface.
-        // In this module only the first rest endpoint StatsService.StatsEndpointsEnum.COMMENTS
-        // is used to populate 99% of the UI even if there is a tab on the top.
-        // Switching to a different tab on the UI doesn't switch the underlying datamodel index as in all other modules.
-        if (isErrorResponse(0)) {
-            showErrorUI();
-            return;
-        }
-
-        if (mDatamodels[1] != null && !isErrorResponse(1)) { // check if comment-followers is already here
+        if (mCommentFollowersModel != null) { // check if comment-followers is already here
             mTotalsLabel.setVisibility(View.VISIBLE);
-            int totalNumberOfFollowers = ((CommentFollowersModel) mDatamodels[1]).getTotal();
+            int totalNumberOfFollowers = mCommentFollowersModel.getTotal();
             String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
             mTotalsLabel.setText(
                     String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
             );
-        } else {
-            mTotalsLabel.setVisibility(View.GONE);
         }
 
         ArrayAdapter adapter = null;
@@ -113,37 +146,33 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasAuthors() {
-        return !isDataEmpty(0)
-                && ((CommentsModel) mDatamodels[0]).getAuthors() != null
-                && ((CommentsModel) mDatamodels[0]).getAuthors().size() > 0;
+        return mCommentsModel != null
+                && mCommentsModel.getAuthors() != null
+                && mCommentsModel.getAuthors().size() > 0;
     }
 
     private List<AuthorModel> getAuthors() {
         if (!hasAuthors()) {
             return new ArrayList<AuthorModel>(0);
         }
-        return ((CommentsModel) mDatamodels[0]).getAuthors();
+        return mCommentsModel.getAuthors();
     }
 
     private boolean hasPosts() {
-        return !isDataEmpty(0)
-                && ((CommentsModel) mDatamodels[0]).getPosts() != null
-                && ((CommentsModel) mDatamodels[0]).getPosts().size() > 0;
+        return  mCommentsModel != null
+                && mCommentsModel.getPosts() != null
+                && mCommentsModel.getPosts().size() > 0;
     }
 
-    private List<PostModel> getPosts() {
+    private List<StatsPostModel> getPosts() {
         if (!hasPosts()) {
-            return new ArrayList<PostModel>(0);
+            return new ArrayList<StatsPostModel>(0);
         }
-        return ((CommentsModel) mDatamodels[0]).getPosts();
+        return mCommentsModel.getPosts();
     }
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (isDataEmpty(0)) {
-            return false;
-        }
-
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
@@ -238,7 +267,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.COMMENTS, StatsService.StatsEndpointsEnum.COMMENT_FOLLOWERS
         };

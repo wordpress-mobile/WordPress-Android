@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +21,50 @@ import java.util.List;
 public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsTagsAndCategoriesFragment.class.getSimpleName();
 
+    private TagsContainerModel mTagsContainer;
+
     @Override
-    protected void updateUI() {
-        if (!isAdded()) {
+    protected boolean hasDataAvailable() {
+        return mTagsContainer != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (mTagsContainer != null) {
+            outState.putSerializable(ARG_REST_RESPONSE, mTagsContainer);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mTagsContainer = (TagsContainerModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.TagsUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
+        mTagsContainer = event.mTagsContainer;
+        mGroupIdToExpandedMap.clear();
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mTagsContainer = null;
+        mGroupIdToExpandedMap.clear();
+        showErrorUI(event.mError);
+    }
+
+    @Override
+    protected void updateUI() {
+        if (!isAdded()) {
             return;
         }
 
@@ -41,16 +78,16 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasTags() {
-        return !isDataEmpty()
-                && ((TagsContainerModel) mDatamodels[0]).getTags() != null
-                && (((TagsContainerModel) mDatamodels[0]).getTags()).size() > 0;
+        return mTagsContainer != null
+                && mTagsContainer.getTags() != null
+                && mTagsContainer.getTags().size() > 0;
     }
 
     private List<TagsModel> getTags() {
         if (!hasTags()) {
             return new ArrayList<TagsModel>(0);
         }
-        return ((TagsContainerModel) mDatamodels[0]).getTags();
+        return mTagsContainer.getTags();
     }
 
     @Override
@@ -64,7 +101,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.TAGS_AND_CATEGORIES
         };
@@ -138,7 +175,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
             // icon.
             holder.networkImageView.setVisibility(View.VISIBLE);
-            holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.stats_icon_tags));
+            holder.networkImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_tag_blue_wordpress_12dp));
 
             return convertView;
         }
@@ -218,8 +255,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             // icon
             if ( children == 0 ) {
                 holder.networkImageView.setVisibility(View.VISIBLE);
-                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized") ? R.drawable.stats_icon_categories
-                        : R.drawable.stats_icon_tags;
+                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized") ? R.drawable.ic_folder_blue_wordpress_12dp
+                        : R.drawable.ic_tag_blue_wordpress_12dp;
                 holder.networkImageView.setImageDrawable(getResources().getDrawable(drawableResource));
             }
 

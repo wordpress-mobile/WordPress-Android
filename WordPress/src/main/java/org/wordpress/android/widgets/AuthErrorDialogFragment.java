@@ -4,13 +4,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 
 /**
  * An alert dialog fragment for XML-RPC authentication failures
@@ -20,8 +18,10 @@ public class AuthErrorDialogFragment extends DialogFragment {
 
     private int mMessageId = R.string.incorrect_credentials;
     private int mTitleId = R.string.connection_error;
+    private SiteModel mSite;
 
-    public void setWPComTitleMessage(int titleResourceId, int messageResourceId) {
+    public void setArgs(int titleResourceId, int messageResourceId, SiteModel site) {
+        mSite = site;
         if (titleResourceId != DEFAULT_RESOURCE_ID) {
             mTitleId = titleResourceId;
         } else {
@@ -52,7 +52,7 @@ public class AuthErrorDialogFragment extends DialogFragment {
         b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), WordPress.getCurrentBlog());
+                ActivityLauncher.viewBlogSettingsForResult(getActivity(), mSite);
             }
         });
         b.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

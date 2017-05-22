@@ -5,21 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-        android:id="@+id/ptr_layout"
+    <org.wordpress.android.ui.FilteredRecyclerView
+        android:id="@+id/reader_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <org.wordpress.android.ui.reader.views.ReaderRecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-
-    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+        android:layout_height="match_parent" />
 
     <include
-        android:id="@+id/empty_view"
+        android:id="@+id/empty_custom_view"
         layout="@layout/reader_empty_view" />
 
     <LinearLayout
@@ -37,6 +29,7 @@
         android:paddingRight="24dp"
         android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
+        tools:targetApi="LOLLIPOP"
         tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView

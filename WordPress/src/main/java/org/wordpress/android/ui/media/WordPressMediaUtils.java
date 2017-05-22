@@ -6,30 +6,25 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.ImageView;
+import android.support.v4.content.FileProvider;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.helpers.Version;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-
-import static org.wordpress.mediapicker.MediaUtils.fadeInImage;
 
 public class WordPressMediaUtils {
     public interface LaunchCameraCallback {
@@ -40,7 +35,7 @@ public class WordPressMediaUtils {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setTitle(context.getResources().getText(R.string.sdcard_title));
         dialogBuilder.setMessage(context.getResources().getText(R.string.sdcard_message));
-        dialogBuilder.setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton(context.getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 dialog.dismiss();
             }
@@ -66,9 +61,8 @@ public class WordPressMediaUtils {
 
 
     public static Intent prepareVideoLibraryIntent(Context context) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
 
@@ -91,7 +85,7 @@ public class WordPressMediaUtils {
 
     public static void launchPictureLibrary(Activity activity) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(preparePictureLibraryIntent(activity),
+        activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo)),
                 RequestCodes.PICTURE_LIBRARY);
     }
 
@@ -100,67 +94,120 @@ public class WordPressMediaUtils {
             return;
         }
         AppLockManager.getInstance().setExtendedTimeout();
-        fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()),
-                RequestCodes.PICTURE_LIBRARY);
+        fragment.startActivityForResult(preparePictureLibraryIntent(fragment.getActivity()
+                .getString(R.string.pick_photo)), RequestCodes.PICTURE_LIBRARY);
     }
 
-    private static Intent preparePictureLibraryIntent(Context context) {
+    private static Intent preparePictureLibraryIntent(String title) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        return Intent.createChooser(intent, title);
+    }
+
+    private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        return Intent.createChooser(intent, context.getString(R.string.pick_photo));
+        return Intent.createChooser(intent, title);
     }
 
-    public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
-        Intent intent = preparelaunchCamera(activity, callback);
+    public static void launchCamera(Activity activity, String applicationId, LaunchCameraCallback callback) {
+        Intent intent = preparelaunchCamera(activity, applicationId, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
             activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
-    public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {
+    public static void launchCamera(Fragment fragment, String applicationId, LaunchCameraCallback callback) {
         if (!fragment.isAdded()) {
             return;
         }
-        Intent intent = preparelaunchCamera(fragment.getActivity(), callback);
+        Intent intent = preparelaunchCamera(fragment.getActivity(), applicationId, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
             fragment.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }
 
-    private static Intent preparelaunchCamera(Context context, LaunchCameraCallback callback) {
+    private static Intent preparelaunchCamera(Context context, String applicationId, LaunchCameraCallback callback) {
         String state = android.os.Environment.getExternalStorageState();
         if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
             showSDCardRequiredDialog(context);
             return null;
         } else {
-            return getLaunchCameraIntent(callback);
+            try {
+                return getLaunchCameraIntent(context, applicationId, callback);
+            } catch (IOException e) {
+                // No need to write log here
+                return null;
+            }
         }
     }
 
-    private static Intent getLaunchCameraIntent(LaunchCameraCallback callback) {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+    private static Intent getLaunchCameraIntent(Context context, String applicationId, LaunchCameraCallback callback)
+            throws IOException {
+        File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        String mediaCapturePath = externalStoragePublicDirectory + File.separator + "Camera" + File.separator + "wp-" + System
+                .currentTimeMillis() + ".jpg";
 
-        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
+        // make sure the directory we plan to store the recording in exists
+        File directory = new File(mediaCapturePath).getParentFile();
+        if (directory == null || (!directory.exists() && !directory.mkdirs())) {
+            try {
+                throw new IOException("Path to file could not be created: " + mediaCapturePath);
+            } catch (IOException e) {
+                AppLog.e(T.MEDIA, e);
+                throw e;
+            }
+        }
+
+        Uri fileUri;
+        try {
+            fileUri = FileProvider.getUriForFile(context, applicationId + ".provider", new File(mediaCapturePath));
+        } catch (IllegalArgumentException e) {
+            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media", e);
+            throw new IOException("Cannot access the file planned to store the new media");
+        } catch (NullPointerException e) {
+            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media - " +
+                    "FileProvider.getUriForFile cannot find a valid provider for the authority: " + applicationId + ".provider", e);
+            throw new IOException("Cannot access the file planned to store the new media");
+        }
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mediaCapturePath)));
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fileUri);
 
         if (callback != null) {
             callback.onMediaCapturePathReady(mediaCapturePath);
         }
+        return intent;
+    }
 
-        // make sure the directory we plan to store the recording in exists
-        File directory = new File(mediaCapturePath).getParentFile();
-        if (!directory.exists() && !directory.mkdirs()) {
+    public static void launchPictureLibraryOrCapture(Fragment fragment, String applicationId, LaunchCameraCallback
+            callback) {
+        if (!fragment.isAdded()) {
+            return;
+        }
+        AppLockManager.getInstance().setExtendedTimeout();
+
+        Intent intent = makePickOrCaptureIntent(fragment.getActivity(), applicationId, callback);
+        fragment.startActivityForResult(intent, RequestCodes.PICTURE_LIBRARY_OR_CAPTURE);
+    }
+
+    private static Intent makePickOrCaptureIntent(Context context, String applicationId, LaunchCameraCallback callback) {
+        Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
+
+        if (DeviceUtils.getInstance().hasCamera(context)) {
             try {
-                throw new IOException("Path to file could not be created.");
+                Intent cameraIntent = getLaunchCameraIntent(context, applicationId, callback);
+                pickPhotoIntent.putExtra(
+                        Intent.EXTRA_INITIAL_INTENTS,
+                        new Intent[]{ cameraIntent });
             } catch (IOException e) {
-                AppLog.e(T.POSTS, e);
+                // No need to write log here
             }
         }
-        return intent;
+
+        return pickPhotoIntent;
     }
 
     public static int getPlaceholder(String url) {
@@ -181,94 +228,50 @@ public class WordPressMediaUtils {
         }
     }
 
+    public static boolean canDeleteMedia(MediaModel mediaModel) {
+        String state = mediaModel.getUploadState();
+        return state == null || (!state.equalsIgnoreCase("uploading") && !state.equalsIgnoreCase("deleted"));
+    }
+
     /**
-     * This is a workaround for WP3.4.2 that deletes the media from the server when editing media properties
-     * within the app. See: https://github.com/wordpress-mobile/WordPress-Android/issues/204
+     * Loads the given network image URL into the {@link NetworkImageView}.
      */
-    public static boolean isWordPressVersionWithMediaEditingCapabilities() {
-        if (WordPress.currentBlog == null) {
-            return false;
-        }
+    public static void loadNetworkImage(String imageUrl, NetworkImageView imageView, ImageLoader imageLoader) {
+        if (imageUrl != null) {
+            Uri uri = Uri.parse(imageUrl);
+            String filepath = uri.getLastPathSegment();
 
-        if (WordPress.currentBlog.getWpVersion() == null) {
-            return true;
-        }
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
+            imageView.setErrorImageResId(placeholderResId);
 
-        if (WordPress.currentBlog.isDotcomFlag()) {
-            return true;
-        }
+            // default image while downloading
+            imageView.setDefaultImageResId(R.drawable.media_item_background);
 
-        Version minVersion;
-        Version currentVersion;
-        try {
-            minVersion = new Version("3.5.2");
-            currentVersion = new Version(WordPress.currentBlog.getWpVersion());
-
-            if (currentVersion.compareTo(minVersion) == -1) {
-                return false;
+            if (MediaUtils.isValidImage(filepath)) {
+                imageView.setTag(imageUrl);
+                imageView.setImageUrl(imageUrl, imageLoader);
+            } else {
+                imageView.setImageResource(placeholderResId);
             }
-        } catch (IllegalArgumentException e) {
-            AppLog.e(T.POSTS, e);
-        }
-
-        return true;
-    }
-
-    public static boolean canDeleteMedia(String blogId, String mediaID) {
-        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
-        if (!cursor.moveToFirst()) {
-            cursor.close();
-            return false;
-        }
-        String state = cursor.getString(cursor.getColumnIndex("uploadState"));
-        cursor.close();
-        return state == null || !state.equals("uploading");
-    }
-
-    public static class BackgroundDownloadWebImage extends AsyncTask<Uri, String, Bitmap> {
-        WeakReference<ImageView> mReference;
-
-        public BackgroundDownloadWebImage(ImageView resultStore) {
-            mReference = new WeakReference<>(resultStore);
-        }
-
-        @Override
-        protected Bitmap doInBackground(Uri... params) {
-            try {
-                String uri = params[0].toString();
-                Bitmap bitmap = WordPress.getBitmapCache().getBitmap(uri);
-
-                if (bitmap == null) {
-                    URL url = new URL(uri);
-                    bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    WordPress.getBitmapCache().put(uri, bitmap);
-                }
-
-                return bitmap;
-            }
-            catch(IOException notFoundException) {
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            ImageView imageView = mReference.get();
-
-            if (imageView != null) {
-                if (imageView.getTag() == this) {
-                    imageView.setImageBitmap(result);
-                    fadeInImage(imageView, result);
-                }
-            }
+        } else {
+            imageView.setImageResource(0);
         }
     }
 
-    public static Cursor getWordPressMediaImages(String blogId) {
-        return WordPress.wpDB.getMediaImagesForBlog(blogId);
-    }
+    /**
+     * Returns a poster (thumbnail) URL given a VideoPress video URL
+     * @param videoUrl the remote URL to the VideoPress video
+     */
+    public static String getVideoPressVideoPosterFromURL(String videoUrl) {
+        String posterUrl = "";
 
-    public static Cursor getWordPressMediaVideos(String blogId) {
-        return WordPress.wpDB.getMediaFilesForBlog(blogId);
+        if (videoUrl != null) {
+            int filetypeLocation = videoUrl.lastIndexOf(".");
+            if (filetypeLocation > 0) {
+                posterUrl = videoUrl.substring(0, filetypeLocation) + "_std.original.jpg";
+            }
+        }
+
+        return posterUrl;
     }
 }

@@ -13,11 +13,23 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.MediaUtils;
 
 public class ReaderVideoUtils {
+
 	private ReaderVideoUtils() {
 		throw new AssertionError();
 	}
+
+    /*
+     * determine whether we can show a thumbnail image for the passed video - currently
+     * we support YouTube, Vimeo & standard images
+     */
+    public static boolean canShowVideoThumbnail(String videoUrl) {
+        return isVimeoLink(videoUrl)
+                || isYouTubeVideoLink(videoUrl)
+                || MediaUtils.isValidImage(videoUrl);
+    }
 
     /*
      * returns the url to get the full-size (480x360) thumbnail url for the passed video
@@ -37,17 +49,6 @@ public class ReaderVideoUtils {
 	public static boolean isYouTubeVideoLink(final String link) {
 		return (!TextUtils.isEmpty(getYouTubeVideoId(link)));
 	}
-
-    /*
-     * accepts a YouTube link in any format (such as the /embed/ format) and turns it into a
-     * standard YouTube video link
-     */
-    public static String fixYouTubeVideoLink(final String videoUrl) {
-        String videoId = getYouTubeVideoId(videoUrl);
-        if (TextUtils.isEmpty(videoId))
-            return videoUrl;
-        return "http://www.youtube.com/watch?v=" + videoId;
-    }
 
 	/*
 	 * extract the video id from the passed YouTube url
@@ -162,13 +163,13 @@ public class ReaderVideoUtils {
             }
         };
 
-        String url = "http://vimeo.com/api/v2/video/" + id + ".json";
+        String url = "https://vimeo.com/api/v2/video/" + id + ".json";
         JsonArrayRequest request = new JsonArrayRequest(url, listener, errorListener);
 
-        WordPress.requestQueue.add(request);
+        WordPress.sRequestQueue.add(request);
     }
 
-    public static interface VideoThumbnailListener {
-        public void onResponse(boolean successful, String thumbnailUrl);
+    public interface VideoThumbnailListener {
+        void onResponse(boolean successful, String thumbnailUrl);
     }
 }

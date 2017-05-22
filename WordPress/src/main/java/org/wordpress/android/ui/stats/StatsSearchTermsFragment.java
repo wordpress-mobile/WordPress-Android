@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +20,50 @@ import java.util.List;
 public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsSearchTermsFragment.class.getSimpleName();
 
-    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE = "http://en.support.wordpress.com/stats/#search-engine-terms";
+    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE = "https://en.support.wordpress.com/stats/#search-engine-terms";
+
+    private SearchTermsModel mSearchTerms;
+
+    @Override
+    protected boolean hasDataAvailable() {
+        return mSearchTerms != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mSearchTerms);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mSearchTerms = (SearchTermsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SearchTermsUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
+            return;
+        }
+
+        mSearchTerms = event.mSearchTerms;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mSearchTerms = null;
+        showErrorUI(event.mError);
+    }
 
     @Override
     protected void updateUI() {
         if (!isAdded()) {
-            return;
-        }
-
-        if (isErrorResponse()) {
-            showErrorUI();
             return;
         }
 
@@ -46,8 +81,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
              *  We need to do some counts then...
              */
 
-            SearchTermsModel searchTerms = (SearchTermsModel) mDatamodels[0];
-            List<SearchTermModel> originalSearchTermList = searchTerms.getSearchTerms();
+            List<SearchTermModel> originalSearchTermList = mSearchTerms.getSearchTerms();
             List<SearchTermModel> mySearchTermList;
             if (originalSearchTermList == null) {
                 // No clear-text search terms. we know we have the encrypted search terms item available
@@ -55,7 +89,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
             } else {
                 // Make sure the list has MAX 9 items if the "Encrypted" is available
                 // we want to show exactly 10 items per module
-                if (searchTerms.getEncryptedSearchTerms() > 0 && originalSearchTermList.size() > getMaxNumberOfItemsToShowInList() - 1) {
+                if (mSearchTerms.getEncryptedSearchTerms() > 0 && originalSearchTermList.size() > getMaxNumberOfItemsToShowInList() - 1) {
                     mySearchTermList = new ArrayList<>();
                     int minIndex = Math.min(originalSearchTermList.size(), getMaxNumberOfItemsToShowInList() - 1);
                     for (int i = 0; i < minIndex; i++) {
@@ -65,7 +99,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                     mySearchTermList = originalSearchTermList;
                 }
             }
-            ArrayAdapter adapter = new SearchTermsAdapter(getActivity(), mySearchTermList, searchTerms.getEncryptedSearchTerms());
+            ArrayAdapter adapter = new SearchTermsAdapter(getActivity(), mySearchTermList, mSearchTerms.getEncryptedSearchTerms());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
         } else {
@@ -74,18 +108,10 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasSearchTerms() {
-        if (isDataEmpty()) {
-            return false;
-        }
-
-        // check if we have search terms
-        SearchTermsModel searchTerms = (SearchTermsModel) mDatamodels[0];
-        if (searchTerms.getSearchTerms() != null && searchTerms.getSearchTerms().size() > 0) {
-            return true;
-        }
-
-        // No clear-text search terms. Check if we have the encrypted search terms item available.
-        return searchTerms.getEncryptedSearchTerms() > 0;
+        return mSearchTerms != null
+                && ((mSearchTerms.getSearchTerms() != null && mSearchTerms.getSearchTerms().size() > 0)
+                        ||  mSearchTerms.getEncryptedSearchTerms() > 0
+                );
     }
 
     @Override
@@ -94,10 +120,10 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
             return false;
         }
 
-        SearchTermsModel searchTerms = (SearchTermsModel) mDatamodels[0];
-        int total = searchTerms.getSearchTerms() != null ? searchTerms.getSearchTerms().size() : 0;
+
+        int total = mSearchTerms.getSearchTerms() != null ? mSearchTerms.getSearchTerms().size() : 0;
         // If "Encrypted" is available we only have 9 items of clear text terms in the list
-        if (searchTerms.getEncryptedSearchTerms() > 0) {
+        if (mSearchTerms.getEncryptedSearchTerms() > 0) {
             return total > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST - 1;
         } else {
             return total > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST;
@@ -134,7 +160,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                 return super.getItem(position);
             }
 
-            return new SearchTermModel("", null, "Unknown Search Terms", encryptedSearchTerms, true);
+            return new SearchTermModel(0, null, "Unknown Search Terms", encryptedSearchTerms, true);
         }
 
         @Override
@@ -199,7 +225,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.SEARCH_TERMS
         };

@@ -22,15 +22,13 @@
         android:orientation="vertical"
         android:background="@color/white">
 
-        <org.wordpress.android.widgets.WPSwitch
+        <Switch
             android:id="@+id/toggle_related_posts_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_title"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            app:fontFamily="openSans"
-            app:fontVariation="normal" />
+            android:textSize="@dimen/text_sz_large" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/toggleRelatedPostsSummary"
@@ -38,11 +36,9 @@
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_summary"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_small"
-            app:fontFamily="openSans"
-            app:fontVariation="normal" />
+            android:textSize="@dimen/text_sz_small" />
 
-        <org.wordpress.android.widgets.WPCheckBox
+        <CheckBox
             android:id="@+id/show_header_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +47,7 @@
             android:textSize="@dimen/text_sz_large"
             android:text="@string/site_settings_rp_show_header_title" />
 
-        <org.wordpress.android.widgets.WPCheckBox
+        <CheckBox
             android:id="@+id/show_images_checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,8 +72,7 @@
             android:textStyle="italic|bold"
             android:textColor="@color/related_posts_preview_header"
             android:textSize="@dimen/text_sz_medium"
-            app:fontFamily="openSans"
-            app:fontVariation="light" />
+            android:fontFamily="sans-serif-light" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/related_posts_list_header"
@@ -88,8 +83,7 @@
             android:textStyle="bold"
             android:textSize="@dimen/text_sz_medium"
             android:textColor="@color/related_posts_list_header"
-            app:fontFamily="openSans"
-            app:fontVariation="light" />
+            android:fontFamily="sans-serif-light" />
 
         <LinearLayout
             android:id="@+id/related_posts_list"
@@ -103,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/rppreview1" />
+                app:srcCompat="@drawable/rppreview1" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title1"
@@ -113,8 +107,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
                 android:text="@string/site_settings_rp_preview1_title"
-                app:fontFamily="openSans"
-                app:fontVariation="light" />
+                android:fontFamily="sans-serif-light" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_site1"
@@ -124,9 +117,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
                 android:textColor="@color/grey_dark"
-                android:text="@string/site_settings_rp_preview1_site"
-                app:fontFamily="openSans"
-                app:fontVariation="normal" />
+                android:text="@string/site_settings_rp_preview1_site" />
 
             <ImageView
                 android:id="@+id/related_post_image2"
@@ -134,7 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/rppreview2" />
+                app:srcCompat="@drawable/rppreview2" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title2"
@@ -144,8 +135,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
                 android:text="@string/site_settings_rp_preview2_title"
-                app:fontFamily="openSans"
-                app:fontVariation="light" />
+                android:fontFamily="sans-serif-light" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_site2"
@@ -155,9 +145,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
                 android:textColor="@color/grey_dark"
-                android:text="@string/site_settings_rp_preview2_site"
-                app:fontFamily="openSans"
-                app:fontVariation="normal" />
+                android:text="@string/site_settings_rp_preview2_site" />
 
             <ImageView
                 android:id="@+id/related_post_image3"
@@ -165,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="8dp"
-                android:src="@drawable/rppreview3" />
+                app:srcCompat="@drawable/rppreview3" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title3"
@@ -175,8 +163,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 android:textColor="@color/grey_dark"
                 android:text="@string/site_settings_rp_preview3_title"
-                app:fontFamily="openSans"
-                app:fontVariation="light" />
+                android:fontFamily="sans-serif-light" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_site3"
@@ -186,9 +173,7 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/text_sz_related_post_small"
                 android:textColor="@color/grey_dark"
-                android:text="@string/site_settings_rp_preview3_site"
-                app:fontFamily="openSans"
-                app:fontVariation="normal" />
+                android:text="@string/site_settings_rp_preview3_site"/>
         </LinearLayout>
 
     </LinearLayout>

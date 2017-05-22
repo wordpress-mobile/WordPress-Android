@@ -10,6 +10,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.lang.reflect.Field;
@@ -58,6 +59,7 @@ public class WPNumberPicker extends NumberPicker {
         updateIntitialOffset();
         setVerticalFadingEdgeEnabled(false);
         setHorizontalFadingEdgeEnabled(false);
+        WPPrefUtils.layoutAsNumberPickerSelected(mInputView);
         mInputView.setVisibility(View.INVISIBLE);
     }
 
@@ -66,8 +68,6 @@ public class WPNumberPicker extends NumberPicker {
         if (value < getMinValue()) value = getMinValue();
         if (value > getMaxValue()) value = getMaxValue();
         super.setValue(value);
-        EditText view = (EditText) getChildAt(0);
-        WPPrefUtils.layoutAsNumberPickerSelected(view);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class WPNumberPicker extends NumberPicker {
             try {
                 mSelectorIndices.set(this, indices);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
     }
@@ -140,7 +140,7 @@ public class WPNumberPicker extends NumberPicker {
             try {
                 return (int[]) mSelectorIndices.get(this);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
 
@@ -152,7 +152,7 @@ public class WPNumberPicker extends NumberPicker {
             try {
                 return (Integer) mOffsetField.get(this);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
 
@@ -164,7 +164,7 @@ public class WPNumberPicker extends NumberPicker {
             try {
                 return (Integer) mSelectorHeight.get(this);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
 
@@ -183,7 +183,7 @@ public class WPNumberPicker extends NumberPicker {
                     mCurrentOffset.set(this, offset);
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
     }
@@ -197,7 +197,7 @@ public class WPNumberPicker extends NumberPicker {
             try {
                 selectionDivider.set(this, null);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
     }
@@ -208,7 +208,7 @@ public class WPNumberPicker extends NumberPicker {
             try {
                 mPaint = (Paint) paint.get(this);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
     }
@@ -219,7 +219,7 @@ public class WPNumberPicker extends NumberPicker {
             try {
                 mInputView = ((EditText) inputField.get(this));
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                AppLog.e(AppLog.T.MAIN, e.getMessage());
             }
         }
     }
@@ -233,7 +233,7 @@ public class WPNumberPicker extends NumberPicker {
             field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.MAIN, e.getMessage());
         }
 
         return field;
@@ -244,7 +244,7 @@ public class WPNumberPicker extends NumberPicker {
         try {
             numberPickerClass = Class.forName(NumberPicker.class.getName());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.MAIN, e.getMessage());
         }
         if (numberPickerClass == null) return;
 

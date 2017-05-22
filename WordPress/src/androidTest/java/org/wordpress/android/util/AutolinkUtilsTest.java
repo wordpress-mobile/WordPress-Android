@@ -45,6 +45,24 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
         assertEquals(sourceTest, output);
     }
 
+    public void testBlacklistedUrlIgnoreCase1() {
+        String sourceTest = "http://youtube.com/WATCH?test";
+        String output = AutolinkUtils.autoCreateLinks(sourceTest);
+        assertEquals(sourceTest, output);
+    }
+
+    public void testBlacklistedUrlKickStarter1() {
+        String sourceTest = "testing https://www.kickstarter.com/projects/583173617/raspi-boy-retro-handheld-emulation-console-electro ponies";
+        String output = AutolinkUtils.autoCreateLinks(sourceTest);
+        assertEquals(sourceTest, output);
+    }
+
+    public void testBlacklistedUrlKickStarter2() {
+        String sourceTest = "testing http://kck.st/2gNq7KK ponies";
+        String output = AutolinkUtils.autoCreateLinks(sourceTest);
+        assertEquals(sourceTest, output);
+    }
+
     public void testMixedUrls1() {
         String sourceTest = "hey http://youtube.com/watch?test salut http://test.com hello";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);

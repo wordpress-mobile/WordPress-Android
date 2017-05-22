@@ -1,64 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/media_filter_spinner_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/grey_lighten_30"
-        android:clickable="true"
-        android:paddingLeft="8dp"
-        android:paddingRight="16dp">
-
-        <org.wordpress.android.ui.CustomSpinner
-            android:id="@+id/media_filter_spinner"
-            style="@style/DropDownNav.WordPress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:paddingLeft="0dp" />
-    </FrameLayout>
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/media_filter_result_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/media_filter_spinner_container"
-        android:padding="8dp"
-        android:visibility="gone" />
-
-    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-        android:id="@+id/ptr_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/media_filter_result_text">
+        android:orientation="vertical">
 
-        <GridView
-            android:id="@+id/media_gridview"
+        <FrameLayout
+            android:id="@+id/media_filter_spinner_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:horizontalSpacing="@dimen/margin_small"
-            android:numColumns="@integer/media_grid_num_columns"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:scrollbarStyle="outsideOverlay"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="@dimen/margin_small"
-            tools:listitem="@layout/media_grid_item"/>
+            android:background="@color/grey_lighten_30"
+            android:clickable="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="16dp">
 
-    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/media_filter_spinner"
+                style="@style/DropDownNav.WordPress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:paddingLeft="0dp" />
+        </FrameLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_filter_result_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:visibility="gone" />
+
+        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+            android:id="@+id/ptr_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/media_grid_item" />
+
+        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/empty_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/media_filter_spinner_container"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -71,8 +68,8 @@
             android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
             android:layout_marginLeft="@dimen/empty_list_title_side_margin"
             android:layout_marginRight="@dimen/empty_list_title_side_margin"
-            android:text="@string/media_empty_list_custom_date"
+            android:text="@string/media_empty_list"
             app:fixWidowWords="true" />
 
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

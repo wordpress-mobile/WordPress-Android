@@ -1,11 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2017-05-03 17:54:54+0000
+Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
+Generator: GlotPress/2.4.0-alpha
+Language: hr
+-->
 <resources>
+	<string name="show_purchases">Prikaži kupovine</string>
+	<string name="delete_site_hint">Obriši web-stranicu</string>
+	<string name="primary_domain">Primarna domena</string>
+	<string name="contact_support">Kontaktirajte podršku</string>
+	<string name="error_post_account_settings">Neuspjelo snimanje postavki vašeg računa</string>
+	<string name="error_post_my_profile">Neuspjelo snimanje vašeg profila</string>
+	<string name="error_fetch_account_settings">Neuspjelo dohvaćanje postavki vašeg računa</string>
+	<string name="error_fetch_my_profile">Neuspjelo dohvaćanje vašeg profila</string>
+	<string name="stats_widget_promo_ok_btn_label">Ok, uspjelo</string>
+	<string name="stats_widget_promo_desc">Dodajte widget na početni zaslon za pristup Statistici u jednom kliku.</string>
+	<string name="stats_widget_promo_title">Widget statistike početnog zaslona</string>
+	<string name="site_settings_unknown_language_code_error">Jezični kod nije prepoznat</string>
+	<string name="site_settings_threading_dialog_description">Dopusti grananje komentara.</string>
+	<string name="site_settings_threading_dialog_header">Grananje do </string>
+	<string name="remove">Ukloni</string>
+	<string name="search">Pretraga</string>
+	<string name="add_category">Dodaj kategoriju</string>
+	<string name="disabled">Onemogući</string>
+	<string name="site_settings_image_original_size">Originalna veličina</string>
+	<string name="privacy_private">Vaša web-stranica je vidljiva samo vama i korisnicima koje odobrite</string>
+	<string name="privacy_public_not_indexed">Vaša web-stranica je vidljiva svima, ali traži od pretraživača da ju ne indeksiraju</string>
+	<string name="privacy_public">Vaša web-stranica je vidljiva svima, i pretraživači će ju indeksirati</string>
+	<string name="about_me_hint">Nekoliko riječi o vama...</string>
+	<string name="about_me">O meni</string>
+	<string name="public_display_name_hint">Prikazano ime biti će vaše korisničko ime, ako drugo nije postavljeno</string>
+	<string name="public_display_name">Javno prikazano ime</string>
+	<string name="my_profile">Moj profil</string>
+	<string name="first_name">Ime</string>
+	<string name="last_name">Prezime</string>
+	<string name="site_privacy_public_desc">Dopusti pretraživačima da indeksiraju web-stranicu</string>
+	<string name="site_privacy_hidden_desc">Obeshrabri pretraživače da indeksiraju web-stranicu</string>
+	<string name="site_privacy_private_desc">Želim da je moja stranica privatna, vidljiva samo korisnicima koje odaberem</string>
+	<string name="cd_related_post_preview_image">Predpregled slika srodnih objava</string>
+	<string name="error_post_remote_site_settings">Nije moguće snimiti info o web-stranici</string>
+	<string name="error_fetch_remote_site_settings">Nije moguće dohvatiti info o web-stranici</string>
+	<string name="error_media_upload_connection">Tijekom prijenosa medijskoga zapisa dogodila se greška u spajanju</string>
+	<string name="site_settings_disconnected_toast">Odjavljeno, uređivanje onemogućeno</string>
+	<string name="site_settings_unsupported_version_error">WordPress inačica koja nije podržana</string>
+	<string name="site_settings_multiple_links_dialog_description">Potrebno odobrenje za komentare koji sadrže više od ovog broja komentara.</string>
+	<string name="site_settings_close_after_dialog_switch_text">Automatski zatvori</string>
+	<string name="site_settings_close_after_dialog_description">Automatski zatvori komentare na člancima</string>
+	<string name="site_settings_paging_dialog_description">Prijelom niza komentara u više stranica.</string>
+	<string name="site_settings_paging_dialog_header">Komentara po stranici</string>
+	<string name="site_settings_close_after_dialog_title">Zatvori komentiranje</string>
+	<string name="site_settings_blacklist_description">Kada komentar sadrži bilo koju od ovih riječi u svom sadržaju, imenu, URL-u, e-pošti, ili IP-u, biti će označen kao spam. Možete unijeti dijelove riječi, tako da će &amp;#8220;press&amp;#8221; odgovarati i riječi &amp;#8220;WordPress&amp;#8221;.</string>
+	<string name="site_settings_hold_for_moderation_description">Kada komentar sadrži bilo koju od ovih riječi u svom sadržaju, imenu, URL-u, e-pošti, ili IP-u, biti će označen kao spam. Možete unijeti dijelove riječi, tako da će &amp;#8220;press&amp;#8221; odgovarati i riječi &amp;#8220;WordPress&amp;#8221;.</string>
+	<string name="site_settings_list_editor_input_hint">Unesite riječi ili frazu</string>
+	<string name="site_settings_list_editor_no_items_text">Nema stavki</string>
+	<string name="site_settings_learn_more_caption">Možete zaobići ove postavke na individualnim objavama.</string>
+	<string name="site_settings_rp_preview3_site">u "Nadogradnji"</string>
+	<string name="site_settings_rp_preview3_title">Fokus nadogradnje: VideoPress za vjenčanja</string>
+	<string name="site_settings_rp_preview2_site">u "Aplikacijama"</string>
+	<string name="site_settings_rp_preview2_title">WordPress for Android aplikacija dobila redizajn</string>
+	<string name="site_settings_rp_preview1_site">u "Mobilnom"</string>
+	<string name="site_settings_rp_preview1_title">Veliko iPhone/iPad ažuriranje sada dostupno</string>
+	<string name="site_settings_rp_show_images_title">Prikaži slike</string>
+	<string name="site_settings_rp_show_header_title">Prikaži zaglavlje</string>
+	<string name="site_settings_rp_switch_summary">Srodne objave prikazuju srodni sadržaj sa vaše stranice ispod vaših objava.</string>
+	<string name="site_settings_rp_switch_title">Prikaži srodne objave</string>
+	<string name="site_settings_delete_site_hint">Uklonite svoju web-stranicu iz aplikacije</string>
+	<string name="site_settings_blacklist_hint">Komentari koji odgovaraju filteru označeni su kao spam</string>
+	<string name="site_settings_moderation_hold_hint">Komentari koji odgovaraju filteru stavljeni su na čekanje</string>
+	<string name="site_settings_multiple_links_hint">Ignoriranje limita poveznica od poznatih korisnika</string>
+	<string name="site_settings_whitelist_hint">Autor komentara mora imati prethodno odobreni komentar</string>
+	<string name="site_settings_user_account_required_hint">Korisnici moraju biti registrirani i prijavljeni kako bi objavili komentare</string>
+	<string name="site_settings_identity_required_hint">Autor komentara mora popuniti ime i adresu e-pošte</string>
+	<string name="site_settings_manual_approval_hint">Komentari moraju biti manualno odobreni</string>
+	<string name="site_settings_paging_hint">Prikaži komentare u grupama određene veličine</string>
+	<string name="site_settings_threading_hint">Dopusti ugniježđene komentare do određenog nivoa</string>
+	<string name="site_settings_sort_by_hint">Određuje kojim poretkom su prikazani komentari</string>
+	<string name="site_settings_close_after_hint">Onemogući komentare nakon određenog vremena</string>
+	<string name="site_settings_receive_pingbacks_hint">Dopusti obavijesti o poveznicama sa drugih blogova</string>
+	<string name="site_settings_send_pingbacks_hint">Pokušaj obavijestiti sve blogove prema kojim postoji poveznica u objavi</string>
+	<string name="site_settings_allow_comments_hint">Dopusti čitateljima da objave komentare</string>
+	<string name="site_settings_discussion_hint">Pregledajte i promijenite postavke rasprave na web-stranici</string>
+	<string name="site_settings_more_hint">Pregledajte sve dostupne postavke resprave</string>
+	<string name="site_settings_related_posts_hint">Prikažite ili sakrijte srodne objave u čitaču</string>
+	<string name="site_settings_image_width_hint">Redimenzionirajte slike u objavama na ovu širinu</string>
+	<string name="site_settings_format_hint">Postavlja novi format objave</string>
+	<string name="site_settings_category_hint">Postavlja novu kategoriju objave</string>
+	<string name="site_settings_password_hint">Promijenite svoju lozinku</string>
+	<string name="site_settings_username_hint">Trenutni korisnički račun</string>
+	<string name="site_settings_language_hint">Jezik na kojem je primarno pisan ovaj blog</string>
+	<string name="site_settings_privacy_hint">Kontrolira tko može vidjeti vašu web-stranicu</string>
+	<string name="site_settings_address_hint">Promjena vaše adrese trenutno nije podržana</string>
+	<string name="site_settings_tagline_hint">Kratki opis ili pamtljiva fraza koja opisuje vaš blog</string>
+	<string name="site_settings_title_hint">U nekoliko riječi, objasnite o čemu govori ova web-stranice.</string>
+	<string name="site_settings_whitelist_known_summary">Komentari od nepoznatih korisnika</string>
+	<string name="site_settings_whitelist_all_summary">Komentari svih korisnika</string>
+	<string name="site_settings_threading_summary">%d nivoa</string>
+	<string name="site_settings_privacy_private_summary">Privatno</string>
+	<string name="site_settings_privacy_hidden_summary">Skriveno</string>
+	<string name="site_settings_privacy_public_summary">Javno</string>
+	<string name="site_settings_delete_site_title">Obriši web-stranicu</string>
+	<string name="site_settings_blacklist_title">Crna lista</string>
+	<string name="site_settings_moderation_hold_title">Zadržati za moderaciju</string>
+	<string name="site_settings_multiple_links_title">Poveznice u komentarima</string>
+	<string name="site_settings_whitelist_title">Automatsko odobravanje</string>
+	<string name="site_settings_threading_title">Grananje</string>
+	<string name="site_settings_paging_title">Paging</string>
+	<string name="site_settings_sort_by_title">Sortiraj po</string>
+	<string name="site_settings_account_required_title">Korisnici moraju biti prijavljeni</string>
+	<string name="site_settings_identity_required_title">Morate uključiti i ima i adresu e-pošte</string>
+	<string name="site_settings_receive_pingbacks_title">Primanje povratnih pingova</string>
+	<string name="site_settings_send_pingbacks_title">Slanje povratnih pingova</string>
+	<string name="site_settings_allow_comments_title">Dopusti komentare</string>
+	<string name="site_settings_default_format_title">Zadani format</string>
+	<string name="site_settings_default_category_title">Zadana kategorija</string>
+	<string name="site_settings_address_title">Adresa</string>
+	<string name="site_settings_tagline_title">Slogan</string>
+	<string name="site_settings_title_title">Naslov web-strancie</string>
+	<string name="site_settings_this_device_header">Ovaj uređaj</string>
+	<string name="site_settings_discussion_new_posts_header">Zadane postavke za nove objave</string>
+	<string name="site_settings_account_header">Račun</string>
+	<string name="site_settings_writing_header">Pisanje</string>
+	<string name="newest_first">Prvo najnoviji</string>
+	<string name="site_settings_general_header">Općenito</string>
+	<string name="discussion">Rasprava</string>
+	<string name="privacy">Privatnost</string>
+	<string name="related_posts">Srodne objave</string>
+	<string name="comments">Komentari</string>
+	<string name="close_after">Zatvori nakon</string>
+	<string name="oldest_first">Prvo najstariji</string>
+	<string name="media_error_no_permission_upload">Nemate dopuštenje za prijenos medijskih zapisa na web-stranicu</string>
+	<string name="never">Nikad</string>
+	<string name="unknown">Nepoznato</string>
 	<string name="reader_err_get_post_not_found">Objava više ne postoji</string>
 	<string name="reader_err_get_post_not_authorized">Nemate pravo pristupa pregledavanja ove objave</string>
 	<string name="reader_err_get_post_generic">Nije moguće učitati objavu</string>
-	<string name="blog_name_no_spaced_allowed">Adresa web stranice ne može sadržavati razmake</string>
+	<string name="blog_name_no_spaced_allowed">Adresa web-stranice ne može sadržavati razmake</string>
 	<string name="invalid_username_no_spaces">Korisničko ime ne može sadržavati razmake</string>
-	<string name="reader_empty_followed_blogs_no_recent_posts_description">Web stranice koje pratite nisu ništa objavile u posljednje vrijeme</string>
+	<string name="reader_empty_followed_blogs_no_recent_posts_description">Web-stranice koje pratite nisu ništa objavile u posljednje vrijeme</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nema novijih objava</string>
 	<string name="media_details_copy_url_toast">URL kopiran u međuspremnik</string>
 	<string name="edit_media">Uredi medijski zapis</string>
@@ -22,7 +154,7 @@
 	<string name="theme_details">Detalji</string>
 	<string name="theme_support">Podrška</string>
 	<string name="theme_done">GOTOVO</string>
-	<string name="theme_manage_site">UPRAVLJANJE WEB STRANICOM</string>
+	<string name="theme_manage_site">UPRAVLJANJE WEB-STRANICOM</string>
 	<string name="title_activity_theme_support">Teme</string>
 	<string name="theme_activate">Aktiviraj</string>
 	<string name="date_range_start_date">Početni datum</string>
@@ -47,10 +179,9 @@
 	<string name="media_dimensions">Dimenzije: %s</string>
 	<string name="media_file_name">Ime datoteke: %s</string>
 	<string name="media_file_type">Vrsta datoteke: %s</string>
-	<string name="upload_queued">Na čekanju</string>
 	<string name="reader_label_gap_marker">Učitaj više objava</string>
-	<string name="notifications_no_search_results">Nijedna web stranica se ne podudara sa \'%s\'</string>
-	<string name="search_sites">Pretraživanje web stranica</string>
+	<string name="notifications_no_search_results">Nijedna web-stranica se ne podudara sa \'%s\'</string>
+	<string name="search_sites">Pretraživanje web-stranica</string>
 	<string name="notifications_empty_view_reader">Pregledaj čitač</string>
 	<string name="unread">Označi kao ne pročitano</string>
 	<string name="notifications_empty_action_followers_likes">Budite primijećeni: komentirajte pročitane objave.</string>
@@ -74,7 +205,7 @@
 	<string name="add_media_permission_required">Potrebno je dopuštenje kako bi se dodao media zapis</string>
 	<string name="access_media_permission_required">Potrebno je dopuštenje kako bi se pristupilo media zapisu</string>
 	<string name="stats_enable_rest_api_in_jetpack">Za pregled statistike uključite JSON API modul u Jetpacku.</string>
-	<string name="error_open_list_from_notification">Ova objava ili stranica je objavljena na drugoj web stranici.</string>
+	<string name="error_open_list_from_notification">Ova objava ili stranica je objavljena na drugoj web-stranici.</string>
 	<string name="reader_short_comment_count_multi">%s komentara</string>
 	<string name="reader_short_comment_count_one">1 komentar</string>
 	<string name="reader_label_submit_comment">POŠALJI</string>
@@ -87,9 +218,7 @@
 	<string name="reader_short_like_count_none">Lajkovi</string>
 	<string name="reader_label_follow_count">%,d sljedbenika</string>
 	<string name="reader_short_like_count_one">1 lajk</string>
-	<string name="reader_label_reading_time_in_minutes">%,d min</string>
 	<string name="reader_menu_tags">Uredi oznake i blogove</string>
-	<string name="reader_label_word_count">%,d riječi</string>
 	<string name="reader_title_post_detail">Objava u Čitaču</string>
 	<string name="local_draft_explainer">Ova objava je skica koja još nije objavljena</string>
 	<string name="local_changes_explainer">Ova objava sadrži promjene koje još nisu objavljene</string>
@@ -104,7 +233,7 @@
 	<string name="app_notifications">Obavijesti aplikacije</string>
 	<string name="notifications_tab">Kartica obavijesti</string>
 	<string name="email">E-pošta</string>
-	<string name="notifications_comments_other_blogs">Komentari na drugim web stranicama</string>
+	<string name="notifications_comments_other_blogs">Komentari na drugim web-stranicama</string>
 	<string name="notifications_wpcom_updates">WordPress.com ažuriranja</string>
 	<string name="notifications_other">Drugo</string>
 	<string name="notifications_account_emails">Poruke od WordPress.com</string>
@@ -120,20 +249,18 @@
 	<string name="button_view">Pogledaj</string>
 	<string name="button_edit">Uredi</string>
 	<string name="button_publish">Objavi</string>
-	<string name="button_more">Više</string>
 	<string name="page_deleted">Stranica obrisana</string>
 	<string name="page_trashed">Stanica poslana u smeće</string>
 	<string name="post_trashed">Objava poslana u smeće</string>
 	<string name="button_trash">Smeće</string>
-	<string name="button_delete">Obriši</string>
 	<string name="button_back">Nazad</string>
 	<string name="button_stats">Statistika</string>
 	<string name="button_preview">Predpregled</string>
 	<string name="post_deleted">Objava obrisana</string>
 	<string name="stats_no_activity_this_period">U ovom periodu nema aktivnosti</string>
 	<string name="trashed">Stavljeno u smeće</string>
-	<string name="my_site_no_sites_view_subtitle">Želite li dodati web stranicu?</string>
-	<string name="my_site_no_sites_view_title">Nemate WordPress web stranica.</string>
+	<string name="my_site_no_sites_view_subtitle">Želite li dodati web-stranicu?</string>
+	<string name="my_site_no_sites_view_title">Nemate WordPress web-stranica.</string>
 	<string name="my_site_no_sites_view_drake">Ilustracija</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Nemate pravo pristupa ovom blogu</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog nije moguće pronaći</string>
@@ -142,7 +269,7 @@
 	<string name="tabbar_accessibility_label_me">Ja</string>
 	<string name="passcodelock_prompt_message">Unesi svoj PIN</string>
 	<string name="editor_toast_changes_saved">Promjene spremljene</string>
-	<string name="push_auth_expired">Zahtjev je istekao. Za ponovni pokušaj prijavite u WordPress.com.</string>
+	<string name="push_auth_expired">Zahtjev je istekao. Za ponovni pokušaj prijavite se u WordPress.com.</string>
 	<string name="ignore">Ignoriraj</string>
 	<string name="stats_insights_best_ever">Najviše pregleda</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% pregleda</string>
@@ -154,66 +281,39 @@
 	<string name="stats_insights">Uvid</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Kako biste vidjeli statistiku, prijavite se sa istim onim WordPress.com računom koji ste upotrijebili za spajanje Jetpacka.</string>
 	<string name="stats_other_recent_stats_moved_label">Tražite Druge nedavne statistike? Premjestili smo ih na Insights stranicu</string>
-	<string name="me_disconnect_from_wordpress_com">Odspoji sa WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Odjava sa WordPress.com</string>
 	<string name="me_btn_login_logout">Prijava/Odjava</string>
-	<string name="me_connect_to_wordpress_com">Spoji sa WordPress.com</string>
+	<string name="me_connect_to_wordpress_com">Spoji se u WordPress.com</string>
 	<string name="me_btn_support">Pomoć i podrška</string>
-	<string name="site_picker_cant_hide_current_site">"%s" nije skriven jer je to trenutna web stranica.</string>
-	<string name="me_btn_settings">Postavke računa</string>
-	<string name="site_picker_create_dotcom">Kreiraj WordPress.com web stranicu</string>
+	<string name="account_settings">Postavke računa</string>
+	<string name="site_picker_cant_hide_current_site">"%s" nije skriven jer je to trenutna web-stranica.</string>
+	<string name="site_picker_create_dotcom">Kreiraj WordPress.com web-stranicu</string>
 	<string name="site_picker_add_site">Dodaj stranicu</string>
-	<string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web stranicu</string>
-	<string name="site_picker_edit_visibility">Prikaži/sakrij web stranice</string>
+	<string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
+	<string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web-stranicu</string>
 	<string name="my_site_btn_view_site">Pogledaj stranicu</string>
 	<string name="site_picker_title">Odaberi stranicu</string>
 	<string name="my_site_btn_view_admin">Prikaži Admin</string>
-	<string name="my_site_btn_switch_site">Promjeni web stranicu</string>
-	<string name="my_site_btn_comments">Komentari</string>
+	<string name="my_site_btn_switch_site">Promjeni web-stranicu</string>
 	<string name="my_site_btn_site_settings">Postavke</string>
 	<string name="my_site_header_publish">Objavi</string>
 	<string name="my_site_btn_blog_posts">Blog objave</string>
 	<string name="my_site_header_look_and_feel">Izgled i dojam</string>
 	<string name="my_site_header_configuration">Konfiguracija</string>
 	<string name="reader_label_new_posts_subtitle">Pritisni za prikaz</string>
-	<string name="my_site_header_admin">Admin</string>
 	<string name="notifications_account_required">Za obavijesti, prijavite se u WordPress.com</string>
 	<string name="stats_unknown_author">Nepoznati autor</string>
 	<string name="image_added">Slika dodana</string>
-	<string name="signout">Prekinuta veza</string>
 	<string name="show">Prikaži</string>
 	<string name="hide">Sakrij</string>
 	<string name="select_all">Odaberi sve</string>
 	<string name="deselect_all">Odznači sve</string>
-	<string name="sign_out_wpcom_confirm">Odspajanjem računa ukloniti će se svi @%s WordPress.com podaci sa ovog uređaja, uključujući lokalne skice i lokalne promjene.</string>
-	<string name="select_from_new_picker">Višestruki odabir s novim odabirom</string>
-	<string name="no_device_videos">Bez videa</string>
-	<string name="no_blog_images">Bez slika</string>
-	<string name="no_blog_videos">Bez videa</string>
-	<string name="no_device_images">Bez slika</string>
+	<string name="sign_out_wpcom_confirm">Odspajanjem računa ukloniti će se svi @%s’s WordPress.com podaci sa ovog uređaja, uključujući lokalne skice i lokalne promjene.</string>
 	<string name="stats_generic_error">Traženu statistiku nije moguće učitati</string>
-	<string name="error_loading_blog_images">Nije moguće dohvatiti slike</string>
-	<string name="error_loading_blog_videos">Nije moguće dohvatiti video</string>
-	<string name="error_loading_images">Greška pri učitavanju slika</string>
-	<string name="error_loading_videos">Greška pri učitavanju videa</string>
-	<string name="loading_blog_images">Dohvaćanje slika</string>
-	<string name="loading_blog_videos">Dohvaćanje videa</string>
-	<string name="no_media_sources">Nije moguće dohvatiti medijske zapise</string>
-	<string name="loading_videos">Učitavanje videa</string>
-	<string name="loading_images">Učitavanje slika</string>
-	<string name="no_media">Nema medijskih zapisa</string>
 	<string name="device">Uređaj</string>
 	<string name="language">Jezik</string>
-	<string name="add_to_post">Dodaj u objavu</string>
-	<string name="take_photo">Slikaj</string>
-	<string name="take_video">Snimi video</string>
-	<string name="tab_title_site_images">Slike stranice</string>
 	<string name="verification_code">Kod za provjeru</string>
 	<string name="verify">Provjeri</string>
-	<string name="media_picker_title">Odabir medijskoga zapisa</string>
-	<string name="tab_title_device_images">Slike sa uređaja</string>
-	<string name="tab_title_device_videos">Video sa uređaja</string>
-	<string name="tab_title_site_videos">Video sa web stranice</string>
-	<string name="error_publish_no_network">Nije moguće objaviti dok nema veze. Snimljeno kao skica.</string>
 	<string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
 	<string name="invalid_verification_code">Neispravan verifikacijski kod</string>
 	<string name="two_step_footer_label">Unesite kod iz autentifikacijske aplikacije.</string>
@@ -238,7 +338,7 @@
 	<string name="stats_search_terms_unknown_search_terms">Nepoznati pojam pretrage</string>
 	<string name="stats_followers_total_wpcom_paged">Prikazuje se %1$d - %2$d od %3$s WordPress.com pratitelja</string>
 	<string name="stats_empty_search_terms">Nema zabilježenih pojmova pretraga</string>
-	<string name="stats_empty_search_terms_desc">Saznajte više o prometu tražilica prateći pojmove koje su vaši posjetitelji tražili da pronađu vašu web stranicu.</string>
+	<string name="stats_empty_search_terms_desc">Saznajte više o prometu tražilica prateći pojmove koje su vaši posjetitelji tražili da pronađu vašu web-stranicu.</string>
 	<string name="stats_total">Ukupno</string>
 	<string name="stats_overall">Sveukupno</string>
 	<string name="reader_empty_posts_in_blog">Ovaj blog je prazan</string>
@@ -248,9 +348,9 @@
 	<string name="stats_months_and_years">Mjeseci i godine</string>
 	<string name="reader_label_new_posts">Nove objave</string>
 	<string name="stats_period">Razdoblje</string>
-	<string name="reader_page_recommended_blogs">Web stranice koje bi vam se mogle sviđati</string>
 	<string name="post_uploading">Prijenos</string>
 	<string name="logs_copied_to_clipboard">Zapisi aplikacije su kopirani međuspremnik</string>
+	<string name="reader_page_recommended_blogs">Web-stranice koje bi vam se mogle sviđati</string>
 	<string name="stats_followers_an_hour_ago">Prije sat vremena</string>
 	<string name="stats_followers_hours">%1$d sati</string>
 	<string name="stats_followers_a_day">Jučer</string>
@@ -275,7 +375,6 @@
 	<string name="stats_view_followers">Sljedbenici</string>
 	<string name="stats_view_countries">Države</string>
 	<string name="stats_likes">Lajkovi</string>
-	<string name="stats_comments">Komentari</string>
 	<string name="stats_view_all">Pogledaj sve</string>
 	<string name="stats_view">Pogledaj</string>
 	<string name="stats_totals_followers">Od</string>
@@ -303,39 +402,34 @@
 	<string name="stats_empty_publicize_desc">Imajte u uvid sve vaše pratitelje sa različitih društvenih mreža koristeći publiciranje.</string>
 	<string name="stats_empty_publicize">Nema zabilježenih publiciranih pratitelja</string>
 	<string name="stats_empty_video_desc">Ako ste prenijeli video koristeći VideoPress, saznajte koliko su puta pregledani.</string>
-	<string name="stats_empty_comments_desc">Ako omogućite komentare na vašoj web stranici, pratite top komentatore i otkrijte koji sadržaj potiče najživlje rasprave, na temelju najnovijih 1.000 komentara.</string>
-	<string name="stats_empty_tags_and_categories_desc">Proučite osvrt najpopularnijih tema na vašoj web stranici, koje se refleksija vaših najpopularnijih objava u prošlom tjednu.</string>
 	<string name="stats_empty_top_authors_desc">Pratite preglede na objavama suradnika, i saznajte najpopularniji sadržaj svakog autora.</string>
-	<string name="stats_empty_clicks_desc">Kada vaša objava sadrži poveznica na druge web stranice, vidjeti ćete na koje poveznice posjetitelji najviše klikaju.</string>
-	<string name="stats_empty_referrers_desc">Naučite više o vidljivosti vaše web stranice prateći koje web stranice i tražilice šalju najviše prometa.</string>
 	<string name="stats_empty_top_posts_desc">Saznajte koji je vaš najgledaniji sadržaj, i provjerite kako se individualne objave i stranice ponašaju tijekom vremena.</string>
-	<string name="stats_empty_geoviews_desc">Istražite listu kako bi saznali koje zemlje i regije generiraju najviše prometa prema vašoj web stranici.</string>
+	<string name="stats_empty_geoviews_desc">Istražite listu kako bi saznali koje zemlje i regije generiraju najviše prometa prema vašoj web-stranici.</string>
+	<string name="stats_empty_referrers_desc">Naučite više o vidljivosti vaše web stranice prateći koje web-stranice i tražilice šalju najviše prometa.</string>
+	<string name="stats_empty_clicks_desc">Kada vaša objava sadrži poveznica na druge web-stranice, vidjeti ćete na koje poveznice posjetitelji najviše klikaju.</string>
+	<string name="stats_empty_tags_and_categories_desc">Proučite osvrt najpopularnijih tema na vašoj web-stranici, koje se refleksija vaših najpopularnijih objava u prošlom tjednu.</string>
+	<string name="stats_empty_comments_desc">Ako omogućite komentare na vašoj web-stranici, pratite top komentatore i otkrijte koji sadržaj potiče najživlje rasprave, na temelju najnovijih 1.000 komentara.</string>
 	<string name="ssl_certificate_details">Detalji</string>
-	<string name="sure_to_remove_account">Ukloni ovu stranicu</string>
 	<string name="delete_sure_post">Obriši ovu obavijest</string>
 	<string name="delete_sure">Obriši ovu skicu</string>
 	<string name="delete_sure_page">Obriši ovu stranicu</string>
 	<string name="confirm_delete_multi_media">Obriši odabrane stavke?</string>
 	<string name="confirm_delete_media">Obriši odabranu stavku?</string>
 	<string name="cab_selected">%d odabrano</string>
-	<string name="media_gallery_date_range">Prikazivanje medijskih zapisa od %1$s do %2$s</string>
 	<string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_label_like">Lajk</string>
 	<string name="reader_label_comment_count_single">Komentar</string>
 	<string name="reader_empty_comments">Još nema komentara</string>
-	<string name="reader_empty_posts_in_tag">Nema postova s ovim tagom</string>
 	<string name="reader_label_comment_count_multi">%,d komentara</string>
 	<string name="reader_label_view_original">Pogledaj izvorni članak</string>
 	<string name="mnu_comment_liked">Lajkao</string>
 	<string name="comment">Komentar</string>
 	<string name="signing_out">Odjava ...</string>
-	<string name="reader_empty_followed_blogs_title">Još ne pratite ni jednu web stranicu</string>
 	<string name="create_new_blog_wpcom">Kreiraj WordPress.com blog</string>
 	<string name="new_blog_wpcom_created">WordPress.com blog je kreiran!</string>
 	<string name="reader_label_comments_closed">Komentari su zatvoreni</string>
 	<string name="reader_label_comments_on">Komentari o</string>
-	<string name="reader_title_comments">Komentari</string>
 	<string name="reader_title_photo_viewer">%1$d od %2$d</string>
 	<string name="error_publish_empty_post">Nije moguće objaviti praznu objavu</string>
 	<string name="error_refresh_unauthorized_posts">Nemate dopuštenje za pregled ili uređivanje objava</string>
@@ -344,19 +438,21 @@
 	<string name="older_month">Starije od mjesec dana</string>
 	<string name="older_two_days">Starije od 2 dana</string>
 	<string name="older_last_week">Starije od tjedan dana</string>
-	<string name="select_a_blog">Odaberite WordPress web stranicu</string>
 	<string name="sending_content">Prijenos %s sadržaja</string>
 	<string name="uploading_total">Prijenos %1$d od %2$d</string>
 	<string name="comment_trashed">Komentar premješten u smeće</string>
 	<string name="posts_empty_list">Još nemate objava. Zašto ne napišete jednu?</string>
 	<string name="comment_reply_to_user">Odgovor na %s</string>
 	<string name="pages_empty_list">Još nemate stranica. Zašto ne kreirate jednu?</string>
-	<string name="media_empty_list_custom_date">Nema medijski zapisa u ovom vremenskom intervalu</string>
 	<string name="posting_post">Objavljivanje "%s"</string>
 	<string name="nux_help_description">Posjetite centar za pomoć kako bi dobili odgovore na učestala pitanja, ili posjetite forume kako bi postavili nova pitanja</string>
 	<string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
 	<string name="agree_terms_of_service">Kreiranjem računa pristajete na fascinantne %1$sUvjeti pružanja usluge%2$s</string>
 	<string name="stats_no_blog">Nije moguće učitati statistiku za navedeni blog</string>
+	<string name="more">Više</string>
+	<string name="reader_empty_posts_in_tag">Nema objava s ovom oznakom</string>
+	<string name="select_a_blog">Odaberite WordPress web-stranicu</string>
+	<string name="reader_empty_followed_blogs_title">Još ne pratite ni jednu web-stranicu</string>
 	<string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
 	<string name="reader_toast_err_block_blog">Nije moguće blokirati ovaj blog</string>
 	<string name="reader_toast_blog_blocked">Objave sa ovog bloga više neće biti prikazane</string>
@@ -369,17 +465,14 @@
 	<string name="hs__conversation_header">Razgovor s podrškom</string>
 	<string name="add_location">Dodaj lokaciju</string>
 	<string name="current_location">Trenutna lokacija</string>
-	<string name="your_signature">Vaš potpis</string>
 	<string name="search_location">Pretraga</string>
 	<string name="edit_location">Uredi</string>
 	<string name="search_current_location">Pronaći</string>
-	<string name="preference_privacy">Privatnost</string>
 	<string name="preference_send_usage_stats">Šalji statistiku</string>
 	<string name="preference_send_usage_stats_summary">Automatski šalji statistiku o korištenju kako bi nam pomogli poboljšati WordPress za Andorid</string>
 	<string name="update_verb">Ažuriraj</string>
 	<string name="schedule_verb">Zakazati</string>
 	<string name="reader_page_followed_tags">Praćene oznake</string>
-	<string name="reader_page_followed_blogs">Praćene web stranice</string>
 	<string name="reader_title_subs">Oznake i blogovi</string>
 	<string name="reader_hint_add_tag_or_url">Unesite URL ili oznaku za praćenje</string>
 	<string name="reader_label_tag_preview">Objave označene %s</string>
@@ -391,6 +484,7 @@
 	<string name="reader_label_followed_blog">Pratite blog</string>
 	<string name="reader_title_blog_preview">Blog u Čitaču</string>
 	<string name="reader_title_tag_preview">Oznaka u Čitaču</string>
+	<string name="reader_page_followed_blogs">Praćene web-stranice</string>
 	<string name="saving">Spremam...</string>
 	<string name="media_empty_list">Nema medijskih zapisa</string>
 	<string name="ptr_tip_message">Savjet: Povucite dolje za osvježavanje</string>
@@ -399,7 +493,7 @@
 	<string name="forums">Forumi</string>
 	<string name="help_center">Centar za pomoć</string>
 	<string name="ssl_certificate_error">Nevažeći SSL certifikat</string>
-	<string name="ssl_certificate_ask_trust">Ako se inače uspijete spojiti sa ovom web stranicom bez problema, ova greška mogla bi značiti da netko pokušava oponašati tu web stranicu, i ne bi trebali nastaviti. Vjerujete certifikat unatoč tome? </string>
+	<string name="ssl_certificate_ask_trust">Ako se inače uspijete spojiti sa ovom web-stranicom bez problema, ova greška mogla bi značiti da netko pokušava oponašati tu web-stranicu, i ne bi trebali nastaviti. Vjerujete certifikat unatoč tome? </string>
 	<string name="username_exists">Ovo korisničko ime već postoji</string>
 	<string name="blog_name_exists">Ova internet stranica već postoji</string>
 	<string name="username_required">Unesite korisničko ime</string>
@@ -415,7 +509,6 @@
 	<string name="notifications_empty_list">Nema obavijesti</string>
 	<string name="out_of_memory">Uređaju je iskoristio dostupnu memoriju</string>
 	<string name="no_network_message">Mreža nedostupna</string>
-	<string name="could_not_remove_account">Nije moguće ukloniti web stranicu</string>
 	<string name="gallery_error">Nije moguće dohvatiti medijski zapis.</string>
 	<string name="blog_not_found">Dogodila se greška prilikom pristupa ovom blogu</string>
 	<string name="wait_until_upload_completes">Pričekajte dok se prijenos završi</string>
@@ -424,18 +517,14 @@
 	<string name="theme_auth_error_message">Provjerite je li imate dopuštenje za postavljanje tema</string>
 	<string name="comments_empty_list">Nema komentara</string>
 	<string name="mnu_comment_unspam">Nije spam</string>
-	<string name="no_site_error">Nije se moguće spojiti na WordPress web stranicu</string>
 	<string name="adding_cat_failed">Neuspjelo dodavanje kategorije</string>
 	<string name="adding_cat_success">Kategorija uspješno dodana</string>
 	<string name="cat_name_required">Polje imena kategorije je obavezno</string>
 	<string name="category_automatically_renamed">Ime kategorije %1$s nije valjano. Preimenovana je u %2$s.</string>
 	<string name="no_account">Nije pronađen WordPress.com račun. Dodajte račun i pokušajte ponovno</string>
-	<string name="auto_sharing_preference_reset">Reset postavki automatskog dijeljenja</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Prethodno odabran blog više nije vidljiv</string>
 	<string name="sdcard_message">Za prijenos medijskih zapisa potrebna je montirana SD kartica</string>
 	<string name="stats_empty_comments">Još nema komentara</string>
 	<string name="stats_bar_graph_empty">Nema dostupne statistike</string>
-	<string name="invalid_url_message">Provjerite da je uneseni blog URL ispravan</string>
 	<string name="error_delete_post">Dogodila se greška prilikom brisanja %s</string>
 	<string name="error_refresh_posts">Trenutno nije moguće osvježiti objave</string>
 	<string name="error_refresh_notifications">Trenutno nije moguće osvježiti obavijesti</string>
@@ -445,26 +534,27 @@
 	<string name="error_generic">Dogodila se greška</string>
 	<string name="error_moderate_comment">Dogodila se greška tijekom moderiranja</string>
 	<string name="error_edit_comment">Dogodila se greška tijekom uređivanja komentara</string>
-	<string name="error_upload">Dogodila se greška tijekom prijenosa %s</string>
 	<string name="error_load_comment">Nije moguće učitati komentar</string>
 	<string name="error_downloading_image">Greška pri preuzimanju slike</string>
 	<string name="reply_failed">Neuspjeli odgovor</string>
 	<string name="username_reserved_but_may_be_available">Navedeno korisničko ime je trenutno rezervirano, ali možda se oslobodi kroz par dana</string>
-	<string name="blog_name_required">Unesite adresu web stranice</string>
-	<string name="blog_name_not_allowed">Adresa web stranice nije dozvoljena</string>
-	<string name="blog_name_must_be_at_least_four_characters">Adresa web stranice mora sadržavati najmanje 4 znaka</string>
-	<string name="blog_name_must_be_less_than_sixty_four_characters">Adresa web stranice ne može sadržavati više od 64 znaka</string>
-	<string name="blog_name_contains_invalid_characters">Adresa web stranice ne može sadržavati znak “_”</string>
-	<string name="blog_name_cant_be_used">Ne možete koristiti navedenu adresu web stranice</string>
-	<string name="blog_name_only_lowercase_letters_and_numbers">Adresa web stranice može sadržavati samo mala slova (a-z) i brojeve</string>
-	<string name="blog_name_reserved">Navedena web stranica je rezervirana</string>
-	<string name="blog_name_reserved_but_may_be_available">Naveden web stranica je trenutno rezervirana, ali možda se oslobodi kroz par dana</string>
 	<string name="username_or_password_incorrect">Korisničko ime ili lozinka koje ste unijeli nisu točni</string>
 	<string name="nux_cannot_log_in">Prijava nije moguća</string>
 	<string name="invalid_email_message">Vaša adresa e-pošte nije valjana</string>
 	<string name="email_invalid">Unesite ispravnu adresu e-pošte</string>
 	<string name="email_not_allowed">Ta adresa e-pošte nije dopuštena</string>
 	<string name="email_exists">Ova adresa e-pošte se već koristi</string>
+	<string name="invalid_url_message">Provjerite da je uneseni URL ispravan</string>
+	<string name="could_not_remove_account">Nije moguće ukloniti web-stranicu</string>
+	<string name="blog_name_reserved_but_may_be_available">Naveden web-stranica je trenutno rezervirana, ali možda se oslobodi kroz par dana</string>
+	<string name="blog_name_reserved">Navedena web-stranica je rezervirana</string>
+	<string name="blog_name_only_lowercase_letters_and_numbers">Adresa web-stranice može sadržavati samo mala slova (a-z) i brojeve</string>
+	<string name="blog_name_cant_be_used">Ne možete koristiti navedenu adresu web-stranice</string>
+	<string name="blog_name_contains_invalid_characters">Adresa web-stranice ne može sadržavati znak “_”</string>
+	<string name="blog_name_must_be_less_than_sixty_four_characters">Adresa web-stranice ne može sadržavati više od 64 znaka</string>
+	<string name="blog_name_must_be_at_least_four_characters">Adresa web-stranice mora sadržavati najmanje 4 znaka</string>
+	<string name="blog_name_not_allowed">Adresa web-stranice nije dozvoljena</string>
+	<string name="blog_name_required">Unesite adresu web-stranice</string>
 	<string name="view_site">Pogledaj stranicu</string>
 	<string name="add_new_category">Dodaj novu kategoriju</string>
 	<string name="category_name">Ime kategorije</string>
@@ -477,18 +567,14 @@
 	<string name="delete_draft">Obriši skicu</string>
 	<string name="mnu_comment_trash">Smeće</string>
 	<string name="mnu_comment_spam">Spam</string>
-	<string name="username_email">Korisničko ime ili e-pošta</string>
 	<string name="create_a_link">Kreiraj poveznicu</string>
 	<string name="reader_title_applog">Aplikacijski zapisnik</string>
-	<string name="site_address">Adresa vaše samostalno hostane web stranice (URL)</string>
 	<string name="add_account_blog_url">Blog adresa</string>
 	<string name="notifications_empty_all">Nema obavijesti... još.</string>
 	<string name="privacy_policy">Pravila privatnosti</string>
 	<string name="open_source_licenses">Licence otvorenog softvera</string>
-	<string name="reader_share_link">Podjeli poveznicu</string>
 	<string name="post_settings">Postavke objave</string>
 	<string name="location_not_found">Nepoznata lokacija</string>
-	<string name="xmlrpc_error">Spajanje nije moguće. Unesite punu putanju do xmlrpc.php na vašoj web stranici.</string>
 	<string name="select_categories">Odaberite kateogrije</string>
 	<string name="account_details">Detalji o računu</string>
 	<string name="edit_post">Uredi objavu</string>
@@ -531,14 +617,11 @@
 	<string name="sure_to_cancel_edit_comment">Otkazati uređivanje komentara?</string>
 	<string name="content_required">Komentar je obavezan</string>
 	<string name="toast_comment_unedited">Komentar nije promjenjen</string>
-	<string name="remove_account">Ukloni web stranicu</string>
-	<string name="blog_removed_successfully">Web stranica uspješno uklonjena</string>
 	<string name="preview_post">Predpregled objave</string>
 	<string name="comment_added">Uspješno dodan komentar</string>
 	<string name="post_not_published">Status objave nije objavljen</string>
 	<string name="page_not_published">Status stranice nije objavljen</string>
 	<string name="view_in_browser">Pregled u pregledniku</string>
-	<string name="category_slug">Slug kategorije (opcionalno)</string>
 	<string name="category_desc">Opis kategorije (opcionalno)</string>
 	<string name="category_parent">Matična kategorija (opcionalno)</string>
 	<string name="share_action_post">Nova objava</string>
@@ -554,9 +637,6 @@
 	<string name="reader_toast_err_remove_tag">Nije moguće ukloniti ovu oznaku</string>
 	<string name="required_field">Obavezno polje</string>
 	<string name="email_hint">Adresa e-pošte</string>
-	<string name="blog_name_invalid">Neispravna adresa web stranice</string>
-	<string name="blog_title_invalid">Neispravno ime web stranice</string>
-	<string name="blog_name_must_include_letters">Adresa web stranice mora sadržavati najmanje 1 slovo (a-z)</string>
 	<string name="author_email">E-pošta autora</string>
 	<string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
 	<string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
@@ -565,9 +645,16 @@
 	<string name="http_authorization_required">Potrebna autorizacija</string>
 	<string name="error_blog_hidden">Blog je skriven i nije ga moguće učitati. Ponovno ga omogućite u postavkama i pokušajte ponovno.</string>
 	<string name="fatal_db_error">Pojavila se greška prilikom kreiranja app baze podataka. Pokušajte ponovno instalirati app.</string>
-	<string name="jetpack_message_not_admin">Za statistiku je potreban Jetpack dodatak. Kontaktirajte administratora web stranice.</string>
 	<string name="email_cant_be_used_to_signup">Ne možete koristiti tu adresu e-pošte za registraciju. Imamo problema sa njima jer blokiraju neke naše poruke. Koristite drugog pružatelja adrese e-pošte.</string>
 	<string name="email_reserved">Navedena adresa e-pošte se već koristi. Provjerite vaš dolaznu poštu za aktivacijsku poruku. Ako ne aktivirate, možete ponovno pokušati za par dana.</string>
+	<string name="blog_title_invalid">Neispravno ime web-stranice</string>
+	<string name="blog_name_invalid">Neispravna adresa web-stranice</string>
+	<string name="blog_name_must_include_letters">Adresa web-stranice mora sadržavati najmanje 1 slovo (a-z)</string>
+	<string name="site_address">Adresa vaše samostalno hostane web-stranice (URL)</string>
+	<string name="jetpack_message_not_admin">Za statistiku je potreban Jetpack dodatak. Kontaktirajte administratora web-stranice.</string>
+	<string name="blog_removed_successfully">Web-stranica uspješno uklonjena</string>
+	<string name="remove_account">Ukloni web-stranicu</string>
+	<string name="xmlrpc_error">Spajanje nije moguće. Unesite punu putanju do xmlrpc.php na vašoj web-stranici.</string>
 	<string name="share_url_post">Podjeli objavu</string>
 	<string name="share_url_page">Podjeli članak</string>
 	<string name="deleting_page">Brišem stranicu</string>
@@ -577,8 +664,6 @@
 	<string name="creating_your_site">Napravi svoju stranicu</string>
 	<string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava...</string>
 	<string name="error_refresh_media">Nešto je pošlo krivo tijekom osvježavanja medijskih zapisa. Pokušajte ponovno kasnije.</string>
-	<string name="share_preference_title">Dijeljenje na WordPressu</string>
-	<string name="reset_auto_share_preference">Vrati izvorne postavke automatskog dijeljenja</string>
 	<string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>
 	<string name="reader_likes_multi">%,d ljudi se ovo sviđa</string>
 	<string name="reader_toast_err_get_comment">Nije moguće dohvatiti komentare</string>
@@ -586,7 +671,6 @@
 	<string name="video">Video</string>
 	<string name="download">Preuzimanje medijskih zapisa</string>
 	<string name="comment_spammed">Komentar označen kao spam</string>
-	<string name="always_use_these_settings_to_share">Uvijek koristi ove postavke</string>
 	<string name="cant_share_no_visible_blog">Ne možete dijeliti na WordPressu bez vidljivog bloga</string>
 	<string name="select_date">Odaberi datum</string>
 	<string name="pick_photo">Odaberi sliku</string>
@@ -594,17 +678,16 @@
 	<string name="pick_video">Odaberi video</string>
 	<string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>
 	<string name="validating_user_data">Provjeravanje korisničkih podataka</string>
-	<string name="validating_site_data">Provjeravanje podataka web stranice</string>
 	<string name="reader_likes_you_and_one">Vama i još jednoj osobi ovo se sviđa</string>
 	<string name="reader_empty_followed_blogs_description">Ne brinite, samo pritisnite ikonu u gore desno za početak istraživanja!</string>
 	<string name="account_two_step_auth_enabled">Ovaj račun ima omogućenu provjeru u dva koraka. Posjetite vaše sigurnosne postavke na WordPress.com i generirajte lozinku za ovu aplikaciju.</string>
+	<string name="validating_site_data">Provjeravanje podataka web-stranice</string>
 	<string name="nux_oops_not_selfhosted_blog">Prijavite se u WordPress.com</string>
-	<string name="nux_add_selfhosted_blog">Dodaj samostalno hostanu web stranicu</string>
 	<string name="nux_welcome_create_account">Kreiraj račun</string>
 	<string name="nux_tap_continue">Nastavi</string>
 	<string name="signing_in">Prijavljivanje...</string>
 	<string name="password_invalid">Trebate sigurniju lozinku. Koristite 7 ili više znakova, miješana mala i velika slova, brojeve i specijalne znakove.</string>
-	<string name="media_add_new_media_gallery">Kreiraj galeriju</string>
+	<string name="nux_add_selfhosted_blog">Dodaj samostalno hostanu web-stranicu</string>
 	<string name="create_account_wpcom">Kreiraj račun na WordPress.com</string>
 	<string name="reader_btn_follow">Prati</string>
 	<string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
@@ -612,7 +695,6 @@
 	<string name="empty_list_default">Popis je prazan</string>
 	<string name="select_from_media_library">Odaberi iz medijskih zapisa</string>
 	<string name="jetpack_not_found">Dodatak Jetpack nije pronađen</string>
-	<string name="reader_timespan_now">sad</string>
 	<string name="reader_untitled_post">(Bez naslova)</string>
 	<string name="reader_btn_share">Podjeli</string>
 	<string name="reader_btn_unfollow">Prati se</string>
@@ -630,8 +712,6 @@
 	<string name="connecting_wpcom">Spajanje sa WordPress.com</string>
 	<string name="username_invalid">Neispravno korisničko ime</string>
 	<string name="nux_tutorial_get_started_title">Započnimo!</string>
-	<string name="jetpack_message">Za statistiku je potreban dodatak Jetpack. Želite li instalirati Jetpack?</string>
-	<string name="reader_share_subject">Podijeljeno sa %s</string>
 	<string name="limit_reached">Dosegnuti je limit. Možete ponovno pokušati za 1 minutu. Ako pokušate prije toga produžiti ćete vrijeme koje morate čekati prije nego što se digne ban. Ako mislite da je ovo greška, kontaktirajte podršku.</string>
 	<string name="stats_timeframe_days">Dani</string>
 	<string name="stats_timeframe_weeks">Tjedni</string>
@@ -643,11 +723,8 @@
 	<string name="stats_entry_referrers">Preporučitelj</string>
 	<string name="stats_totals_views">Pregleda</string>
 	<string name="stats_totals_clicks">Klikova</string>
-	<string name="stats_totals_comments">Komentari</string>
-	<string name="menu_search">Pretraživanje</string>
 	<string name="stats_view_referrers">Preporučitelji</string>
 	<string name="stats_timeframe_today">Danas</string>
-	<string name="stats_view_comments">Komentari</string>
 	<string name="stats_timeframe_yesterday">Jučer</string>
 	<string name="theme_activate_button">Aktiviraj</string>
 	<string name="media_edit_success">Ažuriran</string>
@@ -664,7 +741,6 @@
 	<string name="stats_view_visitors_and_views">Posjetitelji i pregledi</string>
 	<string name="stats_view_clicks">Klikovi</string>
 	<string name="images">Slike</string>
-	<string name="custom_date">Prilagođeni datum</string>
 	<string name="media_add_popup_capture_photo">Uslikajte fotografiju</string>
 	<string name="media_add_popup_capture_video">Snimite video</string>
 	<string name="media_gallery_image_order_random">Nasumično</string>
@@ -674,7 +750,6 @@
 	<string name="media_gallery_type_tiled">Pločice</string>
 	<string name="media_gallery_type_circles">Kružnice</string>
 	<string name="media_gallery_type_slideshow">Dijaprojekcija</string>
-	<string name="media_no_video_title">VideoPress nedostupan</string>
 	<string name="media_edit_title_text">Naslov</string>
 	<string name="media_edit_description_text">Opis</string>
 	<string name="media_edit_caption_text">Podnatpis</string>
@@ -695,7 +770,6 @@
 	<string name="passcode_turn_off">Isključi zaključavanje PIN-om</string>
 	<string name="passcode_turn_on">Uključi zaključavanje PIN-om</string>
 	<string name="unattached">Nepriloženo</string>
-	<string name="media_no_video_message">Za prijenos videa kupite VideoPress nadogradnju!</string>
 	<string name="upload">Prijenos</string>
 	<string name="sign_in">Prijavi se</string>
 	<string name="notifications">Obavijesti</string>
@@ -704,8 +778,6 @@
 	<string name="note_reply_successful">Odgovor objavljen</string>
 	<string name="follows">Praćenje</string>
 	<string name="loading">Učitavanje...</string>
-	<string name="post_signature">Potpis objave</string>
-	<string name="add_tagline">Dodajte svoj potpis u nove objave</string>
 	<string name="httppassword">HTTP lozinka</string>
 	<string name="httpuser">HTTP korisničko ime</string>
 	<string name="error_media_upload">Dogodila se greška tijekom prijenosa medijskog zapisa</string>
@@ -718,32 +790,30 @@
 	<string name="reader">Čitač</string>
 	<string name="no_network_title">Nema dostupne mreže</string>
 	<string name="width">Širina</string>
-	<string name="posts">Postovi</string>
 	<string name="anonymous">Anonimno</string>
 	<string name="page">Stranica</string>
-	<string name="post">Post</string>
 	<string name="pages">Stranice</string>
 	<string name="caption">Opis (opcionalan)</string>
 	<string name="featured">Upotrijebi kao istaknutu sliku</string>
-	<string name="featured_in_post">Uključi sliku u sadržaj posta</string>
-	<string name="ok">OK</string>
+	<string name="posts">Objave</string>
+	<string name="featured_in_post">Uključi sliku u sadržaj objave</string>
+	<string name="post">Objava</string>
 	<string name="blogusername">blogusername</string>
 	<string name="upload_scaled_image">Prenesi i poveži do dimenzionirane slike</string>
 	<string name="scaled_image">Širina dimenzionirane slike</string>
-	<string name="remove_location">Ukloni</string>
 	<string name="scheduled">Zakazano</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Objavljeno pomoću WordPress za Android</string>
+	<string name="uploading">Prijenos...</string>
 	<string name="version">Inačica</string>
 	<string name="tos">Uvjeti Korištenja</string>
 	<string name="app_title">WordPress za Android</string>
-	<string name="about">O aplikaciji</string>
 	<string name="max_thumbnail_px_width">Zadana širina slike</string>
 	<string name="image_alignment">Poravnanje</string>
 	<string name="refresh">Osvježi</string>
 	<string name="untitled">Nenaslovljeno</string>
-	<string name="post_id">Post</string>
+	<string name="edit">Uredi</string>
 	<string name="page_id">Stranica</string>
+	<string name="post_id">Objava</string>
 	<string name="post_password">Lozinka (opcionalno)</string>
 	<string name="immediately">Odmah</string>
 	<string name="quickpress_add_alert_title">Postavi naziv prečaca</string>
@@ -759,21 +829,22 @@
 	<string name="title">Naslov</string>
 	<string name="tags_separate_with_commas">Oznake (razdvoji oznake zarezima)</string>
 	<string name="categories">Kategorije</string>
+	<string name="dlg_deleting_comments">Brisanje komentara</string>
 	<string name="notification_blink">Trepereće svjetlo za obavijesti</string>
-	<string name="notification_sound">Reproduciraj zvučnu obavijest </string>
 	<string name="notification_vibrate">Vibracija</string>
+	<string name="notification_sound">Zvučna obavijest </string>
 	<string name="status">Status</string>
 	<string name="location">Lokacija</string>
 	<string name="sdcard_title">Neophodna SD kartica</string>
 	<string name="select_video">Odaberi video iz galerije</string>
 	<string name="media">Medijski zapisi</string>
+	<string name="approve">Odobri</string>
 	<string name="delete">Izbriši</string>
 	<string name="none">Ništa</string>
 	<string name="blogs">Blogovi</string>
 	<string name="select_photo">Odaberi sliku iz galerije</string>
 	<string name="error">Pogreška</string>
 	<string name="add">Dodaj</string>
-	<string name="tab_comments">Komentari</string>
 	<string name="reply">Odgovori</string>
 	<string name="yes">Da</string>
 	<string name="no">Ne</string>
@@ -783,55 +854,4 @@
 	<string name="category_refresh_error">Pogreška u osvježavanju kategorija</string>
 	<string name="preview">Pretpregled</string>
 	<string name="notification_settings">Postavke obavijesti</string>
-	<string-array name="alignment_array">
-		<item>Nijedan</item>
-		<item>Lijevo</item>
-		<item>Centar</item>
-		<item>Desno</item>
-	</string-array>
-	<string-array name="notifications_blog_settings">
-		<item>Komentari na mojoj stranici</item>
-		<item>Lajkovi na mojim komentarima</item>
-		<item>Lajkovi na mojim objavama</item>
-		<item>Sljedbenici stranice</item>
-		<item>Ostvarenja web stranice</item>
-		<item>Spominjanje korisničkog imena</item>
-	</string-array>
-	<string-array name="notifications_other_settings">
-		<item>Odgovori na moje komentare</item>
-		<item>Lajkovi na moje komentare</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings">
-		<item>Prijedlozi</item>
-		<item>Istraživanje</item>
-		<item>Zajednica</item>
-	</string-array>
-	<string-array name="notifications_wpcom_settings_summaries">
-		<item>Savjeti kako izvući najviše od WordPress.com.</item>
-		<item>Prilika za sudjelovanje u WordPress.com istraživanjima i anketama.</item>
-		<item>Informacije o WordPress.com tečajevima i dogođanjima ( na internetu i osobno).</item>
-	</string-array>
-	<string-array name="post_filters_array">
-		<item>Objavljeno</item>
-		<item>Nacrti</item>
-		<item>Tempirano</item>
-		<item>Stavljeno u smeće</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Crtica</item>
-		<item>Audio</item>
-		<item>Čavrljanje</item>
-		<item>Galerija</item>
-		<item>Slika</item>
-		<item>Poveznica</item>
-		<item>Citat</item>
-		<item>Članak</item>
-		<item>Status</item>
-		<item>Video</item>
-	</string-array>
-	<string-array name="themes_filter_array">
-		<item>Besplatno</item>
-		<item>Sve</item>
-		<item>Premium</item>
-	</string-array>
 </resources>

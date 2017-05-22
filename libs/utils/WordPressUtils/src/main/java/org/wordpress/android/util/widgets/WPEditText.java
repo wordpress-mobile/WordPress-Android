@@ -5,6 +5,11 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.widget.EditText;
 
+/*
+ * @deprecated This custom EditText is used solely by the "legacy" editor in WP Android.
+ * It will be removed when we drop the legacy editor and should not be used in new code.
+ */
+@Deprecated
 public class WPEditText extends EditText {
     private EditTextImeBackListener mOnImeBack;
     private OnSelectionChangedListener onSelectionChangedListener;

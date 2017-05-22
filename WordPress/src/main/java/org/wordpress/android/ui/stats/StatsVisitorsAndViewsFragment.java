@@ -14,15 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
 import org.wordpress.android.ui.stats.models.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -31,16 +29,14 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         implements StatsBarGraph.OnGestureListener {
@@ -63,7 +59,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private CheckedTextView mLegendLabel;
     private LinearLayout mVisitorsCheckboxContainer;
     private CheckBox mVisitorsCheckbox;
-    private boolean mIsCheckboxChecked;
+    private boolean mIsCheckboxChecked = true;
 
     private OnDateChangeListener mListener;
     private OnOverviewItemChangeListener mOverviewItemChangeListener;
@@ -72,14 +68,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
-    private Serializable mVisitsData; //VisitModel or VolleyError
+    private VisitsModel mVisitsData;
     private int mSelectedOverviewItemIndex = 0;
     private int mSelectedBarGraphBarIndex = -1;
     private int mPrevNumberOfBarsGraph = -1;
 
     // Container Activity must implement this interface
     public interface OnDateChangeListener {
-        void onDateChanged(String blogID, StatsTimeframe timeframe, String newDate);
+        void onDateChanged(long siteId, StatsTimeframe timeframe, String newDate);
     }
 
     // Container Activity must implement this interface
@@ -175,14 +171,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         private Drawable getTabIcon() {
             switch (labelItem) {
                 case VISITORS:
-                    return getResources().getDrawable(R.drawable.stats_icon_visitors);
+                    return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
                 case COMMENTS:
-                    return getResources().getDrawable(R.drawable.stats_icon_comments);
+                    return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
                 case LIKES:
-                    return getResources().getDrawable(R.drawable.stats_icon_likes);
+                    return getResources().getDrawable(R.drawable.ic_star_grey_dark_12dp);
                 default:
                     // Views and when no prev match
-                    return getResources().getDrawable(R.drawable.stats_icon_views);
+                    return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
             }
         }
 
@@ -270,12 +266,26 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     };
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected boolean hasDataAvailable() {
+        return mVisitsData != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
+        }
+        outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
+        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
+        outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
+        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
-                mVisitsData = savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+                mVisitsData = (VisitsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             }
             if (savedInstanceState.containsKey(ARG_SELECTED_OVERVIEW_ITEM)) {
                 mSelectedOverviewItemIndex = savedInstanceState.getInt(ARG_SELECTED_OVERVIEW_ITEM, 0);
@@ -288,55 +298,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
 
             mIsCheckboxChecked = savedInstanceState.getBoolean(ARG_CHECKBOX_SELECTED, true);
-        } else {
-            mIsCheckboxChecked = true;
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        //AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
-
-        // FIX for https://github.com/wordpress-mobile/WordPress-Android/issues/2228
-        if (mVisitsData != null && mVisitsData instanceof VolleyError) {
-            VolleyError currentVolleyError = (VolleyError) mVisitsData;
-            mVisitsData = StatsUtils.rewriteVolleyError(currentVolleyError, getString(R.string.error_refresh_stats));
-        }
-        outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
-        outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
-        outState.putInt(ARG_PREV_NUMBER_OF_BARS, mPrevNumberOfBarsGraph);
-        outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
-        outState.putBoolean(ARG_CHECKBOX_SELECTED, mVisitorsCheckbox.isChecked());
-
-        super.onSaveInstanceState(outState);
+    protected void showErrorUI(String label) {
+        setupNoResultsUI(false);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (mVisitsData != null) {
-            updateUI();
-        } else {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                setupNoResultsUI(true);
-                refreshStats();
-            } else {
-                setupNoResultsUI(false);
-            }
-        }
+    protected void showPlaceholderUI() {
+        setupNoResultsUI(true);
     }
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
@@ -353,7 +325,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return visitModelsToShow;
     }
 
-    private void updateUI() {
+    protected void updateUI() {
         if (!isAdded()) {
             return;
         }
@@ -363,12 +335,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        if (mVisitsData instanceof VolleyError || mVisitsData instanceof StatsError) {
-            setupNoResultsUI(false);
-            return;
-        }
-
-        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
             setupNoResultsUI(false);
             return;
@@ -473,7 +440,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         GraphViewSeries mainSeriesOnScreen = new GraphViewSeries(mainSeriesItems);
         mainSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
-        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.translucent_grey_lighten_30);
+        mainSeriesOnScreen.getStyle().outerColor = getResources().getColor(R.color.grey_lighten_30_translucent_50);
         mainSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
         mainSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mainSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 5);
@@ -572,12 +539,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
         }
 
-        if (mVisitsData instanceof VolleyError) {
-            setupNoResultsUI(false);
-            return;
-        }
-
-        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph((VisitsModel)mVisitsData);
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
 
         // Make sure we've data to show on the screen
         if (dataToShowOnGraph.length == 0) {
@@ -735,31 +697,29 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(StatsEvents.SectionUpdated event) {
-        if (!isAdded()) {
+    public void onEventMainThread(StatsEvents.VisitorsAndViewsUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        if (!getDate().equals(event.mDate)) {
+        mVisitsData = event.mVisitsAndViews;
+        mSelectedBarGraphBarIndex = -1;
+
+        // Reset the bar to highlight
+        if (mGraphView != null) {
+            mGraphView.resetHighlightBar();
+        }
+
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
             return;
         }
 
-        if (!isSameBlog(event)) {
-            return;
-        }
-
-        if (event.mTimeframe != getTimeframe()) {
-            return;
-        }
-
-        StatsService.StatsEndpointsEnum sectionToUpdate = event.mEndPointName;
-        if (sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
-            return;
-        }
-
-        Serializable dataObj = event.mResponseObjectModel;
-
-        mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
+        mVisitsData = null;
         mSelectedBarGraphBarIndex = -1;
 
         // Reset the bar to highlight
@@ -848,16 +808,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Update the data below the graph
         if (mListener!= null) {
             // Should never be null
-            final Blog currentBlog = WordPress.getBlog(getLocalTableBlogID());
-            if (currentBlog != null && currentBlog.getDotComBlogId() != null) {
-                mListener.onDateChanged(currentBlog.getDotComBlogId(), getTimeframe(), calculatedDate);
+            SiteModel site = mSiteStore.getSiteByLocalId(getLocalTableBlogID());
+            if (site != null && SiteUtils.isAccessedViaWPComRest(site)) {
+                mListener.onDateChanged(site.getSiteId(), getTimeframe(), calculatedDate);
             }
         }
 
-        AnalyticsUtils.trackWithBlogDetails(
-                AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
-                WordPress.getBlog(getLocalTableBlogID())
-        );
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
+                mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
     }
 
     public enum OverviewLabel {
@@ -876,20 +834,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         public String getLabel() {
             return WordPress.getContext().getString(mLabelResId).toUpperCase();
         }
-
-        public static String[] toStringArray(OverviewLabel[] timeframes) {
-            String[] titles = new String[timeframes.length];
-
-            for (int i = 0; i < timeframes.length; i++) {
-                titles[i] = timeframes[i].getLabel();
-            }
-
-            return titles;
-        }
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.VISITS
         };

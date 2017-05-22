@@ -50,7 +50,7 @@
             android:id="@+id/pref_site_language"
             android:key="@string/pref_key_site_language"
             android:title="@string/site_settings_language_title"
-            android:entries="@array/available_languages"
+            android:entries="@array/language_codes"
             android:entryValues="@array/language_codes"
             app:longClickHint="@string/site_settings_language_hint" />
 
@@ -67,6 +67,7 @@
             android:key="@string/pref_key_site_username"
             android:title="@string/site_settings_username_title"
             android:enabled="false"
+            android:maxLength="@integer/max_length_username"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_settings_username_hint" />
@@ -77,6 +78,7 @@
             android:title="@string/site_settings_password_title"
             android:enabled="false"
             android:inputType="textPassword"
+            android:maxLength="@integer/max_length_password"
             app:summaryLines="1"
             app:maxSummaryLines="2"
             app:longClickHint="@string/site_settings_password_hint" />
@@ -99,8 +101,8 @@
             android:id="@+id/pref_default_format"
             android:key="@string/pref_key_site_format"
             android:title="@string/site_settings_default_format_title"
-            android:entries="@array/post_formats_array"
-            android:entryValues="@array/post_formats_array"
+            android:entries="@array/post_format_display_names"
+            android:entryValues="@array/post_format_display_names"
             app:longClickHint="@string/site_settings_format_hint" />
 
         <org.wordpress.android.ui.prefs.WPPreference
@@ -147,19 +149,19 @@
                 android:title="@string/site_settings_discussion_new_posts_header">
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_allow_comments"
+                    android:id="@+id/pref_allow_comments_nested"
                     android:key="@string/pref_key_site_allow_comments_nested"
                     android:title="@string/site_settings_allow_comments_title"
                     app:longClickHint="@string/site_settings_allow_comments_hint" />
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_send_pingbacks"
+                    android:id="@+id/pref_send_pingbacks_nested"
                     android:key="@string/pref_key_site_send_pingbacks_nested"
                     android:title="@string/site_settings_send_pingbacks_title"
                     app:longClickHint="@string/site_settings_send_pingbacks_hint" />
 
                 <org.wordpress.android.ui.prefs.WPSwitchPreference
-                    android:id="@+id/pref_receive_pingbacks"
+                    android:id="@+id/pref_receive_pingbacks_nested"
                     android:key="@string/pref_key_site_receive_pingbacks_nested"
                     android:title="@string/site_settings_receive_pingbacks_title"
                     app:longClickHint="@string/site_settings_receive_pingbacks_hint" />
@@ -203,12 +205,10 @@
                     android:defaultValue="0"
                     app:longClickHint="@string/site_settings_sort_by_hint"  />
 
-                <org.wordpress.android.ui.prefs.DetailListPreference
+                <org.wordpress.android.ui.prefs.WPPreference
                     android:id="@+id/pref_threading"
                     android:key="@string/pref_key_site_threading"
                     android:title="@string/site_settings_threading_title"
-                    android:entries="@array/site_settings_threading_entries"
-                    android:entryValues="@array/site_settings_threading_values"
                     android:defaultValue="0"
                     app:longClickHint="@string/site_settings_threading_hint" />
 
@@ -258,10 +258,11 @@
         android:title="@string/site_settings_this_device_header">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_enable_location"
-            android:key="@string/pref_key_site_location"
-            android:title="@string/site_settings_location_title"
-            app:longClickHint="@string/site_settings_location_hint" />
+            android:id="@+id/pref_optimize_image"
+            android:layout="@layout/preference_layout"
+            android:key="@string/pref_key_optimize_image"
+            android:title="@string/site_settings_optimize_images"
+            android:summary="@string/site_settings_optimize_images_summary"/>
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_image_width"
@@ -269,20 +270,58 @@
             android:title="@string/site_settings_default_image_width_title"
             android:entries="@array/site_settings_image_width_entries"
             android:entryValues="@array/site_settings_image_width_values"
+            android:dependency="@string/pref_key_optimize_image"
             app:longClickHint="@string/site_settings_image_width_hint" />
 
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_upload_and_link_image"
-            android:key="@string/pref_key_site_upload_and_link_image"
-            android:title="@string/site_settings_upload_and_link_image_title"
-            app:longClickHint="@string/site_settings_upload_and_link_image_hint" />
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_default_image_quality"
+            android:key="@string/pref_key_site_image_quality"
+            android:title="@string/site_settings_default_image_quality_title"
+            android:entries="@array/site_settings_image_quality_entries"
+            android:entryValues="@array/site_settings_image_quality_values"
+            android:dependency="@string/pref_key_optimize_image"
+            app:longClickHint="@string/site_settings_image_quality_hint" />
 
     </PreferenceCategory>
 
-    <Preference
-        android:id="@+id/pref_delete_site"
-        android:key="@string/pref_key_site_delete_site"
-        android:title="@string/site_settings_delete_site_title"
-        app:longClickHint="@string/site_settings_delete_site_hint" />
+    <PreferenceCategory
+        android:id="@+id/pref_advanced"
+        android:key="@string/pref_key_site_advanced"
+        android:title="@string/site_settings_advanced_header">
+
+        <PreferenceScreen
+            android:id="@+id/pref_start_screen"
+            android:key="@string/pref_key_site_start_over_screen"
+            android:title="@string/start_over"
+            app:longClickHint="@string/site_settings_start_over_hint">
+
+            <org.wordpress.android.ui.prefs.WPStartOverPreference
+                android:id="@+id/pref_start_over"
+                android:key="@string/pref_key_site_start_over"
+                android:title="@string/let_us_help"
+                android:summary="@string/start_over_text"
+                android:widgetLayout="@layout/start_over_preference_button"
+                android:layout="@layout/start_over_preference"
+                app:preficon="@drawable/ic_history_black_24dp"
+                app:longClickHint="@string/site_settings_start_over_hint"
+                app:buttonText="@string/contact_support"
+                app:buttonTextColor="@color/grey_dark"
+                app:buttonTextAllCaps="true" />
+
+        </PreferenceScreen>
+
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_export_site"
+            android:key="@string/pref_key_site_export_site"
+            android:title="@string/site_settings_export_content_title"
+            app:longClickHint="@string/export_site_hint" />
+
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_delete_site"
+            android:key="@string/pref_key_site_delete_site"
+            android:title="@string/site_settings_delete_site_title"
+            app:longClickHint="@string/delete_site_hint" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

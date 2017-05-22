@@ -7,7 +7,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com

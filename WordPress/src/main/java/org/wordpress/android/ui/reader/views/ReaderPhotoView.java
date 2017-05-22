@@ -31,7 +31,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ReaderPhotoView extends RelativeLayout {
 
-    public static interface PhotoViewListener {
+    public interface PhotoViewListener {
         void onTapPhotoView();
     }
 
@@ -90,6 +90,7 @@ public class ReaderPhotoView extends RelativeLayout {
              && container.getRequestUrl().equals(url));
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean hasLayout() {
         // if the view's bounds aren't known yet, and this is not a wrap-content/wrap-content
         // view, hold off on loading the image.
@@ -121,7 +122,7 @@ public class ReaderPhotoView extends RelativeLayout {
 
         showProgress();
 
-        mLoResContainer = WordPress.imageLoader.get(mLoResImageUrl,
+        mLoResContainer = WordPress.sImageLoader.get(mLoResImageUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -155,7 +156,7 @@ public class ReaderPhotoView extends RelativeLayout {
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.max(pt.x, pt.y);
 
-        mHiResContainer = WordPress.imageLoader.get(mHiResImageUrl,
+        mHiResContainer = WordPress.sImageLoader.get(mHiResImageUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {

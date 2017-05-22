@@ -31,7 +31,7 @@
                     style="@style/WordPress.NUXTitle"
                     android:text="@string/help"
                     android:id="@+id/create_account_label"
-                    app:fontVariation="light"/>
+                    android:fontFamily="sans-serif-light" />
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXGreyButtonNoBg"

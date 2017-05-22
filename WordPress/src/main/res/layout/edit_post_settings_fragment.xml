@@ -3,12 +3,15 @@
     android:id="@+id/settings_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/margin_medium"
     android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
@@ -89,14 +92,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_sz_large"
                 android:hint="@string/tags_separate_with_commas"
-                android:inputType="textAutoCorrect" />
+                android:inputType="textMultiLine" />
         </LinearLayout>
 
-        <org.wordpress.android.widgets.OpenSansEditText
+        <EditText
             android:id="@+id/postExcerpt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
             android:textSize="@dimen/text_sz_large"
@@ -105,16 +108,41 @@
             android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
             android:minLines="1" />
 
-        <org.wordpress.android.widgets.OpenSansEditText
+        <EditText
             android:id="@+id/post_password"
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_large"
             android:hint="@string/post_password"
+            android:maxLength="@integer/max_length_password"
             android:inputType="textPassword" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/featuredImageLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/editor_post_settings_featured_image" />
+
+        <Button
+            android:id="@+id/addFeaturedImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/editor_post_settings_set_featured_image"/>
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/featuredImage"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitStart"
+            android:minHeight="@dimen/post_settings_featured_image_height_min"
+            android:maxHeight="@dimen/post_settings_featured_image_height_max"
+            android:visibility="gone"/>
 
         <ViewStub
             android:id="@+id/stub_post_location_settings"

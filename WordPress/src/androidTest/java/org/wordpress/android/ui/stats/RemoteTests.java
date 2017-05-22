@@ -24,12 +24,12 @@ import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
-import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.models.ReferrerResultModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SingleItemModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TagsModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
@@ -81,7 +81,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                ClicksModel model = new ClicksModel("123456",response);
+                ClicksModel model = new ClicksModel(123456,response);
                 assertEquals(model.getTotalClicks(), 2);
                 assertEquals(model.getOtherClicks(), 0);
                 assertNotNull(model.getClickGroups());
@@ -114,7 +114,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                ClicksModel model = new ClicksModel("1234567890",response);
+                ClicksModel model = new ClicksModel(1234567890,response);
                 assertEquals(model.getTotalClicks(), 9);
                 assertEquals(model.getOtherClicks(), 0);
                 assertNotNull(model.getClickGroups());
@@ -164,7 +164,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                CommentsModel model = new CommentsModel("123456", response);
+                CommentsModel model = new CommentsModel(123456, response);
                 assertEquals(model.getTotalComments(), 177);
                 assertEquals(model.getMonthlyComments(), 2);
                 assertEquals(model.getMostActiveTime(), "08:00");
@@ -203,7 +203,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                GeoviewsModel model = new GeoviewsModel("123456", response);
+                GeoviewsModel model = new GeoviewsModel(123456, response);
                 assertEquals(model.getOtherViews(), 17);
                 assertEquals(model.getTotalViews(), 55);
 
@@ -233,7 +233,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                FollowersModel model = new FollowersModel("123456", response);
+                FollowersModel model = new FollowersModel(123456, response);
                 assertEquals(model.getTotalEmail(), 2931);
                 assertEquals(model.getTotalWPCom(), 7926165);
                 assertEquals(model.getTotal(), 2931);
@@ -270,7 +270,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                FollowersModel model = new FollowersModel("1234567890", response);
+                FollowersModel model = new FollowersModel(1234567890, response);
                 assertEquals(model.getTotalEmail(), 2930);
                 assertEquals(model.getTotalWPCom(), 7925800);
                 assertEquals(model.getTotal(), 7925800);
@@ -348,7 +348,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                ReferrersModel model = new ReferrersModel("123456", response);
+                ReferrersModel model = new ReferrersModel(123456, response);
                 assertEquals(model.getTotalViews(), 2161);
                 assertEquals(model.getOtherViews(), 938);
                 assertNotNull(model.getGroups());
@@ -413,7 +413,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                TagsContainerModel model = new TagsContainerModel("123456", response);
+                TagsContainerModel model = new TagsContainerModel(123456, response);
                 assertEquals(model.getDate(), "2014-12-16");
                 assertNotNull(model.getTags());
                 assertEquals(model.getTags().size(), 10);
@@ -449,11 +449,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                TopPostsAndPagesModel model = new TopPostsAndPagesModel("123456", response);
+                TopPostsAndPagesModel model = new TopPostsAndPagesModel(123456, response);
                 assertNotNull(model.getTopPostsAndPages());
                 assertEquals(model.getTopPostsAndPages().size(), 10);
 
-                PostModel postModel = model.getTopPostsAndPages().get(0);
+                StatsPostModel postModel = model.getTopPostsAndPages().get(0);
                 assertEquals(postModel.getItemID(), "39806");
                 assertEquals(postModel.getTotals(), 2420);
                 assertEquals(postModel.getTitle(), "Home");
@@ -482,11 +482,11 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                TopPostsAndPagesModel model = new TopPostsAndPagesModel("1234567890", response);
+                TopPostsAndPagesModel model = new TopPostsAndPagesModel(1234567890, response);
                 assertNotNull(model.getTopPostsAndPages());
                 assertEquals(model.getTopPostsAndPages().size(), 10);
 
-                PostModel postModel = model.getTopPostsAndPages().get(0);
+                StatsPostModel postModel = model.getTopPostsAndPages().get(0);
                 assertEquals(postModel.getItemID(), "750");
                 assertEquals(postModel.getTotals(), 7);
                 assertEquals(postModel.getTitle(), "Asynchronous unit testing Core Data with Xcode 6");
@@ -507,7 +507,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                InsightsAllTimeModel model = new InsightsAllTimeModel("12345",response);
+                InsightsAllTimeModel model = new InsightsAllTimeModel(12345,response);
                 assertEquals(model.getPosts(), 128);
                 assertEquals(model.getViews(), 56687);
                 assertEquals(model.getVisitors(), 42893);
@@ -527,9 +527,9 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                InsightsTodayModel model = new InsightsTodayModel("123456", response);
+                InsightsTodayModel model = new InsightsTodayModel(123456, response);
                 assertEquals(model.getDate(), "2014-10-28");
-                assertEquals(model.getBlogID(), "123456");
+                assertEquals(model.getBlogID(), 123456);
                 assertEquals(model.getViews(), 56);
                 assertEquals(model.getVisitors(), 44);
                 assertEquals(model.getLikes(), 1);
@@ -550,7 +550,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                InsightsPopularModel model = new InsightsPopularModel("123456", response);
+                InsightsPopularModel model = new InsightsPopularModel(123456, response);
                 assertEquals(model.getHighestHour(), 9);
                 assertEquals(model.getHighestDayOfWeek(), 5);
                 assertEquals(model.getHighestDayPercent(), 30.532081377152);
@@ -568,7 +568,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                VideoPlaysModel model = new VideoPlaysModel("123456", response);
+                VideoPlaysModel model = new VideoPlaysModel(123456, response);
                 assertEquals(model.getOtherPlays(), 0);
                 assertEquals(model.getTotalPlays(), 0);
                 assertNotNull(model.getPlays());
@@ -587,7 +587,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                VideoPlaysModel model = new VideoPlaysModel("1234567890", response);
+                VideoPlaysModel model = new VideoPlaysModel(1234567890, response);
                 assertEquals(model.getOtherPlays(), 0);
                 assertEquals(model.getTotalPlays(), 2);
                 assertNotNull(model.getPlays());
@@ -611,7 +611,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         StatsRestRequestAbstractListener listener  = new StatsRestRequestAbstractListener() {
             @Override
             void parseResponse(JSONObject response) throws JSONException {
-                VisitsModel model = new VisitsModel("123456", response);
+                VisitsModel model = new VisitsModel(123456, response);
                 assertNotNull(model.getVisits());
                 assertNotNull(model.getUnit());
                 assertNotNull(model.getDate());

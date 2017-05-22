@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+Translation-Revision-Date: 2015-01-28 14:24:38+0000
+Plural-Forms: nplurals=2; plural=n==1 || n%10==1 ? 0 : 1;
+Generator: GlotPress/2.4.0-alpha
+Language: mk
+-->
 <resources>
 	<string name="stats_months_and_years">Месеци и години</string>
 	<string name="error_copy_to_clipboard">Се случи грешка при копирање на текстот во клипбордот</string>
@@ -63,7 +69,6 @@
 	<string name="stats_totals_followers">Од</string>
 	<string name="stats_followers_a_year">Година</string>
 	<string name="stats_followers_total_wpcom">Вкупен број на WordPress.com следбеници: %1$s</string>
-	<string name="stats_comments">Коментари</string>
 	<string name="stats_entry_top_commenter">Автор</string>
 	<string name="stats_view">Прегледи</string>
 	<string name="stats_other_recent_stats_label">Други последни статистики</string>
@@ -75,7 +80,6 @@
 	<string name="confirm_delete_multi_media">Избриши слектирни?</string>
 	<string name="confirm_delete_media">Избриши селектирано</string>
 	<string name="cab_selected">%d слекетирано</string>
-	<string name="media_gallery_date_range">Покажи медиа од %1$s до %2$s</string>
 	<string name="delete_sure_page">Избриши оваа страница</string>
 	<string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
 	<string name="faq_button">ЧПП</string>
@@ -93,12 +97,12 @@
 	<string name="reader_label_comments_closed">Коментари затворени</string>
 	<string name="reader_label_comments_on">Коментари на</string>
 	<string name="error_refresh_unauthorized_pages">Немате дозвола за гледање или уредување на страници</string>
-	<string name="reader_title_comments">Коментари</string>
 	<string name="error_refresh_unauthorized_comments">Немате дозвола за гледање или уредување на коментари</string>
 	<string name="error_refresh_unauthorized_posts">Немате дозвола за гледање или уредување на написи</string>
 	<string name="error_publish_empty_post">Неможе да се објави празен напис</string>
 	<string name="reader_title_photo_viewer">%1$d of %2$d</string>
 	<string name="older_month">Постари од месец</string>
+	<string name="more">Повеќе</string>
 	<string name="older_two_days">Постари од 2 дена</string>
 	<string name="older_last_week">Постари од седмица</string>
 	<string name="stats_no_blog">Статиска неможе да се покаже за побараниот блог</string>
@@ -110,9 +114,7 @@
 	<string name="posts_empty_list">Сеуште нема написи. Зошто не создадете еден?</string>
 	<string name="comment_reply_to_user">Одговори на %s</string>
 	<string name="pages_empty_list">Сеуште нема страници. Зошто не создадете една?</string>
-	<string name="media_empty_list_custom_date">Нема медиа во овој временски интервал</string>
 	<string name="posting_post">Објавување "%s"</string>
-	<string name="signing_out">Одјавување...</string>
 	<string name="comment_trashed">Комента исфрлен</string>
 	<string name="reader_toast_err_generic">Неможе да се изврши ова дејство</string>
 	<string name="reader_toast_err_block_blog">Неможе да се блокира овој блог</string>
@@ -126,11 +128,9 @@
 	<string name="contact_us">Контактирај нè</string>
 	<string name="add_location">Додади локација</string>
 	<string name="current_location">Моментална локација</string>
-	<string name="your_signature">Ваш подпис:</string>
 	<string name="search_location">Пребарувај</string>
 	<string name="edit_location">Уреди</string>
 	<string name="search_current_location">Лоцирај</string>
-	<string name="preference_privacy">Приватност</string>
 	<string name="preference_send_usage_stats">Испрати статистика</string>
 	<string name="preference_send_usage_stats_summary">Автоматски испраќај статистика од употребата да ни помогнеш да го подобриме WordPress за Андроид</string>
 	<string name="update_verb">Ажурирај</string>
@@ -167,7 +167,6 @@
 	<string name="theme_set_failed">Неможе да промени тема</string>
 	<string name="theme_auth_error_message">Осигурете се дека имате привилегија за поставување на теми</string>
 	<string name="invalid_email_message">Вашата е-пошта е невалидна</string>
-	<string name="no_site_error">Неможе да се поврза со страницата на WordPress</string>
 	<string name="invalid_password_message">Лозинка мора да содржи барем 4 знаци</string>
 	<string name="invalid_username_too_short">Корисничкото име мора да содржи барем 4 знаци</string>
 	<string name="adding_cat_failed">Додавањето категорија е неуспешно</string>
@@ -183,9 +182,7 @@
 	<string name="blog_name_must_be_at_least_four_characters">Веб адресата мора да содржи барем 4 знака</string>
 	<string name="no_account">Не е пронајдена WordPress корисничка сметка, додади корисничка сметка и обиди се повторно</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Веб адреста треба да има помалку од 64 знака</string>
-	<string name="auto_sharing_preference_reset">Ресетирање на подесувањата за автоматско споделување</string>
 	<string name="blog_name_contains_invalid_characters">Веб адресата не треба да содржи знак  “_”</string>
-	<string name="auto_sharing_preference_reset_caused_by_error">Претходно избраниот блог повеќе не е видлив</string>
 	<string name="blog_name_cant_be_used">Вие не може да ја користите оваа веб адреса</string>
 	<string name="blog_name_exists">Оваа веб адреса веќе постои</string>
 	<string name="blog_name_reserved">Оваа веб адреса е резервирана</string>
@@ -195,7 +192,6 @@
 	<string name="username_not_allowed">Корисничкото име е не дозоволено</string>
 	<string name="username_must_be_at_least_four_characters">Корисничкото име мора да има барем 4 знака</string>
 	<string name="username_contains_invalid_characters">Корсисничкото име не треба да содржи “_”</string>
-	<string name="error_upload">Се појави грешка додека се испраќаше %s</string>
 	<string name="username_only_lowercase_letters_and_numbers">Корисничкото име може да содржи само мали буви (a-z) или бројки</string>
 	<string name="reply_failed">Не успешен одговор</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>
@@ -213,7 +209,6 @@
 	<string name="blog_not_found">Настана грешка додека се достапувше блогот</string>
 	<string name="error_refresh_notifications">Известувањата неможат да се ажурират во моментот</string>
 	<string name="error_refresh_pages">Страниците неможат да се ажурират во моментот</string>
-	<string name="invalid_url_message">Проверете дали блог URL-то е воведно правилно</string>
 	<string name="error_refresh_posts">Напсите неможат да се ажурират во моментот</string>
 	<string name="blog_name_reserved_but_may_be_available">Ова адреса во моментот е резервирана, но можеби може да биде досптана по неколку денови</string>
 	<string name="gallery_error">Неможе да биде превземена медиата.</string>
@@ -257,14 +252,11 @@
 	<string name="error_blog_hidden">Овој блог е скриен и неможе да се вчита. Овозможи го повторно во подесувањата и обиди се повторно.</string>
 	<string name="account_details">Детаили за сметка</string>
 	<string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
-	<string name="jetpack_message_not_admin">Jetpack додатокот е задолжителен за статистика. Контактирајте го администраторот на страницата.</string>
 	<string name="reader_title_applog">Дневник на апликацијата</string>
-	<string name="reader_share_link">Сподели врска</string>
 	<string name="reader_toast_err_add_tag">Неможе да се додаде оваа обележување</string>
 	<string name="reader_toast_err_remove_tag">Неможе да се отстрани оваа обележување</string>
 	<string name="required_field">Задолжително поле</string>
 	<string name="email_hint">Е-пошта</string>
-	<string name="username_email">Корисничко име или е-пошта</string>
 	<string name="edit_comment">Измени коментар</string>
 	<string name="mnu_comment_approve">Одобри</string>
 	<string name="mnu_comment_trash">Отпадок</string>
@@ -299,7 +291,6 @@
 	<string name="share_action_post">Нов напис</string>
 	<string name="new_media">Нова медиа</string>
 	<string name="view_site">Види страница</string>
-	<string name="category_slug">Голич на категорија (опционален)</string>
 	<string name="category_desc">Опис на категорија (опционален)</string>
 	<string name="category_parent">Родител на категорија (опционален)</string>
 	<string name="comment_status_trash">Исфрлени</string>
@@ -334,9 +325,6 @@
 	<string name="video">Видео</string>
 	<string name="download">Преземање на медиа</string>
 	<string name="comment_spammed">Коментарот е означен како спам</string>
-	<string name="share_preference_title">Сподели до WordPress</string>
-	<string name="always_use_these_settings_to_share">Секогаш користи ги овие поднесувања</string>
-	<string name="reset_auto_share_preference">Ресетирање на подесувањата за автоматско споделување</string>
 	<string name="pick_photo">Избери фотографија</string>
 	<string name="validating_site_data">Валидирање на податоци за сајт</string>
 	<string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>
@@ -346,22 +334,16 @@
 	<string name="select_time">Избери време</string>
 	<string name="select_date">Избери дата</string>
 	<string name="account_two_step_auth_enabled">Оваа корисничка сметка има вклучено автентикација во два чекори. Посетете ги вашите безбедносни подесувања на WordPress.com за да генерирате лозинка за специфичната апликација.</string>
-	<string name="signing_in">Најавување...</string>
-	<string name="nux_oops_not_selfhosted_blog">Најави се на WordPress.com</string>
 	<string name="nux_tap_continue">Продолжи</string>
 	<string name="nux_welcome_create_account">Креирај корисничка сметка</string>
 	<string name="password_invalid">Потребна ви е посигурна лозинка. Употребете 7 или повеќе карактери помешани со големи и мали букви, бројки и специјални карактери.</string>
 	<string name="nux_add_selfhosted_blog">Додади автономна страница</string>
 	<string name="reader_label_removed_tag">Одстранети %s</string>
 	<string name="media_add_popup_title">Додади во медиа библиотеката</string>
-	<string name="media_add_new_media_gallery">Креирај галерија</string>
 	<string name="empty_list_default">Оваа листа е празна</string>
 	<string name="select_from_media_library">Избери медиа од библиотеката</string>
-	<string name="jetpack_message">Jetpack додатокот е задолжителен за статистиката. Дали сакате да инсталирате Jetpack?</string>
 	<string name="jetpack_not_found">Jetpack додатокот не е пронајден</string>
-	<string name="reader_timespan_now">сега</string>
 	<string name="reader_untitled_post">(без наслов)</string>
-	<string name="reader_share_subject">Споделено од %s</string>
 	<string name="reader_btn_share">Сподели</string>
 	<string name="reader_btn_follow">Следи</string>
 	<string name="reader_toast_err_comment_failed">Неможе да се испрати вашиот коментар</string>
@@ -372,7 +354,6 @@
 	<string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
 	<string name="reader_empty_followed_tags">Вие не следите ниту едно обележување</string>
 	<string name="create_account_wpcom">Креирајте корисничка сметка на WordPress.com</string>
-	<string name="connecting_wpcom">Поврзување со WordPress.com</string>
 	<string name="username_invalid">Невалидно корисничко име</string>
 	<string name="limit_reached">Ограничувањето е достигнато. Може да се обидете повторно за 1 минута. Доколку се обидете повторно пред тоа време, ќе го зголемите времето за чекање пред да биде отстранета забраната. Доколку мислите дека ова е грешка, контактирајте ја поддршката.</string>
 	<string name="nux_tutorial_get_started_title">Започнете!</string>
@@ -392,8 +373,6 @@
 	<string name="media_gallery_type_tiled">Плочки</string>
 	<string name="media_gallery_type_circles">Кругови</string>
 	<string name="media_gallery_type_slideshow">Слајдшоу</string>
-	<string name="media_no_video_title">VideoPress не е достапен</string>
-	<string name="media_no_video_message">Преземи го ажурирањето за VideoPress за прикачување на видео!</string>
 	<string name="media_edit_title_text">Наслов</string>
 	<string name="media_edit_caption_text">Наслов</string>
 	<string name="media_edit_description_text">Опис</string>
@@ -403,7 +382,6 @@
 	<string name="media_edit_success">Ажурирано</string>
 	<string name="passcode_enter_old_passcode">Воведи го твојот стар ПИН</string>
 	<string name="stats_timeframe_weeks">Седмици</string>
-	<string name="menu_search">Пребарување</string>
 	<string name="passcode_manage">Управување со PIN заклучување</string>
 	<string name="passcode_enter_passcode">Внесете го вашиот PIN</string>
 	<string name="passcode_re_enter_passcode">Внесете го повторно вашиот PIN</string>
@@ -413,7 +391,6 @@
 	<string name="passcode_turn_on">Вклучете го PIN заклучувањето</string>
 	<string name="stats_totals_views">Прегледи</string>
 	<string name="stats_totals_clicks">Кликнувања</string>
-	<string name="stats_totals_comments">Коментари</string>
 	<string name="theme_activating_button">Активирање</string>
 	<string name="theme_set_success">Темата е поставена успешно!</string>
 	<string name="theme_auth_error_title">Неуспешно преземање на теми</string>
@@ -423,7 +400,6 @@
 	<string name="stats">Статистики</string>
 	<string name="stats_view_visitors_and_views">Посетители и прегледи</string>
 	<string name="stats_view_clicks">Кликнувања</string>
-	<string name="stats_view_comments">Коментари</string>
 	<string name="all">Сите</string>
 	<string name="media_edit_failure">Неуспешно качување</string>
 	<string name="themes_details_label">Детали</string>
@@ -438,7 +414,6 @@
 	<string name="media_gallery_image_order_random">Случајни</string>
 	<string name="stats_view_referrers">Препорачувачи</string>
 	<string name="stats_entry_referrers">Препорачувач</string>
-	<string name="custom_date">Прилагодена дата</string>
 	<string name="media_add_popup_capture_photo">Сликање</string>
 	<string name="media_add_popup_capture_video">Снимање</string>
 	<string name="unattached">Неприкачени</string>
@@ -446,12 +421,9 @@
 	<string name="notifications">Известувања</string>
 	<string name="new_notifications">%d нови известувања</string>
 	<string name="more_notifications">и уште %d .</string>
-	<string name="sign_in">Најави се</string>
 	<string name="note_reply_successful">Одговори на објавено</string>
 	<string name="loading">Вчитување...</string>
 	<string name="httpuser">HTTP корисничко име</string>
-	<string name="post_signature">Потпис на написот</string>
-	<string name="add_tagline">Додади потпис на новите написи</string>
 	<string name="httppassword">HTTP лозинка</string>
 	<string name="error_media_upload">Настана грешка при качување на медиа</string>
 	<string name="publish_date">Објави</string>
@@ -471,22 +443,18 @@
 	<string name="no_network_title">Не е достапна мрежа</string>
 	<string name="featured_in_post">Вклучете ги сликите во содржината на написот</string>
 	<string name="featured">Користи како избрана слика</string>
-	<string name="ok">Добро</string>
 	<string name="blogusername">блогкорисник</string>
 	<string name="upload_scaled_image">Испрати и сврзи со намелана слика</string>
 	<string name="scaled_image">Ширина на прилагодена слика</string>
-	<string name="remove_location">Одстрани</string>
 	<string name="scheduled">Распоредени</string>
 	<string name="link_enter_url">URL</string>
-	<string name="posted_from">Објавено од WordPress за Android</string>
 	<string name="tos">Услови за користење</string>
 	<string name="version">Верзија</string>
 	<string name="app_title">WordPress за Андроид</string>
-	<string name="about">За нас</string>
-	<string name="max_thumbnail_px_width">Стандардна ширина на сликата</string>
 	<string name="image_alignment">Усогласување</string>
 	<string name="refresh">Освежи</string>
 	<string name="untitled">Без наслов</string>
+	<string name="edit">Уреди</string>
 	<string name="post_id">Напис</string>
 	<string name="page_id">Страница</string>
 	<string name="post_password">Лозинка (опционално)</string>
@@ -505,7 +473,6 @@
 	<string name="tags_separate_with_commas">Ознаки (одделете ги ознаките со запирки)</string>
 	<string name="categories">Категории</string>
 	<string name="notification_blink">Известување со трепкачко светло</string>
-	<string name="notification_sound">Свири звук за известување</string>
 	<string name="notification_vibrate">Вибрирај</string>
 	<string name="status">Статус</string>
 	<string name="location">Локација</string>
@@ -513,6 +480,7 @@
 	<string name="select_video">Изберете видео од галеријата</string>
 	<string name="media">Мултимедија</string>
 	<string name="delete">Бриши</string>
+	<string name="approve">Одобри</string>
 	<string name="none">Нема</string>
 	<string name="blogs">Блогови</string>
 	<string name="select_photo">Избери фотографија од галеријата</string>
@@ -521,28 +489,9 @@
 	<string name="save">Зачувај</string>
 	<string name="add">Додај</string>
 	<string name="category_refresh_error">Грешка при освежување на категориите</string>
-	<string name="tab_comments">Коментари</string>
 	<string name="on">на</string>
 	<string name="reply">Одговори</string>
 	<string name="yes">Да</string>
 	<string name="no">Не</string>
 	<string name="preview">Преглед</string>
-	<string-array name="alignment_array">
-		<item>Никој</item>
-		<item>Лево</item>
-		<item>Центар</item>
-		<item>Десно</item>
-	</string-array>
-	<string-array name="post_formats_array">
-		<item>Настрана</item>
-		<item>Аудио</item>
-		<item>Разговор</item>
-		<item>Галерија</item>
-		<item>Слика</item>
-		<item>Врска</item>
-		<item>Цитат</item>
-		<item>Стандардно</item>
-		<item>Статус</item>
-		<item>Видео</item>
-	</string-array>
 </resources>

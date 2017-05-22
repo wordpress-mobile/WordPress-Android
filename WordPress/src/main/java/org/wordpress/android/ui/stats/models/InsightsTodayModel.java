@@ -3,11 +3,8 @@ package org.wordpress.android.ui.stats.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
-
-public class InsightsTodayModel implements Serializable {
-
-    private String mBlogID;
+public class InsightsTodayModel extends BaseStatsModel {
+    private long mBlogID;
     private String mDate;
     private String mPeriod;
     private int mVisitors;
@@ -17,7 +14,7 @@ public class InsightsTodayModel implements Serializable {
     private int mComments;
     private int mFollowers;
 
-    public InsightsTodayModel(String blogID, JSONObject response) throws JSONException {
+    public InsightsTodayModel(long blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
         this.mDate = response.getString("date");
         this.mPeriod = response.getString("period");
@@ -29,11 +26,11 @@ public class InsightsTodayModel implements Serializable {
         this.mFollowers = response.optInt("followers");
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    private void setBlogID(String blogID) {
+    private void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

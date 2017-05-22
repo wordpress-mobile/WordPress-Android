@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.stats;
 
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,95 +12,123 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.stats.exceptions.StatsError;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
-import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
 public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsightsFragment {
     public static final String TAG = StatsInsightsLatestPostSummaryFragment.class.getSimpleName();
 
+    private static final String ARG_REST_RESPONSE_DETAILS = "ARG_REST_RESPONSE_DETAILS";
+
+    private InsightsLatestPostModel mInsightsLatestPostModel;
+    private InsightsLatestPostDetailsModel mInsightsLatestPostDetailsModel;
+
     @Override
-    public void onEventMainThread(StatsEvents.SectionUpdated event) {
-        if (!isAdded()) {
-            return;
+    protected boolean hasDataAvailable() {
+        return mInsightsLatestPostModel != null && mInsightsLatestPostDetailsModel != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (hasDataAvailable()) {
+            outState.putSerializable(ARG_REST_RESPONSE, mInsightsLatestPostModel);
+            outState.putSerializable(ARG_REST_RESPONSE_DETAILS, mInsightsLatestPostDetailsModel);
         }
-
-        // This is just an optimization
-        if (event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS &&
-                event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY) {
-            return;
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mInsightsLatestPostModel = (InsightsLatestPostModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
-
-        if (event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {
-            super.onEventMainThread(event);
-        } else {
-
-            // Check the response of the 2nd rest call before going deeper into updating the UI.
-            if (event.mResponseObjectModel instanceof VolleyError ||
-                    event.mResponseObjectModel instanceof StatsError) {
-                showErrorUI(event.mResponseObjectModel);
-                return;
-            }
-
-            // Here an another additional check that ensures the main data returned from the 1st call is available.
-            if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
-                showErrorUI(null);
-                return;
-            }
-
-            if (event.mResponseObjectModel == null ||
-                    !(event.mResponseObjectModel instanceof Integer)) {
-                showErrorUI(null);
-                return;
-            }
-            final InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
-            latestPostModel.setPostViewsCount((int) event.mResponseObjectModel);
-            updateUI();
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE_DETAILS)) {
+            mInsightsLatestPostDetailsModel = (InsightsLatestPostDetailsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_DETAILS);
         }
     }
 
-    void customizeUIWithResults() {
-        if (!isAdded()) {
-            return;
-        }
-        mResultContainer.removeAllViews();
-
-        // Another additional check. It ensures that the data is available.
-        if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
-            showErrorUI(null);
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.InsightsLatestPostSummaryUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        final InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
+        if (event.mInsightsLatestPostModel == null) {
+            showErrorUI();
+            return;
+        }
 
-        // check if there are posts "published" on the blog
+        mInsightsLatestPostModel = event.mInsightsLatestPostModel;
+
+        // check if there is a post "published" on the blog
         View mainView = getView();
         if (mainView != null) {
-            mainView.setVisibility(latestPostModel.isLatestPostAvailable() ? View.VISIBLE : View.GONE);
+            mainView.setVisibility(mInsightsLatestPostModel.isLatestPostAvailable() ? View.VISIBLE : View.GONE);
         }
-        if (!latestPostModel.isLatestPostAvailable()) {
+        if (!mInsightsLatestPostModel.isLatestPostAvailable()) {
             // No need to go further into UI updating. There are no posts on this blog and the
             // entire fragment is hidden.
             return;
         }
 
         // Check if we already have the number of "views" for the latest post
-        if (latestPostModel.getPostViewsCount() == Integer.MIN_VALUE) {
+        if (mInsightsLatestPostModel.getPostViewsCount() == Integer.MIN_VALUE) {
             // we don't have the views count. Need to call the service again here
-            refreshStats(latestPostModel.getPostID(),
+            refreshStats(mInsightsLatestPostModel.getPostID(),
                     new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS});
             showPlaceholderUI();
+        } else {
+            updateUI();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.InsightsLatestPostDetailsUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        TextView moduleTitle = (TextView) mainView.findViewById(R.id.stats_module_title);
+        if (mInsightsLatestPostModel == null || event.mInsightsLatestPostDetailsModel == null) {
+            showErrorUI();
+            return;
+        }
+
+        mInsightsLatestPostDetailsModel = event.mInsightsLatestPostDetailsModel;
+        mInsightsLatestPostModel.setPostViewsCount(mInsightsLatestPostDetailsModel.getPostViewsCount());
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+
+        if (!shouldUpdateFragmentOnErrorEvent(event)
+                && event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS ) {
+            return;
+        }
+
+        mInsightsLatestPostDetailsModel = null;
+        mInsightsLatestPostModel =  null;
+        showErrorUI(event.mError);
+    }
+
+    protected void updateUI() {
+        super.updateUI();
+
+        if (!isAdded() || !hasDataAvailable()) {
+            return;
+        }
+
+        // check if there are posts "published" on the blog
+        if (!mInsightsLatestPostModel.isLatestPostAvailable()) {
+            // No need to go further into UI updating. There are no posts on this blog and the
+            // entire fragment is hidden.
+            return;
+        }
+
+        TextView moduleTitle = (TextView) getView().findViewById(R.id.stats_module_title);
         moduleTitle.setOnClickListener(ViewsTabOnClickListener);
         moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
@@ -109,10 +139,14 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         String trendLabel = getString(R.string.stats_insights_latest_post_trend);
         String sinceLabel = StatsUtils.getSinceLabel(
                 getActivity(),
-                latestPostModel.getPostDate()
+                mInsightsLatestPostModel.getPostDate()
         ).toLowerCase();
 
-        String postTitle = StringEscapeUtils.unescapeHtml(latestPostModel.getPostTitle());
+        String postTitle = StringEscapeUtils.unescapeHtml4(mInsightsLatestPostModel.getPostTitle());
+        if (TextUtils.isEmpty(postTitle)) {
+            postTitle = getString(R.string.stats_insights_latest_post_no_title);
+        }
+
         final String trendLabelFormatted = String.format(
                 trendLabel, sinceLabel, postTitle);
 
@@ -129,10 +163,10 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             @Override
             public void onClick(View v) {
                 StatsUtils.openPostInReaderOrInAppWebview(getActivity(),
-                        latestPostModel.getBlogID(),
-                        String.valueOf(latestPostModel.getPostID()),
+                        mInsightsLatestPostModel.getBlogID(),
+                        String.valueOf(mInsightsLatestPostModel.getPostID()),
                         StatsConstants.ITEM_TYPE_POST,
-                        latestPostModel.getPostURL());
+                        mInsightsLatestPostModel.getPostURL());
             }
         });
 
@@ -142,13 +176,13 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             LinearLayout currentTab = (LinearLayout) tabs.getChildAt(i);
             switch (i) {
                 case 0:
-                    setupTab(currentTab, FormatUtils.formatDecimal(latestPostModel.getPostViewsCount()), StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
+                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostViewsCount()), StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
                     break;
                 case 1:
-                    setupTab(currentTab, FormatUtils.formatDecimal(latestPostModel.getPostLikeCount()), StatsVisitorsAndViewsFragment.OverviewLabel.LIKES);
+                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostLikeCount()), StatsVisitorsAndViewsFragment.OverviewLabel.LIKES);
                     break;
                 case 2:
-                    setupTab(currentTab, FormatUtils.formatDecimal(latestPostModel.getPostCommentCount()), StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS);
+                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostCommentCount()), StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS);
                     break;
             }
         }
@@ -203,17 +237,16 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             }
 
             // Another check that the data is available
-            if (isDataEmpty(0) || !(mDatamodels[0] instanceof InsightsLatestPostModel)) {
-                showErrorUI(null);
+            if (mInsightsLatestPostModel == null) {
+                showErrorUI();
                 return;
             }
-            InsightsLatestPostModel latestPostModel = (InsightsLatestPostModel) mDatamodels[0];
 
-            PostModel postModel = new PostModel(
-                    latestPostModel.getBlogID(),
-                    String.valueOf(latestPostModel.getPostID()),
-                    latestPostModel.getPostTitle(),
-                    latestPostModel.getPostURL(),
+            StatsPostModel postModel = new StatsPostModel(
+                    mInsightsLatestPostModel.getBlogID(),
+                    String.valueOf(mInsightsLatestPostModel.getPostID()),
+                    mInsightsLatestPostModel.getPostTitle(),
+                    mInsightsLatestPostModel.getPostURL(),
                     StatsConstants.ITEM_TYPE_POST);
             ActivityLauncher.viewStatsSinglePostDetails(getActivity(), postModel);
         }
@@ -222,19 +255,19 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     private Drawable getTabIcon(final StatsVisitorsAndViewsFragment.OverviewLabel labelItem) {
         switch (labelItem) {
             case VISITORS:
-                return getResources().getDrawable(R.drawable.stats_icon_visitors);
+                return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
             case COMMENTS:
-                return getResources().getDrawable(R.drawable.stats_icon_comments);
+                return getResources().getDrawable(R.drawable.ic_comment_grey_dark_12dp);
             case LIKES:
-                return getResources().getDrawable(R.drawable.stats_icon_likes);
+                return getResources().getDrawable(R.drawable.ic_star_grey_dark_12dp);
             default:
                 // Views and when no prev match
-                return getResources().getDrawable(R.drawable.stats_icon_views);
+                return getResources().getDrawable(R.drawable.ic_visible_on_grey_dark_12dp);
         }
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY,
         };

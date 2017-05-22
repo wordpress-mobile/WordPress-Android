@@ -2,7 +2,7 @@
 <!--
     Calypso (WP.com homepage) styles
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="CalypsoTheme" parent="@style/WordPress">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
@@ -12,7 +12,7 @@
 
     <style name="Calypso.SiteSettingsTheme" parent="@style/CalypsoTheme">
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:actionModeCloseDrawable">@drawable/ic_arrow_back_white_24dp</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_arrow_left_white_24dp</item>
         <item name="android:actionModeCloseButtonStyle">@style/Calypso.ActionMode.Button</item>
         <item name="android:actionModeStyle">@style/Calypso.ActionMode</item>
         <item name="colorPrimaryDark">@color/grey_darken_10</item>
@@ -32,8 +32,7 @@
     </style>
 
     <style name="Calypso.ActionMode.Text">
-        <item name="fontFamily">openSans</item>
-        <item name="fontVariation">light</item>
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
@@ -56,8 +55,7 @@
     </style>
 
     <style name="Calypso.TextAppearance.AlertDialog">
-        <item name="fontFamily">openSans</item>
-        <item name="fontVariation">light</item>
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
         <item name="android:background">@color/white</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
         <item name="android:textStyle">bold</item>

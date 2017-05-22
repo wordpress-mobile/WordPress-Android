@@ -37,6 +37,7 @@
                 style="@style/FormatBarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:contentDescription="@string/format_bar_description_media"
                 android:background="@drawable/format_bar_button_media_selector"/>
 
             <org.wordpress.android.editor.RippleToggleButton
@@ -44,6 +45,7 @@
                 style="@style/FormatBarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:contentDescription="@string/format_bar_description_bold"
                 android:background="@drawable/format_bar_button_bold_selector"
                 android:tag="@string/format_bar_tag_bold"/>
 
@@ -52,6 +54,7 @@
                 style="@style/FormatBarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:contentDescription="@string/format_bar_description_italic"
                 android:background="@drawable/format_bar_button_italic_selector"
                 android:tag="@string/format_bar_tag_italic"/>
 
@@ -60,6 +63,7 @@
                 style="@style/FormatBarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:contentDescription="@string/format_bar_description_quote"
                 android:background="@drawable/format_bar_button_quote_selector"
                 android:tag="@string/format_bar_tag_blockquote"/>
 
@@ -68,6 +72,7 @@
                 style="@style/FormatBarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:contentDescription="@string/format_bar_description_ul"
                 android:background="@drawable/format_bar_button_ul_selector"
                 android:tag="@string/format_bar_tag_unorderedList"/>
 
@@ -76,6 +81,7 @@
                 style="@style/FormatBarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:contentDescription="@string/format_bar_description_ol"
                 android:background="@drawable/format_bar_button_ol_selector"
                 android:tag="@string/format_bar_tag_orderedList"/>
 
@@ -84,6 +90,7 @@
                 style="@style/FormatBarButton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:contentDescription="@string/format_bar_description_link"
                 android:background="@drawable/format_bar_button_link_selector"
                 android:tag="@string/format_bar_tag_link"/>
         </LinearLayout>
@@ -100,6 +107,7 @@
             style="@style/FormatBarHtmlButton"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
+            android:contentDescription="@string/format_bar_description_html"
             android:background="@drawable/format_bar_button_html_selector"/>
     </LinearLayout>
 </LinearLayout>

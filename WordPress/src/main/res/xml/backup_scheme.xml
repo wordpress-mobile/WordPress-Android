@@ -4,5 +4,4 @@
   <include domain="database" path="persistentedittext.db"/>
   <include domain="sharedpref" path="self_signed_certs_truststore.bks"/>
   <include domain="sharedpref" path="org.wordpress.android_preferences.xml"/>
-  <include domain="sharedpref" path="simperium.xml"/>
 </full-backup-content>

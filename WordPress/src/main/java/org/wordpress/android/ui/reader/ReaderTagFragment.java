@@ -35,14 +35,15 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     }
 
     private void checkEmptyView() {
-        if (!isAdded()) {
-            return;
-        }
-        boolean isEmpty = hasTagAdapter() && getTagAdapter().isEmpty();
+        if (!isAdded()) return;
+
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
-        emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        if (isEmpty) {
-            emptyView.setText(R.string.reader_empty_followed_tags);
+        if (emptyView != null) {
+            boolean isEmpty = hasTagAdapter() && getTagAdapter().isEmpty();
+            emptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+            if (isEmpty) {
+                emptyView.setText(R.string.reader_empty_followed_tags);
+            }
         }
     }
 

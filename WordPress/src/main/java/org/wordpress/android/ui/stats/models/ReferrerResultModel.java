@@ -17,7 +17,7 @@ import java.util.List;
  * A model to represent a referrer result in stat
  */
 public class ReferrerResultModel implements Serializable {
-    private String mBlogId;
+    private long mBlogId;
     private long mDate;
 
     private String mName;
@@ -26,7 +26,7 @@ public class ReferrerResultModel implements Serializable {
     private String mUrl;
     private List<SingleItemModel> mChildren;
 
-    public ReferrerResultModel(String blogId, String date, JSONObject resultJSON) throws JSONException {
+    public ReferrerResultModel(long blogId, String date, JSONObject resultJSON) throws JSONException {
         setBlogId(blogId);
         setDate(StatsUtils.toMs(date));
 
@@ -56,7 +56,7 @@ public class ReferrerResultModel implements Serializable {
         }
     }
 
-    private SingleItemModel getChildren(String blogId, String date, JSONObject child) throws JSONException {
+    private SingleItemModel getChildren(long blogId, String date, JSONObject child) throws JSONException {
         String name = child.getString("name");
         int totals = child.getInt("views");
         String icon = JSONUtils.getString(child, "icon");
@@ -64,12 +64,12 @@ public class ReferrerResultModel implements Serializable {
         return new SingleItemModel(blogId, date, null, name, totals, url, icon);
     }
 
-    public String getBlogId() {
+    public long getBlogId() {
         return mBlogId;
     }
 
-    private void setBlogId(String blogId) {
-        this.mBlogId = blogId;
+    public void setBlogId(long blogId) {
+        mBlogId = blogId;
     }
 
     public long getDate() {

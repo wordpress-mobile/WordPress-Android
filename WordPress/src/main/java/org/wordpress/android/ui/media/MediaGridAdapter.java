@@ -1,487 +1,395 @@
 package org.wordpress.android.ui.media;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.database.MergeCursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.CursorAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
-import org.wordpress.android.ui.CheckableFrameLayout;
+import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.models.MediaUploadState;
+import org.wordpress.android.ui.FadeInNetworkImageView;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
- * An adapter for the media gallery listViews.
+ * An adapter for the media gallery grid.
  */
-public class MediaGridAdapter extends CursorAdapter {
+public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.GridViewHolder> {
     private MediaGridAdapterCallback mCallback;
     private boolean mHasRetrievedAll;
-    private boolean mIsRefreshing;
-    private int mCursorDataCount;
-    private int mGridItemWidth;
-    private final Map<String, List<BitmapReadyCallback>> mFilePathToCallbackMap;
+
+    private boolean mAllowMultiselect;
+    private boolean mInMultiSelect;
+
     private final Handler mHandler;
-    private final int mLocalImageWidth;
     private final LayoutInflater mInflater;
-    private boolean mIsCurrentBlogPhotonCapable;
+
     private ImageLoader mImageLoader;
-    private Context mContext;
-    // Must be an ArrayList (order is important for galleries)
-    private ArrayList<String> mSelectedItems;
+    private final Context mContext;
+    private final SiteModel mSite;
+
+    private final ArrayList<MediaModel> mMediaList = new ArrayList<>();
+    private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+
+    private final int mThumbWidth;
+    private final int mThumbHeight;
+
+    private static final float SCALE_NORMAL = 1.0f;
+    private static final float SCALE_SELECTED = .85f;
 
     public interface MediaGridAdapterCallback {
-        public void fetchMoreData(int offset);
-        public void onRetryUpload(String mediaId);
-        public boolean isInMultiSelect();
+        void onAdapterFetchMoreData();
+        void onAdapterRetryUpload(int localMediaId);
+        void onAdapterItemSelected(View sourceView, int position);
+        void onAdapterSelectionCountChanged(int count);
     }
 
-    interface BitmapReadyCallback {
-        void onBitmapReady(Bitmap bitmap);
-    }
+    private static final int INVALID_POSITION = -1;
 
-    private static enum ViewTypes {
-        LOCAL, NETWORK, PROGRESS, SPACER
-    }
+    public MediaGridAdapter(Context context, SiteModel site, ImageLoader imageLoader) {
+        super();
+        setHasStableIds(true);
 
-    public MediaGridAdapter(Context context, Cursor c, int flags, ImageLoader imageLoader) {
-        super(context, c, flags);
         mContext = context;
-        mSelectedItems = new ArrayList<String>();
-        mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
+        mSite = site;
         mInflater = LayoutInflater.from(context);
-        mFilePathToCallbackMap = new HashMap<String, List<BitmapReadyCallback>>();
         mHandler = new Handler();
+
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
+        mThumbWidth = displayWidth / getColumnCount(mContext);
+        mThumbHeight = (int) (mThumbWidth * 0.75f);
+
         setImageLoader(imageLoader);
-        checkPhotonCapable();
     }
 
-    void setImageLoader(ImageLoader imageLoader) {
-        if (imageLoader != null) {
-            mImageLoader = imageLoader;
-        } else {
-            mImageLoader = WordPress.imageLoader;
-        }
+    @Override
+    public long getItemId(int position) {
+        return getLocalMediaIdAtPosition(position);
     }
 
-    private void checkPhotonCapable() {
-        mIsCurrentBlogPhotonCapable =
-                (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
+    private void setImageLoader(ImageLoader imageLoader) {
+        mImageLoader = imageLoader;
     }
 
-    public ArrayList<String> getSelectedItems() {
-        return mSelectedItems;
-    }
-
-    private static class GridViewHolder {
-        private final TextView filenameView;
-        private final TextView titleView;
-        private final TextView uploadDateView;
-        private final ImageView imageView;
-        private final TextView fileTypeView;
-        private final TextView dimensionView;
-        private final CheckableFrameLayout frameLayout;
-
-        private final TextView stateTextView;
-        private final ProgressBar progressUpload;
-        private final RelativeLayout uploadStateView;
-
-        GridViewHolder(View view) {
-            filenameView = (TextView) view.findViewById(R.id.media_grid_item_filename);
-            titleView = (TextView) view.findViewById(R.id.media_grid_item_name);
-            uploadDateView = (TextView) view.findViewById(R.id.media_grid_item_upload_date);
-            imageView = (ImageView) view.findViewById(R.id.media_grid_item_image);
-            fileTypeView = (TextView) view.findViewById(R.id.media_grid_item_filetype);
-            dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
-            frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
-
-            stateTextView = (TextView) view.findViewById(R.id.media_grid_item_upload_state);
-            progressUpload = (ProgressBar) view.findViewById(R.id.media_grid_item_upload_progress);
-            uploadStateView = (RelativeLayout) view.findViewById(R.id.media_grid_item_upload_state_container);
-        }
-    }
-
-	@SuppressLint("DefaultLocale")
-	@Override
-    public void bindView(final View view, Context context, Cursor cursor) {
-        int itemViewType = getItemViewType(cursor.getPosition());
-
-        if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
-            if (mIsRefreshing) {
-                int height = mContext.getResources().getDimensionPixelSize(R.dimen.media_grid_progress_height);
-                view.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, height));
-                view.setVisibility(View.VISIBLE);
-            } else {
-                view.setLayoutParams(new GridView.LayoutParams(0, 0));
-                view.setVisibility(View.GONE);
-            }
-            return;
-        } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
-            CheckableFrameLayout frameLayout = (CheckableFrameLayout) view.findViewById(R.id.media_grid_frame_layout);
-            updateGridWidth(context, frameLayout);
-            view.setVisibility(View.INVISIBLE);
+    public void setMediaList(@NonNull List<MediaModel> mediaList) {
+        if (isSameList(mediaList)) {
+            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
             return;
         }
 
-        final GridViewHolder holder;
-        if (view.getTag() instanceof GridViewHolder) {
-            holder = (GridViewHolder) view.getTag();
-        } else {
-            holder = new GridViewHolder(view);
-            view.setTag(holder);
+        mMediaList.clear();
+        mMediaList.addAll(mediaList);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.media_grid_item, parent, false);
+        return new GridViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(GridViewHolder holder, int position) {
+        if (!isValidPosition(position)) {
+            return;
         }
 
-        final String mediaId = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID));
+        MediaModel media = mMediaList.get(position);
+        holder.imageView.setTag(null);
 
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
-        boolean isLocalFile = MediaUtils.isLocalFile(state);
+        String strState = media.getUploadState();
+        MediaUploadState state = MediaUploadState.fromString(strState);
 
-        // file name
-        String fileName = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_NAME));
-        if (holder.filenameView != null) {
-            holder.filenameView.setText(fileName);
-        }
+        boolean isLocalFile = MediaUtils.isLocalFile(strState) && !TextUtils.isEmpty(media.getFilePath());
+        boolean isSelected = isItemSelected(media.getId());
+        boolean isImage = media.getMimeType() != null && media.getMimeType().startsWith("image/");
 
-        // title of media
-        String title = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_TITLE));
-        if (title == null || title.equals(""))
-            title = fileName;
-        holder.titleView.setText(title);
-
-        // upload date
-        if (holder.uploadDateView != null) {
-            String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_DATE_CREATED_GMT)));
-            holder.uploadDateView.setText(date);
-        }
-
-        // load image
-        if (isLocalFile) {
-            loadLocalImage(cursor, holder.imageView);
-        } else {
-            loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
-        }
-
-        // get the file extension from the fileURL
-        String mimeType = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MIME_TYPE));
-        String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
-        fileExtension = fileExtension.toUpperCase();
-        // file type
-        if  (DisplayUtils.isXLarge(context) && !TextUtils.isEmpty(fileExtension)) {
-            holder.fileTypeView.setText(String.format(context.getString(R.string.media_file_type), fileExtension));
-        } else {
-            holder.fileTypeView.setText(fileExtension);
-        }
-
-        // dimensions
-        String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-        TextView dimensionView = (TextView) view.findViewById(R.id.media_grid_item_dimension);
-        if (dimensionView != null) {
-            if( MediaUtils.isValidImage(filePath)) {
-                int width = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_WIDTH));
-                int height = cursor.getInt(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_HEIGHT));
-
-                if (width > 0 && height > 0) {
-                    String dimensions = width + "x" + height;
-                    holder.dimensionView.setText(dimensions);
-                    holder.dimensionView.setVisibility(View.VISIBLE);
-                }
+        if (isImage) {
+            holder.fileContainer.setVisibility(View.GONE);
+            if (isLocalFile) {
+                loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                holder.dimensionView.setVisibility(View.GONE);
-            }
-        }
-
-        holder.frameLayout.setTag(mediaId);
-        holder.frameLayout.setChecked(mSelectedItems.contains(mediaId));
-
-        // resizing layout to fit nicely into grid view
-        updateGridWidth(context, holder.frameLayout);
-
-        // show upload state
-        if (holder.stateTextView != null) {
-            if (state != null && state.length() > 0) {
-                // show the progressbar only when the state is uploading
-                if (state.equals("uploading")) {
-                    holder.progressUpload.setVisibility(View.VISIBLE);
+                // if this isn't a private site use Photon to request the image at the exact size,
+                // otherwise append the standard wp query params to request the desired size
+                // TODO: we should drop using Photon for self-hosted sites once the media model
+                // has been updated to include the various image sizes
+                String thumbUrl;
+                if (!mSite.isPrivate()) {
+                    thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
                 } else {
-                    holder.progressUpload.setVisibility(View.GONE);
-                    if (state.equals("uploaded")) {
-                        holder.stateTextView.setVisibility(View.GONE);
-                    }
+                    thumbUrl = UrlUtils.removeQuery(media.getUrl());
                 }
-
-                // add onclick to retry failed uploads
-                if (state.equals("failed")) {
-                    state = "retry";
-                    holder.stateTextView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (!inMultiSelect()) {
-                                ((TextView) v).setText(R.string.upload_queued);
-                                v.setOnClickListener(null);
-                                mCallback.onRetryUpload(mediaId);
-                            }
-                        }
-
-                    });
-                }
-
-                holder.stateTextView.setText(state);
-                holder.uploadStateView.setVisibility(View.VISIBLE);
-            } else {
-                holder.uploadStateView.setVisibility(View.GONE);
+                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }
+        } else {
+            // not an image, so show file name and file type
+            holder.imageView.setImageDrawable(null);
+            String fileName = media.getFileName();
+            String title = media.getTitle();
+            String fileExtension = MediaUtils.getExtensionForMimeType(media.getMimeType());
+            holder.fileContainer.setVisibility(View.VISIBLE);
+            holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
+            holder.fileTypeView.setText(fileExtension.toUpperCase());
+            int placeholderResId = WordPressMediaUtils.getPlaceholder(fileName);
+            holder.fileTypeImageView.setImageResource(placeholderResId);
+        }
+
+        // show selection count when selected
+        holder.selectionCountTextView.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+        if (isSelected) {
+            int count = mSelectedItems.indexOf(media.getId()) + 1;
+            holder.selectionCountTextView.setText(Integer.toString(count));
+        }
+
+        // make sure the thumbnail scale reflects its selection state
+        float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
+        if (holder.imageView.getScaleX() != scale) {
+            holder.imageView.setScaleX(scale);
+            holder.imageView.setScaleY(scale);
+        }
+
+        // show upload state unless it's already uploaded
+        if (state != MediaUploadState.UPLOADED) {
+            holder.stateContainer.setVisibility(View.VISIBLE);
+
+            // only show progress for items currently being uploaded or deleted
+            boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETING;
+            holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+
+            // failed uploads can be retried
+            if (state == MediaUploadState.FAILED) {
+                holder.stateTextView.setText(mContext.getString(R.string.retry));
+                holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
+            } else {
+                holder.stateTextView.setText(MediaUploadState.getLabel(mContext, state));
+                holder.stateTextView.setCompoundDrawables(null, null, null, null);
+            }
+        } else {
+            holder.stateContainer.setVisibility(View.GONE);
+            holder.stateContainer.setOnClickListener(null);
         }
 
         // if we are near the end, make a call to fetch more
-        int position = cursor.getPosition();
-        if (position == mCursorDataCount - 1 && !mHasRetrievedAll) {
-            if (mCallback != null) {
-                mCallback.fetchMoreData(mCursorDataCount);
-            }
+        if (position == getItemCount() - 1
+                && !mHasRetrievedAll
+                && mCallback != null) {
+            mCallback.onAdapterFetchMoreData();
         }
     }
 
-    private boolean inMultiSelect() {
-        return mCallback.isInMultiSelect();
+    public ArrayList<Integer> getSelectedItems() {
+        return mSelectedItems;
     }
 
-    private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
-        String thumbnailURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_THUMBNAIL_URL));
-
-        // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
-        if (mIsCurrentBlogPhotonCapable) {
-            String imageURL = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_URL));
-            if (imageURL != null) {
-                thumbnailURL = PhotonUtils.getPhotonImageUrl(imageURL, mGridItemWidth, 0);
-            }
-        }
-
-        if (thumbnailURL != null) {
-            Uri uri = Uri.parse(thumbnailURL);
-            String filepath = uri.getLastPathSegment();
-
-            int placeholderResId = WordPressMediaUtils.getPlaceholder(filepath);
-            imageView.setErrorImageResId(placeholderResId);
-
-            // no default image while downloading
-            imageView.setDefaultImageResId(0);
-
-            if (MediaUtils.isValidImage(filepath)) {
-                imageView.setTag(thumbnailURL);
-                imageView.setImageUrl(thumbnailURL, mImageLoader);
-            } else {
-                imageView.setImageResource(placeholderResId);
-            }
-        } else {
-            imageView.setImageResource(0);
-        }
-
+    public int getSelectedItemCount() {
+        return mSelectedItems.size();
     }
 
-    private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
-        final String filePath = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_FILE_PATH));
+    class GridViewHolder extends RecyclerView.ViewHolder {
+        private final TextView titleView;
+        private final FadeInNetworkImageView imageView;
+        private final TextView fileTypeView;
+        private final ImageView fileTypeImageView;
+        private final TextView selectionCountTextView;
+        private final TextView stateTextView;
+        private final ProgressBar progressUpload;
+        private final ViewGroup stateContainer;
+        private final ViewGroup fileContainer;
 
-        if (MediaUtils.isValidImage(filePath)) {
-            imageView.setTag(filePath);
+        public GridViewHolder(View view) {
+            super(view);
 
-            Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                imageView.setImageBitmap(null);
+            imageView = (FadeInNetworkImageView) view.findViewById(R.id.media_grid_item_image);
+            selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
 
-                boolean shouldFetch = false;
+            stateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
+            stateTextView = (TextView) stateContainer.findViewById(R.id.media_grid_item_upload_state);
+            progressUpload = (ProgressBar) stateContainer.findViewById(R.id.media_grid_item_upload_progress);
 
-                List<BitmapReadyCallback> list;
-                if (mFilePathToCallbackMap.containsKey(filePath)) {
-                    list = mFilePathToCallbackMap.get(filePath);
-                } else {
-                    list = new ArrayList<MediaGridAdapter.BitmapReadyCallback>();
-                    shouldFetch = true;
-                    mFilePathToCallbackMap.put(filePath, list);
-                }
-                list.add(new BitmapReadyCallback() {
-                    @Override
-                    public void onBitmapReady(Bitmap bitmap) {
-                        if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath))
-                            imageView.setImageBitmap(bitmap);
+            fileContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_file_container);
+            titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
+            fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
+            fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            // make the progress bar white
+            progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+
+            // set size of image and container views
+            imageView.getLayoutParams().width = mThumbWidth;
+            imageView.getLayoutParams().height = mThumbHeight;
+            stateContainer.getLayoutParams().width = mThumbWidth;
+            stateContainer.getLayoutParams().height = mThumbHeight;
+            fileContainer.getLayoutParams().width = mThumbWidth;
+            fileContainer.getLayoutParams().height = mThumbHeight;
+
+            itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (!isValidPosition(position)) {
+                        return;
                     }
-                });
-
-
-                if (shouldFetch) {
-                    fetchBitmap(filePath);
-                }
-            }
-        } else {
-            // if not image, for now show no image.
-            imageView.setImageBitmap(null);
-        }
-    }
-
-    private void fetchBitmap(final String filePath) {
-        BitmapWorkerTask task = new BitmapWorkerTask(null, mLocalImageWidth, mLocalImageWidth, new BitmapWorkerCallback() {
-            @Override
-            public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<BitmapReadyCallback> callbacks = mFilePathToCallbackMap.get(path);
-                        for (BitmapReadyCallback callback : callbacks) {
-                            callback.onBitmapReady(bitmap);
+                    if (isInMultiSelect()) {
+                        if (canSelectPosition(position)) {
+                            toggleItemSelected(GridViewHolder.this, position);
                         }
-
-                        WordPress.getBitmapCache().put(path, bitmap);
-                        callbacks.clear();
-                        mFilePathToCallbackMap.remove(path);
+                    } else if (mCallback != null) {
+                        mCallback.onAdapterItemSelected(v, position);
                     }
-                });
-            }
-        });
-        task.execute(filePath);
+                }
+            });
+
+            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = getAdapterPosition();
+                    if (canSelectPosition(position)) {
+                        if (isInMultiSelect()) {
+                            toggleItemSelected(GridViewHolder.this, position);
+                        } else if (mAllowMultiselect) {
+                            setInMultiSelect(true);
+                            setItemSelectedByPosition(GridViewHolder.this, position, true);
+                        }
+                    }
+                    return true;
+                }
+            };
+            itemView.setOnLongClickListener(longClickListener);
+            stateTextView.setOnLongClickListener(longClickListener);
+
+            stateTextView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (!isValidPosition(position)) {
+                        return;
+                    }
+                    if (isInMultiSelect()) {
+                        if (canSelectPosition(position)) {
+                            toggleItemSelected(GridViewHolder.this, position);
+                        }
+                    } else {
+                        // retry uploading this media item if it previously failed
+                        MediaModel media = mMediaList.get(position);
+                        MediaUploadState state = MediaUploadState.fromString(media.getUploadState());
+                        if (state == MediaUploadState.FAILED) {
+                            stateTextView.setText(R.string.media_upload_state_queued);
+                            stateTextView.setCompoundDrawables(null, null, null, null);
+                            if (mCallback != null) {
+                                mCallback.onAdapterRetryUpload(media.getId());
+                            }
+                        } else if (mCallback != null) {
+                            mCallback.onAdapterItemSelected(v, position);
+                        }
+                    }
+                }
+            });
+        }
     }
 
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup root) {
-        int itemViewType = getItemViewType(cursor.getPosition());
+    public void setAllowMultiselect(boolean allow) {
+        mAllowMultiselect = allow;
+    }
 
-        // spacer and progress spinner views
-        if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
-            return mInflater.inflate(R.layout.media_grid_progress, root, false);
-        } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
-            return mInflater.inflate(R.layout.media_grid_item, root, false);
+    public boolean isInMultiSelect() {
+        return mInMultiSelect;
+    }
+
+    public void setInMultiSelect(boolean value) {
+        if (mInMultiSelect != value) {
+            mInMultiSelect = value;
+            clearSelection();
         }
+    }
 
-        View view =  mInflater.inflate(R.layout.media_grid_item, root, false);
-        ViewStub imageStub = (ViewStub) view.findViewById(R.id.media_grid_image_stub);
+    private boolean isValidPosition(int position) {
+        return position >= 0 && position < getItemCount();
+    }
 
-        // We need to use ViewStubs to inflate the image to either:
-        // - a regular ImageView (for local images)
-        // - a FadeInNetworkImageView (for network images)
-        // This is because the NetworkImageView can't load local images.
-        // The other option would be to inflate multiple layouts, but that would lead
-        // to extra near-duplicate xml files that would need to be maintained.
-        if (itemViewType == ViewTypes.LOCAL.ordinal()) {
-            imageStub.setLayoutResource(R.layout.media_grid_image_local);
+    public int getLocalMediaIdAtPosition(int position) {
+        if (isValidPosition(position)) {
+            return mMediaList.get(position).getId();
+        }
+        return INVALID_POSITION;
+    }
+
+    /*
+     * determines whether the media item at the passed position can be selected - not allowed
+     * for deleted items since the whole purpose of multiselect is to delete multiple items
+     */
+    private boolean canSelectPosition(int position) {
+        if (!mAllowMultiselect || !isValidPosition(position)) {
+            return false;
+        }
+        MediaUploadState state = MediaUploadState.fromString(mMediaList.get(position).getUploadState());
+        return state != MediaUploadState.DELETING && state != MediaUploadState.DELETED;
+    }
+
+    private void loadLocalImage(final String filePath, ImageView imageView) {
+        imageView.setTag(filePath);
+
+        Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
+        if (bitmap != null) {
+            imageView.setImageBitmap(bitmap);
         } else {
-            imageStub.setLayoutResource(R.layout.media_grid_image_network);
-        }
-
-        imageStub.inflate();
-
-        view.setTag(new GridViewHolder(view));
-
-        return view;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return ViewTypes.values().length;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        Cursor cursor = getCursor();
-        cursor.moveToPosition(position);
-
-        // spacer / progress cells
-        int _id = cursor.getInt(cursor.getColumnIndex("_id"));
-        if (_id < 0) {
-            if (_id == Integer.MIN_VALUE)
-                return ViewTypes.PROGRESS.ordinal();
-            else
-                return ViewTypes.SPACER.ordinal();
-        }
-
-        // regular cells
-        String state = cursor.getString(cursor.getColumnIndex(WordPressDB.COLUMN_NAME_UPLOAD_STATE));
-        if (MediaUtils.isLocalFile(state))
-            return ViewTypes.LOCAL.ordinal();
-        else
-            return ViewTypes.NETWORK.ordinal();
-    }
-
-    /** Updates the width of a cell to max out the space available, for phones **/
-    private void updateGridWidth(Context context, View view) {
-        setGridItemWidth();
-        int columnCount = getColumnCount(context);
-
-        if (columnCount > 1) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
-            view.setLayoutParams(params);
-        }
-    }
-
-    @Override
-    public Cursor swapCursor(Cursor newCursor) {
-        checkPhotonCapable();
-
-        if (newCursor == null) {
-            mCursorDataCount = 0;
-            return super.swapCursor(newCursor);
-        }
-
-        mCursorDataCount = newCursor.getCount();
-
-        // to mimic the infinite the notification's infinite scroll ui
-        // (with a progress spinner on the bottom of the list), we'll need to add
-        // extra cells in the gridview:
-        // - spacer cells as fillers to place the progress spinner on the first cell (_id < 0)
-        // - progress spinner cell (_id = Integer.MIN_VALUE)
-
-        // use a matrix cursor to create the extra rows
-        MatrixCursor matrixCursor = new MatrixCursor(new String[] { "_id" });
-
-        // add spacer cells
-        int columnCount = getColumnCount(mContext);
-        int remainder = newCursor.getCount() % columnCount;
-        if (remainder > 0) {
-            int spaceCount = columnCount - remainder;
-            for (int i = 0; i < spaceCount; i++ ) {
-                int id = i - spaceCount;
-                matrixCursor.addRow(new Object[] {id + ""});
+            imageView.setImageBitmap(null);
+            try {
+                new BitmapWorkerTask(imageView, mThumbWidth, mThumbHeight, new BitmapWorkerCallback() {
+                    @Override
+                    public void onBitmapReady(final String path, final ImageView imageView, final Bitmap bitmap) {
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                WordPress.getBitmapCache().put(path, bitmap);
+                                if (imageView != null
+                                        && imageView.getTag() instanceof String
+                                        && ((String) imageView.getTag()).equalsIgnoreCase(path)) {
+                                    imageView.setImageBitmap(bitmap);
+                                }
+                            }
+                        });
+                    }
+                }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, filePath);
+            } catch (RejectedExecutionException e) {
+                AppLog.e(AppLog.T.MEDIA, e);
             }
         }
-
-        // add progress spinner cell
-        matrixCursor.addRow(new Object[] { Integer.MIN_VALUE });
-
-        // use a merge cursor to place merge the extra rows at the bottom of the newly swapped cursor
-        MergeCursor mergeCursor = new MergeCursor(new Cursor[] { newCursor, matrixCursor });
-        return super.swapCursor(mergeCursor);
     }
 
-    /** Return the number of columns in the media grid **/
-    private int getColumnCount(Context context) {
+    @Override
+    public int getItemCount() {
+        return mMediaList.size();
+    }
+
+    public static int getColumnCount(Context context) {
         return context.getResources().getInteger(R.integer.media_grid_num_columns);
     }
 
@@ -493,70 +401,113 @@ public class MediaGridAdapter extends CursorAdapter {
         mHasRetrievedAll = b;
     }
 
-    public void setRefreshing(boolean refreshing) {
-        mIsRefreshing = refreshing;
-        notifyDataSetChanged();
-    }
-
-    public int getDataCount() {
-        return mCursorDataCount;
-    }
-
-    private void setGridItemWidth() {
-        int maxWidth = mContext.getResources().getDisplayMetrics().widthPixels;
-        int columnCount = getColumnCount(mContext);
-        if (columnCount > 0) {
-            int dp8 = DisplayUtils.dpToPx(mContext, 8);
-            int padding = (columnCount + 1) * dp8;
-            mGridItemWidth = (maxWidth - padding) / columnCount;
-        }
-    }
-
     public void clearSelection() {
-        mSelectedItems.clear();
-    }
-
-    public boolean isItemSelected(String mediaId) {
-        return mSelectedItems.contains(mediaId);
-    }
-
-    public void setItemSelected(int position, boolean selected) {
-        Cursor cursor = (Cursor) getItem(position);
-        if (cursor == null) {
-            return;
-        }
-        int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
-        if (columnIndex != -1) {
-            String mediaId = cursor.getString(columnIndex);
-            setItemSelected(mediaId, selected);
+        if (mSelectedItems.size() > 0) {
+            mSelectedItems.clear();
+            notifyDataSetChanged();
         }
     }
 
-    public void setItemSelected(String mediaId, boolean selected) {
-        if (selected) {
-            mSelectedItems.add(mediaId);
-        } else {
-            mSelectedItems.remove(mediaId);
-        }
-        notifyDataSetChanged();
+    public boolean isItemSelected(int localMediaId) {
+        return mSelectedItems.contains(localMediaId);
     }
 
-    public void toggleItemSelected(int position) {
-        Cursor cursor = (Cursor) getItem(position);
-        int columnIndex = cursor.getColumnIndex(WordPressDB.COLUMN_NAME_MEDIA_ID);
-        if (columnIndex != -1) {
-            String mediaId = cursor.getString(columnIndex);
-            if (mSelectedItems.contains(mediaId)) {
-                mSelectedItems.remove(mediaId);
-            } else {
-                mSelectedItems.add(mediaId);
+    public void removeSelectionByLocalId(int localMediaId) {
+        if (isItemSelected(localMediaId)) {
+            mSelectedItems.remove(Integer.valueOf(localMediaId));
+            if (mCallback != null) {
+                mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
             }
             notifyDataSetChanged();
         }
     }
 
-    public void setSelectedItems(ArrayList<String> selectedItems) {
-        mSelectedItems = selectedItems;
+    private void setItemSelectedByPosition(GridViewHolder holder, int position, boolean selected) {
+        if (!isValidPosition(position)) {
+            return;
+        }
+
+        int localMediaId = mMediaList.get(position).getId();
+        if (selected) {
+            mSelectedItems.add(localMediaId);
+        } else {
+            mSelectedItems.remove(Integer.valueOf(localMediaId));
+        }
+
+        // show and animate the count
+        if (selected) {
+            holder.selectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(localMediaId) + 1));
+        }
+        AniUtils.startAnimation(holder.selectionCountTextView,
+                selected ? R.anim.cab_select : R.anim.cab_deselect);
+        holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
+
+        // scale the thumbnail
+        if (selected) {
+            AniUtils.scale(holder.imageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
+        } else {
+            AniUtils.scale(holder.imageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
+        }
+
+        // redraw after the scale animation completes
+        long delayMs = AniUtils.Duration.SHORT.toMillis(mContext);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        }, delayMs);
+
+        if (mCallback != null) {
+            mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+        }
+    }
+
+    private void toggleItemSelected(GridViewHolder holder, int position) {
+        if (!isValidPosition(position)) {
+            return;
+        }
+        int localMediaId = mMediaList.get(position).getId();
+        boolean isSelected = mSelectedItems.contains(localMediaId);
+        setItemSelectedByPosition(holder, position, !isSelected);
+    }
+
+    public void setSelectedItems(ArrayList<Integer> selectedItems) {
+        mSelectedItems.clear();
+        mSelectedItems.addAll(selectedItems);
+        if (mCallback != null) {
+            mCallback.onAdapterSelectionCountChanged(mSelectedItems.size());
+        }
         notifyDataSetChanged();
+    }
+
+    /*
+     * returns true if the passed list is the same as the existing one
+     */
+    private boolean isSameList(@NonNull List<MediaModel> mediaList) {
+        if (mediaList.size() != mMediaList.size()) {
+            return false;
+        }
+
+        for (MediaModel media: mediaList) {
+            MediaModel thisMedia = getMediaFromId(media.getId());
+            if (thisMedia == null || !thisMedia.equals(media)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+     * returns the media item with the passed media ID in the current media list
+     */
+    private MediaModel getMediaFromId(int id) {
+        for (int i = 0; i < mMediaList.size(); i++) {
+            if (mMediaList.get(i).getId() == id) {
+                return mMediaList.get(i);
+            }
+        }
+        return null;
     }
 }

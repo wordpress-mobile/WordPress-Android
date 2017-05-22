@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.wordpress.android.widgets.WPSwitch
+    <Switch
         android:id="@+id/number_picker_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/calypso_title_text"
-        app:fontFamily="openSans"
-        app:fontVariation="normal" />
+        android:textColor="@color/calypso_title_text" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"
@@ -25,9 +21,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:textSize="@dimen/text_sz_small"
-        android:textColor="@color/grey_darken_10"
-        app:fontFamily="openSans"
-        app:fontVariation="normal" />
+        android:textColor="@color/grey_darken_10" />
 
     <LinearLayout
         android:id="@+id/number_picker_toggleable"
@@ -45,9 +39,7 @@
             android:layout_marginBottom="8dp"
             android:duplicateParentState="true"
             android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/calypso_title_text"
-            app:fontFamily="openSans"
-            app:fontVariation="normal" />
+            android:textColor="@color/calypso_title_text" />
 
         <View
             android:layout_width="match_parent"

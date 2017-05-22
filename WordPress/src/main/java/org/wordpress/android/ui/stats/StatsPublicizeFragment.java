@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +22,48 @@ import java.util.List;
 public class StatsPublicizeFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsPublicizeFragment.class.getSimpleName();
 
+    private PublicizeModel mPublicizeData;
+
     @Override
-    protected void updateUI() {
-        if (!isAdded()) {
+    protected boolean hasDataAvailable() {
+        return mPublicizeData != null;
+    }
+    @Override
+    protected void saveStatsData(Bundle outState) {
+        if (mPublicizeData != null) {
+            outState.putSerializable(ARG_REST_RESPONSE, mPublicizeData);
+        }
+    }
+    @Override
+    protected void restoreStatsData(Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+            mPublicizeData = (PublicizeModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.PublicizeUpdated event) {
+        if (!shouldUpdateFragmentOnUpdateEvent(event)) {
             return;
         }
 
-        if (isErrorResponse()) {
-            showErrorUI();
+        mPublicizeData = event.mPublicizeModel;
+        updateUI();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(StatsEvents.SectionUpdateError event) {
+        if (!shouldUpdateFragmentOnErrorEvent(event)) {
+            return;
+        }
+
+        mPublicizeData = null;
+        showErrorUI(event.mError);
+    }
+
+    @Override
+    protected void updateUI() {
+        if (!isAdded()) {
             return;
         }
 
@@ -42,16 +77,16 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasPublicize() {
-        return !isDataEmpty()
-                && ((PublicizeModel) mDatamodels[0]).getServices() != null
-                && ((PublicizeModel) mDatamodels[0]).getServices().size() > 0;
+        return mPublicizeData != null
+                && mPublicizeData.getServices() != null
+                && mPublicizeData.getServices().size() > 0;
     }
 
     private List<SingleItemModel> getPublicize() {
         if (!hasPublicize()) {
             return null;
         }
-        return ((PublicizeModel) mDatamodels[0]).getServices();
+        return mPublicizeData.getServices();
     }
 
     @Override
@@ -84,8 +119,8 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
                 rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 holder = new StatsViewHolder(rowView);
-                holder.networkImageView.setErrorImageResId(R.drawable.stats_icon_default_site_avatar);
-                holder.networkImageView.setDefaultImageResId(R.drawable.stats_icon_default_site_avatar);
+                holder.networkImageView.setErrorImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_32dp);
+                holder.networkImageView.setDefaultImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_32dp);
                 rowView.setTag(holder);
             } else {
                 holder = (StatsViewHolder) rowView.getTag();
@@ -190,7 +225,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsEndpointsEnum[] getSectionsToUpdate() {
+    protected StatsService.StatsEndpointsEnum[] sectionsToUpdate() {
         return new StatsService.StatsEndpointsEnum[]{
                 StatsService.StatsEndpointsEnum.PUBLICIZE
         };

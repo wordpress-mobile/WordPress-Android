@@ -1,22 +1,19 @@
 package org.wordpress.android.editor;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.net.Uri;
+import android.util.Patterns;
 
 import org.wordpress.android.util.AppLog;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,14 +24,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Utils {
-
     public static String getHtmlFromFile(Activity activity, String filename) {
         try {
             AssetManager assetManager = activity.getAssets();
             InputStream in = assetManager.open(filename);
             return getStringFromInputStream(in);
         } catch (IOException e) {
-            AppLog.e(AppLog.T.EDITOR, e.getMessage());
+            AppLog.e(AppLog.T.EDITOR, "Unable to load editor HTML (is the assets symlink working?): " + e.getMessage());
             return null;
         }
     }
@@ -59,6 +55,11 @@ public class Utils {
             html = html.replace("'", "\\'");
             html = html.replace("\r", "\\r");
             html = html.replace("\n", "\\n");
+
+            // Escape invisible line separator (U+2028) and paragraph separator (U+2029) characters
+            // https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/405
+            html = html.replace("\u2028", "\\u2028");
+            html = html.replace("\u2029", "\\u2029");
         }
         return html;
     }
@@ -72,6 +73,13 @@ public class Utils {
             }
         }
         return html;
+    }
+
+    public static String escapeQuotes(String text) {
+        if (text != null) {
+            text = text.replace("'", "\\'").replace("\"", "\\\"");
+        }
+        return text;
     }
 
     /**
@@ -156,48 +164,17 @@ public class Utils {
         return changeMap;
     }
 
-    public static Uri downloadExternalMedia(Context context, Uri imageUri) {
-        if(context != null && imageUri != null) {
-            File cacheDir = null;
-
-            if(context.getApplicationContext() != null) {
-                cacheDir = context.getCacheDir();
-            }
-
-            try {
-                InputStream inputStream;
-                if(imageUri.toString().startsWith("content://")) {
-                    inputStream = context.getContentResolver().openInputStream(imageUri);
-                    if(inputStream == null) {
-                        AppLog.e(AppLog.T.UTILS, "openInputStream returned null");
-                        return null;
-                    }
-                } else {
-                    inputStream = (new URL(imageUri.toString())).openStream();
-                }
-
-                String fileName = "thumb-" + System.currentTimeMillis();
-
-                File f = new File(cacheDir, fileName);
-                FileOutputStream output = new FileOutputStream(f);
-                byte[] data = new byte[1024];
-
-                int count;
-                while((count = inputStream.read(data)) != -1) {
-                    output.write(data, 0, count);
-                }
-
-                output.flush();
-                output.close();
-                inputStream.close();
-                return Uri.fromFile(f);
-            } catch (IOException e) {
-                AppLog.e(AppLog.T.UTILS, e);
-            }
-
-            return null;
-        } else {
-            return null;
-        }
+    /**
+     * Checks the Clipboard for text that matches the {@link Patterns#WEB_URL} pattern.
+     *
+     * @return the URL text in the clipboard, if it exists; otherwise null
+     */
+    public static String getUrlFromClipboard(Context context) {
+        if (context == null) return null;
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = clipboard != null ? clipboard.getPrimaryClip() : null;
+        if (data == null || data.getItemCount() <= 0) return null;
+        String clipText = String.valueOf(data.getItemAt(0).getText());
+        return Patterns.WEB_URL.matcher(clipText).matches() ? clipText : null;
     }
 }

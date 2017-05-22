@@ -1,0 +1,427 @@
+* {
+    outline: 0px solid transparent;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+    font-family: 'Noto Serif', serif;
+}
+
+html {
+    padding:0;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin:0;
+    font-size:1em;
+    color:#2D2D2D;
+}
+
+body {
+    padding-left:15px;
+    padding-right:15px;
+    padding-top: 15px;
+    padding-bottom: 5px;
+    overflow-y: auto;
+    min-height: 100vh;
+    word-wrap: break-word;
+}
+
+p {
+    line-height: 24px;
+    margin-top: 0px;
+    margin-bottom: 24px;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    color: #E9EFF3;
+    background-color: #E9EFF3;
+    width: 100%;
+}
+
+img {
+    width: auto;
+    height: auto;
+    margin: 0px 0 0px 0;
+    min-width: 30px;
+    min-height: 30px;
+    max-width: 100%;
+    opacity:1;
+}
+
+video {
+    width: auto;
+    height: auto;
+    margin: 0px 0px 0px 0px;
+    min-width: 30px;
+    min-height: 30px;
+    max-width: 100%;
+    opacity:1;
+    background:#2e4453
+}
+
+a {
+    color: #0087be;
+    text-decoration: none;
+}
+
+blockquote {
+    background: #e8f0f5;
+    padding: 10px 10px 10px 20px;
+    margin: 10px 0 10px 0;
+    border-radius: 2px;
+}
+
+img.zs_active {
+    border: 2px dashed #000;
+}
+
+img.uploading {
+    opacity:0.3;
+    -webkit-user-select: none;
+}
+
+img.failed {
+    -webkit-filter: blur(4px) grayscale(0.3);
+    margin:-1px;
+    padding:1px;
+    z-index:-1;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+span.img_container {
+    position: relative;
+    display: inline-block;
+    -webkit-user-select: none;
+}
+
+span.img_container.failed {
+    overflow: hidden;
+}
+
+span.img_container.failed::before {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    content:"";
+    left: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: auto;
+    z-index: 100;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: url('svg/retry-image.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+span.img_container.failed.largeFail::before {
+    height: 120px;
+    width: 120px;
+    border: 4px solid #FFFFFF;
+    background: url('svg/retry-image-large.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+span.img_container.failed::after {
+    position: absolute;
+    padding: 37px 0 0 0;
+    top:50%;
+    left:0%;
+    font-family: sans-serif;
+    font-size:20px;
+    font-weight: 500;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,.06);
+    background:clear;
+    color: white;
+    width:100%;
+    height:50%;
+    -webkit-user-select: none;
+    pointer-events: none;
+    content:attr(data-failed);
+}
+
+span.img_container.failed.largeFail::after {
+    padding: 72px 0 0 0;
+}
+
+span.img_container.failed.smallFail::after {
+    font-family: sans-serif;
+    content:attr(data-failed);
+}
+
+video.uploading {
+    opacity:0.3;
+    -webkit-user-select: none;
+}
+
+video.failed {
+    -webkit-filter: blur(4px) grayscale(0.3);
+    margin:-1px;
+    padding:1px;
+    z-index:-1;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+span.video_container {
+    position: relative;
+    display: inline-block;
+    -webkit-user-select: none;
+}
+
+span.video_container.failed {
+    overflow: hidden;
+}
+
+span.video_container.failed::before {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    content:"";
+    left: 0;
+    right: 0;
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: auto;
+    z-index: 100;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: url('svg/retry-image.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+span.video_container.failed.largeFail::before {
+    height: 120px;
+    width: 120px;
+    border: 4px solid #FFFFFF;
+    background: url('svg/retry-image-large.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+span.video_container.failed::after {
+    position: absolute;
+    padding: 37px 0 0 0;
+    top:50%;
+    left:0%;
+    font-family: sans-serif;
+    font-size:20px;
+    font-weight: 500;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,.06);
+    background:clear;
+    color: white;
+    width:100%;
+    height:50%;
+    -webkit-user-select: none;
+    pointer-events: none;
+    content:attr(data-failed);
+}
+
+span.video_container.failed.largeFail::after {
+    padding: 72px 0 0 0;
+}
+
+span.video_container.failed.smallFail::after {
+    font-family: sans-serif;
+    content:attr(data-failed);
+}
+
+/* Image and video editing overlay styles */
+.edit-container {
+    position: relative;
+    display: inline-block;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+.edit-container img {
+    -webkit-filter: blur(4px) grayscale(0.3);
+    margin:-1px; /*tiny margin to keep crisp edges when blurring the image*/
+    padding:1px;
+}
+
+.edit-container video {
+
+}
+
+/* default. use when images are > 100px w/h */
+.edit-container .edit-overlay {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    z-index: 100;
+    height:90px;
+    min-height: 90px;
+    min-width: 60px;
+}
+
+/* use when the image is < 100px w/h */
+.edit-container.small .edit-overlay {
+    height: 32px;
+    min-height: 32px;
+    min-width: 32px;
+}
+
+.edit-container .edit-icon {
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: auto;
+    z-index: 100;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background: url('svg/edit-image.svg') no-repeat center;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.edit-container.small .edit-icon {
+    height: 32px;
+    min-height: 32px;
+    min-width: 32px;
+    border: none;
+    border-radius: 0%;
+    background-color: initial;
+}
+
+.edit-container .delete-overlay {
+    position: absolute;
+    z-index: 100;
+    right: 0%;
+    height: 24px;
+    width: 24px;
+    min-height: 24px;
+    min-width: 24px;
+    border: 2px solid #FFFFFF;
+    border-radius: 50%;
+    background:url('svg/delete-image.svg') no-repeat center;
+    background-color: rgba(0,0,0,0.1);
+    margin-top: 12px;
+    margin-right: 12px;
+}
+
+.edit-container.small .edit-content {
+    display:none;
+}
+
+.edit-container .edit-content {
+    font-family: sans-serif;
+    font-size:20px;
+    font-weight:500;
+    text-align: center;
+    text-shadow: 0px 1px 2px rgba(0,0,0,.06);
+    color: white;
+    -webkit-user-select: none;
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    width:100%;
+}
+
+progress.wp_media_indicator {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    appearance: none;
+    position: absolute;
+    top:-2pt; height:2pt;
+    left:0px; width:100%;
+}
+
+progress.wp_media_indicator::-webkit-progress-bar {
+    background-color: rgba(232,240,247,1.0);
+}
+
+progress.wp_media_indicator::-webkit-progress-value {
+    background-color:rgba(0,135,190,1.0);
+    border-radius: 0 2pt 2pt 0;
+}
+
+progress.wp_media_indicator.failed::-webkit-progress-bar {
+    background-color: rgba(232,232,232,1.0);
+}
+
+progress.wp_media_indicator.failed::-webkit-progress-value {
+    background-color:rgba(135,135,135,1.0);
+    border-radius: 0 2pt 2pt 0;
+}
+
+
+div.field[contenteditable] {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+div.field[placeholderText][contenteditable=true]:empty:before {
+    content: attr(placeholderText);
+    color: #87a6bc;
+    transition: 0.2s ease opacity;
+}
+
+div.field[placeholderText][contenteditable=true]:empty:focus:before {
+    opacity: 0.6;
+}
+
+#separatorDiv {
+    -webkit-user-select: none;
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+
+#zss_field_title, #zss_field_title p {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 0px;
+}
+
+#zss_field_content {
+    font-size: 16px;
+    line-height: 24px;
+    margin-bottom: 10px;
+}
+
+.wp-temp[data-wp-temp="caption"] {
+    -webkit-user-select: none;
+}
+
+.wp-caption {
+    padding: 0px 10px 10px 0px;
+    font-size: 75%;
+    font-style: italic;
+    cursor: none;
+}
+
+.ipad_body {
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+.more-tag {
+  border: 0;
+  width: 96%;
+  height: 16px;
+  display: block;
+  background: transparent url('svg/more-2x.png') repeat-y scroll center center;
+  background-size: 1900px 20px;
+}
+
+.nextpage-tag {
+  border: 0;
+  width: 96%;
+  height: 16px;
+  display: block;
+  background: transparent url('svg/pagebreak-2x.png') repeat-y scroll center center;
+  background-size: 1900px 20px;
+}

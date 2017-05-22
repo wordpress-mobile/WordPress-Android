@@ -18,7 +18,8 @@
         android:buttonTint="@color/dialog_compound_button"
         android:id="@+id/radio"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:targetApi="LOLLIPOP"/>
 
     <LinearLayout
         android:id="@+id/text_container"

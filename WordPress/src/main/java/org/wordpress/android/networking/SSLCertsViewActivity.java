@@ -2,7 +2,6 @@ package org.wordpress.android.networking;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.webkit.WebSettings;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WebViewActivity;
@@ -22,16 +21,22 @@ public class SSLCertsViewActivity extends WebViewActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
+    }
 
+    @Override
+    protected void loadContent() {
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey(CERT_DETAILS_KEYS)) {
             String certDetails = extras.getString(CERT_DETAILS_KEYS);
             StringBuilder sb = new StringBuilder("<html><body>");
             sb.append(certDetails);
             sb.append("</body></html>");
-            WebSettings settings = mWebView.getSettings();
-            settings.setDefaultTextEncodingName("utf-8");
             mWebView.loadDataWithBaseURL(null, sb.toString(), "text/html", "utf-8", null);
         }
+    }
+
+    @Override
+    protected void configureWebView() {
+        mWebView.getSettings().setDefaultTextEncodingName("utf-8");
     }
 }

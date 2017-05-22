@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -123,7 +122,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WordPress.imageLoader);
+        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WordPress.sImageLoader);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

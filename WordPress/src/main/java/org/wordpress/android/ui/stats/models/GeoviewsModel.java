@@ -4,21 +4,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class GeoviewsModel implements Serializable {
+public class GeoviewsModel extends BaseStatsModel {
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private int otherViews;
     private int totalViews;
     private List<GeoviewModel> countries;
 
-    public GeoviewsModel(String blogID, JSONObject response) throws JSONException {
+    public GeoviewsModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mDate = response.getString("date");
 
@@ -67,11 +66,11 @@ public class GeoviewsModel implements Serializable {
         }
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

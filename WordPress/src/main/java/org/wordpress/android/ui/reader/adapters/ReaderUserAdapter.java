@@ -13,7 +13,6 @@ import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -40,7 +39,7 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
         return mUsers.size();
     }
 
-    boolean isEmpty() {
+    private boolean isEmpty() {
         return (getItemCount() == 0);
     }
 

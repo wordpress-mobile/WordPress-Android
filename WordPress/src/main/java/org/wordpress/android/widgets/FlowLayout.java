@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+
 import org.wordpress.android.R;
 
 public class FlowLayout extends ViewGroup {
@@ -112,7 +113,7 @@ public class FlowLayout extends ViewGroup {
 		return new LayoutParams(p.width, p.height);
 	}
 
-	public static class LayoutParams extends ViewGroup.LayoutParams {
+	public static class LayoutParams extends ViewGroup.MarginLayoutParams {
 		int x;
 		int y;
 

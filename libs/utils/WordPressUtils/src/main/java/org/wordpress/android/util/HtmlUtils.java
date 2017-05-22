@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.QuoteSpan;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.wordpress.android.util.helpers.WPHtmlTagHandler;
 import org.wordpress.android.util.helpers.WPImageGetter;
 import org.wordpress.android.util.helpers.WPQuoteSpan;
@@ -79,7 +79,7 @@ public class HtmlUtils {
         if (text == null || !text.contains("&")) {
             return text;
         }
-        return StringEscapeUtils.unescapeHtml(text);
+        return StringEscapeUtils.unescapeHtml4(text);
     }
 
     /**
@@ -132,6 +132,7 @@ public class HtmlUtils {
      * @param  wpImageGetter
      */
     public static SpannableStringBuilder fromHtml(String source, WPImageGetter wpImageGetter) {
+        source = replaceListTagsWithCustomTags(source);
         SpannableStringBuilder html;
         try {
             html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, new WPHtmlTagHandler());
@@ -148,6 +149,15 @@ public class HtmlUtils {
             html.removeSpan(span);
         }
         return html;
+    }
+
+    private static String replaceListTagsWithCustomTags(String source) {
+        return source.replace("<ul", "<WPUL")
+                .replace("</ul>", "</WPUL>")
+                .replace("<ol", "<WPOL")
+                .replace("</ol>", "</WPOL>")
+                .replace("<li", "<WPLI")
+                .replace("</li>", "</WPLI>");
     }
 
     public static Spanned fromHtml(String source) {

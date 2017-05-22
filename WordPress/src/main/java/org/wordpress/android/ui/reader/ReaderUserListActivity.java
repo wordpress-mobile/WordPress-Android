@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +14,9 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 /*
  * displays a list of users who like a specific reader post
@@ -34,15 +35,21 @@ public class ReaderUserListActivity extends AppCompatActivity {
         setTitle(null);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         if (savedInstanceState != null) {
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);

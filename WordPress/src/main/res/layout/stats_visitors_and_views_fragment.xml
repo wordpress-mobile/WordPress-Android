@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_gravity="center"
-              android:gravity="center">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,7 +86,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/stats_icon_info"
+                    app:srcCompat="@drawable/ic_info_grey_800_32dp"
                     android:paddingEnd="@dimen/margin_medium"
                     android:paddingRight="@dimen/margin_medium"/>
                 <TextView

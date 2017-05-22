@@ -4,15 +4,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PublicizeModel implements Serializable {
-    private String mBlogID;
+public class PublicizeModel extends BaseStatsModel {
+    private long mBlogID;
     private List<SingleItemModel> mServices;
 
-    public PublicizeModel(String blogID, JSONObject response) throws JSONException {
+    public PublicizeModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         JSONArray services = response.getJSONArray("services");
         if (services.length() > 0) {
@@ -31,11 +30,11 @@ public class PublicizeModel implements Serializable {
         return mServices;
     }
 
-    public String getBlogId() {
+    public long getBlogId() {
         return mBlogID;
     }
 
-    public void setBlogId(String blogId) {
+    public void setBlogId(long blogId) {
         this.mBlogID = blogId;
     }
 }

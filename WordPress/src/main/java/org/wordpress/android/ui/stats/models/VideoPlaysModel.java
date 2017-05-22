@@ -4,21 +4,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class VideoPlaysModel implements Serializable {
+public class VideoPlaysModel extends BaseStatsModel {
     private String mPeriod;
     private String mDate;
-    private String mBlogID;
+    private long mBlogID;
     private int mOtherPlays;
     private int mTotalPlays;
     private List<SingleItemModel> mPlays;
 
-    public VideoPlaysModel(String blogID, JSONObject response) throws JSONException {
+    public VideoPlaysModel(long blogID, JSONObject response) throws JSONException {
         this.mBlogID = blogID;
         this.mPeriod = response.getString("period");
         this.mDate = response.getString("date");
@@ -50,11 +49,11 @@ public class VideoPlaysModel implements Serializable {
         }
     }
 
-    public String getBlogID() {
+    public long getBlogID() {
         return mBlogID;
     }
 
-    public void setBlogID(String blogID) {
+    public void setBlogID(long blogID) {
         this.mBlogID = blogID;
     }
 

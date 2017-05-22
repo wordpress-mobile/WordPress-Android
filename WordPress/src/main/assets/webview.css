@@ -27,13 +27,8 @@ footer, header, hgroup, menu, nav, section {
 body {line-height: 1;}
 /* -------------------------- */
 
-@font-face {
-    font-family: 'OpenSans';
-    src: url('fonts/OpenSans-Regular.ttf');
-}
-
 body {
-	font-family: 'OpenSans','DroidSans',Arial,sans-serif;
+	font-family: sans-serif;
 	color: #2e4453;
 	font-size: 14pt;
 	width: 100%;

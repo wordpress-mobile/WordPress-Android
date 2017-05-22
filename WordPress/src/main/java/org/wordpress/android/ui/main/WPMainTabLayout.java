@@ -16,7 +16,6 @@ import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 
 /**
  * tab layout for main activity
@@ -42,7 +41,6 @@ public class WPMainTabLayout extends TabLayout {
         addTab(R.drawable.main_tab_reader, R.string.reader, false);
         addTab(R.drawable.main_tab_me, R.string.tabbar_accessibility_label_me, false);
         addTab(R.drawable.main_tab_notifications, R.string.notifications, true);
-        checkNoteBadge();
     }
 
     private void addTab(@DrawableRes int iconId, @StringRes int contentDescriptionId, boolean isNoteTab) {
@@ -50,23 +48,19 @@ public class WPMainTabLayout extends TabLayout {
 
         ImageView icon = (ImageView) customView.findViewById(R.id.tab_icon);
         icon.setImageResource(iconId);
+        icon.setContentDescription(getResources().getText(contentDescriptionId));
 
         // each tab has a badge icon, but we only care about the one on the notifications tab
         if (isNoteTab) {
             mNoteBadge = customView.findViewById(R.id.tab_badge);
         }
-
-        addTab(newTab().setCustomView(customView).setContentDescription(contentDescriptionId));
+        addTab(newTab().setCustomView(customView));
     }
 
     /*
      * adds or removes the badge on the notifications tab depending on whether there are
      * unread notifications
-     */
-    void checkNoteBadge() {
-        showNoteBadge(SimperiumUtils.hasUnreadNotes());
-    }
-
+    */
     void showNoteBadge(boolean showBadge) {
         if (mNoteBadge == null) return;
 
@@ -103,5 +97,19 @@ public class WPMainTabLayout extends TabLayout {
         }
 
         animScale.start();
+    }
+
+    private boolean isValidPosition(int position) {
+        return (position >=0 && position < getTabCount());
+    }
+
+    public void setSelectedTabPosition(int position) {
+        if (!isValidPosition(position) || getSelectedTabPosition() == position) {
+            return;
+        }
+        Tab tab = getTabAt(position);
+        if (tab != null) {
+            tab.select();
+        }
     }
 }

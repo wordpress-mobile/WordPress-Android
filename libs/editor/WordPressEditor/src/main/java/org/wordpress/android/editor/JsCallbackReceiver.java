@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.wordpress.android.editor.EditorFragmentAbstract.MediaType;
+
 public class JsCallbackReceiver {
     private static final String JS_CALLBACK_DELIMITER = "~";
 
@@ -27,12 +29,18 @@ public class JsCallbackReceiver {
     private static final String CALLBACK_FOCUS_OUT = "callback-focus-out";
 
     private static final String CALLBACK_IMAGE_REPLACED = "callback-image-replaced";
+    private static final String CALLBACK_VIDEO_REPLACED = "callback-video-replaced";
     private static final String CALLBACK_IMAGE_TAP = "callback-image-tap";
     private static final String CALLBACK_LINK_TAP = "callback-link-tap";
+    private static final String CALLBACK_MEDIA_REMOVED = "callback-media-removed";
+
+    private static final String CALLBACK_VIDEOPRESS_INFO_REQUEST = "callback-videopress-info-request";
 
     private static final String CALLBACK_LOG = "callback-log";
 
     private static final String CALLBACK_RESPONSE_STRING = "callback-response-string";
+
+    private static final String CALLBACK_ACTION_FINISHED = "callback-action-finished";
 
     private final OnJsEditorStateChangedListener mListener;
 
@@ -89,8 +97,20 @@ public class JsCallbackReceiver {
                 AppLog.d(AppLog.T.EDITOR, "New field created, " + params);
                 break;
             case CALLBACK_IMAGE_REPLACED:
-                // TODO: Notifies that image upload has finished and that the local url was replaced by the remote url in the ZSS editor
                 AppLog.d(AppLog.T.EDITOR, "Image replaced, " + params);
+
+                // Extract the local media id from the callback string (stripping the 'id=' part)
+                if (params.length() > 3) {
+                    mListener.onMediaReplaced(params.substring(3));
+                }
+                break;
+            case CALLBACK_VIDEO_REPLACED:
+                AppLog.d(AppLog.T.EDITOR, "Video replaced, " + params);
+
+                // Extract the local media id from the callback string (stripping the 'id=' part)
+                if (params.length() > 3) {
+                    mListener.onMediaReplaced(params.substring(3));
+                }
                 break;
             case CALLBACK_IMAGE_TAP:
                 AppLog.d(AppLog.T.EDITOR, "Image tapped, " + params);
@@ -101,6 +121,7 @@ public class JsCallbackReceiver {
                 mediaIds.add("id");
                 mediaIds.add("url");
                 mediaIds.add("meta");
+                mediaIds.add("type");
 
                 Set<String> mediaDataSet = Utils.splitValuePairDelimitedString(params, JS_CALLBACK_DELIMITER, mediaIds);
                 Map<String, String> mediaDataMap = Utils.buildMapFromKeyValuePairs(mediaDataSet);
@@ -111,6 +132,8 @@ public class JsCallbackReceiver {
                 if (mediaUrl != null) {
                     mediaUrl = Utils.decodeHtml(mediaUrl);
                 }
+
+                MediaType mediaType = MediaType.fromString(mediaDataMap.get("type"));
 
                 String mediaMeta = mediaDataMap.get("meta");
                 JSONObject mediaMetaJson = new JSONObject();
@@ -134,7 +157,7 @@ public class JsCallbackReceiver {
                     }
                 }
 
-                mListener.onMediaTapped(mediaId, mediaUrl, mediaMetaJson, uploadStatus);
+                mListener.onMediaTapped(mediaId, mediaType, mediaMetaJson, uploadStatus);
                 break;
             case CALLBACK_LINK_TAP:
                 // Extract and HTML-decode the link data from the callback params
@@ -159,14 +182,29 @@ public class JsCallbackReceiver {
 
                 mListener.onLinkTapped(url, title);
                 break;
+            case CALLBACK_MEDIA_REMOVED:
+                AppLog.d(AppLog.T.EDITOR, "Media removed, " + params);
+                // Extract the media id from the callback string (stripping the 'id=' part of the callback string)
+                if (params.length() > 3) {
+                    mListener.onMediaRemoved(params.substring(3));
+                }
+                break;
+            case CALLBACK_VIDEOPRESS_INFO_REQUEST:
+                // Extract the VideoPress id from the callback string (stripping the 'id=' part of the callback string)
+                if (params.length() > 3) {
+                    mListener.onVideoPressInfoRequested(params.substring(3));
+                }
+                break;
             case CALLBACK_LOG:
                 // Strip 'msg=' from beginning of string
-                AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params.substring(4));
+                if (params.length() > 4) {
+                    AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params.substring(4));
+                }
                 break;
             case CALLBACK_RESPONSE_STRING:
                 AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
                 Set<String> responseDataSet;
-                if (params.startsWith("function=")) {
+                if (params.startsWith("function=") && params.contains(JS_CALLBACK_DELIMITER)) {
                     String functionName = params.substring("function=".length(), params.indexOf(JS_CALLBACK_DELIMITER));
 
                     List<String> responseIds = new ArrayList<>();
@@ -175,10 +213,10 @@ public class JsCallbackReceiver {
                             responseIds.add("id");
                             responseIds.add("contents");
                             break;
-                        case "getSelectedText":
+                        case "getSelectedTextToLinkify":
                             responseIds.add("result");
                             break;
-                        case "getFailedImages":
+                        case "getFailedMedia":
                             responseIds.add("ids");
                     }
 
@@ -187,6 +225,9 @@ public class JsCallbackReceiver {
                     responseDataSet = Utils.splitDelimitedString(params, JS_CALLBACK_DELIMITER);
                 }
                 mListener.onGetHtmlResponse(Utils.buildMapFromKeyValuePairs(responseDataSet));
+                break;
+            case CALLBACK_ACTION_FINISHED:
+                mListener.onActionFinished();
                 break;
             default:
                 AppLog.d(AppLog.T.EDITOR, "Unhandled callback: " + callbackId + ":" + params);

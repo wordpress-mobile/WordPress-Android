@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -29,16 +30,15 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -58,7 +58,7 @@ import de.greenrobot.event.EventBus;
  * followed tags, followed blogs, and recommended blogs
  */
 public class ReaderSubsActivity extends AppCompatActivity
-                                implements ReaderTagAdapter.TagDeletedListener {
+        implements ReaderTagAdapter.TagDeletedListener {
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
@@ -89,20 +89,23 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        int normalColor = getResources().getColor(R.color.blue_light);
-        int selectedColor = getResources().getColor(R.color.white);
+        int normalColor = ContextCompat.getColor(this, R.color.blue_light);
+        int selectedColor = ContextCompat.getColor(this, R.color.white);
         tabLayout.setTabTextColors(normalColor, selectedColor);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
+        }
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Shadow removed on Activities with a tab toolbar
@@ -135,21 +138,15 @@ public class ReaderSubsActivity extends AppCompatActivity
             restorePreviousPage();
         }
 
-        // remember which page the user last viewed - note this listener must be assigned
-        // after we've already called restorePreviousPage()
+        // note this listener must be assigned after we've already called restorePreviousPage()
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                // remember which page the user last viewed
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 AppPrefs.setReaderSubsPageTitle(pageTitle);
             }
         });
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        ActivityLauncher.slideOutToRight(this);
     }
 
     @Override
@@ -188,15 +185,18 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     private void performUpdate() {
+        performUpdate(EnumSet.of(
+                UpdateTask.TAGS,
+                UpdateTask.FOLLOWED_BLOGS,
+                UpdateTask.RECOMMENDED_BLOGS));
+    }
+
+    private void performUpdate(EnumSet<UpdateTask> tasks) {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
 
-        ReaderUpdateService.startService(this,
-                EnumSet.of(UpdateTask.TAGS,
-                           UpdateTask.FOLLOWED_BLOGS,
-                           UpdateTask.RECOMMENDED_BLOGS));
-
+        ReaderUpdateService.startService(this, tasks);
         mHasPerformedUpdate = true;
     }
 
@@ -253,7 +253,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         // is it a url or a tag?
         boolean isUrl = !entry.contains(" ")
-                     && (entry.contains(".") || entry.contains("://"));
+                && (entry.contains(".") || entry.contains("://"));
         if (isUrl) {
             addAsUrl(entry);
         } else {
@@ -325,27 +325,31 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
+        showProgress();
+        final ReaderTag tag = ReaderUtils.createTagFromTagName(tagName, ReaderTagType.FOLLOWED);
+
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && !isFinishing()) {
-                    getPageAdapter().refreshFollowedTagFragment();
+                if (isFinishing()) {
+                    return;
+                }
+
+                hideProgress();
+                getPageAdapter().refreshFollowedTagFragment();
+
+                if (succeeded) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
+                    showInfoToast(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                    mLastAddedTagName = tag.getTagSlug();
+                } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
                 }
             }
         };
 
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-
-        if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-            mLastAddedTagName = tag.getTagName();
-            // make sure addition is reflected on followed tags
-            getPageAdapter().refreshFollowedTagFragment();
-            String labelAddedTag = getString(R.string.reader_label_added_tag);
-            showInfoToast(String.format(labelAddedTag, tag.getCapitalizedTagName()));
-        }
+        ReaderTagActions.addTag(tag, actionListener);
     }
 
     /*
@@ -359,7 +363,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             return;
         }
 
-        showAddUrlProgress();
+        showProgress();
 
         ReaderActions.OnRequestListener requestListener = new ReaderActions.OnRequestListener() {
             @Override
@@ -368,10 +372,11 @@ public class ReaderSubsActivity extends AppCompatActivity
                     followBlogUrl(blogUrl);
                 }
             }
+
             @Override
             public void onFailure(int statusCode) {
                 if (!isFinishing()) {
-                    hideAddUrlProgress();
+                    hideProgress();
                     String errMsg;
                     switch (statusCode) {
                         case 401:
@@ -399,7 +404,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 if (isFinishing()) {
                     return;
                 }
-                hideAddUrlProgress();
+                hideProgress();
                 if (succeeded) {
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
@@ -414,13 +419,13 @@ public class ReaderSubsActivity extends AppCompatActivity
         // note that this uses the endpoint to follow as a feed since typed URLs are more
         // likely to point to a feed than a wp blog (and the endpoint should internally
         // follow it as a blog if it is one)
-        ReaderBlogActions.followFeedByUrl(normUrl, true, followListener);
+        ReaderBlogActions.followFeedByUrl(normUrl, followListener);
     }
 
     /*
-     * called prior to following a url to show progress and disable controls
+     * called prior to following to show progress and disable controls
      */
-    private void showAddUrlProgress() {
+    private void showProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
         progress.setVisibility(View.VISIBLE);
         mEditAdd.setEnabled(false);
@@ -428,9 +433,9 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     /*
-     * called after following a url to hide progress and re-enable controls
+     * called after following to hide progress and re-enable controls
      */
-    private void hideAddUrlProgress() {
+    private void hideProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
         progress.setVisibility(View.GONE);
         mEditAdd.setEnabled(true);
@@ -446,6 +451,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
         toast.show();
     }
+
     /*
      * triggered by a tag fragment's adapter after user removes a tag - note that the network
      * request has already been made when this is called
@@ -453,11 +459,11 @@ public class ReaderSubsActivity extends AppCompatActivity
     @Override
     public void onTagDeleted(ReaderTag tag) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED);
-        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
+        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
         String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoToast(String.format(labelRemovedTag, tag.getCapitalizedTagName()));
+        showInfoToast(String.format(labelRemovedTag, tag.getLabel()));
     }
 
     /*
@@ -515,7 +521,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         private void refreshFollowedTagFragment() {
-            for (Fragment fragment: mFragments) {
+            for (Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
                     ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
                     tagFragment.refresh();
@@ -524,7 +530,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         private void refreshBlogFragments(ReaderBlogType blogType) {
-            for (Fragment fragment: mFragments) {
+            for (Fragment fragment : mFragments) {
                 if (fragment instanceof ReaderBlogFragment) {
                     ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
                     if (blogType == null || blogType.equals(blogFragment.getBlogType())) {

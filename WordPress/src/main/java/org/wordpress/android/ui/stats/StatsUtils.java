@@ -2,34 +2,35 @@ package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
-import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.stats.exceptions.StatsError;
 import org.wordpress.android.ui.stats.models.AuthorsModel;
+import org.wordpress.android.ui.stats.models.BaseStatsModel;
 import org.wordpress.android.ui.stats.models.ClicksModel;
 import org.wordpress.android.ui.stats.models.CommentFollowersModel;
 import org.wordpress.android.ui.stats.models.CommentsModel;
 import org.wordpress.android.ui.stats.models.FollowersModel;
 import org.wordpress.android.ui.stats.models.GeoviewsModel;
 import org.wordpress.android.ui.stats.models.InsightsAllTimeModel;
+import org.wordpress.android.ui.stats.models.InsightsLatestPostDetailsModel;
 import org.wordpress.android.ui.stats.models.InsightsLatestPostModel;
 import org.wordpress.android.ui.stats.models.InsightsPopularModel;
 import org.wordpress.android.ui.stats.models.InsightsTodayModel;
-import org.wordpress.android.ui.stats.models.PostModel;
 import org.wordpress.android.ui.stats.models.PublicizeModel;
 import org.wordpress.android.ui.stats.models.ReferrersModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
+import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.models.TagsContainerModel;
 import org.wordpress.android.ui.stats.models.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.models.VideoPlaysModel;
@@ -49,12 +50,13 @@ import java.util.concurrent.TimeUnit;
 public class StatsUtils {
     @SuppressLint("SimpleDateFormat")
     private static long toMs(String date, String pattern) {
-        if (date == null) {
+        if (date == null || date.equals("null")) {
+            AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
             return -1;
         }
 
         if (pattern == null) {
-            AppLog.w(T.UTILS, "Trying to parse with a null pattern");
+            AppLog.w(T.UTILS, "Trying to parse a Stats date with a null pattern");
             return -1;
         }
 
@@ -82,8 +84,8 @@ public class StatsUtils {
     /**
      * Get the current date of the blog in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
-    public static String getCurrentDateTZ(int localTableBlogID) {
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+    public static String getCurrentDateTZ(SiteModel site) {
+        String timezone = site.getTimezone();
         if (timezone == null) {
             AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
             return getCurrentDate();
@@ -95,10 +97,10 @@ public class StatsUtils {
     /**
      * Get the current datetime of the blog *
      */
-    public static String getCurrentDateTimeTZ(int localTableBlogID) {
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+    public static String getCurrentDateTimeTZ(SiteModel site) {
+        String timezone = site.getTimezone();
         if (timezone == null) {
-            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!");
             return getCurrentDatetime();
         }
         String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
@@ -108,10 +110,10 @@ public class StatsUtils {
     /**
      * Get the current datetime of the blog in Ms *
      */
-    public static long getCurrentDateTimeMsTZ(int localTableBlogID) {
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(localTableBlogID));
+    public static long getCurrentDateTimeMsTZ(SiteModel site) {
+        String timezone = site.getTimezone();
         if (timezone == null) {
-            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!!");
+            AppLog.w(T.UTILS, "Timezone is null. Returning the device time!");
             return new Date().getTime();
         }
         String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
@@ -135,26 +137,6 @@ public class StatsUtils {
         return sdf.format(new Date());
     }
 
-    private static String getBlogTimezone(Blog blog) {
-        if (blog == null) {
-            AppLog.w(T.UTILS, "Blog object is null!! Can't read timezone opt then.");
-            return null;
-        }
-
-        JSONObject jsonOptions = blog.getBlogOptionsJSONObject();
-        String timezone = null;
-        if (jsonOptions != null && jsonOptions.has("time_zone")) {
-            try {
-                timezone = jsonOptions.getJSONObject("time_zone").getString("value");
-            } catch (JSONException e) {
-                AppLog.e(T.UTILS, "Cannot load time_zone from options: " + jsonOptions, e);
-            }
-        } else {
-            AppLog.w(T.UTILS, "Blog options are null, or doesn't contain time_zone");
-        }
-        return timezone;
-    }
-
     private static String getCurrentDateTimeTZ(String blogTimeZoneOption, String pattern) {
         Date date = new Date();
         SimpleDateFormat gmtDf = new SimpleDateFormat(pattern);
@@ -174,10 +156,11 @@ public class StatsUtils {
 
         AppLog.v(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
         String timezoneNormalized;
-        if (blogTimeZoneOption.equals("0") || blogTimeZoneOption.equals("0.0")) {
+        if (TextUtils.isEmpty(blogTimeZoneOption) || blogTimeZoneOption.equals("0")
+                || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
         } else {
-            String[] timezoneSplitted = org.apache.commons.lang.StringUtils.split(blogTimeZoneOption, ".");
+            String[] timezoneSplitted = org.apache.commons.lang3.StringUtils.split(blogTimeZoneOption, ".");
             timezoneNormalized = timezoneSplitted[0];
             if(timezoneSplitted.length > 1 && timezoneSplitted[1].equals("5")){
                 timezoneNormalized += ":30";
@@ -291,22 +274,6 @@ public class StatsUtils {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 
-    public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
-        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
-        // the current wpcom account. We need to load the correct localID here, otherwise options are
-        // blank
-        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
-                remoteBlogID,
-                null);
-        if (localId == 0) {
-            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
-                    remoteBlogID
-            );
-        }
-
-        return localId;
-    }
-
     public static synchronized void logVolleyErrorDetails(final VolleyError volleyError) {
         if (volleyError == null) {
             AppLog.e(T.STATS, "Tried to log a VolleyError, but the error obj was null!");
@@ -336,76 +303,76 @@ public class StatsUtils {
         }
     }
 
-    public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
-            throws JSONException {
-        Serializable model = null;
+    public static synchronized BaseStatsModel parseResponse(StatsService.StatsEndpointsEnum endpointName, long siteId,
+                                                            JSONObject response) throws JSONException {
+        BaseStatsModel model = null;
         switch (endpointName) {
             case VISITS:
-                model = new VisitsModel(blogID, response);
+                model = new VisitsModel(siteId, response);
                 break;
             case TOP_POSTS:
-                model = new TopPostsAndPagesModel(blogID, response);
+                model = new TopPostsAndPagesModel(siteId, response);
                 break;
             case REFERRERS:
-                model = new ReferrersModel(blogID, response);
+                model = new ReferrersModel(siteId, response);
                 break;
             case CLICKS:
-                model = new ClicksModel(blogID, response);
+                model = new ClicksModel(siteId, response);
                 break;
             case GEO_VIEWS:
-                model = new GeoviewsModel(blogID, response);
+                model = new GeoviewsModel(siteId, response);
                 break;
             case AUTHORS:
-                model = new AuthorsModel(blogID, response);
+                model = new AuthorsModel(siteId, response);
                 break;
             case VIDEO_PLAYS:
-                model = new VideoPlaysModel(blogID, response);
+                model = new VideoPlaysModel(siteId, response);
                 break;
             case COMMENTS:
-                model = new CommentsModel(blogID, response);
+                model = new CommentsModel(siteId, response);
                 break;
             case FOLLOWERS_WPCOM:
-                model = new FollowersModel(blogID, response);
+                model = new FollowersModel(siteId, response);
                 break;
             case FOLLOWERS_EMAIL:
-                model = new FollowersModel(blogID, response);
+                model = new FollowersModel(siteId, response);
                 break;
             case COMMENT_FOLLOWERS:
-                model = new CommentFollowersModel(blogID, response);
+                model = new CommentFollowersModel(siteId, response);
                 break;
             case TAGS_AND_CATEGORIES:
-                model = new TagsContainerModel(blogID, response);
+                model = new TagsContainerModel(siteId, response);
                 break;
             case PUBLICIZE:
-                model = new PublicizeModel(blogID, response);
+                model = new PublicizeModel(siteId, response);
                 break;
             case SEARCH_TERMS:
-                model = new SearchTermsModel(blogID, response);
+                model = new SearchTermsModel(siteId, response);
                 break;
             case INSIGHTS_ALL_TIME:
-                model = new InsightsAllTimeModel(blogID, response);
+                model = new InsightsAllTimeModel(siteId, response);
                 break;
             case INSIGHTS_POPULAR:
-                model = new InsightsPopularModel(blogID, response);
+                model = new InsightsPopularModel(siteId, response);
                 break;
             case INSIGHTS_TODAY:
-                model = new InsightsTodayModel(blogID, response);
+                model = new InsightsTodayModel(siteId, response);
                 break;
             case INSIGHTS_LATEST_POST_SUMMARY:
-                model = new InsightsLatestPostModel(blogID, response);
+                model = new InsightsLatestPostModel(siteId, response);
                 break;
             case INSIGHTS_LATEST_POST_VIEWS:
-                model = response.getInt("views");
+                model = new InsightsLatestPostDetailsModel(siteId, response);
                 break;
         }
         return model;
     }
 
-    public static void openPostInReaderOrInAppWebview(Context ctx, final String remoteBlogID,
+    public static void openPostInReaderOrInAppWebview(Context ctx, final long remoteBlogID,
                                                       final String remoteItemID,
                                                       final String itemType,
                                                       final String itemURL) {
-        final long blogID = Long.parseLong(remoteBlogID);
+        final long blogID = remoteBlogID;
         final long itemID = Long.parseLong(remoteItemID);
         if (itemType == null) {
             // If we don't know the type of the item, open it with the browser.
@@ -438,10 +405,10 @@ public class StatsUtils {
         }
     }
 
-    public static void openPostInReaderOrInAppWebview(Context ctx, final PostModel post) {
+    public static void openPostInReaderOrInAppWebview(Context ctx, final StatsPostModel post) {
         final String postType = post.getPostType();
         final String url = post.getUrl();
-        final String blogID = post.getBlogID();
+        final long blogID = post.getBlogID();
         final String itemID = post.getItemID();
         openPostInReaderOrInAppWebview(ctx, blogID, itemID, postType, url);
     }
@@ -553,5 +520,26 @@ public class StatsUtils {
         }
 
         return "";
+    }
+
+    /**
+     * Transform a 2 characters country code into a 2 characters emoji flag.
+     * Emoji letter A starts at: 0x1F1E6 thus,
+     * 0x1F1E6 + 5  = 0x1F1EB represents the letter F
+     * 0x1F1E6 + 17 = 0x1F1F7 represents the letter R
+     *
+     * FR: 0x1F1EB 0x1F1F7 is the french flag: 🇫🇷
+     * More infos on https://apps.timwhitlock.info/emoji/tables/iso3166
+     *
+     * @param countryCode - iso3166 country code (2chars)
+     * @return emoji string representing the flag
+     */
+    public static String countryCodeToEmoji(String countryCode) {
+        if (TextUtils.isEmpty(countryCode) || countryCode.length() != 2) {
+            return "";
+        }
+        int char1 = Character.codePointAt(countryCode, 0) - 0x41 + 0x1F1E6;
+        int char2 = Character.codePointAt(countryCode, 1) - 0x41 + 0x1F1E6;
+        return new String(Character.toChars(char1)) + new String(Character.toChars(char2));
     }
 }

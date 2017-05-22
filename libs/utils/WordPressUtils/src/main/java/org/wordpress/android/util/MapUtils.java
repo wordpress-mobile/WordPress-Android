@@ -48,11 +48,39 @@ public class MapUtils {
     }
 
     /*
+     * float version of above
+     */
+    public static float getMapFloat(final Map<?, ?> map, final String key) {
+        return getMapFloat(map, key, 0);
+    }
+    public static float getMapFloat(final Map<?, ?> map, final String key, float defaultValue) {
+        try {
+            return Float.parseFloat(getMapStr(map, key));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    /*
+     * double version of above
+     */
+    public static double getMapDouble(final Map<?, ?> map, final String key) {
+        return getMapDouble(map, key, 0);
+    }
+    public static double getMapDouble(final Map<?, ?> map, final String key, double defaultValue) {
+        try {
+            return Double.parseDouble(getMapStr(map, key));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    /*
      * returns a date object from the passed key in the passed map
      * returns null if key doesn't exist or isn't a date
      */
     public static Date getMapDate(final Map<?, ?> map, final String key) {
-        if (map==null || key==null || !map.containsKey(key))
+        if (map == null || key == null || !map.containsKey(key))
             return null;
         try {
             return (Date) map.get(key);

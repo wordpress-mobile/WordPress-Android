@@ -35,9 +35,10 @@
                 android:layout_height="@dimen/theme_browser_more_button_height"
                 android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_search"
                 android:background="?android:attr/selectableItemBackground"
-                android:layout_alignParentLeft="true" />
+                android:contentDescription="@string/search"
+                android:layout_alignParentLeft="true"
+                card_view:srcCompat="@drawable/ic_search_black_24dp" />
 
         </RelativeLayout>
 

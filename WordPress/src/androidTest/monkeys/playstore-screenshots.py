@@ -12,7 +12,7 @@ from com.dtmilano.android.viewclient import ViewClient
 def action_login(device, serialno):
     print("login")
     device.type(settings.username)
-    device.press('KEYCODE_DPAD_DOWN')
+    device.press('KEYCODE_ENTER')
     device.type(settings.password)
     device.press('KEYCODE_ENTER')
     # time to login
@@ -64,19 +64,32 @@ def action_open_editor_and_type_text(device, serialno):
     # Open My Sites
     for i in range(5):
         device.press('KEYCODE_DPAD_LEFT')
-    # Select FAB and open the editor
-    device.press('KEYCODE_DPAD_DOWN')
-    device.press('KEYCODE_ENTER')
-    time.sleep(1)
-        # Type a sample text (spaces can't be entered via device.type())
-    for word in settings.example_post_content.split():
-        device.type(word)
-        device.press('KEYCODE_SPACE')
-    # Open virtual keyboard by touching the screen
+
     viewclient = ViewClient(device, serialno)
-    view = viewclient.findViewWithText(settings.example_post_content)
+    viewclient.dump()
+    view = viewclient.findViewById("org.wordpress.android:id/fab_button")
     view.touch()
-    time.sleep(1)
+    time.sleep(2)
+
+    # Type a sample title
+    device.type(settings.example_post_title)
+    # Switch to the content field
+    device.press('KEYCODE_TAB')
+    # Type a sample content
+    device.type(settings.example_post_content)
+    # Wait for the Webview :/
+    time.sleep(5)
+
+def action_open_stats(device, serialno):
+    print("open stats tab")
+    device.press('KEYCODE_TAB')
+    for i in range(5):
+        device.press('KEYCODE_DPAD_LEFT')
+    viewclient = ViewClient(device, serialno)
+    viewclient.dump()
+    view = viewclient.findViewById("org.wordpress.android:id/row_stats")
+    view.touch()
+    time.sleep(5)
 
 # Utilities
 
@@ -99,8 +112,13 @@ def _adb_shell(serialno, command):
     print("adb -s '%s' shell \"%s\"" % (serialno, command))
     os.popen("adb -s '%s' shell \"%s\"" % (serialno, command))
 
+def _adb_shell(serialno, command):
+    print("adb -s '%s' shell \"%s\"" % (serialno, command))
+    os.popen("adb -s '%s' shell \"%s\"" % (serialno, command))
+
+
 def change_lang_settings(serialno, lang):
-    adb_command = "su -c 'setprop persist.sys.language %s; setprop persist.sys.country %s; stop; start'"
+    adb_command = "setprop persist.sys.language %s; setprop persist.sys.country %s; stop; start"
     _adb_shell(serialno, adb_command % (lang, lang))
     # time to reload
     time.sleep(15)
@@ -117,6 +135,14 @@ def reinstall_apk(serialno, packagename, apk):
 def back(device):
     device.press('KEYCODE_BACK')
 
+def enter_demo_mode(serialno):
+    # Demo mode on
+    _adb_shell(serialno, "settings put global sysui_demo_allowed 1")
+    # Disable system notifications
+    _adb_shell(serialno, "am broadcast -a com.android.systemui.demo -e command notifications -e visible false")
+    # Enjoy lunch while browsing the Play Store
+    _adb_shell(serialno, "am broadcast -a com.android.systemui.demo -e command clock -e hhmm 1337")
+
 # Main scenario + screenshots
 
 def run_tests_for_device_and_lang(device, serialno, filename, lang, packagename, apk):
@@ -126,9 +152,15 @@ def run_tests_for_device_and_lang(device, serialno, filename, lang, packagename,
     # Change language setting
     change_lang_settings(serialno, lang)
 
+    # Enter demo mode
+    enter_demo_mode(serialno)
+
     # Launch the app
     launch_activity(device, packagename, "org.wordpress.android.ui.WPLaunchActivity")
-    take_screenshot(serialno, lang + "-login-screen-" + filename)
+    # Dismiss keyboard
+    device.press('KEYCODE_ESCAPE')
+    time.sleep(1)
+    take_screenshot(serialno, lang + "-99-login-screen-" + filename)
 
     # Login into the app
     action_login(device, serialno)
@@ -137,17 +169,20 @@ def run_tests_for_device_and_lang(device, serialno, filename, lang, packagename,
     action_open_my_sites(device, serialno)
     take_screenshot(serialno, lang + "-1-my-sites-" + filename)
     action_open_reader_freshlypressed(device, serialno)
-    take_screenshot(serialno, lang + "-2-reader-freshlypressed-" + filename)
+    take_screenshot(serialno, lang + "-2-reader-discover-" + filename)
     action_open_me(device, serialno)
     take_screenshot(serialno, lang + "-3-me-tab-" + filename)
     action_open_notifications(device, serialno)
     take_screenshot(serialno, lang + "-4-notifications-" + filename)
-
-    #action_open_editor_and_type_text(device, serialno)
-    #take_screenshot(serialno, lang + "-editor-" + filename)
-    # Close virtual keyboard and editor
-    #back(device)
-    #back(device)
+    action_open_stats(device, serialno)
+    take_screenshot(serialno, lang + "-5-stats-" + filename)
+    back(device)
+    action_open_editor_and_type_text(device, serialno)
+    take_screenshot(serialno, lang + "-6-editor-" + filename)
+    # Close virtual keyboard
+    back(device)
+    # Close the editor
+    back(device)
 
 def list_devices():
     devices = []

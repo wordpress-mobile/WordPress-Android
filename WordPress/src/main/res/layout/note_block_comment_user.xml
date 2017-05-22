@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,13 +12,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/user_avatar"
             android:layout_width="@dimen/avatar_sz_small"
-            android:layout_height="@dimen/avatar_sz_small"
-            android:layout_marginTop="5dp"/>
+            android:layout_height="@dimen/avatar_sz_small" />
 
         <LinearLayout
             android:id="@+id/user_name_wrapper"
@@ -43,8 +42,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="-2dp">
+                android:orientation="horizontal">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/user_comment_ago"
@@ -92,10 +90,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
         android:paddingBottom="@dimen/margin_medium"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
-        app:fontFamily="merriweather"
+        android:fontFamily="serif"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />
 
     <View

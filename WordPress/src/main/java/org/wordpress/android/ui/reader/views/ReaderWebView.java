@@ -15,16 +15,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.WPRestClient;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import javax.inject.Inject;
 
 /*
  * WebView descendant used by ReaderPostDetailFragment - handles
@@ -33,6 +34,7 @@ import java.net.URL;
 public class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
+        @SuppressWarnings("SameReturnValue")
         boolean onUrlClick(String url);
         boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
@@ -48,6 +50,9 @@ public class ReaderWebView extends WebView {
         void onPageFinished(WebView view, String url);
     }
 
+    /** Timeout in milliseconds for read / connect timeouts */
+    private static final int TIMEOUT_MS = 30000;
+
     private ReaderWebChromeClient mReaderChromeClient;
     private ReaderCustomViewListener mCustomViewListener;
     private ReaderWebViewUrlClickListener mUrlClickListener;
@@ -58,11 +63,51 @@ public class ReaderWebView extends WebView {
     private static boolean mBlogSchemeIsHttps;
 
     private boolean mIsDestroyed;
-
+    @Inject AccountStore mAccountStore;
 
     public ReaderWebView(Context context) {
         super(context);
-        init();
+        init(context);
+    }
+
+    public ReaderWebView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(context);
+    }
+
+    @SuppressLint("NewApi")
+    private void init(Context context) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
+
+        if (!isInEditMode()) {
+            mToken = mAccountStore.getAccessToken();
+
+            mReaderChromeClient = new ReaderWebChromeClient(this);
+            this.setWebChromeClient(mReaderChromeClient);
+            this.setWebViewClient(new ReaderWebViewClient(this));
+            this.getSettings().setUserAgentString(WordPress.getUserAgent());
+
+            // Adjust content font size on APIs 19 and below as those do not do it automatically.
+            //  If fontScale is close to 1, just let it be 1.
+            final float fontScale = getResources().getConfiguration().fontScale;
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT && ((int) (fontScale * 10000)) != 10000) {
+
+                this.getSettings().setDefaultFontSize((int) (this.getSettings().getDefaultFontSize() * fontScale));
+                this.getSettings().setDefaultFixedFontSize(
+                        (int) (this.getSettings().getDefaultFixedFontSize() * fontScale));
+            }
+
+            // Lollipop disables third-party cookies by default, but we need them in order
+            // to support authenticated images
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
+            }
+        }
     }
 
     @Override
@@ -75,31 +120,9 @@ public class ReaderWebView extends WebView {
         return mIsDestroyed;
     }
 
-    public ReaderWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
 
-    public ReaderWebView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init();
-    }
-
-    @SuppressLint("NewApi")
-    private void init() {
-        if (!isInEditMode()) {
-            mToken = AccountHelper.getDefaultAccount().getAccessToken();
-
-            mReaderChromeClient = new ReaderWebChromeClient(this);
-            this.setWebChromeClient(mReaderChromeClient);
-            this.setWebViewClient(new ReaderWebViewClient(this));
-            this.getSettings().setUserAgentString(WordPress.getUserAgent());
-            // Lollipop disables third-party cookies by default, but we need them in order
-            // to support authenticated images
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
-            }
-        }
+    public void clearContent() {
+        loadUrl("about:blank");
     }
 
     private ReaderWebViewUrlClickListener getUrlClickListener() {
@@ -206,15 +229,13 @@ public class ReaderWebView extends WebView {
             // loaded (is visible) - have seen some posts containing iframes
             // automatically try to open urls (without being clicked)
             // before the page has loaded
-            if (view.getVisibility() == View.VISIBLE
+            return view.getVisibility() == View.VISIBLE
                     && mReaderWebView.hasUrlClickListener()
-                    && isValidClickedUrl(url)) {
-                return mReaderWebView.getUrlClickListener().onUrlClick(url);
-            } else {
-                return false;
-            }
+                    && isValidClickedUrl(url)
+                    && mReaderWebView.getUrlClickListener().onUrlClick(url);
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
             URL imageUrl  = null;
@@ -231,8 +252,8 @@ public class ReaderWebView extends WebView {
                 try {
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
-                    conn.setReadTimeout(WPRestClient.REST_TIMEOUT_MS);
-                    conn.setConnectTimeout(WPRestClient.REST_TIMEOUT_MS);
+                    conn.setReadTimeout(TIMEOUT_MS);
+                    conn.setConnectTimeout(TIMEOUT_MS);
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
@@ -343,8 +364,6 @@ public class ReaderWebView extends WebView {
 
             mCustomView = null;
             mCustomViewCallback = null;
-
-            mReaderWebView.onPause();
         }
 
         boolean isCustomViewShowing() {

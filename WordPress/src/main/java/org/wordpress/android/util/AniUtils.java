@@ -84,7 +84,11 @@ public class AniUtils {
         float toY   = (show ? 0f : max);
 
         ObjectAnimator anim = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, fromY, toY);
-        anim.setInterpolator(show ? new DecelerateInterpolator() : new AccelerateInterpolator());
+        if (show) {
+            anim.setInterpolator(new DecelerateInterpolator());
+        } else {
+            anim.setInterpolator(new AccelerateInterpolator());
+        }
         anim.setDuration(show ? Duration.LONG.toMillis(context) : Duration.SHORT.toMillis(context));
 
         anim.addListener(new AnimatorListenerAdapter() {
@@ -111,16 +115,21 @@ public class AniUtils {
      * used when animating a toolbar in/out
      */
     public static void animateTopBar(View view, boolean show) {
-        animateBar(view, show, true);
+        animateBar(view, show, true, Duration.SHORT);
     }
 
     public static void animateBottomBar(View view, boolean show) {
-        animateBar(view, show, false);
+        animateBar(view, show, false, Duration.SHORT);
     }
 
-    private static void animateBar(final View view,
-                                   final boolean show,
-                                   final boolean isTopBar) {
+    public static void animateBottomBar(View view, boolean show, Duration duration) {
+        animateBar(view, show, false, duration);
+    }
+
+    private static void animateBar(View view,
+                                   boolean show,
+                                   boolean isTopBar,
+                                   Duration duration) {
         int newVisibility = (show ? View.VISIBLE : View.GONE);
         if (view == null || view.getVisibility() == newVisibility) {
             return;
@@ -141,7 +150,7 @@ public class AniUtils {
                 Animation.RELATIVE_TO_SELF, fromY,
                 Animation.RELATIVE_TO_SELF, toY);
 
-        long durationMillis = Duration.SHORT.toMillis(view.getContext());
+        long durationMillis = duration.toMillis(view.getContext());
         animation.setDuration(durationMillis);
 
         if (show) {
@@ -168,14 +177,14 @@ public class AniUtils {
         return fadeIn;
     }
 
-    private static ObjectAnimator getFadeOutAnim(final View target, Duration duration) {
+    private static ObjectAnimator getFadeOutAnim(final View target, Duration duration, final int endVisibility) {
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(target, View.ALPHA, 1.0f, 0.0f);
         fadeOut.setDuration(duration.toMillis(target.getContext()));
         fadeOut.setInterpolator(new LinearInterpolator());
         fadeOut.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                target.setVisibility(View.GONE);
+                target.setVisibility(endVisibility);
             }
         });
         return fadeOut;
@@ -188,9 +197,28 @@ public class AniUtils {
     }
 
     public static void fadeOut(final View target, Duration duration) {
+        fadeOut(target, duration, View.GONE);
+    }
+
+    public static void fadeOut(final View target, Duration duration, int endVisibility) {
         if (target != null && duration != null) {
-            getFadeOutAnim(target, duration).start();
+            getFadeOutAnim(target, duration, endVisibility).start();
         }
+    }
+
+    public static void scale(final View target, float scaleStart, float scaleEnd, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, scaleStart, scaleEnd);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, scaleStart, scaleEnd);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(duration.toMillis(target.getContext()));
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.start();
     }
 
     public static void scaleIn(final View target, Duration duration) {

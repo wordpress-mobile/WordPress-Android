@@ -5,25 +5,35 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SiteSettingsTable;
-import org.wordpress.android.models.Blog;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.PostFormatModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
-import org.xmlrpc.android.ApiHelper.Method;
-import org.xmlrpc.android.ApiHelper.Param;
-import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClientInterface;
-import org.xmlrpc.android.XMLRPCFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Interface for WordPress (.com and .org) Site Settings. The {@link SiteSettingsModel} class is
@@ -36,7 +46,7 @@ import java.util.Map;
  * - Language
  * - Username (.org only)
  * - Password (.org only)
- * - Location (local device setting, not saved remotely)
+ * - Optimized Image (local device setting, not saved remotely)
  * - Default Category
  * - Default Format
  * - Related Posts
@@ -57,9 +67,7 @@ import java.util.Map;
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
  * offered by each is roughly the same). To get an instance of this interface class use the
- * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)} method. It will
- * determine which interface ({@link SelfHostedSiteSettings} or {@link DotComSiteSettings}) is
- * appropriate for the given blog.
+ * {@link SiteSettingsInterface#getInterface(Activity, SiteModel, SiteSettingsListener)} method.
  */
 
 public abstract class SiteSettingsInterface {
@@ -73,11 +81,6 @@ public abstract class SiteSettingsInterface {
      * Key used to access the language preference stored in {@link SharedPreferences}.
      */
     public static final String LANGUAGE_PREF_KEY = "site-settings-language-pref";
-
-    /**
-     * Key used to access the location preference stored in {@link SharedPreferences}.
-     */
-    public static final String LOCATION_PREF_KEY = "site-settings-location-pref";
 
     /**
      * Key used to access the default category preference stored in {@link SharedPreferences}.
@@ -117,14 +120,15 @@ public abstract class SiteSettingsInterface {
     /**
      * Instantiates the appropriate (self-hosted or .com) SiteSettingsInterface.
      */
-    public static SiteSettingsInterface getInterface(Activity host, Blog blog, SiteSettingsListener listener) {
-        if (host == null || blog == null) return null;
+    @Nullable
+    public static SiteSettingsInterface getInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
+        if (host == null || site == null) return null;
 
-        if (blog.isDotcomFlag()) {
-            return new DotComSiteSettings(host, blog, listener);
-        } else {
-            return new SelfHostedSiteSettings(host, blog, listener);
+        if (SiteUtils.isAccessedViaWPComRest(site)) {
+            return new DotComSiteSettings(host, site, listener);
         }
+
+        return new DotOrgSiteSettings(host, site, listener);
     }
 
     /**
@@ -135,28 +139,10 @@ public abstract class SiteSettingsInterface {
     }
 
     /**
-     * Gets the geo-tagging value stored in {@link SharedPreferences}, false by default.
-     */
-    public static boolean getGeotagging(Context context) {
-        return siteSettingsPreferences(context).getBoolean(LOCATION_PREF_KEY, false);
-    }
-
-    /**
      * Gets the default category value stored in {@link SharedPreferences}, 0 by default.
      */
-    public static String getDefaultCategory(Context context) {
-        int id = siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
-
-        if (id != 0) {
-            CategoryModel category = new CategoryModel();
-            Cursor cursor = SiteSettingsTable.getCategory(id);
-            if (cursor != null && cursor.moveToFirst()) {
-                category.deserializeFromDatabase(cursor);
-                return category.name;
-            }
-        }
-
-        return "";
+    public static int getDefaultCategory(Context context) {
+        return siteSettingsPreferences(context).getInt(DEF_CATEGORY_PREF_KEY, 0);
     }
 
     /**
@@ -207,26 +193,35 @@ public abstract class SiteSettingsInterface {
     protected abstract void fetchRemoteData();
 
     protected final Activity mActivity;
-    protected final Blog mBlog;
+    protected final SiteModel mSite;
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
     protected final SiteSettingsModel mRemoteSettings;
-
     private final Map<String, String> mLanguageCodes;
 
-    protected SiteSettingsInterface(Activity host, Blog blog, SiteSettingsListener listener) {
+    @Inject SiteStore mSiteStore;
+    @Inject Dispatcher mDispatcher;
+
+    protected SiteSettingsInterface(Activity host, SiteModel site, SiteSettingsListener listener) {
+        ((WordPress) host.getApplicationContext()).component().inject(this);
+        mDispatcher.register(this);
         mActivity = host;
-        mBlog = blog;
+        mSite = site;
         mListener = listener;
         mSettings = new SiteSettingsModel();
         mRemoteSettings = new SiteSettingsModel();
         mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        mDispatcher.unregister(this);
+        super.finalize();
+    }
+
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
         siteSettingsPreferences(mActivity).edit().putString(LANGUAGE_PREF_KEY, mSettings.language).apply();
-        siteSettingsPreferences(mActivity).edit().putBoolean(LOCATION_PREF_KEY, mSettings.location).apply();
         siteSettingsPreferences(mActivity).edit().putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory).apply();
         siteSettingsPreferences(mActivity).edit().putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat).apply();
     }
@@ -273,12 +268,38 @@ public abstract class SiteSettingsInterface {
         return mSettings.password == null ? "" : mSettings.password;
     }
 
-    public boolean getLocation() {
-        return mSettings.location;
+
+    public boolean getOptimizedImage() {
+        return mSettings.optimizedImage;
+    }
+
+    public int getMaxImageWidth() {
+        int resizeWidth = mSettings.maxImageWidth;
+        return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_IMAGE_MAX_WIDTH : resizeWidth;
+    }
+
+    public int getImageQuality() {
+        return mSettings.imageQualitySetting > 1 ? mSettings.imageQualitySetting : WPMediaUtils.OPTIMIZE_IMAGE_ENCODER_QUALITY;
     }
 
     public @NonNull Map<String, String> getFormats() {
-        if (mSettings.postFormats == null) mSettings.postFormats = new HashMap<>();
+        mSettings.postFormats = new HashMap<>();
+        String[] postFormatDisplayNames = mActivity.getResources().getStringArray(R.array.post_format_display_names);
+        String[] postFormatKeys = mActivity.getResources().getStringArray(R.array.post_format_keys);
+        // Add standard post format (only for .com)
+        mSettings.postFormats.put(STANDARD_POST_FORMAT_KEY, STANDARD_POST_FORMAT);
+        // Add default post formats
+        for (int i = 0; i < postFormatKeys.length && i < postFormatDisplayNames.length; ++i) {
+            mSettings.postFormats.put(postFormatKeys[i], postFormatDisplayNames[i]);
+        }
+        if (mSite == null) {
+            return mSettings.postFormats;
+        }
+        // Add (or replace) site-specific post formats
+        List<PostFormatModel> postFormats = mSiteStore.getPostFormats(mSite);
+        for (PostFormatModel postFormat : postFormats) {
+            mSettings.postFormats.put(postFormat.getSlug(), postFormat.getDisplayName());
+        }
         return mSettings.postFormats;
     }
 
@@ -291,7 +312,7 @@ public abstract class SiteSettingsInterface {
         Map<Integer, String> categoryNames = new HashMap<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
-                categoryNames.put(model.id, model.name);
+                categoryNames.put(model.id, Html.fromHtml(model.name).toString());
             }
         }
 
@@ -305,7 +326,7 @@ public abstract class SiteSettingsInterface {
     public @NonNull String getDefaultCategoryForDisplay() {
         for (CategoryModel model : getCategories()) {
             if (model != null && model.id == getDefaultCategory()) {
-                return model.name;
+                return Html.fromHtml(model.name).toString();
             }
         }
 
@@ -337,6 +358,12 @@ public abstract class SiteSettingsInterface {
         return mSettings.showRelatedPostImages;
     }
 
+    public @NonNull String getRelatedPostsDescription() {
+        if (mActivity == null) return "";
+        String desc = mActivity.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
+        return StringUtils.capitalize(desc);
+    }
+
     public boolean getAllowComments() {
         return mSettings.allowComments;
     }
@@ -357,15 +384,25 @@ public abstract class SiteSettingsInterface {
         return mSettings.closeCommentAfter;
     }
 
-    public @NonNull String getCloseAfterDescription() {
-        return getCloseAfterDescription(getCloseAfter());
+    public @NonNull String getCloseAfterDescriptionForPeriod() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfter());
     }
 
-    public @NonNull String getCloseAfterDescription(int period) {
+    public int getCloseAfterPeriodForDescription() {
+        return !getShouldCloseAfter() ? 0 : getCloseAfter();
+    }
+
+    public @NonNull String getCloseAfterDescription() {
+        return getCloseAfterDescriptionForPeriod(getCloseAfterPeriodForDescription());
+    }
+
+    public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mActivity == null) return "";
 
-        if (period == 0) return mActivity.getString(R.string.never);
-        return mActivity.getResources().getQuantityString(R.plurals.days_quantity, period, period);
+        if (!getShouldCloseAfter()) return mActivity.getString(R.string.never);
+
+        return StringUtils.getQuantityString(mActivity, R.string.never, R.string.days_quantity_one,
+                R.string.days_quantity_other, period);
     }
 
     public int getCommentSorting() {
@@ -394,12 +431,19 @@ public abstract class SiteSettingsInterface {
         return mSettings.threadingLevels;
     }
 
+    public int getThreadingLevelsForDescription() {
+        return !getShouldThreadComments() ? 1 : getThreadingLevels();
+    }
+
     public @NonNull String getThreadingDescription() {
+        return getThreadingDescriptionForLevel(getThreadingLevelsForDescription());
+    }
+
+    public @NonNull String getThreadingDescriptionForLevel(int level) {
         if (mActivity == null) return "";
 
-        int levels = getThreadingLevels();
-        if (levels <= 1) return mActivity.getString(R.string.none);
-        return String.format(mActivity.getString(R.string.site_settings_threading_summary), levels);
+        if (level <= 1) return mActivity.getString(R.string.none);
+        return String.format(mActivity.getString(R.string.site_settings_threading_summary), level);
     }
 
     public boolean getShouldPageComments() {
@@ -410,12 +454,20 @@ public abstract class SiteSettingsInterface {
         return mSettings.commentsPerPage;
     }
 
+    public int getPagingCountForDescription() {
+        return !getShouldPageComments() ? 0 : getPagingCount();
+    }
+
     public @NonNull String getPagingDescription() {
         if (mActivity == null) return "";
 
-        int count = getPagingCount();
-        if (count == 0) return mActivity.getString(R.string.none);
-        return mActivity.getResources().getQuantityString(R.plurals.site_settings_paging_summary, count, count);
+        if (!getShouldPageComments()) {
+            return mActivity.getString(R.string.disabled);
+        }
+
+        int count = getPagingCountForDescription();
+        return StringUtils.getQuantityString(mActivity, R.string.none, R.string.site_settings_paging_summary_one,
+                R.string.site_settings_paging_summary_other, count);
     }
 
     public boolean getManualApproval() {
@@ -439,13 +491,30 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull List<String> getModerationKeys() {
-        if (mSettings.holdForModeration == null) return new ArrayList<>();
+        if (mSettings.holdForModeration == null) mSettings.holdForModeration = new ArrayList<>();
         return mSettings.holdForModeration;
     }
 
+    public @NonNull String getModerationHoldDescription() {
+        return getKeysDescription(getModerationKeys().size());
+    }
+
     public @NonNull List<String> getBlacklistKeys() {
-        if (mSettings.blacklist == null) return new ArrayList<>();
+        if (mSettings.blacklist == null) mSettings.blacklist = new ArrayList<>();
         return mSettings.blacklist;
+    }
+
+    public @NonNull String getBlacklistDescription() {
+        return getKeysDescription(getBlacklistKeys().size());
+    }
+
+    public @NonNull String getKeysDescription(int count) {
+        if (mActivity == null) return "";
+
+        return StringUtils.getQuantityString(mActivity, R.string.site_settings_list_editor_no_items_text,
+                R.string.site_settings_list_editor_summary_one,
+                R.string.site_settings_list_editor_summary_other, count);
+
     }
 
     public void setTitle(String title) {
@@ -464,9 +533,12 @@ public abstract class SiteSettingsInterface {
         mSettings.privacy = privacy;
     }
 
-    public void setLanguageCode(String languageCode) {
+    public boolean setLanguageCode(String languageCode) {
+        if (!mLanguageCodes.containsKey(languageCode) ||
+            TextUtils.isEmpty(mLanguageCodes.get(languageCode))) return false;
         mSettings.language = languageCode;
         mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
+        return true;
     }
 
     public void setLanguageId(int languageId) {
@@ -485,8 +557,16 @@ public abstract class SiteSettingsInterface {
         mSettings.password = password;
     }
 
-    public void setLocation(boolean location) {
-        mSettings.location = location;
+    public void setOptimizedImage(boolean optimizeImage) {
+        mSettings.optimizedImage = optimizeImage;
+    }
+
+    public void setImageResizeWidth(int width) {
+        mSettings.maxImageWidth = width;
+    }
+
+    public void setImageQuality(int quality) {
+        mSettings.imageQualitySetting = quality;
     }
 
     public void setAllowComments(boolean allowComments) {
@@ -646,16 +726,14 @@ public abstract class SiteSettingsInterface {
      * Needed so that subclasses can be created before initializing. The final member variables
      * are null until object has been created so XML-RPC callbacks will not run.
      *
-     * @return
-     * returns itself for the convenience of
-     * {@link SiteSettingsInterface#getInterface(Activity, Blog, SiteSettingsListener)}
+     * @return itself
      */
     public SiteSettingsInterface init(boolean fetchRemote) {
         loadCachedSettings();
 
         if (fetchRemote) {
             fetchRemoteData();
-            fetchPostFormats();
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
         }
 
         return this;
@@ -668,14 +746,6 @@ public abstract class SiteSettingsInterface {
         Exception e = valid ? null : new AuthenticationError();
         if (mSettings.hasVerifiedCredentials != valid) notifyCredentialsVerifiedOnUiThread(e);
         mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
-    }
-
-    /**
-     * Helper method to create an XML-RPC interface for the current blog.
-     */
-    protected XMLRPCClientInterface instantiateInterface() {
-        if (mBlog == null) return null;
-        return XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(), mBlog.getHttppassword());
     }
 
     /**
@@ -702,77 +772,40 @@ public abstract class SiteSettingsInterface {
      * Need to defer loading the cached settings to a thread so it completes after initialization.
      */
     private void loadCachedSettings() {
-        Cursor localSettings = SiteSettingsTable.getSettings(mBlog.getRemoteBlogId());
+        Cursor localSettings = SiteSettingsTable.getSettings(mSite.getId());
 
-        if (localSettings != null) {
+        if (localSettings != null && localSettings.getCount() > 0) {
+            mSettings.isInLocalTable = true;
             Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
             mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
             mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
             if (mSettings.language == null) {
-                setLanguageCode(Locale.getDefault().getLanguage());
+                setLanguageCode(LanguageUtils.getPatchedCurrentDeviceLanguage(null));
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
-            mRemoteSettings.location = mSettings.location;
-            localSettings.close();
+            mRemoteSettings.optimizedImage = mSettings.optimizedImage;
+            mRemoteSettings.maxImageWidth = mSettings.maxImageWidth;
+            mRemoteSettings.imageQualitySetting = mSettings.imageQualitySetting;
             notifyUpdatedOnUiThread(null);
         } else {
             mSettings.isInLocalTable = false;
-            setAddress(mBlog.getHomeURL());
-            setUsername(mBlog.getUsername());
-            setPassword(mBlog.getPassword());
-            setTitle(mBlog.getBlogName());
+            mSettings.localTableId = mSite.getId();
+            setAddress(mSite.getUrl());
+            setUsername(mSite.getUsername());
+            setPassword(mSite.getPassword());
+            setTitle(mSite.getName());
         }
-    }
 
-    /**
-     * Gets available post formats via XML-RPC. Since both self-hosted and .com sites retrieve the
-     * format list via XML-RPC there is no need to implement this in the sub-classes.
-     */
-    private void fetchPostFormats() {
-        XMLRPCClientInterface client = instantiateInterface();
-        if (client == null) return;
+        // Self hosted always read account data from the main table
+        if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
+            setUsername(mSite.getUsername());
+            setPassword(mSite.getPassword());
+        }
 
-        Map<String, String> args = new HashMap<>();
-        args.put(Param.SHOW_SUPPORTED_POST_FORMATS, "true");
-        Object[] params = { mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                mBlog.getPassword(), args};
-        client.callAsync(new XMLRPCCallback() {
-            @Override
-            public void onSuccess(long id, Object result) {
-                credentialsVerified(true);
-
-                if (result != null && result instanceof HashMap) {
-                    Map<?, ?> resultMap = (HashMap<?, ?>) result;
-                    Map allFormats;
-                    Object[] supportedFormats;
-                    if (resultMap.containsKey("supported")) {
-                        allFormats = (Map) resultMap.get("all");
-                        supportedFormats = (Object[]) resultMap.get("supported");
-                    } else {
-                        allFormats = resultMap;
-                        supportedFormats = allFormats.keySet().toArray();
-                    }
-
-                    mRemoteSettings.postFormats = new HashMap<>();
-                    mRemoteSettings.postFormats.put("standard", "Standard");
-                    for (Object supportedFormat : supportedFormats) {
-                        if (allFormats.containsKey(supportedFormat)) {
-                            mRemoteSettings.postFormats.put(supportedFormat.toString(), allFormats.get(supportedFormat).toString());
-                        }
-                    }
-                    mSettings.postFormats = new HashMap<>(mRemoteSettings.postFormats);
-                    String[] formatKeys = new String[mRemoteSettings.postFormats.size()];
-                    SiteSettingsTable.saveSettings(mSettings);
-
-                    notifyUpdatedOnUiThread(null);
-                }
-            }
-
-            @Override
-            public void onFailure(long id, Exception error) {
-            }
-        }, Method.GET_POST_FORMATS, params);
+        if (localSettings != null) {
+            localSettings.close();
+        }
     }
 
     /**
@@ -815,5 +848,16 @@ public abstract class SiteSettingsInterface {
                 mListener.onSettingsSaved(error);
             }
         });
+    }
+
+    // FluxC OnChanged events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostFormatsChanged(OnPostFormatsChanged event) {
+        if (event.isError()) {
+            return;
+        }
+        notifyUpdatedOnUiThread(null);
     }
 }

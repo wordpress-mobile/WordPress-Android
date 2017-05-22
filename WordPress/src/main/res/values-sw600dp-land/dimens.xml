@@ -1,6 +1,3 @@
 <resources>
-    <dimen name="reader_detail_margin">@dimen/reader_detail_margin_tablet_landscape</dimen>
-    <dimen name="content_margin">@dimen/content_margin_tablet_landscape</dimen>
-    <dimen name="reader_card_margin">@dimen/reader_card_margin_tablet_landscape</dimen>
     <dimen name="notifications_list_margin">192dp</dimen>
 </resources>

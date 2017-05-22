@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -24,7 +25,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:visibility="gone"
-            android:src="@drawable/stats_link" />
+            app:srcCompat="@drawable/ic_external_blue_wordpress_18dp" />
 
         <ImageView
             android:id="@+id/stats_list_cell_chevron"
@@ -33,7 +34,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:visibility="gone"
-            android:src="@drawable/stats_chevron_right" />
+            app:srcCompat="@drawable/ic_chevron_right_blue_wordpress_24dp" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/stats_list_cell_image"
@@ -41,6 +42,17 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
+            android:visibility="gone" />
+
+        <!-- Alternative to the Network image view above, can be used to display emojis (flags for instance) -->
+        <TextView
+            android:id="@+id/stats_list_cell_image_alt"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:textSize="@dimen/avatar_sz_extra_small"
+            android:textColor="@color/black"
             android:visibility="gone" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -72,7 +84,8 @@
             android:background="?android:selectableItemBackground"
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
-            android:src="@drawable/ic_action_more" />
+            android:contentDescription="@string/more"
+            app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" />
 
         <LinearLayout
             android:id="@+id/stats_list_cell_total_container"
