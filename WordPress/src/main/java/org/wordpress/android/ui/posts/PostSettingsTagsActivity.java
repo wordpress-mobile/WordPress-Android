@@ -83,7 +83,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new TagsRecyclerViewAdapter(this);
-        mAdapter.setAllTags(mTaxonomyStore.getTagsForPost(mPost, mSite));
+        mAdapter.setAllTags(mTaxonomyStore.getTagsForSite(mSite));
         recyclerView.setAdapter(mAdapter);
 
         if (mTagsEditText != null) {
@@ -160,14 +160,12 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     // Find the text after the last occurrence of "," and filter with it
     private void filterListForCurrentText() {
         String text = mTagsEditText.getText().toString();
-        if (!TextUtils.isEmpty(text)) {
-            int endIndex = text.lastIndexOf(",");
-            if (endIndex == -1) {
-                mAdapter.filter(text);
-            } else if (endIndex + 1 <= text.length()) {
-                String textToFilter = text.substring(endIndex + 1);
-                mAdapter.filter(textToFilter);
-            }
+        int endIndex = text.lastIndexOf(",");
+        if (endIndex == -1) {
+            mAdapter.filter(text);
+        } else {
+            String textToFilter = text.substring(endIndex + 1);
+            mAdapter.filter(textToFilter);
         }
     }
 
@@ -192,7 +190,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
         switch (event.causeOfChange) {
             case FETCH_TAGS:
-                mAdapter.setAllTags(mTaxonomyStore.getTagsForPost(mPost, mSite));
+                mAdapter.setAllTags(mTaxonomyStore.getTagsForSite(mSite));
                 filterListForCurrentText();
                 break;
         }
