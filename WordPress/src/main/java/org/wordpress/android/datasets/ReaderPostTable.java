@@ -367,10 +367,33 @@ public class ReaderPostTable {
         if (post == null) {
             return 0;
         }
-        String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
+        return getNumCommentsForPost(post.blogId, post.postId);
+    }
+
+    public static int getNumCommentsForPost(long blogId, long postId) {
+        String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT num_replies FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
+    }
+
+    public static void setNumCommentsForPost(long blogId, long postId, int numComments) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+
+        ContentValues values = new ContentValues();
+        values.put("num_replies", numComments);
+
+        ReaderDatabase.getWritableDb().update(
+                "tbl_posts",
+                values,
+                "blog_id=? AND post_id=?",
+                args);
+    }
+
+    public static void incNumCommentsForPost(long blogId, long postId) {
+        int numComments = getNumCommentsForPost(blogId, postId);
+        numComments++;
+        setNumCommentsForPost(blogId, postId, numComments);
     }
 
     /*
