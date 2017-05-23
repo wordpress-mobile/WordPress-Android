@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.login.LoginEmailAvailabilityFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginNavFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 
 public class LoginActivity extends AppCompatActivity implements LoginNavHandler, LoginStateGetter.FsmGetter {
     private static final String TAG_LOGIN_NAV_FRAGMENT = "TAG_LOGIN_NAV_FRAGMENT";
+    private static final String TAG_LOGIN_EMAIL_CHECKER_FRAGMENT = "TAG_LOGIN_EMAIL_CHECKER_FRAGMENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,10 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
 
         if (!hasLoginNavFragment()) {
             addLoginNavFragment();
+        }
+
+        if (!hasLoginEmailCheckerFragment()) {
+            addLoginEmailCheckerFragment();
         }
 
         if (savedInstanceState == null) {
@@ -74,6 +80,16 @@ public class LoginActivity extends AppCompatActivity implements LoginNavHandler,
     private void addLoginNavFragment() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(new LoginNavFragment(), TAG_LOGIN_NAV_FRAGMENT);
+        fragmentTransaction.commit();
+    }
+
+    private boolean hasLoginEmailCheckerFragment() {
+        return getSupportFragmentManager().findFragmentByTag(TAG_LOGIN_EMAIL_CHECKER_FRAGMENT) != null;
+    }
+
+    private void addLoginEmailCheckerFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(new LoginEmailAvailabilityFragment(), TAG_LOGIN_EMAIL_CHECKER_FRAGMENT);
         fragmentTransaction.commit();
     }
 

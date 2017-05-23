@@ -26,15 +26,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
-import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.ui.accounts.login.LoginEmailAvailabilityFragment.Events.CheckUpdate;
 import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
 import org.wordpress.android.util.AppLog;
@@ -46,11 +41,9 @@ import org.wordpress.emailchecker2.EmailChecker;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
+import de.greenrobot.event.EventBus;
 
 public class LoginEmailFragment extends Fragment implements TextWatcher {
-    private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
-
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
@@ -61,14 +54,15 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     private LoginNav.InputEmail mLoginNavInputEmail;
     private boolean mEmailAutoCorrected;
-    private boolean mInProgress;
-
-    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+
+        if (savedInstanceState == null) {
+            // reset the email availability checker the first time we enter the screen
+            LoginEmailAvailabilityFragment.clear();
+        }
 
         setHasOptionsMenu(true);
     }
@@ -78,7 +72,6 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_email_screen, container, false);
 
         mEmailEditText = (EditText) rootView.findViewById(R.id.login_email);
-        mEmailEditText.addTextChangedListener(this);
 
         mEmailEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_email_layout);
 
@@ -129,14 +122,6 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        if (savedInstanceState != null) {
-            mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
-
-            if (mInProgress) {
-                showEmailCheckProgressDialog();
-            }
-        }
     }
 
     @Override
@@ -153,13 +138,27 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     public void onDetach() {
         super.onDetach();
         mLoginNavInputEmail = null;
+
+        // dismiss the progress dialog if open to avoid leaking the Activity reference
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+
+        // stop listening to events if not attached to the Activity anymore
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onResume() {
+        super.onResume();
 
-        outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
+        EventBus.getDefault().register(this);
+
+        LoginEmailAvailabilityFragment.askUpdate();
+
+        // enable the email input change listener last, after the EditBox has been set up (i.e. re-populated on rotate).
+        //  The listener clears the state of the email checker so, need to avoid clearing it on rotate.
+        mEmailEditText.addTextChangedListener(this);
     }
 
     @Override
@@ -220,10 +219,10 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         autoCorrectEmail();
 
         if (isValidEmail(email)) {
-            showEmailCheckProgressDialog();
-            mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
+            showEmailError(null);
+            LoginEmailAvailabilityFragment.newCheckRequest(email);
         } else {
-            showEmailError(R.string.email_invalid);
+            showEmailError(getString(R.string.email_invalid));
         }
     }
 
@@ -248,86 +247,68 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        updateNextButton();
-        mEmailEditTextLayout.setError(null);
+        LoginEmailAvailabilityFragment.clear();
     }
 
     private void updateNextButton() {
         mNextButton.setEnabled(getCleanedEmail().length() > 0);
     }
 
-    private void showEmailError(int messageId) {
-        mEmailEditTextLayout.setError(getString(messageId));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mDispatcher.unregister(this);
-    }
-
-    private void showEmailCheckProgressDialog() {
-        startProgress(getActivity().getString(R.string.checking_email));
-    }
-
-    private void startProgress(String message) {
-        mNextButton.setEnabled(false);
-        mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
-                new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                updateNextButton();
-            }
-        });
-        mInProgress = true;
-    }
-
-    private void endProgress() {
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = ProgressDialog.show(getActivity(), "", getString(R.string.checking_email), true, true,
+                    new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    LoginEmailAvailabilityFragment.clear();
+                }
+            });
+            mProgressDialog.show();
+        } else {
+            mProgressDialog.show();
         }
-
-        // nullify the reference to cleanup
-        mProgressDialog = null;
-
-        mInProgress = false;
-
-        updateNextButton();
     }
 
-    // OnChanged events
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    private void clearResultWithMessage(String message) {
+        updateNextButton();
+        dismissProgressDialog();
+        showEmailError(message);
+    }
+
+    private void showEmailError(String message) {
+        mEmailEditTextLayout.setError(message);
+    }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAvailabilityChecked(OnAvailabilityChecked event) {
-        endProgress();
+    public void onEventMainThread(CheckUpdate event) {
+        switch (event.emailCheckState) {
+            case IDLE:
+                clearResultWithMessage(null);
+                break;
+            case IN_PROGRESS:
+                mNextButton.setEnabled(false);
+                showProgressDialog();
+                break;
+            case AVAILABLE_ON_WPCOM:
+                // email address is available on wpcom so, the user can't login with that email
+                clearResultWithMessage(getString(R.string.email_not_registered_wpcom));
+                break;
+            case UNAVAILABLE_ON_WPCOM:
+                // reset the email checker since all went well
+                LoginEmailAvailabilityFragment.clear();
 
-        if (event.isError()) {
-            // report the error but don't bail yet.
-            AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
-        }
-
-        if (event.type != AccountRestClient.IsAvailable.EMAIL) {
-            AppLog.e(T.API, "OnAvailabilityChecked type other than email! Type: " + event.error.type);
-
-            // just bail on unexpected availability check type
-            return;
-        }
-
-        if (event.isAvailable) {
-            // email address is available on wpcom so, apparently the user can't login with that one.
-            showEmailError(R.string.email_not_registered_wpcom);
-            return;
-        }
-
-        if (mLoginNavInputEmail != null) {
-            mLoginNavInputEmail.gotEmail(event.value);
+                // email address is not available on wpcom, which means user does exist so, move on to next screen
+                mLoginNavInputEmail.gotEmail(event.emailAddress);
+                break;
+            case ERROR:
+                clearResultWithMessage(getString(R.string.login_error_while_checking_email));
+                break;
         }
     }
 }
