@@ -113,6 +113,7 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
 
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                    mPostList.refreshListAdapter();
                     return true;
                 }
             });

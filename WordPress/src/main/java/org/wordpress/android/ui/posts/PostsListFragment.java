@@ -552,6 +552,12 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    public void refreshListAdapter() {
+        if (mRecyclerView != null) {
+            mRecyclerView.setAdapter(getPostListAdapter());
+        }
+    }
+
     private void showSearchResults() {
         if (mSearchResults.isEmpty()) {
             mRecyclerView.setAdapter(null);
