@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -111,6 +112,19 @@
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone"
         tools:text="5"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/image_preview"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:background="@drawable/preview_icon_background"
+        android:padding="@dimen/margin_medium"
+        android:visibility="visible"
+        app:srcCompat="@drawable/ic_preview_white_24dp"
         tools:visibility="visible" />
 
 </RelativeLayout>
