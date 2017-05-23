@@ -23,9 +23,11 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
     private static final String INPUT_TAG = "input";
     private static final String TITLE_TAG = "title";
     private static final String HINT_TAG = "hint";
+    private static final String DISABLE_EMPTY_INPUT_TAG = "disable_empty_input";
     private String mCurrentInput;
     private String mTitle;
     private String mHint;
+    private boolean mDisableEmptyInput;
     private PostSettingsInputDialogListener mListener;
     private AlertDialog mDialog;
 
@@ -36,10 +38,12 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
             mCurrentInput = savedInstanceState.getString(INPUT_TAG, "");
             mTitle = savedInstanceState.getString(TITLE_TAG, "");
             mHint = savedInstanceState.getString(HINT_TAG, "");
+            mDisableEmptyInput = savedInstanceState.getBoolean(DISABLE_EMPTY_INPUT_TAG, false);
         } else if (getArguments() != null) {
             mCurrentInput = getArguments().getString(INPUT_TAG, "");
             mTitle = getArguments().getString(TITLE_TAG, "");
             mHint = getArguments().getString(HINT_TAG, "");
+            mDisableEmptyInput = getArguments().getBoolean(DISABLE_EMPTY_INPUT_TAG, false);
         }
     }
 
@@ -49,14 +53,17 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
         outState.putSerializable(INPUT_TAG, mCurrentInput);
         outState.putSerializable(TITLE_TAG, mTitle);
         outState.putSerializable(HINT_TAG, mHint);
+        outState.putBoolean(DISABLE_EMPTY_INPUT_TAG, mDisableEmptyInput);
     }
 
-    public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint) {
+    public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint
+            , boolean disableEmptyInput) {
         PostSettingsInputDialogFragment dialogFragment = new PostSettingsInputDialogFragment();
         Bundle args = new Bundle();
         args.putString(INPUT_TAG, currentText);
         args.putString(TITLE_TAG, title);
         args.putString(HINT_TAG, hint);
+        args.putBoolean(DISABLE_EMPTY_INPUT_TAG, disableEmptyInput);
         dialogFragment.setArguments(args);
         return dialogFragment;
     }
@@ -111,7 +118,7 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
     @Override
     public void afterTextChanged(Editable editable) {
         if (mDialog != null) {
-            boolean disabled = TextUtils.isEmpty(editable);
+            boolean disabled = mDisableEmptyInput && TextUtils.isEmpty(editable);
             mDialog.getButton(Dialog.BUTTON_POSITIVE).setEnabled(!disabled);
         }
     }

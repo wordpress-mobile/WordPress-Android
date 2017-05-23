@@ -992,7 +992,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostExcerptDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint));
+                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -1006,7 +1006,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showSlugDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint));
+                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
