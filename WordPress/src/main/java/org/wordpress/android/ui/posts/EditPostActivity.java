@@ -88,7 +88,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -633,7 +633,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                startMediaGalleryAddActivity();
+                ActivityLauncher.viewMediaPickerForResult(this, mSite);
                 break;
         }
     }
@@ -1831,9 +1831,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
-                case MediaGalleryPickerActivity.REQUEST_CODE:
-                    handleMediaGalleryPickerResult(data);
-                    // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
+                case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                    handleMediaPickerResult(data);
+                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
@@ -1959,12 +1959,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    private void startMediaGalleryAddActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
-    }
-
-    private void handleMediaGalleryPickerResult(Intent data) {
-        ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+    private void handleMediaPickerResult(Intent data) {
+        ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
             return;
         }
