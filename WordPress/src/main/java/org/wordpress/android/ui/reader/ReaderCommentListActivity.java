@@ -627,6 +627,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     // stop highlighting the fake comment and replace it with the real one
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
+                    getCommentAdapter().refreshPost();
                     setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
                 } else {

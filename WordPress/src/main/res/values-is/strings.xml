@@ -15,8 +15,6 @@ Language: is
 	<string name="toast_saving_post_as_draft">Vista færslu sem drög</string>
 	<string name="photo_picker_capture_video">Taka upp myndband</string>
 	<string name="photo_picker_capture_photo">Taka mynd</string>
-	<string name="photo_picker_choose_video">Velja myndband</string>
-	<string name="photo_picker_choose_photo">Veldu mynd</string>
 	<string name="delete_site_warning_subtitle">Farðu varlega! Þegar vef hefur verið eytt verður ekki hægt að endurvekja hann. Vertu viss um að þú viljir halda áfram.</string>
 	<string name="delete_site_warning">Öllum færslum, myndum og gögnum verður eytt. Veffang þessa vefs (%s) tapast.</string>
 	<string name="delete_site_warning_title">Eyða vef?</string>
@@ -83,8 +81,8 @@ Language: is
 	<string name="xmlrpc_endpoint_forbidden_error">Gat ekki tengst. Við fengum 403 villu þegar við reyndum að tengjast\n       XMLRPC endapunkti vefsins þíns. Forritið þarfnast hans til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess\n        að leysa úr þessu vandamáli.</string>
 	<string name="xmlrpc_post_blocked_error">Gat ekki tengst. Vefþjónninn þinn lokar á POST fyrirspurnir og forritið þarfnast þeirra\n        til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess að leysa úr þessu vandamáli.</string>
 	<string name="reader_liked_default_tag">Færslur sem mér líkar við</string>
-	<string name="reader_followed_default_tag">Vefir sem ég fylgi</string>
 	<string name="reader_discover_default_tag">Uppgötva</string>
+	<string name="reader_followed_default_tag">Vefir sem ég fylgi</string>
 	<string name="reader_empty_followed_blogs_search_title">Engir vefir fundust</string>
 	<string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
 	<string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
@@ -373,9 +371,6 @@ Language: is
 	<string name="error_refresh_comments_showing_older">Ekki var hægt að endurfríska athugasemdir í þetta sinn - birti eldri athugasemdir</string>
 	<string name="editor_post_settings_set_featured_image">Velja sem einkennismynd</string>
 	<string name="editor_post_settings_featured_image">Einkennismynd</string>
-	<string name="new_editor_promo_desc">WordPress forritið fyrir Android inniheldur nú fallegan nýjan sjónrænan\n	ritil. Prófaðu hann með því að rita nýja færslu.</string>
-	<string name="new_editor_promo_title">Glænýr ritill</string>
-	<string name="new_editor_promo_button_label">Frábært, takk!</string>
 	<string name="visual_editor_enabled">Sjónrænn ritill virkjaður</string>
 	<string name="editor_content_placeholder">Deildu sögunni þinni hér...</string>
 	<string name="editor_page_title_placeholder">Titill síðu</string>

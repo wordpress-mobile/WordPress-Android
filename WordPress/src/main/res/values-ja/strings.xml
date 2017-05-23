@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-09 02:37:52+0000
+Translation-Revision-Date: 2017-05-19 23:30:35+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">複数のコメントを選択するにはタップしてホールド</string>
+	<string name="smart_toast_photo_long_press">複数の写真を選択するにはタップしてホールド</string>
+	<string name="photo_picker_choose_video">デバイスから動画を選択</string>
+	<string name="photo_picker_choose_photo">デバイスから写真を選択</string>
+	<string name="new_editor_promo_description">WordPress アプリにステキな新エディタが含まれるようになりました。新しい投稿を作成し、お試しください。</string>
+	<string name="wp_media_title">WordPress メディア</string>
+	<string name="media_insert_as_gallery">ギャラリーとして追加</string>
+	<string name="media_insert_individually">個別に追加</string>
+	<string name="media_insert_title">複数の写真を追加</string>
+	<string name="media_gallery_column_count_multi">%d列</string>
+	<string name="media_gallery_column_count_single">1列</string>
 	<string name="editor_confirm_email_prompt_negative">メールの再送</string>
 	<string name="editor_confirm_email_prompt_message_with_email">初回登録時に %s 宛てにメールをお送りしています。そのメッセージを開き、青いボタンをクリックして公開を有効にしてください。</string>
 	<string name="editor_confirm_email_prompt_message">初回登録時にメールをお送りしています。そのメッセージを開き、青いボタンをクリックして公開を有効にしてください。</string>
@@ -15,8 +26,6 @@ Language: ja_JP
 	<string name="toast_saving_post_as_draft">投稿を下書きとして保存しています</string>
 	<string name="photo_picker_capture_video">動画を撮る</string>
 	<string name="photo_picker_capture_photo">写真を撮る</string>
-	<string name="photo_picker_choose_video">動画を選択</string>
-	<string name="photo_picker_choose_photo">写真を選択</string>
 	<string name="delete_site_warning_subtitle">ご注意ください。サイトを削除すると、復元することはできません。続行する前にご確認ください。</string>
 	<string name="delete_site_warning">投稿、画像、データはすべて削除されます。このサイトのアドレス (%s) も失われます。</string>
 	<string name="delete_site_warning_title">サイトを削除しますか ?</string>
@@ -373,9 +382,7 @@ Language: ja_JP
 	<string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
 	<string name="editor_post_settings_set_featured_image">アイキャッチ画像を設定</string>
 	<string name="editor_post_settings_featured_image">アイキャッチ画像</string>
-	<string name="new_editor_promo_desc">Android 用の WordPress アプリに、美しいビジュアルエディターが\n新たに追加されました。新しい投稿を作って、その機能をお試しください。</string>
-	<string name="new_editor_promo_title">刷新されたエディター</string>
-	<string name="new_editor_promo_button_label">ありがとうございます。</string>
+	<string name="new_editor_promo_title">新エディター</string>
 	<string name="visual_editor_enabled">ビジュアルエディターを有効化しました</string>
 	<string name="editor_content_placeholder">こちらでストーリーを共有してください...</string>
 	<string name="editor_page_title_placeholder">ページタイトル</string>

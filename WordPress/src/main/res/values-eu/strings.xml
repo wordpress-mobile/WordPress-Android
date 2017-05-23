@@ -182,7 +182,6 @@ Language: eu_ES
 	<string name="filter_published_posts">Argitaratuta</string>
 	<string name="web_address">Web helbidea</string>
 	<string name="primary_site">Gune nagusia</string>
-	<string name="new_editor_promo_button_label">Bikain, eskerrik asko!</string>
 	<string name="visual_editor_enabled">Editore bisuala gaituta</string>
 	<string name="editor_content_placeholder">Partekatu zure istorioa hemen...</string>
 	<string name="editor_page_title_placeholder">Orrialdearen izenburua</string>

@@ -1,17 +1,24 @@
 package org.wordpress.android.ui.media;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,6 +56,8 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -60,17 +69,20 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class MediaPreviewActivity extends AppCompatActivity {
+public class MediaPreviewActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_IS_VIDEO = "is_video";
 
+    private static final int SAVE_MEDIA_PERMISSION_REQUEST_CODE = 1;
+
     private String mContentUri;
     private int mMediaId;
+    private long mDownloadId;
     private boolean mIsVideo;
     private boolean mEnableMetadata;
-    private boolean mShowEditMenuItem;
+    private boolean mIsClosable;
 
     private SiteModel mSite;
 
@@ -202,8 +214,6 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
-        mShowEditMenuItem = mEnableMetadata && mSite != null && !hasEditFragment;
-
         if (mIsVideo) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo(mediaUri);
@@ -226,11 +236,13 @@ public class MediaPreviewActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
+        unregisterReceiver(mDownloadReceiver);
         mDispatcher.unregister(this);
         super.onStop();
     }
@@ -260,7 +272,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         setLookClosable(false);
-        showEditMenuItem(true);
+        invalidateOptionsMenu();
 
         super.onBackPressed();
     }
@@ -273,18 +285,21 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean showEditMenu  = mMediaId != 0 && mSite != null && mEnableMetadata && !mIsClosable;
+        boolean showSaveMenu  = mMediaId != 0 && mSite != null && !mSite.isPrivate();
+        boolean showShareMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
+
         MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
-        mnuEdit.setVisible(mShowEditMenuItem);
+        mnuEdit.setVisible(showEditMenu);
+
+        MenuItem mnuSave = menu.findItem(R.id.menu_save);
+        mnuSave.setVisible(showSaveMenu);
+        mnuSave.setEnabled(mDownloadId == 0);
 
         MenuItem mnuShare = menu.findItem(R.id.menu_share);
-        mnuShare.setVisible(mMediaId != 0);
+        mnuShare.setVisible(showShareMenu);
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    private void showEditMenuItem(boolean show) {
-        mShowEditMenuItem = show;
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -293,10 +308,14 @@ public class MediaPreviewActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_edit) {
-            showEditFragment(mMediaId);
+            showEditFragment();
+            return true;
+        } else if (item.getItemId() == R.id.menu_save) {
+            saveMedia();
             return true;
         } else if (item.getItemId() == R.id.menu_share) {
             shareMedia();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -349,8 +368,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
 
         @Override
         protected Bitmap doInBackground(Void... params) {
+            int orientation = ImageUtils.getImageOrientation(MediaPreviewActivity.this, mMediaUri);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
-                    MediaPreviewActivity.this, Uri.parse(mMediaUri), mSize, null, 0);
+                    MediaPreviewActivity.this, Uri.parse(mMediaUri), mSize, null, orientation);
             if (bytes != null) {
                 return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             }
@@ -388,6 +408,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         mImageView.setImageBitmap(bmp);
+        invalidateOptionsMenu();
     }
 
     /*
@@ -521,10 +542,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
         return null;
     }
 
-    private void showEditFragment(int localMediaId) {
+    private void showEditFragment() {
         MediaEditFragment fragment = getEditFragment();
         if (fragment == null) {
-            fragment = MediaEditFragment.newInstance(mSite, localMediaId);
+            fragment = MediaEditFragment.newInstance(mSite, mMediaId);
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaEditFragment.TAG)
@@ -532,18 +553,98 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commitAllowingStateLoss();
         } else {
-            fragment.loadMedia(localMediaId);
+            fragment.loadMedia();
         }
 
         setLookClosable(true);
-        showEditMenuItem(false);
+        invalidateOptionsMenu();
         fadeOutMetadata();
     }
 
     private void setLookClosable(boolean lookClosable) {
+        mIsClosable = lookClosable;
         if (mToolbar != null) {
             mToolbar.setNavigationIcon(lookClosable ? R.drawable.ic_close_white_24dp : R.drawable.ic_arrow_left_white_24dp);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
+            boolean canSaveMedia = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    canSaveMedia = false;
+                }
+            }
+            if (canSaveMedia) {
+                saveMedia();
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_insufficient_fs_permissions);
+            }
+        }
+    }
+
+    /*
+     * receives download completion broadcasts from the DownloadManager
+     */
+    private final BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long thisId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            if (thisId == mDownloadId) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(mDownloadId);
+                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                Cursor cursor = dm.query(query);
+                int reason = 0;
+                if (cursor.moveToFirst()) {
+                    reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                }
+                if (reason == DownloadManager.STATUS_FAILED) {
+                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
+                } else {
+                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.media_saved_to_device);
+                }
+                mDownloadId = 0;
+                invalidateOptionsMenu();
+            }
+        }
+    };
+
+    /*
+     * saves the media to the local device using the Android DownloadManager
+     */
+    private void saveMedia() {
+        // must request permissions even though they're already defined in the manifest
+        String[] permissionList = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+            return;
+        }
+
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.getFileName());
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+
+        mDownloadId = dm.enqueue(request);
+        invalidateOptionsMenu();
     }
 
     private void shareMedia() {

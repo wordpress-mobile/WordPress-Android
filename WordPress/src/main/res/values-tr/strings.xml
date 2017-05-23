@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-07 12:41:52+0000
+Translation-Revision-Date: 2017-05-16 11:46:49+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Birden çok yorum seçmek için dokunun ve basılı tutun</string>
+	<string name="smart_toast_photo_long_press">Birden çok fotoğraf seçmek için dokunun ve basılı tutun</string>
+	<string name="photo_picker_choose_video">Cihazdan bir video seçin</string>
+	<string name="photo_picker_choose_photo">Cihazdan bir fotoğraf seçin</string>
+	<string name="new_editor_promo_description">WordPress uygulaması artık beraberinde yeni bir düzenleyici içeriyor. Yeni bir yazı oluşturup deneyimleyin.</string>
+	<string name="wp_media_title">WordPress ortam dosyaları</string>
+	<string name="media_insert_as_gallery">Galeri olarak ekle</string>
+	<string name="media_insert_individually">Tekil olarak ekle</string>
+	<string name="media_insert_title">Birden çok fotoğraf ekle</string>
+	<string name="media_gallery_column_count_multi">%d sütun</string>
+	<string name="media_gallery_column_count_single">1 sütun</string>
 	<string name="editor_confirm_email_prompt_negative">E-postayı yeniden gönder</string>
 	<string name="editor_confirm_email_prompt_message_with_email">İlk kez oturum açtığınızda %s adresine bir e-posta gönderdik. Lütfen mesajı açın ve yayınlamayı etkinleştirmek için mavi düğmeye tıklayın.</string>
 	<string name="editor_confirm_email_prompt_message">İlk kez oturum açtığınızda size bir e-posta gönderdik. Lütfen mesajı açın ve yayınlamayı etkinleştirmek için mavi düğmeye tıklayın.</string>
@@ -15,8 +26,6 @@ Language: tr
 	<string name="toast_saving_post_as_draft">Yazıyı taslak olarak kaydet</string>
 	<string name="photo_picker_capture_photo">Fotoğraf çek</string>
 	<string name="photo_picker_capture_video">Video çek</string>
-	<string name="photo_picker_choose_photo">Fotoğraf seç</string>
-	<string name="photo_picker_choose_video">Video seç</string>
 	<string name="delete_site_warning_subtitle">Dikkatli ol! Site bir kere silindiğinde geri kurtarılamaz. Lütfen ilerlemeden önce emin olun.</string>
 	<string name="delete_site_warning">Tüm gönderileriniz, görüntüleriniz ve veriler silinecektir. Sitenin adresi (%s) kaybolacaktır.</string>
 	<string name="delete_site_warning_title">Site silinsin mi?</string>
@@ -373,9 +382,7 @@ Language: tr
 	<string name="error_refresh_comments_showing_older">Yorumlar şu anda yenilenemiyor, eski yorumlar gösteriliyor</string>
 	<string name="editor_post_settings_set_featured_image">Öne çıkarılan görsel ayarla</string>
 	<string name="editor_post_settings_featured_image">Öne Çıkan Görüntü</string>
-	<string name="new_editor_promo_desc">Android için WordPress uygulaması artık yeni ve güzel bir görsel düzenleyici\n içeriyor. Yeni bir gönderi oluşturarak deneyin.</string>
-	<string name="new_editor_promo_title">Yepyeni bir düzenleyici</string>
-	<string name="new_editor_promo_button_label">Harika, teşekkürler!</string>
+	<string name="new_editor_promo_title">Yeni düzenleyici</string>
 	<string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>
 	<string name="editor_content_placeholder">Hikayenizi burada paylaşın...</string>
 	<string name="editor_page_title_placeholder">Sayfa Başlığı</string>
