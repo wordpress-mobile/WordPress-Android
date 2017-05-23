@@ -46,12 +46,9 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
             mIsPage = savedInstanceState.getBoolean(EXTRA_VIEW_PAGES);
             mCurrentSearch = savedInstanceState.getString(EXTRA_SEARCH_TERM, null);
         } else if (getIntent() != null) {
-            if (getIntent().hasExtra(WordPress.SITE)) {
-                mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            }
-            if (getIntent().hasExtra(EXTRA_VIEW_PAGES)) {
-                mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
-            }
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
+            mCurrentSearch = getIntent().getStringExtra(EXTRA_SEARCH_TERM);
         }
 
         // need a Site to continue
@@ -102,7 +99,11 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         getMenuInflater().inflate(R.menu.posts_list, menu);
 
         MenuItem searchAction = menu.findItem(R.id.search_posts_list);
-        SearchView actionView = searchAction == null ? null : (SearchView) searchAction.getActionView();
+        if (!TextUtils.isEmpty(mCurrentSearch)) {
+            searchAction.expandActionView();
+        }
+
+        SearchView actionView = (SearchView) searchAction.getActionView();
         if (actionView != null) {
             MenuItemCompat.setOnActionExpandListener(searchAction, new MenuItemCompat.OnActionExpandListener() {
                 @Override
