@@ -108,6 +108,7 @@ public class EditPostSettingsFragment extends Fragment
     private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
+    private TextView mSlugTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -117,6 +118,8 @@ public class EditPostSettingsFragment extends Fragment
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private long mFeaturedImageId;
+    private String mCurrentSlug;
+    private String mCurrentExcerpt;
 
     private List<TermModel> mCategories;
 
@@ -217,6 +220,7 @@ public class EditPostSettingsFragment extends Fragment
         mMinute = c.get(Calendar.MINUTE);
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
+        mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -264,6 +268,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showPostExcerptDialog();
+            }
+        });
+
+        final LinearLayout slugContainer = (LinearLayout) rootView.findViewById(R.id.post_slug_container);
+        slugContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSlugDialog();
             }
         });
 
@@ -362,11 +374,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        if (!TextUtils.isEmpty(mPost.getExcerpt())) {
-            mExcerptTextView.setText(mPost.getExcerpt());
-        } else {
-            setPostExcerptToNotSet();
-        }
+        mCurrentExcerpt = mPost.getExcerpt();
+        mCurrentSlug = mPost.getSlug();
+        mExcerptTextView.setText(mCurrentExcerpt);
+        mSlugTextView.setText(mCurrentSlug);
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -696,7 +707,8 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setExcerpt(getPostExcerptFromTextView());
+        post.setExcerpt(mCurrentExcerpt);
+        post.setSlug(mCurrentSlug);
         post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
@@ -979,30 +991,31 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostExcerptDialog() {
-        PostExcerptDialogFragment dialog = PostExcerptDialogFragment.newInstance(getPostExcerptFromTextView());
-        dialog.setPostExcerptDialogListener(new PostExcerptDialogFragment.PostExcerptDialogListener() {
-            @Override
-            public void onPostExcerptUpdated(String postExcerpt) {
-                if (TextUtils.isEmpty(postExcerpt)) {
-                    setPostExcerptToNotSet();
-                } else {
-                    mExcerptTextView.setText(postExcerpt);
-                }
-            }
-        });
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        mCurrentExcerpt = input;
+                        mExcerptTextView.setText(mCurrentExcerpt);
+                    }
+                });
         dialog.show(getFragmentManager(), null);
     }
 
-    private String getPostExcerptFromTextView() {
-        String excerpt = mExcerptTextView.getText().toString();
-        if (excerpt.equals(getString(R.string.not_set))) {
-            excerpt = "";
-        }
-        return excerpt;
-    }
-
-    private void setPostExcerptToNotSet() {
-        mExcerptTextView.setText(R.string.not_set);
+    private void showSlugDialog() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        mCurrentSlug = input;
+                        mSlugTextView.setText(mCurrentSlug);
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
     }
 
     /*

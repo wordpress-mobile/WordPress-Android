@@ -31,7 +31,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_darken_10"
-                android:text="@string/not_set"/>
+                android:hint="@string/not_set"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/post_slug_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
+                android:text="@string/post_slug"/>
+
+            <TextView
+                android:id="@+id/post_slug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_darken_10"
+                android:hint="@string/not_set"/>
 
         </LinearLayout>
 

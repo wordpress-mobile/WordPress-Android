@@ -277,6 +277,7 @@
     <string name="out_of_memory">Device out of memory</string>
     <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
+    <string name="post_slug">Slug</string>
     <string name="download">Downloading media</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
@@ -978,6 +979,7 @@
     <string name="post_settings">Post settings</string>
     <string name="not_set">Not Set</string>
     <string name="post_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
+    <string name="post_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
 
