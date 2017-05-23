@@ -552,9 +552,9 @@ public class PostsListFragment extends Fragment
         }
     }
 
-    public void refreshListAdapter() {
+    public void reloadPosts() {
         if (mRecyclerView != null) {
-            mRecyclerView.setAdapter(getPostListAdapter());
+            loadPosts(LoadMode.FORCED);
         }
     }
 
