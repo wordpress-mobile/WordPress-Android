@@ -326,6 +326,7 @@ public class PostsListFragment extends Fragment
         ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage);
     }
 
+    @Override
     public void onResume() {
         super.onResume();
 
