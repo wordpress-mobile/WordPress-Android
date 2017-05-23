@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.accounts.login.nav.LoginEvents;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavigationFsmGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginStateGetter;
+import org.wordpress.android.ui.accounts.login.nav.LoginNav;
 
-public class LogInOrSignUpFragment extends Fragment {
+public class LoginPrologueFragment extends Fragment {
 
     public static final String TAG = "login_or_signup_fragment_tag";
 
-    LoginEvents.LoginNavPrologue mLoginNavPrologue;
+    LoginNav.Prologue mLoginStatePrologue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,8 @@ public class LogInOrSignUpFragment extends Fragment {
         view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginNavPrologue != null) {
-                    mLoginNavPrologue.doStartLogin();
+                if (mLoginStatePrologue != null) {
+                    mLoginStatePrologue.doStartLogin();
                 }
             }
         });
@@ -38,8 +38,8 @@ public class LogInOrSignUpFragment extends Fragment {
         view.findViewById(R.id.create_site_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginNavPrologue != null) {
-                    mLoginNavPrologue.doStartSignup();
+                if (mLoginStatePrologue != null) {
+                    mLoginStatePrologue.doStartSignup();
                 }
             }
         });
@@ -50,16 +50,16 @@ public class LogInOrSignUpFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginNavigationFsmGetter) {
-            mLoginNavPrologue = ((LoginNavigationFsmGetter) context).getLoginNavPrologue();
+        if (context instanceof LoginStateGetter.FsmGetter) {
+            mLoginStatePrologue = ((LoginStateGetter.FsmGetter) context).getLoginStateGetter().getLoginNavPrologue();
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginNavigationFsmGetter");
+            throw new RuntimeException(context.toString() + " must implement LoginStateGetter.FsmGetter");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mLoginNavPrologue = null;
+        mLoginStatePrologue = null;
     }
 }
