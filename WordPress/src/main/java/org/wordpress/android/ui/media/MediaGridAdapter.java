@@ -47,6 +47,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
+    private boolean mShowPreviewIcon;
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
@@ -87,6 +88,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 
         setImageLoader(imageLoader);
+    }
+
+    public void setShowPreviewIcon(boolean show) {
+        if (show != mShowPreviewIcon) {
+            mShowPreviewIcon = show;
+            if (getItemCount() > 0) {
+                notifyDataSetChanged();;
+            }
+        }
     }
 
     @Override
@@ -236,21 +246,25 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
 
-            imgPreview = (ImageView) view.findViewById(R.id.image_preview);
-            imgPreview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (isValidPosition(position)) {
-                        MediaModel media = mMediaList.get(position);
-                        MediaPreviewActivity.showPreview(
-                                v.getContext(),
-                                imgPreview,
-                                media.getUrl(),
-                                media.isVideo());
+            ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
+            previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
+            imgPreview = (ImageView) previewContainer.findViewById(R.id.image_preview);
+            if (mShowPreviewIcon) {
+                imgPreview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = getAdapterPosition();
+                        if (isValidPosition(position)) {
+                            MediaModel media = mMediaList.get(position);
+                            MediaPreviewActivity.showPreview(
+                                    v.getContext(),
+                                    imgPreview,
+                                    mSite,
+                                    media.getId());
+                        }
                     }
-                }
-            });
+                });
+            }
 
             // make the progress bar white
             progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
