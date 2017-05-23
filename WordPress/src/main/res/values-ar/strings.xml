@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-14 09:48:33+0000
+Translation-Revision-Date: 2017-05-16 03:21:29+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+	<string name="media_gallery_column_count_single">عمود 1</string>
+	<string name="media_gallery_column_count_multi">%d أعمدة</string>
+	<string name="editor_confirm_email_prompt_negative">إعادة إرسال البريد الإلكتروني</string>
+	<string name="toast_saving_post_as_draft">حفظ المقالة بشكل مسودة</string>
+	<string name="photo_picker_capture_video">خذ فيديو</string>
+	<string name="photo_picker_capture_photo">خذ صورة</string>
+	<string name="delete_site_warning_title">حذف الموقع؟</string>
+	<string name="site_picker_remove_site_error">حدث خطأ أثناء إزالة الموقع، حاول مرة أخرى لاحقًا</string>
+	<string name="sure_to_remove_account">إزالة هذا الموقع من التطبيق؟</string>
+	<string name="photo_picker_title">اختيار صورة</string>
+	<string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ التغييرات محليًا.</string>
+	<string name="editor_post_saved_online_not_published">تم حفظ المقالة على الإنترنت كمسودة. النظر في نشرها.</string>
+	<string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
+	<string name="editor_post_saved_locally_not_published">تم حفظ المقالة محليًا فقط. النظر في نشرها.</string>
+	<string name="editor_post_saved_locally">تم حفظ المقالة على جهازك</string>
+	<string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
+	<string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
+	<string name="media_encoder_quality_100">الحد الأقصى</string>
+	<string name="media_encoder_quality_95">مرتفع للغاية</string>
+	<string name="media_encoder_quality_90">مرتفع</string>
+	<string name="media_encoder_quality_85">متوسط</string>
+	<string name="media_encoder_quality_80">منخفض</string>
+	<string name="media_upload_state_uploaded">تم التحميل</string>
+	<string name="media_upload_state_failed">فشل</string>
+	<string name="media_upload_state_deleted">محذوف</string>
+	<string name="media_upload_state_deleting">جارٍ الحذف</string>
+	<string name="media_upload_state_uploading">جارٍ الرفع</string>
+	<string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>
+	<string name="update_draft">تحديث المسودة</string>
+	<string name="keep_editing">متابعة التحرير</string>
+	<string name="image_quality">جودة الصورة</string>
 	<string name="error_all_media_upload_canceled">تم إلغاء جميع عمليات رفع الوسائط بسبب خطأ غير معروف. يُرجى إعادة محاولة الرفع</string>
 	<string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
 	<string name="error_unknown_post">مقالة غير معروفة، ربما تكون النسخة المحلية من هذه المقالة غير متزامنة مع الخادم</string>
@@ -15,8 +46,43 @@ Language: ar
 	<string name="error_upload_params">حدث خطأ أثناء رفع %1$s: %2$s</string>
 	<string name="submit_for_review">إرسال</string>
 	<string name="media_error_too_large_upload">الملف كبير جدًا. يُرجى الاتصال بمزود خدمة استضافة الويب لإصلاح هذه المشكلة</string>
+	<string name="role_subscriber">مشترك</string>
+	<string name="tell_me_more">أرغب في معرفة المزيد</string>
+	<string name="duplicate_site_detected">تم اكتشاف موقع متكرر.</string>
+	<string name="cannot_add_duplicate_site">الموقع موجود بالفعل في التطبيق، لا يمكنك إضافته.</string>
+	<string name="already_logged_in_wpcom_same_username">أنت قيد تسجيل الدخول بالفعل إلى حساب وردبرس.كوم الخاص بك. ينبغي أن يظهر موقعك في منتقي المواقع، تأكد من أنَّه ليس مخفيًا.</string>
+	<string name="already_logged_in_wpcom">أنت قيد تسجيل الدخول بالفعل إلى حساب وردبرس.كوم، ولا يمكنك إضافة موقع وردبرس.كوم مرتبط بحساب آخر.</string>
+	<string name="migration_error_not_connected">فشلت عملية الترحيل: حاول تشغيل التطبيق عندما يتوفر لديك\n اتصال بالشبكة.</string>
+	<string name="retry">إعادة المحاولة</string>
+	<string name="confirm">تأكيد</string>
+	<string name="xmlrpc_endpoint_forbidden_error">تعذر الاتصال. تلقينا الخطأ 403 عند محاولة الوصول إلى\n نقطة نهاية موقعك XMLRPC. يحتاج التطبيق إلى ذلك للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل\n هذه المشكلة.</string>
+	<string name="reader_liked_default_tag">المقالات التي أعجبتني</string>
+	<string name="reader_discover_default_tag">استكشاف</string>
+	<string name="reader_followed_default_tag">المواقع التي تمت متابعتها</string>
 	<string name="reader_photo_by">صورة بواسطة %s</string>
 	<string name="all_your_sites">جميع مواقعي</string>
+	<string name="reader_toast_err_already_liked">لقد قمت بالفعل بتسجيل إعجاب لذلك التعليق</string>
+	<string name="reader_toast_err_comment_not_found">لم يتم العثور على تعليق!</string>
+	<string name="reader_toast_err_cannot_like_post">تعذر تسجيل إعجاب بهذه المقالة</string>
+	<string name="reader_title_post_detail_wpcom">مقالة وردبرس. كوم</string>
+	<string name="reader_title_deeplink">قارئ وردبرس</string>
+	<string name="error_notif_q_action_reply">تعذر الرد على التعليق. يُرجى المحاولة مرة أخرى لاحقًا.</string>
+	<string name="comment_q_action_replying">جارٍ الرد...</string>
+	<string name="comment_q_action_approving">جارٍ الموافقة...</string>
+	<string name="comment_q_action_liking">جارٍ تسجيل الإعجاب...</string>
+	<string name="comment_q_action_processing">جارٍ المعالجة…</string>
+	<string name="comment_q_action_done_generic">تم اتخاذ الإجراء!</string>
+	<string name="comment_liked">تم تسجيل إعجاب بالتعليق</string>
+	<string name="signout">تسجيل الخروج</string>
+	<string name="sign_in_wpcom">تسجيل الدخول إلى وردبرس.كوم</string>
+	<string name="reader_label_global_related_posts">يمكنك الحصول على المزيد على WordPress.com</string>
+	<string name="reader_label_local_related_posts">المزيد في %s</string>
+	<string name="preference_open_device_settings">فتح إعدادات الجهاز</string>
+	<string name="comment_moderated_unapproved">لم تتم الموافقة على التعليق</string>
+	<string name="invite_invalid_email">%s: البريد الإلكتروني غير صالح</string>
+	<string name="invite_already_a_member">%s: عضو بالفعل</string>
+	<string name="comment_moderated_approved">تمت الموافقة على التعليق!</string>
+	<string name="like">أعجبني</string>
 	<string name="reader_label_image_count_one">صورة واحدة</string>
 	<string name="timespan_now">الآن</string>
 	<string name="role_admin">المسؤول</string>
@@ -246,9 +312,6 @@ Language: ar
 	<string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
 	<string name="editor_post_settings_set_featured_image">تعيين الصورة المميزة</string>
 	<string name="editor_post_settings_featured_image">الصورة المميزة</string>
-	<string name="new_editor_promo_desc">يتضمن الآن تطبيق وردبرس.كوم الخاص بنظام Android رؤية جديدة رائعة\n المحرر. جرِّبه من خلال إنشاء مقالة جديدة.</string>
-	<string name="new_editor_promo_title">محرر جديد تمامًا</string>
-	<string name="new_editor_promo_button_label">رائع، شكرًا!</string>
 	<string name="visual_editor_enabled">تم تمكين محرر مرئي</string>
 	<string name="editor_content_placeholder">شارك قصتك هنا…</string>
 	<string name="editor_page_title_placeholder">عنوان الصفحة</string>
@@ -298,6 +361,7 @@ Language: ar
 	<string name="error_post_remote_site_settings">تعذر حفظ معلومات الموقع</string>
 	<string name="error_fetch_remote_site_settings">تعذر استرداد معلومات الموقع</string>
 	<string name="error_media_upload_connection">حدث خطأ في الاتصال أثناء رفع ملفات الوسائط</string>
+	<string name="site_settings_disconnected_toast">غير متصل، التحرير مُعطّل.</string>
 	<string name="site_settings_unsupported_version_error">إصدار وردبرس غير مدعوم</string>
 	<string name="site_settings_multiple_links_dialog_description">يلزم موافقة على التعليقات التي تتضمن أكثر من هذا العدد من الروابط.</string>
 	<string name="site_settings_close_after_dialog_switch_text">إغلاق تلقائي</string>
