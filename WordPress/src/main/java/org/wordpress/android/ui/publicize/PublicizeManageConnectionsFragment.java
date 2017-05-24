@@ -133,8 +133,8 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
 
     private void configureSharingAndMoreButtonsPreferences() {
         mPublicizeButtons = new ArrayList<>();
-        mSharingButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
-        mMoreButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_more_buttons);
+        mSharingButtonsPreference = (MultiSelectListPreference) findPreference(getString(R.string.pref_key_sharing_buttons));
+        mMoreButtonsPreference = (MultiSelectListPreference) findPreference(getString(R.string.pref_key_more_buttons));
         WordPress.getRestClientUtilsV1_1().getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -190,16 +190,16 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
     @Override
     protected void initPreferences() {
         configureSharingAndMoreButtonsPreferences();
-        mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
-        mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
+        mLabelPreference = (SummaryEditTextPreference) findPreference(getString(R.string.publicize_label));
+        mButtonStylePreference = (DetailListPreference) findPreference(getString((R.string.publicize_button_style));
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
-        mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_reblog);
-        mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
-        mCommentLikesPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_comment_likes);
-        mTwitterUsernamePreference = (SummaryEditTextPreference) getChangePref(R.string.pref_key_twitter_username);
-        mTwitterPreferenceCategory = (PreferenceCategory) getChangePref(R.string.pref_key_twitter_category);
+        mReblogButtonPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_reblog));
+        mLikeButtonPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_like));
+        mCommentLikesPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_comment_likes));
+        mTwitterUsernamePreference = (SummaryEditTextPreference) findPreference(getString(R.string.pref_key_twitter_username));
+        mTwitterPreferenceCategory = (PreferenceCategory) findPreference(getString(R.string.pref_key_twitter_category));
     }
 
     @Override
