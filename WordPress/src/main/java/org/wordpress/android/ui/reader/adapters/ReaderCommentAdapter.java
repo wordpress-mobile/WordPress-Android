@@ -329,6 +329,16 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         return position == 0 ? null : mComments.get(position - NUM_HEADERS);
     }
 
+    /*
+     * refresh the post from the database - used to reflect changes to comment counts, etc.
+     */
+    public void refreshPost() {
+        if (mPost != null) {
+            ReaderPost post = ReaderPostTable.getBlogPost(mPost.blogId, mPost.postId, true);
+            setPost(post);
+        }
+    }
+
     private void showLikeStatus(final CommentHolder holder, int position) {
         ReaderComment comment = getItem(position);
         if (comment == null) {

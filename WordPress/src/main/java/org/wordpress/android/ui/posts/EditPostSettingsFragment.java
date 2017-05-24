@@ -62,7 +62,8 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
@@ -249,7 +250,7 @@ public class EditPostSettingsFragment extends Fragment
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchMediaGalleryActivity();
+                    launchFeaturedMediaPicker();
                 }
             });
         } else {
@@ -328,7 +329,7 @@ public class EditPostSettingsFragment extends Fragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case SELECT_LIBRARY_MENU_POSITION:
-                launchMediaGalleryActivity();
+                launchFeaturedMediaPicker();
                 return true;
             case CLEAR_FEATURED_IMAGE_MENU_POSITION:
                 mFeaturedImageId = -1;
@@ -458,11 +459,11 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    private void launchMediaGalleryActivity() {
-        Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
+    private void launchFeaturedMediaPicker() {
+        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
+        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
     private PostStatus getPostStatusForSpinnerPosition(int position) {
@@ -498,10 +499,10 @@ public class EditPostSettingsFragment extends Fragment
                         populateSelectedCategories();
                     }
                     break;
-                case MediaGalleryPickerActivity.REQUEST_CODE:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     if (resultCode == Activity.RESULT_OK) {
                         ArrayList<Long> ids = ListUtils.
-                                fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+                                fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
                         if (ids == null || ids.size() == 0) {
                             return;
                         }
