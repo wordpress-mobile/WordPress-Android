@@ -544,57 +544,22 @@ public class MeFragment extends Fragment {
             // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
             Uri downloadedUri = MediaUtils.downloadExternalMedia(getActivity(), mediaUri);
             if (downloadedUri != null) {
-                startGravatarUpload(getRealPathFromURI(downloadedUri));
+                startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), downloadedUri));
             } else {
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
             }
         } else {
             // It is a regular local media file
-            startGravatarUpload(getRealPathFromURI(mediaUri));
+            startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), mediaUri));
         }
-    }
-
-    private String getRealPathFromURI(Uri uri) {
-        String path;
-        if ("content".equals(uri.getScheme())) {
-            path = getRealPathFromContentURI(uri);
-        } else if ("file".equals(uri.getScheme())) {
-            path = uri.getPath();
-        } else {
-            path = uri.toString();
-        }
-        return path;
-    }
-
-    private String getRealPathFromContentURI(Uri contentUri) {
-        if (contentUri == null)
-            return null;
-
-        String[] proj = { MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-
-        if (cursor == null)
-            return null;
-
-        int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-        if (column_index == -1) {
-            cursor.close();
-            return null;
-        }
-
-        String path;
-        if (cursor.moveToFirst()) {
-            path = cursor.getString(column_index);
-        } else {
-            path = null;
-        }
-
-        cursor.close();
-        return path;
     }
 
     private void startGravatarUpload(final String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         File file = new File(filePath);
         if (!file.exists()) {
             Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();

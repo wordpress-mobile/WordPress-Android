@@ -91,9 +91,9 @@ public final class AnalyticsTracker {
         EDITOR_SAVED_DRAFT,
         EDITOR_DISCARDED_CHANGES,
         EDITOR_EDITED_IMAGE, // Visual editor only
-        EDITOR_ENABLED_NEW_VERSION, // Visual editor only
-        EDITOR_TOGGLED_OFF, // Visual editor only
-        EDITOR_TOGGLED_ON, // Visual editor only
+        EDITOR_HYBRID_ENABLED, // Visual editor only
+        EDITOR_HYBRID_TOGGLED_OFF, // Visual editor only
+        EDITOR_HYBRID_TOGGLED_ON, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
         EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
