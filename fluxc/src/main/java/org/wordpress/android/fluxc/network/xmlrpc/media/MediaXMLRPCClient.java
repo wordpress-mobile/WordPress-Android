@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.media;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.android.volley.RequestQueue;
@@ -503,13 +504,30 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             Map metadataMap = (Map) metadataObject;
             media.setWidth(MapUtils.getMapInt(metadataMap, "width"));
             media.setHeight(MapUtils.getMapInt(metadataMap, "height"));
-            media.setFileNameMediumSize(getFileForSize(metadataMap, "medium"));
-            media.setFileNameMediumLargeSize(getFileForSize(metadataMap, "medium_large"));
-            media.setFileNameLargeSize(getFileForSize(metadataMap, "large"));
+            media.setFileUrlMediumSize(getFileUrlForSize(link, metadataMap, "medium"));
+            media.setFileUrlMediumLargeSize(getFileUrlForSize(link, metadataMap, "medium_large"));
+            media.setFileUrlLargeSize(getFileUrlForSize(link, metadataMap, "large"));
         }
 
         media.setUploadState(MediaModel.UploadState.UPLOADED.toString());
         return media;
+    }
+
+    private String getFileUrlForSize(String mediaUrl, Map metadataMap, String size) {
+        if (metadataMap == null || TextUtils.isEmpty(mediaUrl) || !mediaUrl.contains("/")) {
+            return null;
+        }
+
+        String fileName = getFileForSize(metadataMap, size);
+        if (TextUtils.isEmpty(fileName)) {
+            return null;
+        }
+
+        // make sure the path to the original image is a valid path to a file
+        if (mediaUrl.lastIndexOf("/") + 1 >= mediaUrl.length()) return null;
+
+        String baseURL = mediaUrl.substring(0, mediaUrl.lastIndexOf("/") + 1);
+        return baseURL + fileName;
     }
 
     private String getFileForSize(Map metadataMap, String size) {

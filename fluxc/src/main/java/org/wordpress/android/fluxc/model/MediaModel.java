@@ -61,10 +61,10 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     // Local only
     @Column private String mUploadState;
 
-    // Other Sizes. Image files only
-    @Column private String mFileNameMediumSize;
-    @Column private String mFileNameMediumLargeSize;
-    @Column private String mFileNameLargeSize;
+    // Other Sizes. Only available for images on self-hosted (xmlrpc layer) sites
+    @Column private String mFileUrlMediumSize;
+    @Column private String mFileUrlMediumLargeSize;
+    @Column private String mFileUrlLargeSize;
 
     //
     // Legacy
@@ -112,9 +112,9 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
                 && StringUtils.equals(getAlt(), otherMedia.getAlt())
                 && StringUtils.equals(getVideoPressGuid(), otherMedia.getVideoPressGuid())
                 && StringUtils.equals(getUploadState(), otherMedia.getUploadState())
-                && StringUtils.equals(getFileNameMediumSize(), otherMedia.getFileNameMediumSize())
-                && StringUtils.equals(getFileNameMediumLargeSize(), otherMedia.getFileNameMediumLargeSize())
-                && StringUtils.equals(getFileNameLargeSize(), otherMedia.getFileNameLargeSize());
+                && StringUtils.equals(getFileUrlMediumSize(), otherMedia.getFileUrlMediumSize())
+                && StringUtils.equals(getFileUrlMediumLargeSize(), otherMedia.getFileUrlMediumLargeSize())
+                && StringUtils.equals(getFileUrlLargeSize(), otherMedia.getFileUrlLargeSize());
     }
 
     @Override
@@ -367,27 +367,27 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
         mUploadCancelled = uploadCancelled;
     }
 
-    public void setFileNameMediumSize(String file) {
-        mFileNameMediumSize = file;
+    public void setFileUrlMediumSize(String file) {
+        mFileUrlMediumSize = file;
     }
 
-    public String getFileNameMediumSize() {
-        return mFileNameMediumSize;
+    public String getFileUrlMediumSize() {
+        return mFileUrlMediumSize;
     }
 
-    public void setFileNameMediumLargeSize(String file) {
-        mFileNameMediumLargeSize = file;
+    public void setFileUrlMediumLargeSize(String file) {
+        mFileUrlMediumLargeSize = file;
     }
 
-    public String getFileNameMediumLargeSize() {
-        return mFileNameMediumLargeSize;
+    public String getFileUrlMediumLargeSize() {
+        return mFileUrlMediumLargeSize;
     }
 
-    public void setFileNameLargeSize(String file) {
-        mFileNameLargeSize = file;
+    public void setFileUrlLargeSize(String file) {
+        mFileUrlLargeSize = file;
     }
 
-    public String getFileNameLargeSize() {
-        return mFileNameLargeSize;
+    public String getFileUrlLargeSize() {
+        return mFileUrlLargeSize;
     }
 }
