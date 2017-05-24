@@ -405,7 +405,11 @@ public class EditPostSettingsFragment extends Fragment
 
     private void updateTagsTextView() {
         String tags = TextUtils.join(",", mPost.getTagNameList());
-        mTagsTextView.setText(tags);
+        if (!TextUtils.isEmpty(tags)) {
+            mTagsTextView.setText(tags);
+        } else {
+            mTagsTextView.setText(R.string.not_set);
+        }
     }
 
     public void updateStatusSpinner() {
