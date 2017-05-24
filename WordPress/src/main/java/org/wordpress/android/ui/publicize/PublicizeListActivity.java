@@ -125,7 +125,8 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service);
+        long currentUserId = mAccountStore.getAccount().getUserId();
+        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service, currentUserId);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment, tag)
