@@ -61,6 +61,11 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
     // Local only
     @Column private String mUploadState;
 
+    // Other Sizes. Only available for images on self-hosted (xmlrpc layer) sites
+    @Column private String mFileUrlMediumSize;
+    @Column private String mFileUrlMediumLargeSize;
+    @Column private String mFileUrlLargeSize;
+
     //
     // Legacy
     //
@@ -106,7 +111,10 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
                 && StringUtils.equals(getCaption(), otherMedia.getCaption())
                 && StringUtils.equals(getAlt(), otherMedia.getAlt())
                 && StringUtils.equals(getVideoPressGuid(), otherMedia.getVideoPressGuid())
-                && StringUtils.equals(getUploadState(), otherMedia.getUploadState());
+                && StringUtils.equals(getUploadState(), otherMedia.getUploadState())
+                && StringUtils.equals(getFileUrlMediumSize(), otherMedia.getFileUrlMediumSize())
+                && StringUtils.equals(getFileUrlMediumLargeSize(), otherMedia.getFileUrlMediumLargeSize())
+                && StringUtils.equals(getFileUrlLargeSize(), otherMedia.getFileUrlLargeSize());
     }
 
     @Override
@@ -357,5 +365,29 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     public void setUploadCancelled(boolean uploadCancelled) {
         mUploadCancelled = uploadCancelled;
+    }
+
+    public void setFileUrlMediumSize(String file) {
+        mFileUrlMediumSize = file;
+    }
+
+    public String getFileUrlMediumSize() {
+        return mFileUrlMediumSize;
+    }
+
+    public void setFileUrlMediumLargeSize(String file) {
+        mFileUrlMediumLargeSize = file;
+    }
+
+    public String getFileUrlMediumLargeSize() {
+        return mFileUrlMediumLargeSize;
+    }
+
+    public void setFileUrlLargeSize(String file) {
+        mFileUrlLargeSize = file;
+    }
+
+    public String getFileUrlLargeSize() {
+        return mFileUrlLargeSize;
     }
 }
