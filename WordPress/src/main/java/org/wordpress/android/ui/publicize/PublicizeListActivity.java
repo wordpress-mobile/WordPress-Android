@@ -144,13 +144,12 @@ public class PublicizeListActivity extends AppCompatActivity
         }
     }
 
-    private void showWebViewFragment(int siteId,
-                                     PublicizeService service,
+    private void showWebViewFragment(PublicizeService service,
                                      PublicizeConnection publicizeConnection) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service, publicizeConnection);
+        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(mSite, service, publicizeConnection);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, webViewFragment, tag)
@@ -206,7 +205,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestConnect(PublicizeService service) {
-        showWebViewFragment(mSite.getId(), service, null);
+        showWebViewFragment(service, null);
     }
 
     /*
@@ -214,7 +213,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
-        showWebViewFragment(mSite.getId(), service, publicizeConnection);
+        showWebViewFragment(service, publicizeConnection);
     }
 
     /*
