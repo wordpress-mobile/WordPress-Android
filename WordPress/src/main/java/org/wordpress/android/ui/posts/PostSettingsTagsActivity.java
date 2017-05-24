@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -258,8 +258,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             TagViewHolder(View view) {
                 super(view);
                 nameTextView = (TextView) view.findViewById(R.id.tag_name);
-                LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.tags_list_row_container);
-                linearLayout.setOnClickListener(new View.OnClickListener() {
+                RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.tags_list_row_container);
+                layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         onTagSelected(nameTextView.getText().toString());

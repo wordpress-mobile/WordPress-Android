@@ -19,7 +19,7 @@
             android:id="@+id/tags_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
+            android:padding="@dimen/margin_medium"
             android:hint="@string/tags_separate_with_commas"
             android:inputType="textMultiLine"
             android:textSize="@dimen/text_sz_large"/>
