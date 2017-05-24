@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.publicize;
 
+import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -13,12 +15,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,7 +44,21 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
     private PreferenceCategory mTwitterPreferenceCategory;
     private ArrayList<PublicizeButton> mPublicizeButtons;
 
-    public PublicizeManageConnectionsFragment() {
+    private SiteModel mSite;
+
+    public static PublicizeManageConnectionsFragment newInstance(@NonNull SiteModel site) {
+        PublicizeManageConnectionsFragment fragment = new PublicizeManageConnectionsFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(WordPress.SITE, site);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
     }
 
     private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
@@ -66,7 +84,7 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
             e.printStackTrace();
         }
 
-        WordPress.getRestClientUtilsV1_1().setSharingButtons(mBlog.getDotComBlogId(), jsonObject, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_1().setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -115,7 +133,7 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
         mPublicizeButtons = new ArrayList<>();
         mSharingButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
         mMoreButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_more_buttons);
-        WordPress.getRestClientUtilsV1_1().getSharingButtons(mBlog.getDotComBlogId(), new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_1().getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {

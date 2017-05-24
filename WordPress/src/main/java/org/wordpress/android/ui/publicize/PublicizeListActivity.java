@@ -31,6 +31,7 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeListFragment.PublicizeManageConnectionsListener {
 
     private int mSiteId;
+    private SiteModel mSite;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -49,22 +50,22 @@ public class PublicizeListActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final SiteModel site;
         if (savedInstanceState == null) {
-            site = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             PublicizeTable.createTables(WordPress.wpDB.getDatabase());
-            mSiteId = site.getId();
             showListFragment(mSiteId);
             PublicizeUpdateService.updateConnectionsForSite(this, mSiteId);
         } else {
-            mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
+
+        mSiteId = mSite.getId();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -297,9 +298,9 @@ public class PublicizeListActivity extends AppCompatActivity
 
     @Override
     public void onManageConnectionsClicked() {
-        PublicizeManageConnectionsFragment manageConnectionsFragment = new PublicizeManageConnectionsFragment();
+        PublicizeManageConnectionsFragment fragment = PublicizeManageConnectionsFragment.newInstance(mSite);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, manageConnectionsFragment);
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
