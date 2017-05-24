@@ -361,6 +361,7 @@ public class EditPostSettingsFragment extends Fragment
         mCurrentSlug = mPost.getSlug();
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
+        updateTagsTextView();
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -400,6 +401,11 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         updateStatusSpinner();
+    }
+
+    private void updateTagsTextView() {
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        mTagsTextView.setText(tags);
     }
 
     public void updateStatusSpinner() {
@@ -507,7 +513,7 @@ public class EditPostSettingsFragment extends Fragment
                         if (selectedTags != null) {
                             String tags = selectedTags.replace("\n", " ");
                             mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
-                            mTagsTextView.setText(tags);
+                            updateTagsTextView();
                         }
                     }
                     break;
