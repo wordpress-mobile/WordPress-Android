@@ -500,6 +500,17 @@ public class EditPostSettingsFragment extends Fragment
                         populateSelectedCategories();
                     }
                     break;
+                case ACTIVITY_REQUEST_CODE_SELECT_TAGS:
+                    extras = data.getExtras();
+                    if (resultCode == Activity.RESULT_OK && extras != null) {
+                        String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
+                        if (selectedTags != null) {
+                            String tags = selectedTags.replace("\n", " ");
+                            mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+                            mTagsTextView.setText(tags);
+                        }
+                    }
+                    break;
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     if (resultCode == Activity.RESULT_OK) {
                         ArrayList<Long> ids = ListUtils.

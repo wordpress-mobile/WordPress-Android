@@ -39,6 +39,7 @@ import javax.inject.Inject;
 
 public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher {
     public static final String KEY_LOCAL_POST_ID = "KEY_POST_ID";
+    public static final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
     private SiteModel mSite;
     private PostModel mPost;
 
@@ -136,6 +137,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     private void saveAndFinish() {
         Bundle bundle = new Bundle();
+        bundle.putString(KEY_SELECTED_TAGS, mTagsEditText.getText().toString());
         Intent intent = new Intent();
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
