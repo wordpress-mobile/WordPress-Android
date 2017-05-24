@@ -52,7 +52,7 @@ public class PublicizeListActivity extends AppCompatActivity
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             PublicizeTable.createTables(WordPress.wpDB.getDatabase());
             showListFragment(mSite.getId());
-            PublicizeUpdateService.updateConnectionsForSite(this, mSite.getId());
+            PublicizeUpdateService.updateConnectionsForSite(this, mSite.getSiteId());
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
