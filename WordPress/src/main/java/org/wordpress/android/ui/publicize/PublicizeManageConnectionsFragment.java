@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.DetailListPreference;
+import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
@@ -29,10 +30,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class PublicizeManageConnectionsFragment extends AccountSettingsFragment {
+public class PublicizeManageConnectionsFragment extends SiteSettingsFragment {
     private static final String TWITTER_PREFIX = "@";
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
-    public static final String TWITTER_ID = "twitter";
+    private static final String TWITTER_ID = "twitter";
 
     private MultiSelectListPreference mSharingButtonsPreference;
     private MultiSelectListPreference mMoreButtonsPreference;
@@ -45,22 +46,12 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
     private PreferenceCategory mTwitterPreferenceCategory;
     private ArrayList<PublicizeButton> mPublicizeButtons;
 
-    private SiteModel mSite;
-    private SiteSettingsInterface mSiteSettings;
-
     public static PublicizeManageConnectionsFragment newInstance(@NonNull SiteModel site) {
         PublicizeManageConnectionsFragment fragment = new PublicizeManageConnectionsFragment();
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, null);
     }
 
     private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
@@ -191,7 +182,7 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
     protected void initPreferences() {
         configureSharingAndMoreButtonsPreferences();
         mLabelPreference = (SummaryEditTextPreference) findPreference(getString(R.string.publicize_label));
-        mButtonStylePreference = (DetailListPreference) findPreference(getString((R.string.publicize_button_style));
+        mButtonStylePreference = (DetailListPreference) findPreference(getString(R.string.publicize_button_style));
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
@@ -264,7 +255,7 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
     }
 
     @Override
-    protected void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
+    public void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
         if (pref != null && pref == mTwitterUsernamePreference && newValue != null && !newValue.isEmpty()) {
             newValue = TWITTER_PREFIX + newValue;
         }

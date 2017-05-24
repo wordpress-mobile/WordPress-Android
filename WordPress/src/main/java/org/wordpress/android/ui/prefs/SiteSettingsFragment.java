@@ -136,10 +136,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
-    private SiteModel mSite;
+    public SiteModel mSite;
 
     // Can interface with WP.com or WP.org
-    private SiteSettingsInterface mSiteSettings;
+    public SiteSettingsInterface mSiteSettings;
 
     // Reference to the list of items being edited in the current list editor
     private List<String> mEditingList;
@@ -196,7 +196,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
-    private boolean mEditingEnabled = true;
+    public boolean mEditingEnabled = true;
 
     // Reference to the state of the fragment
     private boolean mIsFragmentPaused = false;
@@ -1087,7 +1087,7 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Helper method to perform validation and set multiple properties on an EditTextPreference.
      * If newValue is equal to the current preference text no action will be taken.
      */
-    private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
+    public void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
         if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
 
         if (!newValue.equals(pref.getSummary())) {
