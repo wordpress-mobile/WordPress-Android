@@ -144,7 +144,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mAdapter == null) {
             mAdapter = new PublicizeServiceAdapter(
                     getActivity(),
-                    mSite.getId(),
+                    mSite.getSiteId(),
                     mAccountStore.getAccount().getUserId());
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {

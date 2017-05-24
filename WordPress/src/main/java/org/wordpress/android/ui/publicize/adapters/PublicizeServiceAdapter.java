@@ -34,7 +34,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private final PublicizeServiceList mServices = new PublicizeServiceList();
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
 
-    private final int mSiteId;
+    private final long mSiteId;
     private final int mBlavatarSz;
     private final ColorFilter mGrayScaleFilter;
     private final int mColorConnected;
@@ -44,7 +44,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private OnAdapterLoadedListener mAdapterLoadedListener;
     private OnServiceClickListener mServiceClickListener;
 
-    public PublicizeServiceAdapter(Context context, int siteId, long currentUserId) {
+    public PublicizeServiceAdapter(Context context, long siteId, long currentUserId) {
         super();
 
         mSiteId = siteId;
