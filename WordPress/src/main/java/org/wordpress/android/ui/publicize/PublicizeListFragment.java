@@ -11,12 +11,15 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
+
+import javax.inject.Inject;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
     public interface PublicizeManageConnectionsListener {
@@ -29,6 +32,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private RecyclerView mRecycler;
     private TextView mEmptyView;
     private Button mManageButton;
+
+    @Inject AccountStore mAccountStore;
 
     public static PublicizeListFragment newInstance(int siteId) {
         Bundle args = new Bundle();
@@ -135,7 +140,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     private PublicizeServiceAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new PublicizeServiceAdapter(getActivity(), mSiteId, mCurrentUserId);
+            mAdapter = new PublicizeServiceAdapter(
+                    getActivity(),
+                    mSiteId,
+                    mAccountStore.getAccount().getUserId());
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener((OnServiceClickListener) getActivity());
