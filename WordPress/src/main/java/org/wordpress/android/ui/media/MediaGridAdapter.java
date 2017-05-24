@@ -100,51 +100,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        if (isSameList(mediaList)) {
-            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
-            return;
+        if (!isSameList(mediaList)) {
+            mMediaList.clear();
+            mMediaList.addAll(mediaList);
+            notifyDataSetChanged();
         }
-
-        mMediaList.clear();
-        mMediaList.addAll(mediaList);
-        notifyDataSetChanged();
     }
 
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.media_grid_item, parent, false);
         return new GridViewHolder(view);
-    }
-
-    /*
-     * returns the most optimal url to use when retrieving a media image for display here
-     */
-    private String getBestImageUrl(@NonNull MediaModel media) {
-        // return photon-ized url if the site allows it since this gives us the image at the
-        // exact size we need here
-        if (SiteUtils.isPhotonCapable(mSite)) {
-            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
-        }
-
-        // can't use photon, so try the various image sizes - note we favor medium-large and
-        // medium because they're more bandwidth-friendly than large
-        String path = media.getUrl().substring(0, media.getUrl().lastIndexOf("/") + 1);
-        if (!TextUtils.isEmpty(media.getFileNameMediumLargeSize())) {
-            return path + media.getFileNameMediumLargeSize();
-        } else if (!TextUtils.isEmpty(media.getFileNameMediumSize())) {
-            return path + media.getFileNameMediumSize();
-        } else if (!TextUtils.isEmpty(media.getFileNameLargeSize())) {
-            return path + media.getFileNameLargeSize();
-        }
-
-        // next stop is to return the thumbnail, which will look pixelated in the grid but it's
-        // better than eating bandwidth showing the full-sized image
-        if (!TextUtils.isEmpty(media.getThumbnailUrl())) {
-            return media.getThumbnailUrl();
-        }
-
-        // last resort, return the full-sized image url
-        return UrlUtils.removeQuery(media.getUrl());
     }
 
     @Override
@@ -168,7 +134,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView, mImageLoader);
+                // if this isn't a private site use Photon to request the image at the exact size,
+                // otherwise append the standard wp query params to request the desired size
+                // TODO: we should drop using Photon for self-hosted sites once the media model
+                // has been updated to include the various image sizes
+                String thumbUrl;
+                if (!mSite.isPrivate()) {
+                    thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
+                } else {
+                    thumbUrl = UrlUtils.removeQuery(media.getUrl());
+                }
+                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }
         } else {
             // not an image, so show file name and file type

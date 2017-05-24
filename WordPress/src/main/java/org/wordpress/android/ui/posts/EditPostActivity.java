@@ -5,11 +5,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -90,8 +88,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -437,12 +434,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     protected void onPause() {
         super.onPause();
 
-        try {
-            unregisterReceiver(mGalleryReceiver);
-        } catch (IllegalArgumentException e) {
-            AppLog.d(T.EDITOR, "Illegal state! Can't unregister receiver that was no registered");
-        }
-
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
     }
@@ -642,7 +633,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                startMediaGalleryAddActivity();
+                ActivityLauncher.viewMediaPickerForResult(this, mSite);
                 break;
         }
     }
@@ -727,8 +718,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                                 shouldShowContextMenu = false;
                             } else {
-                                registerReceiver(mGalleryReceiver,
-                                        new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
                                 refreshBlogMedia();
                             }
                             break;
@@ -1225,9 +1214,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
                         isPublishable && hasLocalChanges;
 
-                // if post was modified or has unsaved local changes and is publishable, save it
-                boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
-                saveResult(shouldSave, false);
+                // if post was modified or has unpublished local changes, save it
+                boolean shouldSave = hasChanges || hasUnpublishedLocalDraftChanges;
+                // if post is publishable or not new, sync it
+                boolean shouldSync = isPublishable || !isNewPost();
+
+                saveResult(shouldSave && shouldSync, false);
 
                 if (shouldSave) {
                     if (isNewPost()) {
@@ -1568,10 +1560,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private void startMediaGalleryActivity(MediaGallery mediaGallery) {
-        ActivityLauncher.viewMediaGalleryForSiteAndGallery(this, mSite, mediaGallery);
-    }
-
     private void prepareMediaPost() {
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
         ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
@@ -1787,12 +1775,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             uri = optimizedMedia;
             path = MediaUtils.getRealPathFromURI(this, uri);
         } else {
-            // Fix the rotation of the picture see https://github.com/wordpress-mobile/WordPress-Android/issues/5737
-            // TODO: find a better implementation
-            Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
-            if (rotatedMedia != null) {
-                uri = rotatedMedia;
-                path = MediaUtils.getRealPathFromURI(this, uri);
+            // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
+            if (!mSite.isWPCom()) {
+                // If it's not wpcom we must rotate the picture locally
+                Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+                if (rotatedMedia != null) {
+                    uri = rotatedMedia;
+                    path = MediaUtils.getRealPathFromURI(this, uri);
+                }
+            } else {
+                // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
+                // All the other editors read EXIF data
+                if (mShowNewEditor) {
+                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(this, path, isVideo);
+                    if (rotatedMedia != null) {
+                        // The uri variable should remain the same since wpcom rotates the picture server side
+                        path = MediaUtils.getRealPathFromURI(this, rotatedMedia);
+                    }
+                }
             }
         }
 
@@ -1831,13 +1831,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
-                case MediaGalleryActivity.REQUEST_CODE:
-                    handleMediaGalleryResult(data);
-                    // TODO: No analytics here?
-                    break;
-                case MediaGalleryPickerActivity.REQUEST_CODE:
-                    handleMediaGalleryPickerResult(data);
-                    // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
+                case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                    handleMediaPickerResult(data);
+                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
@@ -1963,12 +1959,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    private void startMediaGalleryAddActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
-    }
-
-    private void handleMediaGalleryPickerResult(Intent data) {
-        ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+    private void handleMediaPickerResult(Intent data) {
+        ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
             return;
         }
@@ -2006,30 +1998,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         };
-        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback);
+        InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback, mSite);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(dialog, "insert_media");
         ft.commitAllowingStateLoss();
     }
-
-    private void handleMediaGalleryResult(Intent data) {
-        MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
-
-        // if blank gallery returned, don't add to span
-        if (gallery == null || gallery.getIds().size() == 0) {
-            return;
-        }
-        mEditorFragment.appendGallery(gallery);
-    }
-
-    private BroadcastReceiver mGalleryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED.equals(intent.getAction())) {
-                startMediaGalleryActivity((MediaGallery)intent.getSerializableExtra(LegacyEditorFragment.EXTRA_MEDIA_GALLERY));
-            }
-        }
-    };
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.util.AniUtils;
 
 /**
@@ -73,20 +76,32 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
     private SeekBar mNumColumnsSeekBar;
 
     private InsertMediaCallback mCallback;
+    private SiteModel mSite;
     private GalleryType mGalleryType;
     private InsertType mInsertType;
     private int mNumColumns;
 
 
-    public static InsertMediaDialog newInstance(@NonNull InsertMediaCallback callback) {
+    public static InsertMediaDialog newInstance(@NonNull InsertMediaCallback callback, @NonNull SiteModel site) {
         InsertMediaDialog dialog = new InsertMediaDialog();
         dialog.setStyle(AppCompatDialogFragment.STYLE_NORMAL, R.style.Theme_AppCompat_Light_Dialog);
         dialog.setCallback(callback);
+        Bundle args = new Bundle();
+        args.putSerializable(WordPress.SITE, site);
+        dialog.setArguments(args);
         return dialog;
     }
 
     private void setCallback(@NonNull InsertMediaCallback callback) {
         mCallback = callback;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        }
     }
 
     @Override
@@ -98,6 +113,10 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
         View view = localInflater.inflate(R.layout.insert_media_dialog, container, false);
 
         mInsertRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_insert_type);
+        mGalleryRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_gallery_type);
+        mNumColumnsContainer = (ViewGroup) view.findViewById(R.id.num_columns_container);
+        mNumColumnsSeekBar = (SeekBar) mNumColumnsContainer.findViewById(R.id.seekbar_num_columns);
+
         mInsertRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -109,34 +128,39 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
             }
         });
 
-        mGalleryRadioGroup = (RadioGroup) view.findViewById(R.id.radio_group_gallery_type);
-        mGalleryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                GalleryType galleryType;
-                switch (checkedId) {
-                    case R.id.radio_circles:
-                        galleryType = GalleryType.CIRCLES;
-                        break;
-                    case R.id.radio_slideshow:
-                        galleryType = GalleryType.SLIDESHOW;
-                        break;
-                    case R.id.radio_squares:
-                        galleryType = GalleryType.SQUARES;
-                        break;
-                    case R.id.radio_tiled:
-                        galleryType = GalleryType.TILED;
-                        break;
-                    default:
-                        galleryType = GalleryType.DEFAULT;
-                        break;
+        // self-hosted sites don't support gallery types
+        boolean enableGalleryType = mSite != null && mSite.isUsingWpComRestApi();
+        if (enableGalleryType) {
+            mGalleryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                    GalleryType galleryType;
+                    switch (checkedId) {
+                        case R.id.radio_circles:
+                            galleryType = GalleryType.CIRCLES;
+                            break;
+                        case R.id.radio_slideshow:
+                            galleryType = GalleryType.SLIDESHOW;
+                            break;
+                        case R.id.radio_squares:
+                            galleryType = GalleryType.SQUARES;
+                            break;
+                        case R.id.radio_tiled:
+                            galleryType = GalleryType.TILED;
+                            break;
+                        default:
+                            galleryType = GalleryType.DEFAULT;
+                            break;
+                    }
+                    setGalleryType(galleryType);
                 }
-                setGalleryType(galleryType);
-            }
-        });
+            });
+        } else {
+            mGalleryRadioGroup.setVisibility(View.GONE);
+            mNumColumnsContainer.setVisibility(View.VISIBLE);
+            mGalleryType = GalleryType.DEFAULT;
+        }
 
-        mNumColumnsContainer = (ViewGroup) view.findViewById(R.id.num_columns_container);
-        mNumColumnsSeekBar = (SeekBar) mNumColumnsContainer.findViewById(R.id.seekbar_num_columns);
         mNumColumnsSeekBar.setMax(MAX_COLUMN_COUNT - 1);
         mNumColumnsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
