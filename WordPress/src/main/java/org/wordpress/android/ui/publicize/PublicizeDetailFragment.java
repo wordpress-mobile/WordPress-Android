@@ -121,7 +121,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
         long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter =
-                new PublicizeConnectionAdapter(getActivity(), mSite.getSiteId(), mServiceId, currentUserId);
+                new PublicizeConnectionAdapter(getActivity(), mSite.getId(), mServiceId, currentUserId);
         adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
         adapter.setOnAdapterLoadedListener(this);
 

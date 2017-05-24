@@ -209,9 +209,9 @@ public class PublicizeTable {
         getReadableDb().insertWithOnConflict(CONNECTIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static PublicizeConnectionList getConnectionsForSite(long siteId) {
+    public static PublicizeConnectionList getConnectionsForSite(int siteId) {
         PublicizeConnectionList connectionList= new PublicizeConnectionList();
-        String args[] = {Long.toString(siteId)};
+        String args[] = {Integer.toString(siteId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + CONNECTIONS_TABLE + " WHERE site_id=?", args);
         try {
             while (c.moveToNext()) {
@@ -223,12 +223,12 @@ public class PublicizeTable {
         }
     }
 
-    public static void setConnectionsForSite(long siteId, PublicizeConnectionList connectionList) {
+    public static void setConnectionsForSite(int siteId, PublicizeConnectionList connectionList) {
         SQLiteStatement stmt = null;
         SQLiteDatabase db = getWritableDb();
         db.beginTransaction();
         try {
-            db.delete(CONNECTIONS_TABLE, "site_id=?", new String[] {Long.toString(siteId)});
+            db.delete(CONNECTIONS_TABLE, "site_id=?", new String[] {Integer.toString(siteId)});
 
             stmt = db.compileStatement(
                     "INSERT INTO " + CONNECTIONS_TABLE
@@ -278,7 +278,7 @@ public class PublicizeTable {
     private static PublicizeConnection getConnectionFromCursor(Cursor c) {
         PublicizeConnection connection = new PublicizeConnection();
 
-        connection.siteId = c.getLong(c.getColumnIndex("site_id"));
+        connection.siteId = c.getInt(c.getColumnIndex("site_id"));
         connection.connectionId = c.getInt(c.getColumnIndex("id"));
         connection.userId = c.getInt(c.getColumnIndex("user_id"));
         connection.keyringConnectionId = c.getInt(c.getColumnIndex("keyring_connection_id"));
