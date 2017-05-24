@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.media;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.android.volley.RequestQueue;
@@ -503,10 +504,46 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             Map metadataMap = (Map) metadataObject;
             media.setWidth(MapUtils.getMapInt(metadataMap, "width"));
             media.setHeight(MapUtils.getMapInt(metadataMap, "height"));
+            media.setFileUrlMediumSize(getFileUrlForSize(link, metadataMap, "medium"));
+            media.setFileUrlMediumLargeSize(getFileUrlForSize(link, metadataMap, "medium_large"));
+            media.setFileUrlLargeSize(getFileUrlForSize(link, metadataMap, "large"));
         }
 
         media.setUploadState(MediaModel.UploadState.UPLOADED.toString());
         return media;
+    }
+
+    private String getFileUrlForSize(String mediaUrl, Map metadataMap, String size) {
+        if (metadataMap == null || TextUtils.isEmpty(mediaUrl) || !mediaUrl.contains("/")) {
+            return null;
+        }
+
+        String fileName = getFileForSize(metadataMap, size);
+        if (TextUtils.isEmpty(fileName)) {
+            return null;
+        }
+
+        // make sure the path to the original image is a valid path to a file
+        if (mediaUrl.lastIndexOf("/") + 1 >= mediaUrl.length()) return null;
+
+        String baseURL = mediaUrl.substring(0, mediaUrl.lastIndexOf("/") + 1);
+        return baseURL + fileName;
+    }
+
+    private String getFileForSize(Map metadataMap, String size) {
+        if (metadataMap == null) {
+            return null;
+        }
+        Object sizesObject = metadataMap.get("sizes");
+        if (sizesObject instanceof Map) {
+            Map sizesMap = (Map) sizesObject;
+            Object requestedSizeObject = sizesMap.get(size);
+            if (requestedSizeObject instanceof Map) {
+                Map requestedSizeMap = (Map) requestedSizeObject;
+                return MapUtils.getMapStr(requestedSizeMap, "file");
+            }
+        }
+        return null;
     }
 
     private MediaError getMediaErrorFromXMLRPCException(XMLRPCException exception) {
