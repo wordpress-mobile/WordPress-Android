@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnection;
@@ -27,12 +28,13 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PublicizeWebViewFragment extends PublicizeBaseFragment {
-    @Inject AccountStore mAccountStore;
     private int mSiteId;
     private String mServiceId;
     private int mConnectionId;
     private WebView mWebView;
     private ProgressBar mProgress;
+
+    @Inject AccountStore mAccountStore;
 
     /*
      * returns a new webView fragment to connect to a publicize service - if passed connection
@@ -69,6 +71,8 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
