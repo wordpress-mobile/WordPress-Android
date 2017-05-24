@@ -313,9 +313,6 @@ Language: cs_CZ
 	<string name="error_refresh_comments_showing_older">Komentáře nemohou být v tuto chvíli aktualizonány - zobrazující se starší komentáře</string>
 	<string name="editor_post_settings_set_featured_image">Nastavit vybrané obrázky</string>
 	<string name="editor_post_settings_featured_image">Vybraný obrázek</string>
-	<string name="new_editor_promo_desc">WordPress aplikace pro Android nyní zahrnuje krásný nový vizuální editor.\n    Vyzkoušejte si ho tím, že vytvoří nový příspěvek.</string>
-	<string name="new_editor_promo_title">Zburusu nový editor</string>
-	<string name="new_editor_promo_button_label">Skvělé, díky!</string>
 	<string name="visual_editor_enabled">Vizuální editor povolen</string>
 	<string name="editor_content_placeholder">Sdílejte svůj příběh zde...</string>
 	<string name="editor_page_title_placeholder">Název stránky</string>

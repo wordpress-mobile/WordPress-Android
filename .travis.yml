@@ -33,7 +33,7 @@ before_install:
 
 install:
   # Setup gradle.properties
-  - cp WordPress/gradle.properties-example WordPress/gradle.properties
+  - cp gradle.properties-example gradle.properties
 
 script:
   - ./gradlew -PdisablePreDex assembleVanillaRelease lint test || (grep -A20 -B2 'severity="Error"' WordPress/build/**/*.xml; exit 1)
