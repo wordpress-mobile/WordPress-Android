@@ -205,9 +205,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mEmptyViewTitle = (TextView) view.findViewById(R.id.empty_view_title);
 
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
-
         mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
-        mSpinner.setVisibility(mBrowserType.isPicker() ? View.GONE : View.VISIBLE);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
@@ -225,8 +223,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         fetchMediaList(false);
                     }
                 });
+
         restoreState(savedInstanceState);
 
+        if (mImagesOnly) {
+            mFilter = Filter.IMAGES;
+        }
+
+        // filter spinner doesn't show for pickers
+        mSpinner.setVisibility(mBrowserType.isPicker() ? View.GONE : View.VISIBLE);
         if (!mBrowserType.isPicker()) {
             mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
             setupSpinnerAdapter();
@@ -499,11 +504,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         }
 
-        if (mImagesOnly) {
-            mFilter = Filter.IMAGES;
-        } else {
-            mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
-        }
+        mFilter = mImagesOnly ? Filter.IMAGES : Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
