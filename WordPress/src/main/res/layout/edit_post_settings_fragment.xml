@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_darken_10"
-                android:text="@string/not_set"/>
+                android:hint="@string/not_set"/>
 
         </LinearLayout>
 
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_darken_10"
-                android:text="@string/not_set"/>
+                android:hint="@string/not_set"/>
 
         </LinearLayout>
 

@@ -279,9 +279,6 @@ Language: ms
 	<string name="error_refresh_comments_showing_older">Ulasan tidak dapat disegarkan buat masa ini - tunjukkan ulasan terdahulu</string>
 	<string name="editor_post_settings_set_featured_image">Tetapkan Imej Terencana</string>
 	<string name="editor_post_settings_featured_image">Imej Terencana</string>
-	<string name="new_editor_promo_desc">Aplikasi WordPress untuk Android kini dilengkapi dengan penyunting\n    visual baharu yang cantik. Cubanya dengan membuat kiriman baharu.</string>
-	<string name="new_editor_promo_title">Penyuntung baharu</string>
-	<string name="new_editor_promo_button_label">Hebat, terima kasih!</string>
 	<string name="visual_editor_enabled">Penyunting Visual dibolehkan</string>
 	<string name="editor_content_placeholder">Kongsikan cerita anda di sini...</string>
 	<string name="editor_page_title_placeholder">Tajuk Halaman</string>

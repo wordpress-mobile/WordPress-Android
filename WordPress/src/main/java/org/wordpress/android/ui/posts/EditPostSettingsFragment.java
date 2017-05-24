@@ -63,7 +63,8 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -113,6 +114,8 @@ public class EditPostSettingsFragment extends Fragment
     private Button mFeaturedImageButton;
 
     private long mFeaturedImageId;
+    private String mCurrentSlug;
+    private String mCurrentExcerpt;
 
     private List<TermModel> mCategories;
 
@@ -245,7 +248,7 @@ public class EditPostSettingsFragment extends Fragment
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    launchMediaGalleryActivity();
+                    launchFeaturedMediaPicker();
                 }
             });
         } else {
@@ -341,7 +344,7 @@ public class EditPostSettingsFragment extends Fragment
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case SELECT_LIBRARY_MENU_POSITION:
-                launchMediaGalleryActivity();
+                launchFeaturedMediaPicker();
                 return true;
             case CLEAR_FEATURED_IMAGE_MENU_POSITION:
                 mFeaturedImageId = -1;
@@ -354,8 +357,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        setTextIfPresent(mExcerptTextView, mPost.getExcerpt());
-        setTextIfPresent(mSlugTextView, mPost.getSlug());
+        mCurrentExcerpt = mPost.getExcerpt();
+        mCurrentSlug = mPost.getSlug();
+        mExcerptTextView.setText(mCurrentExcerpt);
+        mSlugTextView.setText(mCurrentSlug);
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -455,11 +460,11 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    private void launchMediaGalleryActivity() {
-        Intent intent = new Intent(getActivity(), MediaGalleryPickerActivity.class);
+    private void launchFeaturedMediaPicker() {
+        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
+        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
     private PostStatus getPostStatusForSpinnerPosition(int position) {
@@ -495,10 +500,10 @@ public class EditPostSettingsFragment extends Fragment
                         populateSelectedCategories();
                     }
                     break;
-                case MediaGalleryPickerActivity.REQUEST_CODE:
+                case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                     if (resultCode == Activity.RESULT_OK) {
                         ArrayList<Long> ids = ListUtils.
-                                fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+                                fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
                         if (ids == null || ids.size() == 0) {
                             return;
                         }
@@ -676,8 +681,8 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setExcerpt(getTextFromTextView(mExcerptTextView));
-        post.setSlug(getTextFromTextView(mSlugTextView));
+        post.setExcerpt(mCurrentExcerpt);
+        post.setSlug(mCurrentSlug);
         post.setStatus(status);
         post.setPassword(password);
         post.setPostFormat(postFormat);
@@ -959,28 +964,28 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostExcerptDialog() {
-        String currentExcerpt = getTextFromTextView(mExcerptTextView);
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                currentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint));
+                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        setTextIfPresent(mExcerptTextView, input);
+                        mCurrentExcerpt = input;
+                        mExcerptTextView.setText(mCurrentExcerpt);
                     }
                 });
         dialog.show(getFragmentManager(), null);
     }
 
     private void showSlugDialog() {
-        String currentSlug = getTextFromTextView(mSlugTextView);
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                currentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint));
+                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        setTextIfPresent(mSlugTextView, input);
+                        mCurrentSlug = input;
+                        mSlugTextView.setText(mCurrentSlug);
                     }
                 });
         dialog.show(getFragmentManager(), null);
@@ -994,22 +999,6 @@ public class EditPostSettingsFragment extends Fragment
         tagsIntent.putExtra(WordPress.SITE, mSite);
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_LOCAL_POST_ID, mPost.getId());
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
-    }
-
-    private String getTextFromTextView(TextView textView) {
-        String text = textView.getText().toString();
-        if (text.equals(getString(R.string.not_set))) {
-            text = "";
-        }
-        return text;
-    }
-
-    private void setTextIfPresent(TextView textView, String text) {
-        if (!TextUtils.isEmpty(text)) {
-            textView.setText(text);
-        } else {
-            textView.setText(R.string.not_set);
-        }
     }
 
     /*

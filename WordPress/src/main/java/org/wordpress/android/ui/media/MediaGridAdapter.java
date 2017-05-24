@@ -100,14 +100,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        if (isSameList(mediaList)) {
-            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
-            return;
+        if (!isSameList(mediaList)) {
+            mMediaList.clear();
+            mMediaList.addAll(mediaList);
+            notifyDataSetChanged();
         }
-
-        mMediaList.clear();
-        mMediaList.addAll(mediaList);
-        notifyDataSetChanged();
     }
 
     @Override
@@ -139,8 +136,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             } else {
                 // if this isn't a private site use Photon to request the image at the exact size,
                 // otherwise append the standard wp query params to request the desired size
+                // TODO: we should drop using Photon for self-hosted sites once the media model
+                // has been updated to include the various image sizes
                 String thumbUrl;
-                if (SiteUtils.isPhotonCapable(mSite)) {
+                if (!mSite.isPrivate()) {
                     thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
                 } else {
                     thumbUrl = UrlUtils.removeQuery(media.getUrl());

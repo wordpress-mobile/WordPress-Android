@@ -8,6 +8,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_save"
+        android:icon="@drawable/ic_save_white_24dp"
+        android:title="@string/save"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share_24dp"
         android:title="@string/share_link"
