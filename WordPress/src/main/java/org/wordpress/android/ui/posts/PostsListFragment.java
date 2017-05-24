@@ -106,10 +106,10 @@ public class PostsListFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        updateSiteOrFinishActivity(savedInstanceState);
+
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
-
-        updateSiteOrFinishActivity(savedInstanceState);
 
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
@@ -387,7 +387,7 @@ public class PostsListFragment extends Fragment
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (isAdded() && mSite.getId() == event.mLocalBlogId) {
+        if (isAdded() && mSite != null && mSite.getId() == event.mLocalBlogId) {
             loadPosts(LoadMode.FORCED);
         }
     }
@@ -397,7 +397,7 @@ public class PostsListFragment extends Fragment
     */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadCanceled event) {
-        if (isAdded() && mSite.getId() == event.localSiteId) {
+        if (isAdded() && mSite != null && mSite.getId() == event.localSiteId) {
             loadPosts(LoadMode.FORCED);
         }
     }
