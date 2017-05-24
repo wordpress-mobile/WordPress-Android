@@ -243,10 +243,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSiteSettings = SiteSettingsInterface.getInterface(activity, mSite, this);
 
         setRetainInstance(true);
-        addPreferencesFromResource(R.xml.site_settings);
+        addPreferencesFromResource();
 
         // toggle which preferences are shown and set references
         initPreferences();
+    }
+
+    public void addPreferencesFromResource() {
+        addPreferencesFromResource(R.xml.site_settings);
     }
 
     @Override
@@ -644,7 +648,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
-    private void initPreferences() {
+    public void initPreferences() {
         mTitlePref = (EditTextPreference) getChangePref(R.string.pref_key_site_title);
         mTaglinePref = (EditTextPreference) getChangePref(R.string.pref_key_site_tagline);
         mAddressPref = (EditTextPreference) getChangePref(R.string.pref_key_site_address);
@@ -965,7 +969,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         showNumberPickerDialog(args, MULTIPLE_LINKS_REQUEST_CODE, "multiple-links-dialog");
     }
 
-    private void setPreferencesFromSiteSettings() {
+    public void setPreferencesFromSiteSettings() {
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         setDetailListPreferenceValue(mImageWidthPref,
                 String.valueOf(mSiteSettings.getMaxImageWidth()),
@@ -1077,7 +1081,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mReceivePingbacksNested.setChecked(newValue);
     }
 
-    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
+    public void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
         pref.setValue(value);
         pref.setSummary(summary);
         pref.refreshAdapter();
@@ -1281,7 +1285,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
-    private boolean shouldShowListPreference(DetailListPreference preference) {
+    public boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
     }
 

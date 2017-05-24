@@ -17,14 +17,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
-import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -179,7 +176,7 @@ public class PublicizeManageConnectionsFragment extends SiteSettingsFragment {
     }
 
     @Override
-    protected void initPreferences() {
+    public void initPreferences() {
         configureSharingAndMoreButtonsPreferences();
         mLabelPreference = (SummaryEditTextPreference) findPreference(getString(R.string.publicize_label));
         mButtonStylePreference = (DetailListPreference) findPreference(getString(R.string.publicize_button_style));
@@ -194,7 +191,7 @@ public class PublicizeManageConnectionsFragment extends SiteSettingsFragment {
     }
 
     @Override
-    protected void setEditingEnabled(boolean enabled) {
+    public void setEditingEnabled(boolean enabled) {
         final Preference[] editablePreference = {
                 mSharingButtonsPreference, mMoreButtonsPreference, mLabelPreference, mButtonStylePreference,
                 mReblogButtonPreference, mLikeButtonPreference, mCommentLikesPreference,
@@ -209,7 +206,7 @@ public class PublicizeManageConnectionsFragment extends SiteSettingsFragment {
     }
 
     @Override
-    protected void setPreferencesFromSiteSettings() {
+    public void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
@@ -219,7 +216,7 @@ public class PublicizeManageConnectionsFragment extends SiteSettingsFragment {
     }
 
     @Override
-    protected void addPreferencesFromResource() {
+    public void addPreferencesFromResource() {
         addPreferencesFromResource(R.xml.publicize_preferences);
     }
 
