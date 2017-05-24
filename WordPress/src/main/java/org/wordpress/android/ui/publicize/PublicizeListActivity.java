@@ -114,11 +114,11 @@ public class PublicizeListActivity extends AppCompatActivity
         getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
-    private void showDetailFragment(int siteId, PublicizeService service) {
+    private void showDetailFragment(PublicizeService service) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service);
+        Fragment detailFragment = PublicizeDetailFragment.newInstance(mSite, service);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment, tag)
@@ -197,7 +197,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onServiceClicked(PublicizeService service) {
-        showDetailFragment(mSite.getId(), service);
+        showDetailFragment(service);
     }
 
     /*
