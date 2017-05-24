@@ -1008,7 +1008,8 @@ public class EditPostSettingsFragment extends Fragment
 
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
         tagsIntent.putExtra(WordPress.SITE, mSite);
-        tagsIntent.putExtra(PostSettingsTagsActivity.KEY_LOCAL_POST_ID, mPost.getId());
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 

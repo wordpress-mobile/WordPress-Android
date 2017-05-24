@@ -25,10 +25,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ToastUtils;
 
@@ -38,32 +36,28 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher {
-    public static final String KEY_LOCAL_POST_ID = "KEY_POST_ID";
+    public static final String KEY_TAGS = "KEY_TAGS";
     public static final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
     private SiteModel mSite;
-    private PostModel mPost;
 
     private EditText mTagsEditText;
     private TagsRecyclerViewAdapter mAdapter;
 
     @Inject Dispatcher mDispatcher;
     @Inject TaxonomyStore mTaxonomyStore;
-    @Inject PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplicationContext()).component().inject(this);
 
-        int localPostId;
+        String tags = null;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            localPostId = getIntent().getIntExtra(KEY_LOCAL_POST_ID, 0);
+            tags = getIntent().getStringExtra(KEY_TAGS);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            localPostId = savedInstanceState.getInt(KEY_LOCAL_POST_ID, 0);
         }
-        mPost = mPostStore.getPostByLocalPostId(localPostId);
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
@@ -78,7 +72,6 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mTagsEditText = (EditText) findViewById(R.id.tags_edit_text);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.tags_suggestion_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -87,15 +80,13 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         mAdapter.setAllTags(mTaxonomyStore.getTagsForSite(mSite));
         recyclerView.setAdapter(mAdapter);
 
-        if (mTagsEditText != null) {
-            mTagsEditText.addTextChangedListener(this);
-            String tags = TextUtils.join(",", mPost.getTagNameList());
-            if (!tags.equals("")) {
-                // add a , at the end so the user can start typing a new tag
-                tags += ",";
-                mTagsEditText.setText(tags);
-                mTagsEditText.setSelection(mTagsEditText.length());
-            }
+        mTagsEditText = (EditText) findViewById(R.id.tags_edit_text);
+        mTagsEditText.addTextChangedListener(this);
+        if (!TextUtils.isEmpty(tags)) {
+            // add a , at the end so the user can start typing a new tag
+            tags += ",";
+            mTagsEditText.setText(tags);
+            mTagsEditText.setSelection(mTagsEditText.length());
         }
     }
 
@@ -115,7 +106,6 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putInt(KEY_LOCAL_POST_ID, mPost.getId());
     }
 
     @Override
