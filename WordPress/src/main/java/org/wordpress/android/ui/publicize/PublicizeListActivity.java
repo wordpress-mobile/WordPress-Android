@@ -80,7 +80,7 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_list);
-        Fragment fragment = PublicizeListFragment.newInstance(siteId);
+        Fragment fragment = PublicizeListFragment.newInstance(mSite);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, tag)
