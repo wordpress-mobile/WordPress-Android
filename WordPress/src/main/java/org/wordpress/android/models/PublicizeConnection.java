@@ -25,7 +25,7 @@ public class PublicizeConnection {
     }
 
     public int connectionId;
-    public int siteId;
+    public long siteId;
     public int keyringConnectionId;
     public int keyringConnectionUserId;
 
@@ -190,7 +190,7 @@ public class PublicizeConnection {
         PublicizeConnection connection = new PublicizeConnection();
 
         connection.connectionId = json.optInt("ID");
-        connection.siteId = json.optInt("site_ID");
+        connection.siteId = json.optLong("site_ID");
         connection.userId = json.optInt("user_ID");
         connection.keyringConnectionId = json.optInt("keyring_connection_ID");
         connection.keyringConnectionUserId = json.optInt("keyring_connection_user_ID");

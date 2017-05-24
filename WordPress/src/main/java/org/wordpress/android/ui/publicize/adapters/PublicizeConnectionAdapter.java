@@ -26,7 +26,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
 
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
 
-    private final int mSiteId;
+    private final long mSiteId;
     private final int mAvatarSz;
     private final long mCurrentUserId;
     private final String mServiceId;
@@ -34,7 +34,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
     private PublicizeActions.OnPublicizeActionListener mActionListener;
     private OnAdapterLoadedListener mLoadedListener;
 
-    public PublicizeConnectionAdapter(Context context, int siteId, String serviceId, long currentUserId) {
+    public PublicizeConnectionAdapter(Context context, long siteId, String serviceId, long currentUserId) {
         super();
         mSiteId = siteId;
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
