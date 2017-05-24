@@ -94,9 +94,9 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 8:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("alter table MediaModel add FILE_NAME_MEDIUM_SIZE text;");
-                db.execSQL("alter table MediaModel add FILE_NAME_MEDIUM_LARGE_SIZE text;");
-                db.execSQL("alter table MediaModel add FILE_NAME_LARGE_SIZE text;");
+                db.execSQL("alter table MediaModel add FILE_URL_MEDIUM_SIZE text;");
+                db.execSQL("alter table MediaModel add FILE_URL_MEDIUM_LARGE_SIZE text;");
+                db.execSQL("alter table MediaModel add FILE_URL_LARGE_SIZE text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
