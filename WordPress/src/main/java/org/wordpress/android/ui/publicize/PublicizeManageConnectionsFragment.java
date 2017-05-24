@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.DetailListPreference;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
 import org.wordpress.android.util.AppLog;
@@ -45,6 +46,7 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
     private ArrayList<PublicizeButton> mPublicizeButtons;
 
     private SiteModel mSite;
+    private SiteSettingsInterface mSiteSettings;
 
     public static PublicizeManageConnectionsFragment newInstance(@NonNull SiteModel site) {
         PublicizeManageConnectionsFragment fragment = new PublicizeManageConnectionsFragment();
@@ -55,10 +57,10 @@ public class PublicizeManageConnectionsFragment extends AccountSettingsFragment 
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, null);
     }
 
     private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
