@@ -32,7 +32,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
+    private boolean mShowPreviewIcon;
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
@@ -88,6 +88,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 
         setImageLoader(imageLoader);
+    }
+
+    public void setShowPreviewIcon(boolean show) {
+        if (show != mShowPreviewIcon) {
+            mShowPreviewIcon = show;
+            if (getItemCount() > 0) {
+                notifyDataSetChanged();;
+            }
+        }
     }
 
     @Override
@@ -220,6 +229,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ProgressBar progressUpload;
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
+        private final ImageView imgPreview;
 
         public GridViewHolder(View view) {
             super(view);
@@ -235,6 +245,26 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
+            previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
+            imgPreview = (ImageView) previewContainer.findViewById(R.id.image_preview);
+            if (mShowPreviewIcon) {
+                imgPreview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = getAdapterPosition();
+                        if (isValidPosition(position)) {
+                            MediaModel media = mMediaList.get(position);
+                            MediaPreviewActivity.showPreview(
+                                    v.getContext(),
+                                    imgPreview,
+                                    mSite,
+                                    media.getId());
+                        }
+                    }
+                });
+            }
 
             // make the progress bar white
             progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);

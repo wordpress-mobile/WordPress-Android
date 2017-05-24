@@ -295,6 +295,7 @@
     <dimen name="photo_picker_selected_item_padding">4dp</dimen>
     <dimen name="photo_picker_icon">48dp</dimen>
     <dimen name="photo_picker_video_overlay">36dp</dimen>
+    <dimen name="photo_picker_preview_icon">36dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>
 </resources>
