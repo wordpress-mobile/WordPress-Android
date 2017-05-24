@@ -45,7 +45,7 @@ public class AnalyticsUtils {
     private static String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
     /**
-     * Utility methods to refresh Mixpanel metadata.
+     * Utility methods to refresh metadata.
      */
     public static void refreshMetadata(AccountStore accountStore, SiteStore siteStore) {
         AnalyticsMetadata metadata = new AnalyticsMetadata();

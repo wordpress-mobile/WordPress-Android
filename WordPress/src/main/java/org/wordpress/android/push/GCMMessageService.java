@@ -128,10 +128,9 @@ public class GCMMessageService extends GcmListenerService {
             return;
         }
 
-        // Handle mixpanel PNs
+        // Handle Mixpanel PNs: do nothing since Mixpanel is gone.
+        // TODO remove this in a future version of the app.
         if (data.containsKey("mp_message")) {
-            // Do nothing since Mixpanel is gone.
-            // TODO remove this in a future version of the app.
             return;
         }
 

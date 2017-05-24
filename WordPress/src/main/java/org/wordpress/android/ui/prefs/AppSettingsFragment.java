@@ -204,7 +204,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         conf.locale = newLocale;
         res.updateConfiguration(conf, res.getDisplayMetrics());
 
-        // Track language change on Mixpanel because we have both the device language and app selected language
+        // Track language change on Analytics because we have both the device language and app selected language
         // data in Tracks metadata.
         Map<String, Object> properties = new HashMap<>();
         properties.put("app_locale", conf.locale.toString());
