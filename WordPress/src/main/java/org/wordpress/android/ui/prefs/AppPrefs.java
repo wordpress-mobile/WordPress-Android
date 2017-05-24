@@ -46,9 +46,6 @@ public class AppPrefs {
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
 
-        // email retrieved and attached to mixpanel profile
-        MIXPANEL_EMAIL_ADDRESS,
-
         // index of the last active tab in main activity
         MAIN_TAB_INDEX,
 
@@ -341,16 +338,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.LAST_ACTIVITY_STR);
     }
 
-    // Mixpanel email retrieval check
-
-    public static String getMixpanelUserEmail() {
-        return getString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, null);
-    }
-
-    public static void setMixpanelUserEmail(String email) {
-        setString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, email);
-    }
-
     public static int getMainTabIndex() {
         return getInt(DeletablePrefKey.MAIN_TAB_INDEX);
     }
@@ -422,13 +409,13 @@ public class AppPrefs {
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
-        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_TOGGLED_ON : Stat.EDITOR_TOGGLED_OFF);
+        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
     }
 
     public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
         setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
         if (visualEditorAvailable) {
-            AnalyticsTracker.track(Stat.EDITOR_ENABLED_NEW_VERSION);
+            AnalyticsTracker.track(Stat.EDITOR_HYBRID_ENABLED);
         }
     }
 

@@ -31,6 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -275,15 +276,29 @@ public class WPWebViewActivity extends WebViewActivity {
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
         String authURL = extras.getString(AUTHENTICATION_URL);
-        if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
-            username = mAccountStore.getAccount().getUserName();
-        }
 
         if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
             AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity");
             Toast.makeText(this, getText(R.string.invalid_site_url_message),
                     Toast.LENGTH_SHORT).show();
             finish();
+            return;
+        }
+
+        if (extras.getBoolean(USE_GLOBAL_WPCOM_USER, false)) {
+            username = mAccountStore.getAccount().getUserName();
+
+            // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
+            if (!addressToLoad.contains(".wordpress.com")) {
+                List<SiteModel> wpComSites = mSiteStore.getWPComSites();
+                for (SiteModel siteModel : wpComSites) {
+                    // Only replace the url if we know the unmapped url and if it's a custom domain
+                    if (!TextUtils.isEmpty(siteModel.getUnmappedUrl())
+                            && !siteModel.getUrl().contains(".wordpress.com")) {
+                        addressToLoad = addressToLoad.replace(siteModel.getUrl(), siteModel.getUnmappedUrl());
+                    }
+                }
+            }
         }
 
         if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {

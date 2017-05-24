@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.2'
     }
 }
 
@@ -17,7 +17,6 @@ repositories {
 
 dependencies {
     compile 'com.automattic:tracks:1.1.2'
-    compile 'com.mixpanel.android:mixpanel-android:4.6.4'
     compile 'org.wordpress:utils:1.+'
 }
 

@@ -3,31 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/dialog_full_holo_light"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="15dp"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_large"
         android:text="@string/media_add_popup_title"
-        android:textSize="20sp" />
+        android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/blue_wordpress" />
+        android:layout_height="1dp"
+        android:background="@color/divider_grey" />
 
     <ListView
         android:id="@+id/actionbar_add_media_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/blue_wordpress"
-        android:dividerHeight="1dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp" >
-    </ListView>
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large" />
 
 </LinearLayout>

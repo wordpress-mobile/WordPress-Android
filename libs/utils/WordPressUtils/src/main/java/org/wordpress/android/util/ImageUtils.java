@@ -74,6 +74,10 @@ public class ImageUtils {
 
     // Read the orientation from ContentResolver. If it fails, read from EXIF.
     public static int getImageOrientation(Context ctx, String filePath) {
+        if (TextUtils.isEmpty(filePath) || ctx == null) {
+            AppLog.w(AppLog.T.UTILS, "Can't read orientation. Passed context or file is null or empty.");
+            return 0;
+        }
         Uri curStream;
         int orientation = 0;
 
@@ -94,7 +98,7 @@ public class ImageUtils {
                 cur.close();
             }
         } catch (Exception errReadingContentResolver) {
-            AppLog.e(AppLog.T.UTILS, errReadingContentResolver);
+            AppLog.e(AppLog.T.UTILS, "Error reading orientation of the file: " + filePath, errReadingContentResolver);
         }
 
         if (orientation == 0) {
@@ -106,11 +110,15 @@ public class ImageUtils {
 
 
     public static int getExifOrientation(String path) {
+        if (TextUtils.isEmpty(path)) {
+            AppLog.w(AppLog.T.UTILS, "Can't read EXIF orientation. Passed path is empty.");
+            return 0;
+        }
         ExifInterface exif;
         try {
             exif = new ExifInterface(path);
         } catch (IOException e) {
-            AppLog.e(AppLog.T.UTILS, e);
+            AppLog.e(AppLog.T.UTILS, "Can't read EXIF orientation.", e);
             return 0;
         }
 
@@ -399,37 +407,6 @@ public class ImageUtils {
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
     }
 
-    private static String getRealFilePath(Context context, Uri imageUri) {
-        if (context == null || imageUri == null) {
-            return null;
-        }
-
-        String filePath = null;
-        if (imageUri.toString().contains("content:")) {
-            String[] projection = new String[] { MediaStore.Images.Media.DATA };
-            Cursor cur = null;
-            try {
-                cur = context.getContentResolver().query(imageUri, projection, null, null, null);
-                if (cur != null && cur.moveToFirst()) {
-                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
-                    filePath = cur.getString(dataColumn);
-                }
-            } catch (IllegalStateException stateException) {
-                Log.d(ImageUtils.class.getName(), "IllegalStateException querying content:" + imageUri);
-            } finally {
-                SqlUtils.closeCursor(cur);
-            }
-        }
-
-        if (TextUtils.isEmpty(filePath)) {
-            //access the file directly
-            filePath = imageUri.toString().replace("content://media", "");
-            filePath = filePath.replace("file://", "");
-        }
-
-        return  filePath;
-    }
-
     private static boolean resizeImageAndWriteToStream(Context context,
                                                     Uri imageUri,
                                                     String fileExtension,
@@ -438,7 +415,7 @@ public class ImageUtils {
                                                     int quality,
                                                     OutputStream outStream) throws OutOfMemoryError, IOException {
 
-        String realFilePath = getRealFilePath(context, imageUri);
+        String realFilePath = MediaUtils.getRealPathFromURI(context, imageUri);
 
         // get just the image bounds
         BitmapFactory.Options optBounds = new BitmapFactory.Options();
@@ -736,6 +713,12 @@ public class ImageUtils {
             return null;
         }
 
+        int orientation = getImageOrientation(context, path);
+        // Do not rotate portrait pictures
+        if (orientation == 0) {
+            return  null;
+        }
+
         String mimeType = MediaUtils.getMediaFileMimeType(file);
         if (mimeType.equals("image/gif")) {
             // Don't rotate gifs to maintain their quality
@@ -756,18 +739,26 @@ public class ImageUtils {
             return null;
         }
 
-        int orientation = getImageOrientation(context, path);
-        // Do not rotate portrait pictures
-        if (orientation == 0) {
-            return  null;
-        }
-
-        File resizedImageFile;
+        File rotatedImageFile;
         FileOutputStream out;
 
         try {
-            resizedImageFile = File.createTempFile("wp-image-", "." + fileExtension);
-            out = new FileOutputStream(resizedImageFile);
+            // try to re-use the same name as prefix of the temp file
+            String prefix;
+            int dotPos = fileName.indexOf('.');
+            if (dotPos > 0) {
+                prefix = fileName.substring(0, dotPos);
+            } else {
+                prefix = fileName;
+            }
+
+            if (prefix.length() < 3) {
+                // prefix must be at least 3 characters
+                prefix = "wp-image";
+            }
+
+            rotatedImageFile = File.createTempFile(prefix, "." + fileExtension);
+            out = new FileOutputStream(rotatedImageFile);
         } catch (IOException e) {
             AppLog.e(AppLog.T.MEDIA, "Failed to create the temp file on storage.");
             return null;
@@ -798,11 +789,49 @@ public class ImageUtils {
             }
         }
 
-        String tempFilePath = resizedImageFile.getPath();
+        String tempFilePath = rotatedImageFile.getPath();
         if (!TextUtils.isEmpty(tempFilePath)) {
             return tempFilePath;
         } else {
             AppLog.e(AppLog.T.MEDIA, "Failed to create rotated image.");
+        }
+
+        return null;
+    }
+
+
+    /**
+     * This is a wrapper around MediaStore.Images.Thumbnails.getThumbnail that takes in consideration
+     * the orientation of the picture.
+     *
+     * @param contentResolver ContentResolver used to dispatch queries to MediaProvider.
+     * @param id Original image id associated with thumbnail of interest.
+     * @param kind The type of thumbnail to fetch. Should be either MINI_KIND or MICRO_KIND.
+     *
+     * @return A Bitmap instance. It could be null if the original image
+     *         associated with origId doesn't exist or memory is not enough.
+     */
+    public static Bitmap getThumbnail(ContentResolver contentResolver, long id, int kind) {
+        Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media.DATA}, // Which columns to return
+                MediaStore.Images.Media._ID + "=?",       // Which rows to return
+                new String[]{String.valueOf(id)},       // Selection arguments
+                null);// order
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            String filepath = cursor.getString(0);
+            cursor.close();
+            int rotation = getExifOrientation(filepath);
+            Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(contentResolver, id, kind, null);
+
+            if (rotation != 0 && bitmap != null) {
+                Matrix matrix = new Matrix();
+                matrix.setRotate(rotation);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            }
+
+            return bitmap;
         }
 
         return null;
