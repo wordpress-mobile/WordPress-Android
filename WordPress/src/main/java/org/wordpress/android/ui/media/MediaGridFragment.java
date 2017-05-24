@@ -198,6 +198,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
         mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
+        mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
         mRecycler.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
