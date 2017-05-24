@@ -20,7 +20,6 @@ import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WebViewUtils;
 
 import javax.inject.Inject;
@@ -158,9 +157,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-
-            // TODO: remove logging from final - only here for debugging
-            AppLog.d(AppLog.T.SHARING, "onPageFinished > " + url);
 
             // does this url denotes that we made it past the auth stage?
             if (isAdded() && url != null) {

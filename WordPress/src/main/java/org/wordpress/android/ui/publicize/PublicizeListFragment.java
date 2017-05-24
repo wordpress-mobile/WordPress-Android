@@ -24,14 +24,16 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     private PublicizeManageConnectionsListener mListener;
     private int mSiteId;
+    private long mCurrentUserId;
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
     private Button mManageButton;
 
-    public static PublicizeListFragment newInstance(int siteId) {
+    public static PublicizeListFragment newInstance(int siteId, long currentUserId) {
         Bundle args = new Bundle();
         args.putInt(PublicizeConstants.ARG_SITE_ID, siteId);
+        args.putLong(PublicizeConstants.ARG_USER_ID, currentUserId);
 
         PublicizeListFragment fragment = new PublicizeListFragment();
         fragment.setArguments(args);
@@ -45,6 +47,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         if (args != null) {
             mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
+            mCurrentUserId = args.getLong(PublicizeConstants.ARG_USER_ID);
         }
     }
 
@@ -53,6 +56,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
+            mCurrentUserId = savedInstanceState.getLong(PublicizeConstants.ARG_USER_ID);
         }
     }
 
@@ -71,6 +75,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
+        outState.putLong(PublicizeConstants.ARG_USER_ID, mCurrentUserId);
     }
 
     @Override
@@ -132,7 +137,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     private PublicizeServiceAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new PublicizeServiceAdapter(getActivity(), mSiteId);
+            mAdapter = new PublicizeServiceAdapter(getActivity(), mSiteId, mCurrentUserId);
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener((OnServiceClickListener) getActivity());
