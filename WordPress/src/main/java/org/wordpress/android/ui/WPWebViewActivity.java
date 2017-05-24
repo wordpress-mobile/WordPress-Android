@@ -289,12 +289,14 @@ public class WPWebViewActivity extends WebViewActivity {
             username = mAccountStore.getAccount().getUserName();
 
             // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
-            List<SiteModel> wpComSites = mSiteStore.getWPComSites();
-            for (SiteModel siteModel : wpComSites) {
-                // Only replace the url if we know the unmapped url and if it's a custom domain
-                if (!TextUtils.isEmpty(siteModel.getUnmappedUrl())
-                        && !siteModel.getUrl().contains("wordpress.com")) {
-                    addressToLoad = addressToLoad.replace(siteModel.getUrl(), siteModel.getUnmappedUrl());
+            if (!addressToLoad.contains(".wordpress.com")) {
+                List<SiteModel> wpComSites = mSiteStore.getWPComSites();
+                for (SiteModel siteModel : wpComSites) {
+                    // Only replace the url if we know the unmapped url and if it's a custom domain
+                    if (!TextUtils.isEmpty(siteModel.getUnmappedUrl())
+                            && !siteModel.getUrl().contains(".wordpress.com")) {
+                        addressToLoad = addressToLoad.replace(siteModel.getUrl(), siteModel.getUnmappedUrl());
+                    }
                 }
             }
         }
