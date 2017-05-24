@@ -127,13 +127,7 @@ public class GCMMessageService extends GcmListenerService {
             HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
             return;
         }
-
-        // Handle Mixpanel PNs: do nothing since Mixpanel is gone.
-        // TODO remove this in a future version of the app.
-        if (data.containsKey("mp_message")) {
-            return;
-        }
-
+        
         if (!mAccountStore.hasAccessToken()) {
             return;
         }
