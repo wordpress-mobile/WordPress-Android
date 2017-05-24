@@ -15,8 +15,6 @@ Language: he_IL
 	<string name="toast_saving_post_as_draft">שמירת הפוסט כטיוטה</string>
 	<string name="photo_picker_capture_video">צילום וידאו</string>
 	<string name="photo_picker_capture_photo">צילום תמונה</string>
-	<string name="photo_picker_choose_video">בחירת וידאו</string>
-	<string name="photo_picker_choose_photo">בחירת תמונה</string>
 	<string name="delete_site_warning_subtitle">זהירות! מרגע שהאתר נמחק, לא ניתן לשחזרו. כדאי להיות בטוחים לפני שממשיכים.</string>
 	<string name="delete_site_warning">כל הפוסטים, התמונות והנתונים שלך יימחקו. בנוסף, כתובת האתר (%s) תאבד.</string>
 	<string name="delete_site_warning_title">מחיקת אתר?</string>
@@ -308,9 +306,6 @@ Language: he_IL
 	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
 	<string name="editor_post_settings_set_featured_image">קביעת תמונה מרכזית</string>
 	<string name="editor_post_settings_featured_image">תמונה מרכזית</string>
-	<string name="new_editor_promo_desc">אפליקציית WordPress עבור Android כוללת כעת עורך ויזואלי חדש\n ויפהפה. ניתן להתנסות בו על ידי יצירת פוסט חדש.</string>
-	<string name="new_editor_promo_title">עורך חדש ומחודש</string>
-	<string name="new_editor_promo_button_label">נהדר, תודה!</string>
 	<string name="visual_editor_enabled">עורך ויזואלי מופעל</string>
 	<string name="editor_content_placeholder">מומלץ לשתף את הסיפור שלך כאן…</string>
 	<string name="editor_page_title_placeholder">כותרת עמוד</string>

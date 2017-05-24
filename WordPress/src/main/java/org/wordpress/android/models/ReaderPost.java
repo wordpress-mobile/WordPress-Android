@@ -477,10 +477,7 @@ public class ReaderPost {
         return StringUtils.notNullStr(primaryTag);
     }
     public void setPrimaryTag(String tagName) {
-        // this is a bit of a hack to avoid setting the primary tag to one of the defaults
-        if (!ReaderTag.isDefaultTagTitle(tagName)) {
-            this.primaryTag = StringUtils.notNullStr(tagName);
-        }
+        this.primaryTag = StringUtils.notNullStr(tagName);
     }
     public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
@@ -490,9 +487,7 @@ public class ReaderPost {
         return StringUtils.notNullStr(secondaryTag);
     }
     public void setSecondaryTag(String tagName) {
-        if (!ReaderTag.isDefaultTagTitle(tagName)) {
-            this.secondaryTag = StringUtils.notNullStr(tagName);
-        }
+        this.secondaryTag = StringUtils.notNullStr(tagName);
     }
     public boolean hasSecondaryTag() {
         return !TextUtils.isEmpty(secondaryTag);

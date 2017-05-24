@@ -23,6 +23,8 @@ public class RequestCodes {
     public static final int TAKE_VIDEO = 2300;
     public static final int CROP_PHOTO = 2400;
     public static final int PICTURE_LIBRARY_OR_CAPTURE = 2500;
+    public static final int MULTI_SELECT_MEDIA_PICKER = 2600;
+    public static final int SINGLE_SELECT_MEDIA_PICKER = 2601;
 
     // Jetpack
     public static final int REQUEST_JETPACK = 3000;

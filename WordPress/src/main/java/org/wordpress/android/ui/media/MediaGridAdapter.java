@@ -32,7 +32,6 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -48,6 +47,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
+    private boolean mShowPreviewIcon;
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
@@ -90,6 +90,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         setImageLoader(imageLoader);
     }
 
+    public void setShowPreviewIcon(boolean show) {
+        if (show != mShowPreviewIcon) {
+            mShowPreviewIcon = show;
+            if (getItemCount() > 0) {
+                notifyDataSetChanged();;
+            }
+        }
+    }
+
     @Override
     public long getItemId(int position) {
         return getLocalMediaIdAtPosition(position);
@@ -100,14 +109,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public void setMediaList(@NonNull List<MediaModel> mediaList) {
-        if (isSameList(mediaList)) {
-            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > list is the same");
-            return;
+        if (!isSameList(mediaList)) {
+            mMediaList.clear();
+            mMediaList.addAll(mediaList);
+            notifyDataSetChanged();
         }
-
-        mMediaList.clear();
-        mMediaList.addAll(mediaList);
-        notifyDataSetChanged();
     }
 
     @Override
@@ -139,11 +145,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             } else {
                 // if this isn't a private site use Photon to request the image at the exact size,
                 // otherwise append the standard wp query params to request the desired size
+                // TODO: we should drop using Photon for self-hosted sites once the media model
+                // has been updated to include the various image sizes
                 String thumbUrl;
-                if (SiteUtils.isPhotonCapable(mSite)) {
+                if (!mSite.isPrivate()) {
                     thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
                 } else {
-                    thumbUrl = UrlUtils.removeQuery(media.getUrl()) + "?w=" + mThumbWidth + "&h=" + mThumbHeight;
+                    thumbUrl = UrlUtils.removeQuery(media.getUrl());
                 }
                 WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
             }
@@ -221,6 +229,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ProgressBar progressUpload;
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
+        private final ImageView imgPreview;
 
         public GridViewHolder(View view) {
             super(view);
@@ -236,6 +245,26 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
+            previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
+            imgPreview = (ImageView) previewContainer.findViewById(R.id.image_preview);
+            if (mShowPreviewIcon) {
+                imgPreview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = getAdapterPosition();
+                        if (isValidPosition(position)) {
+                            MediaModel media = mMediaList.get(position);
+                            MediaPreviewActivity.showPreview(
+                                    v.getContext(),
+                                    imgPreview,
+                                    mSite,
+                                    media.getId());
+                        }
+                    }
+                });
+            }
 
             // make the progress bar white
             progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);

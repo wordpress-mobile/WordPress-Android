@@ -15,8 +15,6 @@ Language: id
 	<string name="toast_saving_post_as_draft">Menyimpan pos sebagai konsep</string>
 	<string name="photo_picker_capture_video">Rekam video</string>
 	<string name="photo_picker_capture_photo">Ambil foto</string>
-	<string name="photo_picker_choose_video">Pilih video</string>
-	<string name="photo_picker_choose_photo">Pilih foto</string>
 	<string name="delete_site_warning_subtitle">Hati-hati! Setelah situs dihapus, situs tersebut tidak akan dapat dipulihkan. Pastikan sebelum Anda melanjutkan.</string>
 	<string name="delete_site_warning">Semua pos, gambar, dan data Anda akan dihapus. Dan alamat situs ini (%s) akan hilang.</string>
 	<string name="delete_site_warning_title">Hapus situs?</string>
@@ -345,9 +343,6 @@ Language: id
 	<string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
 	<string name="editor_post_settings_set_featured_image">Atur Gambar Unggulan</string>
 	<string name="editor_post_settings_featured_image">Gambar Unggulan</string>
-	<string name="new_editor_promo_desc">Aplikasi WordPress untuk Android sekarang berisi visual baru yang cantik\n penyunting Cobalah dengan membuat pos baru.</string>
-	<string name="new_editor_promo_title">Penyunting baru</string>
-	<string name="new_editor_promo_button_label">Bagus, terima kasih!</string>
 	<string name="visual_editor_enabled">Editor Visual diaktifkan</string>
 	<string name="editor_content_placeholder">Editor Visual diaktifkan</string>
 	<string name="editor_page_title_placeholder">Judul Halaman</string>

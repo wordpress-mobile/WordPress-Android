@@ -109,8 +109,6 @@
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
-    <string name="media_add_popup_capture_photo">Capture photo</string>
-    <string name="media_add_popup_capture_video">Capture video</string>
 
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
@@ -119,23 +117,18 @@
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
-    <string name="media_gallery_settings_title">Gallery settings</string>
-    <string name="media_gallery_image_order">Image order</string>
-    <string name="media_gallery_image_order_random">Random</string>
-    <string name="media_gallery_image_order_reverse">Reverse</string>
-    <string name="media_gallery_num_columns">Number of columns</string>
+    <string name="media_gallery_column_count_single">1 column</string>
+    <string name="media_gallery_column_count_multi">%d columns</string>
     <string name="media_gallery_type">Type</string>
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
     <string name="media_gallery_type_squares">Squares</string>
     <string name="media_gallery_type_tiled">Tiled</string>
     <string name="media_gallery_type_circles">Circles</string>
     <string name="media_gallery_type_slideshow">Slideshow</string>
-    <string name="media_gallery_edit">Edit gallery</string>
-    <string name="media_gallery_column_count_single">1 column</string>
-    <string name="media_gallery_column_count_multi">%d columns</string>
     <string name="media_insert_title">Add multiple photos</string>
     <string name="media_insert_individually">Add individually</string>
     <string name="media_insert_as_gallery">Add as gallery</string>
+    <string name="media_saved_to_device">Media saved to this device</string>
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
@@ -240,6 +233,7 @@
     <!-- buttons on post cards -->
     <string name="button_edit">Edit</string>
     <string name="button_publish">Publish</string>
+    <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
     <string name="button_preview">Preview</string>
     <string name="button_stats">Stats</string>
@@ -403,8 +397,6 @@
     <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
         address. Check the site address (URL) you entered.</string>
     <!-- media selection -->
-    <string name="select_photo">Select a photo from gallery</string>
-    <string name="select_video">Select a video from gallery</string>
     <string name="select_from_media_library">Select from media library</string>
 
     <!-- category management -->
@@ -420,12 +412,13 @@
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 
     <!-- action from share intents -->
-    <string name="select_a_blog">Select a WordPress site</string>
-    <string name="share_action_title">Add to …</string>
+    <string name="select_a_blog">Choose a WordPress site</string>
+    <string name="share_action_title">Add to</string>
     <string name="share_action_post">New post</string>
     <string name="share_action_media">Media library</string>
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
+    <string name="cant_share_unknown_action">Unrecognized action requested, ignoring</string>
     <string name="no_account">No WordPress account found, add an account and try again</string>
 
     <!-- file errors -->
@@ -960,10 +953,11 @@
     <string name="editor_post_title_placeholder">Post Title</string>
     <string name="editor_page_title_placeholder">Page Title</string>
     <string name="editor_content_placeholder">Share your story here…</string>
-    <string name="editor_post_saved_locally">The post was saved on your device</string>
-    <string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
-    <string name="editor_post_saved_online">The post was saved online</string>
-    <string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
+    <string name="editor_post_saved_online">Post saved online</string>
+    <string name="editor_post_saved_locally">Post saved on device</string>
+    <string name="editor_draft_saved_online">Draft saved online</string>
+    <string name="editor_draft_saved_locally">Draft saved on device</string>
+    <string name="editor_scheduled_post_saved_online">Post scheduled</string>
     <string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
@@ -1095,6 +1089,7 @@
     <string name="error_media_refresh_no_connection">Connection required to refresh library</string>
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_request_too_large">Media too large, can\'t be uploaded</string>
+    <string name="error_media_save">Unable to save media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1178,11 +1173,6 @@
     <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
-
-    <!-- Default tags -->
-    <string name="reader_discover_default_tag">Discover</string>
-    <string name="reader_followed_default_tag">Followed Sites</string>
-    <string name="reader_liked_default_tag">Posts I Like</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and blogs</string>
