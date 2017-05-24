@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
@@ -18,10 +20,11 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import javax.inject.Inject;
+
 public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
     private int mSiteId;
     private String mServiceId;
-    private long mCurrentUserId;
 
     private PublicizeService mService;
 
@@ -29,11 +32,13 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     private RecyclerView mRecycler;
     private ViewGroup mLayoutConnections;
 
-    public static PublicizeDetailFragment newInstance(int siteId, PublicizeService service, long currentUserId) {
+    @Inject AccountStore mAccountStore;
+
+    public static PublicizeDetailFragment newInstance(int siteId, PublicizeService service) {
         Bundle args = new Bundle();
         args.putInt(PublicizeConstants.ARG_SITE_ID, siteId);
         args.putString(PublicizeConstants.ARG_SERVICE_ID, service.getId());
-        args.putLong(PublicizeConstants.ARG_USER_ID, currentUserId);
+
         PublicizeDetailFragment fragment = new PublicizeDetailFragment();
         fragment.setArguments(args);
 
@@ -47,18 +52,17 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         if (args != null) {
             mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
-            mCurrentUserId = args.getLong(PublicizeConstants.ARG_USER_ID);
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
             mServiceId = savedInstanceState.getString(PublicizeConstants.ARG_SERVICE_ID);
-            mCurrentUserId = savedInstanceState.getLong(PublicizeConstants.ARG_USER_ID);
         }
     }
 
@@ -67,7 +71,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         super.onSaveInstanceState(outState);
         outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
-        outState.putLong(PublicizeConstants.ARG_USER_ID, mCurrentUserId);
     }
 
     @Override
@@ -114,8 +117,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         String iconUrl = PhotonUtils.getPhotonImageUrl(mService.getIconUrl(), avatarSz, avatarSz);
         imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
+        long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter =
-                new PublicizeConnectionAdapter(getActivity(), mSiteId, mServiceId, mCurrentUserId);
+                new PublicizeConnectionAdapter(getActivity(), mSiteId, mServiceId, currentUserId);
         adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
         adapter.setOnAdapterLoadedListener(this);
 

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
@@ -24,16 +25,14 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     private PublicizeManageConnectionsListener mListener;
     private int mSiteId;
-    private long mCurrentUserId;
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
     private Button mManageButton;
 
-    public static PublicizeListFragment newInstance(int siteId, long currentUserId) {
+    public static PublicizeListFragment newInstance(int siteId) {
         Bundle args = new Bundle();
         args.putInt(PublicizeConstants.ARG_SITE_ID, siteId);
-        args.putLong(PublicizeConstants.ARG_USER_ID, currentUserId);
 
         PublicizeListFragment fragment = new PublicizeListFragment();
         fragment.setArguments(args);
@@ -47,16 +46,16 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         if (args != null) {
             mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
-            mCurrentUserId = args.getLong(PublicizeConstants.ARG_USER_ID);
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         if (savedInstanceState != null) {
             mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
-            mCurrentUserId = savedInstanceState.getLong(PublicizeConstants.ARG_USER_ID);
         }
     }
 
@@ -75,7 +74,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
-        outState.putLong(PublicizeConstants.ARG_USER_ID, mCurrentUserId);
     }
 
     @Override

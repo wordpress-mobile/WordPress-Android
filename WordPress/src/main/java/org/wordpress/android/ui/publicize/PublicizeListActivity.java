@@ -16,14 +16,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.ToastUtils;
-
-import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
@@ -36,12 +33,9 @@ public class PublicizeListActivity extends AppCompatActivity
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
 
-    @Inject AccountStore mAccountStore;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.publicize_list_activity);
 
@@ -85,9 +79,8 @@ public class PublicizeListActivity extends AppCompatActivity
     private void showListFragment(int siteId) {
         if (isFinishing()) return;
 
-        long currentUserId = mAccountStore.getAccount().getUserId();
         String tag = getString(R.string.fragment_tag_publicize_list);
-        Fragment fragment = PublicizeListFragment.newInstance(siteId, currentUserId);
+        Fragment fragment = PublicizeListFragment.newInstance(siteId);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, tag)
@@ -125,8 +118,7 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        long currentUserId = mAccountStore.getAccount().getUserId();
-        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service, currentUserId);
+        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment, tag)
