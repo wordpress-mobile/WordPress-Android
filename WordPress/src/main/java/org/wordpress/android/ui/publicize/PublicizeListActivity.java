@@ -30,7 +30,6 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeServiceAdapter.OnServiceClickListener,
         PublicizeListFragment.PublicizeManageConnectionsListener {
 
-    private int mSiteId;
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
 
@@ -53,13 +52,11 @@ public class PublicizeListActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             PublicizeTable.createTables(WordPress.wpDB.getDatabase());
-            showListFragment(mSiteId);
-            PublicizeUpdateService.updateConnectionsForSite(this, mSiteId);
+            showListFragment(mSite.getId());
+            PublicizeUpdateService.updateConnectionsForSite(this, mSite.getId());
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
-
-        mSiteId = mSite.getId();
     }
 
     @Override
@@ -202,7 +199,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onServiceClicked(PublicizeService service) {
-        showDetailFragment(mSiteId, service);
+        showDetailFragment(mSite.getId(), service);
     }
 
     /*
@@ -210,7 +207,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestConnect(PublicizeService service) {
-        showWebViewFragment(mSiteId, service, null);
+        showWebViewFragment(mSite.getId(), service, null);
     }
 
     /*
@@ -218,7 +215,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
-        showWebViewFragment(mSiteId, service, publicizeConnection);
+        showWebViewFragment(mSite.getId(), service, publicizeConnection);
     }
 
     /*
