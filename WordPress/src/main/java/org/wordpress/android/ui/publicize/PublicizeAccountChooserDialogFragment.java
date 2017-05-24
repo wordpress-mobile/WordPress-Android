@@ -32,7 +32,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private String mConnectionName = "";
     private String mServiceId = "";
     private int mSelectedIndex = 0;
-    private int mSiteId = 0;
+    private long mSiteId = 0;
 
     @NonNull
     @Override
@@ -107,8 +107,8 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
         });
     }
     
-    private boolean containsSiteId(int[] array) {
-        for (int a : array) {
+    private boolean containsSiteId(long[] array) {
+        for (long a : array) {
             if (a == mSiteId) {
                 return true;
             }
@@ -120,7 +120,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private void retrieveCurrentSiteFromArgs() {
         Bundle args = getArguments();
         if (args != null) {
-            mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
+            mSiteId = args.getLong(PublicizeConstants.ARG_SITE_ID);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
             String jsonString = args.getString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON);
             addConnectionsToLists(jsonString);
