@@ -120,8 +120,8 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         long currentUserId = mAccountStore.getAccount().getUserId();
-        PublicizeConnectionAdapter adapter =
-                new PublicizeConnectionAdapter(getActivity(), mSite.getId(), mServiceId, currentUserId);
+        PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(
+                getActivity(), mSite.getId(), mServiceId, currentUserId);
         adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
         adapter.setOnAdapterLoadedListener(this);
 

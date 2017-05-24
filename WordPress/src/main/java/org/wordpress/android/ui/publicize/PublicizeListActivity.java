@@ -51,7 +51,7 @@ public class PublicizeListActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             PublicizeTable.createTables(WordPress.wpDB.getDatabase());
-            showListFragment(mSite.getId());
+            showListFragment();
             PublicizeUpdateService.updateConnectionsForSite(this, mSite.getSiteId());
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
@@ -76,7 +76,7 @@ public class PublicizeListActivity extends AppCompatActivity
         EventBus.getDefault().register(this);
     }
 
-    private void showListFragment(int siteId) {
+    private void showListFragment() {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_list);
