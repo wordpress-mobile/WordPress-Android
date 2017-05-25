@@ -22,8 +22,9 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     // Associated IDs
     @Column private int mLocalSiteId;
-    @Column private long mMediaId;
-    @Column private long mPostId;
+    @Column private int mLocalPostId; // The local post the media was uploaded from, for lookup after media uploads
+    @Column private long mMediaId; // The remote ID of the media
+    @Column private long mPostId; // The remote post ID ('parent') of the media
     @Column private long mAuthorId;
     @Column private String mGuid;
 
@@ -82,7 +83,8 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
         MediaModel otherMedia = (MediaModel) other;
 
-        return getId() == otherMedia.getId() && getLocalSiteId() == otherMedia.getLocalSiteId()
+        return getId() == otherMedia.getId()
+                && getLocalSiteId() == otherMedia.getLocalSiteId() && getLocalPostId() == otherMedia.getLocalPostId()
                 && getMediaId() == otherMedia.getMediaId() && getPostId() == otherMedia.getPostId()
                 && getAuthorId() == otherMedia.getAuthorId() && getWidth() == otherMedia.getWidth()
                 && getHeight() == otherMedia.getHeight() && getLength() == otherMedia.getLength()
@@ -123,6 +125,14 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     public int getLocalSiteId() {
         return mLocalSiteId;
+    }
+
+    public void setLocalPostId(int localPostId) {
+        mLocalPostId = localPostId;
+    }
+
+    public int getLocalPostId() {
+        return mLocalPostId;
     }
 
     public void setMediaId(long mediaId) {

@@ -1,13 +1,12 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
-import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.network.Response;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 
 import java.util.List;
 import java.util.Map;
 
-public class PostWPComRestResponse extends Payload implements Response {
+public class PostWPComRestResponse implements Response {
     public class PostsResponse {
         public List<PostWPComRestResponse> posts;
     }

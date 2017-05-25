@@ -32,14 +32,11 @@ public class SiteSqlUtils {
                 .where().equals(field, value).endWhere();
     }
 
-    public static List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(String searchString) {
+    public static List<SiteModel> getSitesAccessedViaWPComRestByNameOrUrlMatching(String searchString) {
         // Note: by default SQLite "LIKE" operator is case insensitive, and that's what we're looking for.
         return WellSql.select(SiteModel.class).where()
-                // (IS_WPCOM = true or IS_JETPACK_CONNECTED = true) AND (x in url OR x in name)
-                .beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
-                .endGroup()
+                // ORIGIN = ORIGIN_WPCOM_REST AND (x in url OR x in name)
+                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
                 .beginGroup()
                 .contains(SiteModelTable.URL, searchString)
                 .or().contains(SiteModelTable.NAME, searchString)
@@ -186,20 +183,29 @@ public class SiteSqlUtils {
                 .endGroup().endWhere();
     }
 
-
-    public static SelectQuery<SiteModel> getSelfHostedSites() {
+    /**
+     * @return A selectQuery to get all the sites accessed via the XMLRPC, this includes: pure self hosted sites,
+     * but also Jetpack sites connected via XMLRPC.
+     */
+    public static SelectQuery<SiteModel> getSitesAccessedViaXMLRPC() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, false)
-                .equals(SiteModelTable.IS_JETPACK_CONNECTED, false)
+                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_XMLRPC)
                 .endGroup().endWhere();
     }
 
-    public static SelectQuery<SiteModel> getWPComAndJetpackSites() {
+    public static SelectQuery<SiteModel> getSitesAccessedViaWPComRest() {
         return WellSql.select(SiteModel.class)
                 .where().beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
+                .endGroup().endWhere();
+    }
+
+    public static SelectQuery<SiteModel> getVisibleSitesAccessedViaWPCom() {
+        return WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
+                .equals(SiteModelTable.IS_VISIBLE, true)
                 .endGroup().endWhere();
     }
 

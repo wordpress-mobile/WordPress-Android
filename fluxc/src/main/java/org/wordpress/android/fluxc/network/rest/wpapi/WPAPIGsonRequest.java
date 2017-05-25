@@ -11,7 +11,7 @@ import java.util.Map;
 public class WPAPIGsonRequest<T> extends GsonRequest<T> {
     public WPAPIGsonRequest(int method, String url, Map<String, String> params, Map<String, Object> body,
                              Class<T> clazz, Listener<T> listener, BaseErrorListener errorListener) {
-        super(method, params, body, url, clazz, listener, errorListener);
+        super(method, params, body, url, clazz, null, listener, errorListener);
         // If it's a GET request, add the parameters to the URL
         if (method == Method.GET) {
             addQueryParameters(params);
