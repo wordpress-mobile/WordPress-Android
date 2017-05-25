@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.accounts.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -46,6 +48,8 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 public class LoginEmailFragment extends AbstractFragment implements TextWatcher {
+    private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
@@ -60,6 +64,8 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     protected @Inject Dispatcher mDispatcher;
 
     private LoginListener mLoginListener;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,6 +137,18 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            boolean isInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
+            if (isInProgress) {
+                showEmailCheckProgressDialog();
+            }
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof LoginListener) {
@@ -144,6 +162,13 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     public void onDetach() {
         super.onDetach();
         mLoginListener = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_IN_PROGRESS, mProgressDialog != null);
     }
 
     @Override
@@ -221,7 +246,7 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         }
 
         if (isValidEmail(email)) {
-            startProgress(getActivity().getString(R.string.checking_email));
+            showEmailCheckProgressDialog();
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {
             showEmailError(R.string.email_invalid);
@@ -256,12 +281,16 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        UpdateNextButton();
+        mEmailEditTextLayout.setError(null);
+    }
+
+    private void UpdateNextButton() {
         if (fieldsFilled()) {
             mNextButton.setEnabled(true);
         } else {
             mNextButton.setEnabled(false);
         }
-        mEmailEditTextLayout.setError(null);
     }
 
     private boolean fieldsFilled() {
@@ -302,11 +331,41 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         mDispatcher.unregister(this);
     }
 
+    private void showEmailCheckProgressDialog() {
+        startProgress(getActivity().getString(R.string.checking_email));
+    }
+
+    @Override
+    protected void startProgress(String message) {
+        mNextButton.setEnabled(false);
+        mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
+                new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                UpdateNextButton();
+            }
+        });
+    }
+
+    @Override
+    protected void endProgress() {
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+        }
+
+        // nullify the reference to denote there is no operation in progress
+        mProgressDialog = null;
+
+        UpdateNextButton();
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAvailabilityChecked(OnAvailabilityChecked event) {
+        endProgress();
+
         if (event.isError()) {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }
