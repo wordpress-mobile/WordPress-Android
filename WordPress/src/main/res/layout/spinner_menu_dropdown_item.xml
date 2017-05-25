@@ -5,6 +5,8 @@
     style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
+    android:paddingEnd="@dimen/margin_dialog"
+    android:paddingRight="@dimen/margin_dialog"
     android:ellipsize="end"
     android:maxLines="1"
     android:textColor="@color/grey_dark"
