@@ -78,7 +78,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
     private MediaBrowserType mBrowserType;
-    private boolean mImagesOnly;
 
     private RecyclerView mRecycler;
     private GridLayoutManager mGridManager;
@@ -143,11 +142,13 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (savedInstanceState == null) {
             mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
             mBrowserType = (MediaBrowserType) getActivity().getIntent().getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            mImagesOnly = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, false);
+            boolean imagesOnly = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, false);
+            if (imagesOnly) {
+                mFilter = Filter.IMAGES;
+            }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            mImagesOnly = savedInstanceState.getBoolean(MediaBrowserActivity.ARG_IMAGES_ONLY);
         }
 
         if (mSite == null) {
@@ -225,10 +226,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 });
 
         restoreState(savedInstanceState);
-
-        if (mImagesOnly) {
-            mFilter = Filter.IMAGES;
-        }
 
         // filter spinner doesn't show for pickers
         mSpinner.setVisibility(mBrowserType.isPicker() ? View.GONE : View.VISIBLE);
@@ -438,7 +435,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, mBrowserType);
-        outState.putBoolean(MediaBrowserActivity.ARG_IMAGES_ONLY, mImagesOnly);
     }
 
     private void setupSpinnerAdapter() {
@@ -504,7 +500,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         }
 
-        mFilter = mImagesOnly ? Filter.IMAGES : Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
+        mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
