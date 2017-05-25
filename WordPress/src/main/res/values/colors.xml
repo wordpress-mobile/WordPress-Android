@@ -11,6 +11,7 @@
     <color name="color_primary">@color/blue_wordpress</color>
     <color name="color_primary_dark">@color/status_bar_tint</color>
     <color name="color_accent">@color/orange_jazzy</color>
+    <color name="color_control_normal">@color/white</color>
     <color name="color_control_activated">@color/blue_light</color>
     <color name="color_control_highlight">@color/grey_lighten_20</color>
 
