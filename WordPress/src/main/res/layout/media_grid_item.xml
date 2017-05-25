@@ -89,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:shadowColor="@color/grey_dark"
                 android:shadowDx="2"
                 android:shadowDy="2"
