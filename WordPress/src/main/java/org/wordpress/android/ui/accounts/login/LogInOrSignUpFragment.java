@@ -8,14 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.accounts.login.nav.LoginEvents;
-import org.wordpress.android.ui.accounts.login.nav.LoginNavigationFsmGetter;
 
 public class LogInOrSignUpFragment extends Fragment {
 
     public static final String TAG = "login_or_signup_fragment_tag";
 
-    LoginEvents.LoginNavPrologue mLoginNavPrologue;
+    LoginListener mLoginListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,8 +27,8 @@ public class LogInOrSignUpFragment extends Fragment {
         view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginNavPrologue != null) {
-                    mLoginNavPrologue.doStartLogin();
+                if (mLoginListener != null) {
+                    mLoginListener.showEmailLoginScreen();
                 }
             }
         });
@@ -38,8 +36,8 @@ public class LogInOrSignUpFragment extends Fragment {
         view.findViewById(R.id.create_site_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginNavPrologue != null) {
-                    mLoginNavPrologue.doStartSignup();
+                if (mLoginListener != null) {
+                    mLoginListener.doStartSignup();
                 }
             }
         });
@@ -50,16 +48,16 @@ public class LogInOrSignUpFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LoginNavigationFsmGetter) {
-            mLoginNavPrologue = ((LoginNavigationFsmGetter) context).getLoginNavPrologue();
+        if (context instanceof LoginListener) {
+            mLoginListener = (LoginListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement LoginNavigationFsmGetter");
+            throw new RuntimeException(context.toString() + " must implement LoginListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mLoginNavPrologue = null;
+        mLoginListener = null;
     }
 }

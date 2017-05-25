@@ -1329,6 +1329,7 @@
     <string name="username_contains_invalid_characters">Username may not contain the character “_”</string>
     <string name="username_must_include_letters">Username must have a least 1 letter (a-z)</string>
     <string name="email_invalid">Enter a valid email address</string>
+    <string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
     <string name="email_not_allowed">That email address isn\'t allowed</string>
     <string name="username_exists">That username already exists</string>
     <string name="email_exists">That email address is already being used</string>
@@ -1693,6 +1694,9 @@
     <!-- Login -->
     <string name="log_in">Log In</string>
     <string name="create_wordpress_site">Create WordPress site</string>
-
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
+    <string name="enter_email_wordpress_com">Enter the email address associated with your WordPress.com account</string>
+    <string name="next">Next</string>
+    <string name="enter_username_password_instead">Enter a username and password instead</string>
+    <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
 </resources>
