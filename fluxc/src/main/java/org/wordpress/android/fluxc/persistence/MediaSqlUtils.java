@@ -236,11 +236,24 @@ public class MediaSqlUtils {
 
     public static int deleteMedia(MediaModel media) {
         if (media == null) return 0;
-        return WellSql.delete(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
-                .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
-                .endGroup().endWhere().execute();
+        if (media.getMediaId() == 0) {
+            return WellSql.delete(MediaModel.class)
+                    .where().beginGroup()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .endGroup().endWhere()
+                    .execute();
+        } else {
+            return WellSql.delete(MediaModel.class)
+                    .where().beginGroup()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .or()
+                    .beginGroup()
+                    .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
+                    .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
+                    .endGroup()
+                    .endGroup().endWhere()
+                    .execute();
+        }
     }
 
     public static int deleteMatchingSiteMedia(SiteModel siteModel, String column, Object value) {
