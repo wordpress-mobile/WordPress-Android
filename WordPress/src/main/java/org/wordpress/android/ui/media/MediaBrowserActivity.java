@@ -172,7 +172,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // if media was shared add it to the library
         handleSharedMedia();
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER) {
             SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
         }
     }
