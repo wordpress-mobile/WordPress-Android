@@ -18,6 +18,10 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
@@ -29,6 +33,7 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteExcepti
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -70,6 +75,55 @@ public class SiteStore extends Store {
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
+        }
+    }
+
+    public static class SuggestDomainsPayload extends Payload {
+        public String query;
+        public boolean includeWordpressCom;
+        public boolean includeDotBlogSubdomain;
+        public int quantity;
+        public SuggestDomainsPayload(@NonNull String query, boolean includeWordpressCom,
+                                     boolean includeDotBlogSubdomain, int quantity) {
+            this.query = query;
+            this.includeWordpressCom = includeWordpressCom;
+            this.includeDotBlogSubdomain = includeDotBlogSubdomain;
+            this.quantity = quantity;
+        }
+    }
+
+    public static class SuggestDomainsResponsePayload extends Payload {
+        public String query;
+        public List<DomainSuggestionResponse> suggestions;
+        public SuggestDomainsResponsePayload(@NonNull String query, BaseNetworkError error) {
+            this.query = query;
+            this.error = error;
+            this.suggestions = new ArrayList<>();
+        }
+
+        public SuggestDomainsResponsePayload(@NonNull String query, ArrayList<DomainSuggestionResponse> suggestions) {
+            this.query = query;
+            this.suggestions = suggestions;
+        }
+    }
+
+    public static class ConnectSiteInfoPayload extends Payload {
+        public String url;
+        public boolean exists;
+        public boolean isWordPress;
+        public boolean hasJetpack;
+        public boolean isJetpackActive;
+        public boolean isJetpackConnected;
+        public boolean isWPCom;
+
+        public ConnectSiteInfoPayload(@NonNull String url, BaseNetworkError error) {
+            this.url = url;
+            this.error = error;
+        }
+
+        public String description() {
+            return String.format("url: %s, e: %b, wp: %b, jp: %b, wpcom: %b",
+                    url, exists, isWordPress, hasJetpack, isWPCom);
         }
     }
 
@@ -172,6 +226,31 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnConnectSiteInfoChecked extends OnChanged<SiteError> {
+        public ConnectSiteInfoPayload info;
+        public OnConnectSiteInfoChecked(@NonNull ConnectSiteInfoPayload info) {
+            this.info = info;
+        }
+    }
+
+    public static class SuggestDomainError implements OnChangedError {
+        public SuggestDomainErrorType type;
+        public String message;
+        public SuggestDomainError(@NonNull String apiErrorType, @NonNull String message) {
+            this.type = SuggestDomainErrorType.fromString(apiErrorType);
+            this.message = message;
+        }
+    }
+
+    public static class OnSuggestedDomains extends OnChanged<SuggestDomainError> {
+        public String query;
+        public List<DomainSuggestionResponse> suggestions;
+        public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
+            this.query = query;
+            this.suggestions = suggestions;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -181,6 +260,24 @@ public class SiteStore extends Store {
         INVALID_SITE,
         DUPLICATE_SITE,
         GENERIC_ERROR
+    }
+
+    public enum SuggestDomainErrorType {
+        EMPTY_QUERY,
+        INVALID_MINIMUM_QUANTITY,
+        INVALID_MAXIMUM_QUANTITY,
+        GENERIC_ERROR;
+
+        public static SuggestDomainErrorType fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (SuggestDomainErrorType v : SuggestDomainErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum PostFormatsErrorType {
@@ -331,17 +428,26 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all .COM and Jetpack sites in the store.
+     * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API).
      */
-    public List<SiteModel> getWPComAndJetpackSites() {
-        return SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
+    public List<SiteModel> getSitesAccessedViaWPComRest() {
+        return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsModel();
     }
 
     /**
-     * Returns the number of .COM and Jetpack sites in the store.
+     * Returns the number of sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected
+     * via WPCom REST API).
      */
-    public int getWPComAndJetpackSitesCount() {
-        return SiteSqlUtils.getWPComAndJetpackSites().getAsCursor().getCount();
+    public int getSitesAccessedViaWPComRestCount() {
+        return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount();
+    }
+
+    /**
+     * Checks whether the store contains at least one site accessed via WPCom REST API (WPCom sites or Jetpack
+     * sites connected via WPCom REST API).
+     */
+    public boolean hasSitesAccessedViaWPComRest() {
+        return getSitesAccessedViaWPComRestCount() != 0;
     }
 
     /**
@@ -360,11 +466,12 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns .COM and Jetpack sites with a name or url matching the search string.
+     * Returns sites accessed via WPCom REST API (WPCom sites or Jetpack sites connected via WPCom REST API) with a
+     * name or url matching the search string.
      */
     @NonNull
-    public List<SiteModel> getWPComAndJetpackSitesByNameOrUrlMatching(@NonNull String searchString) {
-        return SiteSqlUtils.getWPComAndJetpackSitesByNameOrUrlMatching(searchString);
+    public List<SiteModel> getSitesAccessedViaWPComRestByNameOrUrlMatching(@NonNull String searchString) {
+        return SiteSqlUtils.getSitesAccessedViaWPComRestByNameOrUrlMatching(searchString);
     }
 
     /**
@@ -375,57 +482,25 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all self-hosted sites (can't be Jetpack) in the store.
+     * Returns sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
-    public List<SiteModel> getSelfHostedSites() {
-        return SiteSqlUtils.getSelfHostedSites().getAsModel();
+    public List<SiteModel> getSitesAccessedViaXMLRPC() {
+        return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsModel();
     }
 
     /**
-     * Returns the number of self-hosted sites (can't be Jetpack) in the store.
+     * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
-    public int getSelfHostedSitesCount() {
-        return SiteSqlUtils.getSelfHostedSites().getAsCursor().getCount();
+    public int getSitesAccessedViaXMLRPCCount() {
+        return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsCursor().getCount();
     }
 
     /**
-     * Checks whether the store contains at least one self-hosted site (can't be Jetpack).
+     * Checks whether the store contains at least one site accessed via XMLRPC (self-hosted sites or
+     * Jetpack sites accessed via XMLRPC).
      */
-    public boolean hasSelfHostedSite() {
-        return getSelfHostedSitesCount() != 0;
-    }
-
-    /**
-     * Returns all Jetpack sites in the store.
-     */
-    public List<SiteModel> getJetpackSites() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsModel();
-    }
-
-    /**
-     * Returns the number of Jetpack sites in the store.
-     */
-    public int getJetpackSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_JETPACK_CONNECTED, true).getAsCursor().getCount();
-    }
-
-    /**
-     * Checks whether the store contains at least one Jetpack site.
-     */
-    public boolean hasJetpackSite() {
-        return getJetpackSitesCount() != 0;
-    }
-
-    /**
-     * Checks whether the store contains a self-hosted site matching the given (remote) site id and XML-RPC URL.
-     */
-    public boolean hasSelfHostedSiteWithSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
-                .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
-                .endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
+    public boolean hasSiteAccessedViaXMLRPC() {
+        return getSitesAccessedViaXMLRPCCount() != 0;
     }
 
     /**
@@ -445,22 +520,15 @@ public class SiteStore extends Store {
     /**
      * Returns all visible .COM sites as {@link SiteModel}s.
      */
-    public List<SiteModel> getVisibleWPComAndJetpackSites() {
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
-                .endGroup()
-                .equals(SiteModelTable.IS_VISIBLE, true)
-                .endWhere()
-                .getAsModel();
+    public List<SiteModel> getVisibleSitesAccessedViaWPCom() {
+        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().getAsModel();
     }
 
     /**
      * Returns the number of visible .COM sites.
      */
-    public int getVisibleWPComAndJetpackSitesCount() {
-        return getVisibleWPComAndJetpackSites().size();
+    public int getVisibleSitesAccessedViaWPComCount() {
+        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().getAsCursor().getCount();
     }
 
     /**
@@ -480,7 +548,7 @@ public class SiteStore extends Store {
      * Given a (remote) site id, returns the corresponding (local) id.
      */
     public int getLocalIdForRemoteSiteId(long siteId) {
-        List<SiteModel> sites =  WellSql.select(SiteModel.class)
+        List<SiteModel> sites = WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SITE_ID, siteId)
                 .or()
@@ -504,7 +572,7 @@ public class SiteStore extends Store {
      * Given a (remote) self-hosted site id and XML-RPC url, returns the corresponding (local) id.
      */
     public int getLocalIdForSelfHostedSiteIdAndXmlRpcUrl(long selfHostedSiteId, String xmlRpcUrl) {
-        List<SiteModel> sites =  WellSql.select(SiteModel.class)
+        List<SiteModel> sites = WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.SELF_HOSTED_SITE_ID, selfHostedSiteId)
                 .equals(SiteModelTable.XMLRPC_URL, xmlRpcUrl)
@@ -528,7 +596,7 @@ public class SiteStore extends Store {
      * sites.
      */
     public long getSiteIdForLocalId(int id) {
-        List<SiteModel> result =  WellSql.select(SiteModel.class)
+        List<SiteModel> result = WellSql.select(SiteModel.class)
                 .where().beginGroup()
                 .equals(SiteModelTable.ID, id)
                 .endGroup().endWhere()
@@ -551,21 +619,6 @@ public class SiteStore extends Store {
         } else {
             return result.get(0).getSelfHostedSiteId();
         }
-    }
-
-    /**
-     * Given a (remote) site id, returns true if the given site is WP.com or Jetpack-enabled
-     * (returns false for non-Jetpack self-hosted sites).
-     */
-    public boolean hasWPComOrJetpackSiteWithSiteId(long siteId) {
-        int localId = getLocalIdForRemoteSiteId(siteId);
-        return WellSql.select(SiteModel.class)
-                .where().beginGroup()
-                .equals(SiteModelTable.ID, localId)
-                .beginGroup()
-                .equals(SiteModelTable.IS_WPCOM, true).or().equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
-                .endGroup().endGroup().endWhere()
-                .getAsCursor().getCount() > 0;
     }
 
     /**
@@ -638,8 +691,14 @@ public class SiteStore extends Store {
             case CREATE_NEW_SITE:
                 createNewSite((NewSitePayload) action.getPayload());
                 break;
+            case FETCH_CONNECT_SITE_INFO:
+                fetchConnectSiteInfo((String) action.getPayload());
+                break;
             case IS_WPCOM_URL:
                 checkUrlIsWPCom((String) action.getPayload());
+                break;
+            case SUGGEST_DOMAINS:
+                suggestDomains((SuggestDomainsPayload) action.getPayload());
                 break;
             case CREATED_NEW_SITE:
                 handleCreateNewSiteCompleted((NewSiteResponsePayload) action.getPayload());
@@ -656,8 +715,14 @@ public class SiteStore extends Store {
             case EXPORTED_SITE:
                 handleExportedSite((ExportSiteResponsePayload) action.getPayload());
                 break;
+            case FETCHED_CONNECT_SITE_INFO:
+                handleFetchedConnectSiteInfo((ConnectSiteInfoPayload) action.getPayload());
+                break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
+                break;
+            case SUGGESTED_DOMAINS:
+                handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -676,7 +741,7 @@ public class SiteStore extends Store {
     private void removeWPComAndJetpackSites() {
         // Logging out of WP.com. Drop all WP.com sites, and all Jetpack sites that were fetched over the WP.com
         // REST API only (they don't have a .org site id)
-        List<SiteModel> wpcomAndJetpackSites = SiteSqlUtils.getWPComAndJetpackSites().getAsModel();
+        List<SiteModel> wpcomAndJetpackSites = SiteSqlUtils.getSitesAccessedViaWPComRest().getAsModel();
         int rowsAffected = removeSites(wpcomAndJetpackSites);
         emitChange(new OnSiteRemoved(rowsAffected));
     }
@@ -793,6 +858,18 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
+    private void fetchConnectSiteInfo(String payload) {
+        mSiteRestClient.fetchConnectSiteInfo(payload);
+    }
+
+    private void handleFetchedConnectSiteInfo(ConnectSiteInfoPayload payload) {
+        OnConnectSiteInfoChecked event = new OnConnectSiteInfoChecked(payload);
+        if (payload.isError()) {
+            event.error = new SiteError(SiteErrorType.INVALID_SITE);
+        }
+        emitChange(event);
+    }
+
     private void checkUrlIsWPCom(String payload) {
         mSiteRestClient.checkUrlIsWPCom(payload);
     }
@@ -834,5 +911,23 @@ public class SiteStore extends Store {
             rowsAffected += SiteSqlUtils.setSiteVisibility(site, visible);
         }
         return rowsAffected;
+    }
+
+    private void suggestDomains(SuggestDomainsPayload payload) {
+        mSiteRestClient.suggestDomains(payload.query, payload.includeWordpressCom, payload.includeDotBlogSubdomain,
+                payload.quantity);
+    }
+
+    private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
+        OnSuggestedDomains event = new OnSuggestedDomains(payload.query, payload.suggestions);
+        if (payload.isError()) {
+            if (payload.error instanceof WPComGsonRequest.WPComGsonNetworkError) {
+                event.error = new SuggestDomainError(((WPComGsonNetworkError) payload.error).apiError,
+                        payload.error.message);
+            } else {
+                event.error = new SuggestDomainError("", payload.error.message);
+            }
+        }
+        emitChange(event);
     }
 }

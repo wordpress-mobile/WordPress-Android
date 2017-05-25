@@ -147,7 +147,7 @@ public class CommentStoreUnitTest {
         assertEquals(14, queriedComments.size());
 
         // Get SPAM and UNAPPROVED comments
-        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel,  SelectQuery.ORDER_ASCENDING,
+        queriedComments = CommentSqlUtils.getCommentsForSite(siteModel, SelectQuery.ORDER_ASCENDING,
                 CommentStatus.SPAM, CommentStatus.UNAPPROVED);
         assertEquals(6, queriedComments.size());
     }

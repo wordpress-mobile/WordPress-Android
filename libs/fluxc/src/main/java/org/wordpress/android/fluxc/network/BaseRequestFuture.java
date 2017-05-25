@@ -21,7 +21,7 @@ package org.wordpress.android.fluxc.network;
 import android.support.annotation.NonNull;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
+import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -58,14 +58,14 @@ import java.util.concurrent.TimeoutException;
  *
  * @param <T> The type of parsed response this future expects.
  */
-public class BaseRequestFuture<T> implements Future<T>, Response.Listener<T>, BaseErrorListener  {
+public class BaseRequestFuture<T> implements Future<T>, Listener<T>, BaseErrorListener {
     private Request<?> mRequest;
     private boolean mResultReceived = false;
     private T mResult;
     private VolleyError mException;
 
     public static <E> BaseRequestFuture<E> newFuture() {
-        return new BaseRequestFuture<E>();
+        return new BaseRequestFuture<>();
     }
 
     private BaseRequestFuture() {}
@@ -98,7 +98,7 @@ public class BaseRequestFuture<T> implements Future<T>, Response.Listener<T>, Ba
     }
 
     @Override
-    public T get(long timeout, TimeUnit unit)
+    public T get(long timeout, @NonNull TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
         return doGet(TimeUnit.MILLISECONDS.convert(timeout, unit));
     }
@@ -132,10 +132,7 @@ public class BaseRequestFuture<T> implements Future<T>, Response.Listener<T>, Ba
 
     @Override
     public boolean isCancelled() {
-        if (mRequest == null) {
-            return false;
-        }
-        return mRequest.isCanceled();
+        return mRequest != null && mRequest.isCanceled();
     }
 
     @Override
