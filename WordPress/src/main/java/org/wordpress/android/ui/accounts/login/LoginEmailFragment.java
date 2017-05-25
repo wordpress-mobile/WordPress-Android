@@ -57,6 +57,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     private ProgressDialog mProgressDialog;
 
     private LoginListener mLoginListener;
+
     private boolean mEmailAutoCorrected;
     private boolean mInProgress;
 
@@ -81,9 +82,9 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
         mNextButton = (Button) rootView.findViewById(R.id.login_email_next_button);
         mNextButton.setOnClickListener(new OnClickListener() {
-                public void onClick(View v) {
-                    next(getCleanedEmail());
-                }
+            public void onClick(View v) {
+                next(getCleanedEmail());
+            }
         });
 
         autoFillFromBuildConfig();
@@ -311,6 +312,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         endProgress();
 
         if (event.isError()) {
+            // report the error but don't bail yet.
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }
 

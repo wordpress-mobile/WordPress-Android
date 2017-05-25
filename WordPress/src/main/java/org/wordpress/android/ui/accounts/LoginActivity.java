@@ -9,8 +9,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
+import org.wordpress.android.util.ToastUtils;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
 
