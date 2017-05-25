@@ -337,12 +337,7 @@ public class ImageUtils {
             return null;
         }
 
-        Uri curUri;
-        if (!filePath.contains("content://")) {
-            curUri = Uri.parse("content://media" + filePath);
-        } else {
-            curUri = Uri.parse(filePath);
-        }
+        Uri curUri = Uri.parse(filePath);
 
         if (filePath.contains("video")) {
             // Load the video thumbnail from the MediaStore
