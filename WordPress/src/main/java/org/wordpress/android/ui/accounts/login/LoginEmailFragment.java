@@ -47,6 +47,7 @@ import javax.inject.Inject;
 
 public class LoginEmailFragment extends Fragment implements TextWatcher {
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
+    private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -60,6 +61,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     private boolean mEmailAutoCorrected;
     private boolean mInProgress;
+    private String mRequestedEmail;
 
     @Inject Dispatcher mDispatcher;
 
@@ -135,6 +137,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
         if (savedInstanceState != null) {
             mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
+            mRequestedEmail = savedInstanceState.getString(KEY_REQUESTED_EMAIL);
 
             if (mInProgress) {
                 showEmailCheckProgressDialog();
@@ -163,6 +166,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
+        outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
     }
 
     @Override
@@ -224,6 +228,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
         if (isValidEmail(email)) {
             showEmailCheckProgressDialog();
+            mRequestedEmail = email;
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {
             showEmailError(R.string.email_invalid);
@@ -276,30 +281,29 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     }
 
     private void showEmailCheckProgressDialog() {
-        startProgress(getActivity().getString(R.string.checking_email));
-    }
-
-    private void startProgress(String message) {
         mNextButton.setEnabled(false);
-        mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
-                new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                updateNextButton();
-            }
-        });
+        mProgressDialog =
+                ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.checking_email), true, true,
+                        new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                if (mInProgress) {
+                                    endProgress();
+                                }
+                            }
+                        });
         mInProgress = true;
     }
 
     private void endProgress() {
+        mInProgress = false;
+
         if (mProgressDialog != null) {
             mProgressDialog.cancel();
+            mProgressDialog = null;
         }
 
-        // nullify the reference to cleanup
-        mProgressDialog = null;
-
-        mInProgress = false;
+        mRequestedEmail = null;
 
         updateNextButton();
     }
@@ -309,38 +313,34 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAvailabilityChecked(OnAvailabilityChecked event) {
-        endProgress();
+        if (mRequestedEmail == null || !mRequestedEmail.equalsIgnoreCase(event.value)) {
+            // bail if user canceled or a different email request is outstanding
+            return;
+        }
+
+        if (mInProgress) {
+            endProgress();
+        }
 
         if (event.isError()) {
             // report the error but don't bail yet.
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
+            showEmailError(R.string.login_error_while_checking_email);
+            return;
         }
 
-        switch(event.type) {
+        switch (event.type) {
             case EMAIL:
-                handleEmailAvailabilityEvent(event);
+                if (event.isAvailable) {
+                    // email address is available on wpcom, so apparently the user can't login with that one.
+                    showEmailError(R.string.email_not_registered_wpcom);
+                } else if (mLoginListener != null) {
+                    mLoginListener.gotEmail(event.value);
+                }
                 break;
             default:
-                // TODO: we're not expecting any other availability check so, we should never have reached this line
+                AppLog.e(T.API, "OnAvailabilityChecked unhandled event type: " + event.error.type);
                 break;
-        }
-    }
-
-    /**
-     * Handler for an email availability event. If a user enters an email address for their
-     * username an API checks to see if it belongs to a wpcom account.  If it exists the magic links
-     * flow is followed. Otherwise the self-hosted sign in form is shown.
-     * @param event the event emitted
-     */
-    private void handleEmailAvailabilityEvent(OnAvailabilityChecked event) {
-        if (!event.isAvailable) {
-            // TODO: Email address exists in WordPress.com so, goto magic link offer screen
-            // Email address exists in WordPress.com
-            if (mLoginListener != null) {
-                mLoginListener.gotEmail(event.value);
-            }
-        } else {
-            showEmailError(R.string.email_not_registered_wpcom);
         }
     }
 }

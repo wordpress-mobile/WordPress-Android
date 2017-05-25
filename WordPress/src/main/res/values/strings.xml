@@ -1700,4 +1700,5 @@
     <string name="enter_username_password_instead">Log in to your site by entering your site address instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="login_error_while_checking_email">An error occurred while checking the email address!</string>
 </resources>
