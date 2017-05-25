@@ -7,6 +7,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,12 +27,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.util.UrlUtils;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,6 +106,37 @@ public class SiteRestClient extends BaseWPComRestClient {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchConnectSiteInfo(@NonNull final String testedUrl) {
+        // Get a proper URI to reliably retrieve the scheme.
+        URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(testedUrl, false));
+
+        // Sanitize and encode the Url for the API call.
+        String sanitizedURL = UrlUtils.removeScheme(testedUrl);
+        sanitizedURL = sanitizedURL.replace("/", "::");
+
+        // Make the call.
+        String url = WPCOMREST.connect.site_info.protocol(uri.getScheme()).address(sanitizedURL).getUrlV1_1();
+        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                ConnectSiteInfoResponse.class,
+                new Listener<ConnectSiteInfoResponse>() {
+                    @Override
+                    public void onResponse(ConnectSiteInfoResponse response) {
+                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(testedUrl, response);
+                        info.url = testedUrl;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(testedUrl, error);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 }
         );
@@ -292,6 +328,36 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void suggestDomains(@NonNull final String query, final boolean includeWordpressCom,
+                               final boolean includeDotBlogSubdomain, final int quantity) {
+        String url = WPCOMREST.domains.suggestions.getUrlV1_1();
+        Map<String, String> params = new HashMap<>(4);
+        params.put("query", query);
+        // ugly trick to bypass checkstyle and its dot com rule
+        params.put("include_wordpressdot" + "com", String.valueOf(includeWordpressCom));
+        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        params.put("quantity", String.valueOf(quantity));
+        final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, params,
+                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
+                new Listener<ArrayList<DomainSuggestionResponse>>() {
+                    @Override
+                    public void onResponse(ArrayList<DomainSuggestionResponse> response) {
+                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, response);
+                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
+                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
@@ -311,6 +377,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setLoginUrl(from.options.login_url);
             site.setTimezone(from.options.gmt_offset);
             site.setFrameNonce(from.options.frame_nonce);
+            site.setUnmappedUrl(from.options.unmapped_url);
         }
         if (from.plan != null) {
             try {
@@ -374,5 +441,19 @@ public class SiteRestClient extends BaseWPComRestClient {
             }
         }
         return payload;
+    }
+
+    private ConnectSiteInfoPayload connectSiteInfoFromResponse(String url, ConnectSiteInfoResponse response) {
+        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(url, null);
+        info.url = url;
+        info.exists = response.exists;
+        info.hasJetpack = response.hasJetpack;
+        info.isJetpackActive = response.isJetpackActive;
+        info.isJetpackConnected = response.isJetpackConnected;
+        info.isWordPress = response.isWordPress;
+        // CHECKSTYLE IGNORE RegexpSingleline
+        info.isWPCom = response.isWordPressDotCom;
+        // CHECKSTYLE END IGNORE RegexpSingleline
+        return info;
     }
 }

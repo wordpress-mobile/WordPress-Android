@@ -6,12 +6,15 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 
 @ActionEnum
 public enum SiteAction implements IAction {
@@ -32,6 +35,10 @@ public enum SiteAction implements IAction {
     EXPORT_SITE,
     @Action(payloadType = String.class)
     IS_WPCOM_URL,
+    @Action(payloadType = SuggestDomainsPayload.class)
+    SUGGEST_DOMAINS,
+    @Action(payloadType = String.class)
+    FETCH_CONNECT_SITE_INFO,
 
     // Remote responses
     @Action(payloadType = NewSiteResponsePayload.class)
@@ -42,6 +49,8 @@ public enum SiteAction implements IAction {
     DELETED_SITE,
     @Action(payloadType = ExportSiteResponsePayload.class)
     EXPORTED_SITE,
+    @Action(payloadType = ConnectSiteInfoPayload.class)
+    FETCHED_CONNECT_SITE_INFO,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
@@ -59,5 +68,7 @@ public enum SiteAction implements IAction {
     @Action(payloadType = SitesModel.class)
     HIDE_SITES,
     @Action(payloadType = IsWPComResponsePayload.class)
-    CHECKED_IS_WPCOM_URL
+    CHECKED_IS_WPCOM_URL,
+    @Action(payloadType = SuggestDomainsResponsePayload.class)
+    SUGGESTED_DOMAINS,
 }

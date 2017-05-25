@@ -13,7 +13,9 @@ import com.google.gson.JsonSyntaxException;
 import org.wordpress.android.fluxc.network.BaseRequest;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class GsonRequest<T> extends BaseRequest<T> {
@@ -22,14 +24,21 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
 
     private final Gson mGson;
     private final Class<T> mClass;
+    private final Type mType;
     private final Listener<T> mListener;
     private final Map<String, String> mParams;
     private final Map<String, Object> mBody;
 
-    public GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
-                       Listener<T> listener, BaseErrorListener errorListener) {
+    protected GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
+                       Type type, Listener<T> listener, BaseErrorListener errorListener) {
         super(method, url, errorListener);
+        // HTTP RFC requires a body (even empty) for all POST requests.
+        if (method == Method.POST && body == null) {
+            body = new HashMap<>();
+        }
+
         mClass = clazz;
+        mType = type;
         mListener = listener;
         mGson = setupGsonBuilder().create();
         mParams = params;
@@ -64,7 +73,13 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            return Response.success(mGson.fromJson(json, mClass), HttpHeaderParser.parseCacheHeaders(response));
+            T res;
+            if (mClass == null) {
+                res = mGson.fromJson(json, mType);
+            } else {
+                res = mGson.fromJson(json, mClass);
+            }
+            return Response.success(res, HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {

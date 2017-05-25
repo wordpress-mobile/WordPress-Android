@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationError;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
+import java.lang.reflect.Type;
 import java.util.Map;
 
 public class WPComGsonRequest<T> extends GsonRequest<T> {
@@ -30,8 +30,8 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
     }
 
     private WPComGsonRequest(int method, String url, Map<String, String> params, Map<String, Object> body,
-                            Class<T> clazz, Listener<T> listener, BaseErrorListener errorListener) {
-        super(method, params, body, url, clazz, listener, errorListener);
+                             Class<T> clazz, Type type, Listener<T> listener, BaseErrorListener errorListener) {
+        super(method, params, body, url, clazz, type, listener, errorListener);
         // If it's a GET request, add the parameters to the URL
         if (method == Method.GET) {
             addQueryParameters(params);
@@ -48,7 +48,12 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
      */
     public static <T> WPComGsonRequest<T> buildGetRequest(String url, Map<String, String> params, Class<T> clazz,
                                                           Listener<T> listener, BaseErrorListener errorListener) {
-        return new WPComGsonRequest<>(Method.GET, url, params, null, clazz, listener, errorListener);
+        return new WPComGsonRequest<>(Method.GET, url, params, null, clazz, null, listener, errorListener);
+    }
+
+    public static <T> WPComGsonRequest<T> buildGetRequest(String url, Map<String, String> params, Type type,
+                                                          Listener<T> listener, BaseErrorListener errorListener) {
+        return new WPComGsonRequest<>(Method.GET, url, params, null, null, type, listener, errorListener);
     }
 
     /**
@@ -61,11 +66,12 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
      */
     public static <T> WPComGsonRequest<T> buildPostRequest(String url, Map<String, Object> body, Class<T> clazz,
                                                            Listener<T> listener, BaseErrorListener errorListener) {
-        // HTTP RFC requires a body (even empty) for all POST requests.
-        if (body == null) {
-            body = new HashMap<>();
-        }
-        return new WPComGsonRequest<>(Method.POST, url, null, body, clazz, listener, errorListener);
+        return new WPComGsonRequest<>(Method.POST, url, null, body, clazz, null, listener, errorListener);
+    }
+
+    public static <T> WPComGsonRequest<T> buildPostRequest(String url, Map<String, Object> body, Type type,
+                                                           Listener<T> listener, BaseErrorListener errorListener) {
+        return new WPComGsonRequest<>(Method.POST, url, null, body, null, type, listener, errorListener);
     }
 
     private String addDefaultParameters(String url) {

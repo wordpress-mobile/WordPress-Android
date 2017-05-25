@@ -146,7 +146,7 @@ public class MediaStore extends Store {
                 return mediaError;
             }
 
-            errorMessage =  errorMessage.toLowerCase(Locale.US);
+            errorMessage = errorMessage.toLowerCase(Locale.US);
             if (errorMessage.contains("broken pipe") || errorMessage.contains("epipe")) {
                 // do not use the real error message.
                 mediaError.message = "";

@@ -1,5 +1,7 @@
 /auth/send-login-email/
 
+/connect/site-info/$protocol#String/$address#String
+
 /is-available/blog/
 /is-available/domain/
 /is-available/email/
@@ -11,6 +13,8 @@
 /me/send-verification-email/
 
 /read/feed/$feed_url_or_id#long,String
+
+/domains/suggestions
 
 /sites/
 /sites/$site/delete
