@@ -91,12 +91,12 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
         mEmailEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    autocorrectEmail();
+                    autoCorrectEmail();
                 }
             }
         });
 
-        autofillFromBuildConfig();
+        autoFillFromBuildConfig();
 
         mEmailEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -187,21 +187,21 @@ public class LoginEmailFragment extends AbstractFragment implements TextWatcher 
     }
 
     /*
-     * autofill the username and password from BuildConfig/gradle.properties (developer feature,
+     * auto-fill the username and password from BuildConfig/gradle.properties (developer feature,
      * only enabled for DEBUG releases)
      */
-    private void autofillFromBuildConfig() {
+    private void autoFillFromBuildConfig() {
         if (!BuildConfig.DEBUG) return;
 
         String email = (String) WordPress.getBuildConfigValue(getActivity().getApplication(),
                 "DEBUG_DOTCOM_LOGIN_EMAIL");
         if (!TextUtils.isEmpty(email)) {
             mEmailEditText.setText(email);
-            AppLog.d(T.NUX, "Autofilled email from build config");
+            AppLog.d(T.NUX, "Auto-filled email from build config");
         }
     }
 
-    private void autocorrectEmail() {
+    private void autoCorrectEmail() {
         if (mEmailAutoCorrected) {
             return;
         }
