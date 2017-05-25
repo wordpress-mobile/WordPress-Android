@@ -80,7 +80,9 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     @Override
     public void onProgress(MediaModel media, float progress) {
-        notifyMediaProgress(media, Math.min(0.99f, progress), null);
+        if (mCurrentUploadCalls.containsKey(media.getId())) {
+            notifyMediaProgress(media, Math.min(progress, 0.99f), null);
+        }
     }
 
     public void pushMedia(final SiteModel site, final MediaModel media) {

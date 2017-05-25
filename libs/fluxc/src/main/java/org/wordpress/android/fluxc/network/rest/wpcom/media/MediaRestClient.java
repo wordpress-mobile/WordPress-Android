@@ -78,7 +78,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     @Override
     public void onProgress(MediaModel media, float progress) {
-        notifyMediaProgress(media, Math.min(progress, 0.99f), null);
+        if (mCurrentUploadCalls.containsKey(media.getId())) {
+            notifyMediaProgress(media, Math.min(progress, 0.99f), null);
+        }
     }
 
     /**
