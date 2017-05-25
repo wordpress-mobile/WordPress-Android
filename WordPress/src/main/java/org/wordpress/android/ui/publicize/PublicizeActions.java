@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
@@ -28,7 +27,6 @@ import de.greenrobot.event.EventBus;
  * API calls to connect/disconnect publicize services
  */
 public class PublicizeActions {
-
     public interface OnPublicizeActionListener {
         void onRequestConnect(PublicizeService service);
         void onRequestDisconnect(PublicizeConnection connection);
@@ -66,21 +64,21 @@ public class PublicizeActions {
     /*
      * create a new publicize service connection for a specific site
      */
-    public static void connect(int siteId, String serviceId){
+    public static void connect(long siteId, String serviceId, long currentUserId){
         if (TextUtils.isEmpty(serviceId)) {
             AppLog.w(AppLog.T.SHARING, "cannot connect without service");
             EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
             return;
         }
 
-        connectStepOne(siteId, serviceId);
+        connectStepOne(siteId, serviceId, currentUserId);
     }
 
     /*
      * step one in creating a publicize connection: request the list of keyring connections
      * and find the one for the passed service
      */
-    private static void connectStepOne(final int siteId, final String serviceId) {
+    private static void connectStepOne(final long siteId, final String serviceId, final long currentUserId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -88,7 +86,7 @@ public class PublicizeActions {
                     // show dialog showing multiple options
                     EventBus.getDefault().post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
-                    int keyringConnectionId = parseServiceKeyringId(serviceId, jsonObject);
+                    long keyringConnectionId = parseServiceKeyringId(serviceId, currentUserId, jsonObject);
                     connectStepTwo(siteId, keyringConnectionId);
                 }
             }
@@ -109,7 +107,7 @@ public class PublicizeActions {
      * step two in creating a publicize connection: now that we have the keyring connection id,
      * create the actual connection
      */
-    public static void connectStepTwo(int siteId, int keyringConnectionId) {
+    public static void connectStepTwo(long siteId, long keyringConnectionId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -128,12 +126,12 @@ public class PublicizeActions {
         };
 
         Map<String, String> params = new HashMap<>();
-        params.put("keyring_connection_ID", Integer.toString(keyringConnectionId));
+        params.put("keyring_connection_ID", Long.toString(keyringConnectionId));
         String path = String.format("/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 
-    private static boolean shouldShowChooserDialog(int siteId, String serviceId, JSONObject jsonObject) {
+    private static boolean shouldShowChooserDialog(long siteId, String serviceId, JSONObject jsonObject) {
         JSONArray jsonConnectionList = jsonObject.optJSONArray("connections");
         if (jsonConnectionList == null || jsonConnectionList.length() <= 1) {
             return false;
@@ -159,13 +157,12 @@ public class PublicizeActions {
      * extract the keyring connection for the passed service from the response
      * to /me/keyring-connections
      */
-    private static int parseServiceKeyringId(String serviceId, JSONObject json) {
+    private static long parseServiceKeyringId(String serviceId, long currentUserId, JSONObject json) {
         JSONArray jsonConnectionList = json.optJSONArray("connections");
         if (jsonConnectionList == null) {
             return 0;
         }
 
-        long currentUserId = AccountHelper.getDefaultAccount().getUserId();
         for (int i = 0; i < jsonConnectionList.length(); i++) {
             JSONObject jsonConnection = jsonConnectionList.optJSONObject(i);
             String service = JSONUtils.getString(jsonConnection, "service");
@@ -173,7 +170,7 @@ public class PublicizeActions {
                 // make sure userId matches the current user, or is zero (shared)
                 long userId = jsonConnection.optLong("user_ID");
                 if (userId == 0 || userId == currentUserId) {
-                    return jsonConnection.optInt("ID");
+                    return jsonConnection.optLong("ID");
                 }
             }
         }

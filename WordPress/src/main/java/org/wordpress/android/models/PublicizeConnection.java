@@ -25,7 +25,7 @@ public class PublicizeConnection {
     }
 
     public int connectionId;
-    public int siteId;
+    public long siteId;
     public int keyringConnectionId;
     public int keyringConnectionUserId;
 
@@ -41,7 +41,7 @@ public class PublicizeConnection {
     private String mExternalName;
     private String mExternalDisplayName;
     private String mExternalProfilePictureUrl;
-    private int[] mSites;
+    private long[] mSites;
 
     // `status` can be `ok` or `broken` -- `broken` means the connection needs to be re-established via the `refresh_URL`
     private String mStatus;
@@ -139,15 +139,15 @@ public class PublicizeConnection {
                 && other.getService().equals(this.getService());
     }
 
-    public void setSites(int[] sites) {
+    public void setSites(long[] sites) {
         mSites = sites;
     }
 
-    public int[] getSites() {
+    public long[] getSites() {
         return mSites;
     }
 
-    public boolean isInSite(int siteId) {
+    public boolean isInSite(long siteId) {
         for (int i = 0; i < mSites.length; i++) {
             if (siteId == mSites[i]) {
                 return true;
@@ -190,7 +190,7 @@ public class PublicizeConnection {
         PublicizeConnection connection = new PublicizeConnection();
 
         connection.connectionId = json.optInt("ID");
-        connection.siteId = json.optInt("site_ID");
+        connection.siteId = json.optLong("site_ID");
         connection.userId = json.optInt("user_ID");
         connection.keyringConnectionId = json.optInt("keyring_connection_ID");
         connection.keyringConnectionUserId = json.optInt("keyring_connection_user_ID");
@@ -210,17 +210,17 @@ public class PublicizeConnection {
             JSONArray jsonSitesArray = json.getJSONArray("sites");
             connection.mSites = getSitesArrayFromJson(jsonSitesArray);
         } catch (JSONException e) {
-            connection.mSites = new int[0];
+            connection.mSites = new long[0];
             e.printStackTrace();
         }
 
         return connection;
     }
 
-    private static int[] getSitesArrayFromJson(JSONArray jsonArray) throws JSONException {
-        int[] sitesArray = new int[jsonArray.length()];
+    private static long[] getSitesArrayFromJson(JSONArray jsonArray) throws JSONException {
+        long[] sitesArray = new long[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) {
-            sitesArray[i] = jsonArray.getInt(i);
+            sitesArray[i] = jsonArray.getLong(i);
         }
 
         return sitesArray;

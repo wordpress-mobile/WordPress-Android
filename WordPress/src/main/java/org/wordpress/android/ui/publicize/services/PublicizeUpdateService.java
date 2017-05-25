@@ -12,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeServiceList;
+import org.wordpress.android.ui.publicize.PublicizeConstants;
 import org.wordpress.android.ui.publicize.PublicizeEvents;
 import org.wordpress.android.util.AppLog;
 
@@ -23,15 +24,14 @@ import de.greenrobot.event.EventBus;
 
 public class PublicizeUpdateService extends IntentService {
 
-    private static final String ARG_SITE_ID = "site_id";
     private static boolean mHasUpdatedServices;
 
     /*
      * update the publicize connections for the passed site
      */
-    public static void updateConnectionsForSite(Context context, int siteId) {
+    public static void updateConnectionsForSite(Context context, long siteId) {
         Intent intent = new Intent(context, PublicizeUpdateService.class);
-        intent.putExtra(ARG_SITE_ID, siteId);
+        intent.putExtra(PublicizeConstants.ARG_SITE_ID, siteId);
         context.startService(intent);
     }
 
@@ -63,7 +63,7 @@ public class PublicizeUpdateService extends IntentService {
             mHasUpdatedServices = true;
         }
 
-        int siteId = intent.getIntExtra(ARG_SITE_ID, 0);
+        long siteId = intent.getLongExtra(PublicizeConstants.ARG_SITE_ID, 0);
         updateConnections(siteId);
     }
 
@@ -96,7 +96,7 @@ public class PublicizeUpdateService extends IntentService {
     /*
      * update the connections for the passed blog
      */
-    private void updateConnections(final int siteId) {
+    private void updateConnections(final long siteId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {

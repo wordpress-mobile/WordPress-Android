@@ -15,10 +15,9 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
 import org.wordpress.android.util.ToastUtils;
@@ -31,12 +30,13 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeServiceAdapter.OnServiceClickListener,
         PublicizeListFragment.PublicizeManageConnectionsListener {
 
-    private int mSiteId;
+    private SiteModel mSite;
     private ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.publicize_list_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,19 +49,19 @@ public class PublicizeListActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             PublicizeTable.createTables(WordPress.wpDB.getDatabase());
-            mSiteId = getIntent().getIntExtra(PublicizeConstants.ARG_SITE_ID, 0);
-            showListFragment(mSiteId);
-            PublicizeUpdateService.updateConnectionsForSite(this, mSiteId);
+            showListFragment();
+            PublicizeUpdateService.updateConnectionsForSite(this, mSite.getSiteId());
         } else {
-            mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
+        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -76,11 +76,11 @@ public class PublicizeListActivity extends AppCompatActivity
         EventBus.getDefault().register(this);
     }
 
-    private void showListFragment(int siteId) {
+    private void showListFragment() {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_list);
-        Fragment fragment = PublicizeListFragment.newInstance(siteId);
+        Fragment fragment = PublicizeListFragment.newInstance(mSite.getSiteId());
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, tag)
@@ -114,11 +114,11 @@ public class PublicizeListActivity extends AppCompatActivity
         getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
-    private void showDetailFragment(int siteId, PublicizeService service) {
+    private void showDetailFragment(PublicizeService service) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        Fragment detailFragment = PublicizeDetailFragment.newInstance(siteId, service);
+        Fragment detailFragment = PublicizeDetailFragment.newInstance(mSite.getSiteId(), service);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment, tag)
@@ -144,13 +144,12 @@ public class PublicizeListActivity extends AppCompatActivity
         }
     }
 
-    private void showWebViewFragment(int siteId,
-                                     PublicizeService service,
+    private void showWebViewFragment(PublicizeService service,
                                      PublicizeConnection publicizeConnection) {
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(siteId, service, publicizeConnection);
+        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(mSite.getSiteId(), service, publicizeConnection);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, webViewFragment, tag)
@@ -198,7 +197,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onServiceClicked(PublicizeService service) {
-        showDetailFragment(mSiteId, service);
+        showDetailFragment(service);
     }
 
     /*
@@ -206,7 +205,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestConnect(PublicizeService service) {
-        showWebViewFragment(mSiteId, service, null);
+        showWebViewFragment(service, null);
     }
 
     /*
@@ -214,7 +213,7 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @Override
     public void onRequestReconnect(PublicizeService service, PublicizeConnection publicizeConnection) {
-        showWebViewFragment(mSiteId, service, publicizeConnection);
+        showWebViewFragment(service, publicizeConnection);
     }
 
     /*
@@ -286,7 +285,7 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeAccountChooserDialogFragment dialogFragment = new PublicizeAccountChooserDialogFragment();
         Bundle args = new Bundle();
         args.putString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON, event.getJSONObject().toString());
-        args.putInt(PublicizeConstants.ARG_SITE_ID, event.getSiteId());
+        args.putLong(PublicizeConstants.ARG_SITE_ID, event.getSiteId());
         args.putString(PublicizeConstants.ARG_SERVICE_ID, event.getServiceId());
         dialogFragment.setArguments(args);
         dialogFragment.show(getSupportFragmentManager(), PublicizeAccountChooserDialogFragment.TAG);
@@ -294,14 +293,9 @@ public class PublicizeListActivity extends AppCompatActivity
 
     @Override
     public void onManageConnectionsClicked() {
-        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mSiteId);
-        Bundle args = new Bundle();
-        args.putInt(SettingsFragment.ARG_LOCAL_BLOG_ID, localBlogId);
-
-        PublicizeManageConnectionsFragment manageConnectionsFragment = new PublicizeManageConnectionsFragment();
-        manageConnectionsFragment.setArguments(args);
+        PublicizeManageConnectionsFragment fragment = PublicizeManageConnectionsFragment.newInstance(mSite);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, manageConnectionsFragment);
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

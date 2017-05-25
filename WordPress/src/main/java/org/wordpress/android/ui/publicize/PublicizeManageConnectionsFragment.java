@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.publicize;
 
+import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -13,9 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
 import org.wordpress.android.ui.prefs.DetailListPreference;
-import org.wordpress.android.ui.prefs.SettingsFragment;
+import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SummaryEditTextPreference;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
 import org.wordpress.android.util.AppLog;
@@ -24,10 +27,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class PublicizeManageConnectionsFragment extends SettingsFragment {
+public class PublicizeManageConnectionsFragment extends SiteSettingsFragment {
     private static final String TWITTER_PREFIX = "@";
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
-    public static final String TWITTER_ID = "twitter";
+    private static final String TWITTER_ID = "twitter";
 
     private MultiSelectListPreference mSharingButtonsPreference;
     private MultiSelectListPreference mMoreButtonsPreference;
@@ -40,7 +43,12 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     private PreferenceCategory mTwitterPreferenceCategory;
     private ArrayList<PublicizeButton> mPublicizeButtons;
 
-    public PublicizeManageConnectionsFragment() {
+    public static PublicizeManageConnectionsFragment newInstance(@NonNull SiteModel site) {
+        PublicizeManageConnectionsFragment fragment = new PublicizeManageConnectionsFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(WordPress.SITE, site);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
@@ -66,7 +74,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
             e.printStackTrace();
         }
 
-        WordPress.getRestClientUtilsV1_1().setSharingButtons(mBlog.getDotComBlogId(), jsonObject, new RestRequest.Listener() {
+        WordPress.getRestClientUtilsV1_1().setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -113,9 +121,9 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
 
     private void configureSharingAndMoreButtonsPreferences() {
         mPublicizeButtons = new ArrayList<>();
-        mSharingButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_sharing_buttons);
-        mMoreButtonsPreference = (MultiSelectListPreference) getChangePref(R.string.pref_key_more_buttons);
-        WordPress.getRestClientUtilsV1_1().getSharingButtons(mBlog.getDotComBlogId(), new RestRequest.Listener() {
+        mSharingButtonsPreference = (MultiSelectListPreference) findPreference(getString(R.string.pref_key_sharing_buttons));
+        mMoreButtonsPreference = (MultiSelectListPreference) findPreference(getString(R.string.pref_key_more_buttons));
+        WordPress.getRestClientUtilsV1_1().getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -168,22 +176,22 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     }
 
     @Override
-    protected void initPreferences() {
+    public void initPreferences() {
         configureSharingAndMoreButtonsPreferences();
-        mLabelPreference = (SummaryEditTextPreference) getChangePref(R.string.publicize_label);
-        mButtonStylePreference = (DetailListPreference) getChangePref(R.string.publicize_button_style);
+        mLabelPreference = (SummaryEditTextPreference) findPreference(getString(R.string.publicize_label));
+        mButtonStylePreference = (DetailListPreference) findPreference(getString(R.string.publicize_button_style));
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
-        mReblogButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_reblog);
-        mLikeButtonPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_like);
-        mCommentLikesPreference = (WPSwitchPreference) getChangePref(R.string.pref_key_comment_likes);
-        mTwitterUsernamePreference = (SummaryEditTextPreference) getChangePref(R.string.pref_key_twitter_username);
-        mTwitterPreferenceCategory = (PreferenceCategory) getChangePref(R.string.pref_key_twitter_category);
+        mReblogButtonPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_reblog));
+        mLikeButtonPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_like));
+        mCommentLikesPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_comment_likes));
+        mTwitterUsernamePreference = (SummaryEditTextPreference) findPreference(getString(R.string.pref_key_twitter_username));
+        mTwitterPreferenceCategory = (PreferenceCategory) findPreference(getString(R.string.pref_key_twitter_category));
     }
 
     @Override
-    protected void setEditingEnabled(boolean enabled) {
+    public void setEditingEnabled(boolean enabled) {
         final Preference[] editablePreference = {
                 mSharingButtonsPreference, mMoreButtonsPreference, mLabelPreference, mButtonStylePreference,
                 mReblogButtonPreference, mLikeButtonPreference, mCommentLikesPreference,
@@ -198,7 +206,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     }
 
     @Override
-    protected void setPreferencesFromSiteSettings() {
+    public void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
@@ -208,7 +216,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     }
 
     @Override
-    protected void addPreferencesFromResource() {
+    public void addPreferencesFromResource() {
         addPreferencesFromResource(R.xml.publicize_preferences);
     }
 
@@ -244,7 +252,7 @@ public class PublicizeManageConnectionsFragment extends SettingsFragment {
     }
 
     @Override
-    protected void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
+    public void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
         if (pref != null && pref == mTwitterUsernamePreference && newValue != null && !newValue.isEmpty()) {
             newValue = TWITTER_PREFIX + newValue;
         }

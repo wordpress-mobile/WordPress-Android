@@ -33,15 +33,15 @@ public class PublicizeEvents {
     }
 
     public static class ActionAccountChosen {
-        private int mSiteId;
+        private long mSiteId;
         private int mKeychainId;
 
-        public ActionAccountChosen(int siteId, int keychainId) {
+        public ActionAccountChosen(long siteId, int keychainId) {
             mSiteId = siteId;
             mKeychainId = keychainId;
         }
 
-        public int getSiteId() {
+        public long getSiteId() {
             return mSiteId;
         }
 
@@ -51,11 +51,11 @@ public class PublicizeEvents {
     }
 
     public static class ActionRequestChooseAccount {
-        private int mSiteId;
+        private long mSiteId;
         private String mServiceId;
         private JSONObject mJSONObject;
 
-        public ActionRequestChooseAccount(int siteId, String serviceId, JSONObject jsonObject) {
+        public ActionRequestChooseAccount(long siteId, String serviceId, JSONObject jsonObject) {
             mSiteId = siteId;
             mServiceId = serviceId;
             mJSONObject = jsonObject;
@@ -65,7 +65,7 @@ public class PublicizeEvents {
             return mJSONObject;
         }
 
-        public int getSiteId() {
+        public long getSiteId() {
             return mSiteId;
         }
 

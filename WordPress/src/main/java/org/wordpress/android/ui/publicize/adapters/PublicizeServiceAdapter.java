@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
@@ -35,7 +34,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private final PublicizeServiceList mServices = new PublicizeServiceList();
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
 
-    private final int mSiteId;
+    private final long mSiteId;
     private final int mBlavatarSz;
     private final ColorFilter mGrayScaleFilter;
     private final int mColorConnected;
@@ -45,12 +44,12 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private OnAdapterLoadedListener mAdapterLoadedListener;
     private OnServiceClickListener mServiceClickListener;
 
-    public PublicizeServiceAdapter(Context context, int siteId) {
+    public PublicizeServiceAdapter(Context context, long siteId, long currentUserId) {
         super();
 
         mSiteId = siteId;
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
-        mCurrentUserId = AccountHelper.getDefaultAccount().getUserId();
+        mCurrentUserId = currentUserId;
 
         mColorConnected = context.getResources().getColor(R.color.grey_dark);
         mColorNotConnected = context.getResources().getColor(R.color.grey_lighten_10);

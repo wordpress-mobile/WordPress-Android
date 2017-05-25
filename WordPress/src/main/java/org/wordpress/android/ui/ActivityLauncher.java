@@ -131,22 +131,16 @@ public class ActivityLauncher {
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
-        if (site == null) return;
-    public static void viewBlogSharing(Context context, Blog blog) {
-        if (blog == null) return;
-
-        Intent intent = new Intent(context, PublicizeListActivity.class);
-        intent.putExtra(PublicizeConstants.ARG_SITE_ID, blog.getRemoteBlogId());
-        context.startActivity(intent);
-    }
-
-    public static void viewBlogSettingsForResult(Activity activity, Blog blog) {
-        if (blog == null) return;
-
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.SITE_SETTINGS);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_BLOG_SETTINGS, site);
+    }
+
+    public static void viewBlogSharing(Context context, SiteModel site) {
+        Intent intent = new Intent(context, PublicizeListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
     }
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {

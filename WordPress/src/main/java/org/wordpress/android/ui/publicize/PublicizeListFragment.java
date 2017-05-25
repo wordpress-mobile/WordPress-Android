@@ -6,16 +6,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.WPButton;
+
+import javax.inject.Inject;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
     public interface PublicizeManageConnectionsListener {
@@ -23,15 +27,17 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     }
 
     private PublicizeManageConnectionsListener mListener;
-    private int mSiteId;
+    private long mSiteId;
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
-    private WPButton mManageButton;
+    private Button mManageButton;
 
-    public static PublicizeListFragment newInstance(int siteId) {
+    @Inject AccountStore mAccountStore;
+
+    public static PublicizeListFragment newInstance(long siteId) {
         Bundle args = new Bundle();
-        args.putInt(PublicizeConstants.ARG_SITE_ID, siteId);
+        args.putLong(PublicizeConstants.ARG_SITE_ID, siteId);
 
         PublicizeListFragment fragment = new PublicizeListFragment();
         fragment.setArguments(args);
@@ -44,15 +50,17 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         super.setArguments(args);
 
         if (args != null) {
-            mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
+            mSiteId = args.getLong(PublicizeConstants.ARG_SITE_ID);
         }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         if (savedInstanceState != null) {
-            mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
+            mSiteId = savedInstanceState.getLong(PublicizeConstants.ARG_SITE_ID);
         }
     }
 
@@ -64,13 +72,13 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         }
         getAdapter().refresh();
         setTitle(R.string.sharing);
-        setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
+        outState.putLong(PublicizeConstants.ARG_SITE_ID, mSiteId);
     }
 
     @Override
@@ -79,7 +87,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
-        mManageButton = (WPButton) rootView.findViewById(R.id.manage_button);
+        mManageButton = (Button) rootView.findViewById(R.id.manage_button);
 
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
@@ -132,7 +140,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
     private PublicizeServiceAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new PublicizeServiceAdapter(getActivity(), mSiteId);
+            mAdapter = new PublicizeServiceAdapter(
+                    getActivity(),
+                    mSiteId,
+                    mAccountStore.getAccount().getUserId());
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener((OnServiceClickListener) getActivity());

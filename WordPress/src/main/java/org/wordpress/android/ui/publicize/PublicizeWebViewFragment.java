@@ -14,35 +14,38 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WebViewUtils;
+
+import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
 public class PublicizeWebViewFragment extends PublicizeBaseFragment {
-
-    private int mSiteId;
+    private long mSiteId;
     private String mServiceId;
     private int mConnectionId;
     private WebView mWebView;
     private ProgressBar mProgress;
+
+    @Inject AccountStore mAccountStore;
 
     /*
      * returns a new webView fragment to connect to a publicize service - if passed connection
      * is non-null then we're reconnecting a broken connection, otherwise we're creating a
      * new connection to the service
      */
-    public static PublicizeWebViewFragment newInstance(int siteId,
+    public static PublicizeWebViewFragment newInstance(long siteId,
                                                        @NonNull PublicizeService service,
                                                        PublicizeConnection connection) {
         Bundle args = new Bundle();
-        args.putInt(PublicizeConstants.ARG_SITE_ID, siteId);
+        args.putSerializable(PublicizeConstants.ARG_SITE_ID, siteId);
         args.putString(PublicizeConstants.ARG_SERVICE_ID, service.getId());
         if (connection != null) {
             args.putInt(PublicizeConstants.ARG_CONNECTION_ID, connection.connectionId);
@@ -59,7 +62,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         super.setArguments(args);
 
         if (args != null) {
-            mSiteId = args.getInt(PublicizeConstants.ARG_SITE_ID);
+            mSiteId = args.getLong(PublicizeConstants.ARG_SITE_ID);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
             mConnectionId = args.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
@@ -68,9 +71,10 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mSiteId = savedInstanceState.getInt(PublicizeConstants.ARG_SITE_ID);
+            mSiteId = savedInstanceState.getLong(PublicizeConstants.ARG_SITE_ID);
             mServiceId = savedInstanceState.getString(PublicizeConstants.ARG_SERVICE_ID);
             mConnectionId = savedInstanceState.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
@@ -79,7 +83,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(PublicizeConstants.ARG_SITE_ID, mSiteId);
+        outState.putLong(PublicizeConstants.ARG_SITE_ID, mSiteId);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
         outState.putInt(PublicizeConstants.ARG_CONNECTION_ID, mConnectionId);
         mWebView.saveState(outState);
@@ -138,9 +142,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         String postData = WPWebViewActivity.getAuthenticationPostData(
                 WPWebViewActivity.WPCOM_LOGIN_URL,
                 connectUrl,
-                AccountHelper.getDefaultAccount().getUserName(),
+                mAccountStore.getAccount().getUserName(),
                 "",
-                AccountHelper.getDefaultAccount().getAccessToken());
+                mAccountStore.getAccessToken());
 
         mWebView.postUrl(WPWebViewActivity.WPCOM_LOGIN_URL, postData.getBytes());
     }
@@ -157,9 +161,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
 
-            // TODO: remove logging from final - only here for debugging
-            AppLog.d(AppLog.T.SHARING, "onPageFinished > " + url);
-
             // does this url denotes that we made it past the auth stage?
             if (isAdded() && url != null) {
                 Uri uri = Uri.parse(url);
@@ -173,8 +174,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
                         return;
                     }
 
+                    long currentUserId = mAccountStore.getAccount().getUserId();
                     // call the endpoint to make the actual connection
-                    PublicizeActions.connect(mSiteId, mServiceId);
+                    PublicizeActions.connect(mSiteId, mServiceId, currentUserId);
                     WebViewUtils.clearCookiesAsync();
                 }
             }

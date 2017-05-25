@@ -249,7 +249,7 @@ public class MySiteFragment extends Fragment
         mSharingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSharing(getActivity(), WordPress.getBlog(mBlogLocalId));
+                ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
             }
         });
 
@@ -357,7 +357,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer.setVisibility(themesVisibility);
 
         // sharing is only exposed for wp.com blogs
-        int sharingVisibility = blog.isDotcomFlag() ? View.VISIBLE : View.GONE;
+        int sharingVisibility = getSelectedSite().isWPCom() ? View.VISIBLE : View.GONE;
         mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site
