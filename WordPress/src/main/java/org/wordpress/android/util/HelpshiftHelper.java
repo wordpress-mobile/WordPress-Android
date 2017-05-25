@@ -105,6 +105,10 @@ public class HelpshiftHelper {
         }
         Support.setDelegate(new Delegate() {
             @Override
+            public void conversationEnded() {
+            }
+
+            @Override
             public void sessionBegan() {
             }
 
