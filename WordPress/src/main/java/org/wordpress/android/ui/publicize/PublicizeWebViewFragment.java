@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
@@ -29,7 +28,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PublicizeWebViewFragment extends PublicizeBaseFragment {
-    private SiteModel mSite;
+    private long mSiteId;
     private String mServiceId;
     private int mConnectionId;
     private WebView mWebView;
@@ -42,11 +41,11 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
      * is non-null then we're reconnecting a broken connection, otherwise we're creating a
      * new connection to the service
      */
-    public static PublicizeWebViewFragment newInstance(@NonNull SiteModel site,
+    public static PublicizeWebViewFragment newInstance(long siteId,
                                                        @NonNull PublicizeService service,
                                                        PublicizeConnection connection) {
         Bundle args = new Bundle();
-        args.putSerializable(WordPress.SITE, site);
+        args.putSerializable(PublicizeConstants.ARG_SITE_ID, siteId);
         args.putString(PublicizeConstants.ARG_SERVICE_ID, service.getId());
         if (connection != null) {
             args.putInt(PublicizeConstants.ARG_CONNECTION_ID, connection.connectionId);
@@ -63,7 +62,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         super.setArguments(args);
 
         if (args != null) {
-            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+            mSiteId = args.getLong(PublicizeConstants.ARG_SITE_ID);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
             mConnectionId = args.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
@@ -75,7 +74,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mSiteId = savedInstanceState.getLong(PublicizeConstants.ARG_SITE_ID);
             mServiceId = savedInstanceState.getString(PublicizeConstants.ARG_SERVICE_ID);
             mConnectionId = savedInstanceState.getInt(PublicizeConstants.ARG_CONNECTION_ID);
         }
@@ -84,7 +83,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putLong(PublicizeConstants.ARG_SITE_ID, mSiteId);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
         outState.putInt(PublicizeConstants.ARG_CONNECTION_ID, mConnectionId);
         mWebView.saveState(outState);
@@ -177,7 +176,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
 
                     long currentUserId = mAccountStore.getAccount().getUserId();
                     // call the endpoint to make the actual connection
-                    PublicizeActions.connect(mSite.getSiteId(), mServiceId, currentUserId);
+                    PublicizeActions.connect(mSiteId, mServiceId, currentUserId);
                     WebViewUtils.clearCookiesAsync();
                 }
             }

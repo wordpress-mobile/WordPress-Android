@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.publicize;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
@@ -25,7 +23,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import javax.inject.Inject;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
-    private SiteModel mSite;
+    private long mSiteId;
     private String mServiceId;
 
     private PublicizeService mService;
@@ -36,9 +34,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
     @Inject AccountStore mAccountStore;
 
-    public static PublicizeDetailFragment newInstance(@NonNull SiteModel site, PublicizeService service) {
+    public static PublicizeDetailFragment newInstance(long siteId, PublicizeService service) {
         Bundle args = new Bundle();
-        args.putSerializable(WordPress.SITE, site);
+        args.putLong(PublicizeConstants.ARG_SITE_ID, siteId);
         args.putString(PublicizeConstants.ARG_SERVICE_ID, service.getId());
 
         PublicizeDetailFragment fragment = new PublicizeDetailFragment();
@@ -52,7 +50,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         super.setArguments(args);
 
         if (args != null) {
-            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+            mSiteId = args.getLong(PublicizeConstants.ARG_SITE_ID);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
         }
     }
@@ -63,7 +61,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mSiteId = savedInstanceState.getLong(PublicizeConstants.ARG_SITE_ID);
             mServiceId = savedInstanceState.getString(PublicizeConstants.ARG_SERVICE_ID);
         }
     }
@@ -71,7 +69,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putLong(PublicizeConstants.ARG_SITE_ID, mSiteId);
         outState.putString(PublicizeConstants.ARG_SERVICE_ID, mServiceId);
     }
 
@@ -121,7 +119,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
         long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(
-                getActivity(), mSite.getSiteId(), mServiceId, currentUserId);
+                getActivity(), mSiteId, mServiceId, currentUserId);
         adapter.setOnPublicizeActionListener(getOnPublicizeActionListener());
         adapter.setOnAdapterLoadedListener(this);
 

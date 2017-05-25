@@ -80,7 +80,7 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_list);
-        Fragment fragment = PublicizeListFragment.newInstance(mSite);
+        Fragment fragment = PublicizeListFragment.newInstance(mSite.getSiteId());
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, tag)
@@ -118,7 +118,7 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
-        Fragment detailFragment = PublicizeDetailFragment.newInstance(mSite, service);
+        Fragment detailFragment = PublicizeDetailFragment.newInstance(mSite.getSiteId(), service);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, detailFragment, tag)
@@ -149,7 +149,7 @@ public class PublicizeListActivity extends AppCompatActivity
         if (isFinishing()) return;
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
-        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(mSite, service, publicizeConnection);
+        Fragment webViewFragment = PublicizeWebViewFragment.newInstance(mSite.getSiteId(), service, publicizeConnection);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, webViewFragment, tag)
