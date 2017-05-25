@@ -316,7 +316,7 @@ public class MediaStore extends Store {
                 handleMediaDeleted((MediaPayload) action.getPayload());
                 break;
             case CANCELED_MEDIA_UPLOAD:
-                handleMediaUploaded((ProgressPayload) action.getPayload());
+                handleMediaCanceled((ProgressPayload) action.getPayload());
                 break;
             case UPDATE_MEDIA:
                 updateMedia(((MediaModel) action.getPayload()), true);
@@ -628,6 +628,18 @@ public class MediaStore extends Store {
         if (payload.media != null) {
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
         }
+        emitChange(onMediaUploaded);
+    }
+
+    private void handleMediaCanceled(@NonNull ProgressPayload payload) {
+        if (payload.media != null) {
+            MediaSqlUtils.deleteMedia(payload.media);
+        }
+
+        OnMediaUploaded onMediaUploaded =
+                new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
+        onMediaUploaded.error = payload.error;
+
         emitChange(onMediaUploaded);
     }
 
