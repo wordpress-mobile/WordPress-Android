@@ -11,4 +11,6 @@ public interface LoginListener {
 
     // Login Site Address input callbacks
     void gotSiteAddress(String siteAddress);
+
+    void help();
 }

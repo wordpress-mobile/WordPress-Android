@@ -71,4 +71,9 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     public void gotSiteAddress(String siteAddress) {
         ToastUtils.showToast(this, "Input site address is not implemented yet. Input site address: " + siteAddress);
     }
+
+    @Override
+    public void help() {
+        ToastUtils.showToast(this, "Help is not implemented yet.");
+    }
 }
