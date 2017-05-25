@@ -384,7 +384,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost();
+                                            mEditPostPreviewFragment.loadPost(mPost);
                                         }
                                     }
                                 });
@@ -1321,7 +1321,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 1:
                     return EditPostSettingsFragment.newInstance(mSite, mPost);
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite, mPost);
+                    return EditPostPreviewFragment.newInstance(mSite);
             }
         }
 
