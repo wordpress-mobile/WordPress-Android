@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -391,7 +390,6 @@ public class WordPress extends MultiDexApplication {
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
 
