@@ -179,6 +179,8 @@ public class SitePickerActivity extends AppCompatActivity
 
         switch (requestCode) {
             case RequestCodes.ADD_ACCOUNT:
+                getAdapter().loadSites();
+                break;
             case RequestCodes.CREATE_SITE:
                 if (resultCode == RESULT_OK) {
                     getAdapter().loadSites();
