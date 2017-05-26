@@ -224,13 +224,14 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "OnAuthEmailSent has error: " + event.error.type + " - " + event.error.message);
             if (isAdded()) {
-                ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message,
-                        ToastUtils.Duration.LONG);
+                ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message, ToastUtils
+                        .Duration.LONG);
             }
-        } else {
-            if (mLoginListener != null) {
-                mLoginListener.showMagicLinkSentScreen(mEmail);
-            }
+            return;
+        }
+
+        if (mLoginListener != null) {
+            mLoginListener.showMagicLinkSentScreen(mEmail);
         }
     }
 }
