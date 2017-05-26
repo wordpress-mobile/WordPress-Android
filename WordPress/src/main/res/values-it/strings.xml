@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-07 12:43:45+0000
+Translation-Revision-Date: 2017-05-15 11:57:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Fai tap e tieni premuto per la selezione multipla dei commenti </string>
+	<string name="smart_toast_photo_long_press">Fai tap e tieni premuto per la selezione multipla delle fotografie</string>
+	<string name="photo_picker_choose_video">Scegli un video dal dispositivo</string>
+	<string name="photo_picker_choose_photo">Scegli una fotografia dal dispositivo</string>
+	<string name="new_editor_promo_description">L\'app di WordPress ora include un nuovo bellissimo editor. Provalo e crea un nuovo articolo.</string>
+	<string name="wp_media_title">Media di WordPress</string>
+	<string name="media_insert_as_gallery">Aggiungi una galleria</string>
+	<string name="media_insert_individually">Aggiungi uno per uno</string>
+	<string name="media_insert_title">Aggiungi più fotografie insieme</string>
+	<string name="media_gallery_column_count_multi">%d colonne</string>
+	<string name="media_gallery_column_count_single">1 colonna</string>
 	<string name="editor_confirm_email_prompt_negative">Invia di nuovo l\'e-mail</string>
 	<string name="editor_confirm_email_prompt_message_with_email">Ti abbiamo inviato un\'e-mail a %s la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
 	<string name="editor_confirm_email_prompt_message">Ti abbiamo inviato un\'e-mail la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
@@ -15,8 +26,6 @@ Language: it
 	<string name="toast_saving_post_as_draft">Salvataggio dell\'articolo come bozza</string>
 	<string name="photo_picker_capture_video">Fai un video</string>
 	<string name="photo_picker_capture_photo">Fai una foto</string>
-	<string name="photo_picker_choose_video">Scegli video</string>
-	<string name="photo_picker_choose_photo">Scegli foto</string>
 	<string name="delete_site_warning_subtitle">Attenzione! Una volta eliminato, un sito non potrà essere recuperato. Verifica prima di procedere.</string>
 	<string name="delete_site_warning">Tutti i tuoi articoli, le immagini e i dati saranno eliminati. L\'indirizzo del sito (%s) andrà perso.</string>
 	<string name="delete_site_warning_title">Eliminare sito?</string>
@@ -57,6 +66,34 @@ Language: it
 	<string name="error_upload_params">Errore durante il caricamento di %1$s: %2$s</string>
 	<string name="submit_for_review">Invia</string>
 	<string name="media_error_too_large_upload">Il file è troppo grande. Contatta il fornitore del servizio di hosting per risolvere il problema.</string>
+	<string name="role_subscriber">Sottoscrittore </string>
+	<string name="tell_me_more">Dimmi di più</string>
+	<string name="cannot_add_duplicate_site">Il sito esiste già nell\'app, non lo puoi aggiungere.</string>
+	<string name="duplicate_site_detected">È stato rilevato un sito duplicato.</string>
+	<string name="already_logged_in_wpcom_same_username">Sei già connesso al tuo account WordPress.com. Il tuo sito dovrebbe apparire nel menu dei siti, assicurati che non sia nascosto.</string>
+	<string name="already_logged_in_wpcom">Sei già connesso a un account WordPress.com, non puoi aggiungere un sito WordPress.com legato a un altro account.</string>
+	<string name="migration_error_not_connected">Il processo di migrazione non è andato a buon fine: assicurati di essere connesso a una rete prima di provare a lanciare l\'app.</string>
+	<string name="migration_message">Aggiornamento dell\'app di WordPress in corso...</string>
+	<string name="checking_username">Controllo del nome utente in corso</string>
+	<string name="jetpack_different_com_account">I siti Jetpack che appartengono a diversi account WordPress.com non sono supportati</string>
+	<string name="jetpack_use_com_account">Per aggiungere il tuo sito Jetpack, accedi all\'account WordPress.com che hai usato per connettere Jetpack.</string>
+	<string name="jetpack_message">Il plugin Jetpack deve essere installato e attivato. Vuoi installare o attivare Jetpack?</string>
+	<string name="error_media_load">Non è possibile caricare il media</string>
+	<string name="error_media_refresh_no_connection">Per aggiornare la libreria è necessaria la connessione </string>
+	<string name="error_media_unauthorized">Non hai i permessi per visualizzare o modificare i media</string>
+	<string name="error_media_not_found">Non è possibile trovare i media</string>
+	<string name="error_media_insufficient_fs_permissions">È necessario il permesso di lettura per il file media</string>
+	<string name="site_settings_optimize_images">Ottimizza le immagini</string>
+	<string name="no_site_error">Non è possibile connettersi al sito WordPress. Non è presente alcun sito WordPress valido a questo\n indirizzo. Controlla l\'indirizzo del sito (URL) che hai inserito.</string>
+	<string name="media_generic_error">Si è verificato un errore con i media</string>
+	<string name="media_upload_error">Si è verificato un errore durante il caricamento dei media</string>
+	<string name="retry">Riprova</string>
+	<string name="confirm">Conferma</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Non è possibile connettersi. Abbiamo ricevuto un messaggio di errore 403 durante il tentativo di accedere\n all\'endpoint XMLRPC del tuo sito. Per l\'app questo è necessario per comunicare con il tuo sito. Contatta il tuo host per risolvere\n questo problema.</string>
+	<string name="xmlrpc_post_blocked_error">Non è possibile connettersi. Il tuo host sta bloccando le richieste POST ma queste sono necessarie al corretto funzionamento dell\'app\n per comunicare con il tuo sito. Contatta il tuo fornitore del servizio di hosting per risolvere questo problema.</string>
+	<string name="reader_liked_default_tag">Articoli che mi sono piaciuti</string>
+	<string name="reader_followed_default_tag">Siti seguiti</string>
+	<string name="reader_discover_default_tag">Scopri</string>
 	<string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
 	<string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
 	<string name="visual_editor_disabled">Editor visuale disabilitato</string>
@@ -345,9 +382,7 @@ Language: it
 	<string name="error_refresh_comments_showing_older">Impossibile aggiornare i commenti in questo momento, vengono visualizzati i commenti precedenti</string>
 	<string name="editor_post_settings_set_featured_image">Imposta immagine in primo piano</string>
 	<string name="editor_post_settings_featured_image">Immagine in evidenza</string>
-	<string name="new_editor_promo_desc">L\'app WordPress per Android ora include un nuovo bellissimo editor\n visuale. Provalo creando un nuovo articolo.</string>
 	<string name="new_editor_promo_title">Un editor completamente nuovo</string>
-	<string name="new_editor_promo_button_label">Fantastico, grazie!</string>
 	<string name="visual_editor_enabled">Editor visuale abilitato</string>
 	<string name="editor_content_placeholder">Condividi la tua storia qui...</string>
 	<string name="editor_page_title_placeholder">Titolo della pagina</string>
@@ -636,6 +671,7 @@ Language: it
 	<string name="stats_insights">Approfondimenti</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Per vedere le tue statistiche, accedi con l\'account WordPress.com che hai usato per connettere Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Stai cercando le tue altre statististiche recenti? Le abbiamo spostaste nella pagina insights.</string>
+	<string name="me_disconnect_from_wordpress_com">Disconnettiti da WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Connettiti a WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" non è stato nascosto perchè è il sito corrente</string>
@@ -1010,6 +1046,7 @@ Language: it
 	<string name="blog_title_invalid">Titolo del sito non valido</string>
 	<string name="notifications_empty_all">Nessuna notifica... per ora.</string>
 	<string name="invalid_site_url_message">Controlla che l\'URL del sito sia valido</string>
+	<string name="jetpack_message_not_admin">Il plugin Jetpack è necessario per le statistiche. Contatta l\'amministratore del sito.</string>
 	<string name="deleting_page">Eliminando la pagina</string>
 	<string name="deleting_post">Eliminando l\'articolo</string>
 	<string name="share_url_post">Condividi l\'articolo</string>

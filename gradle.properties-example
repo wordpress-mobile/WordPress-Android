@@ -9,18 +9,27 @@
 
 # Specifies the JVM arguments used for the daemon process.
 # The setting is particularly useful for tweaking memory settings.
-# Default value: -Xmx10248m -XX:MaxPermSize=256m
-# org.gradle.jvmargs=-Xmx2048m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+org.gradle.jvmargs=-Xmx1536m
 
 # When configured, Gradle will run in incubating parallel mode.
 # This option should only be used with decoupled projects. More details, visit
 # http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects
 # org.gradle.parallel=true
 
-# Enables new incubating mode that makes Gradle selective when configuring projects.
-# Only relevant projects are configured which results in faster builds for large multi-projects.
-# https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:configuration_on_demand
-# org.gradle.configureondemand = true
+# WordPress-Android properties.
 
-# When set to true the Gradle daemon is used to run the build.
-# org.gradle.daemon = true
+# For more details on what these properties do visit
+# https://github.com/wordpress-mobile/WordPress-Android/blob/develop/README.md
+
+wp.oauth.app_id = wordpress
+wp.oauth.app_secret = wordpress
+wp.gcm.id = wordpress
+wp.db_secret = wordpress
+wp.helpshift.api.key = wordpress
+wp.helpshift.api.domain = wordpress.org
+wp.helpshift.api.id = wordpress
+wp.app_license_key = wordpress
+
+# Optional: used to autofill username and password fields at login on debug build only
+wp.debug.dotcom_login_username =
+wp.debug.dotcom_login_password =

@@ -43,8 +43,8 @@
 
     <ImageView
         android:id="@+id/image_preview"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/photo_picker_preview_icon"
+        android:layout_height="@dimen/photo_picker_preview_icon"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/margin_small"
         android:layout_marginLeft="@dimen/margin_small"

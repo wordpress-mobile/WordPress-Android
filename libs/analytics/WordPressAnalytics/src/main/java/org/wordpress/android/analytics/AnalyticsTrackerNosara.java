@@ -360,12 +360,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_discarded_changes";
             case EDITOR_EDITED_IMAGE:
                 return "editor_image_edited";
-            case EDITOR_ENABLED_NEW_VERSION:
-                return "editor_enabled_new_version";
-            case EDITOR_TOGGLED_OFF:
-                return "editor_toggled_off";
-            case EDITOR_TOGGLED_ON:
-                return "editor_toggled_on";
+            case EDITOR_HYBRID_ENABLED:
+                return "editor_hybrid_enabled";
+            case EDITOR_HYBRID_TOGGLED_OFF:
+                return "editor_hybrid_toggled_off";
+            case EDITOR_HYBRID_TOGGLED_ON:
+                return "editor_hybrid_toggled_on";
+            case EDITOR_AZTEC_ENABLED:
+                return "editor_aztec_enabled";
+            case EDITOR_AZTEC_TOGGLED_OFF:
+                return "editor_aztec_toggled_off";
+            case EDITOR_AZTEC_TOGGLED_ON:
+                return "editor_aztec_toggled_on";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
@@ -699,6 +705,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_service_upload_response_ok";
             case MEDIA_UPLOAD_CANCELED:
                 return "media_service_upload_canceled";
+            case MEDIA_PICKER_OPEN_CAPTURE_MEDIA:
+                return "media_picker_capture_media_opened";
+            case MEDIA_PICKER_OPEN_DEVICE_LIBRARY:
+                return "media_picker_device_library_opened";
+            case MEDIA_PICKER_OPEN_WP_MEDIA:
+                return "media_picker_wordpress_library_opened";
+            case MEDIA_PICKER_RECENT_MEDIA_SELECTED:
+                return "media_picker_recent_media_selected";
+            case MEDIA_PICKER_PREVIEW_OPENED:
+                return "media_picker_preview_opened";
             default:
                 return null;
         }

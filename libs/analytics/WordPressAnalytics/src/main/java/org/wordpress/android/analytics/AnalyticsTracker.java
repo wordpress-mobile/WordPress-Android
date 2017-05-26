@@ -79,6 +79,11 @@ public final class AnalyticsTracker {
         EDITOR_ADDED_VIDEO_VIA_WP_MEDIA_LIBRARY,
         MEDIA_PHOTO_OPTIMIZED,
         MEDIA_PHOTO_OPTIMIZE_ERROR,
+        MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
+        MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
+        MEDIA_PICKER_OPEN_WP_MEDIA,
+        MEDIA_PICKER_RECENT_MEDIA_SELECTED,
+        MEDIA_PICKER_PREVIEW_OPENED,
         EDITOR_UPDATED_POST,
         EDITOR_SCHEDULED_POST,
         EDITOR_CLOSED,
@@ -86,9 +91,9 @@ public final class AnalyticsTracker {
         EDITOR_SAVED_DRAFT,
         EDITOR_DISCARDED_CHANGES,
         EDITOR_EDITED_IMAGE, // Visual editor only
-        EDITOR_ENABLED_NEW_VERSION, // Visual editor only
-        EDITOR_TOGGLED_OFF, // Visual editor only
-        EDITOR_TOGGLED_ON, // Visual editor only
+        EDITOR_HYBRID_ENABLED, // Visual editor only
+        EDITOR_HYBRID_TOGGLED_OFF, // Visual editor only
+        EDITOR_HYBRID_TOGGLED_ON, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
         EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,

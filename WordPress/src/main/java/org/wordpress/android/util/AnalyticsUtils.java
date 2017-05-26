@@ -1,9 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.TextUtils;
@@ -11,10 +9,8 @@ import android.webkit.MimeTypeMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -49,14 +45,11 @@ public class AnalyticsUtils {
     private static String INTERCEPTOR_CLASSNAME = "interceptor_classname";
 
     /**
-     * Utility methods to refresh Mixpanel metadata.
+     * Utility methods to refresh metadata.
      */
     public static void refreshMetadata(AccountStore accountStore, SiteStore siteStore) {
         AnalyticsMetadata metadata = new AnalyticsMetadata();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-
-        metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
         metadata.setUserConnected(FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore));
         metadata.setWordPressComUser(accountStore.hasAccessToken());
         metadata.setJetpackUser(isJetpackUser(siteStore));
@@ -78,8 +71,6 @@ public class AnalyticsUtils {
 
     public static void refreshMetadataNewUser(String username, String email) {
         AnalyticsMetadata metadata = new AnalyticsMetadata();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        metadata.setSessionCount(preferences.getInt(AnalyticsTrackerMixpanel.SESSION_COUNT, 0));
         metadata.setUserConnected(true);
         metadata.setWordPressComUser(true);
         metadata.setJetpackUser(false);
@@ -342,6 +333,11 @@ public class AnalyticsUtils {
             if (!file.exists()) {
                 AppLog.e(AppLog.T.MEDIA, "Can't access the media file. It doesn't exists anymore!! Properties are not being tracked.");
                 return properties;
+            }
+
+            if (file.lastModified() > 0L) {
+                long ageMS = System.currentTimeMillis() - file.lastModified();
+                properties.put("age_ms", ageMS);
             }
         } catch (SecurityException e) {
             AppLog.e(AppLog.T.MEDIA, "Can't access the media file. Properties are not being tracked.", e);
