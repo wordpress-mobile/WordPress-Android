@@ -46,9 +46,6 @@ public class AppPrefs {
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
 
-        // email retrieved and attached to mixpanel profile
-        MIXPANEL_EMAIL_ADDRESS,
-
         // index of the last active tab in main activity
         MAIN_TAB_INDEX,
 
@@ -339,16 +336,6 @@ public class AppPrefs {
 
     public static void resetLastActivityStr() {
         remove(DeletablePrefKey.LAST_ACTIVITY_STR);
-    }
-
-    // Mixpanel email retrieval check
-
-    public static String getMixpanelUserEmail() {
-        return getString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, null);
-    }
-
-    public static void setMixpanelUserEmail(String email) {
-        setString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, email);
     }
 
     public static int getMainTabIndex() {

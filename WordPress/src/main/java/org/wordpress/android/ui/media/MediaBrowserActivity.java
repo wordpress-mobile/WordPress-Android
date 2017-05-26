@@ -64,6 +64,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -88,7 +89,22 @@ import javax.inject.Inject;
 public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
         WordPressMediaUtils.LaunchCameraCallback {
+
+    public enum MediaBrowserType {
+        BROWSER,                  // browse & manage media
+        MULTI_SELECT_PICKER,      // select multiple media items
+        SINGLE_SELECT_PICKER;     // select a single media item
+
+        public boolean isPicker() {
+            return this == MULTI_SELECT_PICKER || this == SINGLE_SELECT_PICKER;
+        }
+    }
+
     private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
+
+    public static final String ARG_BROWSER_TYPE = "media_browser_type";
+    public static final String ARG_IMAGES_ONLY = "images_only";
+    public static final String RESULT_IDS = "result_ids";
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
@@ -113,6 +129,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private String mQuery;
     private String mMediaCapturePath;
+    private boolean mImagesOnly;
+    private MediaBrowserType mBrowserType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -122,8 +140,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
+            mImagesOnly = getIntent().getBooleanExtra(ARG_IMAGES_ONLY, false);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
+            mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
         }
 
         if (mSite == null) {
@@ -150,7 +172,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         // if media was shared add it to the library
         handleSharedMedia();
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER) {
             SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
         }
     }
@@ -199,6 +221,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
+        outState.putBoolean(ARG_IMAGES_ONLY, mImagesOnly);
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
@@ -211,6 +235,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
         mQuery = savedInstanceState.getString(SAVED_QUERY);
+        mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
+        mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
     }
 
     @Override
@@ -308,6 +334,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSearchView.setQuery(mQuery, true);
         }
 
+        // hide "add media" if this is used as a media picker
+        if (mBrowserType.isPicker()) {
+            menu.findItem(R.id.menu_new_media).setVisible(false);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -396,14 +427,27 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onMediaItemSelected(View sourceView, int localMediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-        if (media != null) {
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_load);
+            return;
+        }
+
+        // if this is being used as a media picker return the selected item and finish, otherwise
+        // preview the selected item
+        if (mBrowserType.isPicker()) {
+            Intent intent = new Intent();
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            remoteMediaIds.add(media.getMediaId());
+            intent.putExtra(RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
             // TODO: right now only images & videos are supported
             String mimeType = StringUtils.notNullStr(media.getMimeType()).toLowerCase();
-            if (!mimeType.startsWith("image") && !mimeType.startsWith("video")) {
-                return;
+            if (mimeType.startsWith("image") || mimeType.startsWith("video")) {
+                MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
             }
         }
-        MediaPreviewActivity.showPreview(this, sourceView, mSite, localMediaId);
     }
 
     @Override

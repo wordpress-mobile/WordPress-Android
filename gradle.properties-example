@@ -25,7 +25,6 @@ wp.oauth.app_id = wordpress
 wp.oauth.app_secret = wordpress
 wp.gcm.id = wordpress
 wp.db_secret = wordpress
-wp.mixpanel_token = wordpress
 wp.helpshift.api.key = wordpress
 wp.helpshift.api.domain = wordpress.org
 wp.helpshift.api.id = wordpress
