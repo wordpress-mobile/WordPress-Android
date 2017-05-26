@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.services;
 
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.util.StringUtils;
 
 public class PostEvents {
@@ -37,15 +38,10 @@ public class PostEvents {
     }
 
     public static class PostMediaCanceled {
-        public int localMediaId;
-        public boolean all;
+        public PostModel post;
 
-        public PostMediaCanceled(int localMediaId) {
-            this.localMediaId = localMediaId;
-            this.all = false;
-        }
-        public PostMediaCanceled(boolean all) {
-            this.all = all;
+        public PostMediaCanceled(PostModel post) {
+            this.post = post;
         }
     }
 }

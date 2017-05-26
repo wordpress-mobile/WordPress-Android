@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
+import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Started with explicit list of media to upload.
@@ -67,6 +70,7 @@ public class MediaUploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(T.MEDIA, "Media Upload Service > created");
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
         // TODO: recover any media that is in the MediaStore that has not yet been completely uploaded
         // or better yet, create an auxiliary table to host MediaUploadUnitInfo objects
     }
@@ -77,6 +81,7 @@ public class MediaUploadService extends Service {
             cancelUpload(oneUpload);
         }
         mDispatcher.unregister(this);
+        EventBus.getDefault().unregister(this);
         AppLog.i(T.MEDIA, "Media Upload Service > destroyed");
         super.onDestroy();
     }
@@ -301,6 +306,25 @@ public class MediaUploadService extends Service {
         if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
             AppLog.i(T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
+        }
+    }
+
+    // App events
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostMediaCanceled event) {
+        if (event.post == null) {
+            return;
+        }
+        for (MediaModel inProgressUpload : mInProgressUploads) {
+            if (inProgressUpload.getLocalPostId() == event.post.getId()) {
+                cancelUpload(inProgressUpload);
+            }
+        }
+        for (MediaModel pendingUpload : mPendingUploads) {
+            if (pendingUpload.getLocalPostId() == event.post.getId()) {
+                cancelUpload(pendingUpload);
+            }
         }
     }
 
