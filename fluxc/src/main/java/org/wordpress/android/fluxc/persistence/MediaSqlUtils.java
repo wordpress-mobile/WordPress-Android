@@ -179,10 +179,10 @@ public class MediaSqlUtils {
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
-    public static List<MediaModel> matchPostMedia(long postId, String column, Object value) {
+    public static List<MediaModel> matchPostMedia(int localPostId, String column, Object value) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
-                .equals(MediaModelTable.POST_ID, postId)
+                .equals(MediaModelTable.LOCAL_POST_ID, localPostId)
                 .equals(column, value)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
