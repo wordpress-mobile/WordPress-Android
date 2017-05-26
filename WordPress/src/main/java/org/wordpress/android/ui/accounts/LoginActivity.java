@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
+import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
+import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.util.ToastUtils;
 
@@ -44,6 +47,16 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return false;
+    }
+
     // LoginListener implementation methods
 
     @Override
@@ -58,13 +71,30 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void gotEmail(String email) {
-        ToastUtils.showToast(this, "Input email is not implemented yet. Input email: " + email);
+    public void showMagicLinkRequestScreen(String email) {
+        LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
+        slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
     }
 
     @Override
     public void loginViaUsernamePassword() {
         ToastUtils.showToast(this, "Fall back to username/password is not implemented yet.");
+    }
+
+    @Override
+    public void showMagicLinkSentScreen(String email) {
+        LoginMagicLinkSentFragment loginMagicLinkSentFragment = LoginMagicLinkSentFragment.newInstance(email);
+        slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
+    }
+
+    @Override
+    public void openEmailClient() {
+        ToastUtils.showToast(this, "Open email client is not implemented yet.");
+    }
+
+    @Override
+    public void usePasswordInstead(String email) {
+        ToastUtils.showToast(this, "Fall back to password is not implemented yet. Email: " + email);
     }
 
     @Override
