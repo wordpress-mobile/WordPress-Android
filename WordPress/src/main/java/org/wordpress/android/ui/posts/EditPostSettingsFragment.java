@@ -108,6 +108,7 @@ public class EditPostSettingsFragment extends Fragment
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mTagsTextView;
+    private TextView mStatusTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -215,6 +216,7 @@ public class EditPostSettingsFragment extends Fragment
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
+        mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -278,6 +280,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showTagsActivity();
+            }
+        });
+
+        final LinearLayout statusContainer = (LinearLayout) rootView.findViewById(R.id.post_status_container);
+        statusContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showStatusDialog();
             }
         });
 
@@ -361,6 +371,7 @@ public class EditPostSettingsFragment extends Fragment
         mCurrentSlug = mPost.getSlug();
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
+        mStatusTextView.setText(mPost.getStatus());
         updateTagsTextView();
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
@@ -1022,6 +1033,9 @@ public class EditPostSettingsFragment extends Fragment
         String tags = TextUtils.join(",", mPost.getTagNameList());
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
+    }
+
+    private void showStatusDialog() {
     }
 
     /*
