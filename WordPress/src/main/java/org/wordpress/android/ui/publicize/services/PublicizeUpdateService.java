@@ -3,6 +3,7 @@ package org.wordpress.android.ui.publicize.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -10,6 +11,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
@@ -29,9 +31,9 @@ public class PublicizeUpdateService extends IntentService {
     /*
      * update the publicize connections for the passed site
      */
-    public static void updateConnectionsForSite(Context context, long siteId) {
+    public static void updateConnectionsForSite(Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, PublicizeUpdateService.class);
-        intent.putExtra(PublicizeConstants.ARG_SITE_ID, siteId);
+        intent.putExtra(WordPress.SITE, site);
         context.startService(intent);
     }
 
@@ -63,8 +65,8 @@ public class PublicizeUpdateService extends IntentService {
             mHasUpdatedServices = true;
         }
 
-        long siteId = intent.getLongExtra(PublicizeConstants.ARG_SITE_ID, 0);
-        updateConnections(siteId);
+        SiteModel site = (SiteModel) intent.getSerializableExtra(WordPress.SITE);
+        updateConnections(site.getSiteId());
     }
 
     /*
