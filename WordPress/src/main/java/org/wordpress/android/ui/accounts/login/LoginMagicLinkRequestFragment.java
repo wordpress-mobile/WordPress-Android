@@ -217,9 +217,12 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthEmailSent(AccountStore.OnAuthEmailSent event) {
-        if (mInProgress) {
-            endProgress();
+        if (!mInProgress) {
+            // ignore the response if the magic link request is no longer pending
+            return;
         }
+
+        endProgress();
 
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "OnAuthEmailSent has error: " + event.error.type + " - " + event.error.message);
