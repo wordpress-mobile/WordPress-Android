@@ -13,7 +13,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/toolbar"
         android:scaleType="centerInside"
-        android:src="@drawable/login_magiclink_request"/>
+        android:src="@drawable/login_magic_link_sent_illustration"/>
 
     <TextView
         android:id="@+id/label"
