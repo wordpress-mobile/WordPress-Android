@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -44,6 +45,16 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return false;
     }
 
     // LoginListener implementation methods
