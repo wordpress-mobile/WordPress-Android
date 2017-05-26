@@ -25,8 +25,10 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
 
@@ -94,6 +96,10 @@ public class LoginMagicLinkRequestFragment extends Fragment {
                 mLoginListener.usePasswordInstead(mEmail);
             }
         });
+
+        WPNetworkImageView avatarView = (WPNetworkImageView) view.findViewById(R.id.gravatar);
+        avatarView.setImageUrl(GravatarUtils.gravatarFromEmail(mEmail, getContext().getResources()
+                .getDimensionPixelSize(R.dimen.avatar_sz_login)), WPNetworkImageView.ImageType.AVATAR);
 
         return view;
     }

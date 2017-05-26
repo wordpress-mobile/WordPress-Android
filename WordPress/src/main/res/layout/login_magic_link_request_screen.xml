@@ -6,14 +6,13 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar_login" />
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="180dp"
-        android:layout_height="150dp"
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/gravatar"
+        android:layout_width="@dimen/avatar_sz_login"
+        android:layout_height="@dimen/avatar_sz_login"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/toolbar"
-        android:scaleType="centerInside"
-        android:src="@drawable/login_magiclink_request"/>
+        android:layout_marginTop="@dimen/margin_extra_extra_large"/>
 
     <TextView
         android:id="@+id/label"
@@ -21,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_below="@+id/image"
+        android:layout_below="@+id/gravatar"
         android:padding="@dimen/margin_extra_large"
         android:text="@string/login_magic_links_label"/>
 
