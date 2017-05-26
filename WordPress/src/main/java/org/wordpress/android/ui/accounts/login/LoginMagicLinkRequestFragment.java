@@ -77,13 +77,10 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-                        ToastUtils.showToast(getActivity(), R.string.no_network_message, ToastUtils.Duration.LONG);
-                        return;
+                    if (NetworkUtils.checkConnection(getActivity())) {
+                        showMagiclinkRequestProgressDialog();
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
                     }
-
-                    showMagiclinkRequestProgressDialog();
-                    mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
                 }
             }
         });
