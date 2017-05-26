@@ -78,7 +78,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             public void onClick(View v) {
                 if (mLoginListener != null) {
                     if (NetworkUtils.checkConnection(getActivity())) {
-                        showMagiclinkRequestProgressDialog();
+                        showMagicLinkRequestProgressDialog();
                         mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
                     }
                 }
@@ -122,7 +122,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         if (savedInstanceState != null) {
             mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
             if (mInProgress) {
-                showMagiclinkRequestProgressDialog();
+                showMagicLinkRequestProgressDialog();
             }
         }
     }
@@ -179,7 +179,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         mDispatcher.unregister(this);
     }
 
-    private void showMagiclinkRequestProgressDialog() {
+    private void showMagicLinkRequestProgressDialog() {
         startProgress(getString(R.string.login_magic_link_email_requesting));
     }
 
