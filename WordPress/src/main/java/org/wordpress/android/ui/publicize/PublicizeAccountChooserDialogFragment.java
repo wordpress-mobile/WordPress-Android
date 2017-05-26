@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.util.ToastUtils;
 
@@ -32,7 +34,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private String mConnectionName = "";
     private String mServiceId = "";
     private int mSelectedIndex = 0;
-    private long mSiteId = 0;
+    private SiteModel mSite;
 
     @NonNull
     @Override
@@ -95,7 +97,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
-                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSiteId, keychainId));
+                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId));
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -109,7 +111,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     
     private boolean containsSiteId(long[] array) {
         for (long a : array) {
-            if (a == mSiteId) {
+            if (a == mSite.getSiteId()) {
                 return true;
             }
         }
@@ -120,7 +122,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     private void retrieveCurrentSiteFromArgs() {
         Bundle args = getArguments();
         if (args != null) {
-            mSiteId = args.getLong(PublicizeConstants.ARG_SITE_ID);
+            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
             mServiceId = args.getString(PublicizeConstants.ARG_SERVICE_ID);
             String jsonString = args.getString(PublicizeConstants.ARG_CONNECTION_ARRAY_JSON);
             addConnectionsToLists(jsonString);
@@ -136,7 +138,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             for (int i = 0; i < jsonArray.length(); i++) {
                 PublicizeConnection connection = PublicizeConnection.fromJson(jsonArray.getJSONObject(i));
                 if (connection.getService().equals(mServiceId)) {
-                    if (connection.isInSite(mSiteId)) {
+                    if (connection.isInSite(mSite.getSiteId())) {
                         mConnectedAccounts.add(connection);
                     } else {
                         mNotConnectedAccounts.add(connection);
