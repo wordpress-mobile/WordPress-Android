@@ -57,8 +57,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         return fragment;
     }
 
-    public LoginMagicLinkRequestFragment() {}
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
