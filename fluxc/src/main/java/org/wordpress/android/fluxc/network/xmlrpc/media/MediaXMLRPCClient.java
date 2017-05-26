@@ -220,10 +220,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!media.isUploadCancelled()) {
-                    // TODO it would be great to raise some more fine grained errors here, for
-                    // instance timeouts should be raised instead of GENERIC_ERROR
-                    MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                    error.message = e.getLocalizedMessage();
+                    MediaStore.MediaError error = MediaError.fromIOException(e);
                     notifyMediaUploaded(media, error);
                 }
             }

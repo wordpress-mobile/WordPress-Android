@@ -333,7 +333,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 if (!media.isUploadCancelled()) {
                     // TODO it would be great to raise some more fine grained errors here, for
                     // instance timeouts should be raised instead of GENERIC_ERROR
-                    MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                    MediaError error = MediaError.fromIOException(e);
                     error.message = e.getLocalizedMessage();
                     notifyMediaUploaded(media, error);
                 }
@@ -346,9 +346,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
     // Helper methods to dispatch media actions
     //
-
     private MediaError parseUploadError(Response response) {
-        MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+        MediaError mediaError = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
+
         if (response.code() == 403) {
             mediaError.type = MediaErrorType.AUTHORIZATION_REQUIRED;
         } else if (response.code() == 413) {
