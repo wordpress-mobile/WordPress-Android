@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.wellsql.generated.MediaModelTable;
 import com.yarolegovich.wellsql.WellCursor;
@@ -22,8 +23,10 @@ import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -129,6 +132,28 @@ public class MediaStore extends Store {
             this.type = type;
             this.message = message;
         }
+
+        public static MediaError fromIOException(IOException e) {
+            MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+            mediaError.message = e.getLocalizedMessage();
+
+            if (e instanceof java.net.SocketTimeoutException) {
+                mediaError.type = MediaErrorType.TIMEOUT;
+            }
+
+            String errorMessage = e.getMessage();
+            if (TextUtils.isEmpty(errorMessage)) {
+                return mediaError;
+            }
+
+            errorMessage = errorMessage.toLowerCase(Locale.US);
+            if (errorMessage.contains("broken pipe") || errorMessage.contains("epipe")) {
+                // do not use the real error message.
+                mediaError.message = "";
+            }
+
+            return mediaError;
+        }
     }
 
     public static class OnMediaChanged extends OnChanged<MediaError> {
@@ -193,6 +218,8 @@ public class MediaStore extends Store {
         PARSE_ERROR,
         NOT_AUTHENTICATED,
         REQUEST_TOO_LARGE,
+        SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
+        TIMEOUT,
 
         // logic constraints errors
         INVALID_ID,
@@ -210,6 +237,10 @@ public class MediaStore extends Store {
                     return MediaErrorType.AUTHORIZATION_REQUIRED;
                 case PARSE_ERROR:
                     return MediaErrorType.PARSE_ERROR;
+                case SERVER_ERROR:
+                    return MediaErrorType.SERVER_ERROR;
+                case TIMEOUT:
+                    return MediaErrorType.TIMEOUT;
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
@@ -223,6 +254,8 @@ public class MediaStore extends Store {
                     return MediaErrorType.NOT_AUTHENTICATED;
                 case 413:
                     return MediaErrorType.REQUEST_TOO_LARGE;
+                case 500:
+                    return MediaErrorType.SERVER_ERROR;
                 default:
                     return MediaErrorType.GENERIC_ERROR;
             }
