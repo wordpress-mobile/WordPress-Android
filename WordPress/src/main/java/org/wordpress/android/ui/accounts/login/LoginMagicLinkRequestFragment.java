@@ -201,6 +201,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     }
 
     protected void endProgress() {
+        mInProgress = false;
+
         if (mProgressDialog != null) {
             mProgressDialog.cancel();
             mProgressDialog = null;
