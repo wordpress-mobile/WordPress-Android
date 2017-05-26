@@ -33,8 +33,6 @@ public class LoginMagicLinkSentFragment extends Fragment {
         return fragment;
     }
 
-    public LoginMagicLinkSentFragment() {}
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
