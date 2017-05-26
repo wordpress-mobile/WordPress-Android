@@ -298,4 +298,7 @@
     <dimen name="photo_picker_video_overlay">36dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>
+
+    <!-- login -->
+    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
 </resources>
