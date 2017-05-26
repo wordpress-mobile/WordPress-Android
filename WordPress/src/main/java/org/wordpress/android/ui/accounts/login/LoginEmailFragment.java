@@ -38,7 +38,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.emailchecker2.EmailChecker;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +58,6 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
 
     private LoginListener mLoginListener;
 
-    private boolean mEmailAutoCorrected;
     private boolean mInProgress;
     private String mRequestedEmail;
 
@@ -199,32 +197,11 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
         }
     }
 
-    private void autoCorrectEmail() {
-        if (mEmailAutoCorrected) {
-            return;
-        }
-        final String email = getCleanedEmail();
-        // Check if the username looks like an email address
-        final Pattern emailRegExPattern = Patterns.EMAIL_ADDRESS;
-        Matcher matcher = emailRegExPattern.matcher(email);
-        if (!matcher.find()) {
-            return;
-        }
-        // It looks like an email address, then try to correct it
-        String suggest = EmailChecker.suggestDomainCorrection(email);
-        if (suggest.compareTo(email) != 0) {
-            mEmailAutoCorrected = true;
-            mEmailEditText.setText(suggest);
-            mEmailEditText.setSelection(suggest.length());
-        }
-    }
 
     protected void next(String email) {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
-
-        autoCorrectEmail();
 
         if (isValidEmail(email)) {
             showEmailCheckProgressDialog();
