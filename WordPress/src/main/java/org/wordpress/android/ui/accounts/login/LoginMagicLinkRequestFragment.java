@@ -88,7 +88,9 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         view.findViewById(R.id.login_enter_password).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLoginListener.usePasswordInstead(mEmail);
+                if (mLoginListener != null) {
+                    mLoginListener.usePasswordInstead(mEmail);
+                }
             }
         });
 
