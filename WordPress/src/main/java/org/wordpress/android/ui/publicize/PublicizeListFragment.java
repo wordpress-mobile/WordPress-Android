@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -33,7 +32,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
-    private Button mManageButton;
 
     @Inject AccountStore mAccountStore;
 
@@ -89,13 +87,13 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
-        mManageButton = (Button) rootView.findViewById(R.id.manage_button);
+        View manageButton = rootView.findViewById(R.id.text_manage_button);
 
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
         mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        mManageButton.setOnClickListener(new View.OnClickListener() {
+        manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
