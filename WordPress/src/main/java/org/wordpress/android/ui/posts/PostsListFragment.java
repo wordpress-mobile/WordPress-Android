@@ -97,6 +97,7 @@ public class PostsListFragment extends Fragment
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
     private final List<PostModel> mSearchResults = new ArrayList<>();
+    private PostsListAdapter mSearchListAdapter;
     private String mSearchTerm;
     private Handler mHandler;
     private boolean mIsSearching;
@@ -309,6 +310,17 @@ public class PostsListFragment extends Fragment
         }
 
         return mPostsListAdapter;
+    }
+
+    private @Nullable PostsListAdapter getSearchListAdapter() {
+        if (mSearchListAdapter == null) {
+            mSearchListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+            mSearchListAdapter.setOnLoadMoreListener(this);
+            mSearchListAdapter.setOnPostsLoadedListener(this);
+            mSearchListAdapter.setOnPostSelectedListener(this);
+            mSearchListAdapter.setOnPostButtonClickListener(this);
+        }
+        return mSearchListAdapter;
     }
 
     private boolean isRecyclerViewAdapterEmpty() {
