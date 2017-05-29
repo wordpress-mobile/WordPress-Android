@@ -155,6 +155,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_preview_activity);
+        View videoFrame = findViewById(R.id.frame_video);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
         mMetadataView = (ViewGroup) findViewById(R.id.layout_metadata);
@@ -211,7 +212,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
 
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
-        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
             playVideo(mediaUri);
