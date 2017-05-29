@@ -37,8 +37,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private final long mSiteId;
     private final int mBlavatarSz;
     private final ColorFilter mGrayScaleFilter;
-    private final int mColorConnected;
-    private final int mColorNotConnected;
     private final long mCurrentUserId;
 
     private OnAdapterLoadedListener mAdapterLoadedListener;
@@ -50,9 +48,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         mSiteId = siteId;
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mCurrentUserId = currentUserId;
-
-        mColorConnected = context.getResources().getColor(R.color.grey_dark);
-        mColorNotConnected = context.getResources().getColor(R.color.grey_lighten_10);
 
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
@@ -116,13 +111,11 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         holder.imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         if (connections.size() > 0) {
-            holder.txtService.setTextColor(mColorConnected);
             holder.txtUser.setText(connections.getUserDisplayNames());
             holder.txtUser.setVisibility(View.VISIBLE);
             holder.imgIcon.clearColorFilter();
             holder.imgIcon.setImageAlpha(255);
         } else {
-            holder.txtService.setTextColor(mColorNotConnected);
             holder.txtUser.setVisibility(View.GONE);
             holder.imgIcon.setColorFilter(mGrayScaleFilter);
             holder.imgIcon.setImageAlpha(128);

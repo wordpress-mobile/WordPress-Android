@@ -35,7 +35,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_large"
                 tools:text="text_service" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/grey_darken_10"
+                android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_user" />
         </LinearLayout>
