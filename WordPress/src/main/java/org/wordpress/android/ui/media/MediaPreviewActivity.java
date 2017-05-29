@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -215,7 +214,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo(mediaUri);
         } else {
             loadImage(mediaUri);
