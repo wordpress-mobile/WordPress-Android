@@ -16,9 +16,18 @@
         android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/blavatar_placeholder" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_toRightOf="@+id/image_icon"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:background="@color/divider_grey" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_large"
         android:layout_toRightOf="@+id/image_icon"

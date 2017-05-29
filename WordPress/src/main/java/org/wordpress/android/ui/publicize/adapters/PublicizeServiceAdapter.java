@@ -121,6 +121,9 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             holder.imgIcon.setImageAlpha(128);
         }
 
+        // show divider for all but the first item
+        holder.divider.setVisibility(position > 0 ? View.VISIBLE : View.GONE);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,6 +137,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     class SharingViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtService;
         private final TextView txtUser;
+        private final View divider;
         private final WPNetworkImageView imgIcon;
 
         public SharingViewHolder(View view) {
@@ -141,6 +145,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             txtService = (TextView) view.findViewById(R.id.text_service);
             txtUser = (TextView) view.findViewById(R.id.text_user);
             imgIcon = (WPNetworkImageView) view.findViewById(R.id.image_icon);
+            divider = view.findViewById(R.id.divider);
         }
     }
 
