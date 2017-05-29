@@ -16,9 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import javax.inject.Inject;
 
@@ -88,10 +86,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
         View manageButton = rootView.findViewById(R.id.text_manage_button);
-
-        int spacingHorizontal = 0;
-        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
-        mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
