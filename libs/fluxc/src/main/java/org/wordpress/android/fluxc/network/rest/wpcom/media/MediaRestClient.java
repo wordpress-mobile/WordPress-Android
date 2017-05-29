@@ -374,7 +374,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 mediaError.message = body.getString("message");
             }
 
-            if (siteModel.isUsingWpComRestApi() && !siteModel.isWPCom()) {
+            if (!siteModel.isWPCom()) {
                 // TODO : temporary fix for "big" media uploads on Jetpack connected site
                 // See https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/402
                 // Tried to upload a media that's too large (larger than the site's max_upload_filesize)
