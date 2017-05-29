@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
-    android:paddingBottom="@dimen/margin_large"
-    android:paddingTop="@dimen/margin_large">
+    android:background="?android:selectableItemBackground">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_icon"
@@ -20,15 +18,16 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:layout_marginLeft="@dimen/blavatar_sz_small"
-        android:background="@color/divider_grey"
-        android:paddingRight="@dimen/margin_large" />
+        android:layout_toRightOf="@+id/image_icon"
+        android:background="@color/divider_grey" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/image_icon"
         android:orientation="vertical">
 
