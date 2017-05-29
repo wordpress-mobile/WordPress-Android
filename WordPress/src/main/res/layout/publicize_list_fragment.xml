@@ -90,9 +90,11 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/container_manage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/text_manage_label"
+                    android:background="?android:selectableItemBackground"
                     android:orientation="horizontal">
 
                     <ImageView

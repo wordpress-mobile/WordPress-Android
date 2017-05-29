@@ -85,9 +85,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
-        View manageButton = rootView.findViewById(R.id.text_manage_button);
 
-        manageButton.setOnClickListener(new View.OnClickListener() {
+        View manageContainer = rootView.findViewById(R.id.container_manage);
+        manageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
