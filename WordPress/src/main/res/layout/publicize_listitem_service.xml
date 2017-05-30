@@ -12,7 +12,7 @@
         android:layout_height="@dimen/blavatar_sz_small"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_large"
-        tools:src="@drawable/blavatar_placeholder" />
+        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp" />
 
     <View
         android:id="@+id/divider"
