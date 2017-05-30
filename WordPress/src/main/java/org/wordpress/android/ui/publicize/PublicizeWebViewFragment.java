@@ -177,7 +177,8 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
                     long currentUserId = mAccountStore.getAccount().getUserId();
                     // call the endpoint to make the actual connection
                     PublicizeActions.connect(mSite.getSiteId(), mServiceId, currentUserId);
-                    WebViewUtils.clearCookiesAsync();
+                    // TODO: UNCOMMENT THE LINE BELOW
+                    //WebViewUtils.clearCookiesAsync();
                 }
             }
         }

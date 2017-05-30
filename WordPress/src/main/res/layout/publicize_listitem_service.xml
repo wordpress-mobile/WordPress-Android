@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="?android:selectableItemBackground">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_icon"
+        android:layout_width="@dimen/blavatar_sz_small"
+        android:layout_height="@dimen/blavatar_sz_small"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_large"
+        tools:src="@drawable/blavatar_placeholder" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_toRightOf="@+id/image_icon"
+        android:background="@color/divider_grey" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_large">
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/image_icon"
+        android:orientation="vertical">
 
-        <org.wordpress.android.widgets.WPNetworkImageView
-            android:id="@+id/image_icon"
-            android:layout_width="@dimen/blavatar_sz_small"
-            android:layout_height="@dimen/blavatar_sz_small"
-            tools:src="@drawable/blavatar_placeholder" />
-
-        <LinearLayout
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
-            android:orientation="vertical">
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="text_service" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_service"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="text_service" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_user"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/grey_darken_10"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="text_user" />
-        </LinearLayout>
-
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_user" />
     </LinearLayout>
-</LinearLayout>
+
+</RelativeLayout>

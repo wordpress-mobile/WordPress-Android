@@ -37,8 +37,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     private final long mSiteId;
     private final int mBlavatarSz;
     private final ColorFilter mGrayScaleFilter;
-    private final int mColorConnected;
-    private final int mColorNotConnected;
     private final long mCurrentUserId;
 
     private OnAdapterLoadedListener mAdapterLoadedListener;
@@ -50,9 +48,6 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         mSiteId = siteId;
         mBlavatarSz = context.getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mCurrentUserId = currentUserId;
-
-        mColorConnected = context.getResources().getColor(R.color.grey_dark);
-        mColorNotConnected = context.getResources().getColor(R.color.grey_lighten_10);
 
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
@@ -116,17 +111,18 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         holder.imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         if (connections.size() > 0) {
-            holder.txtService.setTextColor(mColorConnected);
             holder.txtUser.setText(connections.getUserDisplayNames());
             holder.txtUser.setVisibility(View.VISIBLE);
             holder.imgIcon.clearColorFilter();
             holder.imgIcon.setImageAlpha(255);
         } else {
-            holder.txtService.setTextColor(mColorNotConnected);
             holder.txtUser.setVisibility(View.GONE);
             holder.imgIcon.setColorFilter(mGrayScaleFilter);
             holder.imgIcon.setImageAlpha(128);
         }
+
+        // show divider for all but the first item
+        holder.divider.setVisibility(position > 0 ? View.VISIBLE : View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +137,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     class SharingViewHolder extends RecyclerView.ViewHolder {
         private final TextView txtService;
         private final TextView txtUser;
+        private final View divider;
         private final WPNetworkImageView imgIcon;
 
         public SharingViewHolder(View view) {
@@ -148,6 +145,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             txtService = (TextView) view.findViewById(R.id.text_service);
             txtUser = (TextView) view.findViewById(R.id.text_user);
             imgIcon = (WPNetworkImageView) view.findViewById(R.id.image_icon);
+            divider = view.findViewById(R.id.divider);
         }
     }
 

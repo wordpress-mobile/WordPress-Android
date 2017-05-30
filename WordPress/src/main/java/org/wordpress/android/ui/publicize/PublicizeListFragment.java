@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -17,9 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import javax.inject.Inject;
 
@@ -33,7 +30,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
-    private Button mManageButton;
 
     @Inject AccountStore mAccountStore;
 
@@ -89,13 +85,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
-        mManageButton = (Button) rootView.findViewById(R.id.manage_button);
 
-        int spacingHorizontal = 0;
-        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
-        mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
-
-        mManageButton.setOnClickListener(new View.OnClickListener() {
+        View manageContainer = rootView.findViewById(R.id.container_manage);
+        manageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
