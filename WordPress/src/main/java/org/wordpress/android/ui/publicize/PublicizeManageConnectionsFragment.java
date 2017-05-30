@@ -52,7 +52,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
     private WPSwitchPreference mCommentLikesPreference;
     private SummaryEditTextPreference mTwitterUsernamePreference;
     private PreferenceCategory mTwitterPreferenceCategory;
-    private ArrayList<PublicizeButton> mPublicizeButtons;
+    private ArrayList<PublicizeButton> mPublicizeButtons = new ArrayList<>();
 
     public SiteModel mSite;
     public SiteSettingsInterface mSiteSettings;
@@ -165,9 +165,12 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
     }
 
     private void configureSharingAndMoreButtonsPreferences() {
-        mPublicizeButtons = new ArrayList<>();
         mSharingButtonsPreference = (MultiSelectListPreference) findPreference(getString(R.string.pref_key_sharing_buttons));
+        mSharingButtonsPreference.setOnPreferenceChangeListener(this);
+
         mMoreButtonsPreference = (MultiSelectListPreference) findPreference(getString(R.string.pref_key_more_buttons));
+        mMoreButtonsPreference.setOnPreferenceChangeListener(this);
+
         WordPress.getRestClientUtilsV1_1().getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
@@ -222,16 +225,28 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
 
     public void initPreferences() {
         configureSharingAndMoreButtonsPreferences();
+
         mLabelPreference = (SummaryEditTextPreference) findPreference(getString(R.string.publicize_label));
+        mLabelPreference.setOnPreferenceChangeListener(this);
+
         mButtonStylePreference = (DetailListPreference) findPreference(getString(R.string.publicize_button_style));
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
+        mButtonStylePreference.setOnPreferenceChangeListener(this);
+
         mReblogButtonPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_reblog));
+        mReblogButtonPreference.setOnPreferenceChangeListener(this);
+
         mLikeButtonPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_like));
+        mLikeButtonPreference.setOnPreferenceChangeListener(this);
+
         mCommentLikesPreference = (WPSwitchPreference) findPreference(getString(R.string.pref_key_comment_likes));
+        mCommentLikesPreference.setOnPreferenceChangeListener(this);
+
         mTwitterUsernamePreference = (SummaryEditTextPreference) findPreference(getString(R.string.pref_key_twitter_username));
         mTwitterPreferenceCategory = (PreferenceCategory) findPreference(getString(R.string.pref_key_twitter_category));
+        mTwitterUsernamePreference.setOnPreferenceChangeListener(this);
     }
 
     public void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
