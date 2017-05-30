@@ -17,10 +17,8 @@ import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
 
@@ -110,14 +108,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
         TextView txtService = (TextView) getView().findViewById(R.id.text_service);
         TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
-        WPNetworkImageView imgIcon = (WPNetworkImageView) getView().findViewById(R.id.image_icon);
 
         txtService.setText(mService.getLabel());
         txtDescription.setText(mService.getDescription());
-
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        String iconUrl = PhotonUtils.getPhotonImageUrl(mService.getIconUrl(), avatarSz, avatarSz);
-        imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(
