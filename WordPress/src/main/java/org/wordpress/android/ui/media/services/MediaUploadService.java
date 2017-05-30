@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -54,7 +53,7 @@ public class MediaUploadService extends Service {
     // Also, we need to process each Post's media in a batch, so that's why we are using a map
     // instead of using a simple List (a map will have a List of MediaModel for their corresponding
     // PostId where they're supposed to belong to as per the user intent)
-    private HashMap<Long, List<MediaModel>> mCompletedUploads = new HashMap<>();
+    private static HashMap<Long, List<MediaModel>> mCompletedUploads = new HashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -124,6 +123,8 @@ public class MediaUploadService extends Service {
             AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
+            // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
+            addMediaToPostCompletedMediaListMap(event.media);
             uploadNextInQueue();
         } else {
             // Upload Progress
@@ -152,7 +153,7 @@ public class MediaUploadService extends Service {
         uploadNextInQueue();
     }
 
-    private synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
+    private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                      MediaUploadReadyListener processor){
         if (media != null && post != null && processor != null) {
             // actually replace the media ID with the media uri
@@ -201,7 +202,6 @@ public class MediaUploadService extends Service {
         MediaModel media = getMediaFromQueueById(id);
         if (media != null) {
             mInProgressUploads.remove(media);
-            addMediaToPostCompletedMediaListMap(media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
@@ -209,12 +209,12 @@ public class MediaUploadService extends Service {
     // this keeps a map for all completed media for each post, so we can process the post easily
     // in one go later
     private void addMediaToPostCompletedMediaListMap(MediaModel media) {
-        List<MediaModel> mediaListForPost = mCompletedUploads.get(media.getPostId());
+        List<MediaModel> mediaListForPost = mCompletedUploads.get(media.getLocalPostId());
         if (mediaListForPost == null) {
             mediaListForPost = new ArrayList<>();
         }
         mediaListForPost.add(media);
-        mCompletedUploads.put(media.getPostId(), mediaListForPost);
+        mCompletedUploads.put(new Long(media.getLocalPostId()), mediaListForPost);
     }
 
     private MediaModel getMediaFromQueueById(int id) {
@@ -311,30 +311,46 @@ public class MediaUploadService extends Service {
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
-    private void updatePostAndStopServiceIfUploadsComplete(){
+    private synchronized void updatePostAndStopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
-        if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
 
+        // we only trigger the actual post modification / processing after we've got
+        // no other pending/inprogress uploads, and we have some completed uploads still to be processed
+        if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty() && !mCompletedUploads.isEmpty()) {
             // here we need to edit the corresponding post with all completed uploads
             // also bear in mind the service could be handling media uploads for different posts,
             // so we also need to take into account processing completed uploads in batches through
             // each post
-            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
             for (Long postId : mCompletedUploads.keySet()) {
-                PostModel post = mPostStore.getPostByLocalPostId(postId);
-                // now get the list of completed media for this post, so we can make post content
-                // updates in one go and save only once
-                List<MediaModel> mediaList = mCompletedUploads.get(postId);
-                for (MediaModel media : mediaList) {
-                    post = updatePostWithMediaUrl(post, media, processor);
-                }
-                // finally save the post, and continue to the next post in the completed map
-                savePostToDb(post);
+                savePostToDb(updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId)));
             }
+        }
 
+        stopServiceIfUploadsComplete();
+    }
+
+    private void stopServiceIfUploadsComplete() {
+        if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
+    }
+
+    public static synchronized PostModel updatePostWithCurrentlyCompletedUploads(PostModel post) {
+        // now get the list of completed media for this post, so we can make post content
+        // updates in one go and save only once
+        if (post != null) {
+            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+            List<MediaModel> mediaList = mCompletedUploads.get(new Long(post.getId()));
+            if (mediaList != null && !mediaList.isEmpty()) {
+                for (MediaModel media : mediaList) {
+                    post = updatePostWithMediaUrl(post, media, processor);
+                }
+                // finally remove all completed uploads for this post, as they've been taken care of
+                mCompletedUploads.remove(new Long(post.getId()));
+            }
+        }
+        return post;
     }
 
     // App events
