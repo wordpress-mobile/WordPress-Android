@@ -30,7 +30,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
     private ConnectButton mConnectBtn;
     private RecyclerView mRecycler;
-    private ViewGroup mLayoutConnections;
+    private View mConnectionsCardView;
 
     @Inject AccountStore mAccountStore;
 
@@ -78,7 +78,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
         mConnectBtn = (ConnectButton) rootView.findViewById(R.id.button_connect);
-        mLayoutConnections = (ViewGroup) rootView.findViewById(R.id.layout_connections);
+        mConnectionsCardView = rootView.findViewById(R.id.card_view_connections);
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         int spacingHorizontal = 0;
@@ -137,7 +137,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     public void onAdapterLoaded(boolean isEmpty) {
         if (!isAdded()) return;
 
-        mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mConnectionsCardView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
         if (hasOnPublicizeActionListener()) {
             if (isEmpty) {
