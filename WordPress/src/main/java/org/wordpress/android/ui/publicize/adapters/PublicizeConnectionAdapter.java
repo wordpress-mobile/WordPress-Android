@@ -96,8 +96,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         if (connection.hasExternalProfilePictureUrl()) {
             String avatarUrl = PhotonUtils.getPhotonImageUrl(
                     connection.getExternalProfilePictureUrl(), mAvatarSz, mAvatarSz);
-            holder.imgAvatar.setImageUrl(
-                    connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.AVATAR);
+            holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
             holder.imgAvatar.showDefaultGravatarImage();
         }
