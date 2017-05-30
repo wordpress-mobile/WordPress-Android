@@ -8,6 +8,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -18,7 +19,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
 import org.wordpress.android.ui.prefs.DetailListPreference;
@@ -52,10 +52,10 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
     private WPSwitchPreference mCommentLikesPreference;
     private SummaryEditTextPreference mTwitterUsernamePreference;
     private PreferenceCategory mTwitterPreferenceCategory;
-    private ArrayList<PublicizeButton> mPublicizeButtons = new ArrayList<>();
+    private final ArrayList<PublicizeButton> mPublicizeButtons = new ArrayList<>();
 
-    public SiteModel mSite;
-    public SiteSettingsInterface mSiteSettings;
+    private SiteModel mSite;
+    private SiteSettingsInterface mSiteSettings;
 
     @Inject Dispatcher mDispatcher;
 
@@ -110,7 +110,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
             jsonArray.put(button.toJson());
         }
 
-        toggleTwitterPreferenceVisiblity();
+        toggleTwitterPreferenceVisibility();
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -149,7 +149,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mTwitterUsernamePreference, username);
     }
 
-    private void toggleTwitterPreferenceVisiblity() {
+    private void toggleTwitterPreferenceVisibility() {
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
             PublicizeButton publicizeButton = mPublicizeButtons.get(i);
             if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
@@ -220,10 +220,10 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         mMoreButtonsPreference.setEntryValues(entryValues);
         mMoreButtonsPreference.setValues(selectedMoreButtons);
 
-        toggleTwitterPreferenceVisiblity();
+        toggleTwitterPreferenceVisibility();
     }
 
-    public void initPreferences() {
+    private void initPreferences() {
         configureSharingAndMoreButtonsPreferences();
 
         mLabelPreference = (SummaryEditTextPreference) findPreference(getString(R.string.publicize_label));
@@ -249,13 +249,13 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         mTwitterUsernamePreference.setOnPreferenceChangeListener(this);
     }
 
-    public void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
+    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
         pref.setValue(value);
         pref.setSummary(summary);
         pref.refreshAdapter();
     }
 
-    public void setPreferencesFromSiteSettings() {
+    private void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
         setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
@@ -264,7 +264,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         changeEditTextPreferenceValue(mTwitterUsernamePreference, mSiteSettings.getTwitterUsername());
     }
 
-    public void addPreferencesFromResource() {
+    private void addPreferencesFromResource() {
         addPreferencesFromResource(R.xml.publicize_preferences);
     }
 
@@ -299,10 +299,11 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         return true;
     }
 
-    public void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
-        if (pref != null && pref == mTwitterUsernamePreference && newValue != null && !newValue.isEmpty()) {
+    private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
+        if (pref == mTwitterUsernamePreference && !TextUtils.isEmpty(newValue)) {
             newValue = TWITTER_PREFIX + newValue;
         }
+        pref.setText(newValue);
     }
 
     @Override
@@ -312,24 +313,19 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
 
     @Override
     public void onSettingsUpdated(Exception error) {
-        if (isAdded()) {
-            if (error != null) {
-                ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
-                getActivity().finish();
-            } else {
-                setPreferencesFromSiteSettings();
-            }
+        if (!isAdded()) return;
+
+        if (error != null) {
+            ToastUtils.showToast(getActivity(), R.string.error_fetch_remote_site_settings);
+            getActivity().finish();
+        } else {
+            setPreferencesFromSiteSettings();
         }
     }
     @Override
     public void onSettingsSaved(Exception error) {
-        if (isAdded()) {
-            if (error != null) {
-                ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
-            } else {
-                mSite.setName(mSiteSettings.getTitle());
-                mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(mSite));
-            }
+        if (isAdded() && error != null) {
+            ToastUtils.showToast(WordPress.getContext(), R.string.error_post_remote_site_settings);
         }
     }
     @Override
