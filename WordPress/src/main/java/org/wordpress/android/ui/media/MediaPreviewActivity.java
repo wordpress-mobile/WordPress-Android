@@ -599,14 +599,11 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 query.setFilterById(mDownloadId);
                 DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 Cursor cursor = dm.query(query);
-                int reason = 0;
                 if (cursor.moveToFirst()) {
-                    reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
-                }
-                if (reason == DownloadManager.STATUS_FAILED) {
-                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
-                } else {
-                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.media_saved_to_device);
+                    int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                    if (reason == DownloadManager.STATUS_FAILED) {
+                        ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
+                    }
                 }
                 mDownloadId = 0;
                 invalidateOptionsMenu();
@@ -636,6 +633,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             ToastUtils.showToast(this, R.string.error_media_not_found);
             return;
         }
+
+        ToastUtils.showToast(this, R.string.media_downloading);
 
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
