@@ -1463,6 +1463,8 @@
     <string name="connections_label">Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>
+    <string name="connection_service_label">Publicize to %s</string>
+    <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>

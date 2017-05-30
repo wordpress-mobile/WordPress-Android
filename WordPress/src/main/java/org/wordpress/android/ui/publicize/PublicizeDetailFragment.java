@@ -16,9 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
 
 import javax.inject.Inject;
 
@@ -81,10 +79,6 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         mConnectionsCardView = rootView.findViewById(R.id.card_view_connections);
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
-        int spacingHorizontal = 0;
-        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
-        mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
-
         return rootView;
     }
 
@@ -106,11 +100,13 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
         setTitle(mService.getLabel());
 
+        String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
         TextView txtService = (TextView) getView().findViewById(R.id.text_service);
-        TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
+        txtService.setText(serviceLabel);
 
-        txtService.setText(mService.getLabel());
-        txtDescription.setText(mService.getDescription());
+        String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
+        TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
+        txtDescription.setText(description);
 
         long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(

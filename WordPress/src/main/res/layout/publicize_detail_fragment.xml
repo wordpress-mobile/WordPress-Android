@@ -7,15 +7,13 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/content_margin"
     android:layout_marginRight="@dimen/content_margin"
-    android:layout_marginTop="@dimen/margin_extra_large"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_connections"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:visibility="gone"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
@@ -49,6 +47,7 @@
         android:id="@+id/card_view_service"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         tools:targetApi="LOLLIPOP">
@@ -63,6 +62,7 @@
                 android:id="@+id/text_service"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
                 android:ellipsize="end"
                 android:textColor="@color/blue_wordpress"
                 android:textSize="@dimen/text_sz_medium"
@@ -78,11 +78,18 @@
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_description" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_divider_height"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:background="@color/divider_grey" />
+
             <org.wordpress.android.ui.publicize.ConnectButton
                 android:id="@+id/button_connect"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large" />
+                android:layout_marginBottom="@dimen/margin_medium" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
