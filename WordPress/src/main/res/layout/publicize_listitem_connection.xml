@@ -32,7 +32,7 @@
         android:layout_toLeftOf="@+id/button_connect"
         android:layout_toRightOf="@+id/image_avatar"
         android:ellipsize="end"
-        android:textColor="@color/grey_darken_10"
+        android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
         tools:text="text_user" />
 
