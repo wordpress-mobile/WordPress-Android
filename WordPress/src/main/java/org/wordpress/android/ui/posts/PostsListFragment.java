@@ -10,10 +10,15 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,10 +73,12 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PostsListFragment extends Fragment
-        implements PostsListAdapter.OnPostsLoadedListener,
+        implements SearchView.OnQueryTextListener,
+        PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
         PostsListAdapter.OnPostButtonClickListener {
+    public static final String EXTRA_SEARCH_TERM = "searchTerm";
 
     public static final int POSTS_REQUEST_COUNT = 20;
 
@@ -135,6 +142,46 @@ public class PostsListFragment extends Fragment
                 mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             }
         }
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // don't add search for self-hosted sites
+        if (!mSite.isUsingWpComRestApi()) {
+            return;
+        }
+
+        inflater.inflate(R.menu.posts_list, menu);
+
+        MenuItem searchAction = menu.findItem(R.id.search_posts_list);
+        if (!TextUtils.isEmpty(mSearchTerm)) {
+            searchAction.expandActionView();
+        }
+
+        SearchView actionView = (SearchView) searchAction.getActionView();
+        if (actionView != null) {
+            MenuItemCompat.setOnActionExpandListener(searchAction, new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                    reloadPosts();
+                    return true;
+                }
+            });
+            actionView.setOnQueryTextListener(this);
+
+            if (!TextUtils.isEmpty(mSearchTerm)) {
+                actionView.setQuery(mSearchTerm, true);
+            }
+        }
+
+        super.onCreateOptionsMenu(menu,inflater);
     }
 
     @Override
@@ -144,20 +191,35 @@ public class PostsListFragment extends Fragment
         super.onDestroy();
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        filterPosts(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        mSearchTerm = query;
+        filterPosts(query);
+        return true;
+    }
+
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mSearchTerm = getArguments().getString(EXTRA_SEARCH_TERM);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mSearchTerm = getActivity().getIntent().getStringExtra(EXTRA_SEARCH_TERM);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mSearchTerm = savedInstanceState.getString(EXTRA_SEARCH_TERM, null);
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found,
-                    ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
     }
@@ -363,6 +425,10 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    public boolean isSearching() {
+        return !TextUtils.isEmpty(mSearchTerm);
+    }
+
     public boolean isRefreshing() {
         return mSwipeToRefreshHelper.isRefreshing();
     }
@@ -482,6 +548,8 @@ public class PostsListFragment extends Fragment
             } else {
                 updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             }
+        } else if (isSearching()) {
+            filterPosts(mSearchTerm);
         } else if (postCount > 0) {
             hideEmptyView();
         }
@@ -561,6 +629,9 @@ public class PostsListFragment extends Fragment
         } else {
             hideLoadMoreProgress();
             mRecyclerView.setAdapter(getPostListAdapter());
+            if (mRecyclerView.getAdapter().getItemCount() <= 0) {
+                hideEmptyView();
+            }
         }
     }
 
@@ -576,12 +647,12 @@ public class PostsListFragment extends Fragment
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
             return;
         }
-        PostsListAdapter adapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
-        adapter.setOnLoadMoreListener(this);
-        adapter.setOnPostSelectedListener(this);
-        adapter.setPosts(mSearchResults);
-        adapter.setOnPostButtonClickListener(this);
-        mRecyclerView.setAdapter(adapter);
+        mSearchListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+        mSearchListAdapter.setOnLoadMoreListener(this);
+        mSearchListAdapter.setOnPostSelectedListener(this);
+        mSearchListAdapter.setPosts(mSearchResults);
+        mSearchListAdapter.setOnPostButtonClickListener(this);
+        mRecyclerView.setAdapter(mSearchListAdapter);
         hideEmptyView();
     }
 
@@ -618,11 +689,13 @@ public class PostsListFragment extends Fragment
         }
 
         // remove post from the list and add it to the list of trashed posts
-        getPostListAdapter().hidePost(post);
         mTrashedPosts.add(post);
+        getPostListAdapter().hidePost(post);
 
-        // make sure empty view shows if user deleted the only post
-        if (getPostListAdapter().getItemCount() == 0) {
+        if (isSearching() && getSearchListAdapter() != null) {
+            getSearchListAdapter().hidePost(post);
+        } else if (getPostListAdapter().getItemCount() == 0) {
+            // make sure empty view shows if user deleted the only post
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         }
 
@@ -631,6 +704,9 @@ public class PostsListFragment extends Fragment
             public void onClick(View v) {
                 // user undid the trash, so unhide the post and remove it from the list of trashed posts
                 mTrashedPosts.remove(post);
+                if (isSearching()) {
+                    getSearchListAdapter().unhidePost(post);
+                }
                 getPostListAdapter().unhidePost(post);
                 hideEmptyView();
             }
@@ -686,6 +762,9 @@ public class PostsListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        if (!TextUtils.isEmpty(mSearchTerm)) {
+            outState.putString(EXTRA_SEARCH_TERM, mSearchTerm);
+        }
     }
 
     @SuppressWarnings("unused")

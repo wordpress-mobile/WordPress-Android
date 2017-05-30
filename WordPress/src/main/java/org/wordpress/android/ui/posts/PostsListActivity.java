@@ -3,13 +3,10 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -22,16 +19,13 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PostsListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    public static final String EXTRA_SEARCH_TERM = "searchTerm";
+public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
     private SiteModel mSite;
-
-    private String mCurrentSearch;
 
     @Inject SiteStore mSiteStore;
 
@@ -44,11 +38,9 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         if (savedInstanceState != null) {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsPage = savedInstanceState.getBoolean(EXTRA_VIEW_PAGES);
-            mCurrentSearch = savedInstanceState.getString(EXTRA_SEARCH_TERM, null);
         } else if (getIntent() != null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
-            mCurrentSearch = getIntent().getStringExtra(EXTRA_SEARCH_TERM);
         }
 
         // need a Site to continue
@@ -90,44 +82,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // don't add search for self-hosted sites
-        if (!mSite.isUsingWpComRestApi()) {
-            return true;
-        }
-
-        getMenuInflater().inflate(R.menu.posts_list, menu);
-
-        MenuItem searchAction = menu.findItem(R.id.search_posts_list);
-        if (!TextUtils.isEmpty(mCurrentSearch)) {
-            searchAction.expandActionView();
-        }
-
-        SearchView actionView = (SearchView) searchAction.getActionView();
-        if (actionView != null) {
-            MenuItemCompat.setOnActionExpandListener(searchAction, new MenuItemCompat.OnActionExpandListener() {
-                @Override
-                public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                    return true;
-                }
-
-                @Override
-                public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                    mPostList.reloadPosts();
-                    return true;
-                }
-            });
-            actionView.setOnQueryTextListener(this);
-
-            if (!TextUtils.isEmpty(mCurrentSearch)) {
-                actionView.setQuery(mCurrentSearch, true);
-            }
-        }
-
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -141,22 +95,6 @@ public class PostsListActivity extends AppCompatActivity implements SearchView.O
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putBoolean(EXTRA_VIEW_PAGES, mIsPage);
-        if (!TextUtils.isEmpty(mCurrentSearch)) {
-            outState.putString(EXTRA_SEARCH_TERM, mCurrentSearch);
-        }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        mPostList.filterPosts(query);
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String query) {
-        mCurrentSearch = query;
-        mPostList.filterPosts(query);
-        return true;
     }
 
     public boolean isRefreshing() {
