@@ -59,7 +59,6 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         if (!mConnections.isSameAs(serviceConnections)) {
             mConnections.clear();
             mConnections.addAll(serviceConnections);
-            mConnections.addAll(serviceConnections); // TODO: REMOVE
             notifyDataSetChanged();
         }
 
