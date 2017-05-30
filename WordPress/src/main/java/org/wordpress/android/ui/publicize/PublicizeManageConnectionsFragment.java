@@ -304,6 +304,7 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
             newValue = TWITTER_PREFIX + newValue;
         }
         pref.setText(newValue);
+        pref.setSummary(newValue);
     }
 
     @Override
