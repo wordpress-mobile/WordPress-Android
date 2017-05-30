@@ -16,13 +16,20 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar" />
 
-    <VideoView
-        android:id="@+id/video_preview"
+    <FrameLayout
+        android:id="@+id/frame_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <VideoView
+            android:id="@+id/video_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <ProgressBar
         android:id="@+id/progress"
