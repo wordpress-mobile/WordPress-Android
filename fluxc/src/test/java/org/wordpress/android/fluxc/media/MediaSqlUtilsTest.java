@@ -95,6 +95,21 @@ public class MediaSqlUtilsTest {
         Assert.assertTrue(media.isEmpty());
     }
 
+    // Inserts local media items and ensures they're deletable, and that they're recognized as unique by deleteMedia()
+    @Test
+    public void testDeleteLocalMedia() {
+        MediaModel testLocalMedia = getTestMedia(0);
+        MediaModel testLocalMedia2 = getTestMedia(0);
+
+        Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testLocalMedia));
+        Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(testLocalMedia2));
+
+        List<MediaModel> media = MediaSqlUtils.getAllSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
+        Assert.assertEquals(2, media.size());
+
+        Assert.assertEquals(1, MediaSqlUtils.deleteMedia(media.get(0)));
+    }
+
     // Inserts many media items then retrieves only some items and validates based on ID
     @Test
     public void testGetSpecifiedMedia() {
