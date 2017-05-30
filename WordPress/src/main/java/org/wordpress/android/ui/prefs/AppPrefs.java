@@ -46,9 +46,6 @@ public class AppPrefs {
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
 
-        // email retrieved and attached to mixpanel profile
-        MIXPANEL_EMAIL_ADDRESS,
-
         // index of the last active tab in main activity
         MAIN_TAB_INDEX,
 
@@ -106,8 +103,8 @@ public class AppPrefs {
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
 
-        // When we need to show the Visual Editor Promo Dialog
-        VISUAL_EDITOR_PROMO_REQUIRED,
+        // When we need to show the new editor promo dialog
+        AZTEC_EDITOR_PROMO_REQUIRED,
 
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
@@ -135,6 +132,11 @@ public class AppPrefs {
 
         // aztec editor available
         AZTEC_EDITOR_AVAILABLE,
+
+        // smart toast counters
+        SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER,
+        SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER,
+        SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER
     }
 
     private static SharedPreferences prefs() {
@@ -184,11 +186,11 @@ public class AppPrefs {
         }
     }
 
-    private static int getInt(PrefKey key) {
+    public static int getInt(PrefKey key) {
         return getInt(key, 0);
     }
 
-    private static void setInt(PrefKey key, int value) {
+    public static void setInt(PrefKey key, int value) {
         setString(key, Integer.toString(value));
     }
 
@@ -336,16 +338,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.LAST_ACTIVITY_STR);
     }
 
-    // Mixpanel email retrieval check
-
-    public static String getMixpanelUserEmail() {
-        return getString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, null);
-    }
-
-    public static void setMixpanelUserEmail(String email) {
-        setString(DeletablePrefKey.MIXPANEL_EMAIL_ADDRESS, email);
-    }
-
     public static int getMainTabIndex() {
         return getInt(DeletablePrefKey.MAIN_TAB_INDEX);
     }
@@ -417,13 +409,13 @@ public class AppPrefs {
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
         setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
-        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_TOGGLED_ON : Stat.EDITOR_TOGGLED_OFF);
+        AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
     }
 
     public static void setVisualEditorAvailable(boolean visualEditorAvailable) {
         setBoolean(UndeletablePrefKey.VISUAL_EDITOR_AVAILABLE, visualEditorAvailable);
         if (visualEditorAvailable) {
-            AnalyticsTracker.track(Stat.EDITOR_ENABLED_NEW_VERSION);
+            AnalyticsTracker.track(Stat.EDITOR_HYBRID_ENABLED);
         }
     }
 
@@ -435,13 +427,13 @@ public class AppPrefs {
         return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
-    public static boolean isVisualEditorPromoRequired() {
-        return getBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, true);
-    }
+   public static boolean isNewEditorPromoRequired() {
+       return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
+   }
 
-    public static void setVisualEditorPromoRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_PROMO_REQUIRED, required);
-    }
+   public static void setNewEditorPromoRequired(boolean required) {
+       setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
+   }
 
     public static boolean isGravatarChangePromoRequired() {
         return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);

@@ -681,10 +681,10 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         sortLanguages();
 
-        boolean isAccessibleViaWPComAPI = SiteUtils.isAccessibleViaWPComAPI(mSite);
+        boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
 
         // .com sites hide the Account category, self-hosted sites hide the Related Posts preference
-        if (!isAccessibleViaWPComAPI) {
+        if (!isAccessedViaWPComRest) {
             // self-hosted, non-jetpack site
             removeNonSelfHostedPreferences();
         } else if (mSite.isJetpackConnected()) {
@@ -696,8 +696,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // hide Admin options depending of capabilities on this site
-        if ((!isAccessibleViaWPComAPI && !mSite.isSelfHostedAdmin())
-            || (isAccessibleViaWPComAPI && !mSite.getHasCapabilityManageOptions())) {
+        if ((!isAccessedViaWPComRest && !mSite.isSelfHostedAdmin())
+            || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
 
@@ -1237,7 +1237,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 WPPrefUtils.layoutAsInput(input);
                 input.setWidth(getResources().getDimensionPixelSize(R.dimen.list_editor_input_max_width));
                 input.setHint(R.string.site_settings_list_editor_input_hint);
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String entry = input.getText().toString();
@@ -1318,9 +1318,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_general);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_start_over_screen);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_export_site);
-        WPPrefUtils.removePreference(this, R.string.pref_key_site_advanced, R.string.pref_key_site_delete_site);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
     }
 
     private void removeNonJetpackPreferences() {

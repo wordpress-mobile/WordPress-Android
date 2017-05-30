@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_pencil_white_24dp"
+        android:title="@string/edit"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@drawable/ic_download_white_24dp"
+        android:title="@string/save"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_share_24dp"
+        android:title="@string/share_link"
+        app:showAsAction="ifRoom" />
+</menu>

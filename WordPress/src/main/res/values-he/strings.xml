@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-05 10:30:36+0000
+Translation-Revision-Date: 2017-05-07 12:41:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">שליחת אימייל מחדש</string>
+	<string name="editor_confirm_email_prompt_message_with_email">שלחנו אימייל לכתובת %s כשנרשמת לראשונה. יש לפתוח את ההודעה וללחוץ על הכפתור הכחול כדי לאפשר את הפרסום.</string>
+	<string name="editor_confirm_email_prompt_message">שלחנו לך אימייל לאחר ההרשמה הראשונית. יש לפתוח את ההודעה וללחוץ על הכפתור הכחול כדי לאפשר את הפרסום.</string>
+	<string name="editor_confirm_email_prompt_title">יש לאשר שזוהי כתובת האימייל שלך</string>
+	<string name="toast_verification_email_send_error">שגיאה בשליחה האימייל לאימות. האם כבר ביצעת אימות?</string>
+	<string name="toast_verification_email_sent">אימייל האימות נשלח, יש לבדוק את תיבת הדואר הנכנס שלך</string>
+	<string name="toast_saving_post_as_draft">שמירת הפוסט כטיוטה</string>
+	<string name="photo_picker_capture_video">צילום וידאו</string>
+	<string name="photo_picker_capture_photo">צילום תמונה</string>
+	<string name="delete_site_warning_subtitle">זהירות! מרגע שהאתר נמחק, לא ניתן לשחזרו. כדאי להיות בטוחים לפני שממשיכים.</string>
+	<string name="delete_site_warning">כל הפוסטים, התמונות והנתונים שלך יימחקו. בנוסף, כתובת האתר (%s) תאבד.</string>
+	<string name="delete_site_warning_title">מחיקת אתר?</string>
+	<string name="start_over_email_intent_error">לא ניתן לשלוח את האימייל</string>
+	<string name="start_over_email_body">אני רוצה להתחיל מחדש את בניית האתר %s</string>
+	<string name="start_over_email_subject">התחלה מחדש של בניית האתר %s</string>
+	<string name="site_picker_remove_site_error">שגיאה בהסרת האתר, יש לנסות שוב מאוחר יותר</string>
+	<string name="editor_post_saved_locally_unfinished_media">בפוסט קיימים פריטי מדיה שהעלאתם טרם הסתיימה והם נשמרו במחשב המקומי</string>
+	<string name="sure_to_remove_account">האם להסיר את האתר מהאפליקציה?</string>
+	<string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
+	<string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
+	<string name="error_unknown_post">פוסט לא מזוהה, ייתכן שהעותק המקומי של הפוסט לא מסונכרן עם השרת</string>
+	<string name="error_fetch_site_after_creation">האתר כבר נוצר, ייתכן שיידרש ריענון של האתרים שלך בתפריט בחירת האתרים.</string>
+	<string name="error_media_request_too_large">פריט המדיה גדול מדי, לא ניתן לבצע העלאה</string>
+	<string name="error_media_parse_error">לא היה ניתן להעביר תגובה לאחר העלאת פריט המדיה</string>
+	<string name="error_upload_params">אירעה שגיאה בעת העלאת של %1$s: %2$s</string>
+	<string name="submit_for_review">שלח</string>
+	<string name="media_error_too_large_upload">הקובץ גדול מדי. יש ליצור קשר עם ספקית אחסון כדי לתקן בעיה זו</string>
 	<string name="reader_photo_by">צולם על ידי %s</string>
 	<string name="reader_label_visit">ניתן לבקר בכתובת</string>
 	<string name="all_your_sites">כל האתרים שלי</string>
@@ -105,7 +132,6 @@ Language: he_IL
 	<string name="image_link_to">קישור אל</string>
 	<string name="image_settings_dismiss_dialog_title">לבטל שינויים שלא נשמרו?</string>
 	<string name="stop_upload_dialog_title">לעצור העלאה?</string>
-	<string name="stop_upload_button">עצור העלאה</string>
 	<string name="alert_error_adding_media">אירעה שגיאה בעת הוספת מדיה</string>
 	<string name="alert_action_while_uploading">מתבצעת כרגע העלאת מדיה על-ידך. יש להמתין להשלמת הפעולה.</string>
 	<string name="alert_insert_image_html_mode">לא ניתן להוסיף מדיה ישירות במצב HTML. יש לחזור למצב ויזואלי.</string>
@@ -199,7 +225,6 @@ Language: he_IL
 	<string name="delete_site_summary">לא ניתן לבטל פעולה זו. מחיקת האתר שלך תסיר את כל התוכן, המשתתפים והדומיינים מהאתר.</string>
 	<string name="delete_site_hint">מחיקת אתר</string>
 	<string name="export_site_hint">יצוא האתר שלך לקובץ XML</string>
-	<string name="are_you_sure">ההחלטה הסופית?</string>
 	<string name="export_site_summary">אם ההחלטה שלך סופית, זה הזמן לייצא את התוכן שלך. לא ניתן יהיה לשחזר אותו בעתיד.</string>
 	<string name="keep_your_content">שמירת התוכן שלך</string>
 	<string name="domain_removal_hint">הדומיינים לא יעבדו עוד לאחר הסרת האתר</string>
@@ -281,9 +306,6 @@ Language: he_IL
 	<string name="error_refresh_comments_showing_older">לא ניתן לרענן תגובות כרגע - מציג תגובות ישנות</string>
 	<string name="editor_post_settings_set_featured_image">קביעת תמונה מרכזית</string>
 	<string name="editor_post_settings_featured_image">תמונה מרכזית</string>
-	<string name="new_editor_promo_desc">אפליקציית WordPress עבור Android כוללת כעת עורך ויזואלי חדש\n ויפהפה. ניתן להתנסות בו על ידי יצירת פוסט חדש.</string>
-	<string name="new_editor_promo_title">עורך חדש ומחודש</string>
-	<string name="new_editor_promo_button_label">נהדר, תודה!</string>
 	<string name="visual_editor_enabled">עורך ויזואלי מופעל</string>
 	<string name="editor_content_placeholder">מומלץ לשתף את הסיפור שלך כאן…</string>
 	<string name="editor_page_title_placeholder">כותרת עמוד</string>
@@ -470,7 +492,6 @@ Language: he_IL
 	<string name="media_uploaded_on">תאריך העלאה: %s</string>
 	<string name="media_dimensions">מימדים: %s</string>
 	<string name="media_file_type">סוג קובץ: %s</string>
-	<string name="upload_queued">בתור</string>
 	<string name="reader_label_gap_marker">פוסטים נוספים</string>
 	<string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
 	<string name="search_sites">חיפוש אתרים</string>
@@ -573,7 +594,6 @@ Language: he_IL
 	<string name="stats_insights">תובנות</string>
 	<string name="stats_sign_in_jetpack_different_com_account">להצגת הנתונים הסטטיסטיים שלך, יש להיכנס לחשבון וורדפרס.קום שבו השתמשת כדי לחבר את Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">מנסה למצוא נתונים סטטיסטיים אחרים מהזמן האחרון? העברנו אותם אל העמוד \'תובנות\'.</string>
-	<string name="me_disconnect_from_wordpress_com">התנתקות מוורדפרס.קום</string>
 	<string name="me_btn_login_logout">כניסה/יציאה</string>
 	<string name="me_connect_to_wordpress_com">התחברות לוורדפרס.קום</string>
 	<string name="site_picker_cant_hide_current_site">"%s" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
@@ -609,7 +629,6 @@ Language: he_IL
 	<string name="two_step_footer_label">יש להזין את הקוד מאפליקציית האימות.</string>
 	<string name="two_step_footer_button">שליחת קוד באמצעות הודעת טקסט</string>
 	<string name="two_step_sms_sent">יש לבדוק הודעות טקסט לקבלת קוד אימות.</string>
-	<string name="error_publish_no_network">לא ניתן לפרסם כאשר אין חיבור אינטרנט. נשמר כטיוטה.</string>
 	<string name="auth_required">יש להתחבר שוב כדי המשיך.</string>
 	<string name="language">שפה</string>
 	<string name="device">מכשיר</string>
@@ -703,11 +722,9 @@ Language: he_IL
 	<string name="stats_other_recent_stats_label">סטטיסטיקות אחרות מהזמן האחרון</string>
 	<string name="stats_followers_total_wpcom">סה"כ עוקבי וורדפרס.קום: %1$s</string>
 	<string name="ssl_certificate_details">פרטים</string>
-	<string name="media_gallery_date_range">הצגת פריטי מדיה מ- %1$s עד %2$s</string>
 	<string name="confirm_delete_media">מחיקת פריט שנבחר?</string>
 	<string name="confirm_delete_multi_media">מחיקת פריטים שנבחרו?</string>
 	<string name="cab_selected">%d נבחרו</string>
-	<string name="sure_to_remove_account">הסרת אתר?</string>
 	<string name="delete_sure_page">מחיקת עמוד</string>
 	<string name="delete_sure_post">מחיקת פוסט</string>
 	<string name="delete_sure">מחיקת טיוטה</string>
@@ -939,7 +956,6 @@ Language: he_IL
 	<string name="image_settings">הגדרות תמונה</string>
 	<string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
 	<string name="reader_title_applog">יומן יישום</string>
-	<string name="reader_share_link">שתף בקישור</string>
 	<string name="reader_toast_err_add_tag">לא ניתן להוסיף תגית זו</string>
 	<string name="reader_toast_err_remove_tag">לא ניתן להסיר תגית זו</string>
 	<string name="required_field">שדה חובה</string>
@@ -986,12 +1002,10 @@ Language: he_IL
 	<string name="signing_in">מתחבר...</string>
 	<string name="nux_oops_not_selfhosted_blog">התחבר לוורדפרס.קום</string>
 	<string name="media_add_popup_title">הוסף לספריית המדיה</string>
-	<string name="media_add_new_media_gallery">צור גלרייה</string>
 	<string name="empty_list_default">רשימה זו ריקה</string>
 	<string name="select_from_media_library">בחר מתוך ספריית מדיה</string>
 	<string name="jetpack_not_found">התוסף Jetpack לא נמצא</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
-	<string name="reader_share_subject">שיתוף מ-%s</string>
 	<string name="reader_btn_share">שתף</string>
 	<string name="reader_btn_follow">עקוב</string>
 	<string name="reader_btn_unfollow">עוקב</string>
@@ -1099,7 +1113,6 @@ Language: he_IL
 	<string name="no_network_title">הרשת אינה זמינה</string>
 	<string name="caption">כיתוב תמונה (אופציונלי)</string>
 	<string name="featured_in_post">הוספת תמונה לתוכן</string>
-	<string name="ok">אוקיי</string>
 	<string name="blogusername">שם משתמש</string>
 	<string name="scaled_image">רוחב תמונה</string>
 	<string name="upload_scaled_image">העלאה וקישור לתמונה</string>

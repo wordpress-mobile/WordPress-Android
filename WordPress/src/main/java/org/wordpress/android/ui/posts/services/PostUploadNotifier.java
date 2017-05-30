@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
@@ -87,8 +88,6 @@ public class PostUploadNotifier {
     public void updateNotificationSuccess(PostModel post, SiteModel site, boolean isFirstTimePublish) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationSuccess");
 
-        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
-
         // Get the shareableUrl
         String shareableUrl = WPMeShortlinks.getPostShortlink(site, post);
         if (shareableUrl == null && !TextUtils.isEmpty(post.getLink())) {
@@ -96,7 +95,7 @@ public class PostUploadNotifier {
         }
 
         // Notification builder
-        Notification.Builder notificationBuilder = new Notification.Builder(mContext.getApplicationContext());
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
         String notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
                 .page_published) : mContext.getResources().getText(R.string.post_published));
         if (!isFirstTimePublish) {
@@ -104,15 +103,19 @@ public class PostUploadNotifier {
                     .page_updated) : mContext.getResources().getText(R.string.post_updated));
         }
         notificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload_done);
-        if (notificationData.latestIcon == null) {
+
+        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        if (notificationData == null || notificationData.latestIcon == null) {
             notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(mContext.getApplicationContext()
                     .getResources(),
                     R.mipmap.app_icon));
         } else {
             notificationBuilder.setLargeIcon(notificationData.latestIcon);
         }
+        String message = post.getTitle();
         notificationBuilder.setContentTitle(notificationTitle);
-        notificationBuilder.setContentText(post.getTitle());
+        notificationBuilder.setContentText(message);
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         notificationBuilder.setAutoCancel(true);
 
         // Tap notification intent (open the post list)
@@ -150,7 +153,7 @@ public class PostUploadNotifier {
     public void updateNotificationError(PostModel post, SiteModel site, String errorMessage, boolean isMediaError) {
         AppLog.d(AppLog.T.POSTS, "updateNotificationError: " + errorMessage);
 
-        Notification.Builder notificationBuilder = new Notification.Builder(mContext.getApplicationContext());
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
         String postOrPage = (String) (post.isPage() ? mContext.getResources().getText(R.string.page_id)
                 : mContext.getResources().getText(R.string.post_id));
         Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
@@ -168,11 +171,12 @@ public class PostUploadNotifier {
                     + mContext.getResources().getText(R.string.error);
         }
 
+        String message = (isMediaError) ? errorMessage : postOrPage + " " + errorText + ": " + errorMessage;
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
         notificationBuilder.setContentTitle((isMediaError) ? errorText :
                 mContext.getResources().getText(R.string.upload_failed));
-        notificationBuilder.setContentText((isMediaError) ? errorMessage : postOrPage + " " + errorText
-                + ": " + errorMessage);
+        notificationBuilder.setContentText(message);
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setAutoCancel(true);
 

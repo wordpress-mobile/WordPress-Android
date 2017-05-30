@@ -1,11 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-10 00:23:26+0000
+Translation-Revision-Date: 2017-05-19 23:30:35+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">複数のコメントを選択するにはタップしてホールド</string>
+	<string name="smart_toast_photo_long_press">複数の写真を選択するにはタップしてホールド</string>
+	<string name="photo_picker_choose_video">デバイスから動画を選択</string>
+	<string name="photo_picker_choose_photo">デバイスから写真を選択</string>
+	<string name="new_editor_promo_description">WordPress アプリにステキな新エディタが含まれるようになりました。新しい投稿を作成し、お試しください。</string>
+	<string name="wp_media_title">WordPress メディア</string>
+	<string name="media_insert_as_gallery">ギャラリーとして追加</string>
+	<string name="media_insert_individually">個別に追加</string>
+	<string name="media_insert_title">複数の写真を追加</string>
+	<string name="media_gallery_column_count_multi">%d列</string>
+	<string name="media_gallery_column_count_single">1列</string>
+	<string name="editor_confirm_email_prompt_negative">メールの再送</string>
+	<string name="editor_confirm_email_prompt_message_with_email">初回登録時に %s 宛てにメールをお送りしています。そのメッセージを開き、青いボタンをクリックして公開を有効にしてください。</string>
+	<string name="editor_confirm_email_prompt_message">初回登録時にメールをお送りしています。そのメッセージを開き、青いボタンをクリックして公開を有効にしてください。</string>
+	<string name="editor_confirm_email_prompt_title">メールアドレスを確認してください</string>
+	<string name="toast_verification_email_send_error">認証メールの送信中にエラーが発生しました。すでに認証されていますか ?</string>
+	<string name="toast_verification_email_sent">認証メールが送信されました。受信トレイを確認してください。</string>
+	<string name="toast_saving_post_as_draft">投稿を下書きとして保存しています</string>
+	<string name="photo_picker_capture_video">動画を撮る</string>
+	<string name="photo_picker_capture_photo">写真を撮る</string>
+	<string name="delete_site_warning_subtitle">ご注意ください。サイトを削除すると、復元することはできません。続行する前にご確認ください。</string>
+	<string name="delete_site_warning">投稿、画像、データはすべて削除されます。このサイトのアドレス (%s) も失われます。</string>
+	<string name="delete_site_warning_title">サイトを削除しますか ?</string>
+	<string name="start_over_email_intent_error">メールを送信できません</string>
+	<string name="start_over_email_body">サイト %s をもう一度始めたい</string>
+	<string name="start_over_email_subject">サイト %s をもう一度始める</string>
+	<string name="site_picker_remove_site_error">サイトの削除中にエラーが発生しました。後でもう一度やり直してください</string>
+	<string name="editor_post_saved_locally_unfinished_media">投稿に未完了のメディアのアップロードがあるため、ローカルに保存されました</string>
+	<string name="sure_to_remove_account">アプリからこのサイトを削除しますか ?</string>
+	<string name="photo_picker_title">写真を選択</string>
+	<string name="error_publish_no_network">デバイスがオフラインです。変更をローカルで保存しました。</string>
+	<string name="editor_post_saved_online_not_published">投稿はオンラインで下書きとして保存されました。公開しませんか ?</string>
+	<string name="editor_post_saved_online">投稿はオンラインで保存しました</string>
+	<string name="editor_post_saved_locally_not_published">投稿はローカルのみで保存されました。公開しませんか ?</string>
+	<string name="editor_post_saved_locally">投稿をデバイスに保存しました</string>
+	<string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
+	<string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
+	<string name="media_encoder_quality_95">非常に高い</string>
+	<string name="media_encoder_quality_90">高い</string>
+	<string name="media_encoder_quality_85">普通</string>
+	<string name="media_encoder_quality_80">低い</string>
+	<string name="media_upload_state_uploaded">アップロード済み</string>
+	<string name="media_encoder_quality_100">最高</string>
+	<string name="media_upload_state_failed">失敗</string>
+	<string name="media_upload_state_deleted">削除済み</string>
+	<string name="media_upload_state_deleting">削除中</string>
+	<string name="media_upload_state_uploading">アップロード中</string>
+	<string name="media_upload_state_queued">待機中</string>
+	<string name="update_draft">下書きを更新</string>
+	<string name="keep_editing">編集を続行</string>
+	<string name="image_quality">画質</string>
+	<string name="error_all_media_upload_canceled">不明なエラーにより、メディアのアップロードはすべてキャンセルされました。もう一度アップロードをお試しください</string>
+	<string name="error_unknown_post_type">投稿フォーマットが不明です</string>
+	<string name="error_unknown_post">不明な投稿です。この投稿のローカルコピーがサーバーと同期されていない可能性があります。</string>
+	<string name="error_fetch_site_after_creation">サイトは作成されているので、サイトピッカーでサイトを最新表示してください。</string>
+	<string name="error_media_request_too_large">メディアのサイズが大きすぎるため、アップロードできません</string>
+	<string name="error_media_parse_error">メディアのアップロード後の応答を解析できませんでした</string>
+	<string name="error_upload_params">%1$sをアップロードする際にエラーが発生しました。%2$s</string>
+	<string name="submit_for_review">送信</string>
+	<string name="media_error_too_large_upload">ファイルのサイズが大きすぎます。この問題を解決するには、Web ホスティングサービスに連絡してください</string>
 	<string name="role_subscriber">購読者</string>
 	<string name="tell_me_more">もっと知る</string>
 	<string name="duplicate_site_detected">重複サイトが検出されました。</string>
@@ -23,7 +83,6 @@ Language: ja_JP
 	<string name="error_media_unauthorized">メディアを表示または編集する権限がありません</string>
 	<string name="error_media_not_found">メディアを検出できませんでした</string>
 	<string name="error_media_insufficient_fs_permissions">メディアファイルに対する読み取り権限が必要です</string>
-	<string name="site_settings_optimize_images_hint">モバイル接続の帯域幅を節約する場合に有効にする</string>
 	<string name="site_settings_optimize_images">画像を最適化</string>
 	<string name="no_site_error">WordPress サイトに接続できませんでした。有効な WordPress サイトはこの\nアドレスにはありません。入力したサイトアドレス (URL) を確認してください。</string>
 	<string name="media_generic_error">メディアエラーが発生しました</string>
@@ -149,7 +208,6 @@ Language: ja_JP
 	<string name="format_bar_description_bold">太字</string>
 	<string name="image_settings_dismiss_dialog_title">保存されていない変更を破棄しますか ?</string>
 	<string name="stop_upload_dialog_title">アップロードを中止しますか ?</string>
-	<string name="stop_upload_button">アップロードを中止</string>
 	<string name="alert_error_adding_media">メディアの挿入中にエラーが発生しました</string>
 	<string name="alert_action_while_uploading">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
 	<string name="alert_insert_image_html_mode">HTML モードでは直接メディアを挿入できません。ビジュアルモードに戻してください。</string>
@@ -243,7 +301,6 @@ Language: ja_JP
 	<string name="delete_site_summary">この操作は元に戻すことはできません。サイトを削除すると、すべてのコンテンツ、寄稿者、ドメインがサイトから削除されます。</string>
 	<string name="delete_site_hint">サイトを削除</string>
 	<string name="export_site_hint">サイトを XML ファイルとしてエクスポート</string>
-	<string name="are_you_sure">本当によろしいですか ?</string>
 	<string name="export_site_summary">本当に削除する場合、今すぐコンテンツをエクスポートしてください。後でこのコンテンツを復元することはできません。</string>
 	<string name="keep_your_content">コンテンツを保存</string>
 	<string name="domain_removal_hint">サイトを削除すると、ドメインは機能しなくなります</string>
@@ -325,9 +382,7 @@ Language: ja_JP
 	<string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
 	<string name="editor_post_settings_set_featured_image">アイキャッチ画像を設定</string>
 	<string name="editor_post_settings_featured_image">アイキャッチ画像</string>
-	<string name="new_editor_promo_desc">Android 用の WordPress アプリに、美しいビジュアルエディターが\n新たに追加されました。新しい投稿を作って、その機能をお試しください。</string>
-	<string name="new_editor_promo_title">刷新されたエディター</string>
-	<string name="new_editor_promo_button_label">ありがとうございます。</string>
+	<string name="new_editor_promo_title">新エディター</string>
 	<string name="visual_editor_enabled">ビジュアルエディターを有効化しました</string>
 	<string name="editor_content_placeholder">こちらでストーリーを共有してください...</string>
 	<string name="editor_page_title_placeholder">ページタイトル</string>
@@ -513,7 +568,6 @@ Language: ja_JP
 	<string name="media_file_name">ファイル名: %s</string>
 	<string name="media_uploaded_on">アップロード日: %s</string>
 	<string name="media_dimensions">サイズ: %s</string>
-	<string name="upload_queued">待機中</string>
 	<string name="media_file_type">ファイル形式: %s</string>
 	<string name="reader_label_gap_marker">さらに投稿を読み込む</string>
 	<string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
@@ -653,7 +707,6 @@ Language: ja_JP
 	<string name="invalid_verification_code">無効な認証コード</string>
 	<string name="verification_code">認証コード</string>
 	<string name="editor_toast_invalid_path">無効なファイルパス</string>
-	<string name="error_publish_no_network">接続がないため公開できません。下書きとして保存します。</string>
 	<string name="device">端末</string>
 	<string name="language">言語</string>
 	<string name="media_details_label_file_name">ファイル名</string>
@@ -747,14 +800,12 @@ Language: ja_JP
 	<string name="stats_view_top_posts_and_pages">投稿とページ</string>
 	<string name="stats_comments_by_posts_and_pages">投稿とページ</string>
 	<string name="ssl_certificate_details">詳細</string>
-	<string name="sure_to_remove_account">このサイトを削除しますか ?</string>
 	<string name="delete_sure_post">この投稿を削除</string>
 	<string name="delete_sure">この下書きを削除</string>
 	<string name="delete_sure_page">このページを削除</string>
 	<string name="confirm_delete_multi_media">選択した項目を削除しますか ?</string>
 	<string name="confirm_delete_media">選択した項目を削除しますか ?</string>
 	<string name="cab_selected">%d件選択</string>
-	<string name="media_gallery_date_range">%1$s から %2$s のメディアを表示中</string>
 	<string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
 	<string name="browse_our_faq_button">よく聞かれる質問を表示</string>
 	<string name="nux_help_description">ヘルプセンターにアクセスして一般的な質問の答えを探すか、フォーラムにアクセスして新しい質問を尋ねてください。</string>
@@ -962,7 +1013,6 @@ Language: ja_JP
 	<string name="preview_page">ページをプレビュー</string>
 	<string name="preview_post">投稿をプレビュー</string>
 	<string name="privacy_policy">個人情報保護方針</string>
-	<string name="reader_share_link">リンクを共有</string>
 	<string name="reader_title_applog">アプリケーションログ</string>
 	<string name="reader_toast_err_add_tag">このブログを追加できません</string>
 	<string name="reader_toast_err_remove_tag">このタグを削除できません</string>
@@ -1032,7 +1082,6 @@ Language: ja_JP
 	<string name="signing_in">ログイン中…</string>
 	<string name="nux_tutorial_get_started_title">始めてみましょう</string>
 	<string name="media_add_popup_title">メディアライブラリに追加</string>
-	<string name="media_add_new_media_gallery">ギャラリーを作成</string>
 	<string name="empty_list_default">リストが空です</string>
 	<string name="select_from_media_library">メディアライブラリから選択</string>
 	<string name="reader_untitled_post">(無題)</string>
@@ -1043,7 +1092,6 @@ Language: ja_JP
 	<string name="reader_label_removed_tag">%s を削除</string>
 	<string name="reader_likes_only_you">「いいね」をつけました</string>
 	<string name="username_invalid">無効なユーザー名</string>
-	<string name="reader_share_subject">%s から共有</string>
 	<string name="jetpack_not_found">Jetpack プラグインが見つかりません</string>
 	<string name="reader_toast_err_view_image">画像を表示できません</string>
 	<string name="reader_toast_err_tag_exists">すでにこのタグをフォロー中です</string>
@@ -1145,7 +1193,6 @@ Language: ja_JP
 	<string name="anonymous">匿名</string>
 	<string name="post">投稿</string>
 	<string name="blogusername">blogusername</string>
-	<string name="ok">OK</string>
 	<string name="scaled_image">変更後の画像幅</string>
 	<string name="upload_scaled_image">アップロードしてサイズを変更した画像にリンク</string>
 	<string name="scheduled">予約済み</string>

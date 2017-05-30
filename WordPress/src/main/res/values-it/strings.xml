@@ -1,17 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-18 11:30:35+0000
+Translation-Revision-Date: 2017-05-15 11:57:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Fai tap e tieni premuto per la selezione multipla dei commenti </string>
+	<string name="smart_toast_photo_long_press">Fai tap e tieni premuto per la selezione multipla delle fotografie</string>
+	<string name="photo_picker_choose_video">Scegli un video dal dispositivo</string>
+	<string name="photo_picker_choose_photo">Scegli una fotografia dal dispositivo</string>
+	<string name="new_editor_promo_description">L\'app di WordPress ora include un nuovo bellissimo editor. Provalo e crea un nuovo articolo.</string>
+	<string name="wp_media_title">Media di WordPress</string>
+	<string name="media_insert_as_gallery">Aggiungi una galleria</string>
+	<string name="media_insert_individually">Aggiungi uno per uno</string>
+	<string name="media_insert_title">Aggiungi più fotografie insieme</string>
+	<string name="media_gallery_column_count_multi">%d colonne</string>
+	<string name="media_gallery_column_count_single">1 colonna</string>
+	<string name="editor_confirm_email_prompt_negative">Invia di nuovo l\'e-mail</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Ti abbiamo inviato un\'e-mail a %s la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
+	<string name="editor_confirm_email_prompt_message">Ti abbiamo inviato un\'e-mail la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
+	<string name="editor_confirm_email_prompt_title">Conferma il tuo indirizzo e-mail</string>
+	<string name="toast_verification_email_send_error">Errore durante l\'invio dell\'e-mail di verifica. Hai già ricevuto l\'e-mail di verifica?</string>
+	<string name="toast_verification_email_sent">E-mail di verifica inviata, controlla la posta in arrivo</string>
+	<string name="toast_saving_post_as_draft">Salvataggio dell\'articolo come bozza</string>
+	<string name="photo_picker_capture_video">Fai un video</string>
+	<string name="photo_picker_capture_photo">Fai una foto</string>
+	<string name="delete_site_warning_subtitle">Attenzione! Una volta eliminato, un sito non potrà essere recuperato. Verifica prima di procedere.</string>
+	<string name="delete_site_warning">Tutti i tuoi articoli, le immagini e i dati saranno eliminati. L\'indirizzo del sito (%s) andrà perso.</string>
+	<string name="delete_site_warning_title">Eliminare sito?</string>
+	<string name="start_over_email_intent_error">Impossibile inviare un\'e-mail</string>
+	<string name="start_over_email_body">Voglio ricominciare con il sito %s</string>
+	<string name="start_over_email_subject">Ricomincia con il sito %s</string>
+	<string name="site_picker_remove_site_error">Errore durante la rimozione del sito. Riprova più tardi</string>
+	<string name="editor_post_saved_locally_unfinished_media">L\'articolo è stato salvato sul dispositivo locale, poiché il caricamento dei file multimediali non è stato completato</string>
+	<string name="sure_to_remove_account">Rimuovere questo sito dall\'app?</string>
+	<string name="photo_picker_title">Scegli foto</string>
+	<string name="error_publish_no_network">Il dispositivo è offline. Le modifiche sono state salvate a livello locale.</string>
+	<string name="editor_post_saved_online_not_published">L\'articolo è stato salvato online come bozza. Prendi in considerazione la possibilità di pubblicarlo.</string>
+	<string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
+	<string name="editor_post_saved_locally_not_published">L\'articolo è stato salvato solo a livello locale. Prendi in considerazione la possibilità di pubblicarlo.</string>
+	<string name="editor_post_saved_locally">L\'articolo è stato salvato sul dispositivo</string>
+	<string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
+	<string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
+	<string name="media_encoder_quality_100">Massima</string>
+	<string name="media_encoder_quality_95">Molto alta</string>
+	<string name="media_encoder_quality_90">Alta</string>
+	<string name="media_encoder_quality_85">Media</string>
+	<string name="media_encoder_quality_80">Bassa</string>
+	<string name="media_upload_state_uploaded">Caricato</string>
+	<string name="media_upload_state_failed">Non riuscito</string>
+	<string name="media_upload_state_deleted">Eliminato</string>
+	<string name="media_upload_state_deleting">Eliminazione in corso</string>
+	<string name="media_upload_state_uploading">Caricamento in corso</string>
+	<string name="media_upload_state_queued">Accodato</string>
+	<string name="update_draft">Aggiorna bozza</string>
+	<string name="keep_editing">Continua a modificare</string>
+	<string name="image_quality">Qualità delle immagini</string>
+	<string name="error_all_media_upload_canceled">Tutti i caricamenti dei file multimediali sono stati cancellati a causa di un errore sconosciuto. Riprova il caricamento.</string>
+	<string name="error_unknown_post_type">Formato dell\'articolo sconosciuto</string>
+	<string name="error_unknown_post">Articolo sconosciuto, la copia locale potrebbe non essere sincronizzata con il server.</string>
+	<string name="error_fetch_site_after_creation">Il sito è stato creato. Potresti aver bisogno di aggiornare i tuoi siti nel relativo selezionatore.</string>
+	<string name="error_media_request_too_large">File multimediale troppo grande, non può essere caricato</string>
+	<string name="error_media_parse_error">Impossibile analizzare la risposta dopo il caricamento del file multimediale</string>
+	<string name="error_upload_params">Errore durante il caricamento di %1$s: %2$s</string>
+	<string name="submit_for_review">Invia</string>
+	<string name="media_error_too_large_upload">Il file è troppo grande. Contatta il fornitore del servizio di hosting per risolvere il problema.</string>
+	<string name="role_subscriber">Sottoscrittore </string>
+	<string name="tell_me_more">Dimmi di più</string>
+	<string name="cannot_add_duplicate_site">Il sito esiste già nell\'app, non lo puoi aggiungere.</string>
+	<string name="duplicate_site_detected">È stato rilevato un sito duplicato.</string>
+	<string name="already_logged_in_wpcom_same_username">Sei già connesso al tuo account WordPress.com. Il tuo sito dovrebbe apparire nel menu dei siti, assicurati che non sia nascosto.</string>
+	<string name="already_logged_in_wpcom">Sei già connesso a un account WordPress.com, non puoi aggiungere un sito WordPress.com legato a un altro account.</string>
+	<string name="migration_error_not_connected">Il processo di migrazione non è andato a buon fine: assicurati di essere connesso a una rete prima di provare a lanciare l\'app.</string>
+	<string name="migration_message">Aggiornamento dell\'app di WordPress in corso...</string>
+	<string name="checking_username">Controllo del nome utente in corso</string>
+	<string name="jetpack_different_com_account">I siti Jetpack che appartengono a diversi account WordPress.com non sono supportati</string>
+	<string name="jetpack_use_com_account">Per aggiungere il tuo sito Jetpack, accedi all\'account WordPress.com che hai usato per connettere Jetpack.</string>
+	<string name="jetpack_message">Il plugin Jetpack deve essere installato e attivato. Vuoi installare o attivare Jetpack?</string>
+	<string name="error_media_load">Non è possibile caricare il media</string>
+	<string name="error_media_refresh_no_connection">Per aggiornare la libreria è necessaria la connessione </string>
+	<string name="error_media_unauthorized">Non hai i permessi per visualizzare o modificare i media</string>
+	<string name="error_media_not_found">Non è possibile trovare i media</string>
+	<string name="error_media_insufficient_fs_permissions">È necessario il permesso di lettura per il file media</string>
+	<string name="site_settings_optimize_images">Ottimizza le immagini</string>
+	<string name="no_site_error">Non è possibile connettersi al sito WordPress. Non è presente alcun sito WordPress valido a questo\n indirizzo. Controlla l\'indirizzo del sito (URL) che hai inserito.</string>
+	<string name="media_generic_error">Si è verificato un errore con i media</string>
+	<string name="media_upload_error">Si è verificato un errore durante il caricamento dei media</string>
+	<string name="retry">Riprova</string>
+	<string name="confirm">Conferma</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Non è possibile connettersi. Abbiamo ricevuto un messaggio di errore 403 durante il tentativo di accedere\n all\'endpoint XMLRPC del tuo sito. Per l\'app questo è necessario per comunicare con il tuo sito. Contatta il tuo host per risolvere\n questo problema.</string>
+	<string name="xmlrpc_post_blocked_error">Non è possibile connettersi. Il tuo host sta bloccando le richieste POST ma queste sono necessarie al corretto funzionamento dell\'app\n per comunicare con il tuo sito. Contatta il tuo fornitore del servizio di hosting per risolvere questo problema.</string>
+	<string name="reader_liked_default_tag">Articoli che mi sono piaciuti</string>
+	<string name="reader_followed_default_tag">Siti seguiti</string>
+	<string name="reader_discover_default_tag">Scopri</string>
 	<string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
 	<string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
 	<string name="visual_editor_disabled">Editor visuale disabilitato</string>
 	<string name="preference_editor_visual">Visuale</string>
-	<string name="preference_editor_legacy">Attuale</string>
 	<string name="preference_editor_type">Imposta il tipo di editor</string>
+	<string name="preference_editor_legacy">Testuale</string>
 	<string name="pending_draft_one_generic">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
 	<string name="pending_draft_one_month">Non lasciarlo in sospeso! \'%1$s\' è in attesa di essere pubblicato.</string>
 	<string name="pending_draft_one_week_2">\'%1$s\' rimane una bozza. Ricordati di pubblicarlo!</string>
@@ -119,7 +207,6 @@ Language: it
 	<string name="image_width">Larghezza</string>
 	<string name="format_bar_description_bold">Grassetto</string>
 	<string name="image_settings_dismiss_dialog_title">Elimina le modifiche non salvate?</string>
-	<string name="stop_upload_button">Ferma il caricamento</string>
 	<string name="stop_upload_dialog_title">Ferma il caricamento?</string>
 	<string name="alert_error_adding_media">Durante l\'inserimento di un elemento multimediale si è verificato un errore.</string>
 	<string name="alert_action_while_uploading">Stai attualmente caricando un elemento multimediale. Attendi il suo completamento.</string>
@@ -214,7 +301,6 @@ Language: it
 	<string name="delete_site_summary">Questa azione è irreversibile. Cancellando il tuo sito rimuoverai tutti i contenuti, collaboratori, e domini.</string>
 	<string name="delete_site_hint">Elimina il sito</string>
 	<string name="export_site_hint">Esporta il sito in un file XML</string>
-	<string name="are_you_sure">Sei sicuro?</string>
 	<string name="export_site_summary">Se sei sicuro, esporta prima i contenuti perchè non potranno più essere recuperati.</string>
 	<string name="keep_your_content">Mantieni il tuo contenuto</string>
 	<string name="domain_removal_hint">I domini non funzioneranno più una volta che avrai rimosso il sito</string>
@@ -296,9 +382,7 @@ Language: it
 	<string name="error_refresh_comments_showing_older">Impossibile aggiornare i commenti in questo momento, vengono visualizzati i commenti precedenti</string>
 	<string name="editor_post_settings_set_featured_image">Imposta immagine in primo piano</string>
 	<string name="editor_post_settings_featured_image">Immagine in evidenza</string>
-	<string name="new_editor_promo_desc">L\'app WordPress per Android ora include un nuovo bellissimo editor\n visuale. Provalo creando un nuovo articolo.</string>
 	<string name="new_editor_promo_title">Un editor completamente nuovo</string>
-	<string name="new_editor_promo_button_label">Fantastico, grazie!</string>
 	<string name="visual_editor_enabled">Editor visuale abilitato</string>
 	<string name="editor_content_placeholder">Condividi la tua storia qui...</string>
 	<string name="editor_page_title_placeholder">Titolo della pagina</string>
@@ -484,7 +568,6 @@ Language: it
 	<string name="media_file_name">Nome del file: %s</string>
 	<string name="media_uploaded_on">Aggiornato il: %s</string>
 	<string name="media_dimensions">Dimensioni: %s</string>
-	<string name="upload_queued">Accodato</string>
 	<string name="media_file_type">Tipo di file: %s</string>
 	<string name="reader_label_gap_marker">Carica altri articoli</string>
 	<string name="notifications_no_search_results">Nessun sito corrisponde a \'%s\'</string>
@@ -619,7 +702,6 @@ Language: it
 	<string name="stats_generic_error">Le statistiche richieste non possono venir caricate</string>
 	<string name="device">Dispositivo</string>
 	<string name="language">Lingua</string>
-	<string name="error_publish_no_network">Impossibile pubblicare perchè non c\'è una connessione. Salva come bozza.</string>
 	<string name="editor_toast_invalid_path">Percorso file non valido</string>
 	<string name="verification_code">Codice di verifica</string>
 	<string name="invalid_verification_code">Codice di verifica non valido</string>
@@ -718,14 +800,12 @@ Language: it
 	<string name="stats_for">Statistiche per %s</string>
 	<string name="themes_fetching">Recupero temi…</string>
 	<string name="ssl_certificate_details">Dettagli</string>
-	<string name="sure_to_remove_account">Rimuovere questo sito?</string>
 	<string name="delete_sure_post">Cancella questo articolo</string>
 	<string name="delete_sure">Cancella questa bozza</string>
 	<string name="delete_sure_page">Cancella questa pagina</string>
 	<string name="confirm_delete_multi_media">Cancellare gli elementi selezionati?</string>
 	<string name="confirm_delete_media">Cancellare l\'elemento selezionato?</string>
 	<string name="cab_selected">%d selezionati</string>
-	<string name="media_gallery_date_range">Visualizzazione elementi media da %1$s a %2$s</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_empty_comments">Ancora nessun commento</string>
 	<string name="reader_label_comment_count_multi">%,d commenti</string>
@@ -954,7 +1034,6 @@ Language: it
 	<string name="error_blog_hidden">Questo blog è nascosto e non può essere caricato. Abilitalo nuovamente nelle impostazioni e riprova.</string>
 	<string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
 	<string name="reader_title_applog">Registro applicazione</string>
-	<string name="reader_share_link">Condividi il link</string>
 	<string name="reader_toast_err_add_tag">Impossibile aggiungere questo tag</string>
 	<string name="reader_toast_err_remove_tag">Impossibile rimuovere questo tag</string>
 	<string name="required_field">Campo obbligatorio</string>
@@ -967,6 +1046,7 @@ Language: it
 	<string name="blog_title_invalid">Titolo del sito non valido</string>
 	<string name="notifications_empty_all">Nessuna notifica... per ora.</string>
 	<string name="invalid_site_url_message">Controlla che l\'URL del sito sia valido</string>
+	<string name="jetpack_message_not_admin">Il plugin Jetpack è necessario per le statistiche. Contatta l\'amministratore del sito.</string>
 	<string name="deleting_page">Eliminando la pagina</string>
 	<string name="deleting_post">Eliminando l\'articolo</string>
 	<string name="share_url_post">Condividi l\'articolo</string>
@@ -1001,7 +1081,6 @@ Language: it
 	<string name="nux_oops_not_selfhosted_blog">Accedi a WordPress.com</string>
 	<string name="signing_in">Connessione in corso...</string>
 	<string name="media_add_popup_title">Aggiungi alla libreria multimediale</string>
-	<string name="media_add_new_media_gallery">Crea una galleria</string>
 	<string name="empty_list_default">Questo elenco è vuoto</string>
 	<string name="select_from_media_library">Seleziona dalla libreria multimediale</string>
 	<string name="jetpack_not_found">Il plugin Jetpack non è stato trovato</string>
@@ -1010,7 +1089,6 @@ Language: it
 	<string name="reader_likes_one">Ad una persona piace questo</string>
 	<string name="reader_likes_only_you">Ti piace questo</string>
 	<string name="reader_untitled_post">(Senza titolo)</string>
-	<string name="reader_share_subject">Condividi da %s</string>
 	<string name="reader_btn_share">Condividi</string>
 	<string name="reader_btn_follow">Segui</string>
 	<string name="reader_btn_unfollow">Seguendo</string>
@@ -1114,7 +1192,6 @@ Language: it
 	<string name="anonymous">Anonimo</string>
 	<string name="page">Pagina</string>
 	<string name="post">Articolo</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">nomeutenteblog</string>
 	<string name="upload_scaled_image">Carica e inserisci link all\'immagine ridimensionata</string>
 	<string name="scaled_image">Larghezza immagine ridimensionata</string>

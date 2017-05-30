@@ -1,11 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-05 12:38:45+0000
+Translation-Revision-Date: 2017-05-11 13:33:37+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Atinge și ține apăsat pentru a selecta mai multe comentarii</string>
+	<string name="smart_toast_photo_long_press">Atinge și ține apăsat pentru a selecta mai multe fotografii</string>
+	<string name="photo_picker_choose_video">Alege video de pe dispozitiv</string>
+	<string name="photo_picker_choose_photo">Alege fotografie de pe dispozitiv</string>
+	<string name="new_editor_promo_description">Acum aplicația WordPress include un editor nou, frumos. Încearcă-l prin crearea unui articol nou.</string>
+	<string name="wp_media_title">Media WordPress</string>
+	<string name="media_insert_as_gallery">Adaugă ca galerie</string>
+	<string name="media_insert_individually">Adaugă individual</string>
+	<string name="media_insert_title">Adaugă mai multe fotografii</string>
+	<string name="media_gallery_column_count_multi">%d coloane</string>
+	<string name="media_gallery_column_count_single">O coloană</string>
+	<string name="editor_confirm_email_prompt_negative">Retrimite email</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Am trimis un email la %s când te-ai înregistrat prima dată. Te rog deschide mesajul și dă clic pe butonul albastru pentru a activa publicarea.</string>
+	<string name="editor_confirm_email_prompt_message">Am trimis un email când te-ai înregistrat prima dată. Te rog deschide mesajul și dă clic pe butonul albastru pentru a activa publicarea.</string>
+	<string name="editor_confirm_email_prompt_title">Te rog confirmă-ți adresa de email</string>
+	<string name="toast_verification_email_send_error">Eroare la trimiterea emailului de verificare. Ai făcut deja verificarea?</string>
+	<string name="toast_verification_email_sent">Email de verificare trimis, verifică-ți emailurile primite</string>
+	<string name="toast_saving_post_as_draft">Salvez articolul ca ciornă</string>
+	<string name="photo_picker_capture_video">Ia video</string>
+	<string name="photo_picker_capture_photo">Ia fotografie</string>
+	<string name="delete_site_warning_subtitle">Ai grijă! După ce un sit este șters, el nu mai poate fi recuperat. Te rog fii sigur înainte de a continua.</string>
+	<string name="delete_site_warning">Toate articolele, imaginile și datele vor fi șterse. Și această adresă de sit (%s) va fi pierdută.</string>
+	<string name="delete_site_warning_title">Ștergi situl?</string>
+	<string name="start_over_email_intent_error">Nu pot trimite un email</string>
+	<string name="start_over_email_body">Vreau să încep cu situl %s</string>
+	<string name="start_over_email_subject">Începe cu situl %s</string>
+	<string name="site_picker_remove_site_error">Eroare la înlăturarea sitului, încearcă din nou mai târziu</string>
+	<string name="editor_post_saved_locally_unfinished_media">Articolul are încărcări media nefinalizate și a fost salvat local</string>
+	<string name="sure_to_remove_account">Înlături acest sit din aplicație?</string>
+	<string name="photo_picker_title">Alege fotografie</string>
+	<string name="error_publish_no_network">Dispozitivul este deconectat. Modificări salvate local.</string>
+	<string name="editor_post_saved_online_not_published">Articolul a fost salvat online ca ciornă. Ia în considerare publicarea lui.</string>
+	<string name="editor_post_saved_online">Articolul a fost salvat online</string>
+	<string name="editor_post_saved_locally_not_published">Articol salvat doar local. Ia în considerare publicarea lui.</string>
+	<string name="editor_post_saved_locally">Articolul a fost salvat pe dispozitivul tău</string>
+	<string name="site_settings_image_quality_hint">Calitatea imaginilor. Valorile mai mari înseamnă imagini de calitate mai bună.</string>
+	<string name="site_settings_optimize_images_summary">Activează pentru a redimensiona și comprima imagini</string>
+	<string name="media_encoder_quality_100">Maximă</string>
+	<string name="media_encoder_quality_95">Foarte bună</string>
+	<string name="media_encoder_quality_90">Bună</string>
+	<string name="media_encoder_quality_85">Medie</string>
+	<string name="media_encoder_quality_80">Slabă</string>
+	<string name="media_upload_state_uploaded">Încărcată</string>
+	<string name="media_upload_state_failed">Eșuată</string>
+	<string name="media_upload_state_deleted">Ștearsă</string>
+	<string name="media_upload_state_deleting">Se șterge</string>
+	<string name="media_upload_state_uploading">Se încarcă</string>
+	<string name="media_upload_state_queued">În coada de așteptare</string>
+	<string name="update_draft">Actualizează ciorna</string>
+	<string name="keep_editing">Continuă editarea</string>
+	<string name="image_quality">Calitate imagine</string>
 	<string name="error_all_media_upload_canceled">Toate încărcările media au fost anulate din cauza unei erori necunoscute. Te rog reîncearcă încărcarea</string>
 	<string name="error_unknown_post_type">Format de articol necunoscut</string>
 	<string name="error_unknown_post">Articol necunoscut, copia locală a acestui articol poate nu este sincronizată cu serverul</string>
@@ -32,7 +83,6 @@ Language: ro
 	<string name="error_media_unauthorized">Nu ai permisiunea de a vedea sau edita media</string>
 	<string name="error_media_not_found">Media n-a putut fi găsită</string>
 	<string name="error_media_insufficient_fs_permissions">Este necesară permisiunea de citire în fișierul media</string>
-	<string name="site_settings_optimize_images_hint">Activează pentru a salva lățimea de bandă în conexiuni pentru mobil</string>
 	<string name="site_settings_optimize_images">Optimizează imagini</string>
 	<string name="no_site_error">Nu m-am putut conecta la situl WordPress. Nu este niciun sit WordPress valid la\n        această adresă. Verifică adresa sitului (URL) pe care ai introdus-o.</string>
 	<string name="media_generic_error">A apărut o eroare media</string>
@@ -158,7 +208,6 @@ Language: ro
 	<string name="format_bar_description_bold">Aldin</string>
 	<string name="image_settings_dismiss_dialog_title">Renunți la modificările nesalvate?</string>
 	<string name="stop_upload_dialog_title">Oprești încărcarea?</string>
-	<string name="stop_upload_button">Oprește încărcarea</string>
 	<string name="alert_error_adding_media">A apărut o eroare în timpul inserării media</string>
 	<string name="alert_action_while_uploading">Acum încarci media. Te rog așteaptă până când aceasta se termină.</string>
 	<string name="alert_insert_image_html_mode">Nu se poate insera media direct în modul HTML. Te rog comută înapoi la modul vizual.</string>
@@ -252,7 +301,6 @@ Language: ro
 	<string name="delete_site_summary">Această acțiune nu poate fi inversată. Ștergerea sitului tău va înlătura tot conținutul, contributorii și domeniile lui.</string>
 	<string name="delete_site_hint">Ștergere sit</string>
 	<string name="export_site_hint">Exportă situl tău într-un fișier XML</string>
-	<string name="are_you_sure">Sigur?</string>
 	<string name="export_site_summary">Dacă nu te răzgândești, te rog asigură-te că ți-ai făcut timp să exporți conținutul până acum. El nu va putea fi recuperat în viitor.</string>
 	<string name="keep_your_content">Păstrează conținutul tău</string>
 	<string name="domain_removal_hint">Domeniile ce nu vor mai funcționa după ce ai înlăturat situl tău</string>
@@ -334,9 +382,7 @@ Language: ro
 	<string name="error_refresh_comments_showing_older">Comentariile nu pot fi reîmprospătate acum - sunt arătate comentarii mai vechi</string>
 	<string name="editor_post_settings_set_featured_image">Setează imaginea reprezentativă</string>
 	<string name="editor_post_settings_featured_image">Imagine reprezentativă</string>
-	<string name="new_editor_promo_desc">aplicația WordPress pentru Android include acum un un nou și frumos \neditor vizual. Încearcă-l creând un nou articol.</string>
-	<string name="new_editor_promo_title">Editor nou nouț</string>
-	<string name="new_editor_promo_button_label">Super, mulțumesc!</string>
+	<string name="new_editor_promo_title">Editor nou</string>
 	<string name="visual_editor_enabled">Editor vizual validat</string>
 	<string name="editor_content_placeholder">Partajează aici povestea ta...</string>
 	<string name="editor_page_title_placeholder">Titlu pagină</string>
@@ -522,7 +568,6 @@ Language: ro
 	<string name="media_file_name">Nume fișier: %s</string>
 	<string name="media_uploaded_on">Încărcat la: %s</string>
 	<string name="media_dimensions">Dimensiuni: %s</string>
-	<string name="upload_queued">În coadă</string>
 	<string name="media_file_type">Tip fișier: %s</string>
 	<string name="reader_label_gap_marker">Încarcă mai multe articole</string>
 	<string name="notifications_no_search_results">Niciun site nu s-a potrivit cu \'%s\'</string>
@@ -626,7 +671,7 @@ Language: ro
 	<string name="stats_insights">Perspective</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Pentru a-ți vedea statisticile, autentifică-te pe WordPress.com în contul pe care-l folosești pentru a te conecta la Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Ești interesat de alte statistici recente? Le-am mutat pe pagina de Perspective.</string>
-	<string name="me_disconnect_from_wordpress_com">Deconectare de la WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Dezautentificare din WordPress.com</string>
 	<string name="me_connect_to_wordpress_com">Conectare la WordPress.com</string>
 	<string name="me_btn_login_logout">Autentificare/Deautentificare</string>
 	<string name="site_picker_cant_hide_current_site">"%s" n-a fost ascuns pentru că este situl curent</string>
@@ -664,7 +709,6 @@ Language: ro
 	<string name="invalid_verification_code">Cod de verificare invalid</string>
 	<string name="verification_code">Cod de verificare</string>
 	<string name="editor_toast_invalid_path">Cale fișier invalidă</string>
-	<string name="error_publish_no_network">Nu pot publica cât timp nu există o conexiune. Salvat ca ciornă.</string>
 	<string name="language">Limbă</string>
 	<string name="device">Dispozitiv</string>
 	<string name="media_details_label_file_type">Tip fișier</string>
@@ -756,14 +800,12 @@ Language: ro
 	<string name="themes_fetching">Se aduc teme...</string>
 	<string name="stats_empty_clicks_desc">Când conținutul tău include legături la alte situri, vei vedea pe care dintre ele vizitatorii tăi au dat cele mai multe clicuri.</string>
 	<string name="ssl_certificate_details">Detalii</string>
-	<string name="sure_to_remove_account">Înlătur acest sit?</string>
 	<string name="delete_sure_post">Șterge acest articol</string>
 	<string name="confirm_delete_multi_media">Ștergi elementele selectate?</string>
 	<string name="delete_sure">Șterge această ciornă</string>
 	<string name="delete_sure_page">Șterge această pagină</string>
 	<string name="cab_selected">%d selectate</string>
 	<string name="confirm_delete_media">Ștergi elementul selectat?</string>
-	<string name="media_gallery_date_range">Afișare media de la %1$s la %2$s</string>
 	<string name="posting_post">Public "%s"</string>
 	<string name="signing_out">Deautentificare....</string>
 	<string name="pages_empty_list">Nicio pagină încă. De ce să nu creezi una?</string>
@@ -926,7 +968,6 @@ Language: ro
 	<string name="category_parent">Părintele categoriei (opțional):</string>
 	<string name="category_desc">Descriere categorie (opțional)</string>
 	<string name="category_name">Nume categorie</string>
-	<string name="reader_share_link">Partajare legătură</string>
 	<string name="share_action_media">Bibliotecă media</string>
 	<string name="share_action_post">Articol nou</string>
 	<string name="page_not_published">Starea paginii nu e publicată</string>
@@ -1045,7 +1086,6 @@ Language: ro
 	<string name="create_account_wpcom">Crează un cont la WordPress.com</string>
 	<string name="reader_empty_followed_tags">Nu urmărești nicio etichetă</string>
 	<string name="empty_list_default">Această listă e goală</string>
-	<string name="reader_share_subject">Partajat de la %s</string>
 	<string name="reader_btn_share">Partajare</string>
 	<string name="reader_toast_err_tag_exists">Urmărești deja eticheta asta</string>
 	<string name="reader_toast_err_tag_invalid">Aceea nu e o etichetă validă</string>
@@ -1065,7 +1105,6 @@ Language: ro
 	<string name="reader_toast_err_url_intent">Nu se poate deschide %s</string>
 	<string name="reader_toast_err_comment_failed">Nu s-a putut publica comentariul tău</string>
 	<string name="button_next">Următor</string>
-	<string name="media_add_new_media_gallery">Creează galerie</string>
 	<string name="connecting_wpcom">Autentificare pe WordPress.com</string>
 	<string name="stats_view_tags_and_categories">Etichete și categorii</string>
 	<string name="passcode_preference_title">PIN blocat</string>
@@ -1153,7 +1192,6 @@ Language: ro
 	<string name="page">Pagină</string>
 	<string name="posts">Articole</string>
 	<string name="no_network_title">Nu e disponibilă nicio rețea.</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">nume utilizator blog</string>
 	<string name="scaled_image">Lățime imagine scalată</string>
 	<string name="upload_scaled_image">Încarcă și leagă la imaginea scalată</string>

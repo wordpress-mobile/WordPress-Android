@@ -60,7 +60,6 @@ Language: sk
 	<string name="image_caption">Titulok</string>
 	<string name="image_settings_save_toast">Zmeny uložené</string>
 	<string name="image_settings_dismiss_dialog_title">Zahodiť neuložené zmeny?</string>
-	<string name="stop_upload_button">Zastaviť nahrávanie</string>
 	<string name="stop_upload_dialog_title">Zastaviť nahrávanie?</string>
 	<string name="alert_error_adding_media">Nastala chyba pri vkladaní súboru</string>
 	<string name="alert_action_while_uploading">Práve nahrávate súbory. Počkajte na dokončenie.</string>
@@ -120,7 +119,6 @@ Language: sk
 	<string name="export_email_sent">Exportovaný email odoslaný!</string>
 	<string name="exporting_content_progress">Exportujem obsah...</string>
 	<string name="delete_site_progress">Mazanie stránky...</string>
-	<string name="are_you_sure">Ste si istý?</string>
 	<string name="export_site_hint">Exportovať Vašu stránku ako XML súbor</string>
 	<string name="keep_your_content">Ponechať Váš obsah</string>
 	<string name="site_settings_export_content_title">Exportovať obsah</string>
@@ -169,8 +167,6 @@ Language: sk
 	<string name="web_address">Webová adresa</string>
 	<string name="editor_post_settings_set_featured_image">Nastaviť ilustračný obrázok</string>
 	<string name="editor_post_settings_featured_image">Ilustračný obrázok</string>
-	<string name="new_editor_promo_title">Úplne nový editor</string>
-	<string name="new_editor_promo_button_label">Skvelé, ďakujem!</string>
 	<string name="visual_editor_enabled">Vizuálny editor povolený</string>
 	<string name="editor_page_title_placeholder">Nadpis stránky</string>
 	<string name="editor_post_title_placeholder">Nadpis článku</string>
@@ -266,7 +262,6 @@ Language: sk
 	<string name="media_uploaded_on">Nahrané: %s</string>
 	<string name="media_file_name">Názov súboru: %s</string>
 	<string name="media_file_type">Typ súboru: %s</string>
-	<string name="upload_queued">Zaradené do fronty</string>
 	<string name="reader_label_gap_marker">Načítať ďalšie články</string>
 	<string name="notifications_no_search_results">Žiadne stránky sa nezhodujú s \'%s\'</string>
 	<string name="search_sites">Nájsť webové stránky</string>
@@ -398,7 +393,6 @@ Language: sk
 	<string name="invalid_verification_code">Nesprávny overovací kód</string>
 	<string name="verification_code">Overovací kód</string>
 	<string name="editor_toast_invalid_path">Nesprávna cesta súboru</string>
-	<string name="error_publish_no_network">Nedá sa publikovať, nefunguje pripojenie. Uložené ako koncept.</string>
 	<string name="media_details_label_file_type">Typ súboru</string>
 	<string name="media_details_label_file_name">Názov súboru</string>
 	<string name="language">Jazyk</string>
@@ -490,8 +484,6 @@ Language: sk
 	<string name="stats_for">Štatistiky pre %s</string>
 	<string name="themes_fetching">Načítavajú sa témy</string>
 	<string name="ssl_certificate_details">Detaily</string>
-	<string name="sure_to_remove_account">Odstrániť webovú stránku?</string>
-	<string name="media_gallery_date_range">Zobrazuje médiá od %1$s do %2$s</string>
 	<string name="cab_selected">%d vybraných</string>
 	<string name="confirm_delete_media">Zmazať vybranú položku?</string>
 	<string name="confirm_delete_multi_media">Zmazať vybrané položky?</string>
@@ -645,7 +637,6 @@ Language: sk
 	<string name="required_field">Povinné pole</string>
 	<string name="reader_toast_err_remove_tag">Túto značku nie je možné odstrániť</string>
 	<string name="reader_toast_err_add_tag">Túto značku nie je možné pridať</string>
-	<string name="reader_share_link">Zdieľať odkaz</string>
 	<string name="reader_title_applog">Záznamy aplikácie</string>
 	<string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
 	<string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
@@ -785,12 +776,10 @@ Language: sk
 	<string name="reader_btn_unfollow">Sledujem</string>
 	<string name="reader_btn_follow">Sledovať</string>
 	<string name="reader_btn_share">Zdielať</string>
-	<string name="reader_share_subject">Zdieľané z %s</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
 	<string name="jetpack_not_found">Modul Jetpack nebol nájdený</string>
 	<string name="select_from_media_library">Vybrať z knižnice súborov</string>
 	<string name="empty_list_default">Tento zoznam je prázdny</string>
-	<string name="media_add_new_media_gallery">Vytvoriť galériu</string>
 	<string name="media_add_popup_title">Pridať do knižnice súborov</string>
 	<string name="passcode_turn_on">Zapnúť funkciu overovanie PIN kódom</string>
 	<string name="passcode_turn_off">Vypnúť funkciu overovanie PIN kódom</string>
@@ -876,7 +865,6 @@ Language: sk
 	<string name="no_network_title">Sieť nedostupná</string>
 	<string name="featured_in_post">Vložiť obrázok do príspevku</string>
 	<string name="featured">Použiť ilustračný obrázok</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">Používateľské meno</string>
 	<string name="scaled_image">Šírka zmenšeného obrázku</string>
 	<string name="upload_scaled_image">Nahrať a zobraziť odkaz na zmenšený obrázok</string>

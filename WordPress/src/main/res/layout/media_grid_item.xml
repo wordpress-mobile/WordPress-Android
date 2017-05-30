@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -88,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:shadowColor="@color/grey_dark"
                 android:shadowDx="2"
                 android:shadowDy="2"
@@ -113,4 +115,22 @@
         tools:text="5"
         tools:visibility="visible" />
 
+    <FrameLayout
+        android:id="@+id/frame_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/image_preview"
+            android:layout_width="@dimen/photo_picker_preview_icon"
+            android:layout_height="@dimen/photo_picker_preview_icon"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:background="@drawable/preview_icon_background"
+            android:padding="@dimen/margin_medium"
+            app:srcCompat="@drawable/ic_preview_white_24dp" />
+    </FrameLayout>
 </RelativeLayout>

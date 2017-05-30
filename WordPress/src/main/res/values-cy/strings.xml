@@ -23,7 +23,6 @@ Language: cy_GB
 	<string name="error_media_unauthorized">Nid oes gennych ganiatâd i weld y na golygu  cyfryngau</string>
 	<string name="error_media_not_found">Methu canfod cyfryngau</string>
 	<string name="error_media_insufficient_fs_permissions">Mae angen caniatâd darllen ar y ffeil cyfrwng</string>
-	<string name="site_settings_optimize_images_hint">Galluogi i arbed lled band ar gysylltiadau symudol</string>
 	<string name="site_settings_optimize_images">Optimeiddio Delweddau</string>
 	<string name="no_site_error">Methu cysylltu â gwefan WordPress. Nid oes gwefan WordPress dilys yn y cyfeiriad\n      hwn. Gwiriwch cyfeiriad y wefan (URL).</string>
 	<string name="media_generic_error">Digwyddodd gwall cyfryngau</string>
@@ -149,7 +148,6 @@ Language: cy_GB
 	<string name="format_bar_description_bold">Trwm</string>
 	<string name="image_settings_dismiss_dialog_title">Dileu\'r newidiadau heb eu cadw?</string>
 	<string name="stop_upload_dialog_title">Atal y llwytho?</string>
-	<string name="stop_upload_button">Atal y Llwytho</string>
 	<string name="alert_error_adding_media">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
 	<string name="alert_action_while_uploading">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
 	<string name="alert_insert_image_html_mode">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
@@ -243,7 +241,6 @@ Language: cy_GB
 	<string name="delete_site_summary">Nid oes modd dadwneud y weithred hon. Bydd dileu\'r eich gwefan yn cael gwared ar yr holl gynnwys, cyfranwyr, a pharthau\'r wefan.</string>
 	<string name="delete_site_hint">Dileu\'r wefan</string>
 	<string name="export_site_hint">Allforio eich gwefan i ffeil XML</string>
-	<string name="are_you_sure">Ydych chi\'n Siŵr?</string>
 	<string name="export_site_summary">Os ydych yn siŵr, cymrwch eich amser ac allforio eich cynnwys nawr. Ni fydd modd ei adfer yn y dyfodol.</string>
 	<string name="keep_your_content">Cadw Eich Cynnwys</string>
 	<string name="domain_removal_hint">Ni fydd y parth yn gweithio unwaith y dilëwch eich gwefan</string>
@@ -325,9 +322,6 @@ Language: cy_GB
 	<string name="error_refresh_comments_showing_older">Nid oes modd adnewyddu sylwadau ar hyn o bryd - yn dangos sylwadau hŷn</string>
 	<string name="editor_post_settings_set_featured_image">Gosod Delwedd Nodwedd</string>
 	<string name="editor_post_settings_featured_image">Delwedd Nodwedd</string>
-	<string name="new_editor_promo_desc">Mae\'r ap WordPress Android bellach yn cynnwys golygydd  gweledol\n  newydd hardd. Rhowch gynnig arno drwy greu cofnod newydd.</string>
-	<string name="new_editor_promo_title">Golygydd newydd sbon</string>
-	<string name="new_editor_promo_button_label">Gwych, diolch!</string>
 	<string name="visual_editor_enabled">Galluogwyd y Golygydd Gweledol</string>
 	<string name="editor_content_placeholder">Rhanwch eich stori yma…</string>
 	<string name="editor_page_title_placeholder">Teitl Tudalen</string>
@@ -513,7 +507,6 @@ Language: cy_GB
 	<string name="media_file_name">Enw ffeil: %s</string>
 	<string name="media_uploaded_on">Llwythwyd i fyny ar: %s</string>
 	<string name="media_dimensions">Dimensiynau: %s</string>
-	<string name="upload_queued">Mewn ciw</string>
 	<string name="media_file_type">Math o ffeil: %s</string>
 	<string name="reader_label_gap_marker">Llwytho rhagor o gofnodion</string>
 	<string name="notifications_no_search_results">Dim gwefannau\'n cydweddu â \'%s\'</string>
@@ -617,7 +610,6 @@ Language: cy_GB
 	<string name="stats_insights">Mewnwelediadau</string>
 	<string name="stats_sign_in_jetpack_different_com_account">I weld eich ystadegau, mewngofnodwch i\'r cyfrif WordPress.com rydych wedi ei ddefnyddio i gysylltu Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Chwilio am eich Ystadegau Diweddar Eraill? Mae nhw wedi eu symud i\'r dudalen Mewnwelediad.</string>
-	<string name="me_disconnect_from_wordpress_com">Allgofnodwch o WordPress.com</string>
 	<string name="me_btn_login_logout">Mewngofnodi/Allgofnodi</string>
 	<string name="me_connect_to_wordpress_com">Mewngofnodwch i WordPress.com</string>
 	<string name="me_btn_support">Cymorth a Chefnogaeth</string>
@@ -655,7 +647,6 @@ Language: cy_GB
 	<string name="invalid_verification_code">Cod dilysu annilys</string>
 	<string name="verification_code">Cod dilysu</string>
 	<string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
-	<string name="error_publish_no_network">Methu cyhoeddi heb gysylltiad. Cadw fel drafft.</string>
 	<string name="device">Dyfais</string>
 	<string name="language">Iaith</string>
 	<string name="media_details_label_file_type">Math o ffeil</string>
@@ -748,8 +739,6 @@ Language: cy_GB
 	<string name="themes_fetching">Estyn themâu…</string>
 	<string name="ssl_certificate_details">Manylion</string>
 	<string name="confirm_delete_media">Dileu\'r eitem hon?</string>
-	<string name="sure_to_remove_account">Tynnu\'r blog?</string>
-	<string name="media_gallery_date_range">Dangos cyfrwng o %1$s hyd %2$s</string>
 	<string name="cab_selected">%d wedi eu dewis</string>
 	<string name="delete_sure_post">Dileu\'r cofnod</string>
 	<string name="delete_sure">Dileu\'r drafft</string>
@@ -906,7 +895,6 @@ Language: cy_GB
 	<string name="reader_toast_err_remove_tag">Methu tynnu\'r tag hwn</string>
 	<string name="reader_toast_err_add_tag">Methu ychwanegu\'r tag hwn</string>
 	<string name="reader_title_applog">Cofnod yr ap</string>
-	<string name="reader_share_link">Rhannu dolen</string>
 	<string name="jetpack_message_not_admin">Mae angen yr ategyn Jetpack ar gyfer adrodd ar yr ystadegau. Cysylltwch â gweinyddwr y wefan.</string>
 	<string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
 	<string name="error_blog_hidden">Mae\'r blog hwn yn gudd ac nid oes modd ei lwytho. Galluogwch y blog eto o fewn y gosodiadau a cheisiwch eto.</string>
@@ -1048,12 +1036,10 @@ Language: cy_GB
 	<string name="reader_btn_follow">Dilyn</string>
 	<string name="reader_btn_unfollow">Yn dilyn</string>
 	<string name="reader_btn_share">Rhannu</string>
-	<string name="reader_share_subject">Rhannu o %s</string>
 	<string name="reader_untitled_post">(Dideitl)</string>
 	<string name="jetpack_not_found">Heb ganfod ategyn jetpack</string>
 	<string name="select_from_media_library">Dewiswch o\'r llyfrgell cyfryngau</string>
 	<string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
-	<string name="media_add_new_media_gallery">Creu oriel</string>
 	<string name="media_add_popup_title">Ychwanegu at y llyfrgell cyfryngau</string>
 	<string name="reader_hint_comment_on_comment">Ateb sylw…</string>
 	<string name="button_next">Nesaf</string>
@@ -1145,7 +1131,6 @@ Language: cy_GB
 	<string name="featured">Defnyddio fel delwedd nodwedd</string>
 	<string name="featured_in_post">Cynnwys delwedd yng nghynnwys y cofnod</string>
 	<string name="blogusername">blogusername</string>
-	<string name="ok">Iawn</string>
 	<string name="scaled_image">Lled y ddelwedd graddedig</string>
 	<string name="upload_scaled_image">Llwytho a chysylltu â delwedd graddedig</string>
 	<string name="scheduled">Amserlennwyd</string>

@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.2'
         classpath 'com.novoda:bintray-release:0.3.4'
     }
 }
@@ -30,7 +30,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        versionName "1.14.0"
+        versionName "1.15.0"
         minSdkVersion 14
         targetSdkVersion 25
     }

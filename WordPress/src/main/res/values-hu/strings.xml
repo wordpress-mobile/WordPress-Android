@@ -21,7 +21,6 @@ Language: hu
 	<string name="language">Nyelv</string>
 	<string name="device">Eszköz</string>
 	<string name="two_step_sms_sent">Nézzük meg a szöveges üzeneteink között az ellenőrző kódot</string>
-	<string name="error_publish_no_network">Internetkapcsolat nélkül nem lehet közzétenni. Elmentve vázlatként.</string>
 	<string name="stats_view_authors">Szerzők</string>
 	<string name="publisher">Közzétevő:</string>
 	<string name="pages_fetching">Oldalak betöltése...</string>
@@ -140,7 +139,6 @@ Language: hu
 	<string name="dlg_trashing_comments">Lomtárba küldés</string>
 	<string name="pending_review">Áttekintésre várakozik</string>
 	<string name="download">Média letöltés folyamatban</string>
-	<string name="media_add_new_media_gallery">Galéria létrehozása</string>
 	<string name="reader_btn_follow">Követés</string>
 	<string name="empty_list_default">Ez a lista üres</string>
 	<string name="themes">Sablonok</string>
@@ -227,7 +225,6 @@ Language: hu
 	<string name="page">Oldal</string>
 	<string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
 	<string name="posts">Bejegyzés</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">honlap-felhasználó</string>
 	<string name="upload_scaled_image">Feltöltés és hivatkozás az átméretezett képre</string>
 	<string name="scaled_image">Átméretezett kép szélessége</string>

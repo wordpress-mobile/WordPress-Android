@@ -1,11 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-07 10:50:49+0000
+Translation-Revision-Date: 2017-05-16 11:46:49+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Birden çok yorum seçmek için dokunun ve basılı tutun</string>
+	<string name="smart_toast_photo_long_press">Birden çok fotoğraf seçmek için dokunun ve basılı tutun</string>
+	<string name="photo_picker_choose_video">Cihazdan bir video seçin</string>
+	<string name="photo_picker_choose_photo">Cihazdan bir fotoğraf seçin</string>
+	<string name="new_editor_promo_description">WordPress uygulaması artık beraberinde yeni bir düzenleyici içeriyor. Yeni bir yazı oluşturup deneyimleyin.</string>
+	<string name="wp_media_title">WordPress ortam dosyaları</string>
+	<string name="media_insert_as_gallery">Galeri olarak ekle</string>
+	<string name="media_insert_individually">Tekil olarak ekle</string>
+	<string name="media_insert_title">Birden çok fotoğraf ekle</string>
+	<string name="media_gallery_column_count_multi">%d sütun</string>
+	<string name="media_gallery_column_count_single">1 sütun</string>
+	<string name="editor_confirm_email_prompt_negative">E-postayı yeniden gönder</string>
+	<string name="editor_confirm_email_prompt_message_with_email">İlk kez oturum açtığınızda %s adresine bir e-posta gönderdik. Lütfen mesajı açın ve yayınlamayı etkinleştirmek için mavi düğmeye tıklayın.</string>
+	<string name="editor_confirm_email_prompt_message">İlk kez oturum açtığınızda size bir e-posta gönderdik. Lütfen mesajı açın ve yayınlamayı etkinleştirmek için mavi düğmeye tıklayın.</string>
+	<string name="editor_confirm_email_prompt_title">Lütfen e-posta adresinizi doğrulayın</string>
+	<string name="toast_verification_email_send_error">Doğrulama e-postası gönderilirken hata oluştu. Zaten doğruladınız mı?</string>
+	<string name="toast_verification_email_sent">Doğrulama e-postası gönderildi, gelen kutunuzu kontrol edin</string>
+	<string name="toast_saving_post_as_draft">Yazıyı taslak olarak kaydet</string>
+	<string name="photo_picker_capture_photo">Fotoğraf çek</string>
+	<string name="photo_picker_capture_video">Video çek</string>
+	<string name="delete_site_warning_subtitle">Dikkatli ol! Site bir kere silindiğinde geri kurtarılamaz. Lütfen ilerlemeden önce emin olun.</string>
+	<string name="delete_site_warning">Tüm gönderileriniz, görüntüleriniz ve veriler silinecektir. Sitenin adresi (%s) kaybolacaktır.</string>
+	<string name="delete_site_warning_title">Site silinsin mi?</string>
+	<string name="start_over_email_intent_error">E-posta gönderilemiyor</string>
+	<string name="start_over_email_body">%s sitesine baştan başlamak istiyorum</string>
+	<string name="start_over_email_subject">%s sitesine baştan başla</string>
+	<string name="site_picker_remove_site_error">Site kaldırılırken hata oluştu, lütfen daha sonra tekrar deneyin</string>
+	<string name="editor_post_saved_locally_unfinished_media">Gönderide tamamlanmamış ortam yüklemeleri olduğundan yerel olarak kaydedildi</string>
+	<string name="sure_to_remove_account">Bu site uygulamadan kaldırılsın mı?</string>
+	<string name="photo_picker_title">Fotoğraf seç</string>
+	<string name="error_publish_no_network">Cihaz çevrimdışı. Değişiklikler yerel olarak kaydedildi.</string>
+	<string name="editor_post_saved_online_not_published">Yazı çevrimiçi taslak olarak kaydedildi. Yayımlamayı düşünün.</string>
+	<string name="editor_post_saved_online">Yazı çevrimiçi kaydedildi.</string>
+	<string name="editor_post_saved_locally_not_published">Yazı sadece yerel olarak kaydedildi. yayımlamayı düşünün.</string>
+	<string name="editor_post_saved_locally">Yazı cihazınız üzerinde kaydedildi</string>
+	<string name="site_settings_image_quality_hint">Görüntülerin kalitesi. Daha yüksek değerler daha kaliteli görüntü anlamına gelir.</string>
+	<string name="site_settings_optimize_images_summary">Görüntülerin boyutlandırılıp sıkıştırılabilmelerini etkinleştir</string>
+	<string name="media_encoder_quality_100">En üst</string>
+	<string name="media_encoder_quality_95">Çok yüksek</string>
+	<string name="media_encoder_quality_90">Yüksek</string>
+	<string name="media_encoder_quality_85">Orta</string>
+	<string name="media_encoder_quality_80">Düşük</string>
+	<string name="media_upload_state_uploaded">Yüklendi</string>
+	<string name="media_upload_state_failed">Başarısız oldu</string>
+	<string name="media_upload_state_deleted">Silindi</string>
+	<string name="media_upload_state_deleting">Siliniyor</string>
+	<string name="media_upload_state_uploading">Yükleniyor</string>
+	<string name="media_upload_state_queued">Sırada</string>
+	<string name="update_draft">Taslağı güncelle</string>
+	<string name="keep_editing">Düzenlemeye devam et</string>
+	<string name="image_quality">Görsel kalitesi</string>
 	<string name="error_all_media_upload_canceled">Tüm ortam yüklemeleri bilimeyen bir hata sebebiyle iptal edildi. Lütfen tekrar yüklemeyi deneyin</string>
 	<string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
 	<string name="error_unknown_post">Bilinmeyen yazı, yazının yerel kopyası sunucu ile eşzamanlı olmayabilir</string>
@@ -32,7 +83,6 @@ Language: tr
 	<string name="error_media_unauthorized">Ortamı görüntülemek ya da düzenlemek için izniniz yok</string>
 	<string name="error_media_not_found">Ortam bulunamadı</string>
 	<string name="error_media_insufficient_fs_permissions">Ortam dosyası için okuma izni gerekiyor</string>
-	<string name="site_settings_optimize_images_hint">Mobil bağlantılarda bant genişliği korumasını etkinleştir</string>
 	<string name="site_settings_optimize_images">Görselleri iyileştir</string>
 	<string name="no_site_error">WordPress sitesine bağlanılamıyor. Bu adreste geçerli bir WordPress sitesi\n     bulunmuyor. Lütfen site adresini kontrol edin.</string>
 	<string name="media_upload_error">Ortam yükleme hatası oluştu</string>
@@ -158,7 +208,6 @@ Language: tr
 	<string name="format_bar_description_bold">Kalın</string>
 	<string name="image_settings_dismiss_dialog_title">Kaydedilmemiş değişiklikler atılsın mı?</string>
 	<string name="stop_upload_dialog_title">Yükleme durdurulsun mu?</string>
-	<string name="stop_upload_button">Yüklemeyi durdur</string>
 	<string name="alert_error_adding_media">Ortam eklenirken bir hata oluştu</string>
 	<string name="alert_action_while_uploading">Şu anda medya yüklüyorsunuz. Lütfen bu işlem tamamlanıncaya kadar bekleyin.</string>
 	<string name="alert_insert_image_html_mode">Ortam HTML modunda doğrudan ekleyemiyor. Lütfen tekrar görsel moduna geçin.</string>
@@ -252,7 +301,6 @@ Language: tr
 	<string name="delete_site_summary">Bu eylem geri alınamaz. Siteniz silindiğinde tüm içerik, katılımcılar ve alan adları silinecektir.</string>
 	<string name="delete_site_hint">Siteyi sil</string>
 	<string name="export_site_hint">İçeriğinizi XML dosyası ile dışarı aktarın</string>
-	<string name="are_you_sure">Emin misiniz?</string>
 	<string name="export_site_summary">Eminseniz lütfen biraz vakit ayırıp içeriğinizi dışarı aktarın. Aktarmazsanız ilerde geri getirmenin yolu olmayacak.</string>
 	<string name="keep_your_content">İçeriğinizi koruyun</string>
 	<string name="domain_removal_hint">Sitenizi kaldırdığınızda şu alan adları artık çalışmayacak</string>
@@ -334,9 +382,7 @@ Language: tr
 	<string name="error_refresh_comments_showing_older">Yorumlar şu anda yenilenemiyor, eski yorumlar gösteriliyor</string>
 	<string name="editor_post_settings_set_featured_image">Öne çıkarılan görsel ayarla</string>
 	<string name="editor_post_settings_featured_image">Öne Çıkan Görüntü</string>
-	<string name="new_editor_promo_desc">Android için WordPress uygulaması artık yeni ve güzel bir görsel düzenleyici\n içeriyor. Yeni bir gönderi oluşturarak deneyin.</string>
-	<string name="new_editor_promo_title">Yepyeni bir düzenleyici</string>
-	<string name="new_editor_promo_button_label">Harika, teşekkürler!</string>
+	<string name="new_editor_promo_title">Yeni düzenleyici</string>
 	<string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>
 	<string name="editor_content_placeholder">Hikayenizi burada paylaşın...</string>
 	<string name="editor_page_title_placeholder">Sayfa Başlığı</string>
@@ -522,7 +568,6 @@ Language: tr
 	<string name="media_file_name">Dosya adı: %s</string>
 	<string name="media_uploaded_on">Yükleme tarihi: %s</string>
 	<string name="media_dimensions">Boyutlar: %s</string>
-	<string name="upload_queued">Sırada</string>
 	<string name="media_file_type">Dosya tipi: %s</string>
 	<string name="reader_label_gap_marker">Daha fazla yazı yükle</string>
 	<string name="notifications_no_search_results">\'%s\' hiçbir siteyle eşleşmedi</string>
@@ -665,7 +710,6 @@ Language: tr
 	<string name="editor_toast_invalid_path">Geçersiz dosya yolu</string>
 	<string name="language">Dil</string>
 	<string name="device">Cihaz</string>
-	<string name="error_publish_no_network">Bağlantı yokken yayımlanamıyor. Taslak olarak kaydedildi.</string>
 	<string name="media_details_label_file_type">Dosya tipi</string>
 	<string name="media_details_label_file_name">Dosya adı</string>
 	<string name="auth_required">Devam etmek için tekrar giriş yapın.</string>
@@ -756,14 +800,12 @@ Language: tr
 	<string name="stats_visitors">Ziyaretçiler</string>
 	<string name="stats_totals_publicize">Takipçiler</string>
 	<string name="ssl_certificate_details">Detaylar</string>
-	<string name="sure_to_remove_account">Bu site kaldırılsın mı?</string>
 	<string name="delete_sure_post">Bu yazıyı sil</string>
 	<string name="delete_sure">Bu taslağı sil</string>
 	<string name="delete_sure_page">Bu sayfayı sil</string>
 	<string name="confirm_delete_multi_media">Seçili ögeler silinsin mi?</string>
 	<string name="confirm_delete_media">Seçili öge silinsin mi?</string>
 	<string name="cab_selected">%d seçili</string>
-	<string name="media_gallery_date_range">%1$s ve %2$s arası ortam dosyaları gösteriliyor</string>
 	<string name="comment_reply_to_user">Şunu cevapla: %s</string>
 	<string name="reader_empty_posts_liked">Henüz hiçbir yazıyı beğenmediniz</string>
 	<string name="faq_button">SSS</string>
@@ -950,7 +992,6 @@ Language: tr
 	<string name="http_authorization_required">Yetkilendirme gerekli</string>
 	<string name="new_media">Yeni medya</string>
 	<string name="view_site">Siteyi görüntüle</string>
-	<string name="reader_share_link">Bağlantıyı paylaş</string>
 	<string name="reader_toast_err_add_tag">Bu etiket eklenemiyor</string>
 	<string name="reader_toast_err_remove_tag">Bu etiket kaldırılamıyor</string>
 	<string name="required_field">Gerekli alan</string>
@@ -1040,12 +1081,10 @@ Language: tr
 	<string name="password_invalid">Daha güvenli bir paraloya ihtiyacınız var. 7 veya daha fazla karakter kullandığınızdan emin olun, büyük ve küçük harfleri, numaraları ve özel karakterleri harmanlayın.</string>
 	<string name="signing_in">Giriş yapılıyor...</string>
 	<string name="media_add_popup_title">Medya kütüphanesine ekle</string>
-	<string name="media_add_new_media_gallery">Galeri oluştur</string>
 	<string name="empty_list_default">Bu liste boş</string>
 	<string name="select_from_media_library">Medya kütüphanesinden seç</string>
 	<string name="jetpack_not_found">Jetpack eklentisi bulunamadı</string>
 	<string name="reader_untitled_post">(Başlıksız)</string>
-	<string name="reader_share_subject">%s den paylaşıldı</string>
 	<string name="reader_btn_share">Paylaş</string>
 	<string name="reader_toast_err_tag_exists">Bu etiketi zaten takip ediyorsunuz</string>
 	<string name="reader_toast_err_tag_invalid">Bu geçerli bir etiket değil</string>
@@ -1153,7 +1192,6 @@ Language: tr
 	<string name="featured_in_post">Görseli yazı içeriğine ekle</string>
 	<string name="posts">Yazılar</string>
 	<string name="post">Yazı</string>
-	<string name="ok">Tamam</string>
 	<string name="blogusername">blogkullanıcıadı</string>
 	<string name="scaled_image">Oranlanmış görsel genişliği</string>
 	<string name="upload_scaled_image">Boyutlandırılmış görseli yükle ve bağlantı ver</string>

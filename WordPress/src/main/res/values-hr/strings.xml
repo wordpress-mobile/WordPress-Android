@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-21 08:44:46+0000
+Translation-Revision-Date: 2017-05-03 17:54:54+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -8,7 +8,6 @@ Language: hr
 <resources>
 	<string name="show_purchases">Prikaži kupovine</string>
 	<string name="delete_site_hint">Obriši web-stranicu</string>
-	<string name="are_you_sure">Da li ste sigurni?</string>
 	<string name="primary_domain">Primarna domena</string>
 	<string name="contact_support">Kontaktirajte podršku</string>
 	<string name="error_post_account_settings">Neuspjelo snimanje postavki vašeg računa</string>
@@ -180,7 +179,6 @@ Language: hr
 	<string name="media_dimensions">Dimenzije: %s</string>
 	<string name="media_file_name">Ime datoteke: %s</string>
 	<string name="media_file_type">Vrsta datoteke: %s</string>
-	<string name="upload_queued">Na čekanju</string>
 	<string name="reader_label_gap_marker">Učitaj više objava</string>
 	<string name="notifications_no_search_results">Nijedna web-stranica se ne podudara sa \'%s\'</string>
 	<string name="search_sites">Pretraživanje web-stranica</string>
@@ -316,7 +314,6 @@ Language: hr
 	<string name="language">Jezik</string>
 	<string name="verification_code">Kod za provjeru</string>
 	<string name="verify">Provjeri</string>
-	<string name="error_publish_no_network">Nije moguće objaviti dok nema veze. Snimljeno kao skica.</string>
 	<string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
 	<string name="invalid_verification_code">Neispravan verifikacijski kod</string>
 	<string name="two_step_footer_label">Unesite kod iz autentifikacijske aplikacije.</string>
@@ -413,14 +410,12 @@ Language: hr
 	<string name="stats_empty_tags_and_categories_desc">Proučite osvrt najpopularnijih tema na vašoj web-stranici, koje se refleksija vaših najpopularnijih objava u prošlom tjednu.</string>
 	<string name="stats_empty_comments_desc">Ako omogućite komentare na vašoj web-stranici, pratite top komentatore i otkrijte koji sadržaj potiče najživlje rasprave, na temelju najnovijih 1.000 komentara.</string>
 	<string name="ssl_certificate_details">Detalji</string>
-	<string name="sure_to_remove_account">Ukloni ovu stranicu</string>
 	<string name="delete_sure_post">Obriši ovu obavijest</string>
 	<string name="delete_sure">Obriši ovu skicu</string>
 	<string name="delete_sure_page">Obriši ovu stranicu</string>
 	<string name="confirm_delete_multi_media">Obriši odabrane stavke?</string>
 	<string name="confirm_delete_media">Obriši odabranu stavku?</string>
 	<string name="cab_selected">%d odabrano</string>
-	<string name="media_gallery_date_range">Prikazivanje medijskih zapisa od %1$s do %2$s</string>
 	<string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
 	<string name="faq_button">FAQ</string>
 	<string name="reader_label_like">Lajk</string>
@@ -578,7 +573,6 @@ Language: hr
 	<string name="notifications_empty_all">Nema obavijesti... još.</string>
 	<string name="privacy_policy">Pravila privatnosti</string>
 	<string name="open_source_licenses">Licence otvorenog softvera</string>
-	<string name="reader_share_link">Podjeli poveznicu</string>
 	<string name="post_settings">Postavke objave</string>
 	<string name="location_not_found">Nepoznata lokacija</string>
 	<string name="select_categories">Odaberite kateogrije</string>
@@ -694,7 +688,6 @@ Language: hr
 	<string name="signing_in">Prijavljivanje...</string>
 	<string name="password_invalid">Trebate sigurniju lozinku. Koristite 7 ili više znakova, miješana mala i velika slova, brojeve i specijalne znakove.</string>
 	<string name="nux_add_selfhosted_blog">Dodaj samostalno hostanu web-stranicu</string>
-	<string name="media_add_new_media_gallery">Kreiraj galeriju</string>
 	<string name="create_account_wpcom">Kreiraj račun na WordPress.com</string>
 	<string name="reader_btn_follow">Prati</string>
 	<string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
@@ -719,7 +712,6 @@ Language: hr
 	<string name="connecting_wpcom">Spajanje sa WordPress.com</string>
 	<string name="username_invalid">Neispravno korisničko ime</string>
 	<string name="nux_tutorial_get_started_title">Započnimo!</string>
-	<string name="reader_share_subject">Podijeljeno sa %s</string>
 	<string name="limit_reached">Dosegnuti je limit. Možete ponovno pokušati za 1 minutu. Ako pokušate prije toga produžiti ćete vrijeme koje morate čekati prije nego što se digne ban. Ako mislite da je ovo greška, kontaktirajte podršku.</string>
 	<string name="stats_timeframe_days">Dani</string>
 	<string name="stats_timeframe_weeks">Tjedni</string>
@@ -806,7 +798,6 @@ Language: hr
 	<string name="posts">Objave</string>
 	<string name="featured_in_post">Uključi sliku u sadržaj objave</string>
 	<string name="post">Objava</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">blogusername</string>
 	<string name="upload_scaled_image">Prenesi i poveži do dimenzionirane slike</string>
 	<string name="scaled_image">Širina dimenzionirane slike</string>

@@ -19,7 +19,7 @@
             android:orientation="horizontal"
             android:layout_marginBottom="@dimen/image_settings_dialog_thumbnail_container_margin_bottom">
 
-            <ImageView
+            <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/image_thumbnail"
                 android:contentDescription="@string/image_thumbnail"
                 android:layout_width="@dimen/image_settings_dialog_thumbnail_size"
@@ -50,6 +50,7 @@
             style="@style/ImageOptionsDialogInput"/>
 
         <TextView
+            android:id="@+id/image_caption_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/image_caption"
@@ -78,6 +79,7 @@
             style="@style/ImageOptionsDialogInput"/>
 
         <TextView
+            android:id="@+id/alignment_spinner_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/image_alignment"
@@ -94,6 +96,7 @@
             style="@style/ImageOptionsDialogInput"/>
 
         <TextView
+            android:id="@+id/image_link_to_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/image_link_to"

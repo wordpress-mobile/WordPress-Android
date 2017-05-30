@@ -147,7 +147,6 @@ Language: el_GR
 	<string name="format_bar_description_bold">Έντονα</string>
 	<string name="image_settings_dismiss_dialog_title">Απόρριψη μη αποθηκευμένων αλλαγών;</string>
 	<string name="stop_upload_dialog_title">Διακοπή μεταφόρτωσης;</string>
-	<string name="stop_upload_button">Διακοπή Μεταφόρτωσης</string>
 	<string name="alert_error_adding_media">Παρουσιάστηκε σφάλμα κατά την εισαγωγή πολυμέσων</string>
 	<string name="alert_action_while_uploading">Αυτή την στιγμή μεταφορτώνετε πολυμέσα. Παρακαλώ περιμένετε μέχρι να ολοκληρωθεί.</string>
 	<string name="alert_insert_image_html_mode">Δεν μπορείτε να προσθέσετε πολυμέσα απευθείας σε λειτουργία HTML. Παρακαλώ επιστρέψτε σε λειτουργία κειμενογράφου.</string>
@@ -238,7 +237,6 @@ Language: el_GR
 	<string name="delete_site_summary">Αυτή η ενέργεια δεν μπορεί να αναιρεθεί. Η διαγραφή του ιστοτόπου σας θα αφαιρέσει όλο το περιεχόμενο, τους συντελεστές και τους τομείς από τον ιστότοπο.</string>
 	<string name="delete_site_hint">Διαγραφή ιστότοπου</string>
 	<string name="export_site_hint">Εξαγωγή του ιστοτόπου σας σε αρχείο XML</string>
-	<string name="are_you_sure">Είστε σίγουροι;</string>
 	<string name="export_site_summary">Αν είστε σίγουροι, παρακαλούμε αφιερώστε λίγο χρόνο να εξάγετε τώρα το περιεχόμενο του ιστοτόπου σας. Δεν μπορεί να ανακτηθεί μελλοντικά.</string>
 	<string name="keep_your_content">Κρατήστε Το Περιεχόμενό Σας</string>
 	<string name="domain_removal_hint">Οι τομείς που δεν θα δουλεύουν μετά την αφαίρεση του ιστοτόπου σας</string>
@@ -319,9 +317,6 @@ Language: el_GR
 	<string name="error_refresh_comments_showing_older">Δεν ήταν δυνατή η ανανέωση των σχολίων αυτή τη στιγμή - εμφάνιση παλαιότερων σχολίων</string>
 	<string name="editor_post_settings_set_featured_image">Ορισμός προβαλλόμενης εικόνας</string>
 	<string name="editor_post_settings_featured_image">Προβαλλόμενη Εικόνα</string>
-	<string name="new_editor_promo_desc">Η εφαρμογή του WordPress για Android περιλαμβάνει τώρα έναν όμορφο νέο\nεπεξεργαστή. Δοκιμάστε τον δημιουργώντας ένα νέο άρθρο.</string>
-	<string name="new_editor_promo_title">Ολοκαίνουριος επεξεργαστής κειμένου</string>
-	<string name="new_editor_promo_button_label">Σπουδαία, ευχαριστούμε!</string>
 	<string name="visual_editor_enabled">Ο οπτικοποιημένος επεξεργαστής ενεργοποιήθηκε</string>
 	<string name="editor_content_placeholder">Μοιραστείτε την ιστορία σας εδώ...</string>
 	<string name="editor_page_title_placeholder">Τίτλος Σελίδας</string>
@@ -506,7 +501,6 @@ Language: el_GR
 	<string name="media_file_name">Όνομα αρχείου: %s</string>
 	<string name="media_uploaded_on">Μεταφορτώθηκε στο: %s</string>
 	<string name="media_file_type">Τύπος αρχείου: %s</string>
-	<string name="upload_queued">Στην ουρά</string>
 	<string name="reader_label_gap_marker">Φόρτωμα περισσότερων άρθρων</string>
 	<string name="notifications_no_search_results">Δεν βρέθηκαν ιστότοποι που να ταιριάζουν με την \'%s\'</string>
 	<string name="search_sites">Αναζήτηση ιστότοπων</string>
@@ -637,7 +631,6 @@ Language: el_GR
 	<string name="verify">Επαλήθευση</string>
 	<string name="verification_code">Κωδικός επαλήθευσης</string>
 	<string name="invalid_verification_code">Μη έγκυρος κωδικός επαλήθευσης</string>
-	<string name="error_publish_no_network">Αδυναμία δημοσίευσης ενώ δεν υπάρχει σύνδεση. Αποθηκεύτηκε ως προσχέδιο.</string>
 	<string name="editor_toast_invalid_path">Μη έγκυρη διαδρομή αρχείου</string>
 	<string name="two_step_footer_label">Εισάγετε τον κωδικό από την εφαρμογή σας πιστοποίησης.</string>
 	<string name="two_step_footer_button">Αποστολή κώδικα μέσω μηνύματος κειμένου</string>
@@ -736,9 +729,7 @@ Language: el_GR
 	<string name="confirm_delete_media">Διαγραφή επιλεγμένου αντικειμένου;</string>
 	<string name="cab_selected">%d επιλεγμένα</string>
 	<string name="delete_sure_post">Διαγραφή αυτής της ανάρτησης</string>
-	<string name="sure_to_remove_account">Αφαίρεση αυτού του ιστότοπου;</string>
 	<string name="delete_sure">Διαγραφή αυτού του προσχεδίου</string>
-	<string name="media_gallery_date_range">Εμφάνιση πολυμέσων από %1$s εώς %2$s</string>
 	<string name="reader_label_comment_count_multi">%,d σχόλια</string>
 	<string name="reader_title_photo_viewer">%1$d από %2$d</string>
 	<string name="more">Περισσότερα</string>
@@ -901,7 +892,6 @@ Language: el_GR
 	<string name="view_site">Προβολή ιστότοπου</string>
 	<string name="local_changes">Τοπικές αλλαγές</string>
 	<string name="image_settings">Ρυθμίσεις εικόνας</string>
-	<string name="reader_share_link">Μοιραστείτε το σύνδεσμο</string>
 	<string name="media_gallery_num_columns">Αριθμός στηλών</string>
 	<string name="media_gallery_edit">Επεξεργασία της γκαλερί</string>
 	<string name="page_settings">Ρυθμίσεις σελίδας</string>
@@ -1012,7 +1002,6 @@ Language: el_GR
 	<string name="nux_add_selfhosted_blog">Προσθέστε έναν ιστότοπο που φιλοξενείτε μόνοι σας</string>
 	<string name="reader_toast_err_share_intent">Δεν ήταν δυνατός ο διαμοιρασμός</string>
 	<string name="media_add_popup_title">Προσθήκη στην Βιβλιοθήκη Ππολυμέσων</string>
-	<string name="media_add_new_media_gallery">Δημιουργία έκθεσης</string>
 	<string name="select_from_media_library">Διαλέξτε από την βιβλιοθήκη πολυμέσων</string>
 	<string name="jetpack_not_found">Δεν βρέθηκε το Jetpack plugin</string>
 	<string name="reader_btn_share">Μοιράσου</string>
@@ -1024,7 +1013,6 @@ Language: el_GR
 	<string name="username_invalid">Εσφαλμένο Όνομα Χρήστη</string>
 	<string name="limit_reached">Φτάσατε το όριο. Μπορείτε να προσπαθήσετε ξανά σε 1 λεπτό. Αν προσπαθήσετε ξανά πριν περάσει η χρονική περίοδος του 1 λεπτού το μόνο που θα καταφέρετε είναι να αυξήσετε το χρόνο αναμονής σας μέχρι να αρθεί η απαγόρευση. Εάν πιστεύετε ότι αυτό είναι σφάλμα, παρακαλώ επικοινωνήστε με την τεχνική υποστήριξη.</string>
 	<string name="nux_tutorial_get_started_title">Ξεκινήστε!</string>
-	<string name="reader_share_subject">Μοιράστηκε από %s</string>
 	<string name="reader_untitled_post">Ανώνυμο</string>
 	<string name="reader_toast_err_view_image">Αδυναμία προβολής της εικόνας</string>
 	<string name="reader_label_added_tag">Προστέθηκε η %s</string>
@@ -1123,7 +1111,6 @@ Language: el_GR
 	<string name="page">Σελίδα</string>
 	<string name="post">Άρθρο</string>
 	<string name="blogusername">όνομα χρήστη ιστολογίου</string>
-	<string name="ok">ΟΚ</string>
 	<string name="upload_scaled_image">Φορτώστε και συνδέστε με την εικόνα στις νέες της διαστάσεις</string>
 	<string name="scaled_image">Νέο πλάτος εικόνας</string>
 	<string name="scheduled">Προγραμματισμένο</string>

@@ -54,7 +54,6 @@ Language: nb_NO
 	<string name="verification_code">Verifikasjonskode</string>
 	<string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
 	<string name="verify">Verifiser</string>
-	<string name="error_publish_no_network">Kan ikke publisere uten tilkobling. Laget som utkast.</string>
 	<string name="language">Språk</string>
 	<string name="device">Enhet</string>
 	<string name="reader_empty_posts_request_failed">Ute av stand til å hente innlegg</string>
@@ -162,7 +161,6 @@ Language: nb_NO
 	<string name="comment_status_spam">Useriøst</string>
 	<string name="share_action_post">Nytt innlegg</string>
 	<string name="new_post">Nytt innlegg</string>
-	<string name="reader_share_link">Del lenke</string>
 	<string name="mnu_comment_spam">Useriøs</string>
 	<string name="local_changes">Lokale endringer</string>
 	<string name="hint_comment_content">Kommentar</string>
@@ -224,14 +222,12 @@ Language: nb_NO
 	<string name="nux_tutorial_get_started_title">Kom igang!</string>
 	<string name="username_invalid">Ugyldig brukernavn</string>
 	<string name="create_account_wpcom">Opprett en konto på WordPress.com</string>
-	<string name="media_add_new_media_gallery">Lag nytt galleri</string>
 	<string name="reader_btn_unfollow">Følger</string>
 	<string name="reader_likes_only_you">Du liker dette</string>
 	<string name="reader_empty_followed_tags">Du følger ingen stikkord</string>
 	<string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
 	<string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
 	<string name="reader_likes_one">En person liker dette</string>
-	<string name="reader_share_subject">Delt fra %s</string>
 	<string name="limit_reached">Midlertidig begrenset. Du kan prøve igjen om 1 minutt. Dersom du prøver igjen før dette, vil begrensningsperioden bli utvidet. Dersom du mener dette er en feil, vennligst ta kontakt med brukerstøtte.</string>
 	<string name="themes">Temaer</string>
 	<string name="all">Alle</string>
@@ -319,7 +315,6 @@ Language: nb_NO
 	<string name="anonymous">Anonym</string>
 	<string name="page">Side</string>
 	<string name="blogusername">brukernavn</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Last og og lenk til det redigerte bildet</string>
 	<string name="scaled_image">Bildebredde</string>
 	<string name="scheduled">Planlagt</string>

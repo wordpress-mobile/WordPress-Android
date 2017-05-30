@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -205,7 +204,7 @@ public class WordPress extends MultiDexApplication {
             // The cache size will be measured in kilobytes rather than
             // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            int cacheSize = maxMemory / 16;  //Use 1/16th of the available memory for this memory cache.
+            int cacheSize = maxMemory / 4;  //Use 1/4th of the available memory for this memory cache.
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;
@@ -391,7 +390,6 @@ public class WordPress extends MultiDexApplication {
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel(getContext(), BuildConfig.MIXPANEL_TOKEN));
         AnalyticsTracker.registerTracker(new AnalyticsTrackerNosara(getContext()));
         AnalyticsTracker.init(getContext());
 
@@ -404,7 +402,7 @@ public class WordPress extends MultiDexApplication {
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
             AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
-            AppPrefs.setVisualEditorPromoRequired(false);
+            AppPrefs.setNewEditorPromoRequired(false);
         }
         if (oldVersionCode != 0 && oldVersionCode < versionCode) {
             Map<String, Long> properties = new HashMap<String, Long>(1);

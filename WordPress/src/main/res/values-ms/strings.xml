@@ -105,7 +105,6 @@ Language: ms
 	<string name="image_settings_save_toast">Penukaran disimpan</string>
 	<string name="image_settings_dismiss_dialog_title">Buang penukaran yang tidak disimpan?</string>
 	<string name="stop_upload_dialog_title">Berhenti memuat naik?</string>
-	<string name="stop_upload_button">Berhenti Muat Naik</string>
 	<string name="alert_error_adding_media">Ralat berlaku semasa menyisip media</string>
 	<string name="alert_action_while_uploading">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
 	<string name="alert_insert_image_html_mode">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
@@ -198,7 +197,6 @@ Language: ms
 	<string name="delete_site_progress">Menghapus laman...</string>
 	<string name="delete_site_hint">Padamkan laman</string>
 	<string name="delete_site_summary">Tindakan ini tidak boleh diulang semula. Menghapuskan laman anda akan membuang semua kandungan, penyumbang, dan domain dari laman.</string>
-	<string name="are_you_sure">Anda Pasti?</string>
 	<string name="export_site_hint">Eksport laman anda ke fail XML</string>
 	<string name="export_site_summary">Jika anda pasti, pastikan anda mengambil masa dan eksport kandungan sekarang. Ia tidak boleh didapati semula.</string>
 	<string name="keep_your_content">Simpan Kandungan Anda</string>
@@ -281,9 +279,6 @@ Language: ms
 	<string name="error_refresh_comments_showing_older">Ulasan tidak dapat disegarkan buat masa ini - tunjukkan ulasan terdahulu</string>
 	<string name="editor_post_settings_set_featured_image">Tetapkan Imej Terencana</string>
 	<string name="editor_post_settings_featured_image">Imej Terencana</string>
-	<string name="new_editor_promo_desc">Aplikasi WordPress untuk Android kini dilengkapi dengan penyunting\n    visual baharu yang cantik. Cubanya dengan membuat kiriman baharu.</string>
-	<string name="new_editor_promo_title">Penyuntung baharu</string>
-	<string name="new_editor_promo_button_label">Hebat, terima kasih!</string>
 	<string name="visual_editor_enabled">Penyunting Visual dibolehkan</string>
 	<string name="editor_content_placeholder">Kongsikan cerita anda di sini...</string>
 	<string name="editor_page_title_placeholder">Tajuk Halaman</string>
@@ -470,7 +465,6 @@ Language: ms
 	<string name="media_file_name">Nama fail: %s</string>
 	<string name="media_uploaded_on">Muat naik pada: %s</string>
 	<string name="media_file_type">Jenis fail: %s</string>
-	<string name="upload_queued">Digilirkan</string>
 	<string name="reader_label_gap_marker">Muatkan lebih banyak kiriman</string>
 	<string name="notifications_no_search_results">Tiada laman sepadan dengan \'%s\'</string>
 	<string name="search_sites">Cari laman</string>
@@ -573,7 +567,6 @@ Language: ms
 	<string name="stats_insights">Wawasan</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Untuk melihat statistik anda, log masuk ke akaun WordPress.com anda untuk menyambungkan JetPack.</string>
 	<string name="stats_other_recent_stats_moved_label">Mencari statistik Terkini Yang Lain anda? Kami telah memindahnya ke halaman Wawasan.</string>
-	<string name="me_disconnect_from_wordpress_com">Log keluar dari WordPress.com</string>
 	<string name="me_btn_login_logout">Log Masuk/Log Keluar</string>
 	<string name="me_connect_to_wordpress_com">Log masuk ke WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" tidak disembunyikan kerana ianya laman semasa</string>
@@ -602,7 +595,6 @@ Language: ms
 	<string name="show">Tunjuk</string>
 	<string name="select_all">Pilih semua</string>
 	<string name="stats_generic_error">Statistik Yang Diperlukan tidak dapat dimuatkan</string>
-	<string name="error_publish_no_network">Tidak boleh menerbit semasa tiada sambungan. Disimpan sebagai draf.</string>
 	<string name="two_step_sms_sent">Periksa mesej teks anda untuk kod pengesahan.</string>
 	<string name="device">Peranti</string>
 	<string name="two_step_footer_label">Masukkan kod dari aplikasi pengesah anda.</string>
@@ -709,8 +701,6 @@ Language: ms
 	<string name="delete_sure">Hapuskan draf ini</string>
 	<string name="delete_sure_page">Hapuskan halaman ini</string>
 	<string name="delete_sure_post">Hapuskan kiriman ini</string>
-	<string name="media_gallery_date_range">Paparkan media dari %1$s ke %2$s</string>
-	<string name="sure_to_remove_account">Buang laman ini?</string>
 	<string name="reader_label_comment_count_multi">%,d ulasan</string>
 	<string name="reader_title_photo_viewer">%1$d dari %2$d</string>
 	<string name="browse_our_faq_button">Layar Soalan Lazim kami</string>
@@ -910,7 +900,6 @@ Language: ms
 	<string name="wordpress_blog">Blog WordPress</string>
 	<string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
 	<string name="reader_title_applog">Log aplikasi</string>
-	<string name="reader_share_link">Kongsi pautan</string>
 	<string name="reader_toast_err_add_tag">Tidak dapat menambah tag ini</string>
 	<string name="reader_toast_err_remove_tag">Tidak dapat membuang tag ini</string>
 	<string name="pending_review">Menunggu semak semula</string>
@@ -985,12 +974,10 @@ Language: ms
 	<string name="nux_welcome_create_account">Cipta akaun</string>
 	<string name="signing_in">Melog masuk...</string>
 	<string name="nux_oops_not_selfhosted_blog">Log masuk ke WordPress.com</string>
-	<string name="media_add_new_media_gallery">Cipta galeri</string>
 	<string name="empty_list_default">Senarai ini kosong</string>
 	<string name="select_from_media_library">Pilih dari perpustakaan media</string>
 	<string name="jetpack_not_found">Pemalam Jetpack tidak dijumpai</string>
 	<string name="reader_untitled_post">(Tanpa tajuk)</string>
-	<string name="reader_share_subject">Dikongsi dari %s</string>
 	<string name="reader_btn_share">Kongsi</string>
 	<string name="reader_btn_follow">Ikut</string>
 	<string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>
@@ -1100,7 +1087,6 @@ Language: ms
 	<string name="page">Laman</string>
 	<string name="post">Kiriman</string>
 	<string name="blogusername">namapenggunablog</string>
-	<string name="ok">OK</string>
 	<string name="scaled_image">Lebar imej berskala</string>
 	<string name="upload_scaled_image">Muat naik dan pautkan ke imej berskala</string>
 	<string name="scheduled">Dijadualkan</string>

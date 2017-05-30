@@ -1,16 +1,23 @@
 package org.wordpress.android.ui.media;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -48,7 +55,10 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.text.SimpleDateFormat;
@@ -58,17 +68,20 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class MediaPreviewActivity extends AppCompatActivity {
+public class MediaPreviewActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_IS_VIDEO = "is_video";
 
+    private static final int SAVE_MEDIA_PERMISSION_REQUEST_CODE = 1;
+
     private String mContentUri;
     private int mMediaId;
+    private long mDownloadId;
     private boolean mIsVideo;
     private boolean mEnableMetadata;
-    private boolean mShowEditMenuItem;
+    private boolean mIsClosable;
 
     private SiteModel mSite;
 
@@ -142,6 +155,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_preview_activity);
+        View videoFrame = findViewById(R.id.frame_video);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
         mMetadataView = (ViewGroup) findViewById(R.id.layout_metadata);
@@ -162,7 +176,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         boolean hasEditFragment = hasEditFragment();
         setLookClosable(hasEditFragment);
 
-        String mediaUri;
+        String mediaUri = null;
         if (!TextUtils.isEmpty(mContentUri)) {
             mediaUri = mContentUri;
         } else if (mMediaId != 0) {
@@ -178,7 +192,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
             if (!hasEditFragment) {
                 fadeInMetadata();
             }
-        } else {
+        }
+
+        if (TextUtils.isEmpty(mediaUri)) {
             delayedFinish(true);
             return;
         }
@@ -196,12 +212,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
-        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
-
-        mShowEditMenuItem = mEnableMetadata && mSite != null && !hasEditFragment;
+        videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo(mediaUri);
         } else {
             loadImage(mediaUri);
@@ -222,11 +235,13 @@ public class MediaPreviewActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        registerReceiver(mDownloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         mDispatcher.register(this);
     }
 
     @Override
     public void onStop() {
+        unregisterReceiver(mDownloadReceiver);
         mDispatcher.unregister(this);
         super.onStop();
     }
@@ -256,32 +271,34 @@ public class MediaPreviewActivity extends AppCompatActivity {
         }
 
         setLookClosable(false);
-        showEditMenuItem(true);
+        invalidateOptionsMenu();
 
         super.onBackPressed();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // enable editing metadata if we have a valid site
-        if (mEnableMetadata && mSite != null) {
-            getMenuInflater().inflate(R.menu.media_edit, menu);
-        }
+        getMenuInflater().inflate(R.menu.media_preview, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
-        if (mnuEdit != null) {
-            mnuEdit.setVisible(mShowEditMenuItem);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
+        boolean showEditMenu  = mMediaId != 0 && mSite != null && mEnableMetadata && !mIsClosable;
+        boolean showSaveMenu  = mMediaId != 0 && mSite != null && !mSite.isPrivate();
+        boolean showShareMenu = mMediaId != 0 && mSite != null && !mSite.isPrivate();
 
-    private void showEditMenuItem(boolean show) {
-        mShowEditMenuItem = show;
-        invalidateOptionsMenu();
+        MenuItem mnuEdit = menu.findItem(R.id.menu_edit);
+        mnuEdit.setVisible(showEditMenu);
+
+        MenuItem mnuSave = menu.findItem(R.id.menu_save);
+        mnuSave.setVisible(showSaveMenu);
+        mnuSave.setEnabled(mDownloadId == 0);
+
+        MenuItem mnuShare = menu.findItem(R.id.menu_share);
+        mnuShare.setVisible(showShareMenu);
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -290,7 +307,13 @@ public class MediaPreviewActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_edit) {
-            showEditFragment(mMediaId);
+            showEditFragment();
+            return true;
+        } else if (item.getItemId() == R.id.menu_save) {
+            saveMedia();
+            return true;
+        } else if (item.getItemId() == R.id.menu_share) {
+            shareMedia();
             return true;
         }
 
@@ -303,16 +326,20 @@ public class MediaPreviewActivity extends AppCompatActivity {
     private void loadImage(@NonNull String mediaUri) {
         int width = DisplayUtils.getDisplayPixelWidth(this);
         int height = DisplayUtils.getDisplayPixelHeight(this);
+        int size = Math.max(width, height);
 
         if (mediaUri.startsWith("http")) {
             showProgress(true);
-            String imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, width, height);
+            String imageUrl = mediaUri;
+            if (SiteUtils.isPhotonCapable(mSite)) {
+                imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+            }
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (!isFinishing() && response.getBitmap() != null) {
                         showProgress(false);
-                        mImageView.setImageBitmap(response.getBitmap());
+                        setBitmap(response.getBitmap());
                     }
                 }
                 @Override
@@ -323,24 +350,48 @@ public class MediaPreviewActivity extends AppCompatActivity {
                         delayedFinish(true);
                     }
                 }
-            }, width, height);
+            }, size, 0);
         } else {
-            byte[] bytes = ImageUtils.createThumbnailFromUri(this, Uri.parse(mediaUri), width, null, 0);
-            if (bytes == null) {
-                delayedFinish(true);
-                return;
-            }
+            new LocalImageTask(mediaUri, size).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
 
-            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            if (bmp != null) {
-                mImageView.setImageBitmap(bmp);
-            } else {
-                delayedFinish(true);
-                return;
-            }
+    private class LocalImageTask extends AsyncTask<Void, Void, Bitmap> {
+        private final String mMediaUri;
+        private final int mSize;
+
+        LocalImageTask(@NonNull String mediaUri, int size) {
+            mMediaUri = mediaUri;
+            mSize = size;
         }
 
-        // assign the photo attacher to enable pinch/zoom
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            int orientation = ImageUtils.getImageOrientation(MediaPreviewActivity.this, mMediaUri);
+            byte[] bytes = ImageUtils.createThumbnailFromUri(
+                    MediaPreviewActivity.this, Uri.parse(mMediaUri), mSize, null, orientation);
+            if (bytes != null) {
+                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isFinishing()) {
+                return;
+            }
+            if (bitmap != null) {
+                setBitmap(bitmap);
+            } else {
+                delayedFinish(true);
+            }
+        }
+    }
+
+    private void setBitmap(@NonNull Bitmap bmp) {
+        // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
+        // for it to be correctly resized upon loading
         PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
 
         // fade in metadata when tapped
@@ -354,6 +405,9 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 }
             });
         }
+
+        mImageView.setImageBitmap(bmp);
+        invalidateOptionsMenu();
     }
 
     /*
@@ -382,7 +436,7 @@ public class MediaPreviewActivity extends AppCompatActivity {
         mVideoView.setVideoURI(Uri.parse(mediaUri));
         mVideoView.requestFocus();
     }
-    
+
     private void loadMetaData(@NonNull final MediaModel media) {
         boolean isLocal = MediaUtils.isLocalFile(media.getUploadState());
 
@@ -487,10 +541,10 @@ public class MediaPreviewActivity extends AppCompatActivity {
         return null;
     }
 
-    private void showEditFragment(int localMediaId) {
+    private void showEditFragment() {
         MediaEditFragment fragment = getEditFragment();
         if (fragment == null) {
-            fragment = MediaEditFragment.newInstance(mSite, localMediaId);
+            fragment = MediaEditFragment.newInstance(mSite, mMediaId);
             FragmentManager fm = getFragmentManager();
             fm.beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaEditFragment.TAG)
@@ -498,17 +552,118 @@ public class MediaPreviewActivity extends AppCompatActivity {
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commitAllowingStateLoss();
         } else {
-            fragment.loadMedia(localMediaId);
+            fragment.loadMedia();
         }
 
         setLookClosable(true);
-        showEditMenuItem(false);
+        invalidateOptionsMenu();
         fadeOutMetadata();
     }
 
     private void setLookClosable(boolean lookClosable) {
+        mIsClosable = lookClosable;
         if (mToolbar != null) {
             mToolbar.setNavigationIcon(lookClosable ? R.drawable.ic_close_white_24dp : R.drawable.ic_arrow_left_white_24dp);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
+            boolean canSaveMedia = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    canSaveMedia = false;
+                }
+            }
+            if (canSaveMedia) {
+                saveMedia();
+            } else {
+                ToastUtils.showToast(this, R.string.error_media_insufficient_fs_permissions);
+            }
+        }
+    }
+
+    /*
+     * receives download completion broadcasts from the DownloadManager
+     */
+    private final BroadcastReceiver mDownloadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long thisId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            if (thisId == mDownloadId) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(mDownloadId);
+                DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                Cursor cursor = dm.query(query);
+                if (cursor.moveToFirst()) {
+                    int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                    if (reason == DownloadManager.STATUS_FAILED) {
+                        ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
+                    }
+                }
+                mDownloadId = 0;
+                invalidateOptionsMenu();
+            }
+        }
+    };
+
+    /*
+     * saves the media to the local device using the Android DownloadManager
+     */
+    private void saveMedia() {
+        // must request permissions even though they're already defined in the manifest
+        String[] permissionList = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+            return;
+        }
+
+        ToastUtils.showToast(this, R.string.media_downloading);
+
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, media.getFileName());
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+
+        mDownloadId = dm.enqueue(request);
+        invalidateOptionsMenu();
+    }
+
+    private void shareMedia() {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mMediaId);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.error_media_not_found);
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, media.getUrl());
+        if (!TextUtils.isEmpty(media.getTitle())) {
+            intent.putExtra(Intent.EXTRA_SUBJECT, media.getTitle());
+        } else if (!TextUtils.isEmpty(media.getDescription())) {
+            intent.putExtra(Intent.EXTRA_SUBJECT, media.getDescription());
+        }
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.share_link)));
+        } catch (android.content.ActivityNotFoundException ex) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_share_intent);
         }
     }
 

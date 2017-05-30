@@ -10,17 +10,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -497,7 +494,18 @@ public class MeFragment extends Fragment {
                                     : AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY_PICKED;
                     AnalyticsTracker.track(stat);
                     Uri imageUri = Uri.parse(strMediaUri);
-                    startCropActivity(imageUri);
+                    if (!MediaUtils.isInMediaStore(imageUri)) {
+                        // Download the picture. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+                        Uri downloadedUri = MediaUtils.downloadExternalMedia(getActivity(), imageUri);
+                        if (downloadedUri != null) {
+                            startCropActivity(downloadedUri);
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
+                            AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
+                        }
+                    } else {
+                        startCropActivity(imageUri);
+                    }
                 }
                 break;
             case UCrop.REQUEST_CROP:
@@ -541,75 +549,25 @@ public class MeFragment extends Fragment {
 
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Create an AsyncTask to download the file
-            new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
-        } else {
-            // It is a regular local media file
-            startGravatarUpload(getRealPathFromURI(mediaUri));
-        }
-    }
-
-    private String getRealPathFromURI(Uri uri) {
-        String path;
-        if ("content".equals(uri.getScheme())) {
-            path = getRealPathFromContentURI(uri);
-        } else if ("file".equals(uri.getScheme())) {
-            path = uri.getPath();
-        } else {
-            path = uri.toString();
-        }
-        return path;
-    }
-
-    private String getRealPathFromContentURI(Uri contentUri) {
-        if (contentUri == null)
-            return null;
-
-        String[] proj = { MediaStore.Images.Media.DATA };
-        CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-
-        if (cursor == null)
-            return null;
-
-        int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-        if (column_index == -1) {
-            cursor.close();
-            return null;
-        }
-
-        String path;
-        if (cursor.moveToFirst()) {
-            path = cursor.getString(column_index);
-        } else {
-            path = null;
-        }
-
-        cursor.close();
-        return path;
-    }
-
-    private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-        @Override
-        protected Uri doInBackground(Uri... uris) {
-            Uri imageUri = uris[0];
-            return MediaUtils.downloadExternalMedia(getActivity(), imageUri);
-        }
-
-        protected void onPostExecute(Uri newUri) {
-            if (getActivity() == null)
-                return;
-
-            if (newUri != null) {
-                String path = getRealPathFromURI(newUri);
-                startGravatarUpload(path);
+            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            Uri downloadedUri = MediaUtils.downloadExternalMedia(getActivity(), mediaUri);
+            if (downloadedUri != null) {
+                startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), downloadedUri));
             } else {
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
             }
+        } else {
+            // It is a regular local media file
+            startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), mediaUri));
         }
     }
 
     private void startGravatarUpload(final String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         File file = new File(filePath);
         if (!file.exists()) {
             Toast.makeText(getActivity(), getString(R.string.error_locating_image), Toast.LENGTH_SHORT).show();

@@ -106,7 +106,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;
-        mIsStatsSupported = SiteUtils.isAccessibleViaWPComAPI(site) && site.getHasCapabilityViewStats();
+        mIsStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.getHasCapabilityViewStats();
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int contentSpacing = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
@@ -430,6 +430,12 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
         } else {
             holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
+        }
+
+        if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
+            holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+        } else {
+            holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
         }
 
         boolean canShowStatsButton = canShowStatsForPost(post);

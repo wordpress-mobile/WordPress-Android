@@ -39,4 +39,18 @@ public class WPMediaUtils {
         }
         return null;
     }
+
+
+    public static Uri fixOrientationIssue(Activity activity, String path, boolean isVideo) {
+        if (isVideo) {
+            return null;
+        }
+
+        String rotatedPath = ImageUtils.rotateImageIfNecessary(activity, path);
+        if (rotatedPath != null) {
+            return Uri.parse(rotatedPath);
+        }
+
+        return null;
+    }
 }

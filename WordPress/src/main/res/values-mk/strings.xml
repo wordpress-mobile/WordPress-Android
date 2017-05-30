@@ -80,7 +80,6 @@ Language: mk
 	<string name="confirm_delete_multi_media">Избриши слектирни?</string>
 	<string name="confirm_delete_media">Избриши селектирано</string>
 	<string name="cab_selected">%d слекетирано</string>
-	<string name="media_gallery_date_range">Покажи медиа од %1$s до %2$s</string>
 	<string name="delete_sure_page">Избриши оваа страница</string>
 	<string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
 	<string name="faq_button">ЧПП</string>
@@ -254,7 +253,6 @@ Language: mk
 	<string name="account_details">Детаили за сметка</string>
 	<string name="fatal_db_error">Настана грешка при креирање на базата на податоци за апликацијата. Направи преинсталирање на апликацијата.</string>
 	<string name="reader_title_applog">Дневник на апликацијата</string>
-	<string name="reader_share_link">Сподели врска</string>
 	<string name="reader_toast_err_add_tag">Неможе да се додаде оваа обележување</string>
 	<string name="reader_toast_err_remove_tag">Неможе да се отстрани оваа обележување</string>
 	<string name="required_field">Задолжително поле</string>
@@ -342,12 +340,10 @@ Language: mk
 	<string name="nux_add_selfhosted_blog">Додади автономна страница</string>
 	<string name="reader_label_removed_tag">Одстранети %s</string>
 	<string name="media_add_popup_title">Додади во медиа библиотеката</string>
-	<string name="media_add_new_media_gallery">Креирај галерија</string>
 	<string name="empty_list_default">Оваа листа е празна</string>
 	<string name="select_from_media_library">Избери медиа од библиотеката</string>
 	<string name="jetpack_not_found">Jetpack додатокот не е пронајден</string>
 	<string name="reader_untitled_post">(без наслов)</string>
-	<string name="reader_share_subject">Споделено од %s</string>
 	<string name="reader_btn_share">Сподели</string>
 	<string name="reader_btn_follow">Следи</string>
 	<string name="reader_toast_err_comment_failed">Неможе да се испрати вашиот коментар</string>
@@ -447,7 +443,6 @@ Language: mk
 	<string name="no_network_title">Не е достапна мрежа</string>
 	<string name="featured_in_post">Вклучете ги сликите во содржината на написот</string>
 	<string name="featured">Користи како избрана слика</string>
-	<string name="ok">Добро</string>
 	<string name="blogusername">блогкорисник</string>
 	<string name="upload_scaled_image">Испрати и сврзи со намелана слика</string>
 	<string name="scaled_image">Ширина на прилагодена слика</string>

@@ -1,11 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-08 09:55:43+0000
+Translation-Revision-Date: 2017-05-16 10:15:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Që të përzgjidhni disa komente njëherësh, prekeni dhe mbajeni të prekur </string>
+	<string name="smart_toast_photo_long_press">Që të përzgjidhni disa foto njëherësh, prekeni dhe mbajeni të prekur </string>
+	<string name="photo_picker_choose_video">Zgjidhni video prej pajisjes</string>
+	<string name="photo_picker_choose_photo">Zgjidhni foto prej pajisjes</string>
+	<string name="new_editor_promo_description">Aplikacioni WordPress tani përmban një përpunues të ri të hijshëm. Provojeni duke krijuar një postim të ri.</string>
+	<string name="wp_media_title">Media WordPress</string>
+	<string name="media_insert_as_gallery">Shtoji si galeri</string>
+	<string name="media_insert_individually">Shtoji tek e tek</string>
+	<string name="media_insert_title">Shtoni disa foto njëherësh</string>
+	<string name="media_gallery_column_count_multi">%d shtylla</string>
+	<string name="media_gallery_column_count_single">1 shtyllë</string>
+	<string name="editor_confirm_email_prompt_negative">Ridërgo Email</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Dërguam një email te %s kur u regjistruat fillimisht. Që të aktivizohet botimi, ju lutemi hapeni mesazhin dhe klikoni mbi butonin blu.</string>
+	<string name="editor_confirm_email_prompt_message">Dërguam një email kur u regjistruat fillimisht. Që të aktivizohet botimi, ju lutemi hapeni mesazhin dhe klikoni mbi butonin blu.</string>
+	<string name="editor_confirm_email_prompt_title">Ju lutemi, ripohoni adresën tuaj email</string>
+	<string name="toast_verification_email_send_error">Gabim në dërgimin e email-it të verifikimit. E keni bërë verifikimin një herë?</string>
+	<string name="toast_verification_email_sent">Email-i i verifikimit u dërgua, kontrolloni mesazhet e marrë</string>
+	<string name="toast_saving_post_as_draft">Po ruhet postimi si skicë</string>
+	<string name="photo_picker_capture_video">Bëni një video</string>
+	<string name="photo_picker_capture_photo">Bëni një foto</string>
+	<string name="delete_site_warning_subtitle">Hapni sytë! Pasi fshihet një sajt, s’mund të rikthehet më. Ju lutemi, sigurohuni përpara se të vazhdoni më tej.</string>
+	<string name="delete_site_warning">Do të fshihen krejt postimet, figurat dhe të dhënat tuaja. Dhe adresa e këtij sajti (%s) do të humbë.</string>
+	<string name="delete_site_warning_title">Të fshihet sajti?</string>
+	<string name="start_over_email_intent_error">S’arrihet të dërgohet email</string>
+	<string name="start_over_email_body">Dua t’ia filloj nga e para me sajtin %s</string>
+	<string name="start_over_email_subject">Fillojani nga e para me sajtin %s</string>
+	<string name="site_picker_remove_site_error">Gabim në heqjen e sajtit, riprovoni më vonë</string>
+	<string name="editor_post_saved_locally_unfinished_media">Postimi ka ngarkime mediash të papërfunduar dhe u ruajt lokalisht</string>
+	<string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
+	<string name="photo_picker_title">Zgjidhni foto</string>
+	<string name="error_publish_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
+	<string name="editor_post_saved_online_not_published">Postimi u ruaj si skicë në internet. Shihni mundësinë e botimit të tij.</string>
+	<string name="editor_post_saved_online">Postimi u ruajt në internet</string>
+	<string name="editor_post_saved_locally_not_published">Postimi u ruaj lokalisht. Shihni mundësinë e botimit të tij.</string>
+	<string name="editor_post_saved_locally">Postimi u ruaj në pajisjen tuaj</string>
+	<string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
+	<string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
+	<string name="media_encoder_quality_100">Maksimum</string>
+	<string name="media_encoder_quality_95">Shumë e Lartë</string>
+	<string name="media_encoder_quality_90">E lartë</string>
+	<string name="media_encoder_quality_85">E mesme</string>
+	<string name="media_encoder_quality_80">E ulët</string>
+	<string name="media_upload_state_uploaded">U ngarkua</string>
+	<string name="media_upload_state_failed">Dështoi</string>
+	<string name="media_upload_state_deleted">U fshi</string>
+	<string name="media_upload_state_deleting">Po fshihet</string>
+	<string name="media_upload_state_uploading">Po ngarkohet</string>
+	<string name="media_upload_state_queued">Në radhë</string>
+	<string name="update_draft">Përditësoni skicën</string>
+	<string name="keep_editing">Vazhdoni përpunimin</string>
+	<string name="image_quality">Cilësi figure</string>
 	<string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
 	<string name="error_unknown_post_type">Format i panjohur postimesh</string>
 	<string name="error_unknown_post">Postim i panjohur, kopja vendore e këtij postimi mund të jetë e panjëkohësuar me atë të shërbyesit</string>
@@ -32,7 +83,6 @@ Language: sq_AL
 	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
 	<string name="error_media_not_found">S’u gjet dot media</string>
 	<string name="error_media_insufficient_fs_permissions">Lypset leje leximi mbi kartelë media</string>
-	<string name="site_settings_optimize_images_hint">Aktivizojeni për të kursyer bandë në lidhje celulari</string>
 	<string name="site_settings_optimize_images">Optimizo Figurat</string>
 	<string name="no_site_error">S’u lidh dot te sajt WordPress. S’ka sajt WordPress të vlefshëm në këtë\n        adresë. Kontrolloni adresën (URL) të sajtit që dhatë.</string>
 	<string name="media_generic_error">Ndodhi një gabim mediash</string>
@@ -158,7 +208,6 @@ Language: sq_AL
 	<string name="image_width">Gjerësi</string>
 	<string name="image_settings_dismiss_dialog_title">Të hidhen tej ndryshimet e paruajtura?</string>
 	<string name="stop_upload_dialog_title">Të ndalet ngarkimi?</string>
-	<string name="stop_upload_button">Ndale Ngarkimin</string>
 	<string name="alert_error_adding_media">Ndodhi një gabim gjatë futjes së medias</string>
 	<string name="alert_action_while_uploading">Po ngarkoni media. Ju lutemi, pritni deri sa kjo të plotësohet.</string>
 	<string name="alert_insert_image_html_mode">S&amp;#8217;futen dot media drejt e nën mënyrën HTML. Ju lutemi, kaloni nën mënyrën pamore.</string>
@@ -252,7 +301,6 @@ Language: sq_AL
 	<string name="delete_site_summary">Ky veprim s&amp;#8217;mund të zhbëhet. Fshirja e sajtit tuaj do të thotë heqje e krejt lëndës, kontribuesve dhe e përkatësive.</string>
 	<string name="delete_site_hint">Fshije sajtin</string>
 	<string name="export_site_hint">Eksportojeni sajtin tuaj si një kartelë XML</string>
-	<string name="are_you_sure">Jeni i Sigurt?</string>
 	<string name="export_site_summary">Nëse jeni i sigurt, ju lutemi, mos harroni të eksportoni lëndën tuaj tani. Nuk mund të rimerret më në të ardhmen.</string>
 	<string name="keep_your_content">Ruani Lëndën Tuaj</string>
 	<string name="domain_removal_hint">Përkatësitë që nuk do të funksionojnë më, pasi të hiqni sajtin tuaj</string>
@@ -334,9 +382,7 @@ Language: sq_AL
 	<string name="error_refresh_comments_showing_older">Komentet s&amp;#8217;u freskuan dot këtë herë - po shfaqen komente më të vjetër</string>
 	<string name="editor_post_settings_set_featured_image">Vëre Si Figurë të Zgjedhur</string>
 	<string name="editor_post_settings_featured_image">Figurë e Zgjedhur</string>
-	<string name="new_editor_promo_desc">WordPress-i për Android tani përfshin një përpunues pamor të ri.\n    Provojeni duke krijuar një postim të ri.</string>
-	<string name="new_editor_promo_title">Përpunues i ri fringo</string>
-	<string name="new_editor_promo_button_label">Bukur, faleminderit!</string>
+	<string name="new_editor_promo_title">Përpunues i ri</string>
 	<string name="visual_editor_enabled">Përpunuesi Pamor u aktivizua</string>
 	<string name="editor_content_placeholder">Ndajeni shembullin tuaj me ta…</string>
 	<string name="editor_page_title_placeholder">Titull Faqeje</string>
@@ -523,7 +569,6 @@ Language: sq_AL
 	<string name="media_dimensions">Përmasa: %s</string>
 	<string name="media_file_name">Emër kartele: %s</string>
 	<string name="media_file_type">Lloj kartele: %s</string>
-	<string name="upload_queued">Në radhë</string>
 	<string name="reader_label_gap_marker">Ngarko më tepër postime</string>
 	<string name="notifications_no_search_results">S&amp;#8217;ka sajte me përputhje për \'%s\'</string>
 	<string name="search_sites">Kërkoni në sajte</string>
@@ -666,7 +711,6 @@ Language: sq_AL
 	<string name="two_step_sms_sent">Kontrolloni mesazhet tuaj tekst për kodin e verifikimit.</string>
 	<string name="media_details_label_file_name">Emër kartele</string>
 	<string name="media_details_label_file_type">Lloj kartele</string>
-	<string name="error_publish_no_network">S&amp;#8217;mund të ketë botim, kur s&amp;#8217;ka lidhje. U ruajt si skicë.</string>
 	<string name="sign_in_jetpack">Që të lidheni me Jetpack-un, bëni hyrjen te llogaria juaj WordPress.com.</string>
 	<string name="auth_required">Hyni sërish që të vazhdohet.</string>
 	<string name="publisher">Botues:</string>
@@ -761,8 +805,6 @@ Language: sq_AL
 	<string name="delete_sure_page">Fshije këtë faqe</string>
 	<string name="confirm_delete_multi_media">Të fshihen objektet e përzgjedhur?</string>
 	<string name="confirm_delete_media">Të fshihet objekti i përzgjedhur?</string>
-	<string name="media_gallery_date_range">Po shfaqen mediat nga %1$s në %2$s</string>
-	<string name="sure_to_remove_account">Të hiqet ky sajt?</string>
 	<string name="cab_selected">%d të përzgjedhur</string>
 	<string name="reader_empty_posts_liked">S\'keni pëlqyer ende ndonjë postim</string>
 	<string name="faq_button">FAQ</string>
@@ -978,7 +1020,6 @@ Language: sq_AL
 	<string name="wordpress_blog">Blog WordPress</string>
 	<string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
 	<string name="reader_title_applog">Regjistër aplikacioni</string>
-	<string name="reader_share_link">Ndani lidhjen me të tjerët</string>
 	<string name="reader_toast_err_add_tag">I pazoti të shtojë këtë etiketë</string>
 	<string name="reader_toast_err_remove_tag">I pazoti ta heqë këtë etiketë</string>
 	<string name="required_field">Fushë e domosdoshme</string>
@@ -1040,11 +1081,9 @@ Language: sq_AL
 	<string name="password_invalid">Ju duhet një fjalëkalim më i sigurt. Sigurohuni se përdorni 7 shenja e sipër, shkronja të mëdha dhe të vogla, numra ose shenja speciale.</string>
 	<string name="nux_oops_not_selfhosted_blog">Hyni te WordPress.com</string>
 	<string name="media_add_popup_title">Shtojeni te mediateka</string>
-	<string name="media_add_new_media_gallery">Krijo galeri</string>
 	<string name="empty_list_default">Kjo listë është e zbrazët</string>
 	<string name="select_from_media_library">Përzgjidhni nga mediateka</string>
 	<string name="reader_untitled_post">(Pa titull)</string>
-	<string name="reader_share_subject">Ndarë nga %s</string>
 	<string name="reader_btn_share">Ndajeni me të tjerët</string>
 	<string name="reader_btn_follow">Ndiqe</string>
 	<string name="reader_hint_comment_on_comment">Përgjigjjuni komentit…</string>
@@ -1153,7 +1192,6 @@ Language: sq_AL
 	<string name="page">Faqe</string>
 	<string name="post">Postim</string>
 	<string name="no_network_title">S&amp;#8217;ka rrjet gati</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">emërpërdoruesiblogu</string>
 	<string name="upload_scaled_image">Ngarkoje dhe lidhe te figura e ripërmasuar</string>
 	<string name="scaled_image">Gjerësi figure të ripërmasuar</string>

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-03-23 07:47:35+0000
+Translation-Revision-Date: 2017-04-26 10:58:13+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="photo_picker_title">Zvolit obrázek</string>
+	<string name="editor_post_saved_online_not_published">Příspěvek je uložený jako koncept. Je potřeba ho publikovat. </string>
+	<string name="editor_post_saved_online">Příspěvek je uložený. </string>
+	<string name="media_encoder_quality_100">Maximální</string>
+	<string name="media_encoder_quality_95">Hodně vysoká</string>
+	<string name="media_encoder_quality_90">Vysoká</string>
+	<string name="media_encoder_quality_85">Střední</string>
+	<string name="media_encoder_quality_80">Nízká</string>
+	<string name="media_upload_state_uploaded">Nahráno</string>
+	<string name="media_upload_state_failed">Chyba</string>
+	<string name="media_upload_state_deleted">Smazáno</string>
+	<string name="media_upload_state_deleting">Mazání</string>
+	<string name="media_upload_state_uploading">Nahrávání</string>
+	<string name="update_draft">Aktualizovat koncept</string>
+	<string name="image_quality">Kvalita obrázku</string>
+	<string name="error_unknown_post_type">Neznámý formát příspěvku</string>
 	<string name="reader_liked_default_tag">Příspěvek I To se mi líbí</string>
 	<string name="reader_discover_default_tag">Objevit</string>
 	<string name="reader_followed_default_tag">Sledované stránky</string>
@@ -123,7 +139,6 @@ Language: cs_CZ
 	<string name="image_width">Šířka</string>
 	<string name="image_settings_dismiss_dialog_title">Zahodit neuložené změny?</string>
 	<string name="stop_upload_dialog_title">Zastavit nahrávání?</string>
-	<string name="stop_upload_button">Nahrávání zastaveno</string>
 	<string name="alert_error_adding_media">Během vkládání média se vyskytla neočekávaná chyba</string>
 	<string name="alert_action_while_uploading">Momentálně se nahrávají média. Počkejte, dokud se to nedokončí.</string>
 	<string name="alert_insert_image_html_mode">Média se nedaří vložit přímo v režimu HTML. Přejděte do editoru.</string>
@@ -217,7 +232,6 @@ Language: cs_CZ
 	<string name="delete_site_hint">Smazat web</string>
 	<string name="delete_site_summary">Tuto akci nelze vrátit zpět! Smazáním vaší stránky se odstraní veškerý obsah, uživatelé a domény z webu.</string>
 	<string name="export_site_hint">Export vaší stránky do XML souboru</string>
-	<string name="are_you_sure">Opravdu?</string>
 	<string name="export_site_summary">Jste si jisti, že jste si nezapomněli v čas exportovat váš obsah. To už v budoucnu nepůjde získat.</string>
 	<string name="keep_your_content">Udržujte svůj obsah</string>
 	<string name="domain_removal_hint">Doména přestane fungovat, jakmile odstraníte svoje stránky</string>
@@ -299,9 +313,6 @@ Language: cs_CZ
 	<string name="error_refresh_comments_showing_older">Komentáře nemohou být v tuto chvíli aktualizonány - zobrazující se starší komentáře</string>
 	<string name="editor_post_settings_set_featured_image">Nastavit vybrané obrázky</string>
 	<string name="editor_post_settings_featured_image">Vybraný obrázek</string>
-	<string name="new_editor_promo_desc">WordPress aplikace pro Android nyní zahrnuje krásný nový vizuální editor.\n    Vyzkoušejte si ho tím, že vytvoří nový příspěvek.</string>
-	<string name="new_editor_promo_title">Zburusu nový editor</string>
-	<string name="new_editor_promo_button_label">Skvělé, díky!</string>
 	<string name="visual_editor_enabled">Vizuální editor povolen</string>
 	<string name="editor_content_placeholder">Sdílejte svůj příběh zde...</string>
 	<string name="editor_page_title_placeholder">Název stránky</string>
@@ -487,7 +498,6 @@ Language: cs_CZ
 	<string name="media_file_name">Název souboru: %s</string>
 	<string name="media_uploaded_on">Nahráno: %s</string>
 	<string name="media_dimensions">Rozměry: %s</string>
-	<string name="upload_queued">Ve frontě</string>
 	<string name="media_file_type">Typ souboru: %s</string>
 	<string name="reader_label_gap_marker">Načíst více příspěvků</string>
 	<string name="notifications_no_search_results">Žádné webové stránky se neshodují s \'%s\'</string>
@@ -591,7 +601,6 @@ Language: cs_CZ
 	<string name="stats_insights">Přehledy</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Chcete-li zobrazit statistiky, přihlaste se do účtu WordPress.com, který jste použili pro připojení Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Hledáte vaše nedávné statistiky? Přesunuli jsme je na stránku statistiky.</string>
-	<string name="me_disconnect_from_wordpress_com">Odpojit od WordPress.com</string>
 	<string name="me_btn_login_logout">Přihlášení/Odhlášení</string>
 	<string name="me_connect_to_wordpress_com">Připojit k WordPress.com</string>
 	<string name="account_settings">Uživatelské nastavení</string>
@@ -623,7 +632,6 @@ Language: cs_CZ
 	<string name="verify">Ověřit</string>
 	<string name="language">Jazyk</string>
 	<string name="device">Zařízení</string>
-	<string name="error_publish_no_network">Nelze publikovat bez připojení. Uloženo jako koncept.</string>
 	<string name="editor_toast_invalid_path">Neplatná cesta k souboru</string>
 	<string name="verification_code">Ověřovací kód</string>
 	<string name="invalid_verification_code">Neplatný ověřovací kód</string>
@@ -721,8 +729,6 @@ Language: cs_CZ
 	<string name="stats_followers_email_selector">Email</string>
 	<string name="stats_likes">To se líbí</string>
 	<string name="ssl_certificate_details">Detaily</string>
-	<string name="sure_to_remove_account">Smazat web?</string>
-	<string name="media_gallery_date_range">Zobraz média od %1$s do %2$s</string>
 	<string name="cab_selected">%d vybráno</string>
 	<string name="delete_sure_page">Smazat stránku</string>
 	<string name="delete_sure">Smazat koncept</string>
@@ -869,7 +875,6 @@ Language: cs_CZ
 	<string name="adding_cat_success">Rubrubrika úspěšně přidána</string>
 	<string name="cat_name_required">Název rubriky je vyžadován</string>
 	<string name="category_automatically_renamed">Název rubriky %1$s není platný. Byl změněn na %2$s.</string>
-	<string name="reader_share_link">Odkaz pro sdílení</string>
 	<string name="view_site">Zobrazit stránku</string>
 	<string name="new_media">Nahrát soubor</string>
 	<string name="new_post">Vytvořit příspěvěk</string>
@@ -1008,12 +1013,10 @@ Language: cs_CZ
 	<string name="reader_btn_share">Sdílet</string>
 	<string name="username_invalid">Špatné uživatelské jméno</string>
 	<string name="media_add_popup_title">Přidat do knihovny medií</string>
-	<string name="media_add_new_media_gallery">Vytvořit galerii</string>
 	<string name="empty_list_default">Tento seznam je prázdný</string>
 	<string name="select_from_media_library">Vyberte z knihovny medií</string>
 	<string name="jetpack_not_found">Plugin Jetpack nebyl nalezen</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
-	<string name="reader_share_subject">Sdíleno z %s</string>
 	<string name="reader_btn_follow">Sledovat</string>
 	<string name="reader_btn_unfollow">Sleduji</string>
 	<string name="reader_hint_comment_on_comment">Odpovědět na komentář...</string>
@@ -1118,7 +1121,6 @@ Language: cs_CZ
 	<string name="post">Příspěvek</string>
 	<string name="caption">Popis (nepovinné)</string>
 	<string name="featured">Použít jako náhledový obrázek</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">Jmémo blogera</string>
 	<string name="scaled_image">Šířka zmenšeného obrázku</string>
 	<string name="upload_scaled_image">Nahrát a odkazovat na zmenšený obrázek</string>

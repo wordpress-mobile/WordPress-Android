@@ -41,6 +41,10 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
+        if (!isValidEvent(stat)) {
+            return;
+        }
+
         String eventName = getEventNameForStat(stat);
         if (eventName == null) {
             AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
@@ -156,27 +160,43 @@ public class AnalyticsTrackerNosara extends Tracker {
             userType = TracksClient.NosaraUserType.ANON;
         }
 
+        // It seems that we're tracking some events with user = null. Make sure we're catching the error here.
+        if (user == null) {
+            try {
+                throw new AnalyticsException("Trying to track analytics with an null user!");
+                // TODO add CrashlyticsUtils.logException or track this error in Nosara by using a special test user.
+            } catch (AnalyticsException e) {
+                AppLog.e(AppLog.T.STATS, e);
+            }
+            return;
+        }
 
         // create the merged JSON Object of properties
         // Properties defined by the user have precedence over the default ones pre-defined at "event level"
-        final JSONObject propertiesToJSON;
+        JSONObject propertiesToJSON = null;
         if (properties != null && properties.size() > 0) {
-            propertiesToJSON = new JSONObject(properties);
-            for (String key : predefinedEventProperties.keySet()) {
-                try {
-                    if (propertiesToJSON.has(key)) {
-                        AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
-                                "the same property pre-defined at event level. This may generate unexpected behavior!!");
-                        AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
-                                predefinedEventProperties.get(key).toString());
-                    } else {
-                        propertiesToJSON.put(key, predefinedEventProperties.get(key));
+            try {
+                propertiesToJSON = new JSONObject(properties);
+                for (String key : predefinedEventProperties.keySet()) {
+                    try {
+                        if (propertiesToJSON.has(key)) {
+                            AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
+                                    "the same property pre-defined at event level. This may generate unexpected behavior!!");
+                            AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
+                                    predefinedEventProperties.get(key).toString());
+                        } else {
+                            propertiesToJSON.put(key, predefinedEventProperties.get(key));
+                        }
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                     }
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
                 }
+            } catch (NullPointerException e) {
+                AppLog.e(AppLog.T.STATS, "A property passed to the event " + eventName + " has null key!", e);
             }
-        } else{
+        }
+
+        if (propertiesToJSON == null) {
             propertiesToJSON = new JSONObject(predefinedEventProperties);
         }
 
@@ -186,8 +206,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
         }
     }
-
-
 
     @Override
     public void endSession() {
@@ -251,6 +269,10 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
+        if (!isValidEvent(stat)) {
+            return null;
+        }
+
         switch (stat) {
             case APPLICATION_OPENED:
                 return "application_opened";
@@ -338,12 +360,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_discarded_changes";
             case EDITOR_EDITED_IMAGE:
                 return "editor_image_edited";
-            case EDITOR_ENABLED_NEW_VERSION:
-                return "editor_enabled_new_version";
-            case EDITOR_TOGGLED_OFF:
-                return "editor_toggled_off";
-            case EDITOR_TOGGLED_ON:
-                return "editor_toggled_on";
+            case EDITOR_HYBRID_ENABLED:
+                return "editor_hybrid_enabled";
+            case EDITOR_HYBRID_TOGGLED_OFF:
+                return "editor_hybrid_toggled_off";
+            case EDITOR_HYBRID_TOGGLED_ON:
+                return "editor_hybrid_toggled_on";
+            case EDITOR_AZTEC_ENABLED:
+                return "editor_aztec_enabled";
+            case EDITOR_AZTEC_TOGGLED_OFF:
+                return "editor_aztec_toggled_off";
+            case EDITOR_AZTEC_TOGGLED_ON:
+                return "editor_aztec_toggled_on";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
@@ -707,6 +735,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_service_upload_response_ok";
             case MEDIA_UPLOAD_CANCELED:
                 return "media_service_upload_canceled";
+            case MEDIA_PICKER_OPEN_CAPTURE_MEDIA:
+                return "media_picker_capture_media_opened";
+            case MEDIA_PICKER_OPEN_DEVICE_LIBRARY:
+                return "media_picker_device_library_opened";
+            case MEDIA_PICKER_OPEN_WP_MEDIA:
+                return "media_picker_wordpress_library_opened";
+            case MEDIA_PICKER_RECENT_MEDIA_SELECTED:
+                return "media_picker_recent_media_selected";
+            case MEDIA_PICKER_PREVIEW_OPENED:
+                return "media_picker_preview_opened";
             default:
                 return null;
         }

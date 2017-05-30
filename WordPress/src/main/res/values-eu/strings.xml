@@ -70,7 +70,6 @@ Language: eu_ES
 	<string name="format_bar_description_bold">Lodia</string>
 	<string name="image_caption">Izenburua</string>
 	<string name="image_settings_dismiss_dialog_title">Gorde gabeko aldaketa baztertu?</string>
-	<string name="stop_upload_button">Gelditu garka</string>
 	<string name="stop_upload_dialog_title">Karga gelditu?</string>
 	<string name="alert_error_adding_media">Errore bat gertatu da mediak txertatzean</string>
 	<string name="alert_action_while_uploading">Mediak kargatzen ari zara. Mesedez itxaron kargak dirauen artean.</string>
@@ -132,7 +131,6 @@ Language: eu_ES
 	<string name="delete_site_progress">Gunea ezabatzen...</string>
 	<string name="delete_site_summary">Ekintza hau ezin da desegin. Zure gunea ezabatzean guneko eduki, parte-hartzaile eta domeinu guztiak kenduko dira.</string>
 	<string name="delete_site_hint">Ezabatu gunea</string>
-	<string name="are_you_sure">Ziur zaude?</string>
 	<string name="export_site_hint">Esportatu zure gunea XML fitxategi batera</string>
 	<string name="export_site_summary">Ziur bazaude, har ezazu mesedez denbora bat zure edukia oraintxe esportatzeko. Etorkizunean ezingo duzu berreskuratu.</string>
 	<string name="keep_your_content">Mantendu zure edukia</string>
@@ -184,7 +182,6 @@ Language: eu_ES
 	<string name="filter_published_posts">Argitaratuta</string>
 	<string name="web_address">Web helbidea</string>
 	<string name="primary_site">Gune nagusia</string>
-	<string name="new_editor_promo_button_label">Bikain, eskerrik asko!</string>
 	<string name="visual_editor_enabled">Editore bisuala gaituta</string>
 	<string name="editor_content_placeholder">Partekatu zure istorioa hemen...</string>
 	<string name="editor_page_title_placeholder">Orrialdearen izenburua</string>
@@ -339,7 +336,6 @@ Language: eu_ES
 	<string name="stats_insights">Ezagutzak</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Zure estatistikak ikusteko, hasi saioa Jetpack konektatzeko erabili zenuen WordPress.com kontuarekin.</string>
 	<string name="stats_other_recent_stats_moved_label">\'Bestelako estatistika berrien\' bila zabiltza? Ezagutzak orrialdera mugitu dugu.</string>
-	<string name="me_disconnect_from_wordpress_com">Itxi saioa WordPress.com-en</string>
 	<string name="me_connect_to_wordpress_com">Hasi saioa WordPress.com-en</string>
 	<string name="me_btn_login_logout">Hasi/itxi saioa</string>
 	<string name="account_settings">Kontuaren ezarpenak</string>
@@ -431,8 +427,6 @@ Language: eu_ES
 	<string name="delete_sure_page">Ezabatu orrialde hau</string>
 	<string name="confirm_delete_multi_media">Ezabatu aukeratutako itemak?</string>
 	<string name="confirm_delete_media">Ezabatu aukeratutako itema?</string>
-	<string name="media_gallery_date_range">Erakutsi mediak  %1$s(e)tik %2$s(e)ra</string>
-	<string name="sure_to_remove_account">Ezabatu gune hau?</string>
 	<string name="signing_out">Saioa ixten...</string>
 	<string name="more">Gehiago</string>
 	<string name="reader_label_comments_closed">Iruzkinak itxita daude</string>
@@ -611,7 +605,6 @@ Language: eu_ES
 	<string name="new_media">Media berria</string>
 	<string name="view_site">Ikusi gunea</string>
 	<string name="error_blog_hidden">Blog hau ezkutatuta dago eta ezin izan da kargatu. Hobespenetan gaitu eta berriz saiatu.</string>
-	<string name="reader_share_link">Partekatu esteka</string>
 	<string name="email_hint">E-posta helbidea</string>
 	<string name="fatal_db_error">Errorea gertatu da aplikazioaren datu-basea sortzean. Saiatu aplikazioa berrinstalatzen.</string>
 	<string name="reader_title_applog">Aplikazioaren loga</string>
@@ -681,12 +674,10 @@ Language: eu_ES
 	<string name="reader_toast_err_url_intent">Ezin izan da %s ireki</string>
 	<string name="nux_tutorial_get_started_title">Hasi!</string>
 	<string name="empty_list_default">Zerrenda hau hutsik dago</string>
-	<string name="reader_share_subject">%s-tik partekatua</string>
 	<string name="reader_btn_share">Partekatu</string>
 	<string name="reader_btn_follow">Jarraitu</string>
 	<string name="connecting_wpcom">WordPress.com-en saioa hasten</string>
 	<string name="media_add_popup_title">Gehitu media bildumara</string>
-	<string name="media_add_new_media_gallery">Sortu bilduma</string>
 	<string name="select_from_media_library">Aukeratu media bildumatik</string>
 	<string name="jetpack_not_found">Ez da Jetpack plugina aurkitu</string>
 	<string name="reader_untitled_post">(Izenbururik gabe)</string>
@@ -787,7 +778,6 @@ Language: eu_ES
 	<string name="posts">Bidalketak</string>
 	<string name="post">Bidalketa</string>
 	<string name="blogusername">Blogeko erabiltzaile-izena</string>
-	<string name="ok">Ados</string>
 	<string name="upload_scaled_image">Igo eta estekatu eskalatutako irudiari</string>
 	<string name="scaled_image">Irudiaren zabalera eskalan</string>
 	<string name="scheduled">Programatuta</string>

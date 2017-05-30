@@ -1,11 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-06 16:47:58+0000
+Translation-Revision-Date: 2017-05-17 05:39:52+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Stuknij i przytrzymaj aby zaznaczyć więcej komentarzy</string>
+	<string name="smart_toast_photo_long_press">Stuknij i przytrzymaj aby zaznaczyć więcej zdjęć</string>
+	<string name="photo_picker_choose_video">Wybierz film z tego urządzenia</string>
+	<string name="photo_picker_choose_photo">Wybierz zdjęcie z tego urządzenia</string>
+	<string name="new_editor_promo_description">Aplikacja WordPress oferuje nowy edytor. Wypróbuj go tworząc nowy wpis.</string>
+	<string name="wp_media_title">Media WordPress</string>
+	<string name="media_insert_as_gallery">Dodaj jako galerię</string>
+	<string name="media_insert_individually">Dodaj pojedynczo</string>
+	<string name="media_insert_title">Dodaj kilka zdjęć</string>
+	<string name="media_gallery_column_count_multi">%d kolumn</string>
+	<string name="media_gallery_column_count_single">1 kolumna</string>
+	<string name="editor_confirm_email_prompt_negative">Wyślij email ponownie</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Wysłaliśmy email na adres %s podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
+	<string name="editor_confirm_email_prompt_message">Wysłaliśmy email na twój adres podczas rejestracji. Otwórz wiadomość i kliknij niebieski przycisk aby uaktywnić publikowanie.</string>
+	<string name="editor_confirm_email_prompt_title">Proszę potwierdzić swój adres email</string>
+	<string name="toast_verification_email_send_error">Błąd podczas wysyłki emaila weryfikacyjnego. Czy już dokonałeś weryfikacji?</string>
+	<string name="toast_verification_email_sent">Wysłano email weryfikacyjny, sprawdź swoją skrzynkę</string>
+	<string name="toast_saving_post_as_draft">Zapisywanie wpisu jako szkic</string>
+	<string name="photo_picker_capture_video">Nagraj film</string>
+	<string name="photo_picker_capture_photo">Wykonaj zdjęcie</string>
+	<string name="delete_site_warning_subtitle">Uwaga! Usunięcie witryny to proces nieodwracalny.</string>
+	<string name="delete_site_warning">Wszystkie twoje wpisy, zdjęcia oraz dane zostaną usunięte. Adres twojej witryny (%s) również zostanie skasowany. </string>
+	<string name="delete_site_warning_title">Usunąć witrynę?</string>
+	<string name="start_over_email_intent_error">Nie można wysłać e-maila</string>
+	<string name="start_over_email_body">Chcę zacząć od nowa i stworzyć witrynę %s od początku</string>
+	<string name="start_over_email_subject">Zacznij jeszcze raz i stwórz od początku witrynę %s</string>
+	<string name="site_picker_remove_site_error">Błąd usuwania witryny, spróbuj ponownie później</string>
+	<string name="editor_post_saved_locally_unfinished_media">Wpis ma niezakończone próby przesyłania mediów i nie został zapisany lokalnie</string>
+	<string name="sure_to_remove_account">Usunąć tą witrynę z aplikacji?</string>
+	<string name="photo_picker_title">Wybierz zdjęcie</string>
+	<string name="error_publish_no_network">Urządzenie jest offline. Zmiany zapisywane lokalnie.</string>
+	<string name="editor_post_saved_online_not_published">Wpis został zapisany online jako szkic. Rozważ opublikowanie.</string>
+	<string name="editor_post_saved_online">Wpis został zapisany online</string>
+	<string name="editor_post_saved_locally_not_published">Wpis zapisany jedynie lokalnie. Rozważ opublikowanie.</string>
+	<string name="editor_post_saved_locally">Wpis został zapisany na twoim urządzeniu</string>
+	<string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
+	<string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
+	<string name="media_encoder_quality_95">Bardzo wysoka</string>
+	<string name="media_encoder_quality_100">Maksymalna</string>
+	<string name="media_encoder_quality_90">Wysoka</string>
+	<string name="media_encoder_quality_85">Średnia</string>
+	<string name="media_encoder_quality_80">Niska</string>
+	<string name="media_upload_state_uploaded">Przesłano</string>
+	<string name="media_upload_state_failed">Niepowodzenie</string>
+	<string name="media_upload_state_deleted">Usunięto</string>
+	<string name="media_upload_state_deleting">Usuwanie</string>
+	<string name="media_upload_state_uploading">Przesyłanie</string>
+	<string name="media_upload_state_queued">W kolejce</string>
+	<string name="update_draft">Zaktualizuj szkic</string>
+	<string name="keep_editing">Kontynuuj edycję</string>
+	<string name="image_quality">Jakość obrazków</string>
 	<string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
 	<string name="error_unknown_post_type">Nieznany format wpisu</string>
 	<string name="error_unknown_post">Nieznany wpis, lokalna kopia wpisu może nie być zsynchronizowana z serwerem</string>
@@ -32,13 +83,14 @@ Language: pl
 	<string name="error_media_unauthorized">Nie masz uprawnień do poglądi lub edycji mediów</string>
 	<string name="error_media_not_found">Nie można odnaleźć mediów</string>
 	<string name="error_media_insufficient_fs_permissions">Wymagane uprawnienia odczytu do pliku medialnego</string>
-	<string name="site_settings_optimize_images_hint">Włącz aby zaoszczędzić transfer danych przez sieć komórkową</string>
 	<string name="site_settings_optimize_images">Optymalizuj obrazki</string>
 	<string name="no_site_error">Nie można podłączyć witryny WordPress. Brak prawidłowej witryny WordPress pod tym adresem. Sprawdź czy wprowadziłeś poprawny adres.</string>
 	<string name="media_generic_error">Wystąpił błąd mediów</string>
 	<string name="media_upload_error">Wystąpił błąd przesyłania mediów</string>
 	<string name="retry">Spróbuj ponownie</string>
 	<string name="confirm">Potwierdź</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do punktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu.</string>
+	<string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST - aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
 	<string name="reader_liked_default_tag">Polubione wpisy</string>
 	<string name="reader_discover_default_tag">Odkrywaj</string>
 	<string name="reader_followed_default_tag">Obserwowane witryny</string>
@@ -155,7 +207,6 @@ Language: pl
 	<string name="image_settings_save_toast">Zmiany zostały zapisane</string>
 	<string name="image_caption">Podpis pod obrazkiem</string>
 	<string name="image_settings_dismiss_dialog_title">Odrzucić niezapisane zmiany?</string>
-	<string name="stop_upload_button">Zatrzymaj przesyłanie</string>
 	<string name="stop_upload_dialog_title">Zatrzymać przesyłanie?</string>
 	<string name="alert_error_adding_media">Błąd podczas wstawiania mediów</string>
 	<string name="alert_action_while_uploading">Przesyłasz właśnie media. Poczekaj aż to zadanie się zakończy.</string>
@@ -216,7 +267,7 @@ Language: pl
 	<string name="logging_in">Logowanie</string>
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Otrzymaj odnośnik przesłany na twój adres email aby się niezwłocznie zalogować</string>
 	<string name="enter_your_password_instead">Wprowadź swoje hasło</string>
-	<string name="web_address_dialog_hint">Pokazywany publicznie kiedy komentujesz</string>
+	<string name="web_address_dialog_hint">Prezentowany kiedy dodajesz komentarze.</string>
 	<string name="username_email">Email lub użytkownik</string>
 	<string name="jetpack_not_connected_message">Wtyczka Jetpack jest zainstalowana, ale nie jest połączona z WordPress.com. Czy chcesz włączyć Jetpack?</string>
 	<string name="jetpack_not_connected">Wtyczka Jetpack nie jest podłączona</string>
@@ -250,7 +301,6 @@ Language: pl
 	<string name="delete_site_hint">Usuń witrynę</string>
 	<string name="delete_site_summary">Nie można cofnąć tego działania. Usunięcie tej witryny usunie całą zawartość, wszystkich współpracowników i domeny tej witryny.</string>
 	<string name="export_site_hint">Wyeksportuj swoją witrynę do pliku XML</string>
-	<string name="are_you_sure">Czy jesteś pewien?</string>
 	<string name="export_site_summary">Jeśli jesteś pewien, upewnij się iż wyeksportowałeś zawartość swojej witryny. Późniejsze odzyskanie zawartości nie będzie możliwe.</string>
 	<string name="keep_your_content">Zachowaj zawartość swojej witryny</string>
 	<string name="domain_removal_hint">Domeny, które nie będą działały po usunięciu twojej witryny</string>
@@ -332,9 +382,7 @@ Language: pl
 	<string name="error_refresh_comments_showing_older">Odświeżenie komentarzy nie było możliwe - pokazane są starsze komentarze</string>
 	<string name="editor_post_settings_set_featured_image">Ustaw obrazek wyróżniający</string>
 	<string name="editor_post_settings_featured_image">Obrazek wyróżniający</string>
-	<string name="new_editor_promo_desc">Aplikacja WordPress dla Androida zawiera nowy, piękny edytor wizualny. Wypróbuj go tworząc nowy wpis.  </string>
-	<string name="new_editor_promo_title">Całkiem nowy edytor</string>
-	<string name="new_editor_promo_button_label">Wielkie dzięki!</string>
+	<string name="new_editor_promo_title">Nowy edytor</string>
 	<string name="visual_editor_enabled">Edytor wizualny włączony</string>
 	<string name="editor_content_placeholder">Podziel się swoją historią...</string>
 	<string name="editor_page_title_placeholder">Tytuł strony</string>
@@ -520,7 +568,6 @@ Language: pl
 	<string name="media_file_name">Nazwa pliku: %s</string>
 	<string name="media_dimensions">Wymiary: %s</string>
 	<string name="media_uploaded_on">Przesłano %s</string>
-	<string name="upload_queued">W kolejce</string>
 	<string name="media_file_type">Typ pliku: %s</string>
 	<string name="reader_label_gap_marker">Wczytaj więcej wpisów</string>
 	<string name="notifications_no_search_results">\'%s\' nie pasuje do żadnej witryny</string>
@@ -658,7 +705,6 @@ Language: pl
 	<string name="two_step_footer_label">Wprowadź kod z aplikacji do uwierzytelniania.</string>
 	<string name="device">Urządzenie</string>
 	<string name="verify">Weryfikuj</string>
-	<string name="error_publish_no_network">Publikacja nie jest możliwa bez połączenia z Internetem. Treść zapisano jako szkic.</string>
 	<string name="editor_toast_invalid_path">Niewłaściwa ścieżka do pliku</string>
 	<string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
 	<string name="verification_code">Kod weryfikacyjny</string>
@@ -760,8 +806,6 @@ Language: pl
 	<string name="confirm_delete_multi_media">Usunąć zaznaczone elementy?</string>
 	<string name="confirm_delete_media">Usunąć zaznaczony element?</string>
 	<string name="cab_selected">Liczba zaznaczonych: %d</string>
-	<string name="media_gallery_date_range">Wyświetlanie mediów z okresu od %1$s do %2$s</string>
-	<string name="sure_to_remove_account">Usunąć tego bloga?</string>
 	<string name="reader_empty_comments">Nie ma jeszcze komentarzy</string>
 	<string name="reader_empty_posts_in_tag">Brak wpisów z tym tagiem</string>
 	<string name="reader_label_view_original">Zobacz oryginalny artykuł</string>
@@ -874,7 +918,6 @@ Language: pl
 	<string name="blog_name_required">Wpisz adres strony</string>
 	<string name="no_network_message">Brak dostępnej sieci</string>
 	<string name="error_refresh_pages">Strony nie mogły zostać odświeżone w tej chwili</string>
-	<string name="error_refresh_notifications">Powiadomienia nie mogły zostać odświeżone w tej chwili</string>
 	<string name="error_refresh_comments">Komentarze nie mogły zostać odświeżone w tej chwili</string>
 	<string name="blog_name_reserved">Ta strona jest zajęta</string>
 	<string name="username_not_allowed">Niedozwolona nazwa użytkownika</string>
@@ -902,6 +945,7 @@ Language: pl
 	<string name="invalid_url_message">Sprawdź, czy wprowadzony adres URL jest poprawny</string>
 	<string name="blog_not_found">Wystąpił błąd podczas dostępu do tego blogu</string>
 	<string name="could_not_remove_account">Nie można usunąć blogu</string>
+	<string name="error_refresh_notifications">Błąd aktualizacji listy powiadomień</string>
 	<string name="trash">Usuń</string>
 	<string name="mnu_comment_unapprove">Odrzuć</string>
 	<string name="blog_title_invalid">Nieprawidłowy tytuł strony</string>
@@ -944,7 +988,6 @@ Language: pl
 	<string name="saving_changes">Zapisywanie zmian</string>
 	<string name="delete_draft">Usuń szkic</string>
 	<string name="toast_comment_unedited">Komentarz nie został zmieniony</string>
-	<string name="reader_share_link">Udostępnij link</string>
 	<string name="learn_more">Dowiedz się więcej</string>
 	<string name="upload_failed">Wysyłanie nie powiodło się</string>
 	<string name="comment_status_spam">Spam</string>
@@ -1038,11 +1081,9 @@ Language: pl
 	<string name="signing_in">Logowanie...</string>
 	<string name="nux_add_selfhosted_blog">Dodaj samodzielnie hostowaną witrynę</string>
 	<string name="media_add_popup_title">Dodaj do biblioteki mediów</string>
-	<string name="media_add_new_media_gallery">Tworzenie galerii</string>
 	<string name="empty_list_default">Lista jest pusta</string>
 	<string name="jetpack_not_found">Wtyczka Jetpack nie została znaleziona</string>
 	<string name="reader_untitled_post">(Brak tytułu)</string>
-	<string name="reader_share_subject">Udostępnione przez %s</string>
 	<string name="reader_btn_share">Udostępnij</string>
 	<string name="reader_label_removed_tag">Usunięto %s</string>
 	<string name="reader_label_added_tag">Dodano %s</string>
@@ -1151,7 +1192,6 @@ Language: pl
 	<string name="featured_in_post">Załącz obraz w treści wpisu</string>
 	<string name="featured">Ustaw jako obrazek wyróżniający</string>
 	<string name="caption">Podpis pod obrazkiem (opcjonalnie)</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">nazwa użytkownika blogu</string>
 	<string name="upload_scaled_image">Załaduj i wprowadź odnośnik do przeskalowanego obrazka</string>
 	<string name="scaled_image">Szerokosć obrazka przeskalowanego</string>

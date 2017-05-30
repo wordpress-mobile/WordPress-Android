@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -24,8 +23,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -52,7 +50,6 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
@@ -96,6 +93,7 @@ public class ActivityLauncher {
     public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.BROWSER);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
@@ -292,32 +290,11 @@ public class ActivityLauncher {
         context.startActivity(statsPostViewIntent);
     }
 
-    public static void viewMediaGalleryPickerForSite(Activity activity, @NonNull SiteModel site) {
-        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
+    public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECT_ONE_ITEM, true);
-        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-    }
-
-    public static void viewMediaGalleryPickerForSiteAndMediaIds(Activity activity, @NonNull SiteModel site,
-                                                     @NonNull ArrayList<Long> mediaIds) {
-        Intent intent = new Intent(activity, MediaGalleryPickerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        if (mediaIds != null && !mediaIds.isEmpty()) {
-            intent.putExtra(MediaGalleryPickerActivity.PARAM_SELECTED_IDS, ListUtils.toLongArray(mediaIds));
-        }
-        activity.startActivityForResult(intent, MediaGalleryPickerActivity.REQUEST_CODE);
-    }
-
-    public static void viewMediaGalleryForSiteAndGallery(Activity activity, @NonNull SiteModel site,
-                                               @Nullable MediaGallery mediaGallery) {
-        Intent intent = new Intent(activity, MediaGalleryActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaGalleryActivity.PARAMS_MEDIA_GALLERY, mediaGallery);
-        if (mediaGallery == null) {
-            intent.putExtra(MediaGalleryActivity.PARAMS_LAUNCH_PICKER, true);
-        }
-        activity.startActivityForResult(intent, MediaGalleryActivity.REQUEST_CODE);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_PICKER);
+        activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {

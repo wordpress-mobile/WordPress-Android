@@ -145,7 +145,7 @@ public class SitePickerActivity extends AppCompatActivity
             mMenuAdd.setVisible(false);
         } else {
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
-            mMenuEdit.setVisible(mSiteStore.getWPComAndJetpackSitesCount() > 1);
+            mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
             mMenuAdd.setVisible(true);
         }
 

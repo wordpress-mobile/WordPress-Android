@@ -15,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -24,6 +26,7 @@ import org.wordpress.android.util.SqlUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
@@ -258,7 +261,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final ImageView imgThumbnail;
         private final TextView txtSelectionCount;
         private final View videoOverlay;
-        private final View btnPreview;
 
         public ThumbnailViewHolder(View view) {
             super(view);
@@ -266,7 +268,6 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
             txtSelectionCount = (TextView) view.findViewById(R.id.text_selection_count);
             videoOverlay = view.findViewById(R.id.image_video_overlay);
-            btnPreview = view.findViewById(R.id.image_preview);
 
             imgThumbnail.getLayoutParams().width = mThumbWidth;
             imgThumbnail.getLayoutParams().height = mThumbHeight;
@@ -300,12 +301,14 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
 
-            btnPreview.setOnClickListener(new View.OnClickListener() {
+            View imgPreview = view.findViewById(R.id.image_preview);
+            imgPreview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     PhotoPickerItem item = getItemAtPosition(position);
                     if (item != null) {
+                        trackOpenPreviewScreenEvent(item);
                         MediaPreviewActivity.showPreview(
                                 mContext,
                                 imgThumbnail,
@@ -315,6 +318,20 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
                 }
             });
         }
+    }
+
+    private void trackOpenPreviewScreenEvent(final PhotoPickerItem item) {
+        if (item == null) {
+            return;
+        }
+
+        new Thread(new Runnable() {
+            public void run() {
+                Map<String, Object> properties = AnalyticsUtils.getMediaProperties(mContext, item.isVideo, item.uri, null);
+                properties.put("is_video", item.isVideo);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
+            }
+        }).start();
     }
 
     /*

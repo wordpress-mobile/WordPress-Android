@@ -1,11 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-04-04 11:06:45+0000
+Translation-Revision-Date: 2017-05-11 13:44:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
+	<string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
+	<string name="photo_picker_choose_video">Choose video from device</string>
+	<string name="photo_picker_choose_photo">Choose photo from device</string>
+	<string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post.</string>
+	<string name="wp_media_title">WordPress media</string>
+	<string name="media_insert_as_gallery">Add as gallery</string>
+	<string name="media_insert_individually">Add individually</string>
+	<string name="media_insert_title">Add multiple photos</string>
+	<string name="media_gallery_column_count_multi">%d columns</string>
+	<string name="media_gallery_column_count_single">1 column</string>
+	<string name="editor_confirm_email_prompt_negative">Resend Email</string>
+	<string name="editor_confirm_email_prompt_message_with_email">We sent an email to %s when you first signed up. Please open the message and click the blue button to enable publishing.</string>
+	<string name="editor_confirm_email_prompt_message">We sent you an email when you first signed up. Please open the message and click the blue button to enable publishing.</string>
+	<string name="editor_confirm_email_prompt_title">Please confirm your email address</string>
+	<string name="toast_verification_email_send_error">Error sending verification email. Are you already verified?</string>
+	<string name="toast_verification_email_sent">Verification email sent, check your inbox</string>
+	<string name="toast_saving_post_as_draft">Saving post as draft</string>
+	<string name="photo_picker_capture_video">Take video</string>
+	<string name="photo_picker_capture_photo">Take photo</string>
+	<string name="delete_site_warning_subtitle">Be careful! Once a site is deleted, it cannot be recovered. Please be sure before you proceed.</string>
+	<string name="delete_site_warning">All your posts, images, and data will be deleted. And this site’s address (%s) will be lost.</string>
+	<string name="delete_site_warning_title">Delete site?</string>
+	<string name="start_over_email_intent_error">Unable to send an email</string>
+	<string name="start_over_email_body">I want to start over with the site %s</string>
+	<string name="start_over_email_subject">Start over with site %s</string>
+	<string name="site_picker_remove_site_error">Error removing site, try again later</string>
+	<string name="editor_post_saved_locally_unfinished_media">The post has unfinished media uploads and has been saved locally</string>
+	<string name="sure_to_remove_account">Remove this site from the app?</string>
+	<string name="photo_picker_title">Choose photo</string>
+	<string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
+	<string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
+	<string name="editor_post_saved_online">The post was saved online</string>
+	<string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
+	<string name="editor_post_saved_locally">The post was saved on your device</string>
+	<string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
+	<string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
+	<string name="media_encoder_quality_100">Maximum</string>
+	<string name="media_encoder_quality_95">Very High</string>
+	<string name="media_encoder_quality_90">High</string>
+	<string name="media_encoder_quality_85">Medium</string>
+	<string name="media_encoder_quality_80">Low</string>
+	<string name="media_upload_state_uploaded">Uploaded</string>
+	<string name="media_upload_state_failed">Failed</string>
+	<string name="media_upload_state_deleted">Deleted</string>
+	<string name="media_upload_state_deleting">Deleting</string>
+	<string name="media_upload_state_uploading">Uploading</string>
+	<string name="media_upload_state_queued">Queued</string>
+	<string name="update_draft">Update draft</string>
+	<string name="keep_editing">Keep editing</string>
+	<string name="image_quality">Image quality</string>
 	<string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 	<string name="error_unknown_post_type">Unknown post format</string>
 	<string name="error_unknown_post">Unknown post, local copy of this post may be out of sync with the server</string>
@@ -32,7 +83,6 @@ Language: en_GB
 	<string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
 	<string name="error_media_not_found">Media could not be found</string>
 	<string name="error_media_insufficient_fs_permissions">Read permission required on media file</string>
-	<string name="site_settings_optimize_images_hint">Enable to save bandwidth on mobile connections</string>
 	<string name="site_settings_optimize_images">Optimise Images</string>
 	<string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this\n        address. Check the site address (URL) you entered.</string>
 	<string name="media_generic_error">Media error occurred</string>
@@ -157,7 +207,6 @@ Language: en_GB
 	<string name="image_caption">Caption</string>
 	<string name="image_settings_save_toast">Changes saved</string>
 	<string name="image_settings_dismiss_dialog_title">Discard unsaved changes?</string>
-	<string name="stop_upload_button">Stop Upload</string>
 	<string name="stop_upload_dialog_title">Stop uploading?</string>
 	<string name="alert_error_adding_media">An error occurred while inserting media</string>
 	<string name="alert_action_while_uploading">You are currently uploading media. Please wait until this completes.</string>
@@ -251,7 +300,6 @@ Language: en_GB
 	<string name="delete_site_progress">Deleting site…</string>
 	<string name="delete_site_hint">Delete site</string>
 	<string name="delete_site_summary">This action cannot be undone. Deleting your site will remove all content, contributors, and domains from the site.</string>
-	<string name="are_you_sure">Are You Sure?</string>
 	<string name="export_site_hint">Export your site to an XML file</string>
 	<string name="export_site_summary">If you are sure, please be sure to take the time and export your content now. It cannot be recovered in the future.</string>
 	<string name="keep_your_content">Keep Your Content</string>
@@ -334,9 +382,7 @@ Language: en_GB
 	<string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
 	<string name="editor_post_settings_set_featured_image">Set Featured Image</string>
 	<string name="editor_post_settings_featured_image">Featured Image</string>
-	<string name="new_editor_promo_desc">The WordPress app for Android now includes a beautiful new visual\n    editor. Try it out by creating a new post.</string>
-	<string name="new_editor_promo_title">Brand new editor</string>
-	<string name="new_editor_promo_button_label">Great, thanks!</string>
+	<string name="new_editor_promo_title">New editor</string>
 	<string name="visual_editor_enabled">Visual Editor enabled</string>
 	<string name="editor_content_placeholder">Share your story here…</string>
 	<string name="editor_page_title_placeholder">Page Title</string>
@@ -523,7 +569,6 @@ Language: en_GB
 	<string name="media_uploaded_on">Uploaded on: %s</string>
 	<string name="media_file_name">File name: %s</string>
 	<string name="media_file_type">File type: %s</string>
-	<string name="upload_queued">Queued</string>
 	<string name="reader_label_gap_marker">Load more posts</string>
 	<string name="notifications_no_search_results">No sites matched \'%s\'</string>
 	<string name="search_sites">Search sites</string>
@@ -626,7 +671,7 @@ Language: en_GB
 	<string name="stats_insights">Insights</string>
 	<string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
-	<string name="me_disconnect_from_wordpress_com">Log out from WordPress.com</string>
+	<string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
@@ -664,7 +709,6 @@ Language: en_GB
 	<string name="invalid_verification_code">Invalid verification code</string>
 	<string name="verification_code">Verification code</string>
 	<string name="editor_toast_invalid_path">Invalid file path</string>
-	<string name="error_publish_no_network">Can\'t publish while there is no connection. Saved as draft.</string>
 	<string name="media_details_label_file_type">File type</string>
 	<string name="media_details_label_file_name">File name</string>
 	<string name="language">Language</string>
@@ -756,8 +800,6 @@ Language: en_GB
 	<string name="stats_for">Stats for %s</string>
 	<string name="themes_fetching">Fetching themes…</string>
 	<string name="ssl_certificate_details">Details</string>
-	<string name="sure_to_remove_account">Remove this site?</string>
-	<string name="media_gallery_date_range">Displaying media from %1$s to %2$s</string>
 	<string name="cab_selected">%d selected</string>
 	<string name="confirm_delete_media">Delete selected item?</string>
 	<string name="confirm_delete_multi_media">Delete selected items?</string>
@@ -914,7 +956,6 @@ Language: en_GB
 	<string name="required_field">Required field</string>
 	<string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
 	<string name="reader_toast_err_add_tag">Unable to add this tag</string>
-	<string name="reader_share_link">Share link</string>
 	<string name="reader_title_applog">Application log</string>
 	<string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
 	<string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1060,12 +1101,10 @@ Language: en_GB
 	<string name="reader_btn_unfollow">Following</string>
 	<string name="reader_btn_follow">Follow</string>
 	<string name="reader_btn_share">Share</string>
-	<string name="reader_share_subject">Shared from %s</string>
 	<string name="reader_untitled_post">(Untitled)</string>
 	<string name="jetpack_not_found">Jetpack plugin not found</string>
 	<string name="select_from_media_library">Select from media library</string>
 	<string name="empty_list_default">This list is empty</string>
-	<string name="media_add_new_media_gallery">Create gallery</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="passcode_turn_on">Turn PIN lock on</string>
 	<string name="passcode_turn_off">Turn PIN lock off</string>
@@ -1153,7 +1192,6 @@ Language: en_GB
 	<string name="no_network_title">No network available</string>
 	<string name="featured_in_post">Include image in post content</string>
 	<string name="featured">Use as featured image</string>
-	<string name="ok">OK</string>
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Scaled image width</string>
 	<string name="upload_scaled_image">Upload and link to scaled image</string>

@@ -1,11 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-02-22 12:41:47+0000
+Translation-Revision-Date: 2017-05-07 12:49:00+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+	<string name="editor_confirm_email_prompt_negative">Kirim Ulang Email</string>
+	<string name="editor_confirm_email_prompt_message_with_email">Kami telah mengirimkan email ke %s saat Anda pertama kali mendaftar. Harap buka pesan tersebut dan klik tombol biru untuk mengaktifkan publikasi.</string>
+	<string name="editor_confirm_email_prompt_message">Kami telah mengirimkan email saat Anda pertama kali mendaftar. Harap buka pesan tersebut dan klik tombol biru untuk mengaktifkan publikasi.</string>
+	<string name="editor_confirm_email_prompt_title">Harap konfirmasikan alamat email Anda</string>
+	<string name="toast_verification_email_send_error">Terjadi error saat mengirim email verifikasi. Apakah akun Anda sudah diverifikasi?</string>
+	<string name="toast_verification_email_sent">Email verifikasi telah dikirim, periksa kotak masuk Anda</string>
+	<string name="toast_saving_post_as_draft">Menyimpan pos sebagai konsep</string>
+	<string name="photo_picker_capture_video">Rekam video</string>
+	<string name="photo_picker_capture_photo">Ambil foto</string>
+	<string name="delete_site_warning_subtitle">Hati-hati! Setelah situs dihapus, situs tersebut tidak akan dapat dipulihkan. Pastikan sebelum Anda melanjutkan.</string>
+	<string name="delete_site_warning">Semua pos, gambar, dan data Anda akan dihapus. Dan alamat situs ini (%s) akan hilang.</string>
+	<string name="delete_site_warning_title">Hapus situs?</string>
+	<string name="start_over_email_intent_error">Tidak dapat mengirim email</string>
+	<string name="start_over_email_body">Saya ingin memulai situs %s dari awal</string>
+	<string name="start_over_email_subject">Mulai situs %s dari awal</string>
+	<string name="site_picker_remove_site_error">Terjadi error saat menghapus situs, coba lagi nanti</string>
+	<string name="editor_post_saved_locally_unfinished_media">Pos memiliki unggahan media yang belum selesai dan telah disimpan secara lokal</string>
+	<string name="sure_to_remove_account">Hapus situs ini dari aplikasi?</string>
+	<string name="photo_picker_title">Pilih foto</string>
+	<string name="error_publish_no_network">Perangkat offline. Perubahan disimpan secara lokal.</string>
+	<string name="editor_post_saved_online_not_published">Pos disimpan online sebagai konsep. Pertimbangkan untuk memublikasikannya.</string>
+	<string name="editor_post_saved_online">Pos disimpan online</string>
+	<string name="editor_post_saved_locally_not_published">Pos hanya disimpan secara lokal. Pertimbangkan untuk memublikasikannya.</string>
+	<string name="editor_post_saved_locally">Pos disimpan di perangkat Anda</string>
+	<string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
+	<string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
+	<string name="media_encoder_quality_100">Maksimum</string>
+	<string name="media_encoder_quality_95">Sangat Tinggi</string>
+	<string name="media_encoder_quality_90">Tinggi</string>
+	<string name="media_encoder_quality_85">Sedang</string>
+	<string name="media_encoder_quality_80">Rendah</string>
+	<string name="media_upload_state_uploaded">Diunggah</string>
+	<string name="media_upload_state_failed">Gagal</string>
+	<string name="media_upload_state_deleted">Dihapus</string>
+	<string name="media_upload_state_deleting">Menghapus</string>
+	<string name="media_upload_state_uploading">Mengunggah</string>
+	<string name="media_upload_state_queued">Diantrekan</string>
+	<string name="update_draft">Perbarui konsep</string>
+	<string name="keep_editing">Lanjutkan menyunting</string>
+	<string name="image_quality">Kualitas gambar</string>
+	<string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
+	<string name="error_unknown_post_type">Format pos tidak diketahui</string>
+	<string name="error_unknown_post">Pos tidak diketahui, salinan lokal pos ini mungkin tidak sinkron dengan server</string>
+	<string name="error_fetch_site_after_creation">Situs telah dibuat, Anda mungkin perlu menyegarkan situs di pemilih situs.</string>
+	<string name="error_media_request_too_large">Media terlalu besar, tidak dapat diunggah</string>
+	<string name="error_media_parse_error">Tidak dapat mengurai respons setelah mengunggah media</string>
+	<string name="error_upload_params">Error saat mengunggah %1$s: %2$s</string>
+	<string name="submit_for_review">Kirim</string>
+	<string name="media_error_too_large_upload">File terlalu besar. Hubungi penyedia hosting web untuk menyelesaikan masalah ini</string>
 	<string name="reader_empty_followed_blogs_search_title">Tidak ada situs yang cocok</string>
 	<string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
 	<string name="preference_editor_visual">Visual</string>
@@ -120,7 +169,6 @@ Language: id
 	<string name="format_bar_description_bold">Tebal</string>
 	<string name="image_settings_dismiss_dialog_title">Buang perubahan yang belum disimpan?</string>
 	<string name="stop_upload_dialog_title">Stop mengunggah?</string>
-	<string name="stop_upload_button">Stop Pengunggahan</string>
 	<string name="alert_error_adding_media">Terjadi galat saat menyisipkan media</string>
 	<string name="alert_action_while_uploading">Anda sedang mengunggah media. Mohon tunggu hingga selesai.</string>
 	<string name="alert_insert_image_html_mode">Gagal menyisipkan media dalam mode HTML. Silakan pindah ke mode visual.</string>
@@ -214,7 +262,6 @@ Language: id
 	<string name="delete_site_summary">Tindakan ini tidak dapat dibatalkan. Menghapus situs Anda akan membuang semua konten, kontributor, dan domain dari situs.</string>
 	<string name="delete_site_hint">Hapus situs</string>
 	<string name="export_site_hint">Ekspor situs Anda ke file XML</string>
-	<string name="are_you_sure">Apakah Anda Yakin?</string>
 	<string name="export_site_summary">Jika Anda yakin, segera luangkan waktu dan ekspor konten Anda sekarang. Itu tidak dapat dikembalikan di masa mendatang.</string>
 	<string name="keep_your_content">Jaga Konten Anda</string>
 	<string name="domain_removal_hint">Domain yang tidak berfungsi setelah Anda menghapus situs Anda</string>
@@ -296,9 +343,6 @@ Language: id
 	<string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
 	<string name="editor_post_settings_set_featured_image">Atur Gambar Unggulan</string>
 	<string name="editor_post_settings_featured_image">Gambar Unggulan</string>
-	<string name="new_editor_promo_desc">Aplikasi WordPress untuk Android sekarang berisi visual baru yang cantik\n penyunting Cobalah dengan membuat pos baru.</string>
-	<string name="new_editor_promo_title">Penyunting baru</string>
-	<string name="new_editor_promo_button_label">Bagus, terima kasih!</string>
 	<string name="visual_editor_enabled">Editor Visual diaktifkan</string>
 	<string name="editor_content_placeholder">Editor Visual diaktifkan</string>
 	<string name="editor_page_title_placeholder">Judul Halaman</string>
@@ -484,7 +528,6 @@ Language: id
 	<string name="media_file_name">Nama file: %s</string>
 	<string name="media_uploaded_on">Diunggah pada: %s</string>
 	<string name="media_dimensions">Dimensi: %s</string>
-	<string name="upload_queued">Diantrekan</string>
 	<string name="media_file_type">Jenis file: %s</string>
 	<string name="reader_label_gap_marker">Muat pos lainnya</string>
 	<string name="notifications_no_search_results">Tidak ada situs yang cocok dengan \'%s\'</string>
@@ -588,7 +631,6 @@ Language: id
 	<string name="stats_insights">Wawasan</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Untuk melihat statistik Anda, masuk ke akun WordPress.com yang Anda pakai untuk terhubung dengan Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Mencari Statistik Terbaru Lainnya? Kami telah memindahkannya ke halaman Wawasan.</string>
-	<string name="me_disconnect_from_wordpress_com">Log out dari WordPress.com</string>
 	<string name="me_btn_login_logout">Log masuk/keluar</string>
 	<string name="me_connect_to_wordpress_com">Log in ke WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" tidak tersembunyi karena itu adalah situs saat ini</string>
@@ -624,7 +666,6 @@ Language: id
 	<string name="invalid_verification_code">Kode verifikasi tidak valid</string>
 	<string name="verification_code">Kode verifikasi</string>
 	<string name="editor_toast_invalid_path">Lokasi file tidak valid</string>
-	<string name="error_publish_no_network">Tak bisa menerbitkan tanpa koneksi internet. Tersimpan sebagai draf.</string>
 	<string name="language">Bahasa</string>
 	<string name="device">Perangkat</string>
 	<string name="media_details_label_file_name">Nama file</string>
@@ -718,14 +759,12 @@ Language: id
 	<string name="stats_followers_a_year">Satu tahun</string>
 	<string name="stats_followers_months">%1$d bulan</string>
 	<string name="ssl_certificate_details">Rincian</string>
-	<string name="sure_to_remove_account">Hapus situs ini?</string>
 	<string name="delete_sure_post">Hapus pos ini</string>
 	<string name="delete_sure">Hapus draf ini</string>
 	<string name="delete_sure_page">Hapus laman ini</string>
 	<string name="confirm_delete_media">Hapus item terpilih?</string>
 	<string name="confirm_delete_multi_media">Hapus semua item terpilih?</string>
 	<string name="cab_selected">%d terpilih</string>
-	<string name="media_gallery_date_range">Menampilkan media dari %1$s hingga %2$s</string>
 	<string name="reader_empty_posts_liked">Anda belum menyukai pos sama sekali</string>
 	<string name="faq_button">Tanya Jawab Umum</string>
 	<string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
@@ -951,7 +990,6 @@ Language: id
 	<string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>
 	<string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
 	<string name="reader_title_applog">Log aplikasi</string>
-	<string name="reader_share_link">Bagikan tautan</string>
 	<string name="reader_toast_err_add_tag">Tidak bisa menambahkan tag ini</string>
 	<string name="reader_toast_err_remove_tag">Tidak bisa menghapus tag ini</string>
 	<string name="required_field">Isian wajib</string>
@@ -1001,12 +1039,10 @@ Language: id
 	<string name="nux_oops_not_selfhosted_blog">Log in ke WordPress.com</string>
 	<string name="signing_in">Log in…</string>
 	<string name="media_add_popup_title">Tambah ke pustaka media</string>
-	<string name="media_add_new_media_gallery">Buat album</string>
 	<string name="empty_list_default">List ini masih kosong</string>
 	<string name="select_from_media_library">Pilih dari pustaka media</string>
 	<string name="jetpack_not_found">Plugin Jetpack tidak ditemukan</string>
 	<string name="reader_untitled_post">(Tanpa Judul)</string>
-	<string name="reader_share_subject">di sebarkan dari %s</string>
 	<string name="reader_btn_share">Bagikan</string>
 	<string name="reader_btn_follow">Ikuti</string>
 	<string name="reader_btn_unfollow">Pengikut</string>
@@ -1115,7 +1151,6 @@ Language: id
 	<string name="featured">Gunakan sebagai gambar terfitur</string>
 	<string name="featured_in_post">Sertakan gambar dalam konten tulisan</string>
 	<string name="blogusername">blogusername</string>
-	<string name="ok">OK</string>
 	<string name="upload_scaled_image">Unggah dan tautkan ke gambar terskala</string>
 	<string name="scaled_image">Lebar gambar terskala</string>
 	<string name="scheduled">Dijadwalkan</string>
