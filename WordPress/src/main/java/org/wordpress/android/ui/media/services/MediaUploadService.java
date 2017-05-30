@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -48,6 +49,12 @@ public class MediaUploadService extends Service {
 
     private List<MediaModel> mPendingUploads = new ArrayList<>();
     private List<MediaModel> mInProgressUploads = new ArrayList<>();
+    // we need this last map so to be able to update the PostModel once with all completed uploads,
+    // as opposed to editing the Post each time a single upload completes.
+    // Also, we need to process each Post's media in a batch, so that's why we are using a map
+    // instead of using a simple List (a map will have a List of MediaModel for their corresponding
+    // PostId where they're supposed to belong to as per the user intent)
+    private HashMap<Long, List<MediaModel>> mCompletedUploads = new HashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -95,7 +102,7 @@ public class MediaUploadService extends Service {
         // skip this request if no media to upload given
         if (intent == null || !intent.hasExtra(MEDIA_LIST_KEY)) {
             AppLog.e(AppLog.T.MEDIA, "MediaUploadService was killed and restarted with a null intent.");
-            stopServiceIfUploadsComplete();
+            updatePostAndStopServiceIfUploadsComplete();
             return START_NOT_STICKY;
         }
 
@@ -115,11 +122,7 @@ public class MediaUploadService extends Service {
         } else if (event.completed) {
             // Upload completed
             AppLog.i(AppLog.T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
-
-            // here we need to edit the corresponding post
-            updatePostWithMediaUrl(event.media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromQueueById(event.media.getId()), null);
-
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else {
@@ -149,40 +152,36 @@ public class MediaUploadService extends Service {
         uploadNextInQueue();
     }
 
-    private synchronized void updatePostWithMediaUrl(MediaModel media){
-        if (media != null) {
-            PostModel post = mPostStore.getPostByLocalPostId(media.getLocalPostId());
-            if (post != null) {
-                // actually replace the media ID with the media uri
-                MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-                PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
-                if (modifiedPost != null) {
-                    post = modifiedPost;
-                }
-
-                // we changed the post, so let’s mark this down
-                if (!post.isLocalDraft()) {
-                    post.setIsLocallyChanged(true);
-                }
-                post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-
-                // finally save the post
-                savePostToDb(post);
+    private synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
+                                                     MediaUploadReadyListener processor){
+        if (media != null && post != null && processor != null) {
+            // actually replace the media ID with the media uri
+            PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
+            if (modifiedPost != null) {
+                post = modifiedPost;
             }
+
+            // we changed the post, so let’s mark this down
+            if (!post.isLocalDraft()) {
+                post.setIsLocallyChanged(true);
+            }
+            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+
         }
+        return post;
     }
 
     private synchronized void savePostToDb(PostModel post) {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
     }
 
-    private void uploadNextInQueue() {
+    private synchronized void uploadNextInQueue() {
 
         MediaModel next = getNextMediaToUpload();
 
         if (next == null) {
             AppLog.v(AppLog.T.MEDIA, "No more media items to upload. Skipping this request - MediaUploadService.");
-            stopServiceIfUploadsComplete();
+            updatePostAndStopServiceIfUploadsComplete();
             return;
         }
 
@@ -191,19 +190,31 @@ public class MediaUploadService extends Service {
         // somehow lost our reference to the site, complete this action
         if (site == null) {
             AppLog.i(AppLog.T.MEDIA, "Unexpected state, site is null. Skipping this request - MediaUploadService.");
-            stopServiceIfUploadsComplete();
+            updatePostAndStopServiceIfUploadsComplete();
             return;
         }
 
         dispatchUploadAction(next, site);
     }
 
-    private void completeUploadWithId(int id) {
+    private synchronized void completeUploadWithId(int id) {
         MediaModel media = getMediaFromQueueById(id);
         if (media != null) {
             mInProgressUploads.remove(media);
+            addMediaToPostCompletedMediaListMap(media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
+    }
+
+    // this keeps a map for all completed media for each post, so we can process the post easily
+    // in one go later
+    private void addMediaToPostCompletedMediaListMap(MediaModel media) {
+        List<MediaModel> mediaListForPost = mCompletedUploads.get(media.getPostId());
+        if (mediaListForPost == null) {
+            mediaListForPost = new ArrayList<>();
+        }
+        mediaListForPost.add(media);
+        mCompletedUploads.put(media.getPostId(), mediaListForPost);
     }
 
     private MediaModel getMediaFromQueueById(int id) {
@@ -300,9 +311,27 @@ public class MediaUploadService extends Service {
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
-    private void stopServiceIfUploadsComplete(){
+    private void updatePostAndStopServiceIfUploadsComplete(){
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > completed");
         if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
+
+            // here we need to edit the corresponding post with all completed uploads
+            // also bear in mind the service could be handling media uploads for different posts,
+            // so we also need to take into account processing completed uploads in batches through
+            // each post
+            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+            for (Long postId : mCompletedUploads.keySet()) {
+                PostModel post = mPostStore.getPostByLocalPostId(postId);
+                // now get the list of completed media for this post, so we can make post content
+                // updates in one go and save only once
+                List<MediaModel> mediaList = mCompletedUploads.get(postId);
+                for (MediaModel media : mediaList) {
+                    post = updatePostWithMediaUrl(post, media, processor);
+                }
+                // finally save the post, and continue to the next post in the completed map
+                savePostToDb(post);
+            }
+
             AppLog.i(AppLog.T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
@@ -367,8 +396,7 @@ public class MediaUploadService extends Service {
             AppLog.d(AppLog.T.TESTS, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());
-            if (queuedMedia.getLocalSiteId() == mediaModel.getLocalSiteId() &&
-                    StringUtils.equals(queuedMedia.getFilePath(), mediaModel.getFilePath())) {
+            if (areTheseTheSameMedia(queuedMedia, mediaModel)) {
                 return true;
             }
         }
@@ -377,10 +405,17 @@ public class MediaUploadService extends Service {
             AppLog.d(AppLog.T.TESTS, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());
-            if (queuedMedia.getLocalSiteId() == mediaModel.getLocalSiteId() &&
-                    StringUtils.equals(queuedMedia.getFilePath(), mediaModel.getFilePath())) {
+            if (areTheseTheSameMedia(queuedMedia, mediaModel)) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private boolean areTheseTheSameMedia(MediaModel media1, MediaModel media2) {
+        if (media1.getLocalSiteId() == media2.getLocalSiteId() &&
+                StringUtils.equals(media1.getFilePath(), media2.getFilePath())) {
+            return true;
         }
         return false;
     }
