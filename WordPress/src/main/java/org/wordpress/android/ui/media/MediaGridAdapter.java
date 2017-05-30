@@ -32,6 +32,7 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
