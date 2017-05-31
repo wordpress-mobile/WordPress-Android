@@ -14,7 +14,6 @@ import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.ui.publicize.ConnectButton;
 import org.wordpress.android.ui.publicize.PublicizeActions;
 import org.wordpress.android.ui.publicize.PublicizeConstants;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -27,7 +26,6 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
     private final PublicizeConnectionList mConnections = new PublicizeConnectionList();
 
     private final long mSiteId;
-    private final int mAvatarSz;
     private final long mCurrentUserId;
     private final String mServiceId;
 
@@ -37,7 +35,6 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
     public PublicizeConnectionAdapter(Context context, long siteId, String serviceId, long currentUserId) {
         super();
         mSiteId = siteId;
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small);
         mServiceId = StringUtils.notNullStr(serviceId);
         mCurrentUserId = currentUserId;
         setHasStableIds(true);
@@ -92,12 +89,11 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         final PublicizeConnection connection = mConnections.get(position);
 
         holder.txtUser.setText(connection.getExternalDisplayName());
+        holder.divider.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 
         if (connection.hasExternalProfilePictureUrl()) {
-            String avatarUrl = PhotonUtils.getPhotonImageUrl(
-                    connection.getExternalProfilePictureUrl(), mAvatarSz, mAvatarSz);
-            holder.imgAvatar.setImageUrl(
-                    connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.AVATAR);
+            holder.imgAvatar.setImageUrl(connection.getExternalProfilePictureUrl(),
+                    WPNetworkImageView.ImageType.AVATAR);
         } else {
             holder.imgAvatar.showDefaultGravatarImage();
         }
@@ -117,12 +113,14 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         private final TextView txtUser;
         private final ConnectButton btnConnect;
         private final WPNetworkImageView imgAvatar;
+        private final View divider;
 
         public ConnectionViewHolder(View view) {
             super(view);
             txtUser = (TextView) view.findViewById(R.id.text_user);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
             btnConnect = (ConnectButton) view.findViewById(R.id.button_connect);
+            divider = view.findViewById(R.id.divider);
         }
     }
 

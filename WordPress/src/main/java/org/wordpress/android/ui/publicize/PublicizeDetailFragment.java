@@ -16,11 +16,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.RecyclerItemDecoration;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
 
@@ -32,7 +28,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
     private ConnectButton mConnectBtn;
     private RecyclerView mRecycler;
-    private ViewGroup mLayoutConnections;
+    private View mConnectionsCardView;
 
     @Inject AccountStore mAccountStore;
 
@@ -80,12 +76,8 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_detail_fragment, container, false);
 
         mConnectBtn = (ConnectButton) rootView.findViewById(R.id.button_connect);
-        mLayoutConnections = (ViewGroup) rootView.findViewById(R.id.layout_connections);
+        mConnectionsCardView = rootView.findViewById(R.id.card_view_connections);
         mRecycler = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-
-        int spacingHorizontal = 0;
-        int spacingVertical = DisplayUtils.dpToPx(getActivity(), 1);
-        mRecycler.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         return rootView;
     }
@@ -108,16 +100,13 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
         setTitle(mService.getLabel());
 
+        String serviceLabel = String.format(getString(R.string.connection_service_label), mService.getLabel());
         TextView txtService = (TextView) getView().findViewById(R.id.text_service);
+        txtService.setText(serviceLabel);
+
+        String description = String.format(getString(R.string.connection_service_description), mService.getLabel());
         TextView txtDescription = (TextView) getView().findViewById(R.id.text_description);
-        WPNetworkImageView imgIcon = (WPNetworkImageView) getView().findViewById(R.id.image_icon);
-
-        txtService.setText(mService.getLabel());
-        txtDescription.setText(mService.getDescription());
-
-        int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        String iconUrl = PhotonUtils.getPhotonImageUrl(mService.getIconUrl(), avatarSz, avatarSz);
-        imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        txtDescription.setText(description);
 
         long currentUserId = mAccountStore.getAccount().getUserId();
         PublicizeConnectionAdapter adapter = new PublicizeConnectionAdapter(
@@ -144,7 +133,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     public void onAdapterLoaded(boolean isEmpty) {
         if (!isAdded()) return;
 
-        mLayoutConnections.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        mConnectionsCardView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
         if (hasOnPublicizeActionListener()) {
             if (isEmpty) {
