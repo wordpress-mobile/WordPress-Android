@@ -16,18 +16,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 
-import javax.inject.Inject;
-
 public class EditPostPreviewFragment extends Fragment {
-    @Inject PostStore mPostStore;
-
     private WebView mWebView;
     private TextView mTextView;
+
     private LoadPostPreviewTask mLoadTask;
 
     private SiteModel mSite;
@@ -50,7 +46,6 @@ public class EditPostPreviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
         updateSiteOrFinishActivity(savedInstanceState);
     }
 
