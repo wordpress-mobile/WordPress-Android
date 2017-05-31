@@ -390,7 +390,7 @@ public class PostUploadService extends Service {
                 if (m.find()) {
                     String imageUri = m.group(1);
                     if (!imageUri.equals("")) {
-                        MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost.getId(), imageUri);
+                        MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost, imageUri);
                         if (mediaModel == null) {
                             mIsMediaError = true;
                             continue;
