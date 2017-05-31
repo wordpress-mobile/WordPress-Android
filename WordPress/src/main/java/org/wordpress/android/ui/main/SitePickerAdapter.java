@@ -267,7 +267,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
     int getNumHiddenSelected() {
         int numHidden = 0;
         for (Integer i: mSelectedPositions) {
-            if (mSites.get(i).isHidden) {
+            if (i < mSites.size() && mSites.get(i).isHidden) {
                 numHidden++;
             }
         }
