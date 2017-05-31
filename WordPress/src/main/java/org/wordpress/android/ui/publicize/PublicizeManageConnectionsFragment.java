@@ -37,8 +37,7 @@ import javax.inject.Inject;
 
 public class PublicizeManageConnectionsFragment extends PreferenceFragment
          implements SiteSettingsInterface.SiteSettingsListener,
-                    Preference.OnPreferenceChangeListener,
-                    Preference.OnPreferenceClickListener {
+                    Preference.OnPreferenceChangeListener {
     private static final String TWITTER_PREFIX = "@";
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
     private static final String TWITTER_ID = "twitter";
@@ -230,7 +229,9 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         mLabelPreference.setOnPreferenceChangeListener(this);
 
         mButtonStylePreference = (DetailListPreference) findPreference(getString(R.string.publicize_button_style));
-        setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
+        setDetailListPreferenceValue(mButtonStylePreference,
+                mSiteSettings.getSharingButtonStyle(getActivity()),
+                mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
         mButtonStylePreference.setOnPreferenceChangeListener(this);
@@ -257,7 +258,9 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
 
     private void setPreferencesFromSiteSettings() {
         changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
-        setDetailListPreferenceValue(mButtonStylePreference, mSiteSettings.getSharingButtonStyle(getActivity()), mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
+        setDetailListPreferenceValue(mButtonStylePreference,
+                mSiteSettings.getSharingButtonStyle(getActivity()),
+                mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
         mLikeButtonPreference.setChecked(mSiteSettings.getAllowLikeButton());
         mCommentLikesPreference.setChecked(mSiteSettings.getAllowCommentLikes());
@@ -305,11 +308,6 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         }
         pref.setText(newValue);
         pref.setSummary(newValue);
-    }
-
-    @Override
-    public boolean onPreferenceClick(Preference preference) {
-        return preference == mButtonStylePreference;// && !shouldShowListPreference((DetailListPreference) preference);
     }
 
     @Override
