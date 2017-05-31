@@ -502,10 +502,10 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * request posts related to the current one - only available for wp.com
+     * request posts related to the current one - only available for wp.com public posts
      */
     private void requestRelatedPosts() {
-        if (hasPost() && mPost.isWP()) {
+        if (hasPost() && mPost.isWP() && !mPost.isPrivate) {
             ReaderPostActions.requestRelatedPosts(mPost);
         }
     }
