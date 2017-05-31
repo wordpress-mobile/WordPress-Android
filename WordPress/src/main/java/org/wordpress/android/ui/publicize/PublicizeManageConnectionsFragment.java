@@ -82,17 +82,17 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        if (mSite == null) {
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
+        if (mSiteSettings == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
             return;
         }
 
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
-
         setRetainInstance(true);
         addPreferencesFromResource();
         initPreferences();
+        setPreferencesFromSiteSettings();
     }
 
     private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
@@ -229,9 +229,6 @@ public class PublicizeManageConnectionsFragment extends PreferenceFragment
         mLabelPreference.setOnPreferenceChangeListener(this);
 
         mButtonStylePreference = (DetailListPreference) findPreference(getString(R.string.publicize_button_style));
-        setDetailListPreferenceValue(mButtonStylePreference,
-                mSiteSettings.getSharingButtonStyle(getActivity()),
-                mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
         mButtonStylePreference.setEntries(getResources().getStringArray(R.array.sharing_button_style_display_array));
         mButtonStylePreference.setEntryValues(getResources().getStringArray(R.array.sharing_button_style_array));
         mButtonStylePreference.setOnPreferenceChangeListener(this);
