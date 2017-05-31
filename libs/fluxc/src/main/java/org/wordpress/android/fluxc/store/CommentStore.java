@@ -186,7 +186,6 @@ public class CommentStore extends Store {
      * @param orderByDateAscending If true order the results by ascending published date.
      *                             If false, order the results by descending published date.
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
-     * @return
      */
     public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
                                                  CommentStatus... statuses) {

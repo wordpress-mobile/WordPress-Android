@@ -42,7 +42,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 8;
+        return 9;
     }
 
     @Override
@@ -91,6 +91,12 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 7:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table MediaModel add LOCAL_POST_ID integer;");
+                oldVersion++;
+            case 8:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table MediaModel add FILE_URL_MEDIUM_SIZE text;");
+                db.execSQL("alter table MediaModel add FILE_URL_MEDIUM_LARGE_SIZE text;");
+                db.execSQL("alter table MediaModel add FILE_URL_LARGE_SIZE text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

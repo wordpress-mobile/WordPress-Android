@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Delete
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
@@ -36,6 +37,8 @@ public enum SiteAction implements IAction {
     IS_WPCOM_URL,
     @Action(payloadType = SuggestDomainsPayload.class)
     SUGGEST_DOMAINS,
+    @Action(payloadType = String.class)
+    FETCH_CONNECT_SITE_INFO,
 
     // Remote responses
     @Action(payloadType = NewSiteResponsePayload.class)
@@ -46,6 +49,8 @@ public enum SiteAction implements IAction {
     DELETED_SITE,
     @Action(payloadType = ExportSiteResponsePayload.class)
     EXPORTED_SITE,
+    @Action(payloadType = ConnectSiteInfoPayload.class)
+    FETCHED_CONNECT_SITE_INFO,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
@@ -65,5 +70,5 @@ public enum SiteAction implements IAction {
     @Action(payloadType = IsWPComResponsePayload.class)
     CHECKED_IS_WPCOM_URL,
     @Action(payloadType = SuggestDomainsResponsePayload.class)
-    SUGGESTED_DOMAINS
+    SUGGESTED_DOMAINS,
 }
