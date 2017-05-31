@@ -681,8 +681,8 @@ public class WPMainActivity extends AppCompatActivity {
             ActivityLauncher.showSignInForResult(this);
         } else {
             SiteModel site = getSelectedSite();
-            if (site != null) {
-                ActivityLauncher.showSitePickerForResult(this, site);
+            if (site == null && mSiteStore.hasSite()) {
+                ActivityLauncher.showSitePickerForResult(this, mSiteStore.getSites().get(0));
             }
         }
     }

@@ -1324,6 +1324,7 @@
     <string name="username_contains_invalid_characters">Username may not contain the character “_”</string>
     <string name="username_must_include_letters">Username must have a least 1 letter (a-z)</string>
     <string name="email_invalid">Enter a valid email address</string>
+    <string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
     <string name="email_not_allowed">That email address isn\'t allowed</string>
     <string name="username_exists">That username already exists</string>
     <string name="email_exists">That email address is already being used</string>
@@ -1684,4 +1685,20 @@
     <!-- smart toasts -->
     <string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
     <string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
+
+    <!-- Login -->
+    <string name="log_in">Log In</string>
+    <string name="create_wordpress_site">Create WordPress site</string>
+    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
+    <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites</string>
+    <string name="next">Next</string>
+    <string name="open_mail">Open mail</string>
+    <string name="enter_username_password_instead">Log in to your site by entering your site address instead.</string>
+    <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
+    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="login_error_while_checking_email">An error occurred while checking the email address!</string>
+    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
+    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_sent_description">Magic link sent illustration</string>
+    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
 </resources>

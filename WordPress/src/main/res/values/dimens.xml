@@ -114,6 +114,7 @@
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">38dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
+    <dimen name="avatar_sz_login">100dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
@@ -157,6 +158,7 @@
     <dimen name="nux_edit_field_font_size">16sp</dimen>
     <dimen name="nux_main_button_height">48dp</dimen>
     <dimen name="nux_secondary_button_height">36dp</dimen>
+    <dimen name="nux_promo_font_size">22sp</dimen>
 
     <dimen name="nux_width">600dp</dimen>
 
@@ -298,4 +300,7 @@
     <dimen name="photo_picker_preview_icon">36dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>
+
+    <!-- login -->
+    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
 </resources>

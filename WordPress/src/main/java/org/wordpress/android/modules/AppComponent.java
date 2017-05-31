@@ -15,11 +15,14 @@ import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.NewUserFragment;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
+import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
+import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -104,6 +107,10 @@ public interface AppComponent {
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
     void inject(NewUserFragment object);
+
+    void inject(LoginActivity object);
+    void inject(LoginEmailFragment object);
+    void inject(LoginMagicLinkRequestFragment object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);

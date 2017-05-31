@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -265,7 +267,9 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Intent intent = new Intent(activity, SignInActivity.class);
+        Class<?> loginClass = BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE ? LoginActivity.class : SignInActivity.class;
+
+        Intent intent = new Intent(activity, loginClass);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
@@ -298,13 +302,17 @@ public class ActivityLauncher {
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
-        Intent intent = new Intent(activity, SignInActivity.class);
+        Class<?> loginClass = BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE ? LoginActivity.class : SignInActivity.class;
+
+        Intent intent = new Intent(activity, loginClass);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
     public static void loginWithoutMagicLink(Activity activity) {
-        Intent signInIntent = new Intent(activity, SignInActivity.class);
+        Class<?> loginClass = BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE ? LoginActivity.class : SignInActivity.class;
+
+        Intent signInIntent = new Intent(activity, loginClass);
         signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
         activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);

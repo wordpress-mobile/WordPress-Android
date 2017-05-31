@@ -46,15 +46,18 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
+        buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
     productFlavors {
         vanilla { // used for release and beta
             buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+            buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
+            buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions

@@ -107,6 +107,11 @@
         </activity>
 
         <activity
+            android:name=".ui.accounts.LoginActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/SignInTheme"
