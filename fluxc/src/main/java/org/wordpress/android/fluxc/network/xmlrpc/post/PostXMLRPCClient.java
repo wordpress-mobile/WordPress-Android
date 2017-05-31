@@ -193,7 +193,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         final XMLRPC method = post.isLocalDraft() ? XMLRPC.NEW_POST : XMLRPC.EDIT_POST;
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         if (method.equals(XMLRPC.NEW_POST) && response instanceof String) {
@@ -242,7 +242,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         params.add(post.getRemotePostId());
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_POST, params,
-                new Listener() {
+                new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
                         RemotePostPayload payload = new RemotePostPayload(post, site);
@@ -408,15 +408,13 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         contentStruct.put("post_type", post.isPage() ? "page" : "post");
         contentStruct.put("post_title", post.getTitle());
 
-        if (post.getDateCreated() != null) {
-            String dateCreated = post.getDateCreated();
-            Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
-            if (date != null) {
-                contentStruct.put("post_date", date);
-                // Redundant, but left in just in case
-                // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
-                contentStruct.put("post_date_gmt", date);
-            }
+        String dateCreated = post.getDateCreated();
+        Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
+        if (date != null) {
+            contentStruct.put("post_date", date);
+            // Redundant, but left in just in case
+            // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
+            contentStruct.put("post_date_gmt", date);
         }
 
         String content = post.getContent();

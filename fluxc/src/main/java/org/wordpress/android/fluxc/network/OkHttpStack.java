@@ -29,7 +29,7 @@ import okhttp3.ResponseBody;
 /**
  * Modified version of https://gist.github.com/alashow/c96c09320899e4caa06b
  *
- * OkHttp backed {@link com.android.volley.toolbox.HttpStack HttpStack} that does not
+ * OkHttp backed {@link HttpStack HttpStack} that does not
  * use okhttp-urlconnection
  */
 public class OkHttpStack implements HttpStack {
@@ -40,7 +40,7 @@ public class OkHttpStack implements HttpStack {
     }
 
     @Override
-    public HttpResponse performRequest(com.android.volley.Request<?> request, Map<String, String> additionalHeaders)
+    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
         int timeoutMs = request.getTimeoutMs();
         mClientBuilder.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS);

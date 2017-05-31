@@ -227,6 +227,7 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
         params.put("offset", String.valueOf(offset));
         params.put("search", searchTerm);
+        params.put("status", "any");
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
@@ -324,6 +325,7 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("title", StringUtils.notNullStr(post.getTitle()));
         params.put("content", StringUtils.notNullStr(post.getContent()));
         params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
+        params.put("slug", StringUtils.notNullStr(post.getSlug()));
 
         if (!TextUtils.isEmpty(post.getDateCreated())) {
             params.put("date", post.getDateCreated());

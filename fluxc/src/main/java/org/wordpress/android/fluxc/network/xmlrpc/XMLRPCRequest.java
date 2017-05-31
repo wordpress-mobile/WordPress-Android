@@ -33,12 +33,12 @@ public class XMLRPCRequest extends BaseRequest<Object> {
     private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("text/xml; charset=%s", PROTOCOL_CHARSET);
 
-    private final Listener mListener;
+    private final Listener<? super Object[]> mListener;
     private final XMLRPC mMethod;
     private final Object[] mParams;
     private final XmlSerializer mSerializer = Xml.newSerializer();
 
-    public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener listener,
+    public XMLRPCRequest(String url, XMLRPC method, List<Object> params, Listener<? super Object[]> listener,
                          BaseErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mListener = listener;
@@ -49,7 +49,7 @@ public class XMLRPCRequest extends BaseRequest<Object> {
 
     @Override
     protected void deliverResponse(Object response) {
-        mListener.onResponse(response);
+        deliverResponse(mListener, response);
     }
 
     @Override
@@ -129,5 +129,20 @@ public class XMLRPCRequest extends BaseRequest<Object> {
         }
 
         return error;
+    }
+
+    /**
+     * Helper method to capture the Listener's wildcard parameter type and use it to cast the response before
+     * calling {@code onResponse()}.
+     */
+    private static <T> void deliverResponse(final Listener<T> listener, Object rawResponse) {
+        // The XMLRPCSerializer always returns an Object - it's up to the client making the request to know whether
+        // it's really an Object[] (i.e., when requesting a list of values from the API).
+        // We've already restricted the Listener parameterization to Object and Object[], so we know this is returning
+        // a 'safe' type - but it's still up to the client to know if an Object or an Object[] is the expected response.
+        // So, we're matching the parsed response to the Listener parameter we were given, trusting that the network
+        // client knows what it's doing
+        @SuppressWarnings("unchecked") T response = (T) rawResponse;
+        listener.onResponse(response);
     }
 }

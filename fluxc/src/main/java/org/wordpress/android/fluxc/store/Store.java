@@ -22,7 +22,7 @@ public abstract class Store {
     }
 
     /**
-     * onAction should {@link Subscribe} with ASYNC {@link ThreadMode}.
+     * onAction should {@link org.greenrobot.eventbus.Subscribe} with ASYNC {@link org.greenrobot.eventbus.ThreadMode}.
      */
     public abstract void onAction(Action action);
     public abstract void onRegister();

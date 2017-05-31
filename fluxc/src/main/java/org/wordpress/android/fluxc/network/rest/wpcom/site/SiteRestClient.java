@@ -27,13 +27,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.util.UrlUtils;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +106,37 @@ public class SiteRestClient extends BaseWPComRestClient {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchConnectSiteInfo(@NonNull final String testedUrl) {
+        // Get a proper URI to reliably retrieve the scheme.
+        URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(testedUrl, false));
+
+        // Sanitize and encode the Url for the API call.
+        String sanitizedURL = UrlUtils.removeScheme(testedUrl);
+        sanitizedURL = sanitizedURL.replace("/", "::");
+
+        // Make the call.
+        String url = WPCOMREST.connect.site_info.protocol(uri.getScheme()).address(sanitizedURL).getUrlV1_1();
+        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                ConnectSiteInfoResponse.class,
+                new Listener<ConnectSiteInfoResponse>() {
+                    @Override
+                    public void onResponse(ConnectSiteInfoResponse response) {
+                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(testedUrl, response);
+                        info.url = testedUrl;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(testedUrl, error);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 }
         );
@@ -407,5 +441,19 @@ public class SiteRestClient extends BaseWPComRestClient {
             }
         }
         return payload;
+    }
+
+    private ConnectSiteInfoPayload connectSiteInfoFromResponse(String url, ConnectSiteInfoResponse response) {
+        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(url, null);
+        info.url = url;
+        info.exists = response.exists;
+        info.hasJetpack = response.hasJetpack;
+        info.isJetpackActive = response.isJetpackActive;
+        info.isJetpackConnected = response.isJetpackConnected;
+        info.isWordPress = response.isWordPress;
+        // CHECKSTYLE IGNORE RegexpSingleline
+        info.isWPCom = response.isWordPressDotCom;
+        // CHECKSTYLE END IGNORE RegexpSingleline
+        return info;
     }
 }
