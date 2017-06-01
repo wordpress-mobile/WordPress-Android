@@ -122,6 +122,10 @@
         </activity>
 
         <activity
+            android:name=".ui.accounts.LoginEpilogueActivity"
+            android:theme="@style/LoginTheme" />
+
+        <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/SignInTheme"

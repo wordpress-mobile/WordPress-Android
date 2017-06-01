@@ -212,6 +212,8 @@ public class WPMainActivity extends AppCompatActivity {
         });
 
 
+        String authTokenToSet= null;
+
         if (savedInstanceState == null) {
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push, otherwise return to the tab
@@ -231,10 +233,23 @@ public class WPMainActivity extends AppCompatActivity {
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
-                    checkMagicLinkSignIn();
+
+                    if (!AppPrefs.isLoginWizardStyleActivated()) {
+                        checkMagicLinkSignIn();
+                    } else if (hasMagicLinkLoginIntent()) {
+                        if (mAccountStore.hasAccessToken()) {
+                            ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
+                        } else {
+                            authTokenToSet = getAuthToken();
+                        }
+                    }
                 }
             } else {
-                ActivityLauncher.showSignInForResult(this);
+                if (hasMagicLinkLoginIntent()) {
+                    authTokenToSet = getAuthToken();
+                } else {
+                    ActivityLauncher.showSignInForResult(this);
+                }
             }
         }
 
@@ -247,6 +262,23 @@ public class WPMainActivity extends AppCompatActivity {
         // We need to register the dispatcher here otherwise it won't trigger if for example Site Picker is present
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+
+        if (authTokenToSet != null) {
+            // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
+            AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
+            mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
+        }
+    }
+
+    private boolean hasMagicLinkLoginIntent() {
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+
+        return Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains(SignInActivity.MAGIC_LOGIN);
+    }
+
+    private String getAuthToken() {
+        return getIntent().getData().getQueryParameter(SignInActivity.TOKEN_PARAMETER);
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -633,8 +665,16 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError() && mSelectedSite != null) {
-            AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
+        if (event.isError()) {
+            if (mSelectedSite != null) {
+                AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
+            }
+
+            return;
+        }
+
+        if (mAccountStore.hasAccessToken() && hasMagicLinkLoginIntent()) {
+            ActivityLauncher.showLoginEpilogue(this);
         }
     }
 

@@ -21,6 +21,7 @@ import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
+import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -271,6 +272,11 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, loginClass);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void showLoginEpilogue(Activity activity) {
+        Intent intent = new Intent(activity, LoginEpilogueActivity.class);
+        activity.startActivity(intent);
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
