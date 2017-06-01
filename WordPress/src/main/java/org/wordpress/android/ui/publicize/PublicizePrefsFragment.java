@@ -19,7 +19,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
-import org.wordpress.android.ui.prefs.DetailListPreference;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -28,6 +27,7 @@ import org.wordpress.android.widgets.WPPrefView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -196,30 +196,32 @@ public class PublicizePrefsFragment extends Fragment
             mPublicizeButtons.add(publicizeButton);
         }
 
-        String[] entries = new String[mPublicizeButtons.size()];
-        String[] entryValues = new String[mPublicizeButtons.size()];
+        List<String> entries = new ArrayList<>();
+        List<String> entryValues = new ArrayList<>();
         HashSet<String> selectedSharingButtons = new HashSet<>();
         HashSet<String> selectedMoreButtons = new HashSet<>();
 
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
-            PublicizeButton publicizeButton = mPublicizeButtons.get(i);
-            entries[i] = publicizeButton.getName();
-            entryValues[i] = publicizeButton.getId();
-            if (publicizeButton.isEnabled() && publicizeButton.isVisible()) {
-                selectedSharingButtons.add(publicizeButton.getId());
+            PublicizeButton button = mPublicizeButtons.get(i);
+            entries.add(button.getName());
+            entryValues.add(button.getId());
+            if (button.isEnabled() && button.isVisible()) {
+                selectedSharingButtons.add(button.getId());
             }
-            if (publicizeButton.isEnabled() && !publicizeButton.isVisible()) {
-                selectedMoreButtons.add(publicizeButton.getId());
+            if (button.isEnabled() && !button.isVisible()) {
+                selectedMoreButtons.add(button.getId());
             }
         }
 
-        // TODO
-        /*mSharingButtonsPreference.setEntries(entries);
-        mSharingButtonsPreference.setEntryValues(entryValues);
-        mSharingButtonsPreference.setValues(selectedSharingButtons);
+        mPrefSharingButtons.setListEntries(entries);
+        mPrefSharingButtons.setListValues(entryValues);
 
-        mMoreButtonsPreference.setEntries(entries);
-        mMoreButtonsPreference.setEntryValues(entryValues);
+        mPrefMoreButtons.setListEntries(entries);
+        mPrefMoreButtons.setListValues(entryValues);
+
+        // TODO
+        /*mSharingButtonsPreference.setListValues(entryValues);
+        mSharingButtonsPreference.setValues(selectedSharingButtons);
         mMoreButtonsPreference.setValues(selectedMoreButtons);*/
 
         toggleTwitterPreferenceVisibility();

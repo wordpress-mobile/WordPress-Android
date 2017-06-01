@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 wp:wpHeading="@string/buttons"
-                wp:wpPrefType="text"
+                wp:wpPrefType="checklist"
                 wp:wpShowDivider="true"
                 wp:wpSummary="@string/sharing_sharing_buttons_description"
                 wp:wpTitle="@string/sharing_buttons" />
@@ -35,7 +35,7 @@
                 android:id="@+id/pref_more_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                wp:wpPrefType="text"
+                wp:wpPrefType="checklist"
                 wp:wpShowDivider="true"
                 wp:wpSummary="@string/sharing_more_description"
                 wp:wpTitle="@string/sharing_edit_more_buttons" />
@@ -52,7 +52,7 @@
                 android:id="@+id/pref_button_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                wp:wpPrefType="chooser"
+                wp:wpPrefType="radiolist"
                 wp:wpShowDivider="false"
                 wp:wpTitle="@string/button_style" />
 

@@ -1,8 +1,11 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,25 +17,29 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  *
  */
 
-public class WPPrefView extends LinearLayout {
+public class WPPrefView extends LinearLayout implements View.OnClickListener {
 
     public enum PrefType {
         TEXT,
         TOGGLE,
-        CHOOSER;
+        CHECKLIST,
+        RADIOLIST;
 
         public static PrefType fromInt(int value) {
             switch (value) {
                 case 1:
                     return TOGGLE;
                 case 2:
-                    return CHOOSER;
+                    return CHECKLIST;
+                case 3:
+                    return RADIOLIST;
                 default:
                     return TEXT;
             }
@@ -40,7 +47,8 @@ public class WPPrefView extends LinearLayout {
     }
 
     private PrefType mPrefType = PrefType.TEXT;
-    private final List<String> mChoices = new ArrayList<>();
+    private final List<String> mListEntries = new ArrayList<>();
+    private final List<String> mListValues = new ArrayList<>();
 
     private TextView mHeadingTextView;
     private TextView mTitleTextView;
@@ -76,6 +84,8 @@ public class WPPrefView extends LinearLayout {
         mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
         mSwitch = (Switch) view.findViewById(R.id.switch_view);
         mDivider = view.findViewById(R.id.divider);
+
+        view.findViewById(R.id.container).setOnClickListener(this);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -139,9 +149,61 @@ public class WPPrefView extends LinearLayout {
         mDivider.setVisibility(show ? VISIBLE : GONE);
     }
 
-    public void setChoices(@NonNull List<String> choices) {
-        mChoices.clear();
-        mChoices.addAll(choices);
+    public void setListEntries(@NonNull List<String> entries) {
+        mListEntries.clear();
+        mListEntries.addAll(entries);
+    }
+
+    public void setListEntries(@ArrayRes int arrayResourceId) {
+        String[] array = getResources().getStringArray(arrayResourceId);
+        setListEntries(Arrays.asList(array));
+    }
+
+    public void setListValues(@NonNull List<String> values) {
+        mListEntries.clear();
+        mListEntries.addAll(values);
+    }
+
+    public void setListValues(@ArrayRes int arrayResourceId) {
+        String[] array = getResources().getStringArray(arrayResourceId);
+        setListValues(Arrays.asList(array));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (mPrefType) {
+            case CHECKLIST:
+                showChecklistDialog();
+                break;
+            case RADIOLIST:
+                break;
+            case TEXT:
+                break;
+            case TOGGLE:
+                break;
+        }
+    }
+
+    private static CharSequence[] listToArray(@NonNull List<String> list) {
+        CharSequence[] array = new CharSequence[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            array[i] = list.get(i);
+        }
+        return array;
+    }
+
+    private void showChecklistDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle(mTitleTextView.getText())
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setMultiChoiceItems(listToArray(mListEntries), null, null)
+                .show();
     }
 
 }
