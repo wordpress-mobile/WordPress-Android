@@ -344,7 +344,11 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
         params.put("tags", TextUtils.join(",", post.getTagNameList()));
 
-        params.put("featured_image", post.getFeaturedImageId());
+        if (post.hasFeaturedImage()) {
+            params.put("featured_image", post.getFeaturedImageId());
+        } else {
+            params.put("featured_image", "");
+        }
 
         if (post.hasLocation()) {
             // Location data was added to the post
