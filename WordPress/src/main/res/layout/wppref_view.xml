@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_large"

@@ -24,6 +24,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPPrefView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,6 +39,11 @@ public class PublicizePrefsFragment extends Fragment
     private static final String TWITTER_ID = "twitter";
 
     private final ArrayList<PublicizeButton> mPublicizeButtons = new ArrayList<>();
+
+    private WPPrefView mPrefSharingButtons;
+    private WPPrefView mPrefMoreButtons;
+    private WPPrefView mPrefLabel;
+    private WPPrefView mPrefButtonStyle;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -76,14 +82,25 @@ public class PublicizePrefsFragment extends Fragment
         }
 
         setRetainInstance(true);
-        initPreferences();
-        setPreferencesFromSiteSettings();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_prefs_fragment, container, false);
+
+        mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
+        mPrefMoreButtons = (WPPrefView) view.findViewById(R.id.pref_more_button);
+        mPrefLabel = (WPPrefView) view.findViewById(R.id.pref_label);
+        mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        configureSharingAndMoreButtonsPreferences();
+        setPreferencesFromSiteSettings();
     }
 
     private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
@@ -208,20 +225,10 @@ public class PublicizePrefsFragment extends Fragment
         toggleTwitterPreferenceVisibility();
     }
 
-    private void initPreferences() {
-        configureSharingAndMoreButtonsPreferences();
-
-        // TODO
-    }
-
-    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
-        pref.setValue(value);
-        pref.setSummary(summary);
-        pref.refreshAdapter();
-    }
-
-    // TODO
     private void setPreferencesFromSiteSettings() {
+        mPrefLabel.setSummary(mSiteSettings.getSharingLabel());
+        mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
+
         /*changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
         setDetailListPreferenceValue(mButtonStylePreference,
                 mSiteSettings.getSharingButtonStyle(getActivity()),
