@@ -112,7 +112,7 @@ public class PostModelTest {
     }
 
     @Test
-    public void testFilterEmtpyTagsOnGetTagNameList() {
+    public void testFilterEmptyTagsOnGetTagNameList() {
         PostModel testPost = PostTestUtils.generateSampleLocalDraftPost();
 
         testPost.setTagNames("pony,             ,ponies");
