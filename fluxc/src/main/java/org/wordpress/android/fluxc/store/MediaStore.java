@@ -405,8 +405,14 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteMediaWithIdsAsCursor(siteModel, mediaIds);
     }
 
-    public List<MediaModel> getLocalMediaForPost(PostModel postModel) {
+    public List<MediaModel> getMediaForPost(PostModel postModel) {
         List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId());
+        return media;
+    }
+
+    public List<MediaModel> getMediaForPostWithState(PostModel postModel, UploadState expectedState) {
+        List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
+                expectedState);
         return media;
     }
 

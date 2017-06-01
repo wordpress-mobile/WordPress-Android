@@ -409,7 +409,7 @@ public class MediaStoreTest {
         assertEquals(3, mMediaStore.getSiteMediaCount(getTestSiteWithLocalId(testSiteId)));
 
         // verify the correct media is in the store
-        List<MediaModel> mediaModelList = mMediaStore.getLocalMediaForPost(post);
+        List<MediaModel> mediaModelList = mMediaStore.getMediaForPost(post);
         assertNotNull(mediaModelList);
         assertEquals(3, mediaModelList.size());
         for (MediaModel media : mediaModelList) {
