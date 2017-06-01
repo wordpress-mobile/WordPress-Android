@@ -65,7 +65,9 @@ public class LoginPrologueAnimationFragment extends Fragment {
             public void onAnimationEnd(Animator animation) {}
 
             @Override
-            public void onAnimationCancel(Animator animation) {}
+            public void onAnimationCancel(Animator animation) {
+                mCount = 0;
+            }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
