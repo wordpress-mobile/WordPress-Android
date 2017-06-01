@@ -311,7 +311,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = (PostModel) extras.getSerializable(EXTRA_POST);
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
-                    mPost = MediaUploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+                    mPost = MediaUploadService.updatePostWithCurrentlyCompletedUploads(mMediaStore, mPost);
                     mIsPage = mPost.isPage();
                 }
             } else {
