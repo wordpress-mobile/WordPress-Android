@@ -119,6 +119,25 @@ public class MediaStore extends Store {
         }
     }
 
+    /**
+     * Actions: CANCEL_MEDIA_UPLOAD
+     */
+    public static class CancelMediaPayload extends Payload {
+        public SiteModel site;
+        public MediaModel media;
+        public boolean delete;
+
+        public CancelMediaPayload(SiteModel site, MediaModel media) {
+            this(site, media, true);
+        }
+
+        public CancelMediaPayload(SiteModel site, MediaModel media, boolean delete) {
+            this.site = site;
+            this.media = media;
+            this.delete = delete;
+        }
+    }
+
     //
     // OnChanged events
     //
@@ -298,7 +317,7 @@ public class MediaStore extends Store {
                 performDeleteMedia((MediaPayload) action.getPayload());
                 break;
             case CANCEL_MEDIA_UPLOAD:
-                performCancelUpload((MediaPayload) action.getPayload());
+                performCancelUpload((CancelMediaPayload) action.getPayload());
                 break;
             case PUSHED_MEDIA:
                 handleMediaPushed((MediaPayload) action.getPayload());
@@ -598,7 +617,7 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performCancelUpload(@NonNull MediaPayload payload) {
+    private void performCancelUpload(@NonNull CancelMediaPayload payload) {
         if (payload.media != null) {
             if (payload.site.isUsingWpComRestApi()) {
                 mMediaRestClient.cancelUpload(payload.media);
