@@ -55,16 +55,29 @@ public class LoginPrologueAnimationFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
 
-        mLottieAnimationView.playAnimation();
+        // toggle the animation but only if already resumed.
+        //  Needed because setUserVisibleHint is called before onCreateView
+        if (isResumed()) {
+            toggleAnimation(isVisibleToUser);
+        }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onResume() {
+        super.onResume();
 
-        mLottieAnimationView.cancelAnimation();
+        // need to toggle the animation so the first time the fragment is resumed it starts animating (if visible).
+        toggleAnimation(getUserVisibleHint());
+    }
+
+    private void toggleAnimation(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            mLottieAnimationView.playAnimation();
+        } else {
+            mLottieAnimationView.cancelAnimation();
+        }
     }
 }
