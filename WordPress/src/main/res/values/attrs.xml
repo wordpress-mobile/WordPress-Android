@@ -39,7 +39,7 @@
         WPTextView attributes
     -->
     <declare-styleable name="WPTextView">
-        <attr name="fixWidowWords" format="boolean"/>
+        <attr name="fixWidowWords" format="boolean" />
     </declare-styleable>
 
     <!--
@@ -88,6 +88,19 @@
 
     <declare-styleable name="wpBoundedWidth">
         <attr name="bounded_width" format="dimension" />
+    </declare-styleable>
+
+    <!--
+        WPPrefView
+    -->
+    <declare-styleable name="wpPrefView">
+        <attr name="wpPrefType" format="enum">
+            <enum name="text" value="0" />
+            <enum name="toggle" value="1" />
+        </attr>
+        <attr name="wpTitle" format="string" />
+        <attr name="wpSummary" format="string" />
+        <attr name="wpShowDivider" format="boolean" />
     </declare-styleable>
 
 </resources>
