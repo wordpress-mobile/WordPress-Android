@@ -618,6 +618,9 @@ public class MediaStore extends Store {
     }
 
     private void performCancelUpload(@NonNull CancelMediaPayload payload) {
+        if (payload.delete) {
+            MediaSqlUtils.deleteMedia(payload.media);
+        }
         if (payload.media != null) {
             if (payload.site.isUsingWpComRestApi()) {
                 mMediaRestClient.cancelUpload(payload.media);
@@ -651,10 +654,6 @@ public class MediaStore extends Store {
     }
 
     private void handleMediaCanceled(@NonNull ProgressPayload payload) {
-        if (payload.media != null) {
-            MediaSqlUtils.deleteMedia(payload.media);
-        }
-
         OnMediaUploaded onMediaUploaded =
                 new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
         onMediaUploaded.error = payload.error;
