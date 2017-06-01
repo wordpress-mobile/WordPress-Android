@@ -97,7 +97,9 @@
         <attr name="wpPrefType" format="enum">
             <enum name="text" value="0" />
             <enum name="toggle" value="1" />
+            <enum name="chooser" value="2" />
         </attr>
+        <attr name="wpHeading" format="string" />
         <attr name="wpTitle" format="string" />
         <attr name="wpSummary" format="string" />
         <attr name="wpShowDivider" format="boolean" />

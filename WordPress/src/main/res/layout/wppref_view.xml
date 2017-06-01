@@ -6,10 +6,27 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/text_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:textColor="@color/blue_wordpress"
+        android:textSize="@dimen/text_sz_medium"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="text_heading" />
+
+    <TextView
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
         tools:text="text_title" />
@@ -18,15 +35,21 @@
         android:id="@+id/text_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="text_summary" />
+        android:visibility="gone"
+        tools:text="text_summary"
+        tools:visibility="visible" />
 
     <Switch
         android:id="@+id/switch_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/grey_lighten_10"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
         android:visibility="gone"
         tools:text="switch"

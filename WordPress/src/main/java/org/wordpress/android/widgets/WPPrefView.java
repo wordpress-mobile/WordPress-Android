@@ -3,6 +3,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  */
@@ -20,12 +24,15 @@ public class WPPrefView extends LinearLayout {
 
     public enum PrefType {
         TEXT,
-        TOGGLE;
+        TOGGLE,
+        CHOOSER;
 
         public static PrefType fromInt(int value) {
             switch (value) {
                 case 1:
                     return TOGGLE;
+                case 2:
+                    return CHOOSER;
                 default:
                     return TEXT;
             }
@@ -33,10 +40,14 @@ public class WPPrefView extends LinearLayout {
     }
 
     private PrefType mPrefType = PrefType.TEXT;
+    private final List<String> mChoices = new ArrayList<>();
+
+    private TextView mHeadingTextView;
     private TextView mTitleTextView;
     private TextView mSummaryTextView;
     private View mDivider;
     private Switch mSwitch;
+
 
     public WPPrefView(Context context) {
         super(context);
@@ -60,6 +71,7 @@ public class WPPrefView extends LinearLayout {
 
     private void initView(Context context, AttributeSet attrs) {
         ViewGroup view = (ViewGroup) inflate(context, R.layout.wppref_view, this);
+        mHeadingTextView = (TextView) view.findViewById(R.id.text_heading);
         mTitleTextView = (TextView) view.findViewById(R.id.text_title);
         mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
         mSwitch = (Switch) view.findViewById(R.id.switch_view);
@@ -72,11 +84,13 @@ public class WPPrefView extends LinearLayout {
                     0, 0);
             try {
                 int prefTypeInt = a.getInteger(R.styleable.wpPrefView_wpPrefType, 0);
+                String heading = a.getString(R.styleable.wpPrefView_wpHeading);
                 String title = a.getString(R.styleable.wpPrefView_wpTitle);
                 String summary = a.getString(R.styleable.wpPrefView_wpSummary);
                 boolean showDivider = a.getBoolean(R.styleable.wpPrefView_wpShowDivider, true);
 
                 setPrefType(PrefType.fromInt(prefTypeInt));
+                setHeading(heading);
                 setTitle(title);
                 setSummary(summary);
                 setShowDivider(showDivider);
@@ -92,10 +106,12 @@ public class WPPrefView extends LinearLayout {
 
     public void setPrefType(@NonNull PrefType prefType) {
         mPrefType = prefType;
-        mSwitch.setVisibility(prefType == PrefType.TOGGLE ? View.VISIBLE : View.GONE);
-        mSummaryTextView.setVisibility(prefType == PrefType.TOGGLE ? View.GONE : View.VISIBLE);
     }
 
+    public void setHeading(String heading) {
+        mHeadingTextView.setText(heading);
+        mHeadingTextView.setVisibility(TextUtils.isEmpty(heading) ? GONE : VISIBLE);
+    }
     public void setTitle(String title) {
         mTitleTextView.setText(title);
     }
@@ -103,6 +119,12 @@ public class WPPrefView extends LinearLayout {
     public void setSummary(String summary) {
         mSummaryTextView.setText(summary);
         mSwitch.setText(summary);
+
+        boolean isEmpty = TextUtils.isEmpty(summary);
+        boolean isToggle = mPrefType == PrefType.TOGGLE;
+
+        mSummaryTextView.setVisibility(!isEmpty && !isToggle ? VISIBLE : GONE);
+        mSwitch.setVisibility(!isEmpty && isToggle ? VISIBLE : GONE);
     }
 
     public boolean isChecked() {
@@ -114,7 +136,12 @@ public class WPPrefView extends LinearLayout {
     }
 
     public void setShowDivider(boolean show) {
-        mDivider.setVisibility(show ? View.VISIBLE : View.GONE);
+        mDivider.setVisibility(show ? VISIBLE : GONE);
+    }
+
+    public void setChoices(@NonNull List<String> choices) {
+        mChoices.clear();
+        mChoices.addAll(choices);
     }
 
 }
