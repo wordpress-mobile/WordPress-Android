@@ -318,11 +318,11 @@ public class PublicizePrefsFragment extends Fragment implements
     @Override
     public void onPrefChanged(@NonNull WPPrefView pref) {
         if (pref == mPrefSharingButtons) {
-            saveSharingButtons(pref.getListItems().getSelectedValues(), true);
+            saveSharingButtons(pref.getSelectedValues(), true);
         } else if (pref == mPrefMoreButtons) {
-            saveSharingButtons(pref.getListItems().getSelectedValues(), false);
+            saveSharingButtons(pref.getSelectedValues(), false);
         } else if (pref == mPrefButtonStyle) {
-            PrefListItem item = pref.getListItems().getFirstSelectedItem();
+            PrefListItem item = pref.getSelectedItem();
             if (item != null) {
                 mSiteSettings.setSharingButtonStyle(item.getItemValue());
             }

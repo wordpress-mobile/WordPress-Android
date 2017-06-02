@@ -58,8 +58,8 @@ public class WPPrefView extends LinearLayout implements
      * listener for when the user changes the preference
      *      TEXT        use prefView.getTextEntry() to retrieve the updated setting
      *      TOOGLE      use prefView.isChecked() to retrieve the updated setting
-     *      RADIOLIST   use prefView.getListItems().getFirstSelectedItem() to retrieve the updated setting
-     *      CHECKLIST   use prefView.getListItems().getSelectedItems() to retrieve the updated setting
+     *      RADIOLIST   use prefView.getSelectedItem() to retrieve the updated setting
+     *      CHECKLIST   use prefView.getSelectedItems() to retrieve the updated setting
      */
     public interface OnPrefChangedListener {
         void onPrefChanged(@NonNull WPPrefView prefView);
@@ -111,7 +111,7 @@ public class WPPrefView extends LinearLayout implements
             }
         }
         // use this for RADIOLIST prefs to get the single-select item
-        public PrefListItem getFirstSelectedItem() {
+        private PrefListItem getFirstSelectedItem() {
             for (PrefListItem item: this) {
                 if (item.mIsChecked) {
                     return item;
@@ -120,7 +120,7 @@ public class WPPrefView extends LinearLayout implements
             return null;
         }
         // use this for CHECKLIST prefs to get all selected items
-        public @NonNull PrefListItems getSelectedItems() {
+        private @NonNull PrefListItems getSelectedItems() {
             PrefListItems selectedItems = new PrefListItems();
             for (PrefListItem item: this) {
                 if (item.mIsChecked) {
@@ -129,7 +129,7 @@ public class WPPrefView extends LinearLayout implements
             }
             return selectedItems;
         }
-        public @NonNull HashSet<String> getSelectedValues() {
+        private @NonNull HashSet<String> getSelectedValues() {
             PrefListItems selectedItems = getSelectedItems();
             HashSet<String> values = new HashSet<>();
             for (PrefListItem item: selectedItems) {
@@ -296,6 +296,18 @@ public class WPPrefView extends LinearLayout implements
     public void setListItems(@NonNull PrefListItems items) {
         mListItems.clear();
         mListItems.addAll(items);
+    }
+
+    public PrefListItem getSelectedItem() {
+        return mListItems.getFirstSelectedItem();
+    }
+
+    public PrefListItems getSelectedItems() {
+        return mListItems.getSelectedItems();
+    }
+
+    public HashSet<String> getSelectedValues() {
+        return mListItems.getSelectedValues();
     }
 
     @Override
