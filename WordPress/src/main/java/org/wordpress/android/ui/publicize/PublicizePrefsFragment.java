@@ -30,7 +30,6 @@ import org.wordpress.android.widgets.WPPrefView.PrefListItems;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -154,7 +153,7 @@ public class PublicizePrefsFragment extends Fragment implements
         try {
             jsonObject.put(SHARING_BUTTONS_KEY, jsonArray);
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.SETTINGS, e);
         }
 
         WordPress.getRestClientUtilsV1_1().setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
@@ -163,7 +162,7 @@ public class PublicizePrefsFragment extends Fragment implements
                 try {
                     configureSharingButtons(response);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(AppLog.T.SETTINGS, e);
                 }
             }
         }, new RestRequest.ErrorListener() {
@@ -287,11 +286,14 @@ public class PublicizePrefsFragment extends Fragment implements
     @Override
     public void onPrefChanged(@NonNull WPPrefView pref) {
         if (pref == mPrefSharingButtons) {
-
+            saveSharingButtons(pref.getListItems().getSelectedValues(), true);
         } else if (pref == mPrefMoreButtons) {
-
+            saveSharingButtons(pref.getListItems().getSelectedValues(), false);
         } else if (pref == mPrefButtonStyle) {
-
+            PrefListItem item = pref.getListItems().getFirstSelectedItem();
+            if (item != null) {
+                mSiteSettings.setSharingButtonStyle(item.getItemValue());
+            }
         } else if (pref == mPrefLabel) {
             mSiteSettings.setSharingLabel(pref.getTextEntry());
         } else if (pref == mPrefShowReblog) {

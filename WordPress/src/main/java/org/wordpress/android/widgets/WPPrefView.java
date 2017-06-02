@@ -22,7 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 /**
  * TODO: comment header explaining how to use this
@@ -52,12 +52,12 @@ public class WPPrefView extends LinearLayout implements
     }
 
     public interface OnPrefChangedListener {
-        public void onPrefChanged(@NonNull WPPrefView prefView);
+        void onPrefChanged(@NonNull WPPrefView prefView);
     }
 
     public static class PrefListItem {
-        private String mItemName;
-        private String mItemValue;
+        private final String mItemName;
+        private final String mItemValue;
         private boolean mIsChecked;
 
         public PrefListItem(@NonNull String itemName, @NonNull String itemValue, boolean isChecked) {
@@ -65,16 +65,45 @@ public class WPPrefView extends LinearLayout implements
             mItemValue = itemValue;
             mIsChecked = isChecked;
         }
+        public @NonNull String getItemName() {
+            return mItemName;
+        }
+        public @NonNull String getItemValue() {
+            return mItemValue;
+        }
     }
 
     public static class PrefListItems extends ArrayList<PrefListItem> {
-        public PrefListItem getSelectedItem() {
+        private void setCheckedItems(@NonNull SparseBooleanArray checkedItems) {
+            for (int i = 0; i < this.size(); i++) {
+                this.get(i).mIsChecked = checkedItems.get(i);
+            }
+        }
+        public PrefListItem getFirstSelectedItem() {
             for (PrefListItem item: this) {
                 if (item.mIsChecked) {
                     return item;
                 }
             }
             return null;
+        }
+        public @NonNull PrefListItems getSelectedItems() {
+            PrefListItems selectedItems = new PrefListItems();
+            for (PrefListItem item: this) {
+                if (item.mIsChecked) {
+                    selectedItems.add(item);
+                }
+            }
+            return selectedItems;
+        }
+        public @NonNull HashSet<String> getSelectedValues() {
+            HashSet<String> values = new HashSet<>();
+            for (PrefListItem item: this) {
+                if (item.mIsChecked) {
+                    values.add(item.mItemValue);
+                }
+            }
+            return values;
         }
         public void setSelectedName(@NonNull String selectedName) {
             for (PrefListItem item: this) {
@@ -217,6 +246,10 @@ public class WPPrefView extends LinearLayout implements
         mDivider.setVisibility(show ? VISIBLE : GONE);
     }
 
+    public @NonNull PrefListItems getListItems() {
+        return mListItems;
+    }
+
     public void setListItems(@NonNull PrefListItems items) {
         mListItems.clear();
         mListItems.addAll(items);
@@ -240,14 +273,6 @@ public class WPPrefView extends LinearLayout implements
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         doPrefChanged();
-    }
-
-    private static CharSequence[] listToArray(@NonNull List<String> list) {
-        CharSequence[] array = new CharSequence[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
     }
 
     private void showTextDialog() {
@@ -281,9 +306,9 @@ public class WPPrefView extends LinearLayout implements
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO
                         SparseBooleanArray checkedItems =
                                 ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+                        mListItems.setCheckedItems(checkedItems);
                         doPrefChanged();
                     }
                 })
@@ -300,17 +325,18 @@ public class WPPrefView extends LinearLayout implements
                 selectedPos = i;
             }
         }
+
         new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String selectedName = mListItems.get(which).mItemName;
-                        for (PrefListItem item: mListItems) {
-                            item.mIsChecked = StringUtils.equals(selectedName, item.mItemName);
-                        }
-                        setSummary(selectedName);
+                        SparseBooleanArray checkedItems =
+                                ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+                        mListItems.setCheckedItems(checkedItems);
+                        PrefListItem item = mListItems.getFirstSelectedItem();
+                        setSummary(item != null ? item.mItemName : "");
                         doPrefChanged();
                     }
                 })
