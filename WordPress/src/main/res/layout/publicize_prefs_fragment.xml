@@ -49,6 +49,7 @@
                     android:layout_height="wrap_content"
                     wp:wpPrefType="text"
                     wp:wpShowDivider="true"
+                    wp:wpTextDialogSubtitle="@string/sharing_label_message"
                     wp:wpTitle="@string/label" />
 
                 <org.wordpress.android.widgets.WPPrefView
@@ -142,6 +143,7 @@
                     wp:wpHeading="@string/twitter"
                     wp:wpPrefType="text"
                     wp:wpShowDivider="false"
+                    wp:wpTextDialogSubtitle="@string/sharing_twitter_message"
                     wp:wpTitle="@string/twitter_username" />
 
             </LinearLayout>

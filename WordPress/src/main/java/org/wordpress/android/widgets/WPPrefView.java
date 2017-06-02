@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -66,6 +67,7 @@ public class WPPrefView extends LinearLayout implements
     private Switch mSwitch;
 
     private String mTextEntry;
+    private String mTextDialogSubtitle;
     private OnPrefChangedListener mListener;
 
     public static class PrefListItem {
@@ -176,12 +178,14 @@ public class WPPrefView extends LinearLayout implements
                 String heading = a.getString(R.styleable.wpPrefView_wpHeading);
                 String title = a.getString(R.styleable.wpPrefView_wpTitle);
                 String summary = a.getString(R.styleable.wpPrefView_wpSummary);
+                String dialogSubtitle = a.getString(R.styleable.wpPrefView_wpTextDialogSubtitle);
                 boolean showDivider = a.getBoolean(R.styleable.wpPrefView_wpShowDivider, true);
 
                 setPrefType(PrefType.fromInt(prefTypeInt));
                 setHeading(heading);
                 setTitle(title);
                 setSummary(summary);
+                setTextDialogSubtitle(dialogSubtitle);
                 setShowDivider(showDivider);
             } finally {
                 a.recycle();
@@ -222,6 +226,10 @@ public class WPPrefView extends LinearLayout implements
     public void setSummary(String summary) {
         mSummaryTextView.setText(summary);
         mSummaryTextView.setVisibility(TextUtils.isEmpty(summary) ? View.GONE : View.VISIBLE);
+    }
+
+    public void setTextDialogSubtitle(String subtitle) {
+        mTextDialogSubtitle = subtitle;
     }
 
     public String getTextEntry() {
@@ -275,12 +283,20 @@ public class WPPrefView extends LinearLayout implements
     }
 
     private void showTextDialog() {
-        final EditText editText = new EditText(getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        ViewGroup customView = (ViewGroup) inflater.inflate(R.layout.wppref_text_dialog, null);
+        final EditText editText = (EditText) customView.findViewById(R.id.edit);
         editText.setText(mSummaryTextView.getText());
+        TextView txtSubtitle = (TextView) customView.findViewById(R.id.text_subtitle);
+        if (!TextUtils.isEmpty(mTextDialogSubtitle)) {
+            txtSubtitle.setText(mTextDialogSubtitle);
+        } else {
+            txtSubtitle.setVisibility(GONE);
+        }
 
         new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
-                .setView(editText)
+                .setView(customView)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override

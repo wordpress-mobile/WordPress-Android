@@ -104,6 +104,7 @@
         <attr name="wpTitle" format="string" />
         <attr name="wpSummary" format="string" />
         <attr name="wpShowDivider" format="boolean" />
+        <attr name="wpTextDialogSubtitle" format="string" />
     </declare-styleable>
 
 </resources>

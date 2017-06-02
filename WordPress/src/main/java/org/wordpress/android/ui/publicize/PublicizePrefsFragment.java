@@ -96,6 +96,8 @@ public class PublicizePrefsFragment extends Fragment implements
             return;
         }
 
+        // this creates a default site settings interface - the actual settings will
+        // be retrieved when getSiteSettings() is called
         mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
     }
 
