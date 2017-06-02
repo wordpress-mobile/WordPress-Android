@@ -32,8 +32,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-public class PublicizePrefsFragment extends Fragment
-         implements SiteSettingsInterface.SiteSettingsListener {
+public class PublicizePrefsFragment extends Fragment implements
+        SiteSettingsInterface.SiteSettingsListener,
+        WPPrefView.OnPrefChangedListener {
+
     private static final String TWITTER_PREFIX = "@";
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
     private static final String TWITTER_ID = "twitter";
@@ -91,15 +93,24 @@ public class PublicizePrefsFragment extends Fragment
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_prefs_fragment, container, false);
 
         mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
-        mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
-        mPrefMoreButtons = (WPPrefView) view.findViewById(R.id.pref_more_button);
-        mPrefLabel = (WPPrefView) view.findViewById(R.id.pref_label);
-
-        mPrefShowReblog = (WPPrefView) view.findViewById(R.id.pref_show_reblog);
-        mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
-
         mPrefButtonStyle.setListEntries(R.array.sharing_button_style_display_array);
         mPrefButtonStyle.setListValues(R.array.sharing_button_style_array);
+        mPrefButtonStyle.setOnPrefChangedListener(this);
+
+        mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
+        mPrefSharingButtons.setOnPrefChangedListener(this);
+
+        mPrefMoreButtons = (WPPrefView) view.findViewById(R.id.pref_more_button);
+        mPrefMoreButtons.setOnPrefChangedListener(this);
+
+        mPrefLabel = (WPPrefView) view.findViewById(R.id.pref_label);
+        mPrefLabel.setOnPrefChangedListener(this);
+
+        mPrefShowReblog = (WPPrefView) view.findViewById(R.id.pref_show_reblog);
+        mPrefShowReblog.setOnPrefChangedListener(this);
+
+        mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
+        mPrefShowLike.setOnPrefChangedListener(this);
 
         return view;
     }
@@ -236,7 +247,7 @@ public class PublicizePrefsFragment extends Fragment
     }
 
     private void setPreferencesFromSiteSettings() {
-        mPrefLabel.setSummary(mSiteSettings.getSharingLabel());
+        mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
         mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
 
         /*changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
@@ -248,37 +259,6 @@ public class PublicizePrefsFragment extends Fragment
         mCommentLikesPreference.setChecked(mSiteSettings.getAllowCommentLikes());
         changeEditTextPreferenceValue(mTwitterUsernamePreference, mSiteSettings.getTwitterUsername());*/
     }
-
-    /*@Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference == mLabelPreference) {
-            mSiteSettings.setSharingLabel(newValue.toString());
-            changeEditTextPreferenceValue(mLabelPreference, newValue.toString());
-        } else if (preference == mButtonStylePreference) {
-            mSiteSettings.setSharingButtonStyle(newValue.toString());
-            setDetailListPreferenceValue(mButtonStylePreference,
-                    mSiteSettings.getSharingButtonStyle(getActivity()),
-                    mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
-        } else if (preference == mReblogButtonPreference) {
-            mSiteSettings.setAllowReblogButton((Boolean) newValue);
-        } else if (preference == mLikeButtonPreference) {
-            mSiteSettings.setAllowLikeButton((Boolean) newValue);
-        } else if (preference == mCommentLikesPreference) {
-            mSiteSettings.setAllowCommentLikes((Boolean) newValue);
-        } else if (preference == mTwitterUsernamePreference) {
-            saveAndSetTwitterUsername(newValue.toString());
-        } else if (preference == mSharingButtonsPreference) {
-            saveSharingButtons((HashSet<String>) newValue, true);
-        } else if (preference == mMoreButtonsPreference) {
-            saveSharingButtons((HashSet<String>) newValue, false);
-        } else {
-            return false;
-        }
-
-        mSiteSettings.saveSettings();
-
-        return true;
-    }*/
 
     @Override
     public void onSettingsUpdated(Exception error) {
@@ -302,5 +282,41 @@ public class PublicizePrefsFragment extends Fragment
         if (isAdded() && error != null) {
             ToastUtils.showToast(getActivity(), R.string.username_or_password_incorrect);
         }
+    }
+
+    @Override
+    public void onPrefChanged(@NonNull WPPrefView pref) {
+        if (pref == mPrefSharingButtons) {
+
+        } else if (pref == mPrefMoreButtons) {
+
+        } else if (pref == mPrefButtonStyle) {
+
+        } else if (pref == mPrefLabel) {
+            mSiteSettings.setSharingLabel(pref.getTextEntry());
+        } else if (pref == mPrefShowReblog) {
+            mSiteSettings.setAllowReblogButton(pref.isChecked());
+        } else if (pref == mPrefShowLike) {
+            mSiteSettings.setAllowLikeButton(pref.isChecked());
+        }
+
+        mSiteSettings.saveSettings();
+
+        /*if (preference == mButtonStylePreference) {
+            mSiteSettings.setSharingButtonStyle(newValue.toString());
+            setDetailListPreferenceValue(mButtonStylePreference,
+                    mSiteSettings.getSharingButtonStyle(getActivity()),
+                    mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
+        } else if (preference == mCommentLikesPreference) {
+            mSiteSettings.setAllowCommentLikes((Boolean) newValue);
+        } else if (preference == mTwitterUsernamePreference) {
+            saveAndSetTwitterUsername(newValue.toString());
+        } else if (preference == mSharingButtonsPreference) {
+            saveSharingButtons((HashSet<String>) newValue, true);
+        } else if (preference == mMoreButtonsPreference) {
+            saveSharingButtons((HashSet<String>) newValue, false);
+        } else {
+            return false;
+        }*/
     }
 }

@@ -52,6 +52,10 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
+    public interface OnPrefChangedListener {
+        public void onPrefChanged(@NonNull WPPrefView prefView);
+    }
+
     private PrefType mPrefType = PrefType.TEXT;
     private final List<String> mListEntries = new ArrayList<>();
     private final List<String> mListValues = new ArrayList<>();
@@ -63,6 +67,9 @@ public class WPPrefView extends LinearLayout implements
     private View mDivider;
     private Switch mSwitch;
 
+    private String mTextEntry;
+
+    private OnPrefChangedListener mListener;
 
     public WPPrefView(Context context) {
         super(context);
@@ -83,6 +90,16 @@ public class WPPrefView extends LinearLayout implements
     public WPPrefView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context, attrs);
+    }
+
+    public void setOnPrefChangedListener(OnPrefChangedListener listener) {
+        mListener = listener;
+    }
+
+    private void doPrefChanged() {
+        if (mListener != null) {
+            mListener.onPrefChanged(this);
+        }
     }
 
     private void initView(Context context, AttributeSet attrs) {
@@ -147,6 +164,15 @@ public class WPPrefView extends LinearLayout implements
         mSummaryTextView.setVisibility(TextUtils.isEmpty(summary) ? View.GONE : View.VISIBLE);
     }
 
+    public String getTextEntry() {
+        return mTextEntry;
+    }
+
+    public void setTextEntry(String entry) {
+        mTextEntry = entry;
+        setSummary(entry);
+    }
+
     public boolean isChecked() {
         return mPrefType == PrefType.TOGGLE && mSwitch.isChecked();
     }
@@ -196,7 +222,7 @@ public class WPPrefView extends LinearLayout implements
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        // TODO: switch has been toggled
+        doPrefChanged();
     }
 
 
@@ -219,7 +245,7 @@ public class WPPrefView extends LinearLayout implements
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        doPrefChanged();
                     }
                 })
         .show();
@@ -235,6 +261,7 @@ public class WPPrefView extends LinearLayout implements
                         // TODO
                         SparseBooleanArray checkedItems =
                                 ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+                        doPrefChanged();
                     }
                 })
                 .setMultiChoiceItems(listToArray(mListEntries), null, null)
@@ -249,6 +276,7 @@ public class WPPrefView extends LinearLayout implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO
+                        doPrefChanged();
                     }
                 })
                 .setSingleChoiceItems(listToArray(mListEntries), 0, null)
