@@ -91,7 +91,10 @@ public class PublicizePrefsFragment extends Fragment
         mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
         mPrefMoreButtons = (WPPrefView) view.findViewById(R.id.pref_more_button);
         mPrefLabel = (WPPrefView) view.findViewById(R.id.pref_label);
+
         mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
+        mPrefButtonStyle.setListEntries(R.array.sharing_button_style_display_array);
+        mPrefButtonStyle.setListValues(R.array.sharing_button_style_array);
 
         return view;
     }

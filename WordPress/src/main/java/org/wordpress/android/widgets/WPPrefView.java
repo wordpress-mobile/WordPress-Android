@@ -8,8 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -176,8 +178,10 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
                 showChecklistDialog();
                 break;
             case RADIOLIST:
+                showRadiolistDialog();
                 break;
             case TEXT:
+                showTextDialog();
                 break;
             case TOGGLE:
                 break;
@@ -192,9 +196,13 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
         return array;
     }
 
-    private void showChecklistDialog() {
+    private void showTextDialog() {
+        final EditText editText = new EditText(getContext());
+        editText.setText(mSummaryTextView.getText());
+
         new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
+                .setView(editText)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -202,8 +210,38 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
 
                     }
                 })
+        .show();
+    }
+
+    private void showChecklistDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle(mTitleTextView.getText())
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO
+                        SparseBooleanArray checkedItems =
+                                ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+                    }
+                })
                 .setMultiChoiceItems(listToArray(mListEntries), null, null)
                 .show();
     }
 
+    private void showRadiolistDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle(mTitleTextView.getText())
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO
+                        SparseBooleanArray checkedItems =
+                                ((AlertDialog) dialog).getListView().getCheckedItemPositions();
+                    }
+                })
+                .setSingleChoiceItems(listToArray(mListEntries), 0, null)
+                .show();
+    }
 }
