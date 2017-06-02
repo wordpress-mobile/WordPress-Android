@@ -65,41 +65,30 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
         card_view:cardBackgroundColor="@color/white"
-        card_view:cardCornerRadius="@dimen/cardview_default_radius"
-        tools:targetApi="LOLLIPOP">
+        card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
             android:orientation="vertical">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_service"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:ellipsize="end"
-                android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold"
-                tools:text="text_service" />
-
-            <View
+            <org.wordpress.android.widgets.WPPrefView
+                android:id="@+id/pref_show_reblog"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/list_divider_height"
-                android:layout_marginBottom="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/divider_grey" />
-
-            <org.wordpress.android.ui.publicize.ConnectButton
-                android:id="@+id/button_connect"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_extra_large"
-                android:layout_marginLeft="@dimen/margin_extra_large" />
+                wp:wpHeading="@string/site_settings_reblog_and_like_header"
+                wp:wpPrefType="toggle"
+                wp:wpShowDivider="true"
+                wp:wpTitle="@string/site_settings_reblog" />
+
+            <org.wordpress.android.widgets.WPPrefView
+                android:id="@+id/pref_show_like"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                wp:wpPrefType="toggle"
+                wp:wpShowDivider="false"
+                wp:wpTitle="@string/site_settings_like" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

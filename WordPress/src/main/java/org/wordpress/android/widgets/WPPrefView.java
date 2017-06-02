@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -26,7 +27,8 @@ import java.util.List;
  *
  */
 
-public class WPPrefView extends LinearLayout implements View.OnClickListener {
+public class WPPrefView extends LinearLayout implements
+        View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public enum PrefType {
         TEXT,
@@ -52,6 +54,7 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
     private final List<String> mListEntries = new ArrayList<>();
     private final List<String> mListValues = new ArrayList<>();
 
+    private ViewGroup mContainer;
     private TextView mHeadingTextView;
     private TextView mTitleTextView;
     private TextView mSummaryTextView;
@@ -81,13 +84,16 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
 
     private void initView(Context context, AttributeSet attrs) {
         ViewGroup view = (ViewGroup) inflate(context, R.layout.wppref_view, this);
+
         mHeadingTextView = (TextView) view.findViewById(R.id.text_heading);
-        mTitleTextView = (TextView) view.findViewById(R.id.text_title);
-        mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
+        mContainer = (ViewGroup) view.findViewById(R.id.container);
+        mTitleTextView = (TextView) mContainer.findViewById(R.id.text_title);
+        mSummaryTextView = (TextView) mContainer.findViewById(R.id.text_summary);
         mSwitch = (Switch) view.findViewById(R.id.switch_view);
         mDivider = view.findViewById(R.id.divider);
 
-        view.findViewById(R.id.container).setOnClickListener(this);
+        mContainer.setOnClickListener(this);
+        mSwitch.setOnCheckedChangeListener(this);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -118,25 +124,24 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
 
     public void setPrefType(@NonNull PrefType prefType) {
         mPrefType = prefType;
+        boolean isToggle = mPrefType == PrefType.TOGGLE;
+        mContainer.setVisibility(isToggle ? View.GONE : View.VISIBLE);
+        mSwitch.setVisibility(isToggle ? View.VISIBLE : View.GONE);
     }
 
     public void setHeading(String heading) {
         mHeadingTextView.setText(heading);
         mHeadingTextView.setVisibility(TextUtils.isEmpty(heading) ? GONE : VISIBLE);
     }
+
     public void setTitle(String title) {
         mTitleTextView.setText(title);
+        mSwitch.setText(title);
     }
 
     public void setSummary(String summary) {
         mSummaryTextView.setText(summary);
-        mSwitch.setText(summary);
-
-        boolean isEmpty = TextUtils.isEmpty(summary);
-        boolean isToggle = mPrefType == PrefType.TOGGLE;
-
-        mSummaryTextView.setVisibility(!isEmpty && !isToggle ? VISIBLE : GONE);
-        mSwitch.setVisibility(!isEmpty && isToggle ? VISIBLE : GONE);
+        mSummaryTextView.setVisibility(TextUtils.isEmpty(summary) ? View.GONE : View.VISIBLE);
     }
 
     public boolean isChecked() {
@@ -183,10 +188,14 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
             case TEXT:
                 showTextDialog();
                 break;
-            case TOGGLE:
-                break;
         }
     }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        // TODO: switch has been toggled
+    }
+
 
     private static CharSequence[] listToArray(@NonNull List<String> list) {
         CharSequence[] array = new CharSequence[list.size()];
@@ -237,8 +246,6 @@ public class WPPrefView extends LinearLayout implements View.OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // TODO
-                        SparseBooleanArray checkedItems =
-                                ((AlertDialog) dialog).getListView().getCheckedItemPositions();
                     }
                 })
                 .setSingleChoiceItems(listToArray(mListEntries), 0, null)

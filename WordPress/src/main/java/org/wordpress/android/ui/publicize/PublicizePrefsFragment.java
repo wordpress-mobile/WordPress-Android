@@ -44,6 +44,8 @@ public class PublicizePrefsFragment extends Fragment
     private WPPrefView mPrefMoreButtons;
     private WPPrefView mPrefLabel;
     private WPPrefView mPrefButtonStyle;
+    private WPPrefView mPrefShowReblog;
+    private WPPrefView mPrefShowLike;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -88,11 +90,14 @@ public class PublicizePrefsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_prefs_fragment, container, false);
 
+        mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
         mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
         mPrefMoreButtons = (WPPrefView) view.findViewById(R.id.pref_more_button);
         mPrefLabel = (WPPrefView) view.findViewById(R.id.pref_label);
 
-        mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
+        mPrefShowReblog = (WPPrefView) view.findViewById(R.id.pref_show_reblog);
+        mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
+
         mPrefButtonStyle.setListEntries(R.array.sharing_button_style_display_array);
         mPrefButtonStyle.setListValues(R.array.sharing_button_style_array);
 

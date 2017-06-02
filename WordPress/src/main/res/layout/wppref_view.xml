@@ -45,16 +45,16 @@
             tools:text="text_summary"
             tools:visibility="visible" />
 
-        <Switch
-            android:id="@+id/switch_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/grey"
-            android:textSize="@dimen/text_sz_medium"
-            android:visibility="gone"
-            tools:text="switch"
-            tools:visibility="visible" />
     </LinearLayout>
+
+    <Switch
+        android:id="@+id/switch_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_extra_large"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="switch" />
 
     <View
         android:id="@+id/divider"
