@@ -29,7 +29,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     public static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
     public static final String ARGS_SELECTED_DATE = "ARGS_SELECTED_DATE";
     static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
-    static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
+    public static final String ARGS_IS_SINGLE_VIEW = "ARGS_IS_SINGLE_VIEW";
 
     // The number of results to return for NON Paged REST endpoints.
     private static final int MAX_RESULTS_REQUESTED = 100;

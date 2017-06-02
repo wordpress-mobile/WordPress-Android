@@ -191,7 +191,10 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_POST, post);
+        // PostModel objects can be quite large, since content field is not size restricted,
+        // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
+        // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
+        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -206,10 +209,6 @@ public class ActivityLauncher {
         String shareableUrl = post.getLink();
         String shareSubject = post.getTitle();
         if (site.isWPCom()) {
-            if (!TextUtils.isEmpty(site.getUnmappedUrl())) {
-                // Custom domains are not properly authenticated due to a server side(?) issue, so this gets around that
-                url = url.replace(site.getUrl(), site.getUnmappedUrl());
-            }
             WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
         } else if (site.isJetpackConnected()) {
             WPWebViewActivity.openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());

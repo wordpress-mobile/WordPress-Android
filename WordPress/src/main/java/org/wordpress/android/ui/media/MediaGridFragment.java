@@ -142,6 +142,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (savedInstanceState == null) {
             mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
             mBrowserType = (MediaBrowserType) getActivity().getIntent().getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE);
+            boolean imagesOnly = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, false);
+            if (imagesOnly) {
+                mFilter = Filter.IMAGES;
+            }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
@@ -195,15 +199,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
         mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
+        mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
         mRecycler.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.empty_view_title);
 
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
-
         mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
-        mSpinner.setVisibility(mBrowserType.isPicker() ? View.GONE : View.VISIBLE);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
@@ -221,8 +224,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         fetchMediaList(false);
                     }
                 });
+
         restoreState(savedInstanceState);
 
+        // filter spinner doesn't show for pickers
+        mSpinner.setVisibility(mBrowserType.isPicker() ? View.GONE : View.VISIBLE);
         if (!mBrowserType.isPicker()) {
             mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
             setupSpinnerAdapter();
@@ -494,8 +500,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         }
 
-        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
+        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
     }

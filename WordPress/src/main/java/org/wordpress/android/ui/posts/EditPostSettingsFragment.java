@@ -347,7 +347,7 @@ public class EditPostSettingsFragment extends Fragment
                 launchFeaturedMediaPicker();
                 return true;
             case CLEAR_FEATURED_IMAGE_MENU_POSITION:
-                mFeaturedImageId = -1;
+                mFeaturedImageId = 0;
                 mFeaturedImageView.setVisibility(View.GONE);
                 mFeaturedImageButton.setVisibility(View.VISIBLE);
                 return true;
@@ -474,6 +474,7 @@ public class EditPostSettingsFragment extends Fragment
         Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
