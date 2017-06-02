@@ -56,9 +56,9 @@ public class WPPrefView extends LinearLayout implements
     }
 
     public static class PrefListItem {
-        private final String mItemName;
-        private final String mItemValue;
-        private boolean mIsChecked;
+        private final String mItemName;   // name to display for this item
+        private final String mItemValue;  // value for this item (can be same as name)
+        private boolean mIsChecked;       // whether this item is checked
 
         public PrefListItem(@NonNull String itemName, @NonNull String itemValue, boolean isChecked) {
             mItemName = itemName;
@@ -286,6 +286,7 @@ public class WPPrefView extends LinearLayout implements
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        setTextEntry(editText.getText().toString());
                         doPrefChanged();
                     }
                 })
