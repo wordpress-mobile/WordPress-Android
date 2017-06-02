@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -86,8 +87,6 @@ public class NewUserFragment extends AbstractFragment {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
-
-    private boolean mAutoCompleteUrl;
 
     protected boolean mSitesFetched = false;
     protected boolean mAccountSettingsFetched = false;
@@ -578,7 +577,7 @@ public class NewUserFragment extends AbstractFragment {
         mSiteUrlTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus && isAdded()) {
+                if (hasFocus && isAdded() && getView() != null && ViewCompat.isAttachedToWindow(getView())) {
                     mSiteUrlTextField.showDropDown();
                 }
             }
@@ -773,5 +772,5 @@ public class NewUserFragment extends AbstractFragment {
         if (!mSiteUrlSuggestionAdapter.isEmpty() && mSiteUrlTextField.hasFocus()) {
             mSiteUrlTextField.showDropDown();
         }
-        }
+    }
 }

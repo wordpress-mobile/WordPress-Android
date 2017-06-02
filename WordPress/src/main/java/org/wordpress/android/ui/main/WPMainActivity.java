@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -633,7 +634,8 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
-        if (event.isError() && mSelectedSite != null) {
+        if (event.isError() && mSelectedSite != null
+                && event.error.type == AuthenticationErrorType.INVALID_TOKEN) {
             AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
         }
     }
@@ -676,13 +678,16 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // User signed-out or removed the last self-hosted site, show `SignInActivity`
+            // User signed-out or removed the last self-hosted site
             resetFragments();
+            // Reset site selection
+            setSelectedSite(null);
+            // Show the sign in screen
             ActivityLauncher.showSignInForResult(this);
         } else {
             SiteModel site = getSelectedSite();
-            if (site != null) {
-                ActivityLauncher.showSitePickerForResult(this, site);
+            if (site == null && mSiteStore.hasSite()) {
+                ActivityLauncher.showSitePickerForResult(this, mSiteStore.getSites().get(0));
             }
         }
     }
