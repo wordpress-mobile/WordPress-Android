@@ -25,6 +25,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPPrefView;
+import org.wordpress.android.widgets.WPPrefView.PrefListItem;
+import org.wordpress.android.widgets.WPPrefView.PrefListItems;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -99,8 +101,6 @@ public class PublicizePrefsFragment extends Fragment implements
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_prefs_fragment, container, false);
 
         mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
-        mPrefButtonStyle.setListEntries(R.array.sharing_button_style_display_array);
-        mPrefButtonStyle.setListValues(R.array.sharing_button_style_array);
         mPrefButtonStyle.setOnPrefChangedListener(this);
 
         mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
@@ -194,7 +194,7 @@ public class PublicizePrefsFragment extends Fragment implements
                 try {
                     configureSharingButtons(response);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    AppLog.e(AppLog.T.SETTINGS, e);
                 }
             }
         }, new RestRequest.ErrorListener() {
@@ -212,33 +212,25 @@ public class PublicizePrefsFragment extends Fragment implements
             mPublicizeButtons.add(publicizeButton);
         }
 
-        List<String> entries = new ArrayList<>();
-        List<String> entryValues = new ArrayList<>();
-        HashSet<String> selectedSharingButtons = new HashSet<>();
-        HashSet<String> selectedMoreButtons = new HashSet<>();
-
-        for (int i = 0; i < mPublicizeButtons.size(); i++) {
-            PublicizeButton button = mPublicizeButtons.get(i);
-            entries.add(button.getName());
-            entryValues.add(button.getId());
-            if (button.isEnabled() && button.isVisible()) {
-                selectedSharingButtons.add(button.getId());
-            }
-            if (button.isEnabled() && !button.isVisible()) {
-                selectedMoreButtons.add(button.getId());
-            }
+        PrefListItems sharingListItems = new PrefListItems();
+        for (PublicizeButton button: mPublicizeButtons) {
+            String itemName = button.getName();
+            String itemValue = button.getId();
+            boolean isChecked = button.isEnabled() && button.isVisible();
+            PrefListItem item = new PrefListItem(itemName, itemValue, isChecked);
+            sharingListItems.add(item);
         }
+        mPrefSharingButtons.setListItems(sharingListItems);
 
-        mPrefSharingButtons.setListEntries(entries);
-        mPrefSharingButtons.setListValues(entryValues);
-
-        mPrefMoreButtons.setListEntries(entries);
-        mPrefMoreButtons.setListValues(entryValues);
-
-        // TODO
-        /*mSharingButtonsPreference.setListValues(entryValues);
-        mSharingButtonsPreference.setValues(selectedSharingButtons);
-        mMoreButtonsPreference.setValues(selectedMoreButtons);*/
+        PrefListItems moreListItems = new PrefListItems();
+        for (PublicizeButton button: mPublicizeButtons) {
+            String itemName = button.getName();
+            String itemValue = button.getId();
+            boolean isChecked = button.isEnabled() && !button.isVisible();
+            PrefListItem item = new PrefListItem(itemName, itemValue, isChecked);
+            moreListItems.add(item);
+        }
+        mPrefMoreButtons.setListItems(moreListItems);
 
         toggleTwitterPreferenceVisibility();
     }
@@ -253,10 +245,19 @@ public class PublicizePrefsFragment extends Fragment implements
 
         mPrefTwitterName.setTextEntry(mSiteSettings.getTwitterUsername());
 
-        /*
-        setDetailListPreferenceValue(mButtonStylePreference,
-                mSiteSettings.getSharingButtonStyle(getActivity()),
-                mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));;*/
+        // configure the button style pref
+        String selectedName = mSiteSettings.getSharingButtonStyleDisplayText(getActivity());
+        String selectedValue = mSiteSettings.getSharingButtonStyle(getActivity());
+        String[] names = getResources().getStringArray(R.array.sharing_button_style_display_array);
+        String[] values = getResources().getStringArray(R.array.sharing_button_style_array);
+        PrefListItems listItems = new PrefListItems();
+        for (int i = 0; i < names.length; i++) {
+            PrefListItem item = new PrefListItem(names[i], values[i], false);
+            listItems.add(item);
+        }
+        listItems.setSelectedName(selectedName);
+        mPrefButtonStyle.setListItems(listItems);
+        mPrefButtonStyle.setSummary(selectedName);
     }
 
     @Override

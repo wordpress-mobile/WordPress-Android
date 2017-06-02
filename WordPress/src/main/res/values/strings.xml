@@ -1509,7 +1509,7 @@
     <string name="sharing_comment_likes">Comment Likes</string>
     <string name="twitter_username">Twitter Username</string>
     <string name="sharing_sharing_buttons_description">Select which buttons are shown under your posts</string>
-    <string name="sharing_more_description">A \"more\" button contains a dropdown which displays sharing buttons</string>
+    <string name="sharing_more_description">A \"More\" button contains a dropdown which displays sharing buttons</string>
     <string name="sharing_edit_more_buttons">Edit \"More\" Buttons</string>
     <string name="buttons">Buttons</string>
     <string name="visual">Visual</string>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -20,9 +19,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,9 +55,36 @@ public class WPPrefView extends LinearLayout implements
         public void onPrefChanged(@NonNull WPPrefView prefView);
     }
 
+    public static class PrefListItem {
+        private String mItemName;
+        private String mItemValue;
+        private boolean mIsChecked;
+
+        public PrefListItem(@NonNull String itemName, @NonNull String itemValue, boolean isChecked) {
+            mItemName = itemName;
+            mItemValue = itemValue;
+            mIsChecked = isChecked;
+        }
+    }
+
+    public static class PrefListItems extends ArrayList<PrefListItem> {
+        public PrefListItem getSelectedItem() {
+            for (PrefListItem item: this) {
+                if (item.mIsChecked) {
+                    return item;
+                }
+            }
+            return null;
+        }
+        public void setSelectedName(@NonNull String selectedName) {
+            for (PrefListItem item: this) {
+                item.mIsChecked = StringUtils.equals(selectedName, item.mItemName);
+            }
+        }
+    }
+
     private PrefType mPrefType = PrefType.TEXT;
-    private final List<String> mListEntries = new ArrayList<>();
-    private final List<String> mListValues = new ArrayList<>();
+    private final PrefListItems mListItems = new PrefListItems();
 
     private ViewGroup mContainer;
     private TextView mHeadingTextView;
@@ -191,34 +217,19 @@ public class WPPrefView extends LinearLayout implements
         mDivider.setVisibility(show ? VISIBLE : GONE);
     }
 
-    public void setListEntries(@NonNull List<String> entries) {
-        mListEntries.clear();
-        mListEntries.addAll(entries);
-    }
-
-    public void setListEntries(@ArrayRes int arrayResourceId) {
-        String[] array = getResources().getStringArray(arrayResourceId);
-        setListEntries(Arrays.asList(array));
-    }
-
-    public void setListValues(@NonNull List<String> values) {
-        mListEntries.clear();
-        mListEntries.addAll(values);
-    }
-
-    public void setListValues(@ArrayRes int arrayResourceId) {
-        String[] array = getResources().getStringArray(arrayResourceId);
-        setListValues(Arrays.asList(array));
+    public void setListItems(@NonNull PrefListItems items) {
+        mListItems.clear();
+        mListItems.addAll(items);
     }
 
     @Override
     public void onClick(View v) {
         switch (mPrefType) {
             case CHECKLIST:
-                showChecklistDialog();
+                showCheckListDialog();
                 break;
             case RADIOLIST:
-                showRadiolistDialog();
+                showRadioListDialog();
                 break;
             case TEXT:
                 showTextDialog();
@@ -230,7 +241,6 @@ public class WPPrefView extends LinearLayout implements
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         doPrefChanged();
     }
-
 
     private static CharSequence[] listToArray(@NonNull List<String> list) {
         CharSequence[] array = new CharSequence[list.size()];
@@ -257,7 +267,14 @@ public class WPPrefView extends LinearLayout implements
         .show();
     }
 
-    private void showChecklistDialog() {
+    private void showCheckListDialog() {
+        CharSequence[] items = new CharSequence[mListItems.size()];
+        boolean[] checkedItems = new boolean[mListItems.size()];
+        for (int i = 0; i < mListItems.size(); i++) {
+            items[i] = mListItems.get(i).mItemName;
+            checkedItems[i] = mListItems.get(i).mIsChecked;
+        }
+
         new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
@@ -270,22 +287,34 @@ public class WPPrefView extends LinearLayout implements
                         doPrefChanged();
                     }
                 })
-                .setMultiChoiceItems(listToArray(mListEntries), null, null)
+                .setMultiChoiceItems(items, checkedItems, null)
                 .show();
     }
 
-    private void showRadiolistDialog() {
+    private void showRadioListDialog() {
+        CharSequence[] items = new CharSequence[mListItems.size()];
+        int selectedPos = 0;
+        for (int i = 0; i < mListItems.size(); i++) {
+            items[i] = mListItems.get(i).mItemName;
+            if (mListItems.get(i).mIsChecked) {
+                selectedPos = i;
+            }
+        }
         new AlertDialog.Builder(getContext())
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO
+                        String selectedName = mListItems.get(which).mItemName;
+                        for (PrefListItem item: mListItems) {
+                            item.mIsChecked = StringUtils.equals(selectedName, item.mItemName);
+                        }
+                        setSummary(selectedName);
                         doPrefChanged();
                     }
                 })
-                .setSingleChoiceItems(listToArray(mListEntries), 0, null)
+                .setSingleChoiceItems(items, selectedPos, null)
                 .show();
     }
 }
