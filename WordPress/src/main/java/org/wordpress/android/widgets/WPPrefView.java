@@ -1,8 +1,10 @@
 package org.wordpress.android.widgets;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -24,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
+ * TODO: comment header explaining how to use this
  */
 
 public class WPPrefView extends LinearLayout implements
@@ -77,6 +79,7 @@ public class WPPrefView extends LinearLayout implements
         initView(context, attrs);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public WPPrefView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initView(context, attrs);
