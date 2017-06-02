@@ -618,15 +618,22 @@ public class MediaStore extends Store {
     }
 
     private void performCancelUpload(@NonNull CancelMediaPayload payload) {
-        if (payload.delete) {
-            MediaSqlUtils.deleteMedia(payload.media);
+        if (payload.media == null) {
+            return;
         }
-        if (payload.media != null) {
-            if (payload.site.isUsingWpComRestApi()) {
-                mMediaRestClient.cancelUpload(payload.media);
-            } else {
-                mMediaXmlrpcClient.cancelUpload(payload.media);
-            }
+
+        MediaModel media = payload.media;
+        if (payload.delete) {
+            MediaSqlUtils.deleteMedia(media);
+        } else {
+            media.setUploadState(UploadState.FAILED.toString());
+            MediaSqlUtils.insertOrUpdateMedia(media);
+        }
+
+        if (payload.site.isUsingWpComRestApi()) {
+            mMediaRestClient.cancelUpload(media);
+        } else {
+            mMediaXmlrpcClient.cancelUpload(media);
         }
     }
 
