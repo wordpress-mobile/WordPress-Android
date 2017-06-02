@@ -54,6 +54,13 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
+    /*
+     * listener for when the user changes the preference
+     *      TEXT        use prefView.getTextEntry() to retrieve the updated setting
+     *      TOOGLE      use prefView.isChecked() to retrieve the updated setting
+     *      RADIOLIST   use prefView.getListItems().getFirstSelectedItem() to retrieve the updated setting
+     *      CHECKLIST   use prefView.getListItems().getSelectedItems() to retrieve the updated setting
+     */
     public interface OnPrefChangedListener {
         void onPrefChanged(@NonNull WPPrefView prefView);
     }
