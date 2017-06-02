@@ -977,6 +977,12 @@
     <string name="post_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
+    <string-array name="post_settings_statuses" translatable="false">
+        <item>@string/publish_post</item>
+        <item>@string/draft</item>
+        <item>@string/pending_review</item>
+        <item>@string/post_private</item>
+    </string-array>
 
 
     <!-- Post Formats -->

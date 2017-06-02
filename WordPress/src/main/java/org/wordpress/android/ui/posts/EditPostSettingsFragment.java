@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -1036,6 +1037,15 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showStatusDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.post_format_status);
+        builder.setSingleChoiceItems(R.array.post_settings_statuses, 0, null);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 
     /*
