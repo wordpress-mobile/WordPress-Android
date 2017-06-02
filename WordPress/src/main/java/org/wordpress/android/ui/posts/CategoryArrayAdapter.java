@@ -1,16 +1,18 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.List;
 
@@ -22,21 +24,19 @@ public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
         mResourceId = resource;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(mResourceId, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.categoryRowText);
-        ImageView levelIndicatorView = (ImageView) rowView.findViewById(R.id.categoryRowLevelIndicator);
-        textView.setText(Html.fromHtml(getItem(position).getName()));
-        int level = getItem(position).getLevel();
-        if (level == 1) { // hide ImageView
-            levelIndicatorView.setVisibility(View.GONE);
-        } else {
-            ViewGroup.LayoutParams params = levelIndicatorView.getLayoutParams();
-            params.width = (params.width / 2) * level;
-            levelIndicatorView.setLayoutParams(params);
+        CategoryNode node = getItem(position);
+        if (node != null) {
+            textView.setText(Html.fromHtml(node.getName()));
+            textView.setPadding(DisplayUtils.dpToPx(getContext(), 16) * node.getLevel(), 0,
+                    DisplayUtils.dpToPx(getContext(), 16), 0);
         }
+
         return rowView;
     }
 }
