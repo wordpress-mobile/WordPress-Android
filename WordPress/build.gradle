@@ -103,7 +103,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.google.android.gms:play-services-auth:9.0.2'
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.helpshift:android-helpshift-aar:4.8.1'
+    compile 'com.helpshift:android-helpshift-aar:4.9.1'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.automattic:rest:1.0.7'
     compile 'org.wordpress:graphview:3.4.0'
@@ -136,7 +136,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:b8d8d0476545ee3fcd23d63d4ba5c9507ebcc4da') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:116c712bcaa901a357fff869cac8ed30d036a045') {
         exclude group: "com.android.volley";
     }
 

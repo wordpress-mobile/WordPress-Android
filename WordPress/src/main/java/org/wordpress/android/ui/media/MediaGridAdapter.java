@@ -48,6 +48,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private boolean mAllowMultiselect;
     private boolean mInMultiSelect;
+    private boolean mShowPreviewIcon;
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
@@ -90,6 +91,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         setImageLoader(imageLoader);
     }
 
+    public void setShowPreviewIcon(boolean show) {
+        if (show != mShowPreviewIcon) {
+            mShowPreviewIcon = show;
+            if (getItemCount() > 0) {
+                notifyDataSetChanged();;
+            }
+        }
+    }
+
     @Override
     public long getItemId(int position) {
         return getLocalMediaIdAtPosition(position);
@@ -113,6 +123,36 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         return new GridViewHolder(view);
     }
 
+    /*
+     * returns the most optimal url to use when retrieving a media image for display here
+     */
+    private String getBestImageUrl(@NonNull MediaModel media) {
+        // return photon-ized url if the site allows it since this gives us the image at the
+        // exact size we need here
+        if (SiteUtils.isPhotonCapable(mSite)) {
+            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
+        }
+
+        // can't use photon, so try the various image sizes - note we favor medium-large and
+        // medium because they're more bandwidth-friendly than large
+        if (!TextUtils.isEmpty(media.getFileUrlMediumLargeSize())) {
+            return media.getFileUrlMediumLargeSize();
+        } else if (!TextUtils.isEmpty(media.getFileUrlMediumSize())) {
+            return media.getFileUrlMediumSize();
+        } else if (!TextUtils.isEmpty(media.getFileUrlLargeSize())) {
+            return media.getFileUrlLargeSize();
+        }
+
+        // next stop is to return the thumbnail, which will look pixelated in the grid but it's
+        // better than eating bandwidth showing the full-sized image
+        if (!TextUtils.isEmpty(media.getThumbnailUrl())) {
+            return media.getThumbnailUrl();
+        }
+
+        // last resort, return the full-sized image url
+        return UrlUtils.removeQuery(media.getUrl());
+    }
+
     @Override
     public void onBindViewHolder(GridViewHolder holder, int position) {
         if (!isValidPosition(position)) {
@@ -134,17 +174,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             if (isLocalFile) {
                 loadLocalImage(media.getFilePath(), holder.imageView);
             } else {
-                // if this isn't a private site use Photon to request the image at the exact size,
-                // otherwise append the standard wp query params to request the desired size
-                // TODO: we should drop using Photon for self-hosted sites once the media model
-                // has been updated to include the various image sizes
-                String thumbUrl;
-                if (!mSite.isPrivate()) {
-                    thumbUrl = PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
-                } else {
-                    thumbUrl = UrlUtils.removeQuery(media.getUrl());
-                }
-                WordPressMediaUtils.loadNetworkImage(thumbUrl, holder.imageView, mImageLoader);
+                WordPressMediaUtils.loadNetworkImage(getBestImageUrl(media), holder.imageView, mImageLoader);
             }
         } else {
             // not an image, so show file name and file type
@@ -220,6 +250,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ProgressBar progressUpload;
         private final ViewGroup stateContainer;
         private final ViewGroup fileContainer;
+        private final ImageView imgPreview;
 
         public GridViewHolder(View view) {
             super(view);
@@ -235,6 +266,26 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
             fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
             fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+
+            ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.frame_preview);
+            previewContainer.setVisibility(mShowPreviewIcon ? View.VISIBLE : View.GONE);
+            imgPreview = (ImageView) previewContainer.findViewById(R.id.image_preview);
+            if (mShowPreviewIcon) {
+                imgPreview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = getAdapterPosition();
+                        if (isValidPosition(position)) {
+                            MediaModel media = mMediaList.get(position);
+                            MediaPreviewActivity.showPreview(
+                                    v.getContext(),
+                                    imgPreview,
+                                    mSite,
+                                    media.getId());
+                        }
+                    }
+                });
+            }
 
             // make the progress bar white
             progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);

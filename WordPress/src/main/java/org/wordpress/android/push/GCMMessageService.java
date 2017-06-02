@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -128,21 +127,7 @@ public class GCMMessageService extends GcmListenerService {
             HelpshiftHelper.getInstance().handlePush(this, new Intent().putExtras(data));
             return;
         }
-
-        // Handle mixpanel PNs
-        if (data.containsKey("mp_message")) {
-            String mpMessage = data.getString("mp_message");
-            String title = getString(R.string.app_name);
-            Intent resultIntent = new Intent(this, WPMainActivity.class);
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            AnalyticsTrackerMixpanel.showNotification(this, pendingIntent,
-                    R.drawable.ic_my_sites_24dp, title, mpMessage);
-            return;
-        }
-
+        
         if (!mAccountStore.hasAccessToken()) {
             return;
         }
