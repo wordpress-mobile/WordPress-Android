@@ -259,9 +259,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
-            // set the upload Cancelled flag on the media model so in case a failure is raised for this upload
-            // after cancellation (or as a product of it) we don't need to notify about the error
-            media.setUploadCancelled(true);
             correspondingCall.cancel();
             // clean from the current uploads map
             mCurrentUploadCalls.remove(mediaModelId);
@@ -332,13 +329,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             @Override
             public void onFailure(Call call, IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
-                if (!media.isUploadCancelled()) {
-                    // TODO it would be great to raise some more fine grained errors here, for
-                    // instance timeouts should be raised instead of GENERIC_ERROR
-                    MediaError error = MediaError.fromIOException(e);
-                    error.message = e.getLocalizedMessage();
-                    notifyMediaUploaded(media, error);
+                if (!mCurrentUploadCalls.containsKey(media.getId())) {
+                    // This call has already been removed from the in-progress list - probably because it was cancelled
+                    // In that case this has already been handled and there's nothing to do
+                    return;
                 }
+
+                // TODO it would be great to raise some more fine grained errors here, for
+                // instance timeouts should be raised instead of GENERIC_ERROR
+                MediaError error = MediaError.fromIOException(e);
+                error.message = e.getLocalizedMessage();
+                notifyMediaUploaded(media, error);
+
                 // clean from the current uploads map
                 mCurrentUploadCalls.remove(media.getId());
             }
