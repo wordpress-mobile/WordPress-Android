@@ -383,6 +383,9 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         updateStatusSpinner();
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+            updateFeaturedImage(mPost.getFeaturedImageId());
+        }
     }
 
     private void updateTagsTextView() {
@@ -411,10 +414,6 @@ public class EditPostSettingsFragment extends Fragment
             case PRIVATE:
                 mStatusTextView.setText(statuses[3]);
                 break;
-        }
-
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            updateFeaturedImage(mPost.getFeaturedImageId());
         }
     }
 
