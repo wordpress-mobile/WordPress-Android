@@ -34,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -1006,6 +1007,9 @@ public class EditPostSettingsFragment extends Fragment
         builder.setSingleChoiceItems(R.array.post_settings_statuses, 0, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                ListView lw = ((AlertDialog)dialog).getListView();
+                String newStatus = (String) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                mStatusTextView.setText(newStatus);
                 updatePostSettingsAndSaveButton();
             }
         });
