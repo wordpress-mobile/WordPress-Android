@@ -67,9 +67,6 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -82,7 +79,6 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
-import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +95,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
+    private static final int ACTIVITY_REQUEST_CODE_SELECT_TAGS = 6;
 
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
@@ -110,13 +107,11 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
+    private TextView mTagsTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
-    private SuggestionAutoCompleteText mTagsEditText;
-
-    private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
     private long mFeaturedImageId;
     private String mCurrentSlug;
@@ -198,9 +193,6 @@ public class EditPostSettingsFragment extends Fragment
 
     @Override
     public void onDestroy() {
-        if (mSuggestionServiceConnectionManager != null) {
-            mSuggestionServiceConnectionManager.unbindFromService();
-        }
         mDispatcher.unregister(this);
         super.onDestroy();
     }
@@ -222,6 +214,7 @@ public class EditPostSettingsFragment extends Fragment
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
+        mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -280,6 +273,14 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
 
+        final LinearLayout tagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
+        tagsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTagsActivity();
+            }
+        });
+
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
@@ -325,13 +326,6 @@ public class EditPostSettingsFragment extends Fragment
                         }
                     }
             );
-
-            mTagsEditText = (SuggestionAutoCompleteText) rootView.findViewById(R.id.tags);
-            if (mTagsEditText != null) {
-                mTagsEditText.setTokenizer(new SuggestionAutoCompleteText.CommaTokenizer());
-
-                setupSuggestionServiceAndAdapter();
-            }
         }
 
         initSettingsFields();
@@ -362,23 +356,12 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded()) return;
-
-        long remoteBlogId = mSite.getSiteId();
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
-        TagSuggestionAdapter tagSuggestionAdapter = SuggestionUtils.setupTagSuggestions(mSite, getActivity(),
-                mSuggestionServiceConnectionManager);
-        if (tagSuggestionAdapter != null) {
-            mTagsEditText.setAdapter(tagSuggestionAdapter);
-        }
-    }
-
     private void initSettingsFields() {
         mCurrentExcerpt = mPost.getExcerpt();
         mCurrentSlug = mPost.getSlug();
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
+        updateTagsTextView();
 
         String[] items = new String[]{getResources().getString(R.string.publish_post),
                 getResources().getString(R.string.draft),
@@ -420,6 +403,15 @@ public class EditPostSettingsFragment extends Fragment
         updateStatusSpinner();
     }
 
+    private void updateTagsTextView() {
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        if (!TextUtils.isEmpty(tags)) {
+            mTagsTextView.setText(tags);
+        } else {
+            mTagsTextView.setText(R.string.not_set);
+        }
+    }
+
     public void updateStatusSpinner() {
         switch (PostStatus.fromPost(mPost)) {
             case PUBLISHED:
@@ -436,11 +428,6 @@ public class EditPostSettingsFragment extends Fragment
             case PRIVATE:
                 mStatusSpinner.setSelection(3, true);
                 break;
-        }
-
-        String tags = TextUtils.join(",", mPost.getTagNameList());
-        if (!tags.equals("") && mTagsEditText != null) {
-            mTagsEditText.setText(tags);
         }
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
@@ -522,6 +509,17 @@ public class EditPostSettingsFragment extends Fragment
                         List<TermModel> categoryList = (List<TermModel>) extras.getSerializable("selectedCategories");
                         mCategories = categoryList;
                         populateSelectedCategories();
+                    }
+                    break;
+                case ACTIVITY_REQUEST_CODE_SELECT_TAGS:
+                    extras = data.getExtras();
+                    if (resultCode == Activity.RESULT_OK && extras != null) {
+                        String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
+                        if (selectedTags != null) {
+                            String tags = selectedTags.replace("\n", " ");
+                            mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+                            updateTagsTextView();
+                        }
                     }
                     break;
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
@@ -669,12 +667,8 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setDateCreated(publicationDateIso8601);
 
-        String tags = "", postFormat = "";
+        String postFormat = "";
         if (!post.isPage()) {
-            tags = EditTextUtils.getText(mTagsEditText);
-            // since mTagsEditText is a `textMultiLine` field, we should replace "\n" with space
-            tags = tags.replace("\n", " ");
-
             // post format
             if (mPostFormatKeys != null && mPostFormatSpinner != null &&
                 mPostFormatSpinner.getSelectedItemPosition() < mPostFormatKeys.size()) {
@@ -711,7 +705,6 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setExcerpt(mCurrentExcerpt);
         post.setSlug(mCurrentSlug);
-        post.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         post.setStatus(status);
         post.setPassword(password);
         post.setPostFormat(postFormat);
@@ -1018,6 +1011,17 @@ public class EditPostSettingsFragment extends Fragment
                     }
                 });
         dialog.show(getFragmentManager(), null);
+    }
+
+    private void showTagsActivity() {
+        // Fetch/refresh the tags in preparation for the the PostSettingsTagsActivity
+        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
+
+        Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
+        tagsIntent.putExtra(WordPress.SITE, mSite);
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
+        startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 
     /*
