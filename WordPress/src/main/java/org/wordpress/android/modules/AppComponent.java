@@ -63,7 +63,6 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragmen
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.publicize.PublicizeListFragment;
-import org.wordpress.android.ui.publicize.PublicizeManageConnectionsFragment;
 import org.wordpress.android.ui.publicize.PublicizePrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
@@ -155,7 +154,6 @@ public interface AppComponent {
     void inject(PublicizeWebViewFragment object);
     void inject(PublicizeDetailFragment object);
     void inject(PublicizeListFragment object);
-    void inject(PublicizeManageConnectionsFragment object);
     void inject(PublicizePrefsFragment object);
 
     void inject(EditPostActivity object);
