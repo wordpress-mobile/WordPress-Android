@@ -2,6 +2,7 @@ package org.wordpress.android.ui.publicize;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -45,6 +46,8 @@ public class PublicizePrefsFragment extends Fragment implements
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
     private static final String TWITTER_ID = "twitter";
 
+    private static final long FETCH_DELAY = 1000L;
+
     private final ArrayList<PublicizeButton> mPublicizeButtons = new ArrayList<>();
 
     private WPPrefView mPrefSharingButtons;
@@ -74,6 +77,8 @@ public class PublicizePrefsFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        setRetainInstance(true);
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             getActivity().finish();
             return;
@@ -85,14 +90,13 @@ public class PublicizePrefsFragment extends Fragment implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
 
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
-        if (mSiteSettings == null) {
+        if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
             return;
         }
 
-        setRetainInstance(true);
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, this);
     }
 
     @Override
@@ -129,8 +133,11 @@ public class PublicizePrefsFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        configureSharingAndMoreButtonsPreferences();
-        setPreferencesFromSiteSettings();
+
+        boolean shouldFetchSettings = (savedInstanceState == null);
+        getSiteSettings(shouldFetchSettings);
+
+        configureSharingButtons();
     }
 
     private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
@@ -147,7 +154,7 @@ public class PublicizePrefsFragment extends Fragment implements
             jsonArray.put(button.toJson());
         }
 
-        toggleTwitterPreferenceVisibility();
+        toggleTwitterPreference();
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -159,11 +166,7 @@ public class PublicizePrefsFragment extends Fragment implements
         WordPress.getRestClientUtilsV1_1().setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
-                    configureSharingButtons(response);
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.SETTINGS, e);
-                }
+                // noop
             }
         }, new RestRequest.ErrorListener() {
             @Override
@@ -173,7 +176,12 @@ public class PublicizePrefsFragment extends Fragment implements
         });
     }
 
-    private void toggleTwitterPreferenceVisibility() {
+    /*
+     * show the twitter username pref only if there's a twitter sharing button enabled
+     */
+    private void toggleTwitterPreference() {
+        if (!isAdded()) return;
+
         View twitterCard = getView().findViewById(R.id.card_view_twitter);
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
             PublicizeButton publicizeButton = mPublicizeButtons.get(i);
@@ -186,12 +194,15 @@ public class PublicizePrefsFragment extends Fragment implements
         twitterCard.setVisibility(GONE);
     }
 
-    private void configureSharingAndMoreButtonsPreferences() {
+    /*
+     * calls the backend to determine which sharing and more buttons are enabled
+     */
+    private void configureSharingButtons() {
         WordPress.getRestClientUtilsV1_1().getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    configureSharingButtons(response);
+                    configureSharingButtonsFromResponse(response);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.SETTINGS, e);
                 }
@@ -204,7 +215,7 @@ public class PublicizePrefsFragment extends Fragment implements
         });
     }
 
-    private void configureSharingButtons(JSONObject response) throws JSONException {
+    private void configureSharingButtonsFromResponse(JSONObject response) throws JSONException {
         JSONArray jsonArray = response.getJSONArray(SHARING_BUTTONS_KEY);
         for (int i = 0; i < jsonArray.length(); i++) {
             PublicizeButton publicizeButton = new PublicizeButton(jsonArray.getJSONObject(i));
@@ -231,9 +242,32 @@ public class PublicizePrefsFragment extends Fragment implements
         }
         mPrefMoreButtons.setListItems(moreListItems);
 
-        toggleTwitterPreferenceVisibility();
+        toggleTwitterPreference();
     }
 
+    /*
+     * updates the sites settings, first from the local cache and then optionally
+     * from the backend - either way this will cause onSettingsUpdated() to be
+     * called so the settings will be reflected here
+     */
+    private void getSiteSettings(boolean shouldFetchSettings) {
+        // load cached settings first
+        mSiteSettings.init(false);
+
+        // then fetch remote if desired
+        if (shouldFetchSettings) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mSiteSettings.init(true);
+                }
+            }, FETCH_DELAY);
+        }
+    }
+
+    /*
+     * update the preference views with the updated site settings
+     */
     private void setPreferencesFromSiteSettings() {
         mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
         mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
@@ -246,7 +280,6 @@ public class PublicizePrefsFragment extends Fragment implements
 
         // configure the button style pref
         String selectedName = mSiteSettings.getSharingButtonStyleDisplayText(getActivity());
-        String selectedValue = mSiteSettings.getSharingButtonStyle(getActivity());
         String[] names = getResources().getStringArray(R.array.sharing_button_style_display_array);
         String[] values = getResources().getStringArray(R.array.sharing_button_style_array);
         PrefListItems listItems = new PrefListItems();
@@ -311,18 +344,5 @@ public class PublicizePrefsFragment extends Fragment implements
         }
 
         mSiteSettings.saveSettings();
-
-        /*if (preference == mButtonStylePreference) {
-            mSiteSettings.setSharingButtonStyle(newValue.toString());
-            setDetailListPreferenceValue(mButtonStylePreference,
-                    mSiteSettings.getSharingButtonStyle(getActivity()),
-                    mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
-        } else if (preference == mSharingButtonsPreference) {
-            saveSharingButtons((HashSet<String>) newValue, true);
-        } else if (preference == mMoreButtonsPreference) {
-            saveSharingButtons((HashSet<String>) newValue, false);
-        } else {
-            return false;
-        }*/
     }
 }

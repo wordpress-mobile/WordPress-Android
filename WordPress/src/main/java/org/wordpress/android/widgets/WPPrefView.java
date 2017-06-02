@@ -55,6 +55,19 @@ public class WPPrefView extends LinearLayout implements
         void onPrefChanged(@NonNull WPPrefView prefView);
     }
 
+    private PrefType mPrefType = PrefType.TEXT;
+    private final PrefListItems mListItems = new PrefListItems();
+
+    private ViewGroup mContainer;
+    private TextView mHeadingTextView;
+    private TextView mTitleTextView;
+    private TextView mSummaryTextView;
+    private View mDivider;
+    private Switch mSwitch;
+
+    private String mTextEntry;
+    private OnPrefChangedListener mListener;
+
     public static class PrefListItem {
         private final String mItemName;   // name to display for this item
         private final String mItemValue;  // value for this item (can be same as name)
@@ -111,20 +124,6 @@ public class WPPrefView extends LinearLayout implements
             }
         }
     }
-
-    private PrefType mPrefType = PrefType.TEXT;
-    private final PrefListItems mListItems = new PrefListItems();
-
-    private ViewGroup mContainer;
-    private TextView mHeadingTextView;
-    private TextView mTitleTextView;
-    private TextView mSummaryTextView;
-    private View mDivider;
-    private Switch mSwitch;
-
-    private String mTextEntry;
-
-    private OnPrefChangedListener mListener;
 
     public WPPrefView(Context context) {
         super(context);
