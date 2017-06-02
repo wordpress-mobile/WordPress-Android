@@ -214,7 +214,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().registerSticky(this);
+        EventBus.getDefault().register(this);
         // If the user hasn't used swipe yet and if the adapter is initialised and have at least 2 notifications,
         // show a hint to promote swipe usage on the ViewPager
         if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAdapter != null && mAdapter.getCount() > 1) {
