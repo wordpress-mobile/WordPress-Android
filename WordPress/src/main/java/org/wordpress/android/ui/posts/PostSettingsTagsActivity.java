@@ -156,7 +156,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         if (endIndex == -1) {
             mAdapter.filter(text);
         } else {
-            String textToFilter = text.substring(endIndex + 1);
+            String textToFilter = text.substring(endIndex + 1).trim();
             mAdapter.filter(textToFilter);
         }
     }
