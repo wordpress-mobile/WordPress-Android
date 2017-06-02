@@ -22,6 +22,7 @@ import org.wordpress.android.models.PublicizeButton;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPPrefView;
 
@@ -30,6 +31,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 
 public class PublicizePrefsFragment extends Fragment implements
@@ -49,6 +53,7 @@ public class PublicizePrefsFragment extends Fragment implements
     private WPPrefView mPrefShowReblog;
     private WPPrefView mPrefShowLike;
     private WPPrefView mPrefAllowCommentLikes;
+    private WPPrefView mPrefTwitterName;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -116,6 +121,9 @@ public class PublicizePrefsFragment extends Fragment implements
         mPrefAllowCommentLikes = (WPPrefView) view.findViewById(R.id.pref_allow_comment_likes);
         mPrefAllowCommentLikes.setOnPrefChangedListener(this);
 
+        mPrefTwitterName = (WPPrefView) view.findViewById(R.id.pref_twitter_name);
+        mPrefTwitterName.setOnPrefChangedListener(this);
+
         return view;
     }
 
@@ -166,32 +174,17 @@ public class PublicizePrefsFragment extends Fragment implements
         });
     }
 
-    private void saveAndSetTwitterUsername(String username) {
-        if (username == null) {
-            return;
-        }
-
-        if (username.startsWith(TWITTER_PREFIX)) {
-            username = username.substring(1, username.length());
-        }
-
-        mSiteSettings.setTwitterUsername(username);
-    }
-
-    // TODO
     private void toggleTwitterPreferenceVisibility() {
+        View twitterCard = getView().findViewById(R.id.card_view_twitter);
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
             PublicizeButton publicizeButton = mPublicizeButtons.get(i);
             if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
-                //mTwitterPreferenceCategory.setTitle(R.string.twitter);
-                //mTwitterPreferenceCategory.removeAll();
-                //mTwitterPreferenceCategory.addPreference(mTwitterUsernamePreference);
+                twitterCard.setVisibility(VISIBLE);
                 return;
             }
         }
 
-        //mTwitterPreferenceCategory.setTitle("");
-        //mTwitterPreferenceCategory.removePreference(mTwitterUsernamePreference);
+        twitterCard.setVisibility(GONE);
     }
 
     private void configureSharingAndMoreButtonsPreferences() {
@@ -254,14 +247,16 @@ public class PublicizePrefsFragment extends Fragment implements
         mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
         mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
 
-        /*changeEditTextPreferenceValue(mLabelPreference, mSiteSettings.getSharingLabel());
+        mPrefShowReblog.setChecked(mSiteSettings.getAllowReblogButton());
+        mPrefShowLike.setChecked(mSiteSettings.getAllowLikeButton());
+        mPrefAllowCommentLikes.setChecked(mSiteSettings.getAllowCommentLikes());
+
+        mPrefTwitterName.setTextEntry(mSiteSettings.getTwitterUsername());
+
+        /*
         setDetailListPreferenceValue(mButtonStylePreference,
                 mSiteSettings.getSharingButtonStyle(getActivity()),
-                mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
-        mReblogButtonPreference.setChecked(mSiteSettings.getAllowReblogButton());
-        mLikeButtonPreference.setChecked(mSiteSettings.getAllowLikeButton());
-        mCommentLikesPreference.setChecked(mSiteSettings.getAllowCommentLikes());
-        changeEditTextPreferenceValue(mTwitterUsernamePreference, mSiteSettings.getTwitterUsername());*/
+                mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));;*/
     }
 
     @Override
@@ -304,6 +299,12 @@ public class PublicizePrefsFragment extends Fragment implements
             mSiteSettings.setAllowLikeButton(pref.isChecked());
         } else if (pref == mPrefAllowCommentLikes) {
             mSiteSettings.setAllowCommentLikes(pref.isChecked());
+        } else if (pref == mPrefTwitterName) {
+            String username = StringUtils.notNullStr(pref.getTextEntry());
+            if (username.startsWith(TWITTER_PREFIX)) {
+                username = username.substring(1, username.length());
+            }
+            mSiteSettings.setTwitterUsername(username);
         }
 
         mSiteSettings.saveSettings();
@@ -313,8 +314,6 @@ public class PublicizePrefsFragment extends Fragment implements
             setDetailListPreferenceValue(mButtonStylePreference,
                     mSiteSettings.getSharingButtonStyle(getActivity()),
                     mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
-        } else if (preference == mTwitterUsernamePreference) {
-            saveAndSetTwitterUsername(newValue.toString());
         } else if (preference == mSharingButtonsPreference) {
             saveSharingButtons((HashSet<String>) newValue, true);
         } else if (preference == mMoreButtonsPreference) {
