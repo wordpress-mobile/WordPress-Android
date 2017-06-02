@@ -85,6 +85,7 @@ public class WPPrefView extends LinearLayout implements
             mItemValue = itemValue;
             mIsChecked = isChecked;
         }
+        @SuppressWarnings("unused")
         public @NonNull String getItemName() {
             return mItemName;
         }
@@ -94,7 +95,7 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-     * all items when this is a list preference
+     * all items when this is a list preference (both single- and multi-select)
      */
     public static class PrefListItems extends ArrayList<PrefListItem> {
         private void setCheckedItems(@NonNull SparseBooleanArray checkedItems) {
@@ -102,6 +103,7 @@ public class WPPrefView extends LinearLayout implements
                 this.get(i).mIsChecked = checkedItems.get(i);
             }
         }
+        // use this for RADIOLIST prefs to get the single-select item
         public PrefListItem getFirstSelectedItem() {
             for (PrefListItem item: this) {
                 if (item.mIsChecked) {
@@ -110,6 +112,7 @@ public class WPPrefView extends LinearLayout implements
             }
             return null;
         }
+        // use this for CHECKLIST prefs to get all selected items
         public @NonNull PrefListItems getSelectedItems() {
             PrefListItems selectedItems = new PrefListItems();
             for (PrefListItem item: this) {
@@ -120,14 +123,14 @@ public class WPPrefView extends LinearLayout implements
             return selectedItems;
         }
         public @NonNull HashSet<String> getSelectedValues() {
+            PrefListItems selectedItems = getSelectedItems();
             HashSet<String> values = new HashSet<>();
-            for (PrefListItem item: this) {
-                if (item.mIsChecked) {
-                    values.add(item.mItemValue);
-                }
+            for (PrefListItem item: selectedItems) {
+                values.add(item.mItemValue);
             }
             return values;
         }
+        // use this with RADIOLIST prefs to select only the passed name
         public void setSelectedName(@NonNull String selectedName) {
             for (PrefListItem item: this) {
                 item.mIsChecked = StringUtils.equals(selectedName, item.mItemName);
@@ -201,11 +204,7 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
-    public PrefType getPrefType() {
-        return mPrefType;
-    }
-
-    public void setPrefType(@NonNull PrefType prefType) {
+    private void setPrefType(@NonNull PrefType prefType) {
         mPrefType = prefType;
 
         boolean isToggle = mPrefType == PrefType.TOGGLE;
@@ -224,7 +223,7 @@ public class WPPrefView extends LinearLayout implements
     /*
      * blue heading text that should appear above the preference when it's the first in a group
      */
-    public void setHeading(String heading) {
+    private void setHeading(String heading) {
         mHeadingTextView.setText(heading);
         mHeadingTextView.setVisibility(TextUtils.isEmpty(heading) ? GONE : VISIBLE);
     }
@@ -232,7 +231,7 @@ public class WPPrefView extends LinearLayout implements
     /*
      * title above the preference and below the optional heading
      */
-    public void setTitle(String title) {
+    private void setTitle(String title) {
         mTitleTextView.setText(title);
         mToggleSwitch.setText(title);
     }
@@ -248,7 +247,7 @@ public class WPPrefView extends LinearLayout implements
     /*
      * subtitle on the dialog that appears when the PrefType is TEXT
      */
-    public void setTextDialogSubtitle(String subtitle) {
+    private void setTextDialogSubtitle(String subtitle) {
         mTextDialogSubtitle = subtitle;
     }
 
@@ -276,7 +275,7 @@ public class WPPrefView extends LinearLayout implements
     /*
      * determines whether a divider appears below the pref - should be true for all but the last one
      */
-    public void setShowDivider(boolean show) {
+    private void setShowDivider(boolean show) {
         mDivider.setVisibility(show ? VISIBLE : GONE);
     }
 
@@ -316,7 +315,7 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-     * user clicked the view when the PrefType is TEXT - show a dialog enabling the user
+     * user clicked the view when the PrefType is TEXT - shows a dialog enabling the user
      * to edit the entry
      */
     private void showTextDialog() {
@@ -346,7 +345,7 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-     * user clicked the view when the PrefType is CHECKLIST - show a multi-select dialog enabling
+     * user clicked the view when the PrefType is CHECKLIST - shows a multi-select dialog enabling
      * the user to modify the list
      */
     private void showCheckListDialog() {
@@ -374,7 +373,7 @@ public class WPPrefView extends LinearLayout implements
     }
 
     /*
-     * user clicked the view when the PrefType is RADIOLIST - show a single-select dialog enabling
+     * user clicked the view when the PrefType is RADIOLIST - shows a single-select dialog enabling
      * the user to choose a different item
      */
     private void showRadioListDialog() {

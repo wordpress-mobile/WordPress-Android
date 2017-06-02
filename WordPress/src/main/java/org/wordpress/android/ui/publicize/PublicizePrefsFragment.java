@@ -218,6 +218,7 @@ public class PublicizePrefsFragment extends Fragment implements
     }
 
     private void configureSharingButtonsFromResponse(JSONObject response) throws JSONException {
+        mPublicizeButtons.clear();
         JSONArray jsonArray = response.getJSONArray(SHARING_BUTTONS_KEY);
         for (int i = 0; i < jsonArray.length(); i++) {
             PublicizeButton publicizeButton = new PublicizeButton(jsonArray.getJSONObject(i));
@@ -248,15 +249,13 @@ public class PublicizePrefsFragment extends Fragment implements
     }
 
     /*
-     * updates the sites settings, first from the local cache and then optionally
+     * retrieves the site settings, first from the local cache and then optionally
      * from the backend - either way this will cause onSettingsUpdated() to be
      * called so the settings will be reflected here
      */
     private void getSiteSettings(boolean shouldFetchSettings) {
-        // load cached settings first
         mSiteSettings.init(false);
 
-        // then fetch remote if desired
         if (shouldFetchSettings) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -268,7 +267,7 @@ public class PublicizePrefsFragment extends Fragment implements
     }
 
     /*
-     * update the preference views with the updated site settings
+     * update the preference views from the site settings
      */
     private void setPreferencesFromSiteSettings() {
         mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
@@ -313,9 +312,7 @@ public class PublicizePrefsFragment extends Fragment implements
     }
     @Override
     public void onCredentialsValidated(Exception error) {
-        if (isAdded() && error != null) {
-            ToastUtils.showToast(getActivity(), R.string.username_or_password_incorrect);
-        }
+        // noop
     }
 
     @Override
