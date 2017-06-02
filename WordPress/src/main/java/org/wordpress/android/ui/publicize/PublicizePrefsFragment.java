@@ -48,6 +48,7 @@ public class PublicizePrefsFragment extends Fragment implements
     private WPPrefView mPrefButtonStyle;
     private WPPrefView mPrefShowReblog;
     private WPPrefView mPrefShowLike;
+    private WPPrefView mPrefAllowCommentLikes;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -111,6 +112,9 @@ public class PublicizePrefsFragment extends Fragment implements
 
         mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
         mPrefShowLike.setOnPrefChangedListener(this);
+
+        mPrefAllowCommentLikes = (WPPrefView) view.findViewById(R.id.pref_allow_comment_likes);
+        mPrefAllowCommentLikes.setOnPrefChangedListener(this);
 
         return view;
     }
@@ -298,6 +302,8 @@ public class PublicizePrefsFragment extends Fragment implements
             mSiteSettings.setAllowReblogButton(pref.isChecked());
         } else if (pref == mPrefShowLike) {
             mSiteSettings.setAllowLikeButton(pref.isChecked());
+        } else if (pref == mPrefAllowCommentLikes) {
+            mSiteSettings.setAllowCommentLikes(pref.isChecked());
         }
 
         mSiteSettings.saveSettings();
@@ -307,8 +313,6 @@ public class PublicizePrefsFragment extends Fragment implements
             setDetailListPreferenceValue(mButtonStylePreference,
                     mSiteSettings.getSharingButtonStyle(getActivity()),
                     mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
-        } else if (preference == mCommentLikesPreference) {
-            mSiteSettings.setAllowCommentLikes((Boolean) newValue);
         } else if (preference == mTwitterUsernamePreference) {
             saveAndSetTwitterUsername(newValue.toString());
         } else if (preference == mSharingButtonsPreference) {

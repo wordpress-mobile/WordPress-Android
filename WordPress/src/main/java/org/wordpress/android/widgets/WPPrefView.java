@@ -105,15 +105,12 @@ public class WPPrefView extends LinearLayout implements
     private void initView(Context context, AttributeSet attrs) {
         ViewGroup view = (ViewGroup) inflate(context, R.layout.wppref_view, this);
 
-        mHeadingTextView = (TextView) view.findViewById(R.id.text_heading);
         mContainer = (ViewGroup) view.findViewById(R.id.container);
-        mTitleTextView = (TextView) mContainer.findViewById(R.id.text_title);
-        mSummaryTextView = (TextView) mContainer.findViewById(R.id.text_summary);
+        mHeadingTextView = (TextView) view.findViewById(R.id.text_heading);
+        mTitleTextView = (TextView) view.findViewById(R.id.text_title);
+        mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
         mSwitch = (Switch) view.findViewById(R.id.switch_view);
         mDivider = view.findViewById(R.id.divider);
-
-        mContainer.setOnClickListener(this);
-        mSwitch.setOnCheckedChangeListener(this);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -144,9 +141,18 @@ public class WPPrefView extends LinearLayout implements
 
     public void setPrefType(@NonNull PrefType prefType) {
         mPrefType = prefType;
+
         boolean isToggle = mPrefType == PrefType.TOGGLE;
-        mContainer.setVisibility(isToggle ? View.GONE : View.VISIBLE);
+        mTitleTextView.setVisibility(isToggle ? View.GONE : View.VISIBLE);
         mSwitch.setVisibility(isToggle ? View.VISIBLE : View.GONE);
+
+        if (isToggle) {
+            mContainer.setOnClickListener(null);
+            mSwitch.setOnCheckedChangeListener(this);
+        } else {
+            mContainer.setOnClickListener(this);
+            mSwitch.setOnCheckedChangeListener(null);
+        }
     }
 
     public void setHeading(String heading) {
