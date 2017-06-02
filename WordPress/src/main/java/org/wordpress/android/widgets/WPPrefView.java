@@ -26,17 +26,19 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * TODO: comment header explaining how to use this
+ * Single preference view which enables building preference screens without relying on Android's
+ * built-in preference tools - enables us to be in the charge of the UI and customizing it as we
+ * wish without fighting PreferenceFragment, etc.
  */
 
 public class WPPrefView extends LinearLayout implements
         View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public enum PrefType {
-        TEXT,
-        TOGGLE,
-        CHECKLIST,
-        RADIOLIST;
+        TEXT,       // text setting
+        TOGGLE,     // boolean setting
+        CHECKLIST,  // multi-select setting
+        RADIOLIST;  // single-select setting
 
         public static PrefType fromInt(int value) {
             switch (value) {
@@ -64,12 +66,15 @@ public class WPPrefView extends LinearLayout implements
     private TextView mTitleTextView;
     private TextView mSummaryTextView;
     private View mDivider;
-    private Switch mSwitch;
+    private Switch mToggleSwitch;
 
     private String mTextEntry;
     private String mTextDialogSubtitle;
     private OnPrefChangedListener mListener;
 
+    /*
+     * single item when this is a list preference
+     */
     public static class PrefListItem {
         private final String mItemName;   // name to display for this item
         private final String mItemValue;  // value for this item (can be same as name)
@@ -88,6 +93,9 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
+    /*
+     * all items when this is a list preference
+     */
     public static class PrefListItems extends ArrayList<PrefListItem> {
         private void setCheckedItems(@NonNull SparseBooleanArray checkedItems) {
             for (int i = 0; i < this.size(); i++) {
@@ -148,16 +156,6 @@ public class WPPrefView extends LinearLayout implements
         initView(context, attrs);
     }
 
-    public void setOnPrefChangedListener(OnPrefChangedListener listener) {
-        mListener = listener;
-    }
-
-    private void doPrefChanged() {
-        if (mListener != null) {
-            mListener.onPrefChanged(this);
-        }
-    }
-
     private void initView(Context context, AttributeSet attrs) {
         ViewGroup view = (ViewGroup) inflate(context, R.layout.wppref_view, this);
 
@@ -165,7 +163,7 @@ public class WPPrefView extends LinearLayout implements
         mHeadingTextView = (TextView) view.findViewById(R.id.text_heading);
         mTitleTextView = (TextView) view.findViewById(R.id.text_title);
         mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
-        mSwitch = (Switch) view.findViewById(R.id.switch_view);
+        mToggleSwitch = (Switch) view.findViewById(R.id.switch_view);
         mDivider = view.findViewById(R.id.divider);
 
         if (attrs != null) {
@@ -193,6 +191,16 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
+    public void setOnPrefChangedListener(OnPrefChangedListener listener) {
+        mListener = listener;
+    }
+
+    private void doPrefChanged() {
+        if (mListener != null) {
+            mListener.onPrefChanged(this);
+        }
+    }
+
     public PrefType getPrefType() {
         return mPrefType;
     }
@@ -202,57 +210,79 @@ public class WPPrefView extends LinearLayout implements
 
         boolean isToggle = mPrefType == PrefType.TOGGLE;
         mTitleTextView.setVisibility(isToggle ? View.GONE : View.VISIBLE);
-        mSwitch.setVisibility(isToggle ? View.VISIBLE : View.GONE);
+        mToggleSwitch.setVisibility(isToggle ? View.VISIBLE : View.GONE);
 
         if (isToggle) {
             mContainer.setOnClickListener(null);
-            mSwitch.setOnCheckedChangeListener(this);
+            mToggleSwitch.setOnCheckedChangeListener(this);
         } else {
             mContainer.setOnClickListener(this);
-            mSwitch.setOnCheckedChangeListener(null);
+            mToggleSwitch.setOnCheckedChangeListener(null);
         }
     }
 
+    /*
+     * blue heading text that should appear above the preference when it's the first in a group
+     */
     public void setHeading(String heading) {
         mHeadingTextView.setText(heading);
         mHeadingTextView.setVisibility(TextUtils.isEmpty(heading) ? GONE : VISIBLE);
     }
 
+    /*
+     * title above the preference and below the optional heading
+     */
     public void setTitle(String title) {
         mTitleTextView.setText(title);
-        mSwitch.setText(title);
+        mToggleSwitch.setText(title);
     }
 
+    /*
+     * optional description that appears below the title
+     */
     public void setSummary(String summary) {
         mSummaryTextView.setText(summary);
         mSummaryTextView.setVisibility(TextUtils.isEmpty(summary) ? View.GONE : View.VISIBLE);
     }
 
+    /*
+     * subtitle on the dialog that appears when the PrefType is TEXT
+     */
     public void setTextDialogSubtitle(String subtitle) {
         mTextDialogSubtitle = subtitle;
     }
 
+    /*
+     * current entry when the PrefType is TEXT
+     */
     public String getTextEntry() {
         return mTextEntry;
     }
-
     public void setTextEntry(String entry) {
         mTextEntry = entry;
         setSummary(entry);
     }
 
+    /*
+     * returns whether or not the switch is checked when the PrefType is TOGGLE
+     */
     public boolean isChecked() {
-        return mPrefType == PrefType.TOGGLE && mSwitch.isChecked();
+        return mPrefType == PrefType.TOGGLE && mToggleSwitch.isChecked();
     }
-
     public void setChecked(boolean checked) {
-        mSwitch.setChecked(checked);
+        mToggleSwitch.setChecked(checked);
     }
 
+    /*
+     * determines whether a divider appears below the pref - should be true for all but the last one
+     */
     public void setShowDivider(boolean show) {
         mDivider.setVisibility(show ? VISIBLE : GONE);
     }
 
+    /*
+     * the list of items when the PrefType is CHECKLIST or RADIOLIST
+     */
     public @NonNull PrefListItems getListItems() {
         return mListItems;
     }
@@ -277,11 +307,18 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
+    /*
+     * user clicked the toggle switch
+     */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         doPrefChanged();
     }
 
+    /*
+     * user clicked the view when the PrefType is TEXT - show a dialog enabling the user
+     * to edit the entry
+     */
     private void showTextDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         ViewGroup customView = (ViewGroup) inflater.inflate(R.layout.wppref_text_dialog, null);
@@ -308,6 +345,10 @@ public class WPPrefView extends LinearLayout implements
         .show();
     }
 
+    /*
+     * user clicked the view when the PrefType is CHECKLIST - show a multi-select dialog enabling
+     * the user to modify the list
+     */
     private void showCheckListDialog() {
         CharSequence[] items = new CharSequence[mListItems.size()];
         boolean[] checkedItems = new boolean[mListItems.size()];
@@ -332,6 +373,10 @@ public class WPPrefView extends LinearLayout implements
                 .show();
     }
 
+    /*
+     * user clicked the view when the PrefType is RADIOLIST - show a single-select dialog enabling
+     * the user to choose a different item
+     */
     private void showRadioListDialog() {
         CharSequence[] items = new CharSequence[mListItems.size()];
         int selectedPos = 0;
