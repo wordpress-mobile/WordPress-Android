@@ -30,7 +30,6 @@ import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -104,7 +103,7 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    private Spinner mStatusSpinner, mPostFormatSpinner;
+    private Spinner mPostFormatSpinner;
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
@@ -221,18 +220,6 @@ public class EditPostSettingsFragment extends Fragment
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
-        mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
-        mStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updatePostSettingsAndSaveButton();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
         TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
@@ -372,25 +359,7 @@ public class EditPostSettingsFragment extends Fragment
         mCurrentSlug = mPost.getSlug();
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
-        mStatusTextView.setText(mPost.getStatus());
         updateTagsTextView();
-
-        String[] items = new String[]{getResources().getString(R.string.publish_post),
-                getResources().getString(R.string.draft),
-                getResources().getString(R.string.pending_review),
-                getResources().getString(R.string.post_private)};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mStatusSpinner.setAdapter(adapter);
-        mStatusSpinner.setOnTouchListener(
-                new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        return false;
-                    }
-                }
-        );
 
         String pubDate = mPost.getDateCreated();
         if (StringUtils.isNotEmpty(pubDate)) {
@@ -425,20 +394,21 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     public void updateStatusSpinner() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
         switch (PostStatus.fromPost(mPost)) {
             case PUBLISHED:
             case SCHEDULED:
             case UNKNOWN:
-                mStatusSpinner.setSelection(0, true);
+                mStatusTextView.setText(statuses[0]);
                 break;
             case DRAFT:
-                mStatusSpinner.setSelection(1, true);
+                mStatusTextView.setText(statuses[1]);
                 break;
             case PENDING:
-                mStatusSpinner.setSelection(2, true);
+                mStatusTextView.setText(statuses[2]);
                 break;
             case PRIVATE:
-                mStatusSpinner.setSelection(3, true);
+                mStatusTextView.setText(statuses[3]);
                 break;
         }
 
@@ -490,18 +460,19 @@ public class EditPostSettingsFragment extends Fragment
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
-    private PostStatus getPostStatusForSpinnerPosition(int position) {
-        switch (position) {
-            case 0:
-                return PostStatus.PUBLISHED;
-            case 1:
-                return PostStatus.DRAFT;
-            case 2:
-                return PostStatus.PENDING;
-            case 3:
-                return PostStatus.PRIVATE;
-            default:
-                return PostStatus.UNKNOWN;
+    private PostStatus getCurrentPostStatus() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        String currentStatus = mStatusTextView.getText().toString();
+        if (currentStatus.equalsIgnoreCase(statuses[0])) {
+            return PostStatus.PUBLISHED;
+        } else if (currentStatus.equalsIgnoreCase(statuses[1])) {
+            return PostStatus.DRAFT;
+        } else if (currentStatus.equalsIgnoreCase(statuses[2])) {
+            return PostStatus.PENDING;
+        } else if (currentStatus.equalsIgnoreCase(statuses[3])) {
+            return PostStatus.PRIVATE;
+        } else {
+            return PostStatus.UNKNOWN;
         }
     }
 
@@ -688,13 +659,6 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        String status;
-        if (mStatusSpinner != null) {
-            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition()).toString();
-        } else {
-            status = post.getStatus();
-        }
-
         if (post.supportsLocation()) {
             if (mPostLocation == null) {
                 post.clearLocation();
@@ -717,7 +681,7 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setExcerpt(mCurrentExcerpt);
         post.setSlug(mCurrentSlug);
-        post.setStatus(status);
+        post.setStatus(getCurrentPostStatus().toString());
         post.setPassword(password);
         post.setPostFormat(postFormat);
     }
@@ -1042,6 +1006,7 @@ public class EditPostSettingsFragment extends Fragment
         builder.setSingleChoiceItems(R.array.post_settings_statuses, 0, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                updatePostSettingsAndSaveButton();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);

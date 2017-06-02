@@ -103,13 +103,6 @@
             android:layout_height="wrap_content"
             android:text="@string/status" />
 
-        <Spinner
-            android:id="@+id/status"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/pubDateLabel"
             style="@style/WordPressSubHeader"
