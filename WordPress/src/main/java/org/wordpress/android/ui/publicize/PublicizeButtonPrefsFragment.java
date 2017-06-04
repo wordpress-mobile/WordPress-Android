@@ -38,7 +38,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 
-public class PublicizePrefsFragment extends Fragment implements
+public class PublicizeButtonPrefsFragment extends Fragment implements
         SiteSettingsInterface.SiteSettingsListener,
         WPPrefView.OnPrefChangedListener {
 
@@ -64,8 +64,8 @@ public class PublicizePrefsFragment extends Fragment implements
 
     @Inject Dispatcher mDispatcher;
 
-    public static PublicizePrefsFragment newInstance(@NonNull SiteModel site) {
-        PublicizePrefsFragment fragment = new PublicizePrefsFragment();
+    public static PublicizeButtonPrefsFragment newInstance(@NonNull SiteModel site) {
+        PublicizeButtonPrefsFragment fragment = new PublicizeButtonPrefsFragment();
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
@@ -103,7 +103,7 @@ public class PublicizePrefsFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_prefs_fragment, container, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_button_prefs_fragment, container, false);
 
         mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
         mPrefButtonStyle.setOnPrefChangedListener(this);

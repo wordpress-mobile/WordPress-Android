@@ -305,7 +305,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
     @Override
     public void onManageConnectionsClicked() {
-        Fragment fragment = PublicizePrefsFragment.newInstance(mSite);
+        Fragment fragment = PublicizeButtonPrefsFragment.newInstance(mSite);
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
