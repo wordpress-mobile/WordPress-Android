@@ -21,11 +21,11 @@ import org.wordpress.android.util.NetworkUtils;
 import javax.inject.Inject;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
-    public interface PublicizeManageConnectionsListener {
-        void onManageConnectionsClicked();
+    public interface PublicizeButtonPrefsListener {
+        void onButtonPrefsClicked();
     }
 
-    private PublicizeManageConnectionsListener mListener;
+    private PublicizeButtonPrefsListener mListener;
     private SiteModel mSite;
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
@@ -91,7 +91,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onManageConnectionsClicked();
+                    mListener.onButtonPrefsClicked();
                 }
             }
         });
@@ -103,8 +103,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof PublicizeManageConnectionsListener) {
-            mListener = (PublicizeManageConnectionsListener) context;
+        if (context instanceof PublicizeButtonPrefsListener) {
+            mListener = (PublicizeButtonPrefsListener) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement PublicizeManageConnectionsListener");
         }

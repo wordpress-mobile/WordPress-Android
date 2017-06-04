@@ -31,7 +31,7 @@ public class PublicizeListActivity extends AppCompatActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,
-        PublicizeListFragment.PublicizeManageConnectionsListener {
+        PublicizeListFragment.PublicizeButtonPrefsListener {
 
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
@@ -304,7 +304,7 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onManageConnectionsClicked() {
+    public void onButtonPrefsClicked() {
         Fragment fragment = PublicizeButtonPrefsFragment.newInstance(mSite);
         getFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
