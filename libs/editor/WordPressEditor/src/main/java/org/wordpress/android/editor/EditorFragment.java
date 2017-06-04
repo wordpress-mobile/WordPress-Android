@@ -1324,8 +1324,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
-        if (mediaType == null || !isAdded()) {
+    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta,
+                              String uploadStatus) {
+        if (mediaType == null || !isAdded() || TextUtils.isEmpty(mediaId) || StringUtils.stringToInt(mediaId) <= 0) {
             return;
         }
 
