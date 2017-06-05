@@ -418,19 +418,30 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private PostStatus getCurrentPostStatus() {
+        int index = getCurrentPostStatusIndex();
+        switch (index) {
+            case 0:
+                return PostStatus.PUBLISHED;
+            case 1:
+                return PostStatus.DRAFT;
+            case 2:
+                return PostStatus.PENDING;
+            case 3:
+                return PostStatus.PRIVATE;
+            default:
+                return PostStatus.UNKNOWN;
+        }
+    }
+
+    private int getCurrentPostStatusIndex() {
         String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
         String currentStatus = mStatusTextView.getText().toString();
-        if (currentStatus.equalsIgnoreCase(statuses[0])) {
-            return PostStatus.PUBLISHED;
-        } else if (currentStatus.equalsIgnoreCase(statuses[1])) {
-            return PostStatus.DRAFT;
-        } else if (currentStatus.equalsIgnoreCase(statuses[2])) {
-            return PostStatus.PENDING;
-        } else if (currentStatus.equalsIgnoreCase(statuses[3])) {
-            return PostStatus.PRIVATE;
-        } else {
-            return PostStatus.UNKNOWN;
+        for (int i = 0; i < statuses.length; i++) {
+            if (currentStatus.equalsIgnoreCase(statuses[i])) {
+                return i;
+            }
         }
+        return -1;
     }
 
     public long getFeaturedImageId() {
@@ -1003,7 +1014,12 @@ public class EditPostSettingsFragment extends Fragment
     private void showStatusDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.post_format_status);
-        builder.setSingleChoiceItems(R.array.post_settings_statuses, 0, null);
+        int checkedItem = getCurrentPostStatusIndex();
+        // Current index should never be -1, but if if is, we don't want to crash
+        if (checkedItem == -1) {
+            checkedItem = 0;
+        }
+        builder.setSingleChoiceItems(R.array.post_settings_statuses, checkedItem, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ListView lw = ((AlertDialog)dialog).getListView();
