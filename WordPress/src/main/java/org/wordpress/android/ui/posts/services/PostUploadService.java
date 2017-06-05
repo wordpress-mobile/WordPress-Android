@@ -693,7 +693,7 @@ public class PostUploadService extends Service {
         }
 
         if (event.isError()) {
-            // TODO: Find the associated post, mark it as failed, update upload messaging, and remove it from the queue
+            // TODO: Update post upload messaging at this point
             AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
                     event.error.type + ": " + event.error.message);
 
@@ -707,8 +707,16 @@ public class PostUploadService extends Service {
         }
 
         if (event.canceled) {
-            // TODO: If a media upload for a post was cancelled, we might want to cancel the post upload, too
-            // Not implemented
+            // TODO: Update post upload messaging at this point
+            AppLog.e(T.MEDIA, "Upload cancelled for post with id " + event.media.getLocalPostId()
+                            + " - a media upload for this post has been cancelled, id: " + event.media.getId());
+
+            PostModel postToCancel = removeQueuedPostByLocalId(event.media.getLocalPostId());
+            if (postToCancel == null) return;
+
+            mFirstPublishPosts.remove(postToCancel.getId());
+            EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+            finishUpload();
             return;
         }
 
