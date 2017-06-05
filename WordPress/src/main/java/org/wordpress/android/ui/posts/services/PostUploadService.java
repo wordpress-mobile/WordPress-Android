@@ -606,6 +606,16 @@ public class PostUploadService extends Service {
         }
     }
 
+    private void cancelPostUploadMatchingMedia(MediaModel media) {
+        PostModel postToCancel = removeQueuedPostByLocalId(media.getLocalPostId());
+        if (postToCancel == null) return;
+
+        // TODO: Update post upload messaging at this point
+        mFirstPublishPosts.remove(postToCancel.getId());
+        EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+        finishUpload();
+    }
+
     /**
      * Returns an error message string for a failed post upload.
      */
@@ -693,30 +703,16 @@ public class PostUploadService extends Service {
         }
 
         if (event.isError()) {
-            // TODO: Update post upload messaging at this point
             AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
                     event.error.type + ": " + event.error.message);
-
-            PostModel postToCancel = removeQueuedPostByLocalId(event.media.getLocalPostId());
-            if (postToCancel == null) return;
-
-            mFirstPublishPosts.remove(postToCancel.getId());
-            EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
-            finishUpload();
+            cancelPostUploadMatchingMedia(event.media);
             return;
         }
 
         if (event.canceled) {
-            // TODO: Update post upload messaging at this point
-            AppLog.e(T.MEDIA, "Upload cancelled for post with id " + event.media.getLocalPostId()
+            AppLog.i(T.MEDIA, "Upload cancelled for post with id " + event.media.getLocalPostId()
                             + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-
-            PostModel postToCancel = removeQueuedPostByLocalId(event.media.getLocalPostId());
-            if (postToCancel == null) return;
-
-            mFirstPublishPosts.remove(postToCancel.getId());
-            EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
-            finishUpload();
+            cancelPostUploadMatchingMedia(event.media);
             return;
         }
 
