@@ -23,19 +23,16 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -51,7 +48,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
@@ -92,7 +88,6 @@ import javax.inject.Inject;
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final String KEY_POST = "KEY_POST";
-    private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
@@ -104,7 +99,6 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    private Spinner mPostFormatSpinner;
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
@@ -128,9 +122,6 @@ public class EditPostSettingsFragment extends Fragment
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String mCustomPubDate = "";
     private boolean mIsCustomPubDate;
-
-    private ArrayList<String> mPostFormatKeys;
-    private ArrayList<String> mPostFormatNames;
 
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
@@ -294,47 +285,7 @@ public class EditPostSettingsFragment extends Fragment
             excerptContainer.setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
-            rootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
-            rootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
-        } else {
-            // Default values
-            mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
-            mPostFormatNames = new ArrayList<>(
-                    Arrays.asList(getResources().getStringArray(R.array.post_format_display_names)));
-            // If we have specific values for this site, use them
-            List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
-            for (PostFormatModel postFormatModel : postFormatModels) {
-                if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
-                    mPostFormatKeys.add(postFormatModel.getSlug());
-                    mPostFormatNames.add(postFormatModel.getDisplayName());
-                }
-            }
-
-            // Set up the Post Format spinner
-            mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
-            ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
-                    mPostFormatNames);
-            pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mPostFormatSpinner.setAdapter(pfAdapter);
-            String activePostFormat = POST_FORMAT_STANDARD_KEY;
-
-            if (!TextUtils.isEmpty(mPost.getPostFormat())) {
-                activePostFormat = mPost.getPostFormat();
-            }
-
-            for (int i = 0; i < mPostFormatKeys.size(); i++) {
-                if (mPostFormatKeys.get(i).equals(activePostFormat))
-                    mPostFormatSpinner.setSelection(i);
-            }
-
-            mPostFormatSpinner.setOnTouchListener(
-                    new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-                            return false;
-                        }
-                    }
-            );
+            formatContainer.setVisibility(View.GONE);
         }
 
         initSettingsFields();
@@ -671,15 +622,6 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setDateCreated(publicationDateIso8601);
 
-        String postFormat = "";
-        if (!post.isPage()) {
-            // post format
-            if (mPostFormatKeys != null && mPostFormatSpinner != null &&
-                mPostFormatSpinner.getSelectedItemPosition() < mPostFormatKeys.size()) {
-                postFormat = mPostFormatKeys.get(mPostFormatSpinner.getSelectedItemPosition());
-            }
-        }
-
         if (post.supportsLocation()) {
             if (mPostLocation == null) {
                 post.clearLocation();
@@ -704,7 +646,6 @@ public class EditPostSettingsFragment extends Fragment
         post.setSlug(mCurrentSlug);
         post.setStatus(getCurrentPostStatus().toString());
         post.setPassword(password);
-        post.setPostFormat(postFormat);
     }
 
     /*

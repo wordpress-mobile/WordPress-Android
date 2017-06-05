@@ -135,21 +135,6 @@
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/postFormatLabel"
-            style="@style/WordPressSubHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/post_format" />
-
-        <Spinner
-            android:id="@+id/postFormat"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/post_format" />
-
         <LinearLayout
             android:id="@+id/sectionTags"
             android:layout_width="match_parent"
