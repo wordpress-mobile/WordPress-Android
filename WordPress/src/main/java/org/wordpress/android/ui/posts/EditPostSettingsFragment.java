@@ -110,6 +110,7 @@ public class EditPostSettingsFragment extends Fragment
     private TextView mSlugTextView;
     private TextView mTagsTextView;
     private TextView mStatusTextView;
+    private TextView mPostFormatTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -218,6 +219,7 @@ public class EditPostSettingsFragment extends Fragment
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
+        mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -277,6 +279,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showStatusDialog();
+            }
+        });
+
+        final LinearLayout formatContainer = (LinearLayout) rootView.findViewById(R.id.post_format_container);
+        formatContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostFormatDialog();
             }
         });
 
@@ -1030,6 +1040,9 @@ public class EditPostSettingsFragment extends Fragment
         });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
+    }
+
+    private void showPostFormatDialog() {
     }
 
     /*
