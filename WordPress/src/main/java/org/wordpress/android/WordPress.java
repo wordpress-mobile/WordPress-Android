@@ -398,23 +398,30 @@ public class WordPress extends MultiDexApplication {
         // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
 
+        boolean shouldForceEnableAztec = true;
+
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
             AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
             AppPrefs.setNewEditorPromoRequired(false);
-        }
-        if (oldVersionCode != 0 && oldVersionCode < versionCode) {
-            Map<String, Long> properties = new HashMap<String, Long>(1);
+        } else if (oldVersionCode < versionCode) {
+            Map<String, Long> properties = new HashMap<>(1);
             properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
             // app upgraded
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
+        } else {
+            shouldForceEnableAztec = false;
+        }
 
-            // Auto-enable Aztec for alpha & beta users
-            if (AppPrefs.isAztecEditorAvailable() && BuildConfig.AZTEC_ENABLE_ON_UPDATE) {
+        if (shouldForceEnableAztec) {
+            // Auto-enable Aztec for new alpha users
+            if (AppPrefs.isAztecEditorAvailable()) {
                 AppPrefs.setAztecEditorEnabled(true);
+                AppPrefs.setVisualEditorEnabled(false);
             }
         }
+
         AppPrefs.setLastAppVersionCode(versionCode);
     }
 
