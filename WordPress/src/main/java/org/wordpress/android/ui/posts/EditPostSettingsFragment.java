@@ -382,7 +382,7 @@ public class EditPostSettingsFragment extends Fragment
             mPasswordEditText.setText(mPost.getPassword());
         }
 
-        updateStatusSpinner();
+        updateStatusTextView();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
         }
@@ -397,7 +397,7 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    public void updateStatusSpinner() {
+    public void updateStatusTextView() {
         String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
         switch (PostStatus.fromPost(mPost)) {
             case PUBLISHED:
@@ -414,6 +414,22 @@ public class EditPostSettingsFragment extends Fragment
             case PRIVATE:
                 mStatusTextView.setText(statuses[3]);
                 break;
+        }
+    }
+
+    private PostStatus getCurrentPostStatus() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        String currentStatus = mStatusTextView.getText().toString();
+        if (currentStatus.equalsIgnoreCase(statuses[0])) {
+            return PostStatus.PUBLISHED;
+        } else if (currentStatus.equalsIgnoreCase(statuses[1])) {
+            return PostStatus.DRAFT;
+        } else if (currentStatus.equalsIgnoreCase(statuses[2])) {
+            return PostStatus.PENDING;
+        } else if (currentStatus.equalsIgnoreCase(statuses[3])) {
+            return PostStatus.PRIVATE;
+        } else {
+            return PostStatus.UNKNOWN;
         }
     }
 
@@ -458,22 +474,6 @@ public class EditPostSettingsFragment extends Fragment
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
         intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
-    }
-
-    private PostStatus getCurrentPostStatus() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        String currentStatus = mStatusTextView.getText().toString();
-        if (currentStatus.equalsIgnoreCase(statuses[0])) {
-            return PostStatus.PUBLISHED;
-        } else if (currentStatus.equalsIgnoreCase(statuses[1])) {
-            return PostStatus.DRAFT;
-        } else if (currentStatus.equalsIgnoreCase(statuses[2])) {
-            return PostStatus.PENDING;
-        } else if (currentStatus.equalsIgnoreCase(statuses[3])) {
-            return PostStatus.PRIVATE;
-        } else {
-            return PostStatus.UNKNOWN;
-        }
     }
 
     @Override
