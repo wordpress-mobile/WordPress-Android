@@ -17,10 +17,6 @@ Language: ar
 	<string name="sure_to_remove_account">إزالة هذا الموقع من التطبيق؟</string>
 	<string name="photo_picker_title">اختيار صورة</string>
 	<string name="error_publish_no_network">الجهاز غير متصل بالإنترنت. تمّ حفظ التغييرات محليًا.</string>
-	<string name="editor_post_saved_online_not_published">تم حفظ المقالة على الإنترنت كمسودة. النظر في نشرها.</string>
-	<string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
-	<string name="editor_post_saved_locally_not_published">تم حفظ المقالة محليًا فقط. النظر في نشرها.</string>
-	<string name="editor_post_saved_locally">تم حفظ المقالة على جهازك</string>
 	<string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
 	<string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
 	<string name="media_encoder_quality_100">الحد الأقصى</string>
@@ -56,9 +52,6 @@ Language: ar
 	<string name="retry">إعادة المحاولة</string>
 	<string name="confirm">تأكيد</string>
 	<string name="xmlrpc_endpoint_forbidden_error">تعذر الاتصال. تلقينا الخطأ 403 عند محاولة الوصول إلى\n نقطة نهاية موقعك XMLRPC. يحتاج التطبيق إلى ذلك للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل\n هذه المشكلة.</string>
-	<string name="reader_liked_default_tag">المقالات التي أعجبتني</string>
-	<string name="reader_discover_default_tag">استكشاف</string>
-	<string name="reader_followed_default_tag">المواقع التي تمت متابعتها</string>
 	<string name="reader_photo_by">صورة بواسطة %s</string>
 	<string name="all_your_sites">جميع مواقعي</string>
 	<string name="reader_toast_err_already_liked">لقد قمت بالفعل بتسجيل إعجاب لذلك التعليق</string>
@@ -751,7 +744,6 @@ Language: ar
 	<string name="older_two_days">أقدم من يومين</string>
 	<string name="older_last_week">أقدم من أسبوع</string>
 	<string name="stats_no_blog">يتعذر تحميل الإحصاءات للمدونة المطلوبة</string>
-	<string name="select_a_blog">تحديد موقع WordPress</string>
 	<string name="sending_content">تحميل محتوى %s</string>
 	<string name="uploading_total">تحميل %1$d من %2$d</string>
 	<string name="mnu_comment_liked">أعجبني</string>
@@ -1038,7 +1030,6 @@ Language: ar
 	<string name="stats_entry_country">الدولة</string>
 	<string name="stats_totals_clicks">النقرات</string>
 	<string name="unattached">غير مرفق</string>
-	<string name="media_add_popup_capture_photo">التقط صورة</string>
 	<string name="media_gallery_image_order_reverse">عكس</string>
 	<string name="media_edit_description_hint">أدخل الوصف هنا</string>
 	<string name="media_edit_title_hint">أدخل العنوان هنا</string>
@@ -1055,7 +1046,6 @@ Language: ar
 	<string name="passcode_preference_title">قفل الـ PIN</string>
 	<string name="passcode_enter_passcode">أدخل مفتاح الـ PIN</string>
 	<string name="passcode_manage">ادارة قفل الـ PIN</string>
-	<string name="media_add_popup_capture_video">ألتقط فيديو</string>
 	<string name="media_gallery_type_circles">دوائر</string>
 	<string name="media_gallery_type_squares">مربعات</string>
 	<string name="themes_features_label">المميزات</string>
@@ -1065,7 +1055,6 @@ Language: ar
 	<string name="stats_entry_authors">الكاتب</string>
 	<string name="theme_activating_button">جاري التفعيل</string>
 	<string name="media_edit_failure">فشل التحديث</string>
-	<string name="share_action_title">أضف إلى...</string>
 	<string name="stats_entry_referrers">الإحالات</string>
 	<string name="media_gallery_type_slideshow">عارض الشرائح</string>
 	<string name="share_action">المشاركة</string>
@@ -1143,13 +1132,11 @@ Language: ar
 	<string name="status">الحالة</string>
 	<string name="location">الموقع</string>
 	<string name="sdcard_title">بطاقة الذاكرة مطلوبة</string>
-	<string name="select_video">اختر فيديو من المعرض</string>
 	<string name="media">الوسائط</string>
 	<string name="delete">حذف</string>
 	<string name="approve">وافق</string>
 	<string name="none">بدون</string>
 	<string name="blogs">المدونات</string>
-	<string name="select_photo">اختر صورة من المعرض</string>
 	<string name="error">خطأ </string>
 	<string name="cancel">إلغاء</string>
 	<string name="save">حفظ </string>
