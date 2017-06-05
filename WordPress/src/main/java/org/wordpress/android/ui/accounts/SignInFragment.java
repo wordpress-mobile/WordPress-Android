@@ -158,9 +158,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected @Inject HTTPAuthManager mHTTPAuthManager;
     protected @Inject MemorizingTrustManager mMemorizingTrustManager;
 
-    protected boolean mSitesFetched = false;
-    protected boolean mAccountSettingsFetched = false;
-
     private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
     private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
 
@@ -1210,17 +1207,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         AppLog.i(T.NUX, "onAccountChanged: " + event.toString());
 
         if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
-            // The user's account info has been fetched and stored - now we can fetch the user's settings and sites
+            // The user's account info has been fetched and stored - next, fetch the user's settings
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            // The user's account settings have also been fetched and stored - now we can fetch the user's sites
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-            return;
-        }
-
-        mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
-
-        // Finish activity if sites have been fetched
-        if (mSitesFetched && mAccountSettingsFetched) {
-            finishCurrentActivity();
         }
     }
 
@@ -1271,12 +1262,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         // Login Successful
         trackAnalyticsSignIn();
-        mSitesFetched = true;
 
-        // Finish activity if account settings have been fetched or if it's a wporg site
-        if (mAccountSettingsFetched || !isWPComLogin()) {
-            finishCurrentActivity();
-        }
+        // Fetching the sites is the last step of both WP.com and self-hosted sign in - we can now finish the activity
+        finishCurrentActivity();
     }
 
     @SuppressWarnings("unused")

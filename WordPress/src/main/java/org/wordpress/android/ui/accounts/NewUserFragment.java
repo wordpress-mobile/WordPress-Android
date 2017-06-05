@@ -76,9 +76,6 @@ public class NewUserFragment extends AbstractFragment {
     private AutoCompleteTextView mSiteUrlTextField;
     private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
 
-    private static final String KEY_SITES_FETCHED = "KEY_SITES_FETCHED";
-    private static final String KEY_ACCOUNT_SETTINGS_FETCHED = "KEY_ACCOUNT_SETTINGS_FETCHED";
-
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
@@ -86,9 +83,6 @@ public class NewUserFragment extends AbstractFragment {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
-
-    protected boolean mSitesFetched = false;
-    protected boolean mAccountSettingsFetched = false;
 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
@@ -375,9 +369,6 @@ public class NewUserFragment extends AbstractFragment {
         startProgress(getString(R.string.validating_user_data));
         clearErrors();
 
-        mSitesFetched = false;
-        mAccountSettingsFetched = false;
-
         String username = getUsername();
         String email = getEmail();
         NewAccountPayload newAccountPayload = new NewAccountPayload(username, getPassword(), getEmail(), true);
@@ -483,11 +474,6 @@ public class NewUserFragment extends AbstractFragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
-
-        if (savedInstanceState != null) {
-            mSitesFetched = savedInstanceState.getBoolean(KEY_SITES_FETCHED, false);
-            mAccountSettingsFetched = savedInstanceState.getBoolean(KEY_ACCOUNT_SETTINGS_FETCHED, false);
-        }
     }
 
     @Override
@@ -643,14 +629,6 @@ public class NewUserFragment extends AbstractFragment {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save fetch state
-        outState.putBoolean(KEY_SITES_FETCHED, mSitesFetched);
-        outState.putBoolean(KEY_ACCOUNT_SETTINGS_FETCHED, mAccountSettingsFetched);
-    }
-
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -729,27 +707,19 @@ public class NewUserFragment extends AbstractFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+            // The user's account info has been fetched and stored - next, fetch the user's settings
             mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            // The user's account settings have also been fetched and stored - now we can fetch the user's sites
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-            return;
-        }
-
-        mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
-
-        // Finish activity if sites have been fetched
-        if (mSitesFetched && mAccountSettingsFetched) {
-            finishCurrentActivity();
         }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        mSitesFetched = true;
-        // Finish activity if account settings have been fetched
-        if (mAccountSettingsFetched) {
-            finishCurrentActivity();
-        }
+        // Fetching the sites is the last step of sign in
+        finishCurrentActivity();
     }
 
     @SuppressWarnings("unused")
