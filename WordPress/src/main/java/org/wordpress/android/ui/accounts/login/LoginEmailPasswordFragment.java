@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -35,6 +36,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -256,6 +258,26 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         updateNextButton();
     }
 
+    private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
+        switch (error) {
+            case INCORRECT_USERNAME_OR_PASSWORD:
+            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
+                showPasswordError();
+                break;
+            case NEEDS_2FA:
+                ToastUtils.showToast(getActivity(), "2FA is not implemented yet");
+                break;
+            case INVALID_REQUEST:
+                // TODO: FluxC: could be specific?
+            default:
+                AppLog.e(T.NUX, "Server response: " + errorMessage);
+
+                ToastUtils.showToast(getActivity(),
+                        errorMessage == null ? getString(R.string.error_generic) : errorMessage);
+                break;
+        }
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -267,7 +289,7 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
 
             if (isAdded()) {
-                showPasswordError();
+                handleAuthError(event.error.type, event.error.message);
             }
 
             return;
