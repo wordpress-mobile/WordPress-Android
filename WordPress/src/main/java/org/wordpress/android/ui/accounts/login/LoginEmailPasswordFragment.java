@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -131,6 +132,10 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (savedInstanceState == null) {
+            EditTextUtils.showSoftInput(mPasswordEditText);
         }
     }
 
