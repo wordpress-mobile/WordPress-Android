@@ -38,6 +38,7 @@ import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -331,8 +332,6 @@ public class WordPress extends MultiDexApplication {
                 AppPrefs.setAccessTokenMigrated(true);
 
                 mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-                mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                 return;
             }
             // Even if there was no token to migrate, turn this flag on so we don't attempt to migrate again
@@ -567,6 +566,16 @@ public class WordPress extends MultiDexApplication {
             if (appLock != null) {
                 appLock.setPassword(null);
             }
+        }
+
+        if (!mAccountStore.hasAccessToken() || !sIsMigrationInProgress) {
+            return;
+        }
+
+        if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
         }
     }
 
