@@ -83,6 +83,7 @@ import de.greenrobot.event.EventBus;
  */
 public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
+    public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -268,6 +269,8 @@ public class WPMainActivity extends AppCompatActivity {
             // Save Token to the AccountStore. This will trigger a onAuthenticationChanged.
             AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
+        } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false)) {
+            ActivityLauncher.showLoginEpilogue(this);
         }
     }
 
