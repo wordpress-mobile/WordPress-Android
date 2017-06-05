@@ -6,12 +6,14 @@ import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
@@ -419,6 +421,9 @@ public class WordPress extends MultiDexApplication {
             if (AppPrefs.isAztecEditorAvailable()) {
                 AppPrefs.setAztecEditorEnabled(true);
                 AppPrefs.setVisualEditorEnabled(false);
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs.edit().putString(getString(R.string.pref_key_editor_type), "2").apply();
             }
         }
 
