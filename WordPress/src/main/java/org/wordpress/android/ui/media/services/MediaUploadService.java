@@ -245,6 +245,10 @@ public class MediaUploadService extends Service {
             MediaModel mediaModel = i.next();
             if (mediaModel.getId() == localMediaId) {
                 i.remove();
+                if (delete) {
+                    AppLog.d(AppLog.T.MEDIA, "Deleting media from queue with id " + localMediaId);
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                }
             }
         }
     }
