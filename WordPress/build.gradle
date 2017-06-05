@@ -46,11 +46,13 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
+        buildConfigField "boolean", "AZTEC_ENABLE_ON_UPDATE", "true"
     }
 
     productFlavors {
         vanilla { // used for release and beta
             buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "false"
+            buildConfigField "boolean", "AZTEC_ENABLE_ON_UPDATE", "false"
         }
 
         zalpha { // alpha version - enable experimental features

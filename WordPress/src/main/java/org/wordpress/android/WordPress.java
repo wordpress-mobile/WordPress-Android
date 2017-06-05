@@ -409,6 +409,11 @@ public class WordPress extends MultiDexApplication {
             properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
             // app upgraded
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
+
+            // Auto-enable Aztec for alpha & beta users
+            if (AppPrefs.isAztecEditorAvailable() && BuildConfig.AZTEC_ENABLE_ON_UPDATE) {
+                AppPrefs.setAztecEditorEnabled(true);
+            }
         }
         AppPrefs.setLastAppVersionCode(versionCode);
     }
