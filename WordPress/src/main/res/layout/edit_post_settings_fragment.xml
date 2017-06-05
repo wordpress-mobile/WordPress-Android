@@ -86,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_dark"
-                android:text="@string/status"/>
+                android:text="@string/post_settings_status"/>
 
             <TextView
                 android:id="@+id/post_status"

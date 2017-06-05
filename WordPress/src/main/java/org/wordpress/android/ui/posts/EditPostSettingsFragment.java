@@ -1013,7 +1013,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showStatusDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.post_format_status);
+        builder.setTitle(R.string.post_settings_status);
         int checkedItem = getCurrentPostStatusIndex();
         // Current index should never be -1, but if if is, we don't want to crash
         if (checkedItem == -1) {
