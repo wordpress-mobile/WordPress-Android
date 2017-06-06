@@ -1226,7 +1226,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mEditPostSettingsFragment.updateStatusSpinner();
+                                    mEditPostSettingsFragment.updateStatusTextView();
                                 }
                             });
                         }

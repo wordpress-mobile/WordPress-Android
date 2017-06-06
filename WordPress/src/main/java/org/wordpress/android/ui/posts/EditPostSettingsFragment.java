@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -29,11 +30,11 @@ import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -103,11 +104,12 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    private Spinner mStatusSpinner, mPostFormatSpinner;
+    private Spinner mPostFormatSpinner;
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mTagsTextView;
+    private TextView mStatusTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -215,21 +217,10 @@ public class EditPostSettingsFragment extends Fragment
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
+        mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
-        mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
-        mStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                updatePostSettingsAndSaveButton();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
         TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
@@ -278,6 +269,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showTagsActivity();
+            }
+        });
+
+        final LinearLayout statusContainer = (LinearLayout) rootView.findViewById(R.id.post_status_container);
+        statusContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showStatusDialog();
             }
         });
 
@@ -363,23 +362,6 @@ public class EditPostSettingsFragment extends Fragment
         mSlugTextView.setText(mCurrentSlug);
         updateTagsTextView();
 
-        String[] items = new String[]{getResources().getString(R.string.publish_post),
-                getResources().getString(R.string.draft),
-                getResources().getString(R.string.pending_review),
-                getResources().getString(R.string.post_private)};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mStatusSpinner.setAdapter(adapter);
-        mStatusSpinner.setOnTouchListener(
-                new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        return false;
-                    }
-                }
-        );
-
         String pubDate = mPost.getDateCreated();
         if (StringUtils.isNotEmpty(pubDate)) {
             try {
@@ -400,7 +382,10 @@ public class EditPostSettingsFragment extends Fragment
             mPasswordEditText.setText(mPost.getPassword());
         }
 
-        updateStatusSpinner();
+        updateStatusTextView();
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+            updateFeaturedImage(mPost.getFeaturedImageId());
+        }
     }
 
     private void updateTagsTextView() {
@@ -412,27 +397,51 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    public void updateStatusSpinner() {
+    public void updateStatusTextView() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
         switch (PostStatus.fromPost(mPost)) {
             case PUBLISHED:
             case SCHEDULED:
             case UNKNOWN:
-                mStatusSpinner.setSelection(0, true);
+                mStatusTextView.setText(statuses[0]);
                 break;
             case DRAFT:
-                mStatusSpinner.setSelection(1, true);
+                mStatusTextView.setText(statuses[1]);
                 break;
             case PENDING:
-                mStatusSpinner.setSelection(2, true);
+                mStatusTextView.setText(statuses[2]);
                 break;
             case PRIVATE:
-                mStatusSpinner.setSelection(3, true);
+                mStatusTextView.setText(statuses[3]);
                 break;
         }
+    }
 
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            updateFeaturedImage(mPost.getFeaturedImageId());
+    private PostStatus getCurrentPostStatus() {
+        int index = getCurrentPostStatusIndex();
+        switch (index) {
+            case 0:
+                return PostStatus.PUBLISHED;
+            case 1:
+                return PostStatus.DRAFT;
+            case 2:
+                return PostStatus.PENDING;
+            case 3:
+                return PostStatus.PRIVATE;
+            default:
+                return PostStatus.UNKNOWN;
         }
+    }
+
+    private int getCurrentPostStatusIndex() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        String currentStatus = mStatusTextView.getText().toString();
+        for (int i = 0; i < statuses.length; i++) {
+            if (currentStatus.equalsIgnoreCase(statuses[i])) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public long getFeaturedImageId() {
@@ -476,21 +485,6 @@ public class EditPostSettingsFragment extends Fragment
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
         intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
-    }
-
-    private PostStatus getPostStatusForSpinnerPosition(int position) {
-        switch (position) {
-            case 0:
-                return PostStatus.PUBLISHED;
-            case 1:
-                return PostStatus.DRAFT;
-            case 2:
-                return PostStatus.PENDING;
-            case 3:
-                return PostStatus.PRIVATE;
-            default:
-                return PostStatus.UNKNOWN;
-        }
     }
 
     @Override
@@ -676,13 +670,6 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        String status;
-        if (mStatusSpinner != null) {
-            status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition()).toString();
-        } else {
-            status = post.getStatus();
-        }
-
         if (post.supportsLocation()) {
             if (mPostLocation == null) {
                 post.clearLocation();
@@ -705,7 +692,7 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setExcerpt(mCurrentExcerpt);
         post.setSlug(mCurrentSlug);
-        post.setStatus(status);
+        post.setStatus(getCurrentPostStatus().toString());
         post.setPassword(password);
         post.setPostFormat(postFormat);
     }
@@ -1022,6 +1009,27 @@ public class EditPostSettingsFragment extends Fragment
         String tags = TextUtils.join(",", mPost.getTagNameList());
         tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
+    }
+
+    private void showStatusDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.post_settings_status);
+        int checkedItem = getCurrentPostStatusIndex();
+        // Current index should never be -1, but if if is, we don't want to crash
+        if (checkedItem == -1) {
+            checkedItem = 0;
+        }
+        builder.setSingleChoiceItems(R.array.post_settings_statuses, checkedItem, null);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ListView listView = ((AlertDialog)dialog).getListView();
+                String newStatus = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
+                mStatusTextView.setText(newStatus);
+                updatePostSettingsAndSaveButton();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 
     /*
