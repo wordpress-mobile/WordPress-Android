@@ -1020,7 +1020,7 @@ public class EditPostSettingsFragment extends Fragment
             checkedItem = 0;
         }
         builder.setSingleChoiceItems(R.array.post_settings_statuses, checkedItem, null);
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ListView lw = ((AlertDialog)dialog).getListView();
                 String newStatus = (String) lw.getAdapter().getItem(lw.getCheckedItemPosition());
