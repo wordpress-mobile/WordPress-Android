@@ -183,7 +183,10 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
-            mLoginListener.help();
+            if (mLoginListener != null) {
+                mLoginListener.help();
+            }
+
             return true;
         }
 
