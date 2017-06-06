@@ -89,6 +89,7 @@ import javax.inject.Inject;
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final String KEY_POST = "KEY_POST";
+    private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final String CATEGORY_PREFIX_TAG = "category-";
@@ -99,6 +100,9 @@ public class EditPostSettingsFragment extends Fragment
 
     private PostModel mPost;
     private SiteModel mSite;
+
+    ArrayList<String> mPostFormatKeys;
+    ArrayList<String> mPostFormatNames;
 
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
@@ -151,6 +155,7 @@ public class EditPostSettingsFragment extends Fragment
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
         updateSiteOrFinishActivity(savedInstanceState);
+        updatePostFormatKeysAndNames();
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
@@ -322,6 +327,7 @@ public class EditPostSettingsFragment extends Fragment
         mCurrentSlug = mPost.getSlug();
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
+        mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
         updateTagsTextView();
 
         String pubDate = mPost.getDateCreated();
@@ -985,25 +991,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostFormatDialog() {
-        // Default values
-        final ArrayList<String> postFormatKeys = new ArrayList<>(Arrays.asList(getResources()
-                .getStringArray(R.array.post_format_keys)));
-        final ArrayList<String> postFormatNames = new ArrayList<>(
-                Arrays.asList(getResources().getStringArray(R.array.post_format_display_names)));
-
-        // If we have specific values for this site, use them
-        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
-        for (PostFormatModel postFormatModel : postFormatModels) {
-            if (!postFormatKeys.contains(postFormatModel.getSlug())) {
-                postFormatKeys.add(postFormatModel.getSlug());
-                postFormatNames.add(postFormatModel.getDisplayName());
-            }
-        }
-
         int checkedItem = 0;
         if (!TextUtils.isEmpty(mPost.getPostFormat())) {
-            for (int i = 0; i < postFormatKeys.size(); i++) {
-                if (mPost.getPostFormat().equals(postFormatKeys.get(i))) {
+            for (int i = 0; i < mPostFormatKeys.size(); i++) {
+                if (mPost.getPostFormat().equals(mPostFormatKeys.get(i))) {
                     checkedItem = i;
                     break;
                 }
@@ -1012,23 +1003,53 @@ public class EditPostSettingsFragment extends Fragment
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.post_settings_format);
-        builder.setSingleChoiceItems(postFormatNames.toArray(new CharSequence[0]), checkedItem, null);
+        builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
-                String newFormat = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                mPostFormatTextView.setText(newFormat);
-                for (int i = 0; i < postFormatNames.size(); i++) {
-                    if (newFormat.equalsIgnoreCase(postFormatNames.get(i))) {
-                        String formatKey = postFormatKeys.get(i);
-                        mPost.setPostFormat(formatKey);
-                        break;
-                    }
-                }
+                String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
+                mPostFormatTextView.setText(formatName);
+                mPost.setPostFormat(getPostFormatKeyFromName(formatName));
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
+    }
+
+    private void updatePostFormatKeysAndNames() {
+        // Default values
+        mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
+        mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
+                .getStringArray(R.array.post_format_display_names)));
+
+        // If we have specific values for this site, use them
+        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
+        for (PostFormatModel postFormatModel : postFormatModels) {
+            if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
+                mPostFormatKeys.add(postFormatModel.getSlug());
+                mPostFormatNames.add(postFormatModel.getDisplayName());
+            }
+        }
+    }
+
+    private String getPostFormatKeyFromName(String postFormatName) {
+        for (int i = 0; i < mPostFormatNames.size(); i++) {
+            if (postFormatName.equalsIgnoreCase(mPostFormatNames.get(i))) {
+                return mPostFormatKeys.get(i);
+            }
+        }
+        return POST_FORMAT_STANDARD_KEY;
+    }
+
+    private String getPostFormatNameFromKey(String postFormatKey) {
+        for (int i = 0; i < mPostFormatKeys.size(); i++) {
+            if (postFormatKey.equalsIgnoreCase(mPostFormatKeys.get(i))) {
+                return mPostFormatNames.get(i);
+            }
+        }
+        // Since this is only used as a display name, if we can't find the key, we should just
+        // return the capitalized key as the name which should be better than returning `null`
+        return StringUtils.capitalize(postFormatKey);
     }
 
     /*
