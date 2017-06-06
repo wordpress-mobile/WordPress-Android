@@ -25,6 +25,7 @@ import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
@@ -58,6 +59,13 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.util.ArrayList;
 
 public class ActivityLauncher {
+
+    public static void showMainActivityAndLoginEpilogue(Activity activity) {
+        Intent intent = new Intent(activity, WPMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(WPMainActivity.ARG_SHOW_LOGIN_EPILOGUE, true);
+        activity.startActivity(intent);
+    }
 
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, SitePickerActivity.class);

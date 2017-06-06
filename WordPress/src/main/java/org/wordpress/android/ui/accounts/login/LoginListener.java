@@ -12,9 +12,13 @@ public interface LoginListener {
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
     void usePasswordInstead(String email);
+    void forgotPassword();
 
     // Login Magic Link Sent callbacks
     void openEmailClient();
+
+    // Login email password callbacks
+    void loggedInViaPassword();
 
     // Login Site Address input callbacks
     void gotSiteAddress(String siteAddress);

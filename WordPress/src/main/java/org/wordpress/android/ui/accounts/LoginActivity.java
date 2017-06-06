@@ -8,7 +8,9 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
+import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
@@ -94,7 +96,19 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void usePasswordInstead(String email) {
-        ToastUtils.showToast(this, "Fall back to password is not implemented yet. Email: " + email);
+        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email);
+        slideInFragment(loginEmailPasswordFragment, true, LoginEmailFragment.TAG);
+    }
+
+    @Override
+    public void forgotPassword() {
+        ToastUtils.showToast(this, "Forgot password is not implemented yet");
+    }
+
+    @Override
+    public void loggedInViaPassword() {
+        ActivityLauncher.showMainActivityAndLoginEpilogue(this);
+        finish();
     }
 
     @Override

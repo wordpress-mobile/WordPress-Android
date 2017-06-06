@@ -1696,14 +1696,15 @@
     <string name="enter_username_password_instead">Log in to your site by entering your site address instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_error_while_checking_email">An error occurred while checking the email address!</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_links_sent_description">Magic link sent illustration</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="connect_more">Connect Another Site</string>
     <string name="login_continue">Continue</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
-
 </resources>
