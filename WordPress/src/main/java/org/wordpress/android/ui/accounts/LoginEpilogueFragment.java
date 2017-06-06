@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
@@ -46,7 +47,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     protected @Inject Dispatcher mDispatcher;
 
     private boolean mInProgress;
-    private SitesListAdapter mAdapter;
+    private SitePickerAdapter mAdapter;
 
     public interface LoginEpilogueListener {
         void onConnectAnotherSite();
@@ -115,7 +116,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         showProgress(mInProgress);
     }
 
-    private SitesListAdapter getAdapter() {
+    private SitePickerAdapter getAdapter() {
         if (mAdapter == null) {
             setNewAdapter();
         }
@@ -123,7 +124,12 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     }
 
     private void setNewAdapter() {
-        mAdapter = new SitesListAdapter(getActivity(), null);
+        mAdapter = new SitePickerAdapter(
+                getActivity(),
+                0,
+                "",
+                false,
+                null);
     }
 
     public void showProgress(boolean show) {

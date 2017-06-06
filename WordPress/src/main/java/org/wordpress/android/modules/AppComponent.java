@@ -22,7 +22,6 @@ import org.wordpress.android.ui.accounts.NewUserFragment;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
-import org.wordpress.android.ui.accounts.SitesListAdapter;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
@@ -109,7 +108,6 @@ public interface AppComponent {
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
     void inject(LoginEpilogueFragment object);
-    void inject(SitesListAdapter object);
     void inject(NewUserFragment object);
 
     void inject(LoginActivity object);
