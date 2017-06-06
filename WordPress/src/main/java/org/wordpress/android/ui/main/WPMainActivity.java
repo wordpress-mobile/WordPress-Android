@@ -274,8 +274,8 @@ public class WPMainActivity extends AppCompatActivity {
     private boolean hasMagicLinkLoginIntent() {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
-
-        return Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains(SignInActivity.MAGIC_LOGIN);
+        String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
+        return Intent.ACTION_VIEW.equals(action) && host.contains(SignInActivity.MAGIC_LOGIN);
     }
 
     private String getAuthToken() {
