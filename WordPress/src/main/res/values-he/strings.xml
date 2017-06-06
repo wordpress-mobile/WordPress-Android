@@ -756,7 +756,6 @@ Language: he_IL
 	<string name="older_month">בן יותר מחודש</string>
 	<string name="older_two_days">בן יותר מיומיים</string>
 	<string name="older_last_week">בן יותר משבוע</string>
-	<string name="select_a_blog">בחר אתר WordPress</string>
 	<string name="uploading_total">העלאה %1$d של %2$d</string>
 	<string name="mnu_comment_liked">פרסם לייק</string>
 	<string name="posting_post">מפרסם "%s"</string>
@@ -1033,8 +1032,6 @@ Language: he_IL
 	<string name="media_gallery_image_order_random">אקראי</string>
 	<string name="stats_view_tags_and_categories">תגים וקטגוריות</string>
 	<string name="unattached">מנותק</string>
-	<string name="media_add_popup_capture_photo">צלם תמונה</string>
-	<string name="media_add_popup_capture_video">צלם וידאו</string>
 	<string name="media_gallery_image_order_reverse">אחורה</string>
 	<string name="media_gallery_type">סוג</string>
 	<string name="media_gallery_type_squares">ריבועים</string>
@@ -1056,7 +1053,6 @@ Language: he_IL
 	<string name="theme_set_success">ערכת העיצוב הוגדרה בהצלחה!</string>
 	<string name="theme_auth_error_title">הבאת ערכות העיצוב נכשלה</string>
 	<string name="post_excerpt">תקציר</string>
-	<string name="share_action_title">הוסף ל...</string>
 	<string name="share_action">שתף</string>
 	<string name="stats">נתונים סטטיסטיים</string>
 	<string name="stats_view_visitors_and_views">מבקרים וצפיות</string>
@@ -1151,13 +1147,11 @@ Language: he_IL
 	<string name="status">סטטוס</string>
 	<string name="location">מיקום</string>
 	<string name="sdcard_title">דרוש כרטיס SD</string>
-	<string name="select_video">בחר וידאו מהגלריה</string>
 	<string name="media">מדיה</string>
 	<string name="delete">מחק</string>
 	<string name="approve">אשר</string>
 	<string name="none">ללא</string>
 	<string name="blogs">אתרים</string>
-	<string name="select_photo">בחר תמונה מהגלריה</string>
 	<string name="yes">כן</string>
 	<string name="no">לא</string>
 	<string name="add">הוסף</string>

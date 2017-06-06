@@ -68,6 +68,7 @@ public class PostsListFragment extends Fragment
         PostsListAdapter.OnPostButtonClickListener {
 
     public static final int POSTS_REQUEST_COUNT = 20;
+    public static final String TAG = "posts_list_fragment_tag";
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;

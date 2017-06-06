@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -49,7 +51,6 @@ public class PostsListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FragmentManager fm = getFragmentManager();
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
@@ -62,7 +63,14 @@ public class PostsListActivity extends AppCompatActivity {
             return;
         }
 
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
+        mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
+        if (mPostList == null) {
+            mPostList = PostsListFragment.newInstance(mSite);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                    .commit();
+        }
+
         showErrorDialogIfNeeded(getIntent().getExtras());
     }
 

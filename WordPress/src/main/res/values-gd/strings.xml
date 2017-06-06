@@ -211,7 +211,6 @@ Language: gd_GB
 	<string name="comment">Beachd</string>
 	<string name="sending_content">A’ luchdadh suas susbaint %s</string>
 	<string name="uploading_total">A’ luchdadh suas %1$d de %2$d</string>
-	<string name="select_a_blog">Tagh làrach WordPress</string>
 	<string name="stats_no_blog">Cha b’ urrainn dhuinn na stats aig a’ bhloga sin a luchdadh</string>
 	<string name="older_last_week">Nas sine na seachdain</string>
 	<string name="older_two_days">Nas sine na dà latha</string>
@@ -500,8 +499,6 @@ Language: gd_GB
 	<string name="all">Na h-uile</string>
 	<string name="images">Dealbhan</string>
 	<string name="unattached">Gun cheangal ris</string>
-	<string name="media_add_popup_capture_photo">Tog dealbh</string>
-	<string name="media_add_popup_capture_video">Tog video</string>
 	<string name="media_gallery_image_order_random">Air thuaiream</string>
 	<string name="media_gallery_image_order_reverse">Òrdugh contrarra</string>
 	<string name="media_gallery_type">Seòrsa</string>
@@ -524,7 +521,6 @@ Language: gd_GB
 	<string name="theme_set_success">Chaidh an t-ùrlar a shuidheachadh!</string>
 	<string name="theme_auth_error_title">Cha b\' urrainn dhuinn na h-ùrlaran fhaighinn dhut</string>
 	<string name="post_excerpt">Às-earrann</string>
-	<string name="share_action_title">Cuir ri ...</string>
 	<string name="share_action">Co-roinn</string>
 	<string name="stats">Stats</string>
 	<string name="stats_view_clicks">Briogaidhean</string>
@@ -619,13 +615,11 @@ Language: gd_GB
 	<string name="status">Staid</string>
 	<string name="location">Ionad</string>
 	<string name="sdcard_title">Tha feum air cairt SD</string>
-	<string name="select_video">Tagh video on ghailearaidh</string>
 	<string name="media">Meadhan</string>
 	<string name="delete">Sguab às</string>
 	<string name="approve">Thoir aonta ris</string>
 	<string name="none">Chan eil gin</string>
 	<string name="blogs">Blogaichean</string>
-	<string name="select_photo">Tagh dealbh on ghailearaidh</string>
 	<string name="error">Mearachd</string>
 	<string name="cancel">Sguir dheth</string>
 	<string name="save">Sàbhail</string>
