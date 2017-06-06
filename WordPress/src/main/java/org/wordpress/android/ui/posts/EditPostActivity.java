@@ -854,6 +854,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case REQUEST_TOO_LARGE:
                 errorMessage = getString(R.string.media_error_too_large_upload);
                 break;
+            case SERVER_ERROR:
+                errorMessage = getString(R.string.media_error_internal_server_error);
+                break;
+            case TIMEOUT:
+                errorMessage = getString(R.string.media_error_timeout);
+                break;
             case GENERIC_ERROR:
             default:
                 errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
