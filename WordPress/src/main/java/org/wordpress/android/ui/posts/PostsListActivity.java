@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -35,13 +34,26 @@ public class PostsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        // init
+        if (savedInstanceState != null) {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsPage = savedInstanceState.getBoolean(EXTRA_VIEW_PAGES);
+        } else if (getIntent() != null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
+        }
+
+        // need a Site to continue
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
+        // set layout and init toolbar
         setContentView(R.layout.post_list_activity);
 
-        mIsPage = getIntent().getBooleanExtra(EXTRA_VIEW_PAGES, false);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
@@ -49,20 +61,8 @@ public class PostsListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        FragmentManager fm = getFragmentManager();
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
+        mPostList = (PostsListFragment) getFragmentManager().findFragmentById(R.id.postList);
 
-        if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            finish();
-            return;
-        }
-
-        mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
         showErrorDialogIfNeeded(getIntent().getExtras());
     }
 
@@ -79,6 +79,26 @@ public class PostsListActivity extends AppCompatActivity {
         if (requestCode == RequestCodes.EDIT_POST) {
             mPostList.handleEditPostResult(resultCode, data);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(EXTRA_VIEW_PAGES, mIsPage);
+    }
+
+    public boolean isRefreshing() {
+        return mPostList.isRefreshing();
     }
 
     /**
@@ -98,29 +118,10 @@ public class PostsListActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getText(R.string.error))
-               .setMessage(errorMessage)
-               .setPositiveButton(android.R.string.ok, null)
-               .setCancelable(true);
+                .setMessage(errorMessage)
+                .setPositiveButton(android.R.string.ok, null)
+                .setCancelable(true);
 
         builder.create().show();
-    }
-
-    public boolean isRefreshing() {
-        return mPostList.isRefreshing();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
     }
 }

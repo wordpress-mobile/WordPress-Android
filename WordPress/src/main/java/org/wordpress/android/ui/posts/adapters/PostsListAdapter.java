@@ -309,6 +309,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         });
     }
 
+    /**
+     * Clears existing posts and adds all from given list
+     */
+    public void setPosts(@NonNull List<PostModel> posts) {
+        mPosts.clear();
+        mPosts.addAll(posts);
+        notifyDataSetChanged();
+    }
+
     /*
      * returns the caption to show in the date header for the passed page - pages with the same
      * caption will be grouped together
