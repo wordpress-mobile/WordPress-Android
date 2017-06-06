@@ -106,7 +106,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (context instanceof PublicizeButtonPrefsListener) {
             mListener = (PublicizeButtonPrefsListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement PublicizeManageConnectionsListener");
+            throw new RuntimeException(context.toString() + " must implement PublicizeButtonPrefsListener");
         }
     }
 
