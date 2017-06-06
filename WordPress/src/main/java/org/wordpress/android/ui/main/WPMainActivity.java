@@ -278,8 +278,9 @@ public class WPMainActivity extends AppCompatActivity {
         return Intent.ACTION_VIEW.equals(action) && host.contains(SignInActivity.MAGIC_LOGIN);
     }
 
-    private String getAuthToken() {
-        return getIntent().getData().getQueryParameter(SignInActivity.TOKEN_PARAMETER);
+    private @Nullable String getAuthToken() {
+        Uri uri = getIntent().getData();
+        return uri != null ? uri.getQueryParameter(SignInActivity.TOKEN_PARAMETER) : null;
     }
 
     private void setTabLayoutElevation(float newElevation){
