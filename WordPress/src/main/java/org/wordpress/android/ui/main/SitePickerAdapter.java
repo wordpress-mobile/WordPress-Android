@@ -143,6 +143,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
 
     public void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -180,41 +181,43 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
                 && !getItem(position + 1).isRecentPick;
         holder.divider.setVisibility(showDivider ?  View.VISIBLE : View.GONE);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int clickedPosition = holder.getAdapterPosition();
-                if (isValidPosition(clickedPosition)) {
-                    if (mIsMultiSelectEnabled) {
-                        toggleSelection(clickedPosition);
-                    } else if (mSiteSelectedListener != null) {
-                        mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
+        if (mIsMultiSelectEnabled || mSiteSelectedListener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int clickedPosition = holder.getAdapterPosition();
+                    if (isValidPosition(clickedPosition)) {
+                        if (mIsMultiSelectEnabled) {
+                            toggleSelection(clickedPosition);
+                        } else if (mSiteSelectedListener != null) {
+                            mSiteSelectedListener.onSiteClick(getItem(clickedPosition));
+                        }
+                    } else {
+                        AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
                     }
-                } else {
-                    AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
                 }
-            }
-        });
+            });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                int clickedPosition = holder.getAdapterPosition();
-                if (isValidPosition(clickedPosition)) {
-                    if (mIsMultiSelectEnabled) {
-                        toggleSelection(clickedPosition);
-                        return true;
-                    } else if (mSiteSelectedListener != null) {
-                        boolean result = mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
-                        setItemSelected(clickedPosition, true);
-                        return result;
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    int clickedPosition = holder.getAdapterPosition();
+                    if (isValidPosition(clickedPosition)) {
+                        if (mIsMultiSelectEnabled) {
+                            toggleSelection(clickedPosition);
+                            return true;
+                        } else if (mSiteSelectedListener != null) {
+                            boolean result = mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
+                            setItemSelected(clickedPosition, true);
+                            return result;
+                        }
+                    } else {
+                        AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
                     }
-                } else {
-                    AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
 
     public String getLastSearch() {
@@ -379,7 +382,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<SitePickerAdapter.Si
         return siteRecordSet;
     }
 
-    void loadSites() {
+    public void loadSites() {
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

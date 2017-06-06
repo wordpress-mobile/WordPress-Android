@@ -99,10 +99,6 @@
                 <data
                     android:host="signin"
                     android:scheme="wordpress" />
-
-                <data
-                    android:host="magic-login"
-                    android:scheme="wordpress" />
             </intent-filter>
         </activity>
 
@@ -110,6 +106,24 @@
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
+            android:theme="@style/NoDisplay">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="magic-login"
+                    android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.accounts.LoginEpilogueActivity"
+            android:theme="@style/LoginTheme" />
 
         <activity
             android:name=".ui.accounts.NewBlogActivity"
