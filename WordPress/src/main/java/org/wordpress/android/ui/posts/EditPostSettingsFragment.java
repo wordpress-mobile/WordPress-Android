@@ -1175,4 +1175,14 @@ public class EditPostSettingsFragment extends Fragment
                 break;
         }
     }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
+            return;
+        }
+        updatePostFormatKeysAndNames();
+    }
 }
