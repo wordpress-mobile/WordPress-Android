@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
@@ -984,6 +985,30 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostFormatDialog() {
+        // Default values
+        ArrayList<String> postFormatKeys = new ArrayList<>(Arrays.asList(getResources()
+                .getStringArray(R.array.post_format_keys)));
+        ArrayList<String> postFormatNames = new ArrayList<>(
+                Arrays.asList(getResources().getStringArray(R.array.post_format_display_names)));
+
+        // If we have specific values for this site, use them
+        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
+        for (PostFormatModel postFormatModel : postFormatModels) {
+            if (!postFormatKeys.contains(postFormatModel.getSlug())) {
+                postFormatKeys.add(postFormatModel.getSlug());
+                postFormatNames.add(postFormatModel.getDisplayName());
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.post_settings_format);
+        builder.setSingleChoiceItems(postFormatNames.toArray(new CharSequence[0]), 0, null);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
     }
 
     /*
