@@ -439,7 +439,6 @@ Language: eu_ES
 	<string name="reader_empty_comments">Oraindik ez dago iruzkinik</string>
 	<string name="reader_label_view_original">Ikusi artikulu originala</string>
 	<string name="reader_label_like">Gustukoa</string>
-	<string name="select_a_blog">Aukeratu WordPress gune bat</string>
 	<string name="reader_empty_followed_blogs_title">Oraindik ez duzu webgunetik jarraitzen</string>
 	<string name="posts_empty_list">Bidalketarik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
 	<string name="pages_empty_list">Orrialderik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
@@ -707,12 +706,10 @@ Language: eu_ES
 	<string name="passcode_enter_passcode">Sartu zure PINa</string>
 	<string name="all">Denak</string>
 	<string name="unattached">Txertatu gabe</string>
-	<string name="media_add_popup_capture_video">Bideoa grabatu</string>
 	<string name="stats_timeframe_today">Gaur</string>
 	<string name="stats_timeframe_yesterday">Atzo</string>
 	<string name="theme_activate_button">Gaitu</string>
 	<string name="theme_activating_button">Gaitzen</string>
-	<string name="share_action_title">Gehitu ...</string>
 	<string name="media_gallery_image_order_random">Ausazkoa</string>
 	<string name="themes_details_label">Xehetasunak</string>
 	<string name="post_excerpt">Laburpena</string>
@@ -728,7 +725,6 @@ Language: eu_ES
 	<string name="themes_features_label">Ezaugarriak</string>
 	<string name="stats_totals_views">Ikuspegiak</string>
 	<string name="themes">Itxurak</string>
-	<string name="media_add_popup_capture_photo">Argazkia atera</string>
 	<string name="media_edit_caption_text">Legenda</string>
 	<string name="media_edit_description_text">Deskripzioa</string>
 	<string name="media_edit_title_hint">Sartu izenburu bat hemen</string>
@@ -813,7 +809,6 @@ Language: eu_ES
 	<string name="notification_blink">Jakinarazpen keinukariaren argia</string>
 	<string name="notification_sound">Jakinarazpen soinua</string>
 	<string name="status">Egoera</string>
-	<string name="select_video">Aukeratu bideo bat bildumatik</string>
 	<string name="location">Kokalekua</string>
 	<string name="sdcard_title">SD txartela ezinbestekoa</string>
 	<string name="media">Media</string>
@@ -821,7 +816,6 @@ Language: eu_ES
 	<string name="approve">Onartu</string>
 	<string name="none">Bat ere ez</string>
 	<string name="blogs">Blogak</string>
-	<string name="select_photo">Aukeratu argazki bat bildumatik</string>
 	<string name="error">Errorea</string>
 	<string name="cancel">Ezeztatu</string>
 	<string name="save">Gorde</string>

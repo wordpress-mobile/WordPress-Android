@@ -194,7 +194,6 @@ Language: az
 	<string name="reader_label_comments_on">Şərh</string>
 	<string name="reader_title_photo_viewer">%1$d / %2$d</string>
 	<string name="error_refresh_unauthorized_posts">Yazıya baxmağa və ya onu redaktə etməyə izniniz yoxdur</string>
-	<string name="select_a_blog">WordPress saytı seç</string>
 	<string name="mnu_comment_liked">Bəyənildi</string>
 	<string name="comment">Şərh</string>
 	<string name="comment_trashed">Şərh zibil qutusuna göndərildi</string>
@@ -481,9 +480,6 @@ Language: az
 	<string name="all">Tamamı</string>
 	<string name="media_gallery_image_order_random">Qarışıq</string>
 	<string name="media_gallery_image_order_reverse">Təkrar</string>
-	<string name="media_add_popup_capture_photo">Foto tut</string>
-	<string name="media_add_popup_capture_video">Video tut</string>
-	<string name="share_action_title">Əlavə et</string>
 	<string name="stats_entry_country">Ölkə</string>
 	<string name="stats_entry_tags_and_categories">Bəhs</string>
 	<string name="stats_entry_referrers">Yönləndirmə</string>
@@ -586,7 +582,6 @@ Language: az
 	<string name="notification_vibrate">Vibrasiya</string>
 	<string name="notification_blink">Məlumatlandırma işığını parlat</string>
 	<string name="status">Status</string>
-	<string name="select_video">Qalereyadan bir video seçin</string>
 	<string name="sdcard_title">SD Kart Gərəkdir</string>
 	<string name="location">Mövqe</string>
 	<string name="media">Media</string>
@@ -594,7 +589,6 @@ Language: az
 	<string name="approve">Təsdiqlə</string>
 	<string name="none">Heç biri</string>
 	<string name="blogs">Bloqlar</string>
-	<string name="select_photo">Qalereyadan bir foto seçin</string>
 	<string name="no">Xeyr</string>
 	<string name="yes">Bəli</string>
 	<string name="reply">Cavabla</string>
