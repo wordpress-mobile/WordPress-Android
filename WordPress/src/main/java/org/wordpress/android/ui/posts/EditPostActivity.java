@@ -150,7 +150,7 @@ import de.greenrobot.event.EventBus;
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         PhotoPickerFragment.PhotoPickerListener {
-    public static final String EXTRA_POST = "postModel";
+    public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
@@ -270,7 +270,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
-            if (!getIntent().hasExtra(EXTRA_POST)
+            if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                     || Intent.ACTION_SEND.equals(action)
                     || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
@@ -308,15 +308,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
-                mPost = (PostModel) extras.getSerializable(EXTRA_POST);
+                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
                     mIsPage = mPost.isPage();
                 }
-            } else {
-                // A postId extra must be passed to this activity
-                showErrorAndFinish(R.string.post_not_found);
-                return;
             }
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
@@ -388,7 +384,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost();
+                                            mEditPostPreviewFragment.loadPost(mPost);
                                         }
                                     }
                                 });
@@ -858,6 +854,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case REQUEST_TOO_LARGE:
                 errorMessage = getString(R.string.media_error_too_large_upload);
                 break;
+            case SERVER_ERROR:
+                errorMessage = getString(R.string.media_error_internal_server_error);
+                break;
+            case TIMEOUT:
+                errorMessage = getString(R.string.media_error_timeout);
+                break;
             case GENERIC_ERROR:
             default:
                 errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
@@ -1091,7 +1093,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         i.putExtra(EXTRA_HAS_UNFINISHED_MEDIA, hasUnfinishedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
-        i.putExtra(EXTRA_POST, mPost);
+        i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         setResult(RESULT_OK, i);
     }
 
@@ -1325,7 +1327,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 1:
                     return EditPostSettingsFragment.newInstance(mSite, mPost);
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite, mPost);
+                    return EditPostPreviewFragment.newInstance(mSite);
             }
         }
 
@@ -1438,7 +1440,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mediaFile == null) {
                     continue;
                 }
-                String replacement = getUploadErrorHtml(mediaFile.getMediaId(), mediaFile.getFilePath());
+                String replacement = getUploadErrorHtml(String.valueOf(mediaFile.getId()), mediaFile.getFilePath());
                 matcher.appendReplacement(stringBuffer, replacement);
             }
             matcher.appendTail(stringBuffer);

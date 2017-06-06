@@ -68,6 +68,7 @@ public class PostsListFragment extends Fragment
         PostsListAdapter.OnPostButtonClickListener {
 
     public static final int POSTS_REQUEST_COUNT = 20;
+    public static final String TAG = "posts_list_fragment_tag";
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
@@ -206,7 +207,8 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
+        final PostModel post = mPostStore.
+                getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
         boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
         if (hasUnfinishedMedia) {
             showSnackbar(R.string.editor_post_saved_locally_unfinished_media, R.string.button_edit,

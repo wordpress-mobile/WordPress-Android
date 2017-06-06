@@ -209,6 +209,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         intent.putExtra(WordPress.SITE, mSiteStore.getSiteByLocalId(mSelectedSiteLocalId));
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserActivity.MediaBrowserType.BROWSER);
 
         intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
         intent.putExtra(Intent.EXTRA_SUBJECT, getIntent().getStringExtra(Intent.EXTRA_SUBJECT));

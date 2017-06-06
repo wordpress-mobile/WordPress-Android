@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-16 10:15:18+0000
+Translation-Revision-Date: 2017-05-30 10:11:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
@@ -37,10 +37,7 @@ Language: sq_AL
 	<string name="sure_to_remove_account">Të hiqet ky sajt nga aplikacioni?</string>
 	<string name="photo_picker_title">Zgjidhni foto</string>
 	<string name="error_publish_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
-	<string name="editor_post_saved_online_not_published">Postimi u ruaj si skicë në internet. Shihni mundësinë e botimit të tij.</string>
 	<string name="editor_post_saved_online">Postimi u ruajt në internet</string>
-	<string name="editor_post_saved_locally_not_published">Postimi u ruaj lokalisht. Shihni mundësinë e botimit të tij.</string>
-	<string name="editor_post_saved_locally">Postimi u ruaj në pajisjen tuaj</string>
 	<string name="site_settings_image_quality_hint">Cilësi fotosh. Vlera më të mëdha do të thotë cilësi më e lartë fotosh.</string>
 	<string name="site_settings_optimize_images_summary">Aktivizojeni që të ripërmasoni dhe ngjeshni foto</string>
 	<string name="media_encoder_quality_100">Maksimum</string>
@@ -91,9 +88,6 @@ Language: sq_AL
 	<string name="confirm">Ripohojeni</string>
 	<string name="xmlrpc_endpoint_forbidden_error">S’u bë dot lidhja. Morëm një gabim 403 error, kur provuat të hyjmë\n        në pikë fundore XMLRPC të sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
 	<string name="xmlrpc_post_blocked_error">S’u bë dot lidhja. Strehuesi juaj i bllokon kërkesat POST, dhe aplikacionit\n        i duhen që të mund të komunikojë me sajtin tuaj. Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-	<string name="reader_liked_default_tag">Postime Që Pëlqej</string>
-	<string name="reader_discover_default_tag">Zbuloni</string>
-	<string name="reader_followed_default_tag">Sajte të Ndjekur</string>
 	<string name="reader_empty_followed_blogs_search_title">S’ka sajte me përputhje</string>
 	<string name="reader_hint_search_followed_sites">Kërkoni te sajtet vijues</string>
 	<string name="preference_editor_type">Caktoni lloj përpunuesi</string>
@@ -1110,8 +1104,6 @@ Language: sq_AL
 	<string name="all">Krejt</string>
 	<string name="images">Figura</string>
 	<string name="unattached">Të pabashkëngjitura</string>
-	<string name="media_add_popup_capture_photo">Bëni foto</string>
-	<string name="media_add_popup_capture_video">Regjistroni video</string>
 	<string name="media_gallery_image_order_random">Kuturu</string>
 	<string name="media_gallery_type">Lloj</string>
 	<string name="media_gallery_type_squares">Katrorë</string>
@@ -1132,7 +1124,6 @@ Language: sq_AL
 	<string name="theme_set_success">Tema u caktua me sukses!</string>
 	<string name="theme_auth_error_title">Dështoi sjellja e temës</string>
 	<string name="post_excerpt">Copëz</string>
-	<string name="share_action_title">Shtojeni te …</string>
 	<string name="share_action">Ndajeni me të tjerët</string>
 	<string name="stats">Statistika</string>
 	<string name="stats_view_visitors_and_views">Vizitorë dhe Parje</string>
@@ -1163,6 +1154,7 @@ Language: sq_AL
 	<string name="passcode_set">PIN u caktua</string>
 	<string name="media_edit_failure">S&amp;#8217;u përditësua dot</string>
 	<string name="passcode_enter_passcode">Jepni PIN-in tuaj</string>
+	<string name="share_action_title">Shtojeni te</string>
 	<string name="upload">Ngarkoje</string>
 	<string name="discard">Hidhe Tej</string>
 	<string name="sign_in">Hyni</string>
@@ -1230,13 +1222,11 @@ Language: sq_AL
 	<string name="status">Gjendje</string>
 	<string name="location">Vendndodhje</string>
 	<string name="sdcard_title">Lypset Kartë SD</string>
-	<string name="select_video">Përzgjidhni një video te galeria</string>
 	<string name="media">Media</string>
 	<string name="delete">Fshije</string>
 	<string name="approve">Miratojeni</string>
 	<string name="none">Asnjë</string>
 	<string name="blogs">Blogje</string>
-	<string name="select_photo">Përzgjidhni një foto te galeria</string>
 	<string name="error">Gabim</string>
 	<string name="cancel">Anuloje</string>
 	<string name="save">Ruaje</string>

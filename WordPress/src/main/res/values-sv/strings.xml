@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-11 12:48:29+0000
+Translation-Revision-Date: 2017-05-23 08:03:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="error_media_save">Kan inte spara media</string>
+	<string name="editor_scheduled_post_saved_online">Inlägget schemalagt</string>
+	<string name="editor_draft_saved_locally">Utkastet sparat på enheten</string>
+	<string name="editor_draft_saved_online">Utkastet sparat on-line</string>
+	<string name="editor_post_saved_locally">Inlägget sparat på enheten</string>
+	<string name="cant_share_unknown_action">Okänd åtgärd, ignoreras</string>
+	<string name="button_sync">Synkning</string>
+	<string name="media_saved_to_device">Mediafil sparad på enheten</string>
 	<string name="smart_toast_comments_long_press">Peka länge för att välja flera kommentarer</string>
 	<string name="smart_toast_photo_long_press">Peka länge för att välja flera foton</string>
 	<string name="photo_picker_choose_video">Välj video från din enhet</string>
@@ -37,10 +45,7 @@ Language: sv_SE
 	<string name="sure_to_remove_account">Ta bort denna webbplats från appen?</string>
 	<string name="error_publish_no_network">Enheten är off-line. Ändringarna har sparats lokalt.</string>
 	<string name="photo_picker_title">Välj foto</string>
-	<string name="editor_post_saved_online_not_published">Inlägget är sparat on-line som ett utkast. Du kanske vill publicera det?</string>
 	<string name="editor_post_saved_online">Inlägget har sparats on-line</string>
-	<string name="editor_post_saved_locally_not_published">Inlägget har endast sparats lokalt. Du kanske vill publicera det?</string>
-	<string name="editor_post_saved_locally">Inlägget har sparats på din enhet</string>
 	<string name="site_settings_image_quality_hint">Bildkvalitet. Ett högre värde innebär bilder med högre kvalitet.</string>
 	<string name="site_settings_optimize_images_summary">Gör det möjligt att ändra storlek på och komprimera bildfiler</string>
 	<string name="media_upload_state_uploaded">Uppladdat</string>
@@ -91,9 +96,6 @@ Language: sv_SE
 	<string name="confirm">Bekräfta</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Det går inte att ansluta. Vi får fel 403 (förbjudet) när vi anropar XMLRPC-ändpunkten  för din webbplats. Appen behöver detta för att kunna kommunicera med din webbplats. Kontakta webbhotellet för att lösa detta problem.</string>
 	<string name="xmlrpc_post_blocked_error">Det gick inte att ansluta. Din webbserver blockerar POST-anrop, som appen behöver för att kommunicera med din webbplats. Kontakta ditt webbhotell för att lösa detta problem.</string>
-	<string name="reader_liked_default_tag">Inlägg jag har gillat</string>
-	<string name="reader_followed_default_tag">Webbplatser jag prenumererar på</string>
-	<string name="reader_discover_default_tag">Upptäck</string>
 	<string name="reader_empty_followed_blogs_search_title">Inga matchande webbplatser</string>
 	<string name="reader_hint_search_followed_sites">Sök följda webbplatser</string>
 	<string name="preference_editor_type">Ställ in redigeringsverktyg</string>
@@ -1110,8 +1112,6 @@ Language: sv_SE
 	<string name="all">Alla</string>
 	<string name="images">Bilder</string>
 	<string name="unattached">Obundna</string>
-	<string name="media_add_popup_capture_photo">Ta foto</string>
-	<string name="media_add_popup_capture_video">Spela in video</string>
 	<string name="media_gallery_image_order_random">Slumpmässig</string>
 	<string name="media_gallery_image_order_reverse">Omvänd</string>
 	<string name="media_gallery_type">Stil</string>
@@ -1134,7 +1134,6 @@ Language: sv_SE
 	<string name="theme_set_success">Temat aktiverat!</string>
 	<string name="theme_auth_error_title">Kunde inte hämta teman</string>
 	<string name="post_excerpt">Utdrag</string>
-	<string name="share_action_title">Lägg till...</string>
 	<string name="share_action">Dela</string>
 	<string name="stats">Statistik</string>
 	<string name="stats_view_visitors_and_views">Besökare och visningar</string>
@@ -1163,6 +1162,7 @@ Language: sv_SE
 	<string name="passcode_preference_title">PIN-kodlås</string>
 	<string name="passcode_turn_off">Stäng av PIN-kodlås</string>
 	<string name="passcode_turn_on">Slå på PIN-kodlås</string>
+	<string name="share_action_title">Lägg till</string>
 	<string name="upload">Ladda upp</string>
 	<string name="discard">Kasta bort</string>
 	<string name="sign_in">Logga in</string>
@@ -1229,14 +1229,12 @@ Language: sv_SE
 	<string name="notification_sound">Notifieringsljud</string>
 	<string name="status">Status</string>
 	<string name="sdcard_title">SD-kort krävs</string>
-	<string name="select_video">Välj en video från galleriet</string>
 	<string name="location">Plats</string>
 	<string name="media">Media</string>
 	<string name="delete">Radera</string>
 	<string name="approve">Godkänn</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Bloggar</string>
-	<string name="select_photo">Välj en bild från galleri</string>
 	<string name="reply">Svara</string>
 	<string name="cancel">Avbryt</string>
 	<string name="save">Spara</string>
