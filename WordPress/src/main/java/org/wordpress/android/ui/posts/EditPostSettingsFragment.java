@@ -101,9 +101,6 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    ArrayList<String> mPostFormatKeys;
-    ArrayList<String> mPostFormatNames;
-
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
@@ -127,6 +124,9 @@ public class EditPostSettingsFragment extends Fragment
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String mCustomPubDate = "";
     private boolean mIsCustomPubDate;
+
+    private ArrayList<String> mPostFormatKeys;
+    private ArrayList<String> mPostFormatNames;
 
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
