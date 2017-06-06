@@ -27,7 +27,7 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
     }
 
     @Override
-    public void onConnectanotherSite() {
+    public void onConnectAnotherSite() {
         ToastUtils.showToast(this, "Connect another site is not implemented yet.");
     }
 

@@ -49,7 +49,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     private SitesListAdapter mAdapter;
 
     public interface LoginEpilogueListener {
-        void onConnectanotherSite();
+        void onConnectAnotherSite();
         void onContinue();
     }
     private LoginEpilogueListener mLoginEpilogueListener;
@@ -74,7 +74,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 if (mLoginEpilogueListener != null) {
-                    mLoginEpilogueListener.onConnectanotherSite();
+                    mLoginEpilogueListener.onConnectAnotherSite();
                 }
             }
         });
