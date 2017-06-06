@@ -986,9 +986,9 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostFormatDialog() {
         // Default values
-        ArrayList<String> postFormatKeys = new ArrayList<>(Arrays.asList(getResources()
+        final ArrayList<String> postFormatKeys = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_keys)));
-        ArrayList<String> postFormatNames = new ArrayList<>(
+        final ArrayList<String> postFormatNames = new ArrayList<>(
                 Arrays.asList(getResources().getStringArray(R.array.post_format_display_names)));
 
         // If we have specific values for this site, use them
@@ -1005,6 +1005,16 @@ public class EditPostSettingsFragment extends Fragment
         builder.setSingleChoiceItems(postFormatNames.toArray(new CharSequence[0]), 0, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                ListView listView = ((AlertDialog)dialog).getListView();
+                String newFormat = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
+                mPostFormatTextView.setText(newFormat);
+                for (int i = 0; i < postFormatNames.size(); i++) {
+                    if (newFormat.equalsIgnoreCase(postFormatNames.get(i))) {
+                        String formatKey = postFormatKeys.get(i);
+                        mPost.setPostFormat(formatKey);
+                        break;
+                    }
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
