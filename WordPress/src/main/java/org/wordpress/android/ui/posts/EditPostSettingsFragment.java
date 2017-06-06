@@ -1000,9 +1000,19 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
+        int checkedItem = 0;
+        if (!TextUtils.isEmpty(mPost.getPostFormat())) {
+            for (int i = 0; i < postFormatKeys.size(); i++) {
+                if (mPost.getPostFormat().equals(postFormatKeys.get(i))) {
+                    checkedItem = i;
+                    break;
+                }
+            }
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.post_settings_format);
-        builder.setSingleChoiceItems(postFormatNames.toArray(new CharSequence[0]), 0, null);
+        builder.setSingleChoiceItems(postFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
