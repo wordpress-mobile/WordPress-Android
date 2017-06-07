@@ -206,7 +206,8 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
+        final PostModel post = mPostStore.
+                getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
         boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
             showSnackbar(R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
