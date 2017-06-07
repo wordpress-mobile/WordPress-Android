@@ -619,12 +619,12 @@ public class PostUploadService extends Service {
         }
     }
 
-    private void cancelPostUploadMatchingMedia(MediaModel media) {
+    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage) {
         PostModel postToCancel = removeQueuedPostByLocalId(media.getLocalPostId());
         if (postToCancel == null) return;
 
         SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
-        String message = getErrorMessage(postToCancel, getErrorMessageFromMediaError(event.error));
+        String message = getErrorMessage(postToCancel, mediaErrorMessage);
         mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
 
         mFirstPublishPosts.remove(postToCancel.getId());
@@ -721,14 +721,15 @@ public class PostUploadService extends Service {
         if (event.isError()) {
             AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
                     event.error.type + ": " + event.error.message);
-            cancelPostUploadMatchingMedia(event.media);
+            String errorMessage = getErrorMessageFromMediaError(event.error);
+            cancelPostUploadMatchingMedia(event.media, errorMessage);
             return;
         }
 
         if (event.canceled) {
             AppLog.i(T.MEDIA, "Upload cancelled for post with id " + event.media.getLocalPostId()
                             + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-            cancelPostUploadMatchingMedia(event.media);
+            cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
             return;
         }
 
