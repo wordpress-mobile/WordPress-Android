@@ -32,7 +32,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.AccountStore.AuthenticatePayload;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -42,32 +41,33 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class LoginEmailPasswordFragment extends Fragment implements TextWatcher {
-    private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
-    private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
+public class Login2FaFragment extends Fragment implements TextWatcher {
+    private static final String KEY_IN_PROGRESS_MESSAGE_ID = "KEY_IN_PROGRESS_MESSAGE_ID";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    private static final String ARG_PASSWORD = "ARG_PASSWORD";
 
-    public static final String TAG = "login_email_password_fragment_tag";
+    public static final String TAG = "login_2fa_fragment_tag";
 
-    private TextInputLayout mPasswordEditTextLayout;
-    private EditText mPasswordEditText;
+    private TextInputLayout m2FaEditTextLayout;
+    private EditText m2FaEditText;
     private Button mNextButton;
     private ProgressDialog mProgressDialog;
 
     private LoginListener mLoginListener;
 
-    private boolean mInProgress;
-    private String mRequestedPassword;
+    private @StringRes int mInProgressMessageId;
 
     private String mEmailAddress;
+    private String mPassword;
 
     @Inject Dispatcher mDispatcher;
 
-    public static LoginEmailPasswordFragment newInstance(String emailAddress) {
-        LoginEmailPasswordFragment fragment = new LoginEmailPasswordFragment();
+    public static Login2FaFragment newInstance(String emailAddress, String password) {
+        Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_PASSWORD, password);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,24 +78,19 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
-
-        if (savedInstanceState != null) {
-            mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
-        }
+        mPassword = getArguments().getString(ARG_PASSWORD);
 
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_email_password_screen, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_2fa_screen, container, false);
 
-        ((TextView) rootView.findViewById(R.id.login_email)).setText(mEmailAddress);
-
-        mPasswordEditText = (EditText) rootView.findViewById(R.id.login_password);
-        mPasswordEditText.addTextChangedListener(this);
-        mPasswordEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_password_layout);
-        mPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        m2FaEditText = (EditText) rootView.findViewById(R.id.login_2fa);
+        m2FaEditText.addTextChangedListener(this);
+        m2FaEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_2fa_layout);
+        m2FaEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (event != null
@@ -109,18 +104,18 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
             }
         });
 
-        mNextButton = (Button) rootView.findViewById(R.id.login_email_password_next_button);
+        mNextButton = (Button) rootView.findViewById(R.id.login_2fa_next_button);
         mNextButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }
         });
 
-        rootView.findViewById(R.id.login_lost_password).setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_text_otp).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginListener != null) {
-                    mLoginListener.forgotPassword();
+                if (isAdded()) {
+                    doAuthAction(R.string.requesting_otp, "", true);
                 }
             }
         });
@@ -142,7 +137,7 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         }
 
         if (savedInstanceState == null) {
-            EditTextUtils.showSoftInput(mPasswordEditText);
+            EditTextUtils.showSoftInput(m2FaEditText);
         }
     }
 
@@ -151,10 +146,10 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
+            mInProgressMessageId = savedInstanceState.getInt(KEY_IN_PROGRESS_MESSAGE_ID, 0);
 
-            if (mInProgress) {
-                showProgressDialog();
+            if (mInProgressMessageId != 0) {
+                showProgressDialog(mInProgressMessageId);
             }
         }
     }
@@ -179,8 +174,7 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
-        outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
+        outState.putInt(KEY_IN_PROGRESS_MESSAGE_ID, mInProgressMessageId);
     }
 
     @Override
@@ -191,10 +185,7 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
-            if (mLoginListener != null) {
-                mLoginListener.help();
-            }
-
+            mLoginListener.help();
             return true;
         }
 
@@ -202,15 +193,19 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
     }
 
     protected void next() {
+        doAuthAction(R.string.logging_in, m2FaEditText.getText().toString(), false);
+    }
+
+    private void doAuthAction(@StringRes int messageId, String twoStepCode, boolean shouldSendTwoStepSMS) {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
-        showProgressDialog();
+        showProgressDialog(messageId);
 
-        mRequestedPassword = mPasswordEditText.getText().toString();
-
-        AuthenticatePayload payload = new AuthenticatePayload(mEmailAddress, mRequestedPassword);
+        AccountStore.AuthenticatePayload payload = new AccountStore.AuthenticatePayload(mEmailAddress, mPassword);
+        payload.twoStepCode = twoStepCode;
+        payload.shouldSendTwoStepSms = shouldSendTwoStepSMS;
         mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
     }
 
@@ -225,15 +220,15 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         updateNextButton();
-        mPasswordEditTextLayout.setError(null);
+        show2FaError(null);
     }
 
     private void updateNextButton() {
-        mNextButton.setEnabled(mPasswordEditText.getText().length() > 0);
+        mNextButton.setEnabled(m2FaEditText.getText().length() > 0);
     }
 
-    private void showPasswordError() {
-        mPasswordEditTextLayout.setError(getString(R.string.password_incorrect));
+    private void show2FaError(String message) {
+        m2FaEditTextLayout.setError(message);
     }
 
     @Override
@@ -248,23 +243,23 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         mDispatcher.unregister(this);
     }
 
-    private void showProgressDialog() {
+    private void showProgressDialog(@StringRes int messageId) {
         mNextButton.setEnabled(false);
         mProgressDialog =
-                ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.logging_in), true, true,
+                ProgressDialog.show(getActivity(), "", getActivity().getString(messageId), true, true,
                         new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
-                                if (mInProgress) {
+                                if (mInProgressMessageId != 0) {
                                     endProgress();
                                 }
                             }
                         });
-        mInProgress = true;
+        mInProgressMessageId = 0;
     }
 
     private void endProgress() {
-        mInProgress = false;
+        mInProgressMessageId = 0;
 
         if (mProgressDialog != null) {
             mProgressDialog.cancel();
@@ -276,12 +271,11 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
 
     private void handleAuthError(AccountStore.AuthenticationErrorType error, String errorMessage) {
         switch (error) {
-            case INCORRECT_USERNAME_OR_PASSWORD:
-            case NOT_AUTHENTICATED: // NOT_AUTHENTICATED is the generic error from XMLRPC response on first call.
-                showPasswordError();
+            case INVALID_OTP:
+                show2FaError(errorMessage);
                 break;
             case NEEDS_2FA:
-                mLoginListener.needs2fa(mEmailAddress, mRequestedPassword);
+                // we get this error when requesting a verification code sent via SMS so, just ignore it.
                 break;
             case INVALID_REQUEST:
                 // TODO: FluxC: could be specific?

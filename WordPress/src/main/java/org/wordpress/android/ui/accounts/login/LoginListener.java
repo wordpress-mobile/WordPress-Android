@@ -19,6 +19,7 @@ public interface LoginListener {
     void openEmailClient();
 
     // Login email password callbacks
+    void needs2fa(String email, String password);
     void loggedInViaPassword();
 
     // Login Site Address input callbacks
