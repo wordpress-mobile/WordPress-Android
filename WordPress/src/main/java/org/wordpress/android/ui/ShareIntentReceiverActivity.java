@@ -47,6 +47,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
 
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
+    private static final int ADD_TO_NEW_POST = 0;
+    private static final int ADD_TO_MEDIA_LIBRARY = 1;
+
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
 
@@ -157,6 +160,20 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
             finish();
         }
+    }
+
+    private int getActionIndex(int actionId) {
+        if (actionId == R.id.media_library_share_action) {
+            return ADD_TO_MEDIA_LIBRARY;
+        }
+        return ADD_TO_NEW_POST;
+    }
+
+    private int getActionId(int actionIndex) {
+        if (actionIndex == ADD_TO_MEDIA_LIBRARY) {
+            return R.id.media_library_share_action;
+        }
+        return R.id.new_post_share_action;
     }
 
     private int getPositionBySiteId(long localBlogId) {
