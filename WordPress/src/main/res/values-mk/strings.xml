@@ -106,7 +106,6 @@ Language: mk
 	<string name="older_two_days">Постари од 2 дена</string>
 	<string name="older_last_week">Постари од седмица</string>
 	<string name="stats_no_blog">Статиска неможе да се покаже за побараниот блог</string>
-	<string name="select_a_blog">Избери WordPress страница</string>
 	<string name="sending_content">Испраќа %s содржина</string>
 	<string name="uploading_total">Испраќа %1$d of %2$d</string>
 	<string name="mnu_comment_liked">Допаднато</string>
@@ -395,7 +394,6 @@ Language: mk
 	<string name="theme_set_success">Темата е поставена успешно!</string>
 	<string name="theme_auth_error_title">Неуспешно преземање на теми</string>
 	<string name="post_excerpt">Извадок</string>
-	<string name="share_action_title">Додади на ...</string>
 	<string name="share_action">Сподели</string>
 	<string name="stats">Статистики</string>
 	<string name="stats_view_visitors_and_views">Посетители и прегледи</string>
@@ -414,8 +412,6 @@ Language: mk
 	<string name="media_gallery_image_order_random">Случајни</string>
 	<string name="stats_view_referrers">Препорачувачи</string>
 	<string name="stats_entry_referrers">Препорачувач</string>
-	<string name="media_add_popup_capture_photo">Сликање</string>
-	<string name="media_add_popup_capture_video">Снимање</string>
 	<string name="unattached">Неприкачени</string>
 	<string name="upload">Качување</string>
 	<string name="notifications">Известувања</string>
@@ -477,13 +473,11 @@ Language: mk
 	<string name="status">Статус</string>
 	<string name="location">Локација</string>
 	<string name="sdcard_title">Потребна е SD картичка</string>
-	<string name="select_video">Изберете видео од галеријата</string>
 	<string name="media">Мултимедија</string>
 	<string name="delete">Бриши</string>
 	<string name="approve">Одобри</string>
 	<string name="none">Нема</string>
 	<string name="blogs">Блогови</string>
-	<string name="select_photo">Избери фотографија од галеријата</string>
 	<string name="error">Грешка</string>
 	<string name="cancel">Откажи</string>
 	<string name="save">Зачувај</string>

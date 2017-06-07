@@ -8,4 +8,11 @@
         app:showAsAction="always"
         android:title="@string/delete"/>
 
+    <item
+        android:id="@+id/mnu_confirm_selection"
+        android:enabled="true"
+        android:icon="@drawable/ic_checkmark_white_24dp"
+        android:title="@string/confirm"
+        android:visible="false" />
+
 </menu>

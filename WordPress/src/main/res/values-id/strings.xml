@@ -26,10 +26,6 @@ Language: id
 	<string name="sure_to_remove_account">Hapus situs ini dari aplikasi?</string>
 	<string name="photo_picker_title">Pilih foto</string>
 	<string name="error_publish_no_network">Perangkat offline. Perubahan disimpan secara lokal.</string>
-	<string name="editor_post_saved_online_not_published">Pos disimpan online sebagai konsep. Pertimbangkan untuk memublikasikannya.</string>
-	<string name="editor_post_saved_online">Pos disimpan online</string>
-	<string name="editor_post_saved_locally_not_published">Pos hanya disimpan secara lokal. Pertimbangkan untuk memublikasikannya.</string>
-	<string name="editor_post_saved_locally">Pos disimpan di perangkat Anda</string>
 	<string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
 	<string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
 	<string name="media_encoder_quality_100">Maksimum</string>
@@ -791,7 +787,6 @@ Language: id
 	<string name="older_two_days">Lebih dari 2 hari</string>
 	<string name="older_last_week">Lebih dari satu minggu</string>
 	<string name="stats_no_blog">Statistik tidak dapat dimuat untuk blog yang diminta</string>
-	<string name="select_a_blog">Pilih situs WordPress</string>
 	<string name="sending_content">Mengunggah konten %s</string>
 	<string name="uploading_total">Mengunggah %1$d dari %2$d</string>
 	<string name="mnu_comment_liked">Disukai</string>
@@ -1068,8 +1063,6 @@ Language: id
 	<string name="images">Gambar</string>
 	<string name="themes">Tema</string>
 	<string name="unattached">Tidak terlampir</string>
-	<string name="media_add_popup_capture_photo">Ambil foto</string>
-	<string name="media_add_popup_capture_video">Rekam video</string>
 	<string name="media_edit_title_text">Judul</string>
 	<string name="media_edit_caption_text">Subjudul</string>
 	<string name="media_edit_description_text">Deskripsi</string>
@@ -1097,7 +1090,6 @@ Language: id
 	<string name="stats_timeframe_today">Hari Ini</string>
 	<string name="stats_timeframe_yesterday">Kemarin</string>
 	<string name="post_excerpt">Rangkuman</string>
-	<string name="share_action_title">Tambah ke ...</string>
 	<string name="share_action">Bagi</string>
 	<string name="stats">Stat</string>
 	<string name="stats_view_visitors_and_views">Pengunjung dan Tampilan</string>
@@ -1186,7 +1178,6 @@ Language: id
 	<string name="notification_blink">Lampu notifikasi berkelip</string>
 	<string name="notification_sound">Bunyi notifikasi</string>
 	<string name="status">Status</string>
-	<string name="select_video">Pilih video dari galeri</string>
 	<string name="sdcard_title">Dibutuhkan SD Card</string>
 	<string name="location">Lokasi</string>
 	<string name="media">Media</string>
@@ -1194,7 +1185,6 @@ Language: id
 	<string name="approve">Setujui</string>
 	<string name="none">Tiada</string>
 	<string name="blogs">Blog</string>
-	<string name="select_photo">Pilih sebuah foto dari galeri</string>
 	<string name="reply">Balasan</string>
 	<string name="preview">Pratinjau</string>
 	<string name="on">pada</string>

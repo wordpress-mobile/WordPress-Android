@@ -6,6 +6,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -39,6 +40,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
@@ -54,6 +56,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * The grid displaying the media items.
@@ -73,6 +77,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
+    private MediaBrowserType mBrowserType;
 
     private RecyclerView mRecycler;
     private GridLayoutManager mGridManager;
@@ -81,6 +86,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
+
     private ActionMode mActionMode;
     private String mSearchTerm;
 
@@ -134,13 +140,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) getActivity().getIntent().getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE);
+            boolean imagesOnly = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, false);
+            if (imagesOnly) {
+                mFilter = Filter.IMAGES;
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
         }
 
         if (mSite == null) {
@@ -190,16 +198,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
-        mGridAdapter.setAllowMultiselect(true);
+        mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
+        mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
         mRecycler.setAdapter(mGridAdapter);
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.empty_view_title);
 
         mResultView = (TextView) view.findViewById(R.id.media_filter_result_text);
-
         mSpinner = (AppCompatSpinner) view.findViewById(R.id.media_filter_spinner);
-        mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
@@ -217,8 +224,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         fetchMediaList(false);
                     }
                 });
+
         restoreState(savedInstanceState);
-        setupSpinnerAdapter();
+
+        // filter spinner doesn't show for pickers
+        mSpinner.setVisibility(mBrowserType.isPicker() ? View.GONE : View.VISIBLE);
+        if (!mBrowserType.isPicker()) {
+            mSpinner.setOnItemSelectedListener(mFilterSelectedListener);
+            setupSpinnerAdapter();
+        }
 
         return view;
     }
@@ -254,6 +268,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterSelectionCountChanged(int count) {
+        if (mBrowserType == MediaBrowserType.SINGLE_SELECT_PICKER) {
+            return;
+        }
+
         if (count == 0 && mActionMode != null) {
             mActionMode.finish();
         } else if (mActionMode == null) {
@@ -416,6 +434,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putInt(BUNDLE_FILTER, mFilter.ordinal());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, mBrowserType);
     }
 
     private void setupSpinnerAdapter() {
@@ -481,8 +500,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         }
 
-        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mFilter = Filter.getFilter(savedInstanceState.getInt(BUNDLE_FILTER));
+        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
     }
@@ -570,6 +589,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    private void setResultIdsAndFinish() {
+        Intent intent = new Intent();
+        if (mGridAdapter.getSelectedItemCount() > 0) {
+            ArrayList<Long> remoteMediaIds = new ArrayList<>();
+            for (Integer localId : mGridAdapter.getSelectedItems()) {
+                MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                if (media != null) {
+                    remoteMediaIds.add(media.getMediaId());
+                }
+            }
+            intent.putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(remoteMediaIds));
+        }
+        getActivity().setResult(RESULT_OK, intent);
+        getActivity().finish();
+    }
+
+
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -585,15 +621,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            MenuItem mnuTrash = menu.findItem(R.id.media_multiselect_actionbar_trash);
+            mnuTrash.setVisible(!mBrowserType.isPicker());
+
+            MenuItem mnuConfirm = menu.findItem(R.id.mnu_confirm_selection);
+            mnuConfirm.setVisible(mBrowserType.isPicker());
+
             return true;
         }
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            int i = item.getItemId();
-            if (i == R.id.media_multiselect_actionbar_trash) {
+            if (item.getItemId() == R.id.media_multiselect_actionbar_trash) {
                 handleMultiSelectDelete();
-                return true;
+            } else if (item.getItemId() == R.id.mnu_confirm_selection) {
+                setResultIdsAndFinish();
             }
             return true;
         }

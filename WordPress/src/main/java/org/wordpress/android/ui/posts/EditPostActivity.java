@@ -5,11 +5,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -90,8 +88,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaGalleryActivity;
-import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
@@ -153,7 +150,7 @@ import de.greenrobot.event.EventBus;
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         PhotoPickerFragment.PhotoPickerListener {
-    public static final String EXTRA_POST = "postModel";
+    public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
@@ -273,7 +270,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
-            if (!getIntent().hasExtra(EXTRA_POST)
+            if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                     || Intent.ACTION_SEND.equals(action)
                     || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
@@ -311,15 +308,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
-                mPost = (PostModel) extras.getSerializable(EXTRA_POST);
+                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
                     mIsPage = mPost.isPage();
                 }
-            } else {
-                // A postId extra must be passed to this activity
-                showErrorAndFinish(R.string.post_not_found);
-                return;
             }
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
@@ -391,7 +384,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost();
+                                            mEditPostPreviewFragment.loadPost(mPost);
                                         }
                                     }
                                 });
@@ -436,12 +429,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     protected void onPause() {
         super.onPause();
-
-        try {
-            unregisterReceiver(mGalleryReceiver);
-        } catch (IllegalArgumentException e) {
-            AppLog.d(T.EDITOR, "Illegal state! Can't unregister receiver that was no registered");
-        }
 
         mHandler.removeCallbacks(mAutoSave);
         mHandler = null;
@@ -642,7 +629,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 launchVideoLibrary();
                 break;
             case WP_MEDIA:
-                startMediaGalleryAddActivity();
+                ActivityLauncher.viewMediaPickerForResult(this, mSite);
                 break;
         }
     }
@@ -727,8 +714,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                                 shouldShowContextMenu = false;
                             } else {
-                                registerReceiver(mGalleryReceiver,
-                                        new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
                                 refreshBlogMedia();
                             }
                             break;
@@ -868,6 +853,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             case REQUEST_TOO_LARGE:
                 errorMessage = getString(R.string.media_error_too_large_upload);
+                break;
+            case SERVER_ERROR:
+                errorMessage = getString(R.string.media_error_internal_server_error);
+                break;
+            case TIMEOUT:
+                errorMessage = getString(R.string.media_error_timeout);
                 break;
             case GENERIC_ERROR:
             default:
@@ -1102,7 +1093,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         i.putExtra(EXTRA_HAS_UNFINISHED_MEDIA, hasUnfinishedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
-        i.putExtra(EXTRA_POST, mPost);
+        i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         setResult(RESULT_OK, i);
     }
 
@@ -1225,9 +1216,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT &&
                         isPublishable && hasLocalChanges;
 
-                // if post was modified or has unsaved local changes and is publishable, save it
-                boolean shouldSave = (hasChanges || hasUnpublishedLocalDraftChanges) && (isPublishable || !isNewPost());
-                saveResult(shouldSave, false);
+                // if post was modified or has unpublished local changes, save it
+                boolean shouldSave = hasChanges || hasUnpublishedLocalDraftChanges;
+                // if post is publishable or not new, sync it
+                boolean shouldSync = isPublishable || !isNewPost();
+
+                saveResult(shouldSave && shouldSync, false);
 
                 if (shouldSave) {
                     if (isNewPost()) {
@@ -1333,7 +1327,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 1:
                     return EditPostSettingsFragment.newInstance(mSite, mPost);
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite, mPost);
+                    return EditPostPreviewFragment.newInstance(mSite);
             }
         }
 
@@ -1446,7 +1440,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mediaFile == null) {
                     continue;
                 }
-                String replacement = getUploadErrorHtml(mediaFile.getMediaId(), mediaFile.getFilePath());
+                String replacement = getUploadErrorHtml(String.valueOf(mediaFile.getId()), mediaFile.getFilePath());
                 matcher.appendReplacement(stringBuffer, replacement);
             }
             matcher.appendTail(stringBuffer);
@@ -1566,10 +1560,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             }
         }
-    }
-
-    private void startMediaGalleryActivity(MediaGallery mediaGallery) {
-        ActivityLauncher.viewMediaGalleryForSiteAndGallery(this, mSite, mediaGallery);
     }
 
     private void prepareMediaPost() {
@@ -1843,13 +1833,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO))) {
             switch (requestCode) {
-                case MediaGalleryActivity.REQUEST_CODE:
-                    handleMediaGalleryResult(data);
-                    // TODO: No analytics here?
-                    break;
-                case MediaGalleryPickerActivity.REQUEST_CODE:
-                    handleMediaGalleryPickerResult(data);
-                    // No need to bump analytics here. Bumped later in handleMediaGalleryPickerResult-> addExistingMediaToEditor
+                case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
+                    handleMediaPickerResult(data);
+                    // No need to bump analytics here. Bumped later in handleMediaPickerResult-> addExistingMediaToEditor
                     break;
                 case RequestCodes.PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
@@ -1975,12 +1961,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return path;
     }
 
-    private void startMediaGalleryAddActivity() {
-        ActivityLauncher.viewMediaGalleryPickerForSite(this, mSite);
-    }
-
-    private void handleMediaGalleryPickerResult(Intent data) {
-        ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaGalleryPickerActivity.RESULT_IDS));
+    private void handleMediaPickerResult(Intent data) {
+        ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
             return;
         }
@@ -2023,25 +2005,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         ft.add(dialog, "insert_media");
         ft.commitAllowingStateLoss();
     }
-
-    private void handleMediaGalleryResult(Intent data) {
-        MediaGallery gallery = (MediaGallery) data.getSerializableExtra(MediaGalleryActivity.RESULT_MEDIA_GALLERY);
-
-        // if blank gallery returned, don't add to span
-        if (gallery == null || gallery.getIds().size() == 0) {
-            return;
-        }
-        mEditorFragment.appendGallery(gallery);
-    }
-
-    private BroadcastReceiver mGalleryReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED.equals(intent.getAction())) {
-                startMediaGalleryActivity((MediaGallery)intent.getSerializableExtra(LegacyEditorFragment.EXTRA_MEDIA_GALLERY));
-            }
-        }
-    };
 
     private void refreshBlogMedia() {
         if (NetworkUtils.isNetworkAvailable(this)) {
