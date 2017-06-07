@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="40dp">
+
+    <org.wordpress.android.widgets.WPTextView
+        style="@style/LoginTheme.PromoText"
+        android:id="@+id/promo_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        tools:text="@string/login_promo_text_anytime"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/promo_text"
+        android:layout_marginTop="-80dp"/>
+</RelativeLayout>

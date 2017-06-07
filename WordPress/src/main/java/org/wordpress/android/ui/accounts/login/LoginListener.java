@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login;
 
 public interface LoginListener {
     // Login Prologue callbacks
+    void nextPromo();
     void showEmailLoginScreen();
     void doStartSignup();
 
