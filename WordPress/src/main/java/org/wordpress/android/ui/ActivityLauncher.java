@@ -303,6 +303,7 @@ public class ActivityLauncher {
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent = new Intent(activity, SignInActivity.class);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        intent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
