@@ -34,10 +34,6 @@ import java.util.HashSet;
 
 import javax.inject.Inject;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-
 public class PublicizeButtonPrefsFragment extends Fragment implements
         SiteSettingsInterface.SiteSettingsListener,
         WPPrefView.OnPrefChangedListener {
@@ -188,12 +184,12 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         for (int i = 0; i < mPublicizeButtons.size(); i++) {
             PublicizeButton publicizeButton = mPublicizeButtons.get(i);
             if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
-                twitterCard.setVisibility(VISIBLE);
+                twitterCard.setVisibility(View.VISIBLE);
                 return;
             }
         }
 
-        twitterCard.setVisibility(GONE);
+        twitterCard.setVisibility(View.GONE);
     }
 
     /*
