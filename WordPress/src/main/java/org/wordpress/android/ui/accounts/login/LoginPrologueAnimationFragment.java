@@ -52,7 +52,6 @@ public class LoginPrologueAnimationFragment extends Fragment {
 
         mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
         mLottieAnimationView.setAnimation(mAnimationFilename, LottieAnimationView.CacheStrategy.Weak);
-//        mLottieAnimationView.setImageAssetsFolder("login_anims");
         mLottieAnimationView.loop(true);
 
         mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
