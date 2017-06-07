@@ -6,16 +6,13 @@
     android:paddingTop="40dp">
 
     <org.wordpress.android.widgets.WPTextView
-        style="@style/WordPress.NUXTitle"
+        style="@style/LoginTheme.PromoText"
         android:id="@+id/promo_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
-        android:textSize="@dimen/nux_promo_font_size"
-        android:lineSpacingExtra="2dp"
         tools:text="@string/login_promo_text_anytime"/>
 
     <com.airbnb.lottie.LottieAnimationView
