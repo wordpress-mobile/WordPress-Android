@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#79ddfa"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.widgets.WPViewPager
+        android:id="@+id/intros_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_buttons"
+        android:clipToPadding="false"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-8dp"
+        app:tabBackground="@drawable/indicator_selector"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp" />
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_lighten_30"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_extra_large">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/login_button"
+            android:theme="@style/WordPress.BlueButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/log_in"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/create_site_button"
+            android:theme="@style/WordPress.WhiteButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="@string/create_wordpress_site"/>
+    </LinearLayout>
+</RelativeLayout>
