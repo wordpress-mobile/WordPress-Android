@@ -45,6 +45,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -114,7 +115,6 @@ public class EditPostSettingsFragment extends Fragment
 
     private long mFeaturedImageId;
     private String mCurrentSlug;
-    private String mCurrentExcerpt;
 
     private List<TermModel> mCategories;
 
@@ -323,9 +323,8 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        mCurrentExcerpt = mPost.getExcerpt();
         mCurrentSlug = mPost.getSlug();
-        mExcerptTextView.setText(mCurrentExcerpt);
+        mExcerptTextView.setText(mPost.getExcerpt());
         mSlugTextView.setText(mCurrentSlug);
         mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
         updateTagsTextView();
@@ -649,7 +648,6 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setExcerpt(mCurrentExcerpt);
         post.setSlug(mCurrentSlug);
         post.setStatus(getCurrentPostStatus().toString());
         post.setPassword(password);
@@ -932,13 +930,12 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostExcerptDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
+                mPost.getExcerpt(), getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        mCurrentExcerpt = input;
-                        mExcerptTextView.setText(mCurrentExcerpt);
+                        updateExcerpt(input);
                     }
                 });
         dialog.show(getFragmentManager(), null);
@@ -1184,5 +1181,17 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
         updatePostFormatKeysAndNames();
+    }
+
+    // Helpers
+
+    private void updateExcerpt(String excerpt) {
+        mPost.setExcerpt(excerpt);
+        mExcerptTextView.setText(mPost.getExcerpt());
+        dispatchUpdatePostAction();
+    }
+
+    private void dispatchUpdatePostAction() {
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
     }
 }
