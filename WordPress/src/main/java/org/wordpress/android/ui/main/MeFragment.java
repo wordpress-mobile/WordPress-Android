@@ -39,12 +39,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -84,15 +85,15 @@ public class MeFragment extends Fragment {
 
     private static final int CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
+    private ViewGroup mAvatarContainer;
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
     private ToolTipView mGravatarToolTipView;
     private View mAvatarTooltipAnchor;
-    private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
-    private TextView mLoginLogoutTextView;
+    private View mWPComConnectRow;
     private View mMyProfileView;
     private View mAccountSettingsView;
     private View mNotificationsView;
@@ -178,14 +179,14 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
-        mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
+        mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mAvatarTooltipAnchor = rootView.findViewById(R.id.avatar_tooltip_anchor);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
-        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mWPComConnectRow = rootView.findViewById(R.id.row_wpcom_connect);
         mMyProfileView = rootView.findViewById(R.id.row_my_profile);
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
@@ -248,14 +249,17 @@ public class MeFragment extends Fragment {
             }
         });
 
+        mWPComConnectRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.showSignInForResult(getActivity());
+            }
+        });
+
         rootView.findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mAccountStore.hasAccessToken()) {
-                    signOutWordPressComWithConfirmation();
-                } else {
-                    ActivityLauncher.showSignInForResult(getActivity());
-                }
+                logoutWithConfirmation();
             }
         });
 
@@ -348,7 +352,7 @@ public class MeFragment extends Fragment {
             loadAvatar(avatarUrl, null);
 
             mUsernameTextView.setText("@" + defaultAccount.getUserName());
-            mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
+            mWPComConnectRow.setVisibility(View.GONE);
 
             String displayName = StringUtils.unescapeHTML(defaultAccount.getDisplayName());
             if (!TextUtils.isEmpty(displayName)) {
@@ -365,7 +369,7 @@ public class MeFragment extends Fragment {
             mAccountSettingsView.setVisibility(View.GONE);
             mNotificationsView.setVisibility(View.GONE);
             mNotificationsDividerView.setVisibility(View.GONE);
-            mLoginLogoutTextView.setText(R.string.me_connect_to_wordpress_com);
+            mWPComConnectRow.setVisibility(View.VISIBLE);
         }
     }
 
@@ -412,7 +416,7 @@ public class MeFragment extends Fragment {
         });
     }
 
-    private void signOutWordPressComWithConfirmation() {
+    private void logoutWithConfirmation() {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
                 mAccountStore.getAccount().getUserName());
 
@@ -421,6 +425,7 @@ public class MeFragment extends Fragment {
                 .setPositiveButton(R.string.signout, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         signOutWordPressCom();
+                        mDispatcher.dispatch(SiteActionBuilder.newRemoveAllSitesAction());
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -673,7 +678,7 @@ public class MeFragment extends Fragment {
         WeakReference<Context> mWeakContext;
 
         public SignOutWordPressComAsync(Context context) {
-            mWeakContext = new WeakReference<Context>(context);
+            mWeakContext = new WeakReference<>(context);
         }
 
         @Override
