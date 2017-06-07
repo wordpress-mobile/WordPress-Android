@@ -18,6 +18,7 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.util.ToastUtils;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
+    private static final String FORGOT_PASSWORD_URL = "https://wordpress.com/wp-login.php?action=lostpassword";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void forgotPassword() {
-        ToastUtils.showToast(this, "Forgot password is not implemented yet");
+        ActivityLauncher.openUrlExternal(this, FORGOT_PASSWORD_URL);
     }
 
     @Override
