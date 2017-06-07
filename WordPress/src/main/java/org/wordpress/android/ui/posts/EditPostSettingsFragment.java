@@ -114,7 +114,6 @@ public class EditPostSettingsFragment extends Fragment
     private Button mFeaturedImageButton;
 
     private long mFeaturedImageId;
-    private String mCurrentSlug;
 
     private List<TermModel> mCategories;
 
@@ -323,9 +322,8 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
-        mCurrentSlug = mPost.getSlug();
         mExcerptTextView.setText(mPost.getExcerpt());
-        mSlugTextView.setText(mCurrentSlug);
+        mSlugTextView.setText(mPost.getSlug());
         mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
         updateTagsTextView();
 
@@ -648,7 +646,6 @@ public class EditPostSettingsFragment extends Fragment
             post.setFeaturedImageId(mFeaturedImageId);
         }
 
-        post.setSlug(mCurrentSlug);
         post.setStatus(getCurrentPostStatus().toString());
         post.setPassword(password);
     }
@@ -943,13 +940,12 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showSlugDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
+                mPost.getSlug(), getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        mCurrentSlug = input;
-                        mSlugTextView.setText(mCurrentSlug);
+                        updateSlug(input);
                     }
                 });
         dialog.show(getFragmentManager(), null);
@@ -1188,6 +1184,12 @@ public class EditPostSettingsFragment extends Fragment
     private void updateExcerpt(String excerpt) {
         mPost.setExcerpt(excerpt);
         mExcerptTextView.setText(mPost.getExcerpt());
+        dispatchUpdatePostAction();
+    }
+
+    private void updateSlug(String slug) {
+        mPost.setSlug(slug);
+        mExcerptTextView.setText(mPost.getSlug());
         dispatchUpdatePostAction();
     }
 
