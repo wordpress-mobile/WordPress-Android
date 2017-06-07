@@ -72,7 +72,6 @@ public class WPPrefView extends LinearLayout implements
     private TextView mHeadingTextView;
     private TextView mTitleTextView;
     private TextView mSummaryTextView;
-    private View mDivider;
     private Switch mToggleSwitch;
 
     private String mTextEntry;
@@ -174,7 +173,6 @@ public class WPPrefView extends LinearLayout implements
         mTitleTextView = (TextView) view.findViewById(R.id.text_title);
         mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
         mToggleSwitch = (Switch) view.findViewById(R.id.switch_view);
-        mDivider = view.findViewById(R.id.divider);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -194,7 +192,9 @@ public class WPPrefView extends LinearLayout implements
                 setTitle(title);
                 setSummary(summary);
                 setTextDialogSubtitle(dialogSubtitle);
-                setShowDivider(showDivider);
+
+                View divider = view.findViewById(R.id.divider);
+                divider.setVisibility(showDivider ? View.VISIBLE : View.GONE);
             } finally {
                 a.recycle();
             }
@@ -277,13 +277,6 @@ public class WPPrefView extends LinearLayout implements
     }
     public void setChecked(boolean checked) {
         mToggleSwitch.setChecked(checked);
-    }
-
-    /*
-     * determines whether a divider appears below the pref - should be true for all but the last one
-     */
-    private void setShowDivider(boolean show) {
-        mDivider.setVisibility(show ? VISIBLE : GONE);
     }
 
     /*
