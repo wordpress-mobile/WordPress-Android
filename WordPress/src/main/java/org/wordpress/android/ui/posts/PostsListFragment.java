@@ -85,6 +85,7 @@ public class PostsListFragment extends Fragment
     private boolean mShouldCancelPendingDraftNotification = false;
     private int mPostIdForPostToBeDeleted = 0;
 
+    private Handler mHandler;
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
     private SiteModel mSite;
@@ -106,6 +107,7 @@ public class PostsListFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        mHandler = new Handler();
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
 
@@ -322,7 +324,7 @@ public class PostsListFragment extends Fragment
         // scale in the fab after a brief delay if it's not already showing
         if (mFabView.getVisibility() != View.VISIBLE) {
             long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-            new Handler().postDelayed(new Runnable() {
+            mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (isAdded()) {
