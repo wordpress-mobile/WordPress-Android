@@ -30,6 +30,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashSet;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
@@ -277,18 +278,25 @@ public class WPNetworkImageView extends AppCompatImageView {
             if (mImageType == ImageType.GONE_UNTIL_AVAILABLE) {
                 setVisibility(View.VISIBLE);
             }
-
+            
             // if cropping is requested, do it before further manipulation
             if (mCropWidth > 0 && mCropHeight > 0) {
                 bitmap = ThumbnailUtils.extractThumbnail(bitmap, mCropWidth, mCropHeight);
             }
 
-            // Apply circular rounding to avatars in a background task
-            if (mImageType == ImageType.AVATAR) {
-                new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
-                return;
-            } else if (mImageType == ImageType.PHOTO_ROUNDED) {
-                new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+            try {
+                // Apply circular rounding to avatars in a background task
+                if (mImageType == ImageType.AVATAR) {
+                    new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                    return;
+                } else if (mImageType == ImageType.PHOTO_ROUNDED) {
+                    new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                    return;
+                }
+            } catch (RejectedExecutionException e) {
+                AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
+                        "The current ShapeBitmapTask was rejected");
+                showDefaultImage();
                 return;
             }
 
@@ -412,10 +420,16 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public void showDefaultGravatarImage() {
         if (getContext() == null) return;
-        new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
-                getContext().getResources(),
-                R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
-        ));
+        try {
+            new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+                    getContext().getResources(),
+                    R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
+            ));
+        } catch (RejectedExecutionException e) {
+            AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
+                    "The current DefaultGravatarImage was rejected");
+            return;
+        }
     }
 
     public void showDefaultBlavatarImage() {

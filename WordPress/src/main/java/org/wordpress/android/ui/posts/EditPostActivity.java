@@ -1032,6 +1032,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         @Override
         protected Void doInBackground(Void... params) {
 
+            if (!mSite.getHasCapabilityPublishPosts()) {
+               if (PostStatus.fromPost(mPost) != PostStatus.DRAFT && PostStatus.fromPost(mPost) != PostStatus.PENDING) {
+                   mPost.setStatus(PostStatus.PENDING.toString());
+               }
+            }
+
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
