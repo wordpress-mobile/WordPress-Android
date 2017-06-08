@@ -110,4 +110,28 @@ public class PostModelTest {
         assertTrue(testPost.shouldDeleteLatitude());
         assertTrue(testPost.shouldDeleteLongitude());
     }
+
+    @Test
+    public void testFilterEmptyTagsOnGetTagNameList() {
+        PostModel testPost = PostTestUtils.generateSampleLocalDraftPost();
+
+        testPost.setTagNames("pony,             ,ponies");
+        List<String> tags = testPost.getTagNameList();
+        assertTrue(tags.contains("pony"));
+        assertTrue(tags.contains("ponies"));
+        assertEquals(2, tags.size());
+    }
+
+    @Test
+    public void testStripTagsOnGetTagNameList() {
+        PostModel testPost = PostTestUtils.generateSampleLocalDraftPost();
+
+        testPost.setTagNames("    pony   , ponies    , #popopopopopony");
+        List<String> tags = testPost.getTagNameList();
+
+        assertTrue(tags.contains("pony"));
+        assertTrue(tags.contains("ponies"));
+        assertTrue(tags.contains("#popopopopopony"));
+        assertEquals(3, tags.size());
+    }
 }
