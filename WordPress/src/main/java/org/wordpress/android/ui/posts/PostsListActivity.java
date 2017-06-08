@@ -65,7 +65,7 @@ public class PostsListActivity extends AppCompatActivity {
 
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
         if (mPostList == null) {
-            mPostList = PostsListFragment.newInstance(mSite);
+            mPostList = PostsListFragment.newInstance(mSite, mIsPage);
             getFragmentManager().beginTransaction()
                     .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
                     .commit();
