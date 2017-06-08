@@ -402,7 +402,7 @@ public class MediaStoreTest {
         // verify the correct media is in the store
         PostModel post = new PostModel();
         post.setId(testLocalPostId);
-        final MediaModel storeMedia = mMediaStore.getPostMediaWithPath(post, testPath);
+        final MediaModel storeMedia = mMediaStore.getMediaForPostWithPath(post, testPath);
         assertNotNull(storeMedia);
         assertEquals(testPath, storeMedia.getFilePath());
         assertEquals(postMediaId, storeMedia.getMediaId());
