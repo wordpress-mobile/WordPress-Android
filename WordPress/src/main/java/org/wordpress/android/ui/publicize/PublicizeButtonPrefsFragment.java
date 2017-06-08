@@ -45,6 +45,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private static final long FETCH_DELAY = 1000L;
 
     private final ArrayList<PublicizeButton> mPublicizeButtons = new ArrayList<>();
+    private boolean mIgnorePrefChanges;
 
     private WPPrefView mPrefSharingButtons;
     private WPPrefView mPrefMoreButtons;
@@ -266,27 +267,32 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
      * update the preference views from the site settings
      */
     private void setPreferencesFromSiteSettings() {
-        mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
-        mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
+        mIgnorePrefChanges = true;
+        try {
+            mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
+            mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
 
-        mPrefShowReblog.setChecked(mSiteSettings.getAllowReblogButton());
-        mPrefShowLike.setChecked(mSiteSettings.getAllowLikeButton());
-        mPrefAllowCommentLikes.setChecked(mSiteSettings.getAllowCommentLikes());
+            mPrefShowReblog.setChecked(mSiteSettings.getAllowReblogButton());
+            mPrefShowLike.setChecked(mSiteSettings.getAllowLikeButton());
+            mPrefAllowCommentLikes.setChecked(mSiteSettings.getAllowCommentLikes());
 
-        mPrefTwitterName.setTextEntry(mSiteSettings.getTwitterUsername());
+            mPrefTwitterName.setTextEntry(mSiteSettings.getTwitterUsername());
 
-        // configure the button style pref
-        String selectedName = mSiteSettings.getSharingButtonStyleDisplayText(getActivity());
-        String[] names = getResources().getStringArray(R.array.sharing_button_style_display_array);
-        String[] values = getResources().getStringArray(R.array.sharing_button_style_array);
-        PrefListItems listItems = new PrefListItems();
-        for (int i = 0; i < names.length; i++) {
-            PrefListItem item = new PrefListItem(names[i], values[i], false);
-            listItems.add(item);
+            // configure the button style pref
+            String selectedName = mSiteSettings.getSharingButtonStyleDisplayText(getActivity());
+            String[] names = getResources().getStringArray(R.array.sharing_button_style_display_array);
+            String[] values = getResources().getStringArray(R.array.sharing_button_style_array);
+            PrefListItems listItems = new PrefListItems();
+            for (int i = 0; i < names.length; i++) {
+                PrefListItem item = new PrefListItem(names[i], values[i], false);
+                listItems.add(item);
+            }
+            listItems.setSelectedName(selectedName);
+            mPrefButtonStyle.setListItems(listItems);
+            mPrefButtonStyle.setSummary(selectedName);
+        } finally {
+            mIgnorePrefChanges = false;
         }
-        listItems.setSelectedName(selectedName);
-        mPrefButtonStyle.setListItems(listItems);
-        mPrefButtonStyle.setSummary(selectedName);
     }
 
     @Override
@@ -313,6 +319,8 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
     @Override
     public void onPrefChanged(@NonNull WPPrefView pref) {
+        if (mIgnorePrefChanges) return;
+
         if (pref == mPrefSharingButtons) {
             saveSharingButtons(pref.getSelectedValues(), true);
         } else if (pref == mPrefMoreButtons) {

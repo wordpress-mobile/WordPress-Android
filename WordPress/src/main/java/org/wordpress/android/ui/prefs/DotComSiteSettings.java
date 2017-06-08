@@ -208,10 +208,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.blacklist = new ArrayList<>();
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
-        mRemoteSettings.allowReblogButton = !settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, true);
-        mRemoteSettings.allowLikeButton = !settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, true);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
+
+        boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
+        boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
+        mRemoteSettings.allowReblogButton = !reblogsDisabled;
+        mRemoteSettings.allowLikeButton = !likesDisabled;
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
         if (modKeys.length() > 0) {
