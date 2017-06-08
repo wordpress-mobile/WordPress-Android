@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceive
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
@@ -53,10 +55,8 @@ public class PostUploadNotifier {
         mNotificationBuilder.setSmallIcon(android.R.drawable.stat_sys_upload);
     }
 
-    public void updateNotificationNewPost(PostModel post, String title, String message) {
-        if (title != null) {
-            mNotificationBuilder.setContentTitle(title);
-        }
+    public void createNotificationForPost(@NonNull PostModel post, String message) {
+        mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
         if (message != null) {
             mNotificationBuilder.setContentText(message);
         }
@@ -66,6 +66,16 @@ public class PostUploadNotifier {
         notificationData.notificationId = notificationId;
         mPostIdToNotificationData.put(post.getId(), notificationData);
         mService.startForeground(notificationId, mNotificationBuilder.build());
+    }
+
+    public boolean isDisplayingNotificationForPost(@NonNull PostModel post) {
+        return mPostIdToNotificationData.get(post.getId()) != null;
+    }
+
+    public void updateNotificationMessage(@NonNull PostModel post, String message) {
+        NotificationData notificationData = mPostIdToNotificationData.get(post.getId());
+        mNotificationBuilder.setContentText(StringUtils.notNullStr(message));
+        doNotify(notificationData.notificationId, mNotificationBuilder.build());
     }
 
     public void updateNotificationIcon(PostModel post, Bitmap icon) {
@@ -230,5 +240,10 @@ public class PostUploadNotifier {
 
         mNotificationBuilder.setContentText(String.format(mContext.getString(R.string.uploading_total),
                 currentItem, notificationData.totalMediaItems));
+    }
+
+    private String buildNotificationTitleForPost(PostModel post) {
+        String postTitle = TextUtils.isEmpty(post.getTitle()) ? mContext.getString(R.string.untitled) : post.getTitle();
+        return String.format(mContext.getString(R.string.posting_post), postTitle);
     }
 }

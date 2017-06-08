@@ -167,6 +167,7 @@ public class PostUploadService extends Service {
         }
 
         uploadNextPost();
+        showNotificationsForPendingMediaPosts();
         // We want this service to continue running until it is explicitly stopped, so return sticky.
         return START_STICKY;
     }
@@ -212,6 +213,16 @@ public class PostUploadService extends Service {
         }
         AppLog.d(T.POSTS, "All posts queued for upload have pending media");
         return null;
+    }
+
+    private void showNotificationsForPendingMediaPosts() {
+        for (PostModel postModel : mPostsList) {
+            if (MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
+                if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
+                    mPostUploadNotifier.createNotificationForPost(postModel, getString(R.string.uploading_post_media));
+                }
+            }
+        }
     }
 
     /**
@@ -266,14 +277,16 @@ public class PostUploadService extends Service {
         protected Boolean doInBackground(PostModel... posts) {
             mPost = posts[0];
 
-            String postTitle = TextUtils.isEmpty(mPost.getTitle()) ? getString(R.string.untitled) : mPost.getTitle();
-            String uploadingPostTitle = String.format(getString(R.string.posting_post), postTitle);
             String uploadingPostMessage = String.format(
                     getString(R.string.sending_content),
                     mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
             );
 
-            mPostUploadNotifier.updateNotificationNewPost(mPost, uploadingPostTitle, uploadingPostMessage);
+            if (mPostUploadNotifier.isDisplayingNotificationForPost(mPost)) {
+                mPostUploadNotifier.updateNotificationMessage(mPost, uploadingPostMessage);
+            } else {
+                mPostUploadNotifier.createNotificationForPost(mPost, uploadingPostMessage);
+            }
 
             mSite = mSiteStore.getSiteByLocalId(mPost.getLocalSiteId());
             if (mSite == null) {
@@ -606,11 +619,14 @@ public class PostUploadService extends Service {
         }
     }
 
-    private void cancelPostUploadMatchingMedia(MediaModel media) {
+    private void cancelPostUploadMatchingMedia(MediaModel media, String mediaErrorMessage) {
         PostModel postToCancel = removeQueuedPostByLocalId(media.getLocalPostId());
         if (postToCancel == null) return;
 
-        // TODO: Update post upload messaging at this point
+        SiteModel site = mSiteStore.getSiteByLocalId(postToCancel.getLocalSiteId());
+        String message = getErrorMessage(postToCancel, mediaErrorMessage);
+        mPostUploadNotifier.updateNotificationError(postToCancel, site, message, true);
+
         mFirstPublishPosts.remove(postToCancel.getId());
         EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
         finishUpload();
@@ -705,14 +721,15 @@ public class PostUploadService extends Service {
         if (event.isError()) {
             AppLog.e(T.MEDIA, "Media upload failed for post " + event.media.getLocalPostId() + " : " +
                     event.error.type + ": " + event.error.message);
-            cancelPostUploadMatchingMedia(event.media);
+            String errorMessage = getErrorMessageFromMediaError(event.error);
+            cancelPostUploadMatchingMedia(event.media, errorMessage);
             return;
         }
 
         if (event.canceled) {
             AppLog.i(T.MEDIA, "Upload cancelled for post with id " + event.media.getLocalPostId()
                             + " - a media upload for this post has been cancelled, id: " + event.media.getId());
-            cancelPostUploadMatchingMedia(event.media);
+            cancelPostUploadMatchingMedia(event.media, getString(R.string.error_media_canceled));
             return;
         }
 
