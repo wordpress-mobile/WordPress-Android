@@ -674,6 +674,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (isFinishing()) return;
+
                         AppLog.d(AppLog.T.READER, "reader pager > creating adapter");
                         PostPagerAdapter adapter =
                                 new PostPagerAdapter(getFragmentManager(), idList);
