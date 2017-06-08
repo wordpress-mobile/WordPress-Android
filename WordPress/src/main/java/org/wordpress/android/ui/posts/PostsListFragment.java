@@ -133,6 +133,7 @@ public class PostsListFragment extends Fragment
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
         }
 
         if (mSite == null) {
@@ -609,6 +610,7 @@ public class PostsListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
     }
 
     @SuppressWarnings("unused")
