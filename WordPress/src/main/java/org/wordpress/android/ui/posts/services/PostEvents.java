@@ -13,6 +13,14 @@ public class PostEvents {
         }
     }
 
+    public static class PostUploadCanceled {
+        public final int localSiteId;
+
+        public PostUploadCanceled(int localSiteId) {
+            this.localSiteId = localSiteId;
+        }
+    }
+
     public static class PostMediaInfoUpdated {
         private long mMediaId;
         private String mMediaUrl;

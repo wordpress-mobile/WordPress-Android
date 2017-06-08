@@ -155,7 +155,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
-    public static final String EXTRA_HAS_UNFINISHED_MEDIA = "hasUnfinishedMedia";
+    public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
@@ -797,23 +797,26 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
 
-        // Disable format bar buttons while a media upload is in progress
-        if (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress()) {
-            ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
-            return false;
-        }
-
         if (itemId == R.id.menu_save_post) {
             publishPost();
-        } else if (itemId == R.id.menu_preview_post) {
-            mViewPager.setCurrentItem(PAGE_PREVIEW);
-        } else if (itemId == R.id.menu_post_settings) {
-            InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
-            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-            if (mShowNewEditor || mShowAztecEditor) {
-                mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
+        } else {
+            // TODO Drop this for Aztec when we have reattachment working
+            // Disable other action bar buttons while a media upload is in progress
+            if (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress()) {
+                ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
+                return false;
             }
-            mViewPager.setCurrentItem(PAGE_SETTINGS);
+
+            if (itemId == R.id.menu_preview_post) {
+                mViewPager.setCurrentItem(PAGE_PREVIEW);
+            } else if (itemId == R.id.menu_post_settings) {
+                InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                if (mShowNewEditor || mShowAztecEditor) {
+                    mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
+                }
+                mViewPager.setCurrentItem(PAGE_SETTINGS);
+            }
         }
         return false;
     }
@@ -1027,7 +1030,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
@@ -1086,7 +1089,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void saveResult(boolean saved, boolean savedLocally) {
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
-        i.putExtra(EXTRA_HAS_UNFINISHED_MEDIA, hasUnfinishedMedia());
+        i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
@@ -1234,7 +1237,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         }
                     }
 
-                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
+                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasFailedMedia()
                             && NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         savePostOnlineAndFinishAsync(isFirstTimePublish);
                     } else {
@@ -1256,9 +1259,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
     }
 
-    private boolean hasUnfinishedMedia() {
-        return mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress() ||
-                mEditorFragment.hasFailedMediaUploads();
+    /**
+     * Can be dropped and replaced by mEditorFragment.hasFailedMediaUploads() when we drop the visual editor.
+     * mEditorFragment.isActionInProgress() was added to address a timing issue when adding media and immediately
+     * publishing or exiting the visual editor. It's not safe to upload the post in this state.
+     * See https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/294
+     */
+    private boolean hasFailedMedia() {
+        return mEditorFragment.hasFailedMediaUploads() || mEditorFragment.isActionInProgress();
     }
 
     private boolean updatePostObject() {

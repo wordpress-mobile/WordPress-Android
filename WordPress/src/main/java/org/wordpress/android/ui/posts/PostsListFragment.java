@@ -106,10 +106,10 @@ public class PostsListFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
+        updateSiteOrFinishActivity(savedInstanceState);
+
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
-
-        updateSiteOrFinishActivity(savedInstanceState);
 
         if (isAdded()) {
             Bundle extras = getActivity().getIntent().getExtras();
@@ -208,9 +208,9 @@ public class PostsListFragment extends Fragment
 
         final PostModel post = mPostStore.
                 getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
-        boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
-        if (hasUnfinishedMedia) {
-            showSnackbar(R.string.editor_post_saved_locally_unfinished_media, R.string.button_edit,
+        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
+        if (hasFailedMedia) {
+            showSnackbar(R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -384,11 +384,21 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * upload start, reload so correct status on uploading post appears
+     * Upload started, reload so correct status on uploading post appears
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (isAdded() && mSite.getId() == event.mLocalBlogId) {
+        if (isAdded() && mSite != null && mSite.getId() == event.mLocalBlogId) {
+            loadPosts(LoadMode.FORCED);
+        }
+    }
+
+    /*
+    * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
+    */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostUploadCanceled event) {
+        if (isAdded() && mSite != null && mSite.getId() == event.localSiteId) {
             loadPosts(LoadMode.FORCED);
         }
     }
