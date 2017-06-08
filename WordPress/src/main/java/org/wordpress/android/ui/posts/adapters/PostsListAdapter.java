@@ -539,6 +539,16 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         animOut.start();
     }
 
+    public @NonNull List<PostModel> getPostList() {
+        return mPosts;
+    }
+
+    public void setPostList(@NonNull List<PostModel> postList) {
+        mPosts.clear();
+        mPosts.addAll(postList);
+        notifyDataSetChanged();
+    }
+
     public void loadPosts(LoadMode mode) {
         if (mIsLoadingPosts) {
             AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts");
