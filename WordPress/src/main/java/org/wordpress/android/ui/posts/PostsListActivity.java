@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -65,7 +62,7 @@ public class PostsListActivity extends AppCompatActivity {
 
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
         if (mPostList == null) {
-            mPostList = PostsListFragment.newInstance(mSite);
+            mPostList = PostsListFragment.newInstance(mSite, mIsPage);
             getFragmentManager().beginTransaction()
                     .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
                     .commit();
