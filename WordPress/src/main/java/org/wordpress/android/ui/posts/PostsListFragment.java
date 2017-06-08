@@ -11,12 +11,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.helpshift.support.util.ListUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -30,9 +33,11 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.SearchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.OnPostsSearched;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -45,6 +50,7 @@ import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -69,6 +75,9 @@ public class PostsListFragment extends Fragment
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
+    // delay between user typing and performing network search
+    private static final long SEARCH_DELAY_MS = 1000L;
+
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
@@ -86,6 +95,12 @@ public class PostsListFragment extends Fragment
     private int mPostIdForPostToBeDeleted = 0;
 
     private Handler mHandler;
+    private boolean mIsSearching = false;
+    private boolean mCanSearchMore = true;
+    private int mSearchOffset = 0;
+    private String mSearchTerm;
+
+    private final List<PostModel> mSearchResults = new ArrayList<>();
     private final List<PostModel> mTrashedPosts = new ArrayList<>();
 
     private SiteModel mSite;
@@ -188,6 +203,20 @@ public class PostsListFragment extends Fragment
         initSwipeToRefreshHelper(view);
 
         return view;
+    }
+
+    public void search(String searchTerm) {
+        // remove pending searches
+        mHandler.removeCallbacks(mSearchRunnable);
+        mSearchTerm = searchTerm;
+        mSearchOffset = 0;
+        mSearchResults.clear();
+
+        if (!TextUtils.isEmpty(searchTerm)) {
+            mHandler.postDelayed(mSearchRunnable, SEARCH_DELAY_MS);
+        } else {
+            loadPosts(LoadMode.IF_CHANGED);
+        }
     }
 
     public void handleEditPostResult(int resultCode, Intent data) {
@@ -464,8 +493,14 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onLoadMore() {
-        if (mCanLoadMorePosts && !mIsFetchingPosts) {
-            requestPosts(true);
+        if (TextUtils.isEmpty(mSearchTerm)) {
+            if (mCanLoadMorePosts && !mIsFetchingPosts) {
+                requestPosts(true);
+            }
+        } else if (mCanSearchMore && !mIsSearching) {
+            showLoadMoreProgress();
+            mSearchOffset = mSearchResults.size();
+            mHandler.post(mSearchRunnable);
         }
     }
 
@@ -483,6 +518,11 @@ public class PostsListFragment extends Fragment
     @Override
     public void onPostButtonClicked(int buttonType, PostModel post) {
         if (!isAdded()) return;
+
+        PostModel existingPost = getPostFromRemoteId(post.getRemotePostId());
+        if (existingPost != null) {
+            post = existingPost;
+        }
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
@@ -608,6 +648,41 @@ public class PostsListFragment extends Fragment
         snackbar.show();
     }
 
+    /**
+     * Searches the PostStore for post with a matching remote ID. Used when searching since PostModel's returned
+     * from search actions don't have valid local IDs
+     */
+    private PostModel getPostFromRemoteId(long remoteId) {
+        for (PostModel post : mPostStore.getPostsForSite(mSite)) {
+            if (post.getRemotePostId() == remoteId) {
+                return post;
+            }
+        }
+        return null;
+    }
+
+    private void dispatchSearchAction() {
+        SearchPostsPayload payload = new SearchPostsPayload(mSite, mSearchTerm, mSearchOffset);
+        if (mIsPage) {
+            mDispatcher.dispatch(PostActionBuilder.newSearchPagesAction(payload));
+        } else {
+            mDispatcher.dispatch(PostActionBuilder.newSearchPostsAction(payload));
+        }
+    }
+
+    private final Runnable mSearchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (TextUtils.isEmpty(mSearchTerm)) {
+                hideLoadMoreProgress();
+                return;
+            }
+            updateEmptyView(EmptyViewMessageType.LOADING);
+            showLoadMoreProgress();
+            dispatchSearchAction();
+        }
+    };
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -658,6 +733,29 @@ public class PostsListFragment extends Fragment
     public void onPostUploaded(OnPostUploaded event) {
         if (isAdded() && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostsSearched(OnPostsSearched event) {
+        mIsSearching = false;
+        hideLoadMoreProgress();
+
+        if (event.isError()) {
+            AppLog.w(AppLog.T.POSTS, "Error searching posts: " + event.error.message);
+            ToastUtils.showToast(getActivity(), "Error searching posts: " + event.error.type);
+        } else {
+            if (event.searchResults != null && !ListUtils.isEmpty(event.searchResults.getPosts())) {
+                hideEmptyView();
+                mSearchResults.addAll(event.searchResults.getPosts());
+                getPostListAdapter().setPostList(mSearchResults);
+            } else {
+                // search returned no results
+                getPostListAdapter().setPostList(mSearchResults);
+                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            }
+            mCanSearchMore = event.canLoadMore;
         }
     }
 

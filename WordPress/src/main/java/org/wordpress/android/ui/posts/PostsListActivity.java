@@ -3,10 +3,14 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -19,13 +23,20 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends AppCompatActivity implements OnActionExpandListener, SearchView.OnQueryTextListener {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
+
+    private static final String SAVED_QUERY = "SAVED_QUERY";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
     private SiteModel mSite;
+
+    // Search
+    private SearchView mSearchView;
+    private MenuItem mSearchMenuItem;
+    private String mQuery;
 
     @Inject SiteStore mSiteStore;
 
@@ -78,10 +89,55 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (mSearchMenuItem != null) {
+            String tempQuery = mQuery;
+            MenuItemCompat.collapseActionView(mSearchMenuItem);
+            mQuery = tempQuery;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.posts_list, menu);
+
+        mSearchMenuItem = menu.findItem(R.id.search_posts_list);
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
+        // open search bar if we were searching for something before
+        if (!TextUtils.isEmpty(mQuery)) {
+            String tempQuery = mQuery; //temporary hold onto query
+            MenuItemCompat.expandActionView(mSearchMenuItem); //this will reset mQuery
+            onQueryTextSubmit(tempQuery);
+            mSearchView.setQuery(mQuery, true);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.search_posts_list:
+                mSearchMenuItem = item;
+                MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+                MenuItemCompat.expandActionView(mSearchMenuItem);
+
+                mSearchView = (SearchView) item.getActionView();
+                mSearchView.setOnQueryTextListener(this);
+
+                // load last saved query
+                if (!TextUtils.isEmpty(mQuery)) {
+                    onQueryTextSubmit(mQuery);
+                    mSearchView.setQuery(mQuery, true);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -89,9 +145,50 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        // load last search query
+        if (!TextUtils.isEmpty(mQuery)) {
+            onQueryTextChange(mQuery);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (mPostList != null) {
+            mPostList.search(query);
+        }
+        mQuery = query;
+        mSearchView.clearFocus();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (mPostList != null) {
+            mPostList.search(newText);
+        }
+        mQuery = newText;
+        return true;
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putString(SAVED_QUERY, mQuery);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        mQuery = savedInstanceState.getString(SAVED_QUERY);
     }
 
     @Override
