@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -156,6 +155,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.media_preview_activity);
+        View videoFrame = findViewById(R.id.frame_video);
         mImageView = (ImageView) findViewById(R.id.image_preview);
         mVideoView = (VideoView) findViewById(R.id.video_preview);
         mMetadataView = (ViewGroup) findViewById(R.id.layout_metadata);
@@ -212,10 +212,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
         }
 
         mImageView.setVisibility(mIsVideo ?  View.GONE : View.VISIBLE);
-        mVideoView.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
 
         if (mIsVideo) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             playVideo(mediaUri);
         } else {
             loadImage(mediaUri);
@@ -599,14 +598,11 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 query.setFilterById(mDownloadId);
                 DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                 Cursor cursor = dm.query(query);
-                int reason = 0;
                 if (cursor.moveToFirst()) {
-                    reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
-                }
-                if (reason == DownloadManager.STATUS_FAILED) {
-                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
-                } else {
-                    ToastUtils.showToast(MediaPreviewActivity.this, R.string.media_saved_to_device);
+                    int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                    if (reason == DownloadManager.STATUS_FAILED) {
+                        ToastUtils.showToast(MediaPreviewActivity.this, R.string.error_media_save);
+                    }
                 }
                 mDownloadId = 0;
                 invalidateOptionsMenu();
@@ -636,6 +632,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             ToastUtils.showToast(this, R.string.error_media_not_found);
             return;
         }
+
+        ToastUtils.showToast(this, R.string.media_downloading);
 
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
