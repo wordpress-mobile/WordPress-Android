@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-19 23:30:35+0000
+Translation-Revision-Date: 2017-06-03 04:26:44+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="editor_scheduled_post_saved_online">投稿を予約しました</string>
+	<string name="error_media_save">メディアを保存できません</string>
+	<string name="editor_draft_saved_locally">下書きを端末に保存しました</string>
+	<string name="editor_draft_saved_online">下書きをオンラインに保存しました</string>
+	<string name="editor_post_saved_locally">投稿を端末に保存しました</string>
+	<string name="cant_share_unknown_action">不明なアクションが要求されたため、無視します。</string>
+	<string name="button_sync">同期</string>
+	<string name="media_saved_to_device">この端末に保存されたメディア</string>
 	<string name="smart_toast_comments_long_press">複数のコメントを選択するにはタップしてホールド</string>
 	<string name="smart_toast_photo_long_press">複数の写真を選択するにはタップしてホールド</string>
-	<string name="photo_picker_choose_video">デバイスから動画を選択</string>
-	<string name="photo_picker_choose_photo">デバイスから写真を選択</string>
+	<string name="photo_picker_choose_video">端末から動画を選択</string>
+	<string name="photo_picker_choose_photo">端末から写真を選択</string>
 	<string name="new_editor_promo_description">WordPress アプリにステキな新エディタが含まれるようになりました。新しい投稿を作成し、お試しください。</string>
 	<string name="wp_media_title">WordPress メディア</string>
 	<string name="media_insert_as_gallery">ギャラリーとして追加</string>
@@ -36,11 +44,8 @@ Language: ja_JP
 	<string name="editor_post_saved_locally_unfinished_media">投稿に未完了のメディアのアップロードがあるため、ローカルに保存されました</string>
 	<string name="sure_to_remove_account">アプリからこのサイトを削除しますか ?</string>
 	<string name="photo_picker_title">写真を選択</string>
-	<string name="error_publish_no_network">デバイスがオフラインです。変更をローカルで保存しました。</string>
-	<string name="editor_post_saved_online_not_published">投稿はオンラインで下書きとして保存されました。公開しませんか ?</string>
-	<string name="editor_post_saved_online">投稿はオンラインで保存しました</string>
-	<string name="editor_post_saved_locally_not_published">投稿はローカルのみで保存されました。公開しませんか ?</string>
-	<string name="editor_post_saved_locally">投稿をデバイスに保存しました</string>
+	<string name="error_publish_no_network">端末がオフラインです。変更をローカルで保存しました。</string>
+	<string name="editor_post_saved_online">投稿をオンラインで保存しました</string>
 	<string name="site_settings_image_quality_hint">写真の画質。値が高いほど、画質が良いことを意味します。</string>
 	<string name="site_settings_optimize_images_summary">写真をリサイズして圧縮できます</string>
 	<string name="media_encoder_quality_95">非常に高い</string>
@@ -91,9 +96,6 @@ Language: ja_JP
 	<string name="confirm">確認</string>
 	<string name="xmlrpc_endpoint_forbidden_error">接続できませんでした。サイトの XMLRPC エンドポイントにアクセスしようとし多際に403エラーを受け取りました。サイトと通信するためにアプリはこのエンドポイントにアクセスする必要があります。ホストに連絡してこの問題を解決してください。</string>
 	<string name="xmlrpc_post_blocked_error">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
-	<string name="reader_liked_default_tag">「いいね」した投稿</string>
-	<string name="reader_discover_default_tag">Discover</string>
-	<string name="reader_followed_default_tag">フォロー中のサイト</string>
 	<string name="reader_empty_followed_blogs_search_title">一致するサイトがありません</string>
 	<string name="reader_hint_search_followed_sites">フォローしているサイトの検索</string>
 	<string name="visual_editor_disabled">ビジュアルエディターが無効になっています</string>
@@ -142,7 +144,7 @@ Language: ja_JP
 	<string name="sign_in_wpcom">WordPress.com にログインする</string>
 	<string name="reader_label_global_related_posts">WordPress.com の詳細</string>
 	<string name="reader_label_local_related_posts">関連 (%s)</string>
-	<string name="preference_open_device_settings">デバイス設定を開く</string>
+	<string name="preference_open_device_settings">端末設定を開く</string>
 	<string name="comment_moderated_unapproved">未承認コメント</string>
 	<string name="invite_invalid_email">%s: 無効なメールアドレス</string>
 	<string name="invite_user_blocked_invites">%s: ユーザーが招待をブロックしました</string>
@@ -271,7 +273,7 @@ Language: ja_JP
 	<string name="username_email">メールアドレスまたはユーザー名</string>
 	<string name="jetpack_not_connected_message">Jetpack プラグインがインストールされていますが、WordPress.com と連携されていません。Jetpack との連携を行いますか ?</string>
 	<string name="jetpack_not_connected">Jetpack プラグインが連携されていません</string>
-	<string name="new_editor_reflection_error">ビジュアルエディターはお使いのデバイスとの互換性がありません。自動で無効化されました。</string>
+	<string name="new_editor_reflection_error">ビジュアルエディターはお使いの端末との互換性がありません。自動で無効化されました。</string>
 	<string name="stats_insights_latest_post_no_title">(タイトルなし)</string>
 	<string name="capture_or_pick_photo">写真を撮影または選択</string>
 	<string name="plans_post_purchase_button_themes">テーマを表示</string>
@@ -507,7 +509,7 @@ Language: ja_JP
 	<string name="site_settings_address_title">アドレス</string>
 	<string name="site_settings_title_title">サイトのタイトル</string>
 	<string name="site_settings_tagline_title">キャッチフレーズ</string>
-	<string name="site_settings_this_device_header">このデバイス</string>
+	<string name="site_settings_this_device_header">この端末</string>
 	<string name="site_settings_discussion_new_posts_header">新しい投稿のデフォルト</string>
 	<string name="site_settings_account_header">アカウント</string>
 	<string name="site_settings_writing_header">投稿設定</string>
@@ -612,7 +614,7 @@ Language: ja_JP
 	<string name="reader_title_post_detail">Reader 投稿</string>
 	<string name="local_draft_explainer">この投稿は公開されていないローカルの下書きです</string>
 	<string name="local_changes_explainer">この投稿には公開されていないローカルの変更があります</string>
-	<string name="notifications_push_summary">デバイスに表示される通知の設定。</string>
+	<string name="notifications_push_summary">端末に表示される通知の設定。</string>
 	<string name="notifications_email_summary">アカウントに結び付けられているメールに送信される通知の設定。</string>
 	<string name="notifications_tab_summary">「通知」タブに表示される通知の設定。</string>
 	<string name="notifications_disabled">アプリ通知が無効化されています。ここをタップして「設定」で有効化します。</string>
@@ -698,7 +700,7 @@ Language: ja_JP
 	<string name="show">表示</string>
 	<string name="hide">隠す</string>
 	<string name="select_all">すべて選択</string>
-	<string name="sign_out_wpcom_confirm">アカウントからログアウトすると、ローカルの下書きおよび変更を含む @%s のすべての WordPress.com データがこのデバイスから削除されます。</string>
+	<string name="sign_out_wpcom_confirm">アカウントからログアウトすると、ローカルの下書きおよび変更を含む @%s のすべての WordPress.com データがこの端末から削除されます。</string>
 	<string name="stats_generic_error">必須の統計情報が読み込めませんでした</string>
 	<string name="two_step_sms_sent">テキストメッセージの認証コードを確認してください。</string>
 	<string name="two_step_footer_button">テキストメッセージでコードを送信</string>
@@ -826,7 +828,6 @@ Language: ja_JP
 	<string name="error_refresh_unauthorized_comments">コメントの表示/編集の権限がありません。</string>
 	<string name="more">続き</string>
 	<string name="stats_no_blog">要求されたブログの統計を読み込めませんでした。</string>
-	<string name="select_a_blog">WordPress のサイトを選択してください。</string>
 	<string name="sending_content">%s のコンテンツをアップロードしています</string>
 	<string name="uploading_total">%2$d件中%1$d件目をアップロード中</string>
 	<string name="mnu_comment_liked">「いいね」済み</string>
@@ -844,6 +845,7 @@ Language: ja_JP
 	<string name="older_last_week">1週間以上前</string>
 	<string name="reader_empty_followed_blogs_title">フォローしているサイトがまだありません</string>
 	<string name="faq_button">よくある質問</string>
+	<string name="select_a_blog">WordPress サイトを選択</string>
 	<string name="reader_toast_blog_blocked">このブログからの投稿は今後表示されません</string>
 	<string name="reader_menu_block_blog">このブログをブロック</string>
 	<string name="reader_toast_err_block_blog">ブログをブロックできませんでした</string>
@@ -891,7 +893,6 @@ Language: ja_JP
 	<string name="gallery_error">メディア項目を読み込めませんでした。</string>
 	<string name="mnu_comment_unspam">スパムはありません</string>
 	<string name="no_network_message">利用可能なネットワークがありません</string>
-	<string name="out_of_memory">デバイスのメモリが足りません</string>
 	<string name="theme_fetch_failed">テーマの取得に失敗しました</string>
 	<string name="theme_set_failed">テーマの設定に失敗しました</string>
 	<string name="adding_cat_failed">カテゴリーの追加に失敗しました</string>
@@ -946,6 +947,7 @@ Language: ja_JP
 	<string name="username_only_lowercase_letters_and_numbers">ユーザー名には英小文字 (a-z) と数字以外は含められません</string>
 	<string name="could_not_remove_account">サイトを削除できませんでした</string>
 	<string name="invalid_url_message">入力したブログ URL が正しいか確認してください</string>
+	<string name="out_of_memory">端末のメモリが足りません</string>
 	<string name="image_settings">画像設定</string>
 	<string name="local_changes">ローカルの変更</string>
 	<string name="new_media">新規メディア</string>
@@ -983,7 +985,6 @@ Language: ja_JP
 	<string name="edit_post">投稿を編集</string>
 	<string name="email_hint">メールアドレス</string>
 	<string name="email_reserved">そのメールアドレスはすでに使われています。有効化メールが届いていないかチェックしてみてください。有効化しなかった場合、数日後に同じアドレスでもう一度登録できるようになります。</string>
-	<string name="file_error_create">メディアアップロードの際に一時ファイルを作成できませんでした。デバイス上に空き容量があるか確認してください。</string>
 	<string name="file_not_found">アップロードするメディアファイルが見つかりませんでした。削除または移動されたようです。</string>
 	<string name="hint_comment_content">コメント</string>
 	<string name="horizontal_alignment">横配置</string>
@@ -1047,6 +1048,7 @@ Language: ja_JP
 	<string name="notifications_empty_all">通知はまだありません。</string>
 	<string name="invalid_site_url_message">入力したサイト URL が正しいか確認してください</string>
 	<string name="jetpack_message_not_admin">Jetpack プラグインが必要です。サイト管理者にご連絡ください。</string>
+	<string name="file_error_create">メディアアップロードの際に一時ファイルを作成できませんでした。端末上に空き容量があるか確認してください。</string>
 	<string name="deleting_page">ページを削除中</string>
 	<string name="deleting_post">投稿を削除中</string>
 	<string name="share_link">リンクを共有</string>
@@ -1138,8 +1140,6 @@ Language: ja_JP
 	<string name="stats_totals_views">表示</string>
 	<string name="stats_totals_clicks">クリック数</string>
 	<string name="stats_totals_plays">再生回数</string>
-	<string name="media_add_popup_capture_photo">写真を撮影</string>
-	<string name="media_add_popup_capture_video">動画を撮影</string>
 	<string name="media_edit_success">更新しました</string>
 	<string name="themes_details_label">詳細</string>
 	<string name="themes_features_label">機能</string>
@@ -1230,13 +1230,11 @@ Language: ja_JP
 	<string name="status">状態</string>
 	<string name="location">場所</string>
 	<string name="sdcard_title">SD カードが必要です</string>
-	<string name="select_video">ギャラリーからビデオを選択する</string>
 	<string name="media">メディア</string>
 	<string name="delete">削除</string>
 	<string name="approve">承認</string>
 	<string name="none">なし</string>
 	<string name="blogs">ブログ</string>
-	<string name="select_photo">ギャラリーから写真を選択</string>
 	<string name="reply">返信する</string>
 	<string name="preview">プレビュー</string>
 	<string name="on">オン</string>

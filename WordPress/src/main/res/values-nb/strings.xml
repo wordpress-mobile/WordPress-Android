@@ -232,7 +232,6 @@ Language: nb_NO
 	<string name="themes">Temaer</string>
 	<string name="all">Alle</string>
 	<string name="images">Bilder</string>
-	<string name="media_add_popup_capture_photo">Ta bilde</string>
 	<string name="media_gallery_type">Type</string>
 	<string name="media_gallery_image_order_random">Tilfeldig</string>
 	<string name="media_gallery_image_order_reverse">Omvendt</string>
@@ -255,7 +254,6 @@ Language: nb_NO
 	<string name="media_edit_caption_hint">Skriv en bildetekst her</string>
 	<string name="media_gallery_type_circles">Sirkler</string>
 	<string name="post_excerpt">Ingress</string>
-	<string name="share_action_title">Legg til ...</string>
 	<string name="theme_auth_error_title">Kunne ikke hente temaer</string>
 	<string name="theme_set_success">Temaet er lagret!</string>
 	<string name="stats_timeframe_yesterday">I går</string>
@@ -265,7 +263,6 @@ Language: nb_NO
 	<string name="stats_totals_clicks">Klikk</string>
 	<string name="stats_totals_plays">Avspillinger</string>
 	<string name="unattached">Uten vedlegg</string>
-	<string name="media_add_popup_capture_video">Ta opp video</string>
 	<string name="media_gallery_type_squares">Kvadratisk</string>
 	<string name="media_gallery_type_tiled">Flislagt</string>
 	<string name="media_gallery_type_slideshow">Lysbildevisning</string>
@@ -347,14 +344,12 @@ Language: nb_NO
 	<string name="notification_blink">Blinkende varsler</string>
 	<string name="status">Status</string>
 	<string name="sdcard_title">Krever SD kort</string>
-	<string name="select_video">Velg video fra galleriet</string>
 	<string name="location">Sted</string>
 	<string name="media">Media</string>
 	<string name="delete">Slett</string>
 	<string name="approve">Godkjenn</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogger</string>
-	<string name="select_photo">Velg et foto fra galleriet</string>
 	<string name="yes">Ja</string>
 	<string name="reply">Svar</string>
 	<string name="on">på</string>

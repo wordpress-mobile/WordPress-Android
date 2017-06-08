@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-20 18:11:38+0000
+Translation-Revision-Date: 2017-05-29 07:23:55+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
@@ -37,10 +37,7 @@ Language: zh_TW
 	<string name="sure_to_remove_account">從應用程式移除此網站？</string>
 	<string name="photo_picker_title">選擇照片</string>
 	<string name="error_publish_no_network">裝置已離線。變更已儲存到本機。</string>
-	<string name="editor_post_saved_online_not_published">文章已在線上儲存為草稿。考慮發佈。</string>
 	<string name="editor_post_saved_online">文章已在線上儲存</string>
-	<string name="editor_post_saved_locally_not_published">僅將文章儲存到本機。考慮發佈。</string>
-	<string name="editor_post_saved_locally">文章已儲存到你的裝置</string>
 	<string name="site_settings_image_quality_hint">照片品質。越高的值代表越高的照片品質。</string>
 	<string name="site_settings_optimize_images_summary">啟用即可調整照片大小和壓縮照片</string>
 	<string name="media_encoder_quality_100">上限</string>
@@ -91,9 +88,6 @@ Language: zh_TW
 	<string name="confirm">確認</string>
 	<string name="xmlrpc_endpoint_forbidden_error">無法連結。嘗試存取網站的 XMLRPC 終端時\n收到 403 錯誤訊息。此應用程式需要 XMLRPC 終端才能與你的網站通訊。請聯絡你的主機服務提供者，\n以解決此問題。</string>
 	<string name="xmlrpc_post_blocked_error">無法連結。你的主機服務提供者封鎖了 POST 請求，但此應用程式需要\n需要使用 POST 請求才能與你的網站通訊。請聯絡你的主機服務提供者，以解決此問題。</string>
-	<string name="reader_liked_default_tag">我按讚的文章</string>
-	<string name="reader_discover_default_tag">探索</string>
-	<string name="reader_followed_default_tag">關注的網站</string>
 	<string name="reader_empty_followed_blogs_search_title">找不到相符的網站</string>
 	<string name="reader_hint_search_followed_sites">搜尋關注的網站</string>
 	<string name="visual_editor_disabled">視覺化編輯器已停用</string>
@@ -212,9 +206,14 @@ Language: zh_TW
 	<string name="alert_action_while_uploading">你目前正在上傳媒體。請等待此項作業完成。</string>
 	<string name="alert_insert_image_html_mode">無法直接在 HTML 模式中插入媒體。請切換回視覺化模式。</string>
 	<string name="uploading_gallery_placeholder">正在上傳圖庫...</string>
+	<string name="invite_error_some_failed">已送出邀請但發生錯誤！</string>
 	<string name="invite_sent">已成功送出邀請</string>
 	<string name="tap_to_try_again">點選以重試！</string>
 	<string name="invite_error_for_username">%1$s：%2$s</string>
+	<string name="invite_error_sending">嘗試傳送邀請時發生錯誤！</string>
+	<string name="invite_error_invalid_usernames_multiple">無法傳送：使用者名稱或電子郵件無效</string>
+	<string name="invite_error_invalid_usernames_one">無法傳送：使用者名稱或電子郵件無效</string>
+	<string name="invite_error_no_usernames">請新增至少一個使用者名稱</string>
 	<string name="invite_message_info">(選用) 你最多可以輸入 500 個字元的自訂訊息，附在傳送給使用者的邀請中。</string>
 	<string name="invite_message_remaining_other">剩下 %d 個字元</string>
 	<string name="invite_message_remaining_one">剩下 1 個字元</string>
@@ -222,6 +221,7 @@ Language: zh_TW
 	<string name="invite_message_title">自訂訊息</string>
 	<string name="invite">邀請</string>
 	<string name="invite_names_title">使用者名稱或電子郵件</string>
+	<string name="signup_succeed_signin_failed">系統已為你建立帳號，但在將你登入時發生錯誤\n。請嘗試使用新建立的使用者名稱與密碼登入。</string>
 	<string name="send_link">傳送連結</string>
 	<string name="my_site_header_external">外部</string>
 	<string name="invite_people">邀請他人</string>
@@ -237,6 +237,7 @@ Language: zh_TW
 	<string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
 	<string name="draft_explainer">這篇文章只是草稿，尚未發表</string>
 	<string name="send">傳送</string>
+	<string name="user_remove_confirmation_message">如果移除 %1$s，該使用者將無法再存取此網站，但 %1$s 建立的所有內容仍會保留在網站上。\n\n仍要移除這位使用者嗎？</string>
 	<string name="person_removed">已成功移除 %1$s</string>
 	<string name="person_remove_confirmation_title">移除 %1$s</string>
 	<string name="reader_empty_posts_in_custom_list">此清單中的網站最近未張貼任何文章</string>
@@ -244,6 +245,7 @@ Language: zh_TW
 	<string name="edit_user">編輯使用者</string>
 	<string name="role">角色</string>
 	<string name="error_remove_user">無法移除使用者</string>
+	<string name="error_fetch_viewers_list">無法擷取網站使用者</string>
 	<string name="error_update_role">無法更新使用者角色</string>
 	<string name="gravatar_camera_and_media_permission_required">需要權限才能選取或拍攝照片</string>
 	<string name="error_updating_gravatar">更新你的 Gravatar 時發生錯誤</string>
@@ -256,6 +258,7 @@ Language: zh_TW
 	<string name="not_on_wordpress_com">不在 WordPress.com 上嗎？</string>
 	<string name="magic_link_unavailable_error_message">目前無法使用。請輸入你的密碼</string>
 	<string name="check_your_email">檢查你的電子郵件</string>
+	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">取得傳送至你電子郵件的連結以立即登入</string>
 	<string name="logging_in">正在登入</string>
 	<string name="enter_your_password_instead">改為輸入你的密碼</string>
 	<string name="web_address_dialog_hint">當你留言時公開顯示。</string>
@@ -322,6 +325,7 @@ Language: zh_TW
 	<string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
 	<string name="post_format_status">狀態</string>
 	<string name="post_format_video">影片</string>
+	<string name="alignment_center">置中</string>
 	<string name="theme_free">免費</string>
 	<string name="theme_all">全部</string>
 	<string name="theme_premium">進階版</string>
@@ -372,6 +376,7 @@ Language: zh_TW
 	<string name="error_refresh_comments_showing_older">目前無法重新整理留言 – 顯示較舊的留言</string>
 	<string name="editor_post_settings_set_featured_image">設定特色圖片</string>
 	<string name="editor_post_settings_featured_image">特色圖片</string>
+	<string name="new_editor_promo_title">全新編輯器</string>
 	<string name="visual_editor_enabled">視覺化編輯器已啟用</string>
 	<string name="editor_content_placeholder">在此分享你的故事...</string>
 	<string name="editor_page_title_placeholder">頁面標題</string>
@@ -421,6 +426,7 @@ Language: zh_TW
 	<string name="error_post_remote_site_settings">無法儲存網站資訊</string>
 	<string name="error_fetch_remote_site_settings">無法擷取網站資訊</string>
 	<string name="error_media_upload_connection">上傳媒體時發生連線錯誤</string>
+	<string name="site_settings_disconnected_toast">已中斷連線，編輯功能已停用。</string>
 	<string name="site_settings_unsupported_version_error">不支援的 WordPress 版本</string>
 	<string name="site_settings_multiple_links_dialog_description">如果留言包含的連結超過此數量，留言就必須經過審核。</string>
 	<string name="site_settings_close_after_dialog_switch_text">自動關閉</string>
@@ -485,6 +491,7 @@ Language: zh_TW
 	<string name="site_settings_threading_title">階層顯示</string>
 	<string name="site_settings_paging_title">分頁</string>
 	<string name="site_settings_sort_by_title">排序依據</string>
+	<string name="site_settings_account_required_title">使用者必須登入</string>
 	<string name="site_settings_identity_required_title">必須包含名稱和電子郵件</string>
 	<string name="site_settings_receive_pingbacks_title">接收引用通知</string>
 	<string name="site_settings_send_pingbacks_title">傳送引用通知</string>
@@ -646,6 +653,7 @@ Language: zh_TW
 	<string name="tabbar_accessibility_label_me">我</string>
 	<string name="passcodelock_prompt_message">輸入 PIN 碼</string>
 	<string name="editor_toast_changes_saved">變更已儲存</string>
+	<string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
 	<string name="stats_insights_best_ever">最佳的瀏覽次數</string>
 	<string name="ignore">忽略</string>
 	<string name="stats_insights_most_popular_percent_views">瀏覽次數：%1$d%%</string>
@@ -655,8 +663,11 @@ Language: zh_TW
 	<string name="stats_insights_today">本日統計</string>
 	<string name="stats_insights_all_time">有史以來的文章數、瀏覽次數與訪客數</string>
 	<string name="stats_insights">Insights</string>
+	<string name="stats_sign_in_jetpack_different_com_account">若要檢視統計資料，請使用連線 Jetpack 的帳號登入 WordPress.com。</string>
 	<string name="stats_other_recent_stats_moved_label">正在尋找其他近期統計資料嗎？我們已將統計資料移至「Insights」頁面。</string>
+	<string name="me_disconnect_from_wordpress_com">中斷與 WordPress.com 的連線</string>
 	<string name="me_btn_login_logout">登入/登出</string>
+	<string name="me_connect_to_wordpress_com">連線 WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
 	<string name="me_btn_support">說明與客戶服務</string>
 	<string name="account_settings">帳號設定</string>
@@ -674,9 +685,11 @@ Language: zh_TW
 	<string name="my_site_btn_blog_posts">網誌文章</string>
 	<string name="reader_label_new_posts_subtitle">點選以顯示</string>
 	<string name="my_site_header_configuration">組態</string>
+	<string name="notifications_account_required">登入 WordPress.com 以接收通知</string>
 	<string name="stats_unknown_author">不明作者</string>
 	<string name="image_added">已新增圖片</string>
 	<string name="select_all">全部選取</string>
+	<string name="sign_out_wpcom_confirm">中斷帳號連結將會移除此裝置上 @%s 的所有 WordPress.com 資料，包括本機草稿及變更項目。</string>
 	<string name="show">顯示</string>
 	<string name="hide">隱藏</string>
 	<string name="deselect_all">取消全選</string>
@@ -690,6 +703,8 @@ Language: zh_TW
 	<string name="two_step_footer_label">輸入驗證器應用程式上的驗證碼。</string>
 	<string name="two_step_footer_button">透過簡訊傳送驗證碼</string>
 	<string name="two_step_sms_sent">請查看簡訊是否收到驗證碼。</string>
+	<string name="sign_in_jetpack">登入 WordPress.com 帳號以連結至 Jetpack。</string>
+	<string name="auth_required">再次登入以繼續操作。</string>
 	<string name="media_details_label_file_name">檔案名稱</string>
 	<string name="media_details_label_file_type">檔案類型</string>
 	<string name="media_fetching">正在擷取媒體…</string>
@@ -797,6 +812,7 @@ Language: zh_TW
 	<string name="reader_label_comment_count_multi">%,d 則留言</string>
 	<string name="reader_label_view_original">查看原始文章</string>
 	<string name="reader_label_like">按讚</string>
+	<string name="reader_label_liked_by">按讚的人：</string>
 	<string name="reader_label_comment_count_single">一則留言</string>
 	<string name="reader_label_comments_closed">留言已關閉</string>
 	<string name="reader_label_comments_on">以下內容的留言：</string>
@@ -820,6 +836,7 @@ Language: zh_TW
 	<string name="comment_reply_to_user">回覆 %s</string>
 	<string name="pages_empty_list">尚無任何頁面。建立頁面？</string>
 	<string name="posting_post">正在發表「%s」</string>
+	<string name="signing_out">正在登出…</string>
 	<string name="reader_empty_followed_blogs_title">你尚未關注任何網站</string>
 	<string name="reader_toast_err_generic">無法執行此動作</string>
 	<string name="reader_toast_err_block_blog">無法封鎖此網誌</string>
@@ -1010,6 +1027,7 @@ Language: zh_TW
 	<string name="wordpress_blog">WordPress 網誌</string>
 	<string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
 	<string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
+	<string name="jetpack_message_not_admin">統計需要 Jetpack 外掛程式。請聯絡網站管理員。</string>
 	<string name="reader_title_applog">應用程式記錄檔</string>
 	<string name="reader_toast_err_add_tag">無法新增此標籤</string>
 	<string name="reader_toast_err_remove_tag">無法移除此標籤</string>
@@ -1054,6 +1072,8 @@ Language: zh_TW
 	<string name="nux_tap_continue">繼續</string>
 	<string name="nux_welcome_create_account">建立帳號</string>
 	<string name="nux_add_selfhosted_blog">新增自助託管的網站</string>
+	<string name="nux_oops_not_selfhosted_blog">登入 WordPress.com</string>
+	<string name="signing_in">正在登入…</string>
 	<string name="media_add_popup_title">增加媒體庫</string>
 	<string name="empty_list_default">清單是空的</string>
 	<string name="select_from_media_library">從媒體庫選擇</string>
@@ -1065,6 +1085,7 @@ Language: zh_TW
 	<string name="reader_btn_share">分享</string>
 	<string name="reader_btn_follow">追蹤</string>
 	<string name="reader_toast_err_url_intent">無法開啟 %s</string>
+	<string name="connecting_wpcom">連結至 WordPress.com</string>
 	<string name="username_invalid">無效的使用者名稱</string>
 	<string name="reader_likes_one">1 人說這個讚</string>
 	<string name="reader_likes_only_you">你說這個讚</string>
@@ -1083,8 +1104,6 @@ Language: zh_TW
 	<string name="all">全部</string>
 	<string name="images">圖片</string>
 	<string name="unattached">未附加</string>
-	<string name="media_add_popup_capture_photo">拍照</string>
-	<string name="media_add_popup_capture_video">錄影</string>
 	<string name="media_gallery_type_slideshow">幻燈片</string>
 	<string name="media_gallery_image_order_random">隨機</string>
 	<string name="media_edit_description_text">說明</string>
@@ -1138,6 +1157,7 @@ Language: zh_TW
 	<string name="passcode_turn_on">開啟 PIN 鎖定</string>
 	<string name="upload">上傳</string>
 	<string name="discard">放棄</string>
+	<string name="sign_in">登入</string>
 	<string name="notifications">通知</string>
 	<string name="note_reply_successful">回覆已發佈</string>
 	<string name="new_notifications">%d 個新通知</string>
@@ -1202,13 +1222,11 @@ Language: zh_TW
 	<string name="status">狀態</string>
 	<string name="location">位置</string>
 	<string name="sdcard_title">需要 SD 卡</string>
-	<string name="select_video">從媒體庫選擇影片</string>
 	<string name="media">媒體</string>
 	<string name="delete">刪除</string>
 	<string name="approve">通過</string>
 	<string name="none">無</string>
 	<string name="blogs">部落格</string>
-	<string name="select_photo">從媒體庫選擇照片</string>
 	<string name="error">錯誤</string>
 	<string name="cancel">取消</string>
 	<string name="save">儲存</string>
