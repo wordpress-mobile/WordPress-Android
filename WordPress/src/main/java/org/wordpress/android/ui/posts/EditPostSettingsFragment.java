@@ -1017,6 +1017,16 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostPasswordDialog() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mPost.getPassword(), getString(R.string.password), getString(R.string.post_password_dialog_hint), true);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        mPost.setPassword(input);
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
     }
 
     private void updatePostFormatKeysAndNames() {

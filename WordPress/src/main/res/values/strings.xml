@@ -976,7 +976,7 @@
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_status">Status</string>
-    <string name="post_password_explanation">Only those with this password can view this post</string>
+    <string name="post_password_dialog_hint">Only those with this password can view this post</string>
     <string name="post_settings_format">Post Format</string>
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/publish_post</item>
