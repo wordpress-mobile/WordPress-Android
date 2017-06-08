@@ -64,10 +64,12 @@
                     style="@style/Base.TextAppearance.AppCompat.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minHeight="48dp"
                     android:layout_toLeftOf="@+id/login_email_next_button"
                     android:layout_marginRight="@dimen/margin_extra_extra_extra_large"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
                     android:textColor="@color/blue_wordpress"
                     android:text="@string/login_text_otp"/>
             </RelativeLayout>
