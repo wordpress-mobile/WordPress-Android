@@ -116,6 +116,26 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/post_password_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
+                android:text="@string/password"/>
+
+            <TextView
+                android:text="@string/post_password_explanation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_darken_10"/>
+
+        </LinearLayout>
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/pubDateLabel"
             style="@style/WordPressSubHeader"
@@ -156,18 +176,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-
-        <EditText
-            android:id="@+id/post_password"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_sz_large"
-            android:hint="@string/post_password"
-            android:maxLength="@integer/max_length_password"
-            android:inputType="textPassword" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/featuredImageLabel"

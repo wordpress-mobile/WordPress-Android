@@ -101,7 +101,6 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mTagsTextView;
@@ -217,7 +216,6 @@ public class EditPostSettingsFragment extends Fragment
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
-        mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
@@ -287,6 +285,14 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
 
+        final LinearLayout passwordContainer = (LinearLayout) rootView.findViewById(R.id.post_password_container);
+        passwordContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostPasswordDialog();
+            }
+        });
+
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
             rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
@@ -344,10 +350,6 @@ public class EditPostSettingsFragment extends Fragment
             } catch (RuntimeException e) {
                 AppLog.e(T.POSTS, e);
             }
-        }
-
-        if (!TextUtils.isEmpty(mPost.getPassword())) {
-            mPasswordEditText.setText(mPost.getPassword());
         }
 
         updateStatusTextView();
@@ -613,7 +615,6 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
 
-        String password = EditTextUtils.getText(mPasswordEditText);
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
@@ -652,7 +653,6 @@ public class EditPostSettingsFragment extends Fragment
         post.setExcerpt(mCurrentExcerpt);
         post.setSlug(mCurrentSlug);
         post.setStatus(getCurrentPostStatus().toString());
-        post.setPassword(password);
     }
 
     /*
@@ -1014,6 +1014,9 @@ public class EditPostSettingsFragment extends Fragment
         });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
+    }
+
+    private void showPostPasswordDialog() {
     }
 
     private void updatePostFormatKeysAndNames() {
