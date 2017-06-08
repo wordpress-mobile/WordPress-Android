@@ -292,18 +292,15 @@ public class PostsListFragment extends Fragment
             mPostsListAdapter.setOnPostSelectedListener(this);
             mPostsListAdapter.setOnPostButtonClickListener(this);
         }
-
         return mPostsListAdapter;
     }
 
     private boolean isPostAdapterEmpty() {
-        return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
+        return getPostListAdapter().getItemCount() == 0;
     }
 
     private void loadPosts(LoadMode mode) {
-        if (getPostListAdapter() != null) {
-            getPostListAdapter().loadPosts(mode);
-        }
+        getPostListAdapter().loadPosts(mode);
     }
 
     private void newPost() {
@@ -311,10 +308,11 @@ public class PostsListFragment extends Fragment
         ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage);
     }
 
+    @Override
     public void onResume() {
         super.onResume();
 
-        if (getPostListAdapter() != null && mRecyclerView.getAdapter() == null) {
+        if (mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
@@ -353,7 +351,7 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        if (getPostListAdapter() != null && getPostListAdapter().getItemCount() == 0) {
+        if (getPostListAdapter().getItemCount() == 0) {
             updateEmptyView(EmptyViewMessageType.LOADING);
         }
 
@@ -539,8 +537,7 @@ public class PostsListFragment extends Fragment
     private void trashPost(final PostModel post) {
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
-        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
-            || getPostListAdapter() == null) {
+        if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))) {
             return;
         }
 
@@ -669,10 +666,10 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(MediaStore.OnMediaChanged event) {
-        if (isAdded() && !event.isError() && mPostsListAdapter != null) {
+        if (isAdded() && !event.isError()) {
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);
-                mPostsListAdapter.mediaChanged(mediaModel);
+                getPostListAdapter().mediaChanged(mediaModel);
             }
         }
     }
