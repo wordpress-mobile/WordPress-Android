@@ -106,6 +106,7 @@ public class EditPostSettingsFragment extends Fragment
     private TextView mTagsTextView;
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
+    private TextView mPasswordTextView;
     private TextView mPubDateText;
     private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
@@ -216,6 +217,7 @@ public class EditPostSettingsFragment extends Fragment
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
+        mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
@@ -334,6 +336,7 @@ public class EditPostSettingsFragment extends Fragment
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
         mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+        mPasswordTextView.setText(mPost.getPassword());
         updateTagsTextView();
 
         String pubDate = mPost.getDateCreated();
@@ -1018,12 +1021,14 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostPasswordDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getPassword(), getString(R.string.password), getString(R.string.post_password_dialog_hint), true);
+                mPost.getPassword(), getString(R.string.password),
+                getString(R.string.post_password_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
                         mPost.setPassword(input);
+                        mPasswordTextView.setText(mPost.getPassword());
                     }
                 });
         dialog.show(getFragmentManager(), null);
