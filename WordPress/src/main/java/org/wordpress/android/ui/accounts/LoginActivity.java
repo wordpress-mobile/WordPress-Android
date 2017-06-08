@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
@@ -115,6 +116,12 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     @Override
     public void forgotPassword() {
         ActivityLauncher.openUrlExternal(this, FORGOT_PASSWORD_URL);
+    }
+
+    @Override
+    public void needs2fa(String email, String password) {
+        Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password);
+        slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
     @Override
