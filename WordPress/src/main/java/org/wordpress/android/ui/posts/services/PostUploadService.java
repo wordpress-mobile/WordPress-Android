@@ -117,11 +117,12 @@ public class PostUploadService extends Service {
      * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
      */
     public static boolean isPostUploadingOrQueued(PostModel post) {
-        // first check the currently uploading post
-        if (mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId()) {
+        // First check the currently uploading post
+        if (isPostUploading(post)) {
             return true;
         }
-        // then check the list of posts waiting to be uploaded
+
+        // Then check the list of posts waiting to be uploaded
         if (mPostsList.size() > 0) {
             synchronized (mPostsList) {
                 for (PostModel queuedPost : mPostsList) {
@@ -132,6 +133,15 @@ public class PostUploadService extends Service {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns true if the passed post is currently uploading.
+     * Except for legacy mode, a post counts as 'uploading' if the post content itself is being uploaded - a post
+     * waiting for media to finish uploading counts as 'waiting to be uploaded' until the media uploads complete.
+     */
+    public static boolean isPostUploading(PostModel post) {
+        return mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId();
     }
 
     @Override

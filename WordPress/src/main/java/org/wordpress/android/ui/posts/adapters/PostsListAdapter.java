@@ -243,7 +243,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
             }
 
-            if (PostUploadService.isPostUploadingOrQueued(post)) {
+            if (PostUploadService.isPostUploading(post)) {
                 postHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
                 postHolder.disabledOverlay.setVisibility(View.GONE);
@@ -287,7 +287,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
 
-            if (PostUploadService.isPostUploadingOrQueued(post)) {
+            if (PostUploadService.isPostUploading(post)) {
                 pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
                 pageHolder.disabledOverlay.setVisibility(View.GONE);
