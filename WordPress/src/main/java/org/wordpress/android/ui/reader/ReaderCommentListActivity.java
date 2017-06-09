@@ -127,14 +127,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
-            // we need to re-request comments every time this activity is shown in order to
-            // correctly reflect deletions and nesting changes - skipped when there's no
-            // connection so we can show existing comments while offline
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
-            }
         }
-
 
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
                 (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
@@ -167,7 +160,11 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID), false);
         }
 
-        refreshComments();
+        if (savedInstanceState == null && NetworkUtils.isNetworkAvailable(this)) {
+            updatePostAndComments();
+        } else {
+            refreshComments();
+        }
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
         mSuggestionAdapter = SuggestionUtils.setupSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
@@ -189,30 +186,26 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     };
 
+    // to do a complete refresh we need to get updated post and new comments
     private void updatePostAndComments() {
-        //to do a complete refresh we need to get updated post and new comments
         ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (isFinishing()) {
-                    return;
-                }
-
-                if (result.isNewOrChanged()) {
-                    // reget the post, then pass it to the adapter
+                if (!isFinishing() && result.isNewOrChanged()) {
+                    // get the updated post and pass it to the adapter
                     ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, true);
                     if (post != null) {
+                        post.numReplies++;
                         getCommentAdapter().setPost(post);
                         mPost = post;
                     }
-                    // clear all the previous comments, then load the first page of comments
-                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
-                    updateComments(false, false);
-                } else {
-                    setRefreshing(false);
                 }
             }
         });
+
+        // clear all the previous comments, then load the first page of comments
+        ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
+        updateComments(true, false);
     }
 
     @Override
@@ -222,16 +215,15 @@ public class ReaderCommentListActivity extends AppCompatActivity {
 
         if (mBackFromLogin) {
             if (NetworkUtils.isNetworkAvailable(this)) {
-                // purge and reload the comments since logged in changes some info (example: isLikedByCurrentUser)
-                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
+                // reload the comments since logged in changes some info (example: isLikedByCurrentUser)
                 updatePostAndComments();
             }
 
             // clear up the back-from-login flag anyway
             mBackFromLogin = false;
+        } else {
+            refreshComments();
         }
-
-        refreshComments();
     }
 
     @SuppressWarnings("unused")
