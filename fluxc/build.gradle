@@ -58,7 +58,7 @@ android.buildTypes.all { buildType ->
 
 dependencies {
     // WordPress libs
-    compile ('org.wordpress:utils:1.+') {
+    compile ('org.wordpress:utils:1.16.0') {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley";
     }
@@ -80,7 +80,7 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.2'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
 }
 
 version = android.defaultConfig.versionName
