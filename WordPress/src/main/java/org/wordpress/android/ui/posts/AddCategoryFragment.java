@@ -25,6 +25,8 @@ import javax.inject.Inject;
 
 public class AddCategoryFragment extends AppCompatDialogFragment {
     private SiteModel mSite;
+    private EditText mCategoryEditText;
+    private Spinner mParentSpinner;
 
     @Inject TaxonomyStore mTaxonomyStore;
 
@@ -49,27 +51,30 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
 
         // Inflate view
         View view = inflater.inflate(R.layout.add_category, null);
-        final EditText categoryEditText = (EditText) view.findViewById(R.id.category_name);
-        final Spinner parentSpinner = (Spinner) view.findViewById(R.id.parent_category);
+        mCategoryEditText = (EditText) view.findViewById(R.id.category_name);
+        mParentSpinner = (Spinner) view.findViewById(R.id.parent_category);
 
-        loadCategories(parentSpinner);
+        loadCategories();
 
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
-                // Add action buttons
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        addCategory(categoryEditText, parentSpinner);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        AddCategoryFragment.this.getDialog().cancel();
-                    }
-                });
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null);
+
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        AlertDialog dialog = (AlertDialog) getDialog();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addCategory()) {
+                    dismiss();
+                }
+            }
+        });
     }
 
     private void initSite(Bundle savedInstanceState) {
@@ -89,41 +94,33 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         }
     }
 
-    private void addCategory(EditText categoryEditText, Spinner parentSpinner) {
-        String categoryName = categoryEditText.getText().toString();
-        CategoryNode selectedCategory = (CategoryNode) parentSpinner.getSelectedItem();
+    private boolean addCategory() {
+        String categoryName = mCategoryEditText.getText().toString();
+        CategoryNode selectedCategory = (CategoryNode) mParentSpinner.getSelectedItem();
         long parentId = (selectedCategory != null) ? selectedCategory.getCategoryId() : 0;
 
         if (categoryName.replaceAll(" ", "").equals("")) {
-            // Name field cannot be empty
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setTitle(getResources().getText(R.string.required_field));
-            dialogBuilder.setMessage(getResources().getText(R.string.cat_name_required));
-            dialogBuilder.setPositiveButton(android.R.string.ok, new
-                    DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Just close the window.
-                        }
-                    });
-            dialogBuilder.setCancelable(true);
-            dialogBuilder.create().show();
-        } else {
-            TermModel newCategory = new TermModel();
-            newCategory.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
-            newCategory.setName(categoryName);
-            newCategory.setParentRemoteId(parentId);
-            ((SelectCategoriesActivity) getActivity()).categoryAdded(newCategory);
+            mCategoryEditText.setError(getText(R.string.cat_name_required));
+            return false;
         }
+
+        TermModel newCategory = new TermModel();
+        newCategory.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY);
+        newCategory.setName(categoryName);
+        newCategory.setParentRemoteId(parentId);
+        ((SelectCategoriesActivity) getActivity()).categoryAdded(newCategory);
+
+        return true;
     }
 
-    private void loadCategories(Spinner parentSpinner) {
+    private void loadCategories() {
         CategoryNode rootCategory = CategoryNode.createCategoryTreeFromList(mTaxonomyStore.getCategoriesForSite(mSite));
         ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
         categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.top_level_category_name)));
         if (categoryLevels.size() > 0) {
             ParentCategorySpinnerAdapter categoryAdapter = new ParentCategorySpinnerAdapter(getActivity(),
                     R.layout.categories_row_parent, categoryLevels);
-            parentSpinner.setAdapter(categoryAdapter);
+            mParentSpinner.setAdapter(categoryAdapter);
         }
     }
 
