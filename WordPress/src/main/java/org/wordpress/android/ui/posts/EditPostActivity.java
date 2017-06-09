@@ -1844,6 +1844,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     try {
+                        WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
                         File f = new File(mMediaCapturePath);
                         Uri capturedImageUri = Uri.fromFile(f);
                         if (!addMedia(capturedImageUri)) {
