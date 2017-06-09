@@ -42,7 +42,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.people.PersonDetailFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
-import org.wordpress.android.ui.posts.AddCategoryActivity;
+import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -185,7 +185,7 @@ public interface AppComponent {
     void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
-    void inject(AddCategoryActivity object);
+    void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
 }
