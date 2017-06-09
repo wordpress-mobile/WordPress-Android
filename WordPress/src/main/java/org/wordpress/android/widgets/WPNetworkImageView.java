@@ -272,6 +272,12 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private void handleResponse(ImageLoader.ImageContainer response, boolean isCached, ImageLoadListener
             imageLoadListener) {
+        if (response == null) {
+            // It seems that response could be null here. See: https://github.com/wordpress-mobile/WordPress-Android/issues/6002
+            AppLog.w(AppLog.T.UTILS, "WPNetworkImageView > empty response received for URL: " + mUrl);
+            showErrorImage();
+            return;
+        }
         if (response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
 
