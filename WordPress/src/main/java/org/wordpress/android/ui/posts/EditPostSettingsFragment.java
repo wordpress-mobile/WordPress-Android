@@ -215,7 +215,7 @@ public class EditPostSettingsFragment extends Fragment
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
-        mCategoriesTextView = ((TextView) rootView.findViewById(R.id.post_categories));
+        mCategoriesTextView = (TextView) rootView.findViewById(R.id.post_categories);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -25,8 +24,6 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 public class AddCategoryFragment extends AppCompatDialogFragment {
-    public static final String KEY_CATEGORY = "KEY_CATEGORY";
-
     private SiteModel mSite;
 
     @Inject TaxonomyStore mTaxonomyStore;

@@ -267,10 +267,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         finish();
     }
 
-    private int getCheckedItemCount(ListView listView) {
-        return listView.getCheckedItemCount();
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(OnTaxonomyChanged event) {
