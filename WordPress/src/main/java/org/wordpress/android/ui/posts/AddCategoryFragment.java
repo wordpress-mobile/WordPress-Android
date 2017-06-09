@@ -85,7 +85,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getDialog().cancel();
+            getFragmentManager().popBackStack();
         }
     }
 
