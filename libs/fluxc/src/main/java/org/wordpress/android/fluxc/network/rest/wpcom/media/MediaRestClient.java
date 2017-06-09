@@ -380,7 +380,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 // Tried to upload a media that's too large (larger than the site's max_upload_filesize)
                 if (body.has("error")) {
                     String error = body.getString("error");
-                    if ("invalid_hmac".equals(error) || "unknown".equals(error)) {
+                    if ("invalid_hmac".equals(error)) {
                         mediaError.type = MediaErrorType.REQUEST_TOO_LARGE;
                     }
                 }
