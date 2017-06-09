@@ -187,7 +187,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private boolean canPublishPost(PostModel post) {
-        return post != null && !PostUploadService.isPostUploading(post) &&
+        return post != null && !PostUploadService.isPostUploadingOrQueued(post) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
@@ -243,7 +243,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
             }
 
-            if (PostUploadService.isPostUploading(post)) {
+            if (PostUploadService.isPostUploadingOrQueued(post)) {
                 postHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
                 postHolder.disabledOverlay.setVisibility(View.GONE);
@@ -275,7 +275,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             pageHolder.dateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
 
             // no "..." more button when uploading
-            pageHolder.btnMore.setVisibility(PostUploadService.isPostUploading(post) ? View.GONE : View.VISIBLE);
+            pageHolder.btnMore.setVisibility(PostUploadService.isPostUploadingOrQueued(post) ? View.GONE :
+                    View.VISIBLE);
             pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -286,7 +287,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // only show the top divider for the first item
             pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
 
-            if (PostUploadService.isPostUploading(post)) {
+            if (PostUploadService.isPostUploadingOrQueued(post)) {
                 pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
             } else {
                 pageHolder.disabledOverlay.setVisibility(View.GONE);
@@ -375,7 +376,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             int statusIconResId = 0;
             int statusColorResId = R.color.grey_darken_10;
 
-            if (PostUploadService.isPostUploading(post)) {
+            if (PostUploadService.isPostUploadingOrQueued(post)) {
                 statusTextResId = R.string.post_uploading;
                 statusColorResId = R.color.alert_yellow;
             } else if (post.isLocalDraft()) {
@@ -717,7 +718,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 // Always update the list if there are uploading posts
                 boolean postsAreUploading = false;
                 for (PostModel post : tmpPosts) {
-                    if (PostUploadService.isPostUploading(post)) {
+                    if (PostUploadService.isPostUploadingOrQueued(post)) {
                         postsAreUploading = true;
                         break;
                     }

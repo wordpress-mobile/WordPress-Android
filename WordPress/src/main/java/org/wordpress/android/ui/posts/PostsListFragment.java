@@ -520,7 +520,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 // prevent deleting post while it's being uploaded
-                if (!PostUploadService.isPostUploading(post)) {
+                if (!PostUploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
                 }
                 break;
