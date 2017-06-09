@@ -45,7 +45,6 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private static final long FETCH_DELAY = 1000L;
 
     private final ArrayList<PublicizeButton> mPublicizeButtons = new ArrayList<>();
-    private boolean mIgnorePrefChanges;
 
     private WPPrefView mPrefSharingButtons;
     private WPPrefView mPrefMoreButtons;
@@ -103,35 +102,33 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_button_prefs_fragment, container, false);
 
         mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
-        mPrefButtonStyle.setOnPrefChangedListener(this);
-
         mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
-        mPrefSharingButtons.setOnPrefChangedListener(this);
-
         mPrefMoreButtons = (WPPrefView) view.findViewById(R.id.pref_more_button);
-        mPrefMoreButtons.setOnPrefChangedListener(this);
-
         mPrefLabel = (WPPrefView) view.findViewById(R.id.pref_label);
-        mPrefLabel.setOnPrefChangedListener(this);
-
         mPrefShowReblog = (WPPrefView) view.findViewById(R.id.pref_show_reblog);
-        mPrefShowReblog.setOnPrefChangedListener(this);
-
         mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
-        mPrefShowLike.setOnPrefChangedListener(this);
-
         mPrefAllowCommentLikes = (WPPrefView) view.findViewById(R.id.pref_allow_comment_likes);
-        mPrefAllowCommentLikes.setOnPrefChangedListener(this);
-
         mPrefTwitterName = (WPPrefView) view.findViewById(R.id.pref_twitter_name);
-        mPrefTwitterName.setOnPrefChangedListener(this);
 
         return view;
     }
 
+    private void assignPrefListeners(boolean assign) {
+        WPPrefView.OnPrefChangedListener listener = assign ? this : null;
+
+        mPrefButtonStyle.setOnPrefChangedListener(listener);
+        mPrefSharingButtons.setOnPrefChangedListener(listener);
+        mPrefMoreButtons.setOnPrefChangedListener(listener);
+        mPrefLabel.setOnPrefChangedListener(listener);
+        mPrefShowReblog.setOnPrefChangedListener(listener);
+        mPrefShowLike.setOnPrefChangedListener(listener);
+        mPrefAllowCommentLikes.setOnPrefChangedListener(listener);
+        mPrefTwitterName.setOnPrefChangedListener(listener);
+    }
+
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
         boolean shouldFetchSettings = (savedInstanceState == null);
         getSiteSettings(shouldFetchSettings);
@@ -267,7 +264,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
      * update the preference views from the site settings
      */
     private void setPreferencesFromSiteSettings() {
-        mIgnorePrefChanges = true;
+        assignPrefListeners(false);
         try {
             mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
             mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
@@ -291,7 +288,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
             mPrefButtonStyle.setListItems(listItems);
             mPrefButtonStyle.setSummary(selectedName);
         } finally {
-            mIgnorePrefChanges = false;
+            assignPrefListeners(true);
         }
     }
 
@@ -319,8 +316,6 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
     @Override
     public void onPrefChanged(@NonNull WPPrefView pref) {
-        if (mIgnorePrefChanges) return;
-
         if (pref == mPrefSharingButtons) {
             saveSharingButtons(pref.getSelectedValues(), true);
         } else if (pref == mPrefMoreButtons) {
