@@ -126,4 +126,10 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
             parentSpinner.setAdapter(categoryAdapter);
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+    }
 }
