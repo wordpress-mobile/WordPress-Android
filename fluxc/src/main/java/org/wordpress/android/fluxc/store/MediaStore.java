@@ -467,14 +467,12 @@ public class MediaStore extends Store {
     }
 
     public List<MediaModel> getMediaForPost(PostModel postModel) {
-        List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId());
-        return media;
+        return MediaSqlUtils.matchPostMedia(postModel.getId());
     }
 
     public List<MediaModel> getMediaForPostWithState(PostModel postModel, UploadState expectedState) {
-        List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
+        return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
                 expectedState);
-        return media;
     }
 
     public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
