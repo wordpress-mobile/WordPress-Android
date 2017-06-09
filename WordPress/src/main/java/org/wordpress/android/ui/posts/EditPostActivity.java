@@ -854,6 +854,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case REQUEST_TOO_LARGE:
                 errorMessage = getString(R.string.media_error_too_large_upload);
                 break;
+            case SERVER_ERROR:
+                errorMessage = getString(R.string.media_error_internal_server_error);
+                break;
+            case TIMEOUT:
+                errorMessage = getString(R.string.media_error_timeout);
+                break;
             case GENERIC_ERROR:
             default:
                 errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
@@ -1025,6 +1031,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         protected Void doInBackground(Void... params) {
+
+            if (!mSite.getHasCapabilityPublishPosts()) {
+               if (PostStatus.fromPost(mPost) != PostStatus.DRAFT && PostStatus.fromPost(mPost) != PostStatus.PENDING) {
+                   mPost.setStatus(PostStatus.PENDING.toString());
+               }
+            }
 
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
@@ -1434,7 +1446,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mediaFile == null) {
                     continue;
                 }
-                String replacement = getUploadErrorHtml(mediaFile.getMediaId(), mediaFile.getFilePath());
+                String replacement = getUploadErrorHtml(String.valueOf(mediaFile.getId()), mediaFile.getFilePath());
                 matcher.appendReplacement(stringBuffer, replacement);
             }
             matcher.appendTail(stringBuffer);
