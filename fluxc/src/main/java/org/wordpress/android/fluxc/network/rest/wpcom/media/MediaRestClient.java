@@ -338,7 +338,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 // TODO it would be great to raise some more fine grained errors here, for
                 // instance timeouts should be raised instead of GENERIC_ERROR
                 MediaError error = MediaError.fromIOException(e);
-                error.message = e.getLocalizedMessage();
                 notifyMediaUploaded(media, error);
 
                 // clean from the current uploads map
