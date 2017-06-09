@@ -13,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
@@ -368,7 +369,7 @@ public class MediaStoreTest {
     @Test
     public void testGetPostMedia() {
         final int testSiteId = 11235813;
-        final long testPostId = 213253;
+        final int testLocalPostId = 213253;
         final long postMediaId = 13;
         final long unattachedMediaId = 57;
         final long otherMediaId = 911;
@@ -377,7 +378,7 @@ public class MediaStoreTest {
         // add post media with test path
         final MediaModel postMedia = getBasicMedia();
         postMedia.setLocalSiteId(testSiteId);
-        postMedia.setPostId(testPostId);
+        postMedia.setLocalPostId(testLocalPostId);
         postMedia.setMediaId(postMediaId);
         postMedia.setFilePath(testPath);
         insertMediaIntoDatabase(postMedia);
@@ -385,7 +386,7 @@ public class MediaStoreTest {
         // add unattached media with test path
         final MediaModel unattachedMedia = getBasicMedia();
         unattachedMedia.setLocalSiteId(testSiteId);
-        unattachedMedia.setPostId(testPostId);
+        unattachedMedia.setLocalPostId(testLocalPostId);
         unattachedMedia.setFilePath(testPath);
         unattachedMedia.setMediaId(unattachedMediaId);
         insertMediaIntoDatabase(unattachedMedia);
@@ -393,17 +394,28 @@ public class MediaStoreTest {
         // add post media with different file path
         final MediaModel otherPathMedia = getBasicMedia();
         otherPathMedia.setLocalSiteId(testSiteId);
-        otherPathMedia.setPostId(testPostId);
+        otherPathMedia.setLocalPostId(testLocalPostId);
         otherPathMedia.setMediaId(otherMediaId);
         otherPathMedia.setFilePath("appended/" + testPath);
         insertMediaIntoDatabase(otherPathMedia);
 
         // verify the correct media is in the store
-        final MediaModel storeMedia = mMediaStore.getPostMediaWithPath(testPostId, testPath);
+        PostModel post = new PostModel();
+        post.setId(testLocalPostId);
+        final MediaModel storeMedia = mMediaStore.getMediaForPostWithPath(post, testPath);
         assertNotNull(storeMedia);
         assertEquals(testPath, storeMedia.getFilePath());
         assertEquals(postMediaId, storeMedia.getMediaId());
         assertEquals(3, mMediaStore.getSiteMediaCount(getTestSiteWithLocalId(testSiteId)));
+
+        // verify the correct media is in the store
+        List<MediaModel> mediaModelList = mMediaStore.getMediaForPost(post);
+        assertNotNull(mediaModelList);
+        assertEquals(3, mediaModelList.size());
+        for (MediaModel media : mediaModelList) {
+            assertNotNull(media);
+            assertEquals(post.getId(), media.getLocalPostId());
+        }
     }
 
     @Test
