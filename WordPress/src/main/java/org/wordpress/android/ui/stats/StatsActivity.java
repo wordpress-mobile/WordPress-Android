@@ -566,7 +566,7 @@ public class StatsActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
-            onBackPressed();
+            finish();
             return true;
         }
 
