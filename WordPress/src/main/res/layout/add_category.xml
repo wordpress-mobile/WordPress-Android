@@ -1,67 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_large">
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/categoryTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/category_name"
+            android:textColor="@color/grey_dark"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_sz_large" />
 
         <!-- Category name -->
         <EditText
             android:id="@+id/category_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/category_name"
-            android:inputType="text" />
-
-        <!-- Category description -->
-        <EditText
-            android:id="@+id/category_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/category_name"
-            android:hint="@string/category_desc"
-            android:inputType="text" />
+            android:layout_below="@id/categoryTitle"
+            android:inputType="text"
+            android:textColor="@color/grey_darken_20"
+            android:textSize="@dimen/text_sz_large" />
 
         <!--  Parent category -->
         <TextView
             android:id="@+id/parentDescLabel"
-            style="@style/WordPressSubHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/category_desc"
-            android:text="@string/category_parent" />
+            android:layout_below="@id/category_name"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="@string/category_parent"
+            android:textColor="@color/grey_dark"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_sz_large" />
 
         <Spinner
             android:id="@+id/parent_category"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@id/parentDescLabel"
-            android:layout_marginBottom="@dimen/margin_large" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/parent_category"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/cancel" />
-
-            <Button
-                android:id="@+id/ok"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@android:string/ok" />
-
-        </LinearLayout>
-
+            android:layout_below="@id/parentDescLabel"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:textColor="@color/grey_darken_20"
+            android:textSize="@dimen/text_sz_large" />
     </RelativeLayout>
 </ScrollView>

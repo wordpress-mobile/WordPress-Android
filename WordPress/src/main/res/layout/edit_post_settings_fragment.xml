@@ -53,7 +53,26 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/grey_darken_10"
                 android:hint="@string/not_set"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/post_categories_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
+                android:text="@string/categories"/>
+
+            <TextView
+                android:id="@+id/post_categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_darken_10"
+                android:text="@string/not_set"/>
         </LinearLayout>
 
         <LinearLayout
@@ -129,28 +148,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:prompt="@string/post_format" />
-
-        <LinearLayout
-            android:id="@+id/sectionTags"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/categoryLabel"
-                style="@style/WordPressSubHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="@string/categories" />
-
-            <org.wordpress.android.widgets.FlowLayout
-                android:id="@+id/sectionCategories"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
 
         <EditText
             android:id="@+id/post_password"

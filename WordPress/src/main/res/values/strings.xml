@@ -406,12 +406,13 @@
     <string name="add_new_category">Add new category</string>
     <string name="add_category">Add category</string>
     <string name="category_name">Category name</string>
-    <string name="category_desc">Category description (optional)</string>
-    <string name="category_parent">Category parent (optional):</string>
+    <string name="category_parent">Parent category (optional):</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
+    <string name="top_level_category_name">Top level</string>
+
 
     <!-- action from share intents -->
     <string name="select_a_blog">Choose a WordPress site</string>

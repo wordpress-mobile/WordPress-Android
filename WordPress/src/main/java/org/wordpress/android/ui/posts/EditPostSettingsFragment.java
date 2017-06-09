@@ -12,9 +12,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.AppCompatButton;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -85,6 +83,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -108,10 +107,10 @@ public class EditPostSettingsFragment extends Fragment
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
+    private TextView mCategoriesTextView;
     private TextView mTagsTextView;
     private TextView mStatusTextView;
     private TextView mPubDateText;
-    private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
@@ -119,7 +118,7 @@ public class EditPostSettingsFragment extends Fragment
     private String mCurrentSlug;
     private String mCurrentExcerpt;
 
-    private List<TermModel> mCategories;
+    private List<TermModel> mCategories = new ArrayList<>();
 
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
@@ -216,12 +215,12 @@ public class EditPostSettingsFragment extends Fragment
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
+        mCategoriesTextView = (TextView) rootView.findViewById(R.id.post_categories);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
-        mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
         TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
@@ -264,6 +263,14 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
 
+        final LinearLayout categoriesContainer = (LinearLayout) rootView.findViewById(R.id.post_categories_container);
+        categoriesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCategoriesActivity();
+            }
+        });
+
         final LinearLayout tagsContainer = (LinearLayout) rootView.findViewById(R.id.post_tags_container);
         tagsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,8 +289,8 @@ public class EditPostSettingsFragment extends Fragment
 
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
-            rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
-            rootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
+            rootView.findViewById(R.id.post_categories_container).setVisibility(View.GONE);
+            rootView.findViewById(R.id.post_tags_container).setVisibility(View.GONE);
             rootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
             rootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
         } else {
@@ -535,17 +542,6 @@ public class EditPostSettingsFragment extends Fragment
         int id = v.getId();
         if (id == R.id.pubDate) {
             showPostDateSelectionDialog();
-        } else if (id == R.id.selectCategories) {
-            Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-            categoriesIntent.putExtra(WordPress.SITE, mSite);
-
-            // Make sure the PostModel is up to date with current category selections
-            updatePostSettings(mPost);
-            categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
-
-            startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
-        } else if (id == R.id.categoryButton) {
-            onCategoryButtonClick(v);
         } else if (id == R.id.locationText) {
             viewLocation();
         } else if (id == R.id.updateLocation) {
@@ -1000,6 +996,17 @@ public class EditPostSettingsFragment extends Fragment
         dialog.show(getFragmentManager(), null);
     }
 
+    private void showCategoriesActivity() {
+        Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
+        categoriesIntent.putExtra(WordPress.SITE, mSite);
+
+        // Make sure the PostModel is up to date with current category selections
+        updatePostSettings(mPost);
+        categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
+
+        startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+    }
+
     private void showTagsActivity() {
         // Fetch/refresh the tags in preparation for the the PostSettingsTagsActivity
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
@@ -1073,75 +1080,20 @@ public class EditPostSettingsFragment extends Fragment
         mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 
-    /**
-     * Categories
-     */
-
-    private void onCategoryButtonClick(View v) {
-        if (mCategories == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_generic);
-            return;
-        }
-
-        // Get category name by removing prefix from the tag
-        boolean listChanged = false;
-        String categoryName = (String) v.getTag();
-        categoryName = categoryName.replaceFirst(CATEGORY_PREFIX_TAG, "");
-
-        // Remove clicked category from list
-        for (int i = 0; i < mCategories.size(); i++) {
-            if (mCategories.get(i).getName().equals(categoryName)) {
-                mCategories.remove(i);
-                listChanged = true;
-                break;
-            }
-        }
-
-        // Recreate category views
-        if (listChanged) {
-            populateSelectedCategories();
-        }
-    }
-
     private void populateSelectedCategories() {
-        // Remove previous category buttons if any + select category button
-        List<View> viewsToRemove = new ArrayList<>();
-        for (int i = 0; i < mSectionCategories.getChildCount(); i++) {
-            View v = mSectionCategories.getChildAt(i);
-            if (v == null)
-                return;
-            Object tag = v.getTag();
-            if (tag != null && tag.getClass() == String.class &&
-                    (((String) tag).startsWith(CATEGORY_PREFIX_TAG) || tag.equals("select-category"))) {
-                viewsToRemove.add(v);
+        StringBuilder sb = new StringBuilder();
+        Iterator<TermModel> it = mCategories.iterator();
+        if (it.hasNext()) {
+            sb.append(it.next().getName());
+            while (it.hasNext()) {
+                sb.append(", ");
+                sb.append(it.next().getName());
             }
         }
-        for (View viewToRemove : viewsToRemove) {
-            mSectionCategories.removeView(viewToRemove);
-        }
-        viewsToRemove.clear();
-
-        // New category buttons
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-
-        if (mCategories != null) {
-            for (TermModel category : mCategories) {
-                AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button,
-                        null);
-                if (category != null && category.getName() != null && buttonCategory != null) {
-                    buttonCategory.setText(Html.fromHtml(category.getName()));
-                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + category.getName());
-                    buttonCategory.setOnClickListener(this);
-                    mSectionCategories.addView(buttonCategory);
-                }
-            }
-        }
-
-        // Add select category button once the category list has been initialized
-        Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        if (selectCategory != null && mCategories != null) {
-            selectCategory.setOnClickListener(this);
-            mSectionCategories.addView(selectCategory);
+        if (sb.toString().isEmpty()) {
+            mCategoriesTextView.setText(R.string.not_set);
+        } else {
+            mCategoriesTextView.setText(sb);
         }
     }
 
