@@ -199,9 +199,15 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                 }
 
                 if (result.isNewOrChanged()) {
-                    getCommentAdapter().setPost(mPost); //pass updated post to the adapter
-                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId); //clear all the previous comments
-                    updateComments(false, false); //load first page of comments
+                    // reget the post, then pass it to the adapter
+                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, true);
+                    if (post != null) {
+                        getCommentAdapter().setPost(post);
+                        mPost = post;
+                    }
+                    // clear all the previous comments, then load the first page of comments
+                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
+                    updateComments(false, false);
                 } else {
                     setRefreshing(false);
                 }
