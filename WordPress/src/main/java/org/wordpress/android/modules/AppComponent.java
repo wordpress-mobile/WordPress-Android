@@ -47,6 +47,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
+import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
@@ -147,6 +148,7 @@ public interface AppComponent {
 
     void inject(EditPostActivity object);
     void inject(EditPostSettingsFragment object);
+    void inject(PostSettingsTagsActivity object);
 
     void inject(PostPreviewActivity object);
     void inject(PostPreviewFragment object);

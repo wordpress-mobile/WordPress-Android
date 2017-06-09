@@ -20,14 +20,13 @@
 
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
-    <string name="tags_separate_with_commas">Tags (separate tags with commas)</string>
+    <string name="tags_separate_with_commas">Separate tags with commas</string>
     <string name="post_content">Content (tap to add text and media)</string>
     <string name="max_thumbnail_px_width">Default Image Width</string>
     <string name="image_quality">Image quality</string>
     <string name="password">Password</string>
     <string name="blogs">Blogs</string>
     <string name="account_details">Account details</string>
-    <string name="status">Status</string>
 
     <!-- comment form labels -->
     <string name="anonymous">Anonymous</string>
@@ -274,6 +273,7 @@
     <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
     <string name="post_excerpt">Excerpt</string>
     <string name="post_slug">Slug</string>
+    <string name="post_tags">Tags</string>
     <string name="download">Downloading media</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
@@ -978,6 +978,13 @@
     <string name="post_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
+    <string name="post_settings_status">Status</string>
+    <string-array name="post_settings_statuses" translatable="false">
+        <item>@string/publish_post</item>
+        <item>@string/draft</item>
+        <item>@string/pending_review</item>
+        <item>@string/post_private</item>
+    </string-array>
 
 
     <!-- Post Formats -->

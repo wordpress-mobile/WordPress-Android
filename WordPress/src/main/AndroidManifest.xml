@@ -198,6 +198,10 @@
         <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.posts.PostSettingsTagsActivity"
+            android:label="@string/post_tags"
+            android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"

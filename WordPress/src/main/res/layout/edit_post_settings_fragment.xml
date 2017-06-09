@@ -56,19 +56,45 @@
 
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/statusLabel"
-            style="@style/WordPressSubHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status" />
-
-        <Spinner
-            android:id="@+id/status"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
+        <LinearLayout
+            android:id="@+id/post_tags_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
+                android:text="@string/post_tags"/>
+
+            <TextView
+                android:id="@+id/post_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_darken_10"
+                android:text="@string/not_set"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/post_status_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
+                android:text="@string/post_settings_status"/>
+
+            <TextView
+                android:id="@+id/post_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_darken_10"/>
+
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/pubDateLabel"
@@ -124,17 +150,6 @@
                 android:layout_marginRight="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-            <org.wordpress.android.widgets.SuggestionAutoCompleteText
-                android:id="@+id/tags"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_sz_large"
-                android:hint="@string/tags_separate_with_commas"
-                android:inputType="textMultiLine" />
         </LinearLayout>
 
         <EditText
