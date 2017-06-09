@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -157,7 +158,7 @@ public class MediaStore extends Store {
             MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
             mediaError.message = e.getLocalizedMessage();
 
-            if (e instanceof java.net.SocketTimeoutException) {
+            if (e instanceof SocketTimeoutException) {
                 mediaError.type = MediaErrorType.TIMEOUT;
             }
 
