@@ -136,11 +136,22 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         configureSharingButtons();
     }
 
-    private void saveSharingButtons(HashSet<String> values, boolean isVisible) {
+    /*
+     * save both the sharing & more buttons
+     */
+    private void saveSharingButtons() {
+        HashSet<String> sharingButtons = mPrefSharingButtons.getSelectedValues();
+        HashSet<String> moreButtons = mPrefMoreButtons.getSelectedValues();
+
+        // sharing buttons are visible and enabled, more buttons are invisible and enabled,
+        // all others are invisible and disabled
         JSONArray jsonArray = new JSONArray();
         for (PublicizeButton button: mPublicizeButtons) {
-            if (values.contains(button.getId())) {
-                button.setVisibility(isVisible);
+            if (sharingButtons.contains(button.getId())) {
+                button.setVisibility(true);
+                button.setEnabled(true);
+            } else if (moreButtons.contains(button.getId())) {
+                button.setVisibility(false);
                 button.setEnabled(true);
             } else {
                 button.setEnabled(false);
@@ -316,10 +327,8 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
     @Override
     public void onPrefChanged(@NonNull WPPrefView pref) {
-        if (pref == mPrefSharingButtons) {
-            saveSharingButtons(pref.getSelectedValues(), true);
-        } else if (pref == mPrefMoreButtons) {
-            saveSharingButtons(pref.getSelectedValues(), false);
+        if (pref == mPrefSharingButtons || pref == mPrefMoreButtons) {
+            saveSharingButtons();
         } else if (pref == mPrefButtonStyle) {
             PrefListItem item = pref.getSelectedItem();
             if (item != null) {
