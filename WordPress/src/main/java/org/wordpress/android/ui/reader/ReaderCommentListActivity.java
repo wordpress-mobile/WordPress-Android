@@ -190,7 +190,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (!isFinishing() && result.isNewOrChanged()) {
                     // get the updated post and pass it to the adapter
-                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, true);
+                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
                     if (post != null) {
                         getCommentAdapter().setPost(post);
                         mPost = post;
@@ -305,7 +305,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     }
 
     private boolean loadPost() {
-        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, true);
+        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
         if (mPost == null) {
             return false;
         }
