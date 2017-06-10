@@ -481,9 +481,18 @@ public class MediaStore extends Store {
         return MediaSqlUtils.searchSiteMediaAsCursor(siteModel, MediaModelTable.TITLE, titleSearch);
     }
 
-    public MediaModel getPostMediaWithPath(PostModel postModel, String filePath) {
+    public MediaModel getMediaForPostWithPath(PostModel postModel, String filePath) {
         List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.FILE_PATH, filePath);
         return media.size() > 0 ? media.get(0) : null;
+    }
+
+    public List<MediaModel> getMediaForPost(PostModel postModel) {
+        return MediaSqlUtils.matchPostMedia(postModel.getId());
+    }
+
+    public List<MediaModel> getMediaForPostWithState(PostModel postModel, UploadState expectedState) {
+        return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
+                expectedState);
     }
 
     public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {

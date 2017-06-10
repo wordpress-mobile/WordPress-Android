@@ -189,6 +189,15 @@ public class MediaSqlUtils {
                 .getAsModel();
     }
 
+    public static List<MediaModel> matchPostMedia(int localPostId) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_POST_ID, localPostId)
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
+    }
+
     public static int insertOrUpdateMedia(MediaModel media) {
         if (media == null) return 0;
 
