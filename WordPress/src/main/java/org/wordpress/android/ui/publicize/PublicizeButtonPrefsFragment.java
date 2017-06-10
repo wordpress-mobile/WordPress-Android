@@ -242,8 +242,11 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
         mPublicizeButtons.clear();
         for (int i = 0; i < jsonArray.length(); i++) {
-            PublicizeButton publicizeButton = new PublicizeButton(jsonArray.optJSONObject(i));
-            mPublicizeButtons.add(publicizeButton);
+            JSONObject object = jsonArray.optJSONObject(i);
+            if (object != null) {
+                PublicizeButton publicizeButton = new PublicizeButton(object);
+                mPublicizeButtons.add(publicizeButton);
+            }
         }
 
         PrefListItems sharingListItems = new PrefListItems();
