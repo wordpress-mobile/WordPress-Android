@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseBooleanArray;
@@ -16,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -71,7 +71,7 @@ public class WPPrefView extends LinearLayout implements
     private TextView mHeadingTextView;
     private TextView mTitleTextView;
     private TextView mSummaryTextView;
-    private Switch mToggleSwitch;
+    private SwitchCompat mToggleSwitch;
 
     private String mTextEntry;
     private String mTextDialogSubtitle;
@@ -185,7 +185,7 @@ public class WPPrefView extends LinearLayout implements
         mHeadingTextView = (TextView) view.findViewById(R.id.text_heading);
         mTitleTextView = (TextView) view.findViewById(R.id.text_title);
         mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
-        mToggleSwitch = (Switch) view.findViewById(R.id.switch_view);
+        mToggleSwitch = (SwitchCompat) view.findViewById(R.id.switch_view);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(

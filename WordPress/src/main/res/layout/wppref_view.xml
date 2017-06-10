@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -35,12 +36,14 @@
             android:textSize="@dimen/text_sz_large"
             tools:text="text_title" />
 
-        <Switch
+        <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
+            app:theme="@style/WPPrefSwitch"
+            tools:checked="true"
             tools:text="switch" />
 
         <TextView
