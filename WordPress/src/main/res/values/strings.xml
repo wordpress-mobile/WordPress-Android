@@ -136,7 +136,9 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_too_large_upload">The file is too big. Please contact the web hosting provider to fix this issue</string>
+    <string name="media_error_too_large_upload">File too large to upload. Try enabling Optimize Images in Site->Settings</string>
+    <string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
+    <string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
@@ -641,14 +643,14 @@
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
 
+    <string name="preference_editor_beta" translatable="false">Beta</string>
     <string name="preference_editor_legacy">Legacy</string>
     <string name="preference_editor_visual">Visual</string>
-    <string name="preference_editor_aztec" translatable="false">Aztec</string>
 
     <string-array name="editor_entries" translatable="false">
         <item>@string/preference_editor_legacy</item>
         <item>@string/preference_editor_visual</item>
-        <item>@string/preference_editor_aztec</item>
+        <item>@string/preference_editor_beta</item>
     </string-array>
 
     <string-array name="editor_entries_without_aztec" translatable="false">
