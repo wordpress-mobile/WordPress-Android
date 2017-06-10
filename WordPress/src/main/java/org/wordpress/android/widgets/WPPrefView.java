@@ -23,7 +23,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * Single preference view which enables building preference screens without relying on Android's
@@ -128,19 +127,33 @@ public class WPPrefView extends LinearLayout implements
             }
             return selectedItems;
         }
-        private @NonNull HashSet<String> getSelectedValues() {
-            PrefListItems selectedItems = getSelectedItems();
-            HashSet<String> values = new HashSet<>();
-            for (PrefListItem item: selectedItems) {
-                values.add(item.mItemValue);
-            }
-            return values;
-        }
         // use this with RADIOLIST prefs to select only the passed name
         public void setSelectedName(@NonNull String selectedName) {
             for (PrefListItem item: this) {
                 item.mIsChecked = StringUtils.equals(selectedName, item.mItemName);
             }
+        }
+        public boolean removeItems(@NonNull PrefListItems items) {
+            boolean isChanged = false;
+            for (PrefListItem item: items) {
+                int i = indexOfValue(item.getItemValue());
+                if (i > -1) {
+                    this.remove(i);
+                    isChanged = true;
+                }
+            }
+            return isChanged;
+        }
+        private int indexOfValue(@NonNull String value) {
+            for (int i = 0; i < this.size(); i++) {
+                if (this.get(i).getItemValue().equals(value)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public boolean containsValue(@NonNull String value) {
+            return indexOfValue(value) > -1;
         }
     }
 
@@ -297,10 +310,6 @@ public class WPPrefView extends LinearLayout implements
 
     public PrefListItems getSelectedItems() {
         return mListItems.getSelectedItems();
-    }
-
-    public HashSet<String> getSelectedValues() {
-        return mListItems.getSelectedValues();
     }
 
     @Override

@@ -30,7 +30,6 @@ import org.wordpress.android.widgets.WPPrefView.PrefListItem;
 import org.wordpress.android.widgets.WPPrefView.PrefListItems;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import javax.inject.Inject;
 
@@ -40,6 +39,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
     private static final String TWITTER_PREFIX = "@";
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
+    private static final String SHARING_BUTTONS_UPDATED_KEY = "updated";
     private static final String TWITTER_ID = "twitter";
 
     private static final long FETCH_DELAY = 1000L;
@@ -136,21 +136,29 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         configureSharingButtons();
     }
 
-    /*
+    /**
      * save both the sharing & more buttons
+     * @param isSharingButtons true if called by mPrefSharingButtons, false if by mPrefMoreButtons
      */
-    private void saveSharingButtons() {
-        HashSet<String> sharingButtons = mPrefSharingButtons.getSelectedValues();
-        HashSet<String> moreButtons = mPrefMoreButtons.getSelectedValues();
+    private void saveSharingButtons(boolean isSharingButtons) {
+        PrefListItems sharingButtons = mPrefSharingButtons.getSelectedItems();
+        PrefListItems moreButtons = mPrefMoreButtons.getSelectedItems();
+
+        // sharing and more buttons are mutually exclusive
+        if (isSharingButtons) {
+             moreButtons.removeItems(sharingButtons);
+        } else {
+            sharingButtons.removeItems(moreButtons);
+        }
 
         // sharing buttons are visible and enabled, more buttons are invisible and enabled,
         // all others are invisible and disabled
         JSONArray jsonArray = new JSONArray();
         for (PublicizeButton button: mPublicizeButtons) {
-            if (sharingButtons.contains(button.getId())) {
+            if (sharingButtons.containsValue(button.getId())) {
                 button.setVisibility(true);
                 button.setEnabled(true);
-            } else if (moreButtons.contains(button.getId())) {
+            } else if (moreButtons.containsValue(button.getId())) {
                 button.setVisibility(false);
                 button.setEnabled(true);
             } else {
@@ -173,7 +181,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         WordPress.getRestClientUtilsV1_1().setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                // noop
+                configureSharingButtonsFromResponse(response);
             }
         }, new RestRequest.ErrorListener() {
             @Override
@@ -208,11 +216,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         WordPress.getRestClientUtilsV1_1().getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
-                    configureSharingButtonsFromResponse(response);
-                } catch (JSONException e) {
-                    AppLog.e(AppLog.T.SETTINGS, e);
-                }
+                configureSharingButtonsFromResponse(response);
             }
         }, new RestRequest.ErrorListener() {
             @Override
@@ -222,11 +226,23 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         });
     }
 
-    private void configureSharingButtonsFromResponse(JSONObject response) throws JSONException {
+    private void configureSharingButtonsFromResponse(JSONObject response) {
+        // the array of buttons is in SHARING_BUTTONS_KEY for the GET response,
+        // or SHARING_BUTTONS_UPDATED_KEY for the POST response
+        JSONArray jsonArray;
+        if (response.has(SHARING_BUTTONS_KEY)) {
+            jsonArray = response.optJSONArray(SHARING_BUTTONS_KEY);
+        } else {
+            jsonArray = response.optJSONArray(SHARING_BUTTONS_UPDATED_KEY);
+        }
+        if (jsonArray == null) {
+            AppLog.w(AppLog.T.SETTINGS, "Publicize sharing buttons missing from response");
+            return;
+        }
+
         mPublicizeButtons.clear();
-        JSONArray jsonArray = response.getJSONArray(SHARING_BUTTONS_KEY);
         for (int i = 0; i < jsonArray.length(); i++) {
-            PublicizeButton publicizeButton = new PublicizeButton(jsonArray.getJSONObject(i));
+            PublicizeButton publicizeButton = new PublicizeButton(jsonArray.optJSONObject(i));
             mPublicizeButtons.add(publicizeButton);
         }
 
@@ -327,8 +343,10 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
     @Override
     public void onPrefChanged(@NonNull WPPrefView pref) {
-        if (pref == mPrefSharingButtons || pref == mPrefMoreButtons) {
-            saveSharingButtons();
+        if (pref == mPrefSharingButtons) {
+            saveSharingButtons(true);
+        } else if (pref == mPrefMoreButtons) {
+            saveSharingButtons(false);
         } else if (pref == mPrefButtonStyle) {
             PrefListItem item = pref.getSelectedItem();
             if (item != null) {
