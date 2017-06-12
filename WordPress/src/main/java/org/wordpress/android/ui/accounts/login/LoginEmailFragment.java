@@ -103,11 +103,11 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             }
         });
 
-        rootView.findViewById(R.id.login_email_username_password).setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_site_address).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.loginViaUsernamePassword();
+                    mLoginListener.loginViaSiteAddress();
                 }
             }
         });
