@@ -199,8 +199,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             }
         });
 
-        // clear all the previous comments, then load the first page of comments
-        ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
+        // load the first page of comments
         updateComments(true, false);
     }
 
