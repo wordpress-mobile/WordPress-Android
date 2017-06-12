@@ -16,102 +16,72 @@
 
         <LinearLayout
             android:id="@+id/post_excerpt_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/PostSettingsContainer">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_dark"
+                style="@style/PostSettingsTitle"
                 android:text="@string/post_excerpt"/>
 
             <TextView
                 android:id="@+id/post_excerpt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"
+                style="@style/PostSettingsSubtitle"
                 android:hint="@string/not_set"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/post_slug_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/PostSettingsContainer">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_dark"
+                style="@style/PostSettingsTitle"
                 android:text="@string/post_slug"/>
 
             <TextView
                 android:id="@+id/post_slug"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"
+                style="@style/PostSettingsSubtitle"
                 android:hint="@string/not_set"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/post_categories_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/PostSettingsContainer">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_dark"
+                style="@style/PostSettingsTitle"
                 android:text="@string/categories"/>
 
             <TextView
                 android:id="@+id/post_categories"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"
+                style="@style/PostSettingsSubtitle"
                 android:text="@string/not_set"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/post_tags_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/PostSettingsContainer">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_dark"
+                style="@style/PostSettingsTitle"
                 android:text="@string/post_tags"/>
 
             <TextView
                 android:id="@+id/post_tags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"
+                style="@style/PostSettingsSubtitle"
                 android:text="@string/not_set"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/post_status_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/PostSettingsContainer">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_dark"
+                style="@style/PostSettingsTitle"
                 android:text="@string/post_settings_status"/>
 
             <TextView
                 android:id="@+id/post_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"/>
+                style="@style/PostSettingsSubtitle"/>
 
         </LinearLayout>
 
