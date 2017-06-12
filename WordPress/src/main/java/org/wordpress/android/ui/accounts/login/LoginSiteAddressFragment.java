@@ -276,7 +276,9 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     }
 
     private void askForHttpAuthCredentials(@NonNull final String url) {
-        // asking for HTTP auth credentials is not implemented yet
+        LoginHttpAuthDialogFragment loginHttpAuthDialogFragment = LoginHttpAuthDialogFragment.newInstance(url);
+        loginHttpAuthDialogFragment.setTargetFragment(this, LoginHttpAuthDialogFragment.DO_HTTP_AUTH);
+        loginHttpAuthDialogFragment.show(getFragmentManager(), LoginHttpAuthDialogFragment.TAG);
     }
 
     public void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
@@ -318,6 +320,19 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
             case GENERIC_ERROR:
                 showError(R.string.error_generic, null, null);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LoginHttpAuthDialogFragment.DO_HTTP_AUTH && resultCode == Activity.RESULT_OK) {
+            String url = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_URL);
+            String httpUsername = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_USERNAME);
+            String httpPassword = data.getStringExtra(LoginHttpAuthDialogFragment.ARG_PASSWORD);
+            mHTTPAuthManager.addHTTPAuthCredentials(httpUsername, httpPassword, url, null);
+            discover();
         }
     }
 
