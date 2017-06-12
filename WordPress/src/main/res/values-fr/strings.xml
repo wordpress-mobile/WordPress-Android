@@ -37,10 +37,6 @@ Language: fr
 	<string name="sure_to_remove_account">Supprimer ce site de l\'application ?</string>
 	<string name="photo_picker_title">Choisir une photo</string>
 	<string name="error_publish_no_network">L’appareil est hors ligne. Les modifications ont été sauvegardées localement.</string>
-	<string name="editor_post_saved_online_not_published">L’article a été sauvegardé en ligne en tant que brouillon. Étudiez la possibilité de le publier.</string>
-	<string name="editor_post_saved_online">L’article a été sauvegardé en ligne.</string>
-	<string name="editor_post_saved_locally_not_published">L’article a uniquement été sauvegardé localement. Étudiez la possibilité de le publier.</string>
-	<string name="editor_post_saved_locally">L’article a été sauvegardé sur votre appareil.</string>
 	<string name="site_settings_image_quality_hint">Qualité des images. Des valeurs élevées signifient une meilleure qualité d’image.</string>
 	<string name="site_settings_optimize_images_summary">Autoriser le redimensionnement et la compression des images</string>
 	<string name="media_encoder_quality_100">Maximum</string>
@@ -91,9 +87,6 @@ Language: fr
 	<string name="confirm">Confirmer</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Connexion impossible. Nous avons reçu une erreur 403 lors de \nnotre tentative d\'accès à votre point d’accès XMLRPC au site. \nL’application en a besoin pour communiquer avec votre site. \nContactez votre hébergeur pour résoudre ce problème.</string>
 	<string name="xmlrpc_post_blocked_error">Connexion impossible. Votre hébergeur bloque les requêtes POST\ndont votre application a besoin pour communiquer avec votre site. \nContactez-le pour résoudre ce problème.</string>
-	<string name="reader_liked_default_tag">Articles que j’aime</string>
-	<string name="reader_discover_default_tag">Découvrir</string>
-	<string name="reader_followed_default_tag">Sites suivis</string>
 	<string name="reader_empty_followed_blogs_search_title">Aucun site ne correspond</string>
 	<string name="reader_hint_search_followed_sites">Rechercher parmi les sites suivis</string>
 	<string name="visual_editor_disabled">Éditeur visuel désactivé</string>
@@ -832,7 +825,6 @@ Language: fr
 	<string name="older_two_days">Plus de 2 jours</string>
 	<string name="older_last_week">Plus d\'une semaine</string>
 	<string name="stats_no_blog">Les statistiques ne peuvent pas être chargée pour ce blog</string>
-	<string name="select_a_blog">Sélectionner un site WordPress</string>
 	<string name="sending_content">Upload du contenu de %s</string>
 	<string name="uploading_total">Upload %1$d sur %2$d</string>
 	<string name="mnu_comment_liked">Aimé</string>
@@ -1112,8 +1104,6 @@ Language: fr
 	<string name="images">Images</string>
 	<string name="all">Tout</string>
 	<string name="unattached">Non attachés</string>
-	<string name="media_add_popup_capture_photo">Capturer photo</string>
-	<string name="media_add_popup_capture_video">Capturer vidéo</string>
 	<string name="passcode_preference_title">code PIN</string>
 	<string name="passcode_turn_on">Activer le code PIN</string>
 	<string name="passcode_manage">Gérer le code PIN</string>
@@ -1154,7 +1144,6 @@ Language: fr
 	<string name="stats_totals_plays">Vues</string>
 	<string name="theme_auth_error_title">Impossible de récupérer les thèmes</string>
 	<string name="post_excerpt">Extrait</string>
-	<string name="share_action_title">Ajouter à ...</string>
 	<string name="share_action">Partager</string>
 	<string name="stats">Stats</string>
 	<string name="media_edit_failure">Échec de mise à jour</string>
@@ -1229,14 +1218,12 @@ Language: fr
 	<string name="notification_sound">Son de notification</string>
 	<string name="status">Avancement</string>
 	<string name="sdcard_title">Carte SD requise</string>
-	<string name="select_video">Choisissez une vidéo dans la galerie</string>
 	<string name="location">Localisation</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Effacer</string>
 	<string name="approve">Approuver</string>
 	<string name="none">Aucun</string>
 	<string name="blogs">Blogs</string>
-	<string name="select_photo">Sélectionnez une photo dans la galerie</string>
 	<string name="error">Erreur</string>
 	<string name="cancel">Annuler</string>
 	<string name="save">Enregistrer</string>

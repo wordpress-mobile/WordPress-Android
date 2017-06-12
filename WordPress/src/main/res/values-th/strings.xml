@@ -386,7 +386,6 @@ Language: th
 	<string name="older_two_days">เก่ากว่า 2 วัน</string>
 	<string name="older_last_week">เก่ากว่าหนึ่งอาทิตย์</string>
 	<string name="stats_no_blog">ไม่สามารถโหลดสถิติได้สำหรับบล็อกที่ต้องการ</string>
-	<string name="select_a_blog">เลือกเว็บไซต์เวิร์ดเพรส</string>
 	<string name="sending_content">กำลังอัปโหลดเนื้อหา %s</string>
 	<string name="uploading_total">กำลังอัปโหลด %1$d จาก %2$d</string>
 	<string name="mnu_comment_liked">ชื่นชอบแล้ว</string>
@@ -695,7 +694,6 @@ Language: th
 	<string name="stats_timeframe_days">วัน</string>
 	<string name="stats_timeframe_weeks">สัปดาห์</string>
 	<string name="stats_timeframe_months">เดือน</string>
-	<string name="share_action_title">เพิ่มไปที่...</string>
 	<string name="share_action">แบ่งปัน</string>
 	<string name="stats">สถิติ</string>
 	<string name="stats_view_visitors_and_views">ผู้เยี่ยมชมและการดู</string>
@@ -717,8 +715,6 @@ Language: th
 	<string name="media_gallery_type_tiled">เรียงแบบกระเบื้อง</string>
 	<string name="media_gallery_type_circles">เรียงแบบวงกลม</string>
 	<string name="media_gallery_type_slideshow">สไลด์โชว์</string>
-	<string name="media_add_popup_capture_photo">จับภาพรูปภาพ</string>
-	<string name="media_add_popup_capture_video">จับภาพวีดีโอ</string>
 	<string name="media_gallery_image_order_random">สุ่ม</string>
 	<string name="media_gallery_image_order_reverse">ย้อนกลับ</string>
 	<string name="media_gallery_type">ประเภท</string>
@@ -802,13 +798,11 @@ Language: th
 	<string name="status">สถานะ</string>
 	<string name="location">สถานที่</string>
 	<string name="sdcard_title">ต้องการ SD Card</string>
-	<string name="select_video">เลือกวีดีโอจาก gallery</string>
 	<string name="media">ไฟล์สื่อ</string>
 	<string name="delete">ลบ</string>
 	<string name="approve">อนุมัติ</string>
 	<string name="none">ไม่มี</string>
 	<string name="blogs">บล็อก</string>
-	<string name="select_photo">เลือกรูปจาก gallery</string>
 	<string name="error">ผิดพลาด</string>
 	<string name="yes">ใช่</string>
 	<string name="no">ไม่ใช่</string>

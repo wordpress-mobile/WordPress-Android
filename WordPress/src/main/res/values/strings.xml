@@ -135,7 +135,9 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_too_large_upload">The file is too big. Please contact the web hosting provider to fix this issue</string>
+    <string name="media_error_too_large_upload">File too large to upload. Try enabling Optimize Images in Site->Settings</string>
+    <string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
+    <string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
@@ -404,12 +406,13 @@
     <string name="add_new_category">Add new category</string>
     <string name="add_category">Add category</string>
     <string name="category_name">Category name</string>
-    <string name="category_desc">Category description (optional)</string>
-    <string name="category_parent">Category parent (optional):</string>
+    <string name="category_parent">Parent category (optional):</string>
     <string name="adding_cat_failed">Adding category failed</string>
     <string name="adding_cat_success">Category added successfully</string>
     <string name="cat_name_required">The category name field is required</string>
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
+    <string name="top_level_category_name">Top level</string>
+
 
     <!-- action from share intents -->
     <string name="select_a_blog">Choose a WordPress site</string>

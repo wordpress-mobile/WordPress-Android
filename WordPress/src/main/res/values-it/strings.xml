@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-15 11:57:52+0000
+Translation-Revision-Date: 2017-05-23 08:08:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+	<string name="error_media_save">Non è possibile salvare il media</string>
+	<string name="editor_scheduled_post_saved_online">Pubblicazione programmata</string>
+	<string name="editor_draft_saved_locally">La bozza è stata salvata sul device</string>
+	<string name="editor_draft_saved_online">La bozza è stata salvata online</string>
+	<string name="editor_post_saved_locally">L\'articolo è stato salvato sul device</string>
+	<string name="cant_share_unknown_action">L\'azione richiesta non è riconosciuta, verrà ignorata</string>
+	<string name="button_sync">Sincronizza</string>
+	<string name="media_saved_to_device">Il media è stato salvato su questo device</string>
 	<string name="smart_toast_comments_long_press">Fai tap e tieni premuto per la selezione multipla dei commenti </string>
 	<string name="smart_toast_photo_long_press">Fai tap e tieni premuto per la selezione multipla delle fotografie</string>
 	<string name="photo_picker_choose_video">Scegli un video dal dispositivo</string>
@@ -37,10 +45,7 @@ Language: it
 	<string name="sure_to_remove_account">Rimuovere questo sito dall\'app?</string>
 	<string name="photo_picker_title">Scegli foto</string>
 	<string name="error_publish_no_network">Il dispositivo è offline. Le modifiche sono state salvate a livello locale.</string>
-	<string name="editor_post_saved_online_not_published">L\'articolo è stato salvato online come bozza. Prendi in considerazione la possibilità di pubblicarlo.</string>
 	<string name="editor_post_saved_online">L\'articolo è stato salvato online</string>
-	<string name="editor_post_saved_locally_not_published">L\'articolo è stato salvato solo a livello locale. Prendi in considerazione la possibilità di pubblicarlo.</string>
-	<string name="editor_post_saved_locally">L\'articolo è stato salvato sul dispositivo</string>
 	<string name="site_settings_image_quality_hint">Qualità delle immagini. Valori più elevati indicano una migliore qualità delle immagini.</string>
 	<string name="site_settings_optimize_images_summary">Consenti di ridimensionare e comprimere le immagini</string>
 	<string name="media_encoder_quality_100">Massima</string>
@@ -91,9 +96,6 @@ Language: it
 	<string name="confirm">Conferma</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Non è possibile connettersi. Abbiamo ricevuto un messaggio di errore 403 durante il tentativo di accedere\n all\'endpoint XMLRPC del tuo sito. Per l\'app questo è necessario per comunicare con il tuo sito. Contatta il tuo host per risolvere\n questo problema.</string>
 	<string name="xmlrpc_post_blocked_error">Non è possibile connettersi. Il tuo host sta bloccando le richieste POST ma queste sono necessarie al corretto funzionamento dell\'app\n per comunicare con il tuo sito. Contatta il tuo fornitore del servizio di hosting per risolvere questo problema.</string>
-	<string name="reader_liked_default_tag">Articoli che mi sono piaciuti</string>
-	<string name="reader_followed_default_tag">Siti seguiti</string>
-	<string name="reader_discover_default_tag">Scopri</string>
 	<string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
 	<string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
 	<string name="visual_editor_disabled">Editor visuale disabilitato</string>
@@ -1109,8 +1111,6 @@ Language: it
 	<string name="themes">Temi</string>
 	<string name="all">Tutto</string>
 	<string name="images">Immagini</string>
-	<string name="media_add_popup_capture_photo">Scatta una foto</string>
-	<string name="media_add_popup_capture_video">Registra un video</string>
 	<string name="media_edit_title_text">Titolo</string>
 	<string name="media_edit_description_text">Descrizione</string>
 	<string name="media_edit_title_hint">Inserisci un titolo qui</string>
@@ -1230,13 +1230,11 @@ Language: it
 	<string name="status">Stato</string>
 	<string name="location">Posizione</string>
 	<string name="sdcard_title">Scheda SD necessaria</string>
-	<string name="select_video">Seleziona un video dalla Galleria</string>
 	<string name="media">Media</string>
 	<string name="approve">Approva</string>
 	<string name="delete">Elimina</string>
 	<string name="none">Nessuna</string>
 	<string name="blogs">Blog</string>
-	<string name="select_photo">Seleziona una foto dalla galleria</string>
 	<string name="cancel">Annulla</string>
 	<string name="save">Salva</string>
 	<string name="add">Aggiungi</string>

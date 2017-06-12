@@ -2,6 +2,8 @@ package org.wordpress.android.ui.posts;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.LongSparseArray;
@@ -165,32 +167,17 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mListScrollPositionManager.restoreScrollOffset();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            final Bundle extras = data.getExtras();
-
-            switch (requestCode) {
-                case ACTIVITY_REQUEST_CODE_ADD_CATEGORY:
-                    if (resultCode == RESULT_OK) {
-                        if (!NetworkUtils.checkConnection(this)) {
-                            mEmptyView.setText(R.string.no_network_title);
-                            break;
-                        }
-                        TermModel newCategory = (TermModel) extras.getSerializable(AddCategoryActivity.KEY_CATEGORY);
-
-                        // Save selected categories
-                        updateSelectedCategoryList();
-                        mListScrollPositionManager.saveScrollOffset();
-
-                        mSwipeToRefreshHelper.setRefreshing(true);
-                        RemoteTermPayload payload = new RemoteTermPayload(newCategory, mSite);
-                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload));
-                        break;
-                    }
-            }
+    private void showAddCategoryFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
         }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        AddCategoryFragment newFragment = AddCategoryFragment.newInstance(mSite);
+        newFragment.show(ft, "dialog");
     }
 
     @Override
@@ -207,14 +194,26 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         return true;
     }
 
+    public void categoryAdded(TermModel newCategory) {
+        if (!NetworkUtils.checkConnection(this)) {
+            mEmptyView.setText(R.string.no_network_title);
+            return;
+        }
+        // Save selected categories
+        updateSelectedCategoryList();
+        mListScrollPositionManager.saveScrollOffset();
+
+        mSwipeToRefreshHelper.setRefreshing(true);
+        RemoteTermPayload payload = new RemoteTermPayload(newCategory, mSite);
+        mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(payload));
+    }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_new_category) {
             if (NetworkUtils.checkConnection(this)) {
-                Intent intent = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
-                intent.putExtra(WordPress.SITE, mSite);
-                startActivityForResult(intent, 0);
+                showAddCategoryFragment();
             }
             return true;
         } else if (itemId == android.R.id.home) {
@@ -266,10 +265,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
         finish();
-    }
-
-    private int getCheckedItemCount(ListView listView) {
-        return listView.getCheckedItemCount();
     }
 
     @SuppressWarnings("unused")
