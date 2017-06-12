@@ -117,7 +117,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.helpWithSiteAddress();
+                    showSiteAddressHelp();
                 }
             }
         });
@@ -321,6 +321,10 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
                 showError(R.string.error_generic, null, null);
                 break;
         }
+    }
+
+    private void showSiteAddressHelp() {
+        new LoginSiteAddressHelpDialogFragment().show(getFragmentManager(), LoginSiteAddressHelpDialogFragment.TAG);
     }
 
     @Override

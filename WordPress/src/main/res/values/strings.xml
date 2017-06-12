@@ -1119,6 +1119,7 @@
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
     <string name="login_globe_icon">Site address globe icon</string>
+    <string name="login_site_address_help_image">Site address positioning image</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
@@ -1718,5 +1719,8 @@
     <string name="enter_site_address">Enter the address of your WordPress site you\'d like to connect.</string>
     <string name="login_site_address">Site address</string>
     <string name="login_site_address_help">Need help finding your site address?</string>
+    <string name="login_site_address_help_title">What\'s my site address?</string>
+    <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
+    <string name="login_site_address_more_help">Need more help?</string>
     <string name="login_checking_site_address">Checking site address</string>
 </resources>
