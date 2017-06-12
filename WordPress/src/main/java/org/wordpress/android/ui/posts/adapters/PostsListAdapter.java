@@ -730,6 +730,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             // Generate the featured image url for each post
             String imageUrl = null;
+            mFeaturedImageUrls.clear();
             for (PostModel post : tmpPosts) {
                 if (post.isLocalDraft()) {
                     imageUrl = null;
