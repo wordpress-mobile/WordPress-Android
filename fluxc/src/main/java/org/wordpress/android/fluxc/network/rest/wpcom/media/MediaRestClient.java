@@ -321,7 +321,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             + mCurrentUploadCalls.size());
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    notifyMediaUploaded(media, parseUploadError(response));
+                    notifyMediaUploaded(media, parseUploadError(response, siteModel));
                     // clean from the current uploads map
                     mCurrentUploadCalls.remove(media.getId());
                 }
@@ -346,7 +346,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
     // Helper methods to dispatch media actions
     //
-    private MediaError parseUploadError(Response response) {
+    private MediaError parseUploadError(Response response, SiteModel siteModel) {
         MediaError mediaError = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
 
         if (response.code() == 403) {
@@ -372,6 +372,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             // Or an object
             if (body.has("message")) {
                 mediaError.message = body.getString("message");
+            }
+
+            if (!siteModel.isWPCom()) {
+                // TODO : temporary fix for "big" media uploads on Jetpack connected site
+                // See https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/402
+                // Tried to upload a media that's too large (larger than the site's max_upload_filesize)
+                if (body.has("error")) {
+                    String error = body.getString("error");
+                    if ("invalid_hmac".equals(error)) {
+                        mediaError.type = MediaErrorType.REQUEST_TOO_LARGE;
+                    }
+                }
             }
         } catch (JSONException | IOException e) {
             // no op
