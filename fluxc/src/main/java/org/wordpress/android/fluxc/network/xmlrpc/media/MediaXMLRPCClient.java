@@ -397,6 +397,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
+            removeCallFromCurrentUploadsMap(media.getId());
             correspondingCall.cancel();
 
             // report the upload was successfully cancelled
@@ -450,10 +451,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaUploadCanceled(MediaModel media) {
-        if (media != null) {
-            removeCallFromCurrentUploadsMap(media.getId());
-        }
-
         ProgressPayload payload = new ProgressPayload(media, 0.f, false, true);
         mDispatcher.dispatch(MediaActionBuilder.newCanceledMediaUploadAction(payload));
     }
