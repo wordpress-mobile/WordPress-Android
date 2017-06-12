@@ -8,8 +8,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.CardView
@@ -53,15 +54,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/empty_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/grey_darken_20"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:textSize="@dimen/text_sz_extra_large"
+                    android:visibility="gone"
+                    tools:text="@string/empty_list_default"
+                    tools:visibility="visible" />
+
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/card_view_manage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/card_view"
             android:layout_marginTop="@dimen/margin_large"
             card_view:cardBackgroundColor="@color/white"
             card_view:cardCornerRadius="@dimen/cardview_default_radius"
@@ -115,15 +126,5 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/empty_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_extra_large"
-            android:visibility="gone"
-            tools:text="@string/empty_list_default"
-            tools:visibility="visible" />
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

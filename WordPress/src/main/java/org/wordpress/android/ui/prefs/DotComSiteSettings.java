@@ -52,8 +52,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     public static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
     public static final String SHARING_LABEL_KEY = "sharing_label";
     public static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
-    public static final String SHARING_REBLOG_KEY = "social_notifications_reblog";
-    public static final String SHARING_LIKE_KEY = "social_notifications_like";
+    public static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
+    public static final String SHARING_LIKES_DISABLED_KEY = "disabled_likes";
     public static final String SHARING_COMMENT_LIKES_KEY = "jetpack_comment_likes_enabled";
     public static final String TWITTER_USERNAME_KEY = "twitter_via";
 
@@ -208,10 +208,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.blacklist = new ArrayList<>();
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
-        mRemoteSettings.allowReblogButton = settingsObject.optBoolean(SHARING_REBLOG_KEY, false);
-        mRemoteSettings.allowLikeButton = settingsObject.optBoolean(SHARING_LIKE_KEY, false);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
+
+        boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
+        boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
+        mRemoteSettings.allowReblogButton = !reblogsDisabled;
+        mRemoteSettings.allowLikeButton = !likesDisabled;
 
         String modKeys = settingsObject.optString(MODERATION_KEYS_KEY, "");
         if (modKeys.length() > 0) {
@@ -349,11 +352,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
 
         if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
-            params.put(SHARING_REBLOG_KEY, String.valueOf(mSettings.allowReblogButton));
+            params.put(SHARING_REBLOGS_DISABLED_KEY, String.valueOf(!mSettings.allowReblogButton));
         }
 
         if (mSettings.allowLikeButton != mRemoteSettings.allowLikeButton) {
-            params.put(SHARING_LIKE_KEY, String.valueOf(mSettings.allowLikeButton));
+            params.put(SHARING_LIKES_DISABLED_KEY, String.valueOf(!mSettings.allowLikeButton));
         }
 
         if (mSettings.allowCommentLikes != mRemoteSettings.allowCommentLikes) {
