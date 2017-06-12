@@ -21,19 +21,16 @@ import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -103,13 +100,13 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    private Spinner mPostFormatSpinner;
     private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mCategoriesTextView;
     private TextView mTagsTextView;
     private TextView mStatusTextView;
+    private TextView mPostFormatTextView;
     private TextView mPubDateText;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
@@ -157,6 +154,7 @@ public class EditPostSettingsFragment extends Fragment
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
         updateSiteOrFinishActivity(savedInstanceState);
+        updatePostFormatKeysAndNames();
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
@@ -218,6 +216,7 @@ public class EditPostSettingsFragment extends Fragment
         mCategoriesTextView = (TextView) rootView.findViewById(R.id.post_categories);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
+        mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
@@ -287,51 +286,19 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
 
+        final LinearLayout formatContainer = (LinearLayout) rootView.findViewById(R.id.post_format_container);
+        formatContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostFormatDialog();
+            }
+        });
+
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
             rootView.findViewById(R.id.post_categories_container).setVisibility(View.GONE);
             rootView.findViewById(R.id.post_tags_container).setVisibility(View.GONE);
-            rootView.findViewById(R.id.postFormatLabel).setVisibility(View.GONE);
-            rootView.findViewById(R.id.postFormat).setVisibility(View.GONE);
-        } else {
-            // Default values
-            mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
-            mPostFormatNames = new ArrayList<>(
-                    Arrays.asList(getResources().getStringArray(R.array.post_format_display_names)));
-            // If we have specific values for this site, use them
-            List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
-            for (PostFormatModel postFormatModel : postFormatModels) {
-                if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
-                    mPostFormatKeys.add(postFormatModel.getSlug());
-                    mPostFormatNames.add(postFormatModel.getDisplayName());
-                }
-            }
-
-            // Set up the Post Format spinner
-            mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
-            ArrayAdapter<String> pfAdapter = new ArrayAdapter<>(getActivity(), R.layout.simple_spinner_item,
-                    mPostFormatNames);
-            pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mPostFormatSpinner.setAdapter(pfAdapter);
-            String activePostFormat = POST_FORMAT_STANDARD_KEY;
-
-            if (!TextUtils.isEmpty(mPost.getPostFormat())) {
-                activePostFormat = mPost.getPostFormat();
-            }
-
-            for (int i = 0; i < mPostFormatKeys.size(); i++) {
-                if (mPostFormatKeys.get(i).equals(activePostFormat))
-                    mPostFormatSpinner.setSelection(i);
-            }
-
-            mPostFormatSpinner.setOnTouchListener(
-                    new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-                            return false;
-                        }
-                    }
-            );
+            formatContainer.setVisibility(View.GONE);
         }
 
         initSettingsFields();
@@ -367,6 +334,7 @@ public class EditPostSettingsFragment extends Fragment
         mCurrentSlug = mPost.getSlug();
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
+        mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
         updateTagsTextView();
 
         String pubDate = mPost.getDateCreated();
@@ -657,15 +625,6 @@ public class EditPostSettingsFragment extends Fragment
 
         post.setDateCreated(publicationDateIso8601);
 
-        String postFormat = "";
-        if (!post.isPage()) {
-            // post format
-            if (mPostFormatKeys != null && mPostFormatSpinner != null &&
-                mPostFormatSpinner.getSelectedItemPosition() < mPostFormatKeys.size()) {
-                postFormat = mPostFormatKeys.get(mPostFormatSpinner.getSelectedItemPosition());
-            }
-        }
-
         if (post.supportsLocation()) {
             if (mPostLocation == null) {
                 post.clearLocation();
@@ -690,7 +649,6 @@ public class EditPostSettingsFragment extends Fragment
         post.setSlug(mCurrentSlug);
         post.setStatus(getCurrentPostStatus().toString());
         post.setPassword(password);
-        post.setPostFormat(postFormat);
     }
 
     /*
@@ -1039,6 +997,68 @@ public class EditPostSettingsFragment extends Fragment
         builder.show();
     }
 
+    private void showPostFormatDialog() {
+        int checkedItem = 0;
+        if (!TextUtils.isEmpty(mPost.getPostFormat())) {
+            for (int i = 0; i < mPostFormatKeys.size(); i++) {
+                if (mPost.getPostFormat().equals(mPostFormatKeys.get(i))) {
+                    checkedItem = i;
+                    break;
+                }
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.post_settings_format);
+        builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ListView listView = ((AlertDialog)dialog).getListView();
+                String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
+                mPostFormatTextView.setText(formatName);
+                mPost.setPostFormat(getPostFormatKeyFromName(formatName));
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
+    }
+
+    private void updatePostFormatKeysAndNames() {
+        // Default values
+        mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
+        mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
+                .getStringArray(R.array.post_format_display_names)));
+
+        // If we have specific values for this site, use them
+        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
+        for (PostFormatModel postFormatModel : postFormatModels) {
+            if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
+                mPostFormatKeys.add(postFormatModel.getSlug());
+                mPostFormatNames.add(postFormatModel.getDisplayName());
+            }
+        }
+    }
+
+    private String getPostFormatKeyFromName(String postFormatName) {
+        for (int i = 0; i < mPostFormatNames.size(); i++) {
+            if (postFormatName.equalsIgnoreCase(mPostFormatNames.get(i))) {
+                return mPostFormatKeys.get(i);
+            }
+        }
+        return POST_FORMAT_STANDARD_KEY;
+    }
+
+    private String getPostFormatNameFromKey(String postFormatKey) {
+        for (int i = 0; i < mPostFormatKeys.size(); i++) {
+            if (postFormatKey.equalsIgnoreCase(mPostFormatKeys.get(i))) {
+                return mPostFormatNames.get(i);
+            }
+        }
+        // Since this is only used as a display name, if we can't find the key, we should just
+        // return the capitalized key as the name which should be better than returning `null`
+        return StringUtils.capitalize(postFormatKey);
+    }
+
     /*
      * changes the left drawable on the location text to match the passed status
      */
@@ -1106,5 +1126,15 @@ public class EditPostSettingsFragment extends Fragment
                 populateSelectedCategories();
                 break;
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
+            return;
+        }
+        updatePostFormatKeysAndNames();
     }
 }

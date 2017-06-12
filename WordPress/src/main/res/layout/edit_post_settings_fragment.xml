@@ -115,6 +115,26 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/post_format_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_dark"
+                android:text="@string/post_settings_format"/>
+
+            <TextView
+                android:id="@+id/post_format"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_darken_10"/>
+
+        </LinearLayout>
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/pubDateLabel"
             style="@style/WordPressSubHeader"
@@ -133,21 +153,6 @@
             android:text="@string/immediately"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/postFormatLabel"
-            style="@style/WordPressSubHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/post_format" />
-
-        <Spinner
-            android:id="@+id/postFormat"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:prompt="@string/post_format" />
 
         <EditText
             android:id="@+id/post_password"

@@ -849,7 +849,6 @@
     <!-- post scheduling and password -->
     <string name="submit_for_review">Submit</string>
     <string name="publish_date">Publish</string>
-    <string name="post_format">Post format</string>
     <string name="schedule_verb">Schedule</string>
 
     <!-- post date selection -->
@@ -980,6 +979,7 @@
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_status">Status</string>
+    <string name="post_settings_format">Post Format</string>
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/publish_post</item>
         <item>@string/draft</item>
