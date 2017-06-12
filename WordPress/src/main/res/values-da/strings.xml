@@ -190,7 +190,6 @@ Language: da_DK
 	<string name="pages_empty_list">Endnu ingen sider! Hvorfor ikke lave en?</string>
 	<string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
 	<string name="posting_post">Sender "%s"</string>
-	<string name="select_a_blog">Vælg et WordPress-websted</string>
 	<string name="sending_content">Overfører %s indhold</string>
 	<string name="uploading_total">Overfører %1$d af %2$d</string>
 	<string name="comment_reply_to_user">Besvar %s</string>
@@ -468,8 +467,6 @@ Language: da_DK
 	<string name="theme_set_success">Tema indstillet!</string>
 	<string name="media_edit_description_hint">Indtast en beskrivelse her</string>
 	<string name="media_edit_title_hint">Indtast en titel her</string>
-	<string name="media_add_popup_capture_video">Optag video</string>
-	<string name="media_add_popup_capture_photo">Tag billede</string>
 	<string name="unattached">Frigjort</string>
 	<string name="passcode_re_enter_passcode">Genindtast PIN-kode</string>
 	<string name="passcode_enter_passcode">Indtast PIN-kode</string>
@@ -509,7 +506,6 @@ Language: da_DK
 	<string name="theme_activate_button">Aktiver</string>
 	<string name="theme_activating_button">Aktiverer</string>
 	<string name="post_excerpt">Uddrag</string>
-	<string name="share_action_title">Tilføj til ...</string>
 	<string name="stats_totals_plays">Afspilninger</string>
 	<string name="passcode_change_passcode">Ændr PIN</string>
 	<string name="passcode_set">PIN ændret</string>
@@ -575,7 +571,6 @@ Language: da_DK
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Blink beskedlys</string>
 	<string name="status">Status</string>
-	<string name="select_video">Vælg en video fra galleriet</string>
 	<string name="sdcard_title">SD-kort påkrævet</string>
 	<string name="location">Placering</string>
 	<string name="media">Medier</string>
@@ -583,7 +578,6 @@ Language: da_DK
 	<string name="approve">Godkend</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogs</string>
-	<string name="select_photo">Vælg et billede fra galleri</string>
 	<string name="error">Fejl</string>
 	<string name="save">Gem</string>
 	<string name="add">Tilføj</string>

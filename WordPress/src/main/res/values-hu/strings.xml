@@ -143,8 +143,6 @@ Language: hu
 	<string name="empty_list_default">Ez a lista üres</string>
 	<string name="themes">Sablonok</string>
 	<string name="all">Összes</string>
-	<string name="media_add_popup_capture_photo">Fénykép készítése</string>
-	<string name="media_add_popup_capture_video">Videó készítése</string>
 	<string name="media_gallery_image_order_random">Véletlenszerű</string>
 	<string name="media_gallery_type">Típus</string>
 	<string name="media_gallery_image_order_reverse">Megfordítás</string>
@@ -170,7 +168,6 @@ Language: hu
 	<string name="media_edit_description_hint">A leírást itt lehet megadni</string>
 	<string name="media_edit_failure">A feltöltés nem sikerült</string>
 	<string name="theme_set_success">Sikerült beállítani a sablont!</string>
-	<string name="share_action_title">Hozzáadás...</string>
 	<string name="share_action">Megosztás</string>
 	<string name="stats_view_visitors_and_views">Látogatók és megtekintések</string>
 	<string name="stats_timeframe_days">nap</string>
@@ -258,14 +255,12 @@ Language: hu
 	<string name="notification_vibrate">Rezgés</string>
 	<string name="status">Állapot</string>
 	<string name="sdcard_title">SD kártya szükséges</string>
-	<string name="select_video">Videó választása a galériából</string>
 	<string name="location">Földrajzi hely</string>
 	<string name="media">Média</string>
 	<string name="delete">Törlés</string>
 	<string name="approve">Elfogadás</string>
 	<string name="none">Egyik sem</string>
 	<string name="blogs">Honlapok</string>
-	<string name="select_photo">Válasszunk egy képet a galériából</string>
 	<string name="error">Hiba</string>
 	<string name="cancel">Megszakítás</string>
 	<string name="save">Mentés</string>

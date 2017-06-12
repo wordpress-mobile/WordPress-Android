@@ -220,7 +220,6 @@ Language: sr_RS
 	<string name="mnu_comment_liked">Свиђа се</string>
 	<string name="uploading_total">Отпремљивање %1$d од %2$d</string>
 	<string name="sending_content">Отпремљивање %s садржаја</string>
-	<string name="select_a_blog">Одаберите Вордпрес веб место</string>
 	<string name="stats_no_blog">Статистике не могу бити учитане за тражени блог</string>
 	<string name="older_two_days">Старије од два дана</string>
 	<string name="older_last_week">Старије од недељу дана</string>
@@ -495,12 +494,10 @@ Language: sr_RS
 	<string name="media_add_popup_title">Додајте у библиотеку медија</string>
 	<string name="select_from_media_library">Одаберите из библиотеке медија</string>
 	<string name="reader_hint_comment_on_comment">Одговор на коментар…</string>
-	<string name="media_add_popup_capture_photo">Фотографиши</string>
 	<string name="media_gallery_type_slideshow">Приказ слајдова</string>
 	<string name="media_gallery_type">Врста</string>
 	<string name="post_excerpt">Исечак</string>
 	<string name="themes_features_label">Особине</string>
-	<string name="media_add_popup_capture_video">Сними видео снимак</string>
 	<string name="theme_activating_button">Уклучивање</string>
 	<string name="theme_activate_button">Укључи</string>
 	<string name="themes_details_label">Детаљи</string>
@@ -524,7 +521,6 @@ Language: sr_RS
 	<string name="stats_view_visitors_and_views">Посетиоци и прегледи</string>
 	<string name="stats">Статистике</string>
 	<string name="share_action">Подели</string>
-	<string name="share_action_title">Додај на...</string>
 	<string name="theme_set_success">Успешно постављена тема!</string>
 	<string name="stats_totals_plays">Пуштања</string>
 	<string name="stats_totals_clicks">Притискања</string>
@@ -610,14 +606,12 @@ Language: sr_RS
 	<string name="notification_vibrate">Вибрирај</string>
 	<string name="notification_blink">Трепћи светло за обавештење</string>
 	<string name="status">Стање</string>
-	<string name="select_video">Одабери видео снимак из галерије</string>
 	<string name="sdcard_title">SD картица неопходна</string>
 	<string name="location">Локација</string>
 	<string name="media">Медији</string>
 	<string name="delete">Обриши</string>
 	<string name="none">Ниједан</string>
 	<string name="blogs">Блогови</string>
-	<string name="select_photo">Одабери фотографију из галерије</string>
 	<string name="no">Не</string>
 	<string name="yes">Да</string>
 	<string name="reply">Одговор</string>

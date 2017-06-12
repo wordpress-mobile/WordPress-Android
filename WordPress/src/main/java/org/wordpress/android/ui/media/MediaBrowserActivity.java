@@ -154,6 +154,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
+        if (mBrowserType == null) {
+            // default to browser mode if missing type
+            AppLog.w(AppLog.T.MEDIA, "MediaBrowserType is null. Defaulting to MediaBrowserType.BROWSER mode.");
+            mBrowserType = MediaBrowserType.BROWSER;
+        }
+
         setContentView(R.layout.media_browser_activity);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
