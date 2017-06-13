@@ -70,6 +70,7 @@ public class SitePickerActivity extends AppCompatActivity
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
+    private static final String KEY_REFRESHING = "refreshing_sites";
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
@@ -96,7 +97,11 @@ public class SitePickerActivity extends AppCompatActivity
         restoreSavedInstanceState(savedInstanceState);
         setupActionBar();
         setupRecycleView();
+
         initSwipeToRefreshHelper(findViewById(android.R.id.content));
+        if (savedInstanceState != null) {
+            mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
+        }
     }
 
     @Override
@@ -110,6 +115,7 @@ public class SitePickerActivity extends AppCompatActivity
         outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
+        outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
         super.onSaveInstanceState(outState);
     }
 
