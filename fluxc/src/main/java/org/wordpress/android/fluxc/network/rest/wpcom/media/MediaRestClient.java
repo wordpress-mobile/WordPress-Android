@@ -278,6 +278,15 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         String url = WPCOMREST.sites.site(siteModel.getSiteId()).media.new_.getUrlV1_1();
         RestUploadRequestBody body = new RestUploadRequestBody(media, getEditRequestParams(media), this);
+        if (siteModel.hasMaxUploadSize() && body.contentLength() > siteModel.getMaxUploadSize()) {
+            // Abort upload if it exceeds the site upload limit
+            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
+                    + siteModel.getMaxUploadSize());
+            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
 
         Request request = new Request.Builder()
