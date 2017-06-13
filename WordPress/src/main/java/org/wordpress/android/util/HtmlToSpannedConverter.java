@@ -365,7 +365,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
             WPImageSpan is = new WPImageSpan(mContext, resizedBitmap, curStream);
 
             // Get the MediaFile data from db
-            MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost, src);
+            MediaModel mediaModel = mMediaStore.getMediaForPostWithPath(mPost, src);
             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
 
             if (mediaFile != null) {
