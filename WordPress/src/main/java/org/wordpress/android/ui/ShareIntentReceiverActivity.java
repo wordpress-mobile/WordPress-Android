@@ -195,6 +195,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
         }
         mActionIndex = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, ADD_TO_NEW_POST);
+        if (mActionIndex < 0 || mActionIndex >= mActionGroup.getChildCount()) {
+            mActionIndex = ADD_TO_NEW_POST;
+        }
         mActionGroup.check(getActionId(mActionIndex));
     }
 
