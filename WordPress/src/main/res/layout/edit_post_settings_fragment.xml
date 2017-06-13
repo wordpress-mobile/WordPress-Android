@@ -87,41 +87,29 @@
 
         <LinearLayout
             android:id="@+id/post_format_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/PostSettingsContainer">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_dark"
+                style="@style/PostSettingsTitle"
                 android:text="@string/post_settings_format"/>
 
             <TextView
                 android:id="@+id/post_format"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"/>
+                style="@style/PostSettingsSubtitle"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/post_password_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            style="@style/PostSettingsContainer">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_dark"
+                style="@style/PostSettingsTitle"
                 android:text="@string/password"/>
 
             <TextView
                 android:id="@+id/post_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey_darken_10"
+                style="@style/PostSettingsSubtitle"
                 android:hint="@string/not_set"/>
 
         </LinearLayout>
