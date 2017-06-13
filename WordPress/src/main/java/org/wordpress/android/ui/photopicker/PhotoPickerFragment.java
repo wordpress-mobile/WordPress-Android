@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v13.app.ActivityCompat;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -488,7 +489,8 @@ public class PhotoPickerFragment extends Fragment {
             mPermissionsDeniedAlways = false;
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    boolean showRationale = shouldShowRequestPermissionRationale(permissions[i]);
+                    boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+                            getActivity(), permissions[i]);
                     if (!showRationale) {
                         mPermissionsDeniedAlways = true;
                         break;
