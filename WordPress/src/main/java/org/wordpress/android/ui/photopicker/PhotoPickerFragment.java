@@ -72,6 +72,7 @@ public class PhotoPickerFragment extends Fragment {
     private Parcelable mRestoreState;
     private PhotoPickerListener mListener;
 
+    private boolean mHasPermissions;
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
     private boolean mDeviceOnly;
@@ -332,6 +333,8 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
+        if (!mHasPermissions) return;
+
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
             mRestoreState = mGridManager.onSaveInstanceState();
@@ -351,6 +354,9 @@ public class PhotoPickerFragment extends Fragment {
             AppLog.w(AppLog.T.POSTS, "Photo picker > can't refresh when not added");
             return;
         }
+
+        if (!mHasPermissions) return;
+
         if (mGridManager == null || mAdapter == null) {
             reload();
         } else {
@@ -412,17 +418,19 @@ public class PhotoPickerFragment extends Fragment {
     public void checkPermissions() {
         if (!isAdded()) return;
 
-        boolean hasPermission = true;
+        mHasPermissions = true;
         for (String permission : PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                hasPermission = false;
+                mHasPermissions = false;
             }
         }
 
-        if (hasPermission && isSoftAskViewShowing()) {
+        if (mHasPermissions) {
             showSoftAskView(false);
-            reload();
-        } else if (!hasPermission && !isSoftAskViewShowing()) {
+            if (mAdapter == null || mAdapter.isEmpty()) {
+                reload();
+            }
+        } else {
             showSoftAskView(true);
         }
     }
@@ -467,10 +475,10 @@ public class PhotoPickerFragment extends Fragment {
                 }
             });
 
-            mSoftAskContainer.setVisibility(View.VISIBLE);
+            AniUtils.fadeIn(mSoftAskContainer, AniUtils.Duration.MEDIUM);
             hideBottomBar();
         } else {
-            mSoftAskContainer.setVisibility(View.GONE);
+            AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
             showBottomBar();
             refresh();
         }
