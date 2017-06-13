@@ -94,6 +94,8 @@ public class PhotoPickerFragment extends Fragment {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
+    // TODO: a future PR should only request WRITE_EXTERNAL_STORAGE since that's all we need
+    // to show photos. we should request CAMERA permission when the camera icon is tapped.
     private static final String[] PERMISSIONS =
             {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
@@ -113,11 +115,12 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mAllowMultiSelect = savedInstanceState.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
-            mPhotosOnly = savedInstanceState.getBoolean(ARG_PHOTOS_ONLY, false);
-            mDeviceOnly = savedInstanceState.getBoolean(ARG_DEVICE_ONLY, false);
-            mPermissionsDeniedAlways = savedInstanceState.getBoolean(ARG_PERMISSIONS_DENIED, false);
+        Bundle args = getArguments();
+        if (args != null) {
+            mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
+            mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY, false);
+            mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY, false);
+            mPermissionsDeniedAlways = args.getBoolean(ARG_PERMISSIONS_DENIED, false);
         }
     }
 
@@ -127,15 +130,6 @@ public class PhotoPickerFragment extends Fragment {
         mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT);
         mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY);
         mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(ARG_ALLOW_MULTI_SELECT, mAllowMultiSelect);
-        outState.putBoolean(ARG_PHOTOS_ONLY, mPhotosOnly);
-        outState.putBoolean(ARG_DEVICE_ONLY, mDeviceOnly);
-        outState.putBoolean(ARG_PERMISSIONS_DENIED, mPermissionsDeniedAlways);
-        super.onSaveInstanceState(outState);
     }
 
     public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
