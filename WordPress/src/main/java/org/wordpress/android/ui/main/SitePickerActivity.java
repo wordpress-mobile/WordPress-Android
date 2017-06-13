@@ -50,6 +50,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,6 +72,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ActionMode mActionMode;
     private MenuItem mMenuEdit;
     private MenuItem mMenuAdd;
@@ -92,6 +95,7 @@ public class SitePickerActivity extends AppCompatActivity
         restoreSavedInstanceState(savedInstanceState);
         setupActionBar();
         setupRecycleView();
+        initSwipeToRefreshHelper(findViewById(android.R.id.content));
     }
 
     @Override
@@ -224,6 +228,23 @@ public class SitePickerActivity extends AppCompatActivity
                 }
             }
         }, 200, TimeUnit.MILLISECONDS);
+    }
+
+    private void initSwipeToRefreshHelper(View view) {
+        if (view == null) {
+            return;
+        }
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+                this,
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (isFinishing()) {
+                            return;
+                        }
+                    }
+                });
     }
 
     private void setupRecycleView() {
