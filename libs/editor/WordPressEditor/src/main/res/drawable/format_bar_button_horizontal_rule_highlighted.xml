@@ -7,9 +7,9 @@
     android:viewportHeight="44"
     android:viewportWidth="44" >
 
-    <!-- @color/wp_blue -->
+    <!-- @color/wp_grey_dark -->
     <path
-        android:fillColor="#ff0087be"
+        android:fillColor="#ff2e4453"
         android:pathData="M13,21h18v2H13V21z" >
     </path>
 
