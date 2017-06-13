@@ -5,13 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.widgets.WPViewPager
-        android:id="@+id/intros_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_buttons"
-        android:clipToPadding="false"/>
-
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout_indicator"
         android:layout_width="match_parent"
@@ -20,6 +13,14 @@
         app:tabBackground="@drawable/indicator_selector"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp" />
+
+    <org.wordpress.android.widgets.WPViewPager
+        android:id="@+id/intros_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout_indicator"
+        android:layout_above="@+id/bottom_buttons"
+        android:clipToPadding="false"/>
 
     <LinearLayout
         android:id="@+id/bottom_buttons"
