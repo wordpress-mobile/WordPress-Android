@@ -270,7 +270,8 @@ public class SiteSqlUtils {
 
         if (localSites.size() > 0) {
             for (SiteModel site : localSites) {
-                deleteSite(site);
+                AppLog.d(T.DB, "Removing " + site.getName() + " (" + site.getSiteId() + ")");
+//                deleteSite(site);
             }
         }
 
