@@ -75,7 +75,10 @@ public class PhotoPickerFragment extends Fragment {
     private Parcelable mRestoreState;
     private PhotoPickerListener mListener;
 
+    // true = user has granted the necessary permissions
     private boolean mHasPermissions;
+
+    // true = user has denied the necessary permissions AND checked "don't ask again"
     private boolean mPermissionsDeniedAlways;
 
     private boolean mAllowMultiSelect;
@@ -133,9 +136,9 @@ public class PhotoPickerFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void setOptions(EnumSet<PhotoPickerOption> options) {
-        mAllowMultiSelect = options != null && options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mPhotosOnly = options != null && options.contains(PhotoPickerOption.PHOTOS_ONLY);
+    public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
+        mAllowMultiSelect = options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
+        mPhotosOnly = options.contains(PhotoPickerOption.PHOTOS_ONLY);
 
         if (hasAdapter()) {
             getAdapter().setAllowMultiSelect(mAllowMultiSelect);
@@ -196,13 +199,17 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        checkPermissions();
-
         if (mHasPermissions && savedInstanceState == null && mAllowMultiSelect) {
             SmartToast.show(getActivity(), SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkPermissions();
     }
 
     private void showPickerPopupMenu(@NonNull View view) {
@@ -426,6 +433,7 @@ public class PhotoPickerFragment extends Fragment {
 
     /*
      * load the photos if we have the necessary permissions, otherwise show the "soft ask" view
+     * which asks the user to allow the permissions
      */
     public void checkPermissions() {
         if (!isAdded()) return;
@@ -462,6 +470,7 @@ public class PhotoPickerFragment extends Fragment {
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
         intent.setData(uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
@@ -519,13 +528,12 @@ public class PhotoPickerFragment extends Fragment {
             }
             mSoftAskContainer.setVisibility(View.VISIBLE);
             hideBottomBar();
-        } else if (show && mSoftAskContainer.getVisibility() != View.VISIBLE) {
+        } else if (mSoftAskContainer.getVisibility() == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
             showBottomBar();
             refresh();
         }
     }
-
 
     private void trackAddRecentMediaEvent(List<Uri> uriList) {
         if (uriList == null) {

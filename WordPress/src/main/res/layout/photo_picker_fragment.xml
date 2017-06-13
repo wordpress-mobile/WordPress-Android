@@ -39,17 +39,24 @@
         android:visibility="gone"
         tools:visibility="visible">
 
+        <ImageView
+            android:id="@+id/image_soft_ask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:tint="@color/blue_wordpress"
+            app:srcCompat="@drawable/media_image_placeholder" />
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_soft_ask_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawablePadding="@dimen/margin_large"
-            android:drawableTop="@drawable/img_wordpress_org_blue_wordpress_50dp"
+            android:layout_marginTop="@dimen/margin_large"
             android:gravity="center"
             android:text="@string/photo_picker_soft_ask_label"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_extra_large" />
+            android:textSize="@dimen/text_sz_large" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_soft_ask_allow"
@@ -61,7 +68,7 @@
             android:text="@string/photo_picker_soft_ask_allow"
             android:textAllCaps="true"
             android:textColor="@color/blue_wordpress"
-            android:textSize="@dimen/text_sz_extra_large"
+            android:textSize="@dimen/text_sz_large"
             android:textStyle="bold" />
     </LinearLayout>
 
