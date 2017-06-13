@@ -370,11 +370,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void updateTagsTextView() {
         String tags = TextUtils.join(",", mPost.getTagNameList());
-        if (!TextUtils.isEmpty(tags)) {
-            mTagsTextView.setText(tags);
-        } else {
-            mTagsTextView.setText(R.string.not_set);
-        }
+        // If `tags` is empty, the hint "Not Set" will be shown instead
+        mTagsTextView.setText(tags);
     }
 
     public void updateStatusTextView() {
@@ -1128,11 +1125,8 @@ public class EditPostSettingsFragment extends Fragment
                 sb.append(it.next().getName());
             }
         }
-        if (sb.toString().isEmpty()) {
-            mCategoriesTextView.setText(R.string.not_set);
-        } else {
-            mCategoriesTextView.setText(sb);
-        }
+        // If `sb` is empty, the hint "Not Set" will be shown instead
+        mCategoriesTextView.setText(sb);
     }
 
     @SuppressWarnings("unused")

@@ -54,7 +54,7 @@
             <TextView
                 android:id="@+id/post_categories"
                 style="@style/PostSettingsSubtitle"
-                android:text="@string/not_set"/>
+                android:hint="@string/not_set"/>
         </LinearLayout>
 
         <LinearLayout
@@ -68,7 +68,7 @@
             <TextView
                 android:id="@+id/post_tags"
                 style="@style/PostSettingsSubtitle"
-                android:text="@string/not_set"/>
+                android:hint="@string/not_set"/>
         </LinearLayout>
 
         <LinearLayout
