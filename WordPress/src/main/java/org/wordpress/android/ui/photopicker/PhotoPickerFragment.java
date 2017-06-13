@@ -2,10 +2,12 @@ package org.wordpress.android.ui.photopicker;
 
 import android.Manifest;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentCompat;
@@ -74,6 +76,8 @@ public class PhotoPickerFragment extends Fragment {
     private PhotoPickerListener mListener;
 
     private boolean mHasPermissions;
+    private boolean mPermissionsDeniedAlways;
+
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
     private boolean mDeviceOnly;
@@ -81,6 +85,7 @@ public class PhotoPickerFragment extends Fragment {
     private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
     private static final String ARG_PHOTOS_ONLY = "photos_only";
     private static final String ARG_DEVICE_ONLY = "device_only";
+    private static final String ARG_PERMISSIONS_DENIED = "permissions_denied";
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
@@ -107,6 +112,7 @@ public class PhotoPickerFragment extends Fragment {
             mAllowMultiSelect = savedInstanceState.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
             mPhotosOnly = savedInstanceState.getBoolean(ARG_PHOTOS_ONLY, false);
             mDeviceOnly = savedInstanceState.getBoolean(ARG_DEVICE_ONLY, false);
+            mPermissionsDeniedAlways = savedInstanceState.getBoolean(ARG_PERMISSIONS_DENIED, false);
         }
     }
 
@@ -123,6 +129,7 @@ public class PhotoPickerFragment extends Fragment {
         outState.putBoolean(ARG_ALLOW_MULTI_SELECT, mAllowMultiSelect);
         outState.putBoolean(ARG_PHOTOS_ONLY, mPhotosOnly);
         outState.putBoolean(ARG_DEVICE_ONLY, mDeviceOnly);
+        outState.putBoolean(ARG_PERMISSIONS_DENIED, mPermissionsDeniedAlways);
         super.onSaveInstanceState(outState);
     }
 
@@ -440,10 +447,22 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
+    /*
+     * request the camera and storage permissions required to access photos
+     */
     private void requestPermissions() {
-        if (!isAdded()) return;
-
         FragmentCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
+    }
+
+    /*
+     * open the device's settings page for this app -
+     */
+    private void showAppSettings() {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
     }
 
     @Override
@@ -451,38 +470,56 @@ public class PhotoPickerFragment extends Fragment {
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
+            // remember whether the user denied permissions AND checked "do not ask again"
+            mPermissionsDeniedAlways = false;
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    boolean showRationale = shouldShowRequestPermissionRationale(permissions[i]);
+                    if (!showRationale) {
+                        mPermissionsDeniedAlways = true;
+                        break;
+                    }
+                }
+            }
+
             checkPermissions();
         }
-    }
-
-    private boolean isSoftAskViewShowing() {
-        return mSoftAskContainer.getVisibility() == View.VISIBLE;
     }
 
     private void showSoftAskView(boolean show) {
         if (!isAdded()) return;
 
-        boolean alreadyShowing = isSoftAskViewShowing();
-        if ((show && alreadyShowing) || (!show && !alreadyShowing)) {
-            return;
-        }
-
         if (show) {
-            String label = getString(R.string.photo_picker_soft_ask_label);
+            int labelId = mPermissionsDeniedAlways ?
+                    R.string.photo_picker_soft_ask_permissions_denied : R.string.photo_picker_soft_ask_label;
             String appName = getString(R.string.app_name);
             TextView txtLabel = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
-            txtLabel.setText(String.format(label, appName));
+            txtLabel.setText(String.format(getString(labelId), appName));
 
-            mSoftAskContainer.findViewById(R.id.text_soft_ask_allow).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    requestPermissions();
-                }
-            });
-
-            AniUtils.fadeIn(mSoftAskContainer, AniUtils.Duration.MEDIUM);
+            // when the user taps Allow, request the required permissions unless the user already
+            // denied them permanently, in which case take them to the device settings for this
+            // app so the user can change permissions there
+            TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
+            if (!mPermissionsDeniedAlways) {
+                txtAllow.setText(R.string.photo_picker_soft_ask_allow);
+                txtAllow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestPermissions();
+                    }
+                });
+            } else {
+                txtAllow.setText(R.string.photo_picker_soft_ask_edit_permissions);
+                txtAllow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAppSettings();
+                    }
+                });
+            }
+            mSoftAskContainer.setVisibility(View.VISIBLE);
             hideBottomBar();
-        } else {
+        } else if (show && mSoftAskContainer.getVisibility() != View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
             showBottomBar();
             refresh();
