@@ -91,7 +91,6 @@ public class EditPostSettingsFragment extends Fragment
     private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
-    private static final String CATEGORY_PREFIX_TAG = "category-";
     private static final int ACTIVITY_REQUEST_CODE_SELECT_TAGS = 6;
 
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
