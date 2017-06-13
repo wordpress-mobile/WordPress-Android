@@ -16,6 +16,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class SiteSqlUtils {
@@ -227,5 +228,52 @@ public class SiteSqlUtils {
             postFormat.setSiteId(site.getId());
         }
         WellSql.insert(postFormats).execute();
+    }
+
+    /**
+     * Removes all sites from local database with the following criteria:
+     * 1. Site is a WP.com -or- Jetpack connected site
+     * 2. Site has no local-only data (posts/pages/drafts)
+     * 3. Remote site ID does not match a site ID found in given sites list
+     *
+     * @param sites
+     *  list of sites to keep in local database
+     */
+    public static int removeSitesAbsentFromList(@NonNull List<SiteModel> sites) {
+        // get all local WP.com+Jetpack sites
+        List<SiteModel> localSites = WellSql.select(SiteModel.class)
+                .where().beginGroup()
+                .equals(SiteModelTable.IS_JETPACK_CONNECTED, true)
+                .or()
+                .equals(SiteModelTable.IS_WPCOM, true)
+                .endGroup().endWhere().getAsModel();
+
+        if (localSites.size() > 0) {
+            // iterate through all local WP.com+Jetpack sites
+            Iterator<SiteModel> localIterator = localSites.iterator();
+            while (localIterator.hasNext()) {
+                SiteModel localSite = localIterator.next();
+
+                // don't remove local site if the remote ID matches a given site's ID
+                for (SiteModel site : sites) {
+                    if (site.getSiteId() == localSite.getSiteId()) {
+                        localIterator.remove();
+                        break;
+                    }
+                }
+                // don't remove site
+                if (PostSqlUtils.getSiteHasLocalChanges(localSite)) {
+                    localIterator.remove();
+                }
+            }
+        }
+
+        if (localSites.size() > 0) {
+            for (SiteModel site : localSites) {
+                deleteSite(site);
+            }
+        }
+
+        return 0;
     }
 }
