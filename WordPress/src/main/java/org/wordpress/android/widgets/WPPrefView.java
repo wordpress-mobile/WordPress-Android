@@ -187,6 +187,8 @@ public class WPPrefView extends LinearLayout implements
         mSummaryTextView = (TextView) view.findViewById(R.id.text_summary);
         mToggleSwitch = (SwitchCompat) view.findViewById(R.id.switch_view);
 
+        mContainer.setOnClickListener(this);
+
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(
                     attrs,
@@ -228,16 +230,8 @@ public class WPPrefView extends LinearLayout implements
         mPrefType = prefType;
 
         boolean isToggle = mPrefType == PrefType.TOGGLE;
-        mTitleTextView.setVisibility(isToggle ? View.GONE : View.VISIBLE);
         mToggleSwitch.setVisibility(isToggle ? View.VISIBLE : View.GONE);
-
-        if (isToggle) {
-            mContainer.setOnClickListener(null);
-            mToggleSwitch.setOnCheckedChangeListener(this);
-        } else {
-            mContainer.setOnClickListener(this);
-            mToggleSwitch.setOnCheckedChangeListener(null);
-        }
+        mToggleSwitch.setOnCheckedChangeListener(isToggle ? this : null);
     }
 
     /*
@@ -253,7 +247,6 @@ public class WPPrefView extends LinearLayout implements
      */
     private void setTitle(String title) {
         mTitleTextView.setText(title);
-        mToggleSwitch.setText(title);
     }
 
     /*
@@ -323,6 +316,9 @@ public class WPPrefView extends LinearLayout implements
                 break;
             case TEXT:
                 showTextDialog();
+                break;
+            case TOGGLE:
+                mToggleSwitch.setChecked(!mToggleSwitch.isChecked());
                 break;
         }
     }
