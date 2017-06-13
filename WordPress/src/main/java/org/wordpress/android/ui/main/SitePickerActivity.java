@@ -47,6 +47,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
@@ -249,6 +250,11 @@ public class SitePickerActivity extends AppCompatActivity
                     @Override
                     public void onRefreshStarted() {
                         if (isFinishing()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            ToastUtils.showToast(SitePickerActivity.this, R.string.site_picker_no_network_refresh_error);
                             return;
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
