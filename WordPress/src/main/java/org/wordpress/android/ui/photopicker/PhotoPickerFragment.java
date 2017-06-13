@@ -483,7 +483,7 @@ public class PhotoPickerFragment extends Fragment {
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            // remember whether the user denied permissions AND checked "do not ask again"
+            // determine whether the user denied permissions AND checked "do not ask again"
             mPermissionsDeniedAlways = false;
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
@@ -499,6 +499,10 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
+    /*
+     * shows the "soft ask" view which should appear when the necessary permissions haven't
+     * been granted yet
+     */
     private void showSoftAskView(boolean show) {
         if (!isAdded()) return;
 
@@ -513,23 +517,20 @@ public class PhotoPickerFragment extends Fragment {
             // denied them permanently, in which case take them to the device settings for this
             // app so the user can change permissions there
             TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
-            if (!mPermissionsDeniedAlways) {
-                txtAllow.setText(R.string.photo_picker_soft_ask_allow);
-                txtAllow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            int allowId = mPermissionsDeniedAlways ?
+                    R.string.photo_picker_soft_ask_edit_permissions : R.string.photo_picker_soft_ask_allow;
+            txtAllow.setText(allowId);
+            txtAllow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mPermissionsDeniedAlways) {
+                        showAppSettings();
+                    } else {
                         requestPermissions();
                     }
-                });
-            } else {
-                txtAllow.setText(R.string.photo_picker_soft_ask_edit_permissions);
-                txtAllow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showAppSettings();
-                    }
-                });
-            }
+                }
+            });
+
             mSoftAskContainer.setVisibility(View.VISIBLE);
             hideBottomBar();
         } else if (mSoftAskContainer.getVisibility() == View.VISIBLE) {
