@@ -69,6 +69,8 @@
 
         </LinearLayout>
 
+        <View style="@style/PostSettingsDivider"/>
+
         <!--Categories & Tags-->
 
         <TextView
@@ -103,6 +105,8 @@
                 android:hint="@string/not_set"/>
         </LinearLayout>
 
+        <View style="@style/PostSettingsDivider"/>
+
         <!--Featured Image-->
 
         <TextView
@@ -126,6 +130,8 @@
             android:minHeight="@dimen/post_settings_featured_image_height_min"
             android:maxHeight="@dimen/post_settings_featured_image_height_max"
             android:visibility="gone"/>
+
+        <View style="@style/PostSettingsDivider"/>
 
         <!--More Options-->
 

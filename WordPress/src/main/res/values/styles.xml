@@ -491,4 +491,11 @@
         <item name="android:textColorHint">@color/grey_darken_10</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
+
+    <style name="PostSettingsDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+    </style>
 </resources>
