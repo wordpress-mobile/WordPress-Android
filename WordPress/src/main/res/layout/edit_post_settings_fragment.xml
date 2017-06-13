@@ -3,7 +3,7 @@
     android:id="@+id/settings_fragment_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/background_grey">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,34 +14,66 @@
         android:paddingRight="@dimen/margin_extra_large"
         android:orientation="vertical">
 
+        <!--Status-->
+
+        <TextView
+            style="@style/PostSettingsSectionHeader"
+            android:text="@string/post_settings_status"
+            android:layout_marginTop="0dp"/>
+
         <LinearLayout
-            android:id="@+id/post_excerpt_container"
+            android:id="@+id/post_status_container"
             style="@style/PostSettingsContainer">
 
             <TextView
                 style="@style/PostSettingsTitle"
-                android:text="@string/post_excerpt"/>
+                android:text="@string/post_settings_status"/>
 
             <TextView
-                android:id="@+id/post_excerpt"
+                android:id="@+id/post_status"
+                style="@style/PostSettingsSubtitle"/>
+
+        </LinearLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/pubDateLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/publish_date" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/pubDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:background="@drawable/selectable_background_wordpress"
+            android:text="@string/immediately"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large" />
+
+        <LinearLayout
+            android:id="@+id/post_password_container"
+            style="@style/PostSettingsContainer">
+
+            <TextView
+                style="@style/PostSettingsTitle"
+                android:text="@string/password"/>
+
+            <TextView
+                android:id="@+id/post_password"
                 style="@style/PostSettingsSubtitle"
                 android:hint="@string/not_set"/>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/post_slug_container"
-            style="@style/PostSettingsContainer">
+        <!--Categories & Tags-->
 
-            <TextView
-                style="@style/PostSettingsTitle"
-                android:text="@string/post_slug"/>
-
-            <TextView
-                android:id="@+id/post_slug"
-                style="@style/PostSettingsSubtitle"
-                android:hint="@string/not_set"/>
-        </LinearLayout>
+        <TextView
+            style="@style/PostSettingsSectionHeader"
+            android:text="@string/categories_and_tags"/>
 
         <LinearLayout
             android:id="@+id/post_categories_container"
@@ -71,74 +103,12 @@
                 android:hint="@string/not_set"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/post_status_container"
-            style="@style/PostSettingsContainer">
+        <!--Featured Image-->
 
-            <TextView
-                style="@style/PostSettingsTitle"
-                android:text="@string/post_settings_status"/>
-
-            <TextView
-                android:id="@+id/post_status"
-                style="@style/PostSettingsSubtitle"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/post_format_container"
-            style="@style/PostSettingsContainer">
-
-            <TextView
-                style="@style/PostSettingsTitle"
-                android:text="@string/post_settings_format"/>
-
-            <TextView
-                android:id="@+id/post_format"
-                style="@style/PostSettingsSubtitle"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/post_password_container"
-            style="@style/PostSettingsContainer">
-
-            <TextView
-                style="@style/PostSettingsTitle"
-                android:text="@string/password"/>
-
-            <TextView
-                android:id="@+id/post_password"
-                style="@style/PostSettingsSubtitle"
-                android:hint="@string/not_set"/>
-
-        </LinearLayout>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/pubDateLabel"
-            style="@style/WordPressSubHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/publish_date" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/pubDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:background="@drawable/selectable_background_wordpress"
-            android:text="@string/immediately"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large" />
-
-        <org.wordpress.android.widgets.WPTextView
+        <TextView
             android:id="@+id/featuredImageLabel"
-            style="@style/WordPressSubHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/editor_post_settings_featured_image" />
+            style="@style/PostSettingsSectionHeader"
+            android:text="@string/featured_image"/>
 
         <Button
             android:id="@+id/addFeaturedImage"
@@ -156,6 +126,55 @@
             android:minHeight="@dimen/post_settings_featured_image_height_min"
             android:maxHeight="@dimen/post_settings_featured_image_height_max"
             android:visibility="gone"/>
+
+        <!--More Options-->
+
+        <TextView
+            style="@style/PostSettingsSectionHeader"
+            android:text="@string/more_options"/>
+
+        <LinearLayout
+            android:id="@+id/post_format_container"
+            style="@style/PostSettingsContainer">
+
+            <TextView
+                style="@style/PostSettingsTitle"
+                android:text="@string/post_settings_format"/>
+
+            <TextView
+                android:id="@+id/post_format"
+                style="@style/PostSettingsSubtitle"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/post_slug_container"
+            style="@style/PostSettingsContainer">
+
+            <TextView
+                style="@style/PostSettingsTitle"
+                android:text="@string/post_slug"/>
+
+            <TextView
+                android:id="@+id/post_slug"
+                style="@style/PostSettingsSubtitle"
+                android:hint="@string/not_set"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/post_excerpt_container"
+            style="@style/PostSettingsContainer">
+
+            <TextView
+                style="@style/PostSettingsTitle"
+                android:text="@string/post_excerpt"/>
+
+            <TextView
+                android:id="@+id/post_excerpt"
+                style="@style/PostSettingsSubtitle"
+                android:hint="@string/not_set"/>
+
+        </LinearLayout>
 
         <ViewStub
             android:id="@+id/stub_post_location_settings"
