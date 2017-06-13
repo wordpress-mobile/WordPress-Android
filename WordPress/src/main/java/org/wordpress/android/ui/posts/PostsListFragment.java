@@ -109,10 +109,11 @@ public class PostsListFragment extends Fragment
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
 
-    public static PostsListFragment newInstance(SiteModel site) {
+    public static PostsListFragment newInstance(SiteModel site, boolean isPage) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
+        bundle.putBoolean(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -127,13 +128,6 @@ public class PostsListFragment extends Fragment
         mDispatcher.register(this);
 
         updateSiteOrFinishActivity(savedInstanceState);
-
-        if (isAdded()) {
-            Bundle extras = getActivity().getIntent().getExtras();
-            if (extras != null) {
-                mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
-            }
-        }
     }
 
     @Override
@@ -148,11 +142,14 @@ public class PostsListFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mIsPage = getArguments().getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mIsPage = getActivity().getIntent().getBooleanExtra(PostsListActivity.EXTRA_VIEW_PAGES, false);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
         }
 
         if (mSite == null) {
@@ -687,6 +684,7 @@ public class PostsListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
     }
 
     @SuppressWarnings("unused")

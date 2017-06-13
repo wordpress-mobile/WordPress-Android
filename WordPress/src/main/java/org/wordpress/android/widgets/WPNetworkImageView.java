@@ -272,7 +272,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private void handleResponse(ImageLoader.ImageContainer response, boolean isCached, ImageLoadListener
             imageLoadListener) {
-        if (response.getBitmap() != null) {
+        if (response != null && response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
 
             if (mImageType == ImageType.GONE_UNTIL_AVAILABLE) {
