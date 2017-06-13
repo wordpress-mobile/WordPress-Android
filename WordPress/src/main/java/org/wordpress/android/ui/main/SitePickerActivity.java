@@ -254,7 +254,6 @@ public class SitePickerActivity extends AppCompatActivity
                         }
                         if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
                             mSwipeToRefreshHelper.setRefreshing(false);
-                            ToastUtils.showToast(SitePickerActivity.this, R.string.site_picker_no_network_refresh_error);
                             return;
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());

@@ -1421,7 +1421,6 @@
     <string name="site_picker_create_dotcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
-    <string name="site_picker_no_network_refresh_error">A network connection is required to refresh sites</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
