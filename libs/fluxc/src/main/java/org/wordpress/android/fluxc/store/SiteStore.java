@@ -737,6 +737,7 @@ public class SiteStore extends Store {
             event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
         } else {
             UpdateSitesResult res = createOrUpdateSites(fetchedSites);
+            event.rowsAffected = res.rowsAffected;
             SiteSqlUtils.removeSitesAbsentFromList(fetchedSites.getSites());
         }
         emitChange(event);
