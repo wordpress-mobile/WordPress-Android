@@ -261,20 +261,18 @@ public class SiteSqlUtils {
                         break;
                     }
                 }
-                // don't remove site
+                // don't remove sites with local changes
                 if (PostSqlUtils.getSiteHasLocalChanges(localSite)) {
                     localIterator.remove();
                 }
             }
-        }
 
-        if (localSites.size() > 0) {
+            // delete applicable sites
             for (SiteModel site : localSites) {
-                AppLog.d(T.DB, "Removing " + site.getName() + " (" + site.getSiteId() + ")");
-//                deleteSite(site);
+                deleteSite(site);
             }
         }
 
-        return 0;
+        return localSites.size();
     }
 }
