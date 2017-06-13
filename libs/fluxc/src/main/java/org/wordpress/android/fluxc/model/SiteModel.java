@@ -46,6 +46,7 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
     @Column private String mFrameNonce; // only wpcom and Jetpack sites
+    @Column private long mMaxUploadSize; // only set for Jetpack sites
     @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
 
     // Self hosted specifics
@@ -414,6 +415,18 @@ public class SiteModel extends Payload implements Identifiable, Serializable {
 
     public void setFrameNonce(String frameNonce) {
         mFrameNonce = frameNonce;
+    }
+
+    public long getMaxUploadSize() {
+        return mMaxUploadSize;
+    }
+
+    public void setMaxUploadSize(long maxUploadSize) {
+        mMaxUploadSize = maxUploadSize;
+    }
+
+    public boolean hasMaxUploadSize() {
+        return mMaxUploadSize > 0;
     }
 
     public String getPlanShortName() {
