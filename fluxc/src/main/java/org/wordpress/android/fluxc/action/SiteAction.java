@@ -41,6 +41,8 @@ public enum SiteAction implements IAction {
     FETCH_CONNECT_SITE_INFO,
 
     // Remote responses
+    @Action(payloadType = SitesModel.class)
+    FETCHED_SITES,
     @Action(payloadType = NewSiteResponsePayload.class)
     CREATED_NEW_SITE,
     @Action(payloadType = FetchedPostFormatsPayload.class)
