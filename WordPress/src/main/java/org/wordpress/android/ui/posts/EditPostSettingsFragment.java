@@ -768,9 +768,9 @@ public class EditPostSettingsFragment extends Fragment
         public void afterTextChanged(Editable s) {
             String buttonText;
             if (s.length() > 0) {
-                buttonText = getResources().getString(R.string.search_location);
+                buttonText = getResources().getString(R.string.post_settings_search_location);
             } else {
-                buttonText = getResources().getString(R.string.search_current_location);
+                buttonText = getResources().getString(R.string.post_settings_search_current_location);
             }
             mButtonSearchLocation.setText(buttonText);
         }
@@ -787,7 +787,7 @@ public class EditPostSettingsFragment extends Fragment
         View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
         TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
-        locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
+        locationLabel.setText(getResources().getString(R.string.post_settings_location).toUpperCase());
 
         mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
         mLocationText.setOnClickListener(this);
@@ -891,7 +891,7 @@ public class EditPostSettingsFragment extends Fragment
         if (location != null) {
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            updateLocationText(getString(R.string.location_not_found));
+            updateLocationText(getString(R.string.post_settings_location_not_found));
             setLocationStatus(LocationStatus.NOT_FOUND);
         }
     }
@@ -923,7 +923,7 @@ public class EditPostSettingsFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        Toast.makeText(getActivity(), getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getResources().getText(R.string.post_settings_location_not_found), Toast.LENGTH_SHORT).show();
     }
 
     private void updateLocationText(String locationName) {
@@ -932,7 +932,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostExcerptDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
+                mCurrentExcerpt, getString(R.string.post_settings_excerpt), getString(R.string.post_settings_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -946,7 +946,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showSlugDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
+                mCurrentSlug, getString(R.string.post_settings_slug), getString(R.string.post_settings_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -1013,7 +1013,7 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        builder.setTitle(R.string.post_settings_format);
+        builder.setTitle(R.string.post_settings_post_format);
         builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -1030,7 +1030,7 @@ public class EditPostSettingsFragment extends Fragment
     private void showPostPasswordDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 mPost.getPassword(), getString(R.string.password),
-                getString(R.string.post_password_dialog_hint), false);
+                getString(R.string.post_settings_password_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override

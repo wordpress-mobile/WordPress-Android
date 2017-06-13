@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:hint="@string/current_location"
+        android:hint="@string/post_settings_current_location"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:textSize="@dimen/text_sz_large" />
@@ -24,6 +24,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:lines="1"
-        android:text="@string/search_current_location"
+        android:text="@string/post_settings_search_current_location"
         android:textSize="@dimen/text_sz_large" />
 </LinearLayout>

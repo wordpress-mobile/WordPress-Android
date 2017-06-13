@@ -61,7 +61,7 @@
             <TextView
                 android:id="@+id/post_password"
                 style="@style/PostSettingsSubtitle"
-                android:hint="@string/not_set"/>
+                android:hint="@string/post_settings_not_set"/>
 
         </LinearLayout>
 
@@ -71,7 +71,7 @@
 
         <TextView
             style="@style/PostSettingsSectionHeader"
-            android:text="@string/categories_and_tags"/>
+            android:text="@string/post_settings_categories_and_tags"/>
 
         <LinearLayout
             android:id="@+id/post_categories_container"
@@ -84,7 +84,7 @@
             <TextView
                 android:id="@+id/post_categories"
                 style="@style/PostSettingsSubtitle"
-                android:hint="@string/not_set"/>
+                android:hint="@string/post_settings_not_set"/>
         </LinearLayout>
 
         <LinearLayout
@@ -93,12 +93,12 @@
 
             <TextView
                 style="@style/PostSettingsTitle"
-                android:text="@string/post_tags"/>
+                android:text="@string/post_settings_tags"/>
 
             <TextView
                 android:id="@+id/post_tags"
                 style="@style/PostSettingsSubtitle"
-                android:hint="@string/not_set"/>
+                android:hint="@string/post_settings_not_set"/>
         </LinearLayout>
 
         <View style="@style/PostSettingsDivider"/>
@@ -108,13 +108,13 @@
         <TextView
             android:id="@+id/featuredImageLabel"
             style="@style/PostSettingsSectionHeader"
-            android:text="@string/featured_image"/>
+            android:text="@string/post_settings_featured_image"/>
 
         <Button
             android:id="@+id/addFeaturedImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/editor_post_settings_set_featured_image"/>
+            android:text="@string/post_settings_set_featured_image"/>
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/featuredImage"
@@ -133,7 +133,7 @@
 
         <TextView
             style="@style/PostSettingsSectionHeader"
-            android:text="@string/more_options"/>
+            android:text="@string/post_settings_more_options"/>
 
         <LinearLayout
             android:id="@+id/post_format_container"
@@ -141,7 +141,7 @@
 
             <TextView
                 style="@style/PostSettingsTitle"
-                android:text="@string/post_settings_format"/>
+                android:text="@string/post_settings_post_format"/>
 
             <TextView
                 android:id="@+id/post_format"
@@ -155,12 +155,12 @@
 
             <TextView
                 style="@style/PostSettingsTitle"
-                android:text="@string/post_slug"/>
+                android:text="@string/post_settings_slug"/>
 
             <TextView
                 android:id="@+id/post_slug"
                 style="@style/PostSettingsSubtitle"
-                android:hint="@string/not_set"/>
+                android:hint="@string/post_settings_not_set"/>
         </LinearLayout>
 
         <LinearLayout
@@ -169,12 +169,12 @@
 
             <TextView
                 style="@style/PostSettingsTitle"
-                android:text="@string/post_excerpt"/>
+                android:text="@string/post_settings_excerpt"/>
 
             <TextView
                 android:id="@+id/post_excerpt"
                 style="@style/PostSettingsSubtitle"
-                android:hint="@string/not_set"/>
+                android:hint="@string/post_settings_not_set"/>
 
         </LinearLayout>
 

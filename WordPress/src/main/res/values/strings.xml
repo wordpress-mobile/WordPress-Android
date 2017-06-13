@@ -72,7 +72,6 @@
     <string name="upload_scaled_image">Upload and link to scaled image</string>
     <string name="scaled_image_error">Enter a valid scaled width value</string>
     <string name="scaled_image">Scaled image width</string>
-    <string name="immediately">Immediately</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="refresh">Refresh</string>
     <string name="blog_not_found">An error occurred when accessing this blog</string>
@@ -270,9 +269,6 @@
     <string name="featured_in_post">Include image in post content</string>
     <string name="out_of_memory">Device out of memory</string>
     <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
-    <string name="post_excerpt">Excerpt</string>
-    <string name="post_slug">Slug</string>
-    <string name="post_tags">Tags</string>
     <string name="download">Downloading media</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
@@ -429,16 +425,6 @@
     <!-- SD Card errors -->
     <string name="sdcard_title">SD Card Required</string>
     <string name="sdcard_message">A mounted SD card is required to upload media</string>
-
-    <!-- location -->
-    <string name="location">Location</string>
-    <string name="location_not_found">Unknown location</string>
-    <string name="add_location">Add location</string>
-    <string name="current_location">Current location</string>
-    <string name="search_current_location">Locate</string>
-    <string name="search_location">Search</string>
-    <string name="edit_location">Edit</string>
-    <string name="add_location_permission_required">Permission required in order to add location</string>
 
     <!--     Begin     -->
     <!-- Site Settings -->
@@ -825,14 +811,6 @@
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
     <string name="invalid_url_message">Check that the URL entered is valid</string>
 
-    <!-- post status -->
-    <string name="publish_post">Publish</string>
-    <string name="pending_review">Pending review</string>
-    <string name="draft">Draft</string>
-    <string name="post_private">Private</string>
-    <string name="scheduled">Scheduled</string>
-    <string name="trashed">Trashed</string>
-
     <!-- QuickPress -->
     <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
     <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
@@ -847,12 +825,7 @@
 
     <!-- post scheduling and password -->
     <string name="submit_for_review">Submit</string>
-    <string name="publish_date">Publish</string>
     <string name="schedule_verb">Schedule</string>
-
-    <!-- post date selection -->
-    <string name="select_date">Select date</string>
-    <string name="select_time">Select time</string>
 
     <!-- notifications -->
     <string name="notifications">Notifications</string>
@@ -970,25 +943,51 @@
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
-    <!-- editor post settings -->
+    <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
-    <string name="not_set">Not Set</string>
-    <string name="post_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
-    <string name="post_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
-    <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_status">Status</string>
-    <string name="categories_and_tags">Categories &amp; Tags</string>
-    <string name="more_options">More Options</string>
-    <string name="featured_image">Featured Image</string>
-    <string name="post_password_dialog_hint">Only those with this password can view this post</string>
-    <string name="post_settings_format">Post Format</string>
-    <string-array name="post_settings_statuses" translatable="false">
-        <item>@string/publish_post</item>
-        <item>@string/draft</item>
-        <item>@string/pending_review</item>
-        <item>@string/post_private</item>
-    </string-array>
+    <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
+    <string name="post_settings_more_options">More Options</string>
+    <string name="post_settings_not_set">Not Set</string>
+    <string name="post_settings_excerpt">Excerpt</string>
+    <string name="post_settings_slug">Slug</string>
+    <string name="post_settings_tags">Tags</string>
+    <string name="post_settings_post_format">Post Format</string>
+    <string name="post_settings_featured_image">Featured Image</string>
+    <string name="post_settings_set_featured_image">Set Featured Image</string>
+    <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
+    <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
+    <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
 
+    <!-- post date selection -->
+    <string name="publish_date">Publish</string>
+    <string name="immediately">Immediately</string>
+    <string name="select_date">Select date</string>
+    <string name="select_time">Select time</string>
+
+    <!-- location -->
+    <string name="post_settings_location">Location</string>
+    <string name="post_settings_location_not_found">Unknown location</string>
+    <string name="post_settings_add_location">Add location</string>
+    <string name="post_settings_current_location">Current location</string>
+    <string name="post_settings_search_current_location">Locate</string>
+    <string name="post_settings_search_location">Search</string>
+    <string name="post_settings_edit_location">Edit</string>
+    <string name="post_settings_add_location_permission_required">Permission required in order to add location</string>
+
+    <!-- Post Status -->
+    <string name="post_status_publish_post">Publish</string>
+    <string name="post_status_pending_review">Pending review</string>
+    <string name="post_status_draft">Draft</string>
+    <string name="post_status_post_private">Private</string>
+    <string name="post_status_scheduled">Scheduled</string>
+    <string name="post_status_trashed">Trashed</string>
+    <string-array name="post_settings_statuses" translatable="false">
+        <item>@string/post_status_publish_post</item>
+        <item>@string/post_status_draft</item>
+        <item>@string/post_status_pending_review</item>
+        <item>@string/post_status_post_private</item>
+    </string-array>
 
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>

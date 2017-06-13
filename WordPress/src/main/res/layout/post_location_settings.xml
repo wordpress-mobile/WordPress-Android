@@ -12,7 +12,7 @@
         style="@style/WordPressSubHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/location"
+        android:text="@string/post_settings_location"
         android:textSize="@dimen/text_sz_large"
         android:layout_marginBottom="@dimen/margin_small" />
 

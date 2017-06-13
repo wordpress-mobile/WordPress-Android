@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:text="@string/edit_location"
+            android:text="@string/post_settings_edit_location"
             android:textSize="@dimen/text_sz_large" />
 
         <Button
