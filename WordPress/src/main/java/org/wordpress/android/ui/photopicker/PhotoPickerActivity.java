@@ -26,13 +26,11 @@ import java.io.File;
 import java.util.EnumSet;
 import java.util.List;
 
-// TODO: implement ActivityCompat.OnRequestPermissionsResultCallback
 public class PhotoPickerActivity extends AppCompatActivity
         implements PhotoPickerFragment.PhotoPickerListener {
 
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
-    private static final int PERMISSION_REQUEST_CODE = 1;
 
     // the uri of the selected image will be returned as a string in EXTRA_MEDIA_URI
     public static final String EXTRA_MEDIA_URI = "picker_media_uri";
@@ -79,7 +77,7 @@ public class PhotoPickerActivity extends AppCompatActivity
                 PhotoPickerOption.DEVICE_ONLY);
         PhotoPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
-            fragment = PhotoPickerFragment.newInstance(this, PERMISSION_REQUEST_CODE, options);
+            fragment = PhotoPickerFragment.newInstance(this, options);
             getFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

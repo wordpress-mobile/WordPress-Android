@@ -165,7 +165,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
     public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
-    public static final int PHOTO_PICKER_PERMISSION_REQUEST_CODE = 4;
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -530,7 +529,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         EnumSet<PhotoPickerOption> options =
                 EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE, options);
+        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, options);
 
         getFragmentManager()
                 .beginTransaction()
@@ -719,28 +718,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         super.openContextMenu(mMenuView);
                         mMenuView = null;
                     }
-                } else {
-                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
-                }
-                break;
-            case PHOTO_PICKER_PERMISSION_REQUEST_CODE:
-                boolean canShowPhotoPicker = true;
-                for (int i = 0; i < grantResults.length; ++i) {
-                    switch (permissions[i]) {
-                        case Manifest.permission.CAMERA:
-                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                canShowPhotoPicker = false;
-                            }
-                            break;
-                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                canShowPhotoPicker = false;
-                            }
-                            break;
-                    }
-                }
-                if (canShowPhotoPicker) {
-                    showPhotoPicker();
                 } else {
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
