@@ -221,13 +221,21 @@ public class SitePickerActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        mDebouncer.debounce(Void.class, new Runnable() {
-            @Override public void run() {
-                if (!isFinishing()) {
-                    getAdapter().loadSites();
-                }
+        if (mSwipeToRefreshHelper.isRefreshing()) {
+            mSwipeToRefreshHelper.setRefreshing(false);
+            if (!isFinishing()) {
+                getAdapter().loadSites();
             }
-        }, 200, TimeUnit.MILLISECONDS);
+        } else {
+            mDebouncer.debounce(Void.class, new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        getAdapter().loadSites();
+                    }
+                }
+            }, 200, TimeUnit.MILLISECONDS);
+        }
     }
 
     private void initSwipeToRefreshHelper(View view) {
@@ -243,6 +251,9 @@ public class SitePickerActivity extends AppCompatActivity
                         if (isFinishing()) {
                             return;
                         }
+                        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
+                        mSwipeToRefreshHelper.setRefreshing(true);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
                 });
     }
