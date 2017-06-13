@@ -158,10 +158,7 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mPhotosOnly) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                        trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
-                    }
+                    doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
                 } else {
                     showCameraPopupMenu(v);
                 }
@@ -171,10 +168,7 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mPhotosOnly) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                        trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
-                    }
+                    doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
                 } else {
                     showPickerPopupMenu(v);
                 }
@@ -191,10 +185,7 @@ public class PhotoPickerFragment extends Fragment {
             wpMediaIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.WP_MEDIA);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
-                    }
+                    doIconClicked(PhotoPickerIcon.WP_MEDIA);
                 }
             });
         }
@@ -212,6 +203,30 @@ public class PhotoPickerFragment extends Fragment {
         checkPermissions();
     }
 
+    private void doIconClicked(@NonNull PhotoPickerIcon icon) {
+        switch (icon) {
+            case ANDROID_CAPTURE_PHOTO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
+                break;
+            case ANDROID_CAPTURE_VIDEO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, true);
+                break;
+            case ANDROID_CHOOSE_PHOTO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
+                break;
+            case ANDROID_CHOOSE_VIDEO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, true);
+                break;
+            case WP_MEDIA:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
+                break;
+        }
+
+        if (mListener != null) {
+            mListener.onPhotoPickerIconClicked(icon);
+        }
+    }
+
     private void showPickerPopupMenu(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
@@ -219,10 +234,7 @@ public class PhotoPickerFragment extends Fragment {
         itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
                 return true;
             }
         });
@@ -231,10 +243,7 @@ public class PhotoPickerFragment extends Fragment {
         itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, true);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
                 return true;
             }
         });
@@ -249,10 +258,7 @@ public class PhotoPickerFragment extends Fragment {
         itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
                 return true;
             }
         });
@@ -261,16 +267,14 @@ public class PhotoPickerFragment extends Fragment {
         itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, true);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
                 return true;
             }
         });
 
         popup.show();
     }
+
     void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
