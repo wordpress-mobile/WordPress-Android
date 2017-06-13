@@ -43,7 +43,7 @@ public class SmartToast {
             default:
                 return;
         }
-        int numTimesShown = 0;//AppPrefs.getInt(keyCounter); TODO: UNCOMMENT
+        int numTimesShown = AppPrefs.getInt(keyCounter);
         if (numTimesShown >= MAX_TIMES_TO_SHOW) {
             return;
         }
