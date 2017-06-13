@@ -724,7 +724,13 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            case FETCHED_SITES:
+                handleFetchedSites((SitesModel) action.getPayload());
+                break;
         }
+    }
+
+    private void handleFetchedSites(SitesModel fetchedSites) {
     }
 
     private void removeSite(SiteModel site) {
