@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +45,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
 
         initSite(savedInstanceState);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
