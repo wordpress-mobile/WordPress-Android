@@ -93,11 +93,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SitesResponse response) {
                         List<SiteModel> siteArray = new ArrayList<>();
-
                         for (SiteWPComRestResponse siteResponse : response.sites) {
                             siteArray.add(siteResponseToSiteModel(siteResponse));
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(new SitesModel(siteArray)));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(new SitesModel(siteArray)));
                     }
                 },
                 new BaseErrorListener() {
@@ -105,7 +104,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
                     }
                 }
         );
