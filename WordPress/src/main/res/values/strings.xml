@@ -1673,6 +1673,8 @@
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
+    <string name="photo_picker_soft_ask_label">To see your photos, give %s access to Media</string>
+    <string name="photo_picker_soft_ask_allow">Allow</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>

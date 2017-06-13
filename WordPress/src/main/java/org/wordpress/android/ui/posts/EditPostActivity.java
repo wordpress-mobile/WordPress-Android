@@ -530,7 +530,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         EnumSet<PhotoPickerOption> options =
                 EnumSet.of(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, options);
+        mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE, options);
 
         getFragmentManager()
                 .beginTransaction()
@@ -542,11 +542,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * user has requested to show the photo picker
      */
     void showPhotoPicker() {
-        // request permissions if we don't already have them
-        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
-            return;
-        }
-
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
             initPhotoPicker();
