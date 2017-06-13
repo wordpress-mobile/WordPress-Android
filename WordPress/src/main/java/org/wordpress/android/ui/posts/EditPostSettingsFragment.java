@@ -100,13 +100,13 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mCategoriesTextView;
     private TextView mTagsTextView;
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
+    private TextView mPasswordTextView;
     private TextView mPubDateText;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
@@ -217,7 +217,7 @@ public class EditPostSettingsFragment extends Fragment
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
-        mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
+        mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mPubDateText.setOnClickListener(this);
 
@@ -294,6 +294,14 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
 
+        final LinearLayout passwordContainer = (LinearLayout) rootView.findViewById(R.id.post_password_container);
+        passwordContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostPasswordDialog();
+            }
+        });
+
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
             rootView.findViewById(R.id.post_categories_container).setVisibility(View.GONE);
@@ -335,6 +343,7 @@ public class EditPostSettingsFragment extends Fragment
         mExcerptTextView.setText(mCurrentExcerpt);
         mSlugTextView.setText(mCurrentSlug);
         mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+        mPasswordTextView.setText(mPost.getPassword());
         updateTagsTextView();
 
         String pubDate = mPost.getDateCreated();
@@ -351,10 +360,6 @@ public class EditPostSettingsFragment extends Fragment
             } catch (RuntimeException e) {
                 AppLog.e(T.POSTS, e);
             }
-        }
-
-        if (!TextUtils.isEmpty(mPost.getPassword())) {
-            mPasswordEditText.setText(mPost.getPassword());
         }
 
         updateStatusTextView();
@@ -609,7 +614,6 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
 
-        String password = EditTextUtils.getText(mPasswordEditText);
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
@@ -648,7 +652,6 @@ public class EditPostSettingsFragment extends Fragment
         post.setExcerpt(mCurrentExcerpt);
         post.setSlug(mCurrentSlug);
         post.setStatus(getCurrentPostStatus().toString());
-        post.setPassword(password);
     }
 
     /*
@@ -1021,6 +1024,21 @@ public class EditPostSettingsFragment extends Fragment
         });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
+    }
+
+    private void showPostPasswordDialog() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mPost.getPassword(), getString(R.string.password),
+                getString(R.string.post_password_dialog_hint), false);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        mPost.setPassword(input);
+                        mPasswordTextView.setText(mPost.getPassword());
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
     }
 
     private void updatePostFormatKeysAndNames() {

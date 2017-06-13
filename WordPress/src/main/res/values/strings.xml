@@ -263,7 +263,6 @@
     <string name="page_published">Page published</string>
     <string name="post_updated">Post updated</string>
     <string name="page_updated">Page updated</string>
-    <string name="post_password">Password (optional)</string>
     <string name="caption">Caption (optional)</string>
     <string name="horizontal_alignment">Horizontal alignment</string>
     <string name="width">Width</string>
@@ -979,6 +978,7 @@
     <string name="editor_post_settings_featured_image">Featured Image</string>
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_status">Status</string>
+    <string name="post_password_dialog_hint">Only those with this password can view this post</string>
     <string name="post_settings_format">Post Format</string>
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/publish_post</item>
