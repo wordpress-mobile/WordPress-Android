@@ -731,6 +731,14 @@ public class SiteStore extends Store {
     }
 
     private void handleFetchedSites(SitesModel fetchedSites) {
+        OnSiteChanged event = new OnSiteChanged(0);
+        if (fetchedSites.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            UpdateSitesResult res = createOrUpdateSites(fetchedSites);
+        }
+        emitChange(event);
     }
 
     private void removeSite(SiteModel site) {
