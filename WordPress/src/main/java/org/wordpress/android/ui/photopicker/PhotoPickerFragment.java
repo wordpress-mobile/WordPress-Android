@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -509,9 +510,10 @@ public class PhotoPickerFragment extends Fragment {
         if (show) {
             int labelId = mPermissionsDeniedAlways ?
                     R.string.photo_picker_soft_ask_permissions_denied : R.string.photo_picker_soft_ask_label;
-            String appName = getString(R.string.app_name);
+            String appName = "<strong>" + getString(R.string.app_name) + "</strong>";
+            String label = String.format(getString(labelId), appName);
             TextView txtLabel = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
-            txtLabel.setText(String.format(getString(labelId), appName));
+            txtLabel.setText(Html.fromHtml(label));
 
             // when the user taps Allow, request the required permissions unless the user already
             // denied them permanently, in which case take them to the device settings for this
