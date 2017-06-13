@@ -230,19 +230,15 @@ public class SitePickerActivity extends AppCompatActivity
     public void onSiteChanged(OnSiteChanged event) {
         if (mSwipeToRefreshHelper.isRefreshing()) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            if (!isFinishing()) {
-                getAdapter().loadSites();
-            }
-        } else {
-            mDebouncer.debounce(Void.class, new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        getAdapter().loadSites();
-                    }
-                }
-            }, 200, TimeUnit.MILLISECONDS);
         }
+        mDebouncer.debounce(Void.class, new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    getAdapter().loadSites();
+                }
+            }
+        }, 200, TimeUnit.MILLISECONDS);
     }
 
     private void initSwipeToRefreshHelper(View view) {
