@@ -256,8 +256,6 @@ public class SitePickerActivity extends AppCompatActivity
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
-                        mSwipeToRefreshHelper.setRefreshing(true);
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
                 });
