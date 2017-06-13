@@ -217,8 +217,7 @@ public class EditPostSettingsFragment extends Fragment
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
         mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
-        mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
-        mPubDateText.setOnClickListener(this);
+        mPubDateText = (TextView) rootView.findViewById(R.id.publish_date);
 
         TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
@@ -298,6 +297,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showPostPasswordDialog();
+            }
+        });
+
+        final LinearLayout publishDateContainer = (LinearLayout) rootView.findViewById(R.id.publish_date_container);
+        publishDateContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostDateSelectionDialog();
             }
         });
 
@@ -509,9 +516,7 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.pubDate) {
-            showPostDateSelectionDialog();
-        } else if (id == R.id.locationText) {
+        if (id == R.id.locationText) {
             viewLocation();
         } else if (id == R.id.updateLocation) {
             showLocationSearch();

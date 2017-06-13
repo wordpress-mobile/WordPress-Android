@@ -35,24 +35,20 @@
 
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/pubDateLabel"
-            style="@style/WordPressSubHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/publish_date" />
+        <LinearLayout
+            android:id="@+id/publish_date_container"
+            style="@style/PostSettingsContainer">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/pubDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_small"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:background="@drawable/selectable_background_wordpress"
-            android:text="@string/immediately"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large" />
+            <TextView
+                style="@style/PostSettingsTitle"
+                android:text="@string/publish_date"/>
+
+            <TextView
+                android:id="@+id/publish_date"
+                style="@style/PostSettingsSubtitle"
+                android:hint="@string/immediately"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/post_password_container"
