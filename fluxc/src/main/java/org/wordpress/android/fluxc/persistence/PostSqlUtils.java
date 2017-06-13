@@ -150,4 +150,15 @@ public class PostSqlUtils {
     public static int deleteAllPosts() {
         return WellSql.delete(PostModel.class).execute();
     }
+
+    public static boolean getSiteHasLocalChanges(SiteModel site) {
+        return site != null && WellSql.select(PostModel.class)
+                .where().beginGroup()
+                .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
+                .beginGroup()
+                .equals(PostModelTable.IS_LOCAL_DRAFT, true)
+                .or()
+                .equals(PostModelTable.IS_LOCALLY_CHANGED, true)
+                .endGroup().endGroup().endWhere().getAsCursor().getCount() > 0;
+    }
 }
