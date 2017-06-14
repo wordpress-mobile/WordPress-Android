@@ -26,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -560,10 +559,6 @@ public class PhotoPickerFragment extends Fragment {
                     }
                 }
             });
-
-            int tintId = mPermissionsDeniedAlways ? R.color.alert_red : R.color.blue_wordpress;
-            ImageView imgSoftAsk = (ImageView) mSoftAskContainer.findViewById(R.id.image_soft_ask);
-            imgSoftAsk.setColorFilter(ContextCompat.getColor(getActivity(), tintId));
 
             mSoftAskContainer.setVisibility(View.VISIBLE);
             hideBottomBar();
