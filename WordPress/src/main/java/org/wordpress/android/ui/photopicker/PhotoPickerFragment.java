@@ -459,7 +459,14 @@ public class PhotoPickerFragment extends Fragment {
      * request the camera and storage permissions required to access photos
      */
     private void requestPermissions() {
-        FragmentCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST_CODE);
+        ArrayList<String> list = new ArrayList<>();
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                list.add(permission);
+            }
+        }
+        String[] array = list.toArray(new String[list.size()]);
+        FragmentCompat.requestPermissions(this, array, PERMISSION_REQUEST_CODE);
     }
 
     /*
