@@ -609,14 +609,21 @@ public class AppPrefs {
     }
 
     /*
-     * stores that the list of permissions has been asked
+     * remember that the passed permissions has been asked
+     */
+    public static void setPermissionAsked(@NonNull String permission) {
+        PrefKey key = getPermissionKey(permission);
+        if (key != null) {
+            setBoolean(key, true);
+        }
+    }
+
+    /*
+     * remember that the list of permissions has been asked
      */
     public static void setPermissionListAsked(@NonNull String[] permissions) {
         for (int i = 0; i < permissions.length; i++) {
-            PrefKey key = getPermissionKey(permissions[i]);
-            if (key != null) {
-                setBoolean(key, true);
-            }
+            setPermissionAsked(permissions[i]);
         }
     }
 

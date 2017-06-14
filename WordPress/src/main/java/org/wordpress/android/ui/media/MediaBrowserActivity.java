@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -308,8 +309,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
-        AppPrefs.setPermissionListAsked(permissions);
-
         // only MEDIA_PERMISSION_REQUEST_CODE is handled
         if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {
             return;
@@ -360,6 +359,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 return true;
             case R.id.menu_new_media:
                 AppLockManager.getInstance().setExtendedTimeout();
+                AppPrefs.setPermissionAsked(Manifest.permission.CAMERA);
+                AppPrefs.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                     showAddMediaPopup();
                 }

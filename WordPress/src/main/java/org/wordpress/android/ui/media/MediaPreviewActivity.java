@@ -572,8 +572,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        AppPrefs.setPermissionListAsked(permissions);
-
         if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
             boolean canSaveMedia = true;
             for (int grantResult : grantResults) {
@@ -622,6 +620,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
+        AppPrefs.setPermissionListAsked(permissionList);
         if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
             return;
         }

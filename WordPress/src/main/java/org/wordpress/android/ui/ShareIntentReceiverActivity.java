@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -126,8 +127,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        AppPrefs.setPermissionListAsked(permissions);
-
         if (requestCode == SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
             for (int grantResult : grantResults) {
                 if (grantResult == PackageManager.PERMISSION_DENIED) {
@@ -261,6 +260,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
      */
     private void shareIt() {
         if (!isSharingText()) {
+            AppPrefs.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
             if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return;

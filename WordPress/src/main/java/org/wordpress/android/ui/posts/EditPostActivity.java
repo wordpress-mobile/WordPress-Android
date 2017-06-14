@@ -680,8 +680,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        AppPrefs.setPermissionListAsked(permissions);
-
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE:
                 boolean shouldShowLocation = false;
@@ -2209,7 +2207,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mDroppedMediaUris = mediaUris;
-
+        AppPrefs.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (PermissionUtils.checkAndRequestStoragePermission(this, DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE)) {
             runOnUiThread(mFetchMediaRunnable);
         }
