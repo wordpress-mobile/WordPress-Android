@@ -3,10 +3,12 @@ package org.wordpress.android.ui.photopicker;
 import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +31,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -141,6 +144,20 @@ public class PhotoPickerFragment extends Fragment {
             getAdapter().setAllowMultiSelect(mAllowMultiSelect);
             getAdapter().setShowPhotosOnly(mPhotosOnly);
         }
+    }
+
+    // TODO: a future PR should move these to a separate utility class and use them app-wide
+    // to determine whether a permission has ever been asked
+    private boolean hasAskedForPermission(@NonNull String permission) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        return prefs.getBoolean(getKeyForPermision(permission), false);
+    }
+    private void setHasAskedPermission(@NonNull String permission) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        prefs.edit().putBoolean(getKeyForPermision(permission), true).commit();
+    }
+    private String getKeyForPermision(@NonNull String permission) {
+        return "asked_permission_" + permission;
     }
 
     @Override
@@ -443,6 +460,10 @@ public class PhotoPickerFragment extends Fragment {
         for (String permission : PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 mHasPermissions = false;
+                // if we've asked for this permission previously, check whether it has always been denied.
+                if (hasAskedForPermission(permission) && !shouldShowRequestPermissionRationale(permission)) {
+                    mPermissionsDeniedAlways = true;
+                }
             }
         }
 
@@ -487,6 +508,9 @@ public class PhotoPickerFragment extends Fragment {
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CODE) {
+            for (int i = 0; i < permissions.length; i++) {
+                setHasAskedPermission(permissions[i]);
+            }
             // determine whether the user denied permissions AND checked "do not ask again"
             mPermissionsDeniedAlways = false;
             for (int i = 0; i < grantResults.length; i++) {
