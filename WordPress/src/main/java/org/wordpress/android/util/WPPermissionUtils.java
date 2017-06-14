@@ -76,6 +76,7 @@ public class WPPermissionUtils {
             case android.Manifest.permission.ACCESS_FINE_LOCATION:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_LOCATION_FINE;
             default:
+                AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;
         }
     }
