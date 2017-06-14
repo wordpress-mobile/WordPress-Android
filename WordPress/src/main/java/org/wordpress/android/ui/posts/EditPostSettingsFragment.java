@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -219,9 +220,9 @@ public class EditPostSettingsFragment extends Fragment
         mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
         mPubDateText = (TextView) rootView.findViewById(R.id.publish_date);
 
-        TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
-        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
-        mFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
+        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.post_featured_image);
+        mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
+        CardView featuredImageCardView = (CardView) rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
@@ -231,7 +232,6 @@ public class EditPostSettingsFragment extends Fragment
                     view.showContextMenu();
                 }
             });
-
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -239,9 +239,7 @@ public class EditPostSettingsFragment extends Fragment
                 }
             });
         } else {
-            featuredImageLabel.setVisibility(View.GONE);
-            mFeaturedImageView.setVisibility(View.GONE);
-            mFeaturedImageButton.setVisibility(View.GONE);
+            featuredImageCardView.setVisibility(View.GONE);
         }
 
         final LinearLayout excerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);

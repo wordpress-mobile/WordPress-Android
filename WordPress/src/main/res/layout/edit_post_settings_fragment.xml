@@ -118,6 +118,7 @@
         <!--Featured Image-->
 
         <android.support.v7.widget.CardView
+            android:id="@+id/post_featured_image_card_view"
             style="@style/PostSettingsCardView"
             card_view:cardBackgroundColor="@color/white"
             card_view:cardCornerRadius="@dimen/cardview_default_radius">
@@ -126,26 +127,27 @@
                 style="@style/PostSettingsCardViewInnerLayout">
 
                 <TextView
-                    android:id="@+id/featuredImageLabel"
                     style="@style/PostSettingsSectionHeader"
                     android:text="@string/post_settings_featured_image"/>
 
-                <Button
-                    android:id="@+id/addFeaturedImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/post_settings_set_featured_image"/>
+                <LinearLayout
+                    style="@style/PostSettingsContainer">
 
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/featuredImage"
-                    android:paddingTop="@dimen/margin_small"
-                    android:paddingBottom="@dimen/margin_small"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitStart"
-                    android:minHeight="@dimen/post_settings_featured_image_height_min"
-                    android:maxHeight="@dimen/post_settings_featured_image_height_max"
-                    android:visibility="gone"/>
+                    <Button
+                        android:id="@+id/post_add_featured_image_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/post_settings_set_featured_image"/>
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/post_featured_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="@dimen/post_settings_featured_image_height_max"
+                        android:minHeight="@dimen/post_settings_featured_image_height_min"
+                        android:scaleType="fitStart"
+                        android:visibility="gone"/>
+                </LinearLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
