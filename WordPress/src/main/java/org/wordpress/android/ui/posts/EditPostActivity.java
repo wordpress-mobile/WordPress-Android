@@ -680,6 +680,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        AppPrefs.setPermissionListAsked(permissions);
+
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE:
                 boolean shouldShowLocation = false;

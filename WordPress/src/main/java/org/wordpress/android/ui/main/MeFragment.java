@@ -441,6 +441,8 @@ public class MeFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[]
             grantResults) {
+        AppPrefs.setPermissionListAsked(permissions);
+
         switch (requestCode) {
             case CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE:
                 if (permissions.length == 0) {

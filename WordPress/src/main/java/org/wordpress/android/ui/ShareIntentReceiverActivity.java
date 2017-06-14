@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -125,6 +126,8 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        AppPrefs.setPermissionListAsked(permissions);
+
         if (requestCode == SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
             for (int grantResult : grantResults) {
                 if (grantResult == PackageManager.PERMISSION_DENIED) {

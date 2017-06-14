@@ -59,6 +59,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -307,6 +308,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
+        AppPrefs.setPermissionListAsked(permissions);
+
         // only MEDIA_PERMISSION_REQUEST_CODE is handled
         if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {
             return;

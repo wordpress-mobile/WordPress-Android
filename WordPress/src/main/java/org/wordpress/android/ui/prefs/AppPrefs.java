@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.BuildConfig;
@@ -136,7 +137,14 @@ public class AppPrefs {
         // smart toast counters
         SMART_TOAST_PHOTO_PICKER_LONG_PRESS_COUNTER,
         SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER,
-        SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER
+        SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER,
+
+        // permission keys - set once a specific permission has been asked, regardless of response
+        ASKED_PERMISSION_STORAGE_WRITE,
+        ASKED_PERMISSION_STORAGE_READ,
+        ASKED_PERMISSION_CAMERA,
+        ASKED_PERMISSION_LOCATION_COURSE,
+        ASKED_PERMISSION_LOCATION_FINE
     }
 
     private static SharedPreferences prefs() {
@@ -589,5 +597,43 @@ public class AppPrefs {
 
     public static void setDraftsMigratedToFluxC(boolean migrated) {
         setBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, migrated);
+    }
+
+
+    /*
+     * returns true if the app has ever asked for the passed permission
+     */
+    public static boolean isPermissionAsked(@NonNull String permission, boolean isAsked) {
+        PrefKey key = getPermissionKey(permission);
+        return key != null ? getBoolean(key, false) : false;
+    }
+
+    /*
+     * stores that the list of permissions has been asked
+     */
+    public static void setPermissionListAsked(@NonNull String[] permissions) {
+        for (int i = 0; i < permissions.length; i++) {
+            PrefKey key = getPermissionKey(permissions[i]);
+            if (key != null) {
+                setBoolean(key, true);
+            }
+        }
+    }
+
+    private static PrefKey getPermissionKey(@NonNull String permission) {
+        switch (permission) {
+            case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
+                return UndeletablePrefKey.ASKED_PERMISSION_STORAGE_WRITE;
+            case android.Manifest.permission.READ_EXTERNAL_STORAGE:
+                return UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ;
+            case android.Manifest.permission.CAMERA:
+                return UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
+            case android.Manifest.permission.ACCESS_COARSE_LOCATION:
+                return UndeletablePrefKey.ASKED_PERMISSION_LOCATION_COURSE;
+            case android.Manifest.permission.ACCESS_FINE_LOCATION:
+                return UndeletablePrefKey.ASKED_PERMISSION_LOCATION_FINE;
+            default:
+                return null;
+        }
     }
 }

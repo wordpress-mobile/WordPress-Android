@@ -48,6 +48,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -571,6 +572,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        AppPrefs.setPermissionListAsked(permissions);
+
         if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
             boolean canSaveMedia = true;
             for (int grantResult : grantResults) {
