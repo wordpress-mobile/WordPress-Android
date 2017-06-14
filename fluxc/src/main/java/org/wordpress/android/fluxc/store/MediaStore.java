@@ -462,6 +462,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
+    public List<MediaModel> getSiteMediaWithState(SiteModel siteModel, UploadState expectedState) {
+        return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
+    }
+
     public String getUrlForSiteVideoWithVideoPressGuid(SiteModel siteModel, String videoPressGuid) {
         List<MediaModel> media =
                 MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);

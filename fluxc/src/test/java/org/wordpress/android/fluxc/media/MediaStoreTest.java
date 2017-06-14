@@ -297,11 +297,19 @@ public class MediaStoreTest {
         assertEquals(2, mMediaStore.getSiteMediaCount(testSite));
 
         // verify local store media
-        final List<MediaModel> storeMedia = mMediaStore.getLocalSiteMedia(testSite);
-        assertNotNull(storeMedia);
-        assertEquals(1, storeMedia.size());
-        assertNotNull(storeMedia.get(0));
-        assertEquals(localMediaId, storeMedia.get(0).getMediaId());
+        final List<MediaModel> localSiteMedia = mMediaStore.getLocalSiteMedia(testSite);
+        assertNotNull(localSiteMedia);
+        assertEquals(1, localSiteMedia.size());
+        assertNotNull(localSiteMedia.get(0));
+        assertEquals(localMediaId, localSiteMedia.get(0).getMediaId());
+
+        // verify uploaded store media
+        final List<MediaModel> uploadedSiteMedia = mMediaStore.getSiteMediaWithState(testSite,
+                MediaModel.UploadState.UPLOADED);
+        assertNotNull(uploadedSiteMedia);
+        assertEquals(1, uploadedSiteMedia.size());
+        assertNotNull(uploadedSiteMedia.get(0));
+        assertEquals(remoteMediaId, uploadedSiteMedia.get(0).getMediaId());
     }
 
     @Test
