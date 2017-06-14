@@ -48,7 +48,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -61,6 +60,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -620,7 +620,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
-        AppPrefs.setPermissionListAsked(permissionList);
+        WPPermissionUtils.setPermissionListAsked(permissionList);
         if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
             return;
         }

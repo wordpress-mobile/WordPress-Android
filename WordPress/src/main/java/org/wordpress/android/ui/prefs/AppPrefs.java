@@ -202,13 +202,12 @@ public class AppPrefs {
         setString(key, Integer.toString(value));
     }
 
-    private static boolean getBoolean(PrefKey key, boolean def) {
-
+    public static boolean getBoolean(PrefKey key, boolean def) {
         String value = getString(key, Boolean.toString(def));
         return Boolean.parseBoolean(value);
     }
 
-    private static void setBoolean(PrefKey key, boolean value) {
+    public static void setBoolean(PrefKey key, boolean value) {
         setString(key, Boolean.toString(value));
     }
 
@@ -600,47 +599,4 @@ public class AppPrefs {
     }
 
 
-    /*
-     * returns true if the app has ever asked for the passed permission
-     */
-    public static boolean isPermissionAsked(@NonNull String permission, boolean isAsked) {
-        PrefKey key = getPermissionKey(permission);
-        return key != null ? getBoolean(key, false) : false;
-    }
-
-    /*
-     * remember that the passed permissions has been asked
-     */
-    public static void setPermissionAsked(@NonNull String permission) {
-        PrefKey key = getPermissionKey(permission);
-        if (key != null) {
-            setBoolean(key, true);
-        }
-    }
-
-    /*
-     * remember that the list of permissions has been asked
-     */
-    public static void setPermissionListAsked(@NonNull String[] permissions) {
-        for (int i = 0; i < permissions.length; i++) {
-            setPermissionAsked(permissions[i]);
-        }
-    }
-
-    private static PrefKey getPermissionKey(@NonNull String permission) {
-        switch (permission) {
-            case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                return UndeletablePrefKey.ASKED_PERMISSION_STORAGE_WRITE;
-            case android.Manifest.permission.READ_EXTERNAL_STORAGE:
-                return UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ;
-            case android.Manifest.permission.CAMERA:
-                return UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
-            case android.Manifest.permission.ACCESS_COARSE_LOCATION:
-                return UndeletablePrefKey.ASKED_PERMISSION_LOCATION_COURSE;
-            case android.Manifest.permission.ACCESS_FINE_LOCATION:
-                return UndeletablePrefKey.ASKED_PERMISSION_LOCATION_FINE;
-            default:
-                return null;
-        }
-    }
 }

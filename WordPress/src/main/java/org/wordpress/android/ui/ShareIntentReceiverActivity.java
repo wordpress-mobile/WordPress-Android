@@ -26,11 +26,11 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -260,7 +260,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
      */
     private void shareIt() {
         if (!isSharingText()) {
-            AppPrefs.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            WPPermissionUtils.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
             if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return;

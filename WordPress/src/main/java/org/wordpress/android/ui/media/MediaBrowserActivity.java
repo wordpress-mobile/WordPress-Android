@@ -60,7 +60,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -74,6 +73,7 @@ import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -359,8 +359,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 return true;
             case R.id.menu_new_media:
                 AppLockManager.getInstance().setExtendedTimeout();
-                AppPrefs.setPermissionAsked(Manifest.permission.CAMERA);
-                AppPrefs.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                WPPermissionUtils.setPermissionAsked(Manifest.permission.CAMERA);
+                WPPermissionUtils.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                     showAddMediaPopup();
                 }
