@@ -22,10 +22,6 @@
             <LinearLayout
                 style="@style/PostSettingsCardViewInnerLayout">
 
-                <TextView
-                    style="@style/PostSettingsSectionHeader"
-                    android:text="@string/post_settings_status"/>
-
                 <LinearLayout
                     android:id="@+id/post_status_container"
                     style="@style/PostSettingsContainer">
