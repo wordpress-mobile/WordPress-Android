@@ -13,6 +13,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
@@ -282,7 +283,7 @@ public class MediaStoreTest {
         final MediaModel localMedia = getBasicMedia();
         localMedia.setLocalSiteId(testSiteId);
         localMedia.setMediaId(localMediaId);
-        localMedia.setUploadState(MediaModel.UploadState.UPLOADING.toString());
+        localMedia.setUploadState(UploadState.UPLOADING.toString());
         insertMediaIntoDatabase(localMedia);
 
         // add remote media
@@ -290,7 +291,7 @@ public class MediaStoreTest {
         remoteMedia.setLocalSiteId(testSiteId);
         remoteMedia.setMediaId(remoteMediaId);
         // remote media has a defined upload date, simulated here
-        remoteMedia.setUploadState(MediaModel.UploadState.UPLOADED.toString());
+        remoteMedia.setUploadState(UploadState.UPLOADED.toString());
         insertMediaIntoDatabase(remoteMedia);
 
         SiteModel testSite = getTestSiteWithLocalId(testSiteId);
@@ -304,8 +305,7 @@ public class MediaStoreTest {
         assertEquals(localMediaId, localSiteMedia.get(0).getMediaId());
 
         // verify uploaded store media
-        final List<MediaModel> uploadedSiteMedia = mMediaStore.getSiteMediaWithState(testSite,
-                MediaModel.UploadState.UPLOADED);
+        final List<MediaModel> uploadedSiteMedia = mMediaStore.getSiteMediaWithState(testSite, UploadState.UPLOADED);
         assertNotNull(uploadedSiteMedia);
         assertEquals(1, uploadedSiteMedia.size());
         assertNotNull(uploadedSiteMedia.get(0));
@@ -435,9 +435,9 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(MediaModel.UploadState.DELETE.toString());
+            pendingDelete.get(i).setUploadState(UploadState.DELETE.toString());
             pendingDelete.get(i).setMediaId(i + (count * 2));
-            other.get(i).setUploadState(MediaModel.UploadState.UPLOADED.toString());
+            other.get(i).setUploadState(UploadState.UPLOADED.toString());
             other.get(i).setMediaId(i + count);
             insertMediaIntoDatabase(pendingDelete.get(i));
             insertMediaIntoDatabase(other.get(i));
@@ -450,7 +450,7 @@ public class MediaStoreTest {
         for (int i = 0; i < count; ++i) {
             MediaModel next = mMediaStore.getNextSiteMediaToDelete(testSite);
             assertNotNull(next);
-            assertEquals(MediaModel.UploadState.DELETE.toString(), next.getUploadState());
+            assertEquals(UploadState.DELETE.toString(), next.getUploadState());
             assertTrue(pendingDelete.contains(next));
             MediaSqlUtils.deleteMedia(next);
             assertEquals(count * 2 - i - 1, mMediaStore.getSiteMediaCount(testSite));
@@ -467,9 +467,9 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(MediaModel.UploadState.DELETE.toString());
+            pendingDelete.get(i).setUploadState(UploadState.DELETE.toString());
             pendingDelete.get(i).setMediaId(i + (count * 2));
-            other.get(i).setUploadState(MediaModel.UploadState.DELETED.toString());
+            other.get(i).setUploadState(UploadState.DELETED.toString());
             other.get(i).setMediaId(i + count);
             insertMediaIntoDatabase(pendingDelete.get(i));
             insertMediaIntoDatabase(other.get(i));
