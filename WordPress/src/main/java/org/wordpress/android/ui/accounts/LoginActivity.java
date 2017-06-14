@@ -17,6 +17,7 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
+import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.util.ToastUtils;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
@@ -149,12 +150,19 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void gotXmlRpcEndpoint(String siteAddress) {
-        ToastUtils.showToast(this, "Input site address is not implemented yet. Input site address: " + siteAddress);
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
+                LoginUsernamePasswordFragment.newInstance(siteAddress);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override
     public void helpWithSiteAddress() {
         ToastUtils.showToast(this, "Help finding site address is not implemented yet.");
+    }
+
+    @Override
+    public void loggedInViaUsernamePassword() {
+        launchEpilogueAndFinish();
     }
 
     @Override

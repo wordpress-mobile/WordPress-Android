@@ -28,6 +28,9 @@ public interface LoginListener {
     void gotXmlRpcEndpoint(String siteAddress);
     void helpWithSiteAddress();
 
+    // Login username password callbacks
+    void loggedInViaUsernamePassword();
+
     // Help callback
     void help();
 

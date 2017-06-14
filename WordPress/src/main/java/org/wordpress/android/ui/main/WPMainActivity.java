@@ -251,6 +251,7 @@ public class WPMainActivity extends AppCompatActivity {
                     authTokenToSet = getAuthToken();
                 } else {
                     ActivityLauncher.showSignInForResult(this);
+                    finish();
                 }
             }
         }
