@@ -215,6 +215,10 @@ public class AppPrefs {
         prefs().edit().remove(key.name()).apply();
     }
 
+    public static boolean keyExists(@NonNull PrefKey key) {
+        return prefs().contains(key.name());
+    }
+
     // Exposed methods
 
     /**

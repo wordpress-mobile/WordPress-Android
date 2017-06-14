@@ -309,6 +309,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
         // only MEDIA_PERMISSION_REQUEST_CODE is handled
         if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {
             return;
@@ -359,8 +361,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 return true;
             case R.id.menu_new_media:
                 AppLockManager.getInstance().setExtendedTimeout();
-                WPPermissionUtils.setPermissionAsked(Manifest.permission.CAMERA);
-                WPPermissionUtils.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
                     showAddMediaPopup();
                 }

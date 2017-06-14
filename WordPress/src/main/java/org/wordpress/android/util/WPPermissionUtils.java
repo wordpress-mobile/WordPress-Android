@@ -1,35 +1,65 @@
 package org.wordpress.android.util;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import org.wordpress.android.ui.prefs.AppPrefs;
 
 public class WPPermissionUtils {
 
     /*
-     * returns true if the app has ever asked for the passed permission
+     * returns true if we know the app has asked for the passed permission
      */
-    public static boolean isPermissionAsked(@NonNull String permission, boolean isAsked) {
+    public static boolean isPermissionAsked(@NonNull Context context, @NonNull String permission) {
         AppPrefs.PrefKey key = getPermissionKey(permission);
-        return key != null ? AppPrefs.getBoolean(key, false) : false;
+        if (key == null) {
+            return false;
+        }
+
+        // if the key exists, we've already stored whether this permission has been asked for
+        if (AppPrefs.keyExists(key)) {
+            return AppPrefs.getBoolean(key, false);
+        }
+
+        // otherwise, check whether permission has already been granted - if so we know it has been asked
+        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED) {
+            AppPrefs.setBoolean(key, true);
+            return true;
+        }
+
+        return false;
     }
 
     /*
-     * remember that the passed permissions has been asked
+     * returns true if the passed permission has been denied AND the user checked "never show again"
+     * in the native permission dialog
      */
-    public static void setPermissionAsked(@NonNull String permission) {
-        AppPrefs.PrefKey key = getPermissionKey(permission);
-        if (key != null) {
-            AppPrefs.setBoolean(key, true);
+    public static boolean isPermissionAlwaysDenied(@NonNull Activity activity, @NonNull String permission) {
+        // shouldShowRequestPermissionRationale returns false if the permission has been permanently
+        // denied, but it also returns false if the app has never requested that permission - so we
+        // check it only if we know we've asked for this permission
+        if (isPermissionAsked(activity, permission)
+                && ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_DENIED) {
+            boolean shouldShow = ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
+            return !shouldShow;
         }
+
+        return false;
     }
 
     /*
      * remember that the list of permissions has been asked
      */
     public static void setPermissionListAsked(@NonNull String[] permissions) {
-        for (int i = 0; i < permissions.length; i++) {
-            setPermissionAsked(permissions[i]);
+        for (String permission : permissions) {
+            AppPrefs.PrefKey key = getPermissionKey(permission);
+            if (key != null) {
+                AppPrefs.setBoolean(key, true);
+            }
         }
     }
 

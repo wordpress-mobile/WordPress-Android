@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -207,8 +206,6 @@ public class MeFragment extends Fragment {
                 // and no need to promote the feature any more
                 AppPrefs.setGravatarChangePromoRequired(false);
 
-                WPPermissionUtils.setPermissionAsked(Manifest.permission.CAMERA);
-                WPPermissionUtils.setPermissionAsked(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
                         CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
                     showPhotoPickerForGravatar();
@@ -445,6 +442,8 @@ public class MeFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[]
             grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
         switch (requestCode) {
             case CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE:
                 if (permissions.length == 0) {
