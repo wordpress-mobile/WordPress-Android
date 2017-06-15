@@ -155,11 +155,17 @@ public class EditPostSettingsFragment extends Fragment
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
-        updateSiteOrFinishActivity(savedInstanceState);
+        updateSiteAndFetchPostOrFinishActivity(savedInstanceState);
         updatePostFormatKeysAndNames();
+
+        // Update post formats and categories, in case anything changed.
+        mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
+        if (!mPost.isPage()) {
+            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
+        }
     }
 
-    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+    private void updateSiteAndFetchPostOrFinishActivity(Bundle savedInstanceState) {
         int localPostId;
         if (savedInstanceState == null) {
             if (getArguments() != null) {
@@ -185,12 +191,6 @@ public class EditPostSettingsFragment extends Fragment
         if (mPost == null) {
             ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
-        }
-
-        // Update post formats and categories, in case anything changed.
-        mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
-        if (!mPost.isPage()) {
-            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
         }
     }
 
