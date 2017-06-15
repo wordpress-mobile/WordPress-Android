@@ -32,13 +32,15 @@ public class WPPermissionUtils {
     public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
 
     /**
-     * called by the onRequestPermissionsResult() of various activities and fragments
+     * called by the onRequestPermissionsResult() of various activities and fragments - tracks
+     * the permission results, remembers that the permissions have been asked for, and optionally
+     * shows a dialog enabling the user to edit permissions if any are always denied
      *
      * @param activity      host activity
      * @param requestCode   request code passed to ContextCompat.checkSelfPermission
      * @param permissions   list of permissions
      * @param grantResults  list of results for above permissions
-     * @param checkForAlwaysDenied check if any permissions have been always denied, show dialog if so
+     * @param checkForAlwaysDenied show dialog if any permissions always denied
      * @return true if all permissions granted
      */
     public static boolean setPermissionListAsked(@NonNull Activity activity,
@@ -46,29 +48,23 @@ public class WPPermissionUtils {
                                                  @NonNull String permissions[],
                                                  @NonNull int[] grantResults,
                                                  boolean checkForAlwaysDenied) {
-        // track the passed list of permissions and remembers that they've been asked
-        boolean allGranted = true;
         for (int i = 0; i < permissions.length; i++) {
-            AppPrefs.PrefKey key = getPermissionKey(permissions[i]);
+            AppPrefs.PrefKey key = getPermissionAskedKey(permissions[i]);
             if (key != null) {
                 boolean isFirstTime = !AppPrefs.keyExists(key);
-                track(requestCode, permissions[i], grantResults[i], isFirstTime);
+                trackPermissionResult(requestCode, permissions[i], grantResults[i], isFirstTime);
                 AppPrefs.setBoolean(key, true);
-            }
-            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                allGranted = false;
             }
         }
 
-        // show a dialog if any of these permissions have been always denied
-        if (!allGranted && checkForAlwaysDenied) {
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    allGranted = false;
-                    if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
-                        showPermissionAlwaysDeniedDialog(activity, permissions[i]);
-                        break;
-                    }
+        boolean allGranted = true;
+        for (int i = 0; i < grantResults.length; i++) {
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                allGranted = false;
+                if (checkForAlwaysDenied
+                        && !ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
+                    showPermissionAlwaysDeniedDialog(activity, permissions[i]);
+                    break;
                 }
             }
         }
@@ -80,7 +76,7 @@ public class WPPermissionUtils {
      * returns true if we know the app has asked for the passed permission
      */
     private static boolean isPermissionAsked(@NonNull Context context, @NonNull String permission) {
-        AppPrefs.PrefKey key = getPermissionKey(permission);
+        AppPrefs.PrefKey key = getPermissionAskedKey(permission);
         if (key == null) {
             return false;
         }
@@ -116,10 +112,10 @@ public class WPPermissionUtils {
         return false;
     }
 
-    private static void track(int requestCode,
-                              @NonNull String permission,
-                              int result,
-                              boolean isFirstTime) {
+    private static void trackPermissionResult(int requestCode,
+                                              @NonNull String permission,
+                                              int result,
+                                              boolean isFirstTime) {
         Map<String, String> props = new HashMap<>();
         props.put("permission", permission);
         props.put("request_code", Integer.toString(requestCode));
@@ -133,9 +129,10 @@ public class WPPermissionUtils {
     }
 
     /*
-     * key in shared preferences which stores whether the passed permission has been asked for
+     * key in shared preferences which stores a boolean telling whether the app has already
+     * asked for the passed permission
      */
-    private static AppPrefs.PrefKey getPermissionKey(@NonNull String permission) {
+    private static AppPrefs.PrefKey getPermissionAskedKey(@NonNull String permission) {
         switch (permission) {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_WRITE;
@@ -157,7 +154,8 @@ public class WPPermissionUtils {
      * called when the app detects that the user has permanently denied a permission, shows a dialog
      * alerting them to this fact and enabling them to visit the app settings to edit permissions
      */
-    private static void showPermissionAlwaysDeniedDialog(@NonNull final Context context, @NonNull String permission) {
+    private static void showPermissionAlwaysDeniedDialog(@NonNull final Context context,
+                                                         @NonNull String permission) {
         String permissionName;
         switch (permission) {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
