@@ -919,7 +919,7 @@ public class EditPostSettingsFragment extends Fragment
 
         // Make sure the PostModel is up to date with current category selections
         updatePostSettings(mPost);
-        categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
+        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
 
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }

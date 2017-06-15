@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
@@ -43,11 +44,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+
 public class SelectCategoriesActivity extends AppCompatActivity {
-    private static final int ACTIVITY_REQUEST_CODE_ADD_CATEGORY = 0;
-
-    public static final String KEY_POST = "KEY_POST";
-
     private ListView mListView;
     private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
@@ -58,6 +57,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
 
@@ -99,8 +99,9 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            if (extras.containsKey(KEY_POST)) {
-                PostModel post = (PostModel) extras.getSerializable(KEY_POST);
+            if (extras.containsKey(EXTRA_POST_LOCAL_ID)) {
+                int localPostId = extras.getInt(EXTRA_POST_LOCAL_ID);
+                PostModel post = mPostStore.getPostByLocalPostId(localPostId);
                 if (post != null) {
                     for (Long categoryId : post.getCategoryIdList()) {
                         mSelectedCategories.add(categoryId);
@@ -141,11 +142,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     }
 
     private boolean isCategoryListEmpty() {
-        if (mListView.getAdapter() != null) {
-            return mListView.getAdapter().isEmpty();
-        } else {
-            return true;
-        }
+        return mListView.getAdapter() == null || mListView.getAdapter().isEmpty();
     }
 
     private void populateCategoryList() {
