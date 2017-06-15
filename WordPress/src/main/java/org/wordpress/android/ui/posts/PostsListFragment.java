@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
@@ -501,6 +502,11 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
+                if (PostUploadService.isPostUploadingOrQueued(post)) {
+                    // If the post is uploading media, allow the media to continue uploading, but don't upload the
+                    // post itself when they finish (since we're about to edit it again)
+                    PostUploadService.cancelQueuedPostUpload(post);
+                }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_SUBMIT:
@@ -519,8 +525,11 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
+                // TODO: Async: Update this behavior to handle pressing Delete/Trash while the post has uploading media
+                // Currently, the button is tappable while media are uploading, but nothing happens
+
                 // prevent deleting post while it's being uploaded
-                if (!PostUploadService.isPostUploading(post)) {
+                if (!PostUploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
                 }
                 break;
@@ -693,6 +702,17 @@ public class PostsListFragment extends Fragment
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);
                 mPostsListAdapter.mediaChanged(mediaModel);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.media != null && event.completed) {
+            PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+            if (post != null && PostUploadService.isPostUploadingOrQueued(post)) {
+                loadPosts(LoadMode.FORCED);
             }
         }
     }
