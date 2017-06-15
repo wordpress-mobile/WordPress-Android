@@ -117,8 +117,6 @@ public class EditPostSettingsFragment extends Fragment
 
     private long mFeaturedImageId;
 
-    private List<TermModel> mCategories = new ArrayList<>();
-
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
 
@@ -326,7 +324,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         initSettingsFields();
-        populateSelectedCategories();
         initLocation(rootView);
         return rootView;
     }
@@ -361,6 +358,7 @@ public class EditPostSettingsFragment extends Fragment
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
+        updateCategoriesTextView();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
         }
@@ -432,8 +430,7 @@ public class EditPostSettingsFragment extends Fragment
                     if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORIES)) {
                         @SuppressWarnings("unchecked")
                         List<TermModel> categoryList = (List<TermModel>) extras.getSerializable(KEY_SELECTED_CATEGORIES);
-                        mCategories = categoryList;
-                        populateSelectedCategories();
+                        updateCategories(categoryList);
                     }
                     break;
                 case ACTIVITY_REQUEST_CODE_SELECT_TAGS:
@@ -524,14 +521,6 @@ public class EditPostSettingsFragment extends Fragment
             } else {
                 post.setLocation(mPostLocation);
             }
-        }
-
-        if (mCategories != null) {
-            List<Long> categoryIds = new ArrayList<>();
-            for (TermModel category : mCategories) {
-                categoryIds.add(category.getRemoteTermId());
-            }
-            post.setCategoryIdList(categoryIds);
         }
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
@@ -720,6 +709,19 @@ public class EditPostSettingsFragment extends Fragment
         dispatchUpdatePostAction();
     }
 
+    private void updateCategories(List<TermModel> categoryList) {
+        if (categoryList == null) {
+            return;
+        }
+        List<Long> categoryIds = new ArrayList<>();
+        for (TermModel category : categoryList) {
+            categoryIds.add(category.getRemoteTermId());
+        }
+        mPost.setCategoryIdList(categoryIds);
+        updateCategoriesTextView();
+        dispatchUpdatePostAction();
+    }
+
     private void updatePostStatus(PostStatus postStatus) {
         mPost.setStatus(postStatus.toString());
         updateStatusTextView();
@@ -770,9 +772,10 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    private void populateSelectedCategories() {
+    private void updateCategoriesTextView() {
+        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
         StringBuilder sb = new StringBuilder();
-        Iterator<TermModel> it = mCategories.iterator();
+        Iterator<TermModel> it = categories.iterator();
         if (it.hasNext()) {
             sb.append(it.next().getName());
             while (it.hasNext()) {
@@ -862,8 +865,7 @@ public class EditPostSettingsFragment extends Fragment
     public void onTaxonomyChanged(OnTaxonomyChanged event) {
         switch (event.causeOfChange) {
             case FETCH_CATEGORIES:
-                mCategories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
-                populateSelectedCategories();
+                updateCategoriesTextView();
                 break;
         }
     }
