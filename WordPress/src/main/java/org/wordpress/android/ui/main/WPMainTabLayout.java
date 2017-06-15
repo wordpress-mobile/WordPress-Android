@@ -38,9 +38,9 @@ public class WPMainTabLayout extends TabLayout {
 
     public void createTabs() {
         addTab(R.drawable.main_tab_sites, R.string.tabbar_accessibility_label_my_site, false);
-        addTab(R.drawable.main_tab_reader, R.string.reader, false);
+        addTab(R.drawable.main_tab_reader, R.string.tabbar_accessibility_label_reader, false);
         addTab(R.drawable.main_tab_me, R.string.tabbar_accessibility_label_me, false);
-        addTab(R.drawable.main_tab_notifications, R.string.notifications, true);
+        addTab(R.drawable.main_tab_notifications, R.string.tabbar_accessibility_label_notifications, true);
     }
 
     private void addTab(@DrawableRes int iconId, @StringRes int contentDescriptionId, boolean isNoteTab) {

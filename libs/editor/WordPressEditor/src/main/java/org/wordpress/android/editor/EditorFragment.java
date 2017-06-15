@@ -1326,12 +1326,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta,
                               String uploadStatus) {
-        if (mediaType == null || !isAdded() || TextUtils.isEmpty(mediaId) || StringUtils.stringToInt(mediaId) <= 0) {
+        if (mediaType == null || !isAdded()) {
             return;
         }
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
+                if (TextUtils.isEmpty(mediaId) || StringUtils.stringToInt(mediaId) <= 0) {
+                    return;
+                }
+
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
@@ -1366,6 +1370,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 dialog.show();
                 break;
             case ATTR_STATUS_FAILED:
+                if (TextUtils.isEmpty(mediaId) || StringUtils.stringToInt(mediaId) <= 0) {
+                    return;
+                }
+
                 // Retry media upload
                 mEditorFragmentListener.onMediaRetryClicked(mediaId);
 
