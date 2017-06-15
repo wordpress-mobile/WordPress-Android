@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
@@ -87,9 +88,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
-    private static final String KEY_POST = "KEY_POST";
     private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
@@ -129,16 +131,17 @@ public class EditPostSettingsFragment extends Fragment
     private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject FluxCImageLoader mImageLoader;
 
-    public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
+    public static EditPostSettingsFragment newInstance(SiteModel site, int localPostId) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putSerializable(KEY_POST, post);
+        bundle.putSerializable(EXTRA_POST_LOCAL_ID, localPostId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -157,21 +160,30 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+        int localPostId;
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mPost = (PostModel) getArguments().getSerializable(KEY_POST);
+                localPostId = getArguments().getInt(EXTRA_POST_LOCAL_ID);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(KEY_POST);
+                localPostId = getActivity().getIntent().getIntExtra(EXTRA_POST_LOCAL_ID, 0);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mPost = (PostModel) savedInstanceState.getSerializable(KEY_POST);
+            localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
         }
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+
+        if (localPostId != 0) {
+            mPost = mPostStore.getPostByLocalPostId(localPostId);
+        }
+        if (mPost == null) {
+            ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
 
@@ -186,7 +198,7 @@ public class EditPostSettingsFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(KEY_POST, mPost);
+        outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
     }
 
     @Override
