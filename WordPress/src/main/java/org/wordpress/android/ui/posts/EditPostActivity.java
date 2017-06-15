@@ -2230,7 +2230,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
         if (!TextUtils.isEmpty(mediaId)) {
             int localMediaId = Integer.valueOf(mediaId);
-            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId));
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId, delete));
         } else {
             // Passed mediaId is incorrect: cancel all uploads
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
