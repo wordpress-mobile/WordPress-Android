@@ -319,8 +319,8 @@ public class EditPostSettingsFragment extends Fragment
 
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
-            rootView.findViewById(R.id.post_categories_container).setVisibility(View.GONE);
-            rootView.findViewById(R.id.post_tags_container).setVisibility(View.GONE);
+            categoriesContainer.setVisibility(View.GONE);
+            tagsContainer.setVisibility(View.GONE);
             formatContainer.setVisibility(View.GONE);
         }
 
