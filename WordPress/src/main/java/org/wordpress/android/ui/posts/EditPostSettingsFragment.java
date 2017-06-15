@@ -358,7 +358,20 @@ public class EditPostSettingsFragment extends Fragment
         mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
         mPasswordTextView.setText(mPost.getPassword());
         updateTagsTextView();
+        updateStatusTextView();
+        updatePublishDateTextView();
+        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
+            updateFeaturedImage(mPost.getFeaturedImageId());
+        }
+    }
 
+    private void updateTagsTextView() {
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        // If `tags` is empty, the hint "Not Set" will be shown instead
+        mTagsTextView.setText(tags);
+    }
+
+    private void updatePublishDateTextView() {
         String pubDate = mPost.getDateCreated();
         if (StringUtils.isNotEmpty(pubDate)) {
             try {
@@ -374,17 +387,6 @@ public class EditPostSettingsFragment extends Fragment
                 AppLog.e(T.POSTS, e);
             }
         }
-
-        updateStatusTextView();
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            updateFeaturedImage(mPost.getFeaturedImageId());
-        }
-    }
-
-    private void updateTagsTextView() {
-        String tags = TextUtils.join(",", mPost.getTagNameList());
-        // If `tags` is empty, the hint "Not Set" will be shown instead
-        mTagsTextView.setText(tags);
     }
 
     public void updateStatusTextView() {
