@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Outline;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -53,8 +55,12 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -62,7 +68,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
@@ -72,6 +82,8 @@ import de.greenrobot.event.EventBus;
 public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
+
+    private static final int CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
@@ -194,7 +206,12 @@ public class MeFragment extends Fragment {
                 // and no need to promote the feature any more
                 AppPrefs.setGravatarChangePromoRequired(false);
 
-                ActivityLauncher.showPhotoPickerForResult(getActivity());
+                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(MeFragment.this,
+                        CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE)) {
+                    showPhotoPickerForGravatar();
+                } else {
+                    AppLockManager.getInstance().setExtendedTimeout();
+                }
             }
         });
         mMyProfileView.setOnClickListener(new View.OnClickListener() {
@@ -423,6 +440,44 @@ public class MeFragment extends Fragment {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[]
+            grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
+        switch (requestCode) {
+            case CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE:
+                if (permissions.length == 0) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_INTERRUPTED);
+                }  else {
+                    List<String> granted = new ArrayList<>();
+                    List<String> denied = new ArrayList<>();
+
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                            granted.add(permissions[i]);
+                        } else {
+                            denied.add(permissions[i]);
+                        }
+                    }
+
+                    if (denied.size() == 0) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_ACCEPTED);
+                        showPhotoPickerForGravatar();
+                    } else {
+                        ToastUtils.showToast(this.getActivity(), getString(R.string
+                                .gravatar_camera_and_media_permission_required), ToastUtils.Duration.LONG);
+                        Map<String, Object> properties = new HashMap<>();
+                        properties.put("permissions granted", granted.size() == 0 ? "[none]" : TextUtils
+                                .join(",", granted));
+                        properties.put("permissions denied", TextUtils.join(",", denied));
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_PERMISSIONS_DENIED, properties);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -469,6 +524,10 @@ public class MeFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    private void showPhotoPickerForGravatar() {
+        ActivityLauncher.showPhotoPickerForResult(getActivity());
     }
 
     private void startCropActivity(Uri uri) {
