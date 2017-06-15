@@ -573,7 +573,7 @@ public class EditPostSettingsFragment extends Fragment
             public void onClick(DialogInterface dialog, int id) {
                 mIsCustomPublishDate = true;
                 mPublishDateTextView.setText(R.string.immediately);
-                updatePostSettingsAndSaveButton();
+                updateSaveButton();
             }
         });
         datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(android.R.string.cancel),
@@ -606,7 +606,7 @@ public class EditPostSettingsFragment extends Fragment
                     mPublishDateTextView.setText(formattedDate);
                     mIsCustomPublishDate = true;
 
-                    updatePostSettingsAndSaveButton();
+                    updateSaveButton();
                 } catch (RuntimeException e) {
                     AppLog.e(T.POSTS, e);
                 }
@@ -662,12 +662,8 @@ public class EditPostSettingsFragment extends Fragment
         post.setStatus(getCurrentPostStatus().toString());
     }
 
-    /*
-     * Saves settings to post object and updates save button text in the ActionBar
-     */
-    private void updatePostSettingsAndSaveButton() {
+    private void updateSaveButton() {
         if (isAdded()) {
-            updatePostSettings(mPost);
             getActivity().invalidateOptionsMenu();
         }
     }
@@ -1002,7 +998,7 @@ public class EditPostSettingsFragment extends Fragment
                 ListView listView = ((AlertDialog)dialog).getListView();
                 String newStatus = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
                 mStatusTextView.setText(newStatus);
-                updatePostSettingsAndSaveButton();
+                updateSaveButton();
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
