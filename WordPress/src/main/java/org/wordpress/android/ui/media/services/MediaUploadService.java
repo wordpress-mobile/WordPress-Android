@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -297,7 +298,7 @@ public class MediaUploadService extends Service {
     private void dispatchCancelAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
         AppLog.i(T.MEDIA, "Dispatching cancel upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
-        MediaPayload payload = new MediaPayload(site, media);
+        CancelMediaPayload payload = new CancelMediaPayload(site, media);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 

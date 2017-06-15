@@ -79,6 +79,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -122,6 +123,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -680,6 +682,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE:
                 boolean shouldShowLocation = false;
@@ -2234,7 +2238,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mDroppedMediaUris = mediaUris;
-
         if (PermissionUtils.checkAndRequestStoragePermission(this, DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE)) {
             runOnUiThread(mFetchMediaRunnable);
         }
@@ -2286,7 +2289,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (!TextUtils.isEmpty(localMediaId)) {
             MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
             if (mediaModel != null) {
-                MediaPayload payload = new MediaPayload(mSite, mediaModel);
+                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, delete);
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
             }
         } else {
