@@ -115,7 +115,6 @@ public class EditPostSettingsFragment extends Fragment
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
-    private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -467,14 +466,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         post.setDateCreated(publicationDateIso8601);
-
-        if (post.supportsLocation()) {
-            if (mPostLocation == null) {
-                post.clearLocation();
-            } else {
-                post.setLocation(mPostLocation);
-            }
-        }
     }
 
     private void showPostExcerptDialog() {
@@ -1155,21 +1146,22 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void setLocation(double latitude, double longitude) {
-        mPostLocation = new PostLocation(latitude, longitude);
-        new GetAddressTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
+        mPost.setLocation(latitude, longitude);
+        dispatchUpdatePostAction();
+        new GetAddressTask().execute(mPost.getLatitude(), mPost.getLongitude());
     }
 
     private void removeLocation() {
-        mPostLocation = null;
         mPost.clearLocation();
+        dispatchUpdatePostAction();
 
         updateLocationText("");
         setLocationStatus(LocationStatus.NONE);
     }
 
     private void viewLocation() {
-        if (mPostLocation != null && mPostLocation.isValid()) {
-            String locationString = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
+        if (mPost.supportsLocation() && mPost.getLocation().isValid()) {
+            String locationString = "geo:" + mPost.getLatitude() + "," + mPost.getLongitude();
             ActivityLauncher.openUrlExternal(getActivity(), locationString);
         } else {
             showLocationNotAvailableError();
