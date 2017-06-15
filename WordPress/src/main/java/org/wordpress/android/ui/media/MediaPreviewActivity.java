@@ -75,8 +75,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_IS_VIDEO = "is_video";
 
-    private static final int SAVE_MEDIA_PERMISSION_REQUEST_CODE = 1;
-
     private String mContentUri;
     private int mMediaId;
     private long mDownloadId;
@@ -573,7 +571,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
-        if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
+        if (requestCode == WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE) {
             boolean canSaveMedia = true;
             for (int grantResult : grantResults) {
                 if (grantResult != PackageManager.PERMISSION_GRANTED) {
@@ -621,7 +619,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
-        if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
+        if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE, permissionList)) {
             return;
         }
 

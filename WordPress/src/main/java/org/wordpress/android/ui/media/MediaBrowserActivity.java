@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.media;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -101,8 +100,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return this == MULTI_SELECT_PICKER || this == SINGLE_SELECT_PICKER;
         }
     }
-
-    private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_IMAGES_ONLY = "images_only";
@@ -311,19 +308,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
         WPPermissionUtils.setPermissionListAsked(requestCode, permissions, results);
 
-        // only MEDIA_PERMISSION_REQUEST_CODE is handled
-        if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {
-            return;
-        }
-
-        for (int grantResult : results) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
-                return;
+        if (requestCode == WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE) {
+            for (int grantResult : results) {
+                if (grantResult == PackageManager.PERMISSION_DENIED) {
+                    ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
+                    return;
+                }
             }
-        }
 
-        showAddMediaPopup();
+            showAddMediaPopup();
+        }
     }
 
     @Override
@@ -361,7 +355,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 return true;
             case R.id.menu_new_media:
                 AppLockManager.getInstance().setExtendedTimeout();
-                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
+                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE)) {
                     showAddMediaPopup();
                 }
                 return true;

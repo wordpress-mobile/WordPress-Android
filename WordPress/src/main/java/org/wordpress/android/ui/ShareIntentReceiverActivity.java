@@ -46,8 +46,6 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
 
-    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
-
     private static final int ADD_TO_NEW_POST = 0;
     private static final int ADD_TO_MEDIA_LIBRARY = 1;
 
@@ -127,7 +125,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
-        if (requestCode == SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
+        if (requestCode == WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
             for (int grantResult : grantResults) {
                 if (grantResult == PackageManager.PERMISSION_DENIED) {
                     ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
@@ -261,7 +259,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void shareIt() {
         if (!isSharingText()) {
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
-            if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+            if (!PermissionUtils.checkAndRequestStoragePermission(this, WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return;
             }
         }
