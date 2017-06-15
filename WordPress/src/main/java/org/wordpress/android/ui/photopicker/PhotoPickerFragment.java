@@ -77,9 +77,6 @@ public class PhotoPickerFragment extends Fragment {
     private Parcelable mRestoreState;
     private PhotoPickerListener mListener;
 
-    // true = user has granted the necessary permissions
-    private boolean mHasPermissions;
-
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
     private boolean mDeviceOnly;
@@ -181,7 +178,7 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        if (mHasPermissions && savedInstanceState == null && mAllowMultiSelect) {
+        if (savedInstanceState == null && mAllowMultiSelect && isPermissionGranted()) {
             SmartToast.show(getActivity(), SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
         }
 
@@ -347,7 +344,7 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!mHasPermissions) return;
+        if (!isPermissionGranted()) return;
 
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
@@ -369,7 +366,7 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!mHasPermissions) return;
+        if (!isPermissionGranted()) return;
 
         if (mGridManager == null || mAdapter == null) {
             reload();
@@ -427,6 +424,18 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     /*
+     * returns true if all of the required permissions have been granted
+     */
+    private boolean isPermissionGranted() {
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
      * returns true if any of the required permissions have been denied AND the user checked "Never ask again"
      */
     private boolean isPermissionAlwaysDenied() {
@@ -447,15 +456,7 @@ public class PhotoPickerFragment extends Fragment {
     public void checkPermissions() {
         if (!isAdded()) return;
 
-        mHasPermissions = true;
-        for (String permission : PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                mHasPermissions = false;
-                break;
-            }
-        }
-
-        if (mHasPermissions) {
+        if (isPermissionGranted()) {
             showSoftAskView(false);
             if (mAdapter == null || mAdapter.isEmpty()) {
                 reload();
