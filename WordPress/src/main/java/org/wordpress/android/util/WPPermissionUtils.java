@@ -85,9 +85,13 @@ public class WPPermissionUtils {
     }
 
     private static void track(int requestCode, @NonNull String permission, int result) {
+        AppPrefs.PrefKey key = getPermissionKey(permission);
+        boolean isFirstTime = key != null && !AppPrefs.keyExists(key);
+
         Map<String, String> props = new HashMap<>();
         props.put("permission", permission);
         props.put("request_code", Integer.toString(requestCode));
+        props.put("is_first_time", Boolean.toString(isFirstTime));
 
         if (result == PackageManager.PERMISSION_GRANTED) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.APP_PERMISSION_GRANTED, props);
