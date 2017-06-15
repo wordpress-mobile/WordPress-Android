@@ -189,7 +189,7 @@ public class PostPreviewActivity extends AppCompatActivity {
 
         if (mPost == null
                 || mIsUpdatingPost
-                || PostUploadService.isPostUploading(mPost)
+                || PostUploadService.isPostUploadingOrQueued(mPost)
                 || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
                 && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
             messageView.setVisibility(View.GONE);
