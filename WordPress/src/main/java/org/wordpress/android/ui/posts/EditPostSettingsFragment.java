@@ -115,8 +115,6 @@ public class EditPostSettingsFragment extends Fragment
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
-    private long mFeaturedImageId;
-
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
 
@@ -341,9 +339,7 @@ public class EditPostSettingsFragment extends Fragment
                 launchFeaturedMediaPicker();
                 return true;
             case CLEAR_FEATURED_IMAGE_MENU_POSITION:
-                mFeaturedImageId = 0;
-                mFeaturedImageView.setVisibility(View.GONE);
-                mFeaturedImageButton.setVisibility(View.VISIBLE);
+                clearFeaturedImage();
                 return true;
             default:
                 return false;
@@ -371,49 +367,6 @@ public class EditPostSettingsFragment extends Fragment
         flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
         return flags;
-    }
-
-    public long getFeaturedImageId() {
-        return mFeaturedImageId;
-    }
-
-    public void updateFeaturedImage(long id) {
-        if (mFeaturedImageId != id) {
-            mFeaturedImageId = id;
-            if (mFeaturedImageId > 0) {
-                MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mFeaturedImageId);
-
-                if (media == null || !isAdded()) {
-                    return;
-                }
-
-                mFeaturedImageView.setVisibility(View.VISIBLE);
-                mFeaturedImageButton.setVisibility(View.GONE);
-
-                // Get max width for photon thumbnail
-                int width = DisplayUtils.getDisplayPixelWidth(getActivity());
-                int height = DisplayUtils.getDisplayPixelHeight(getActivity());
-                int size = Math.max(width, height);
-
-                String mediaUri = media.getThumbnailUrl();
-                if (SiteUtils.isPhotonCapable(mSite)) {
-                    mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
-                }
-
-                WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
-            } else {
-                mFeaturedImageView.setVisibility(View.GONE);
-                mFeaturedImageButton.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    private void launchFeaturedMediaPicker() {
-        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
-        intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
-        intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
-        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
     @Override
@@ -521,10 +474,6 @@ public class EditPostSettingsFragment extends Fragment
             } else {
                 post.setLocation(mPostLocation);
             }
-        }
-
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            post.setFeaturedImageId(mFeaturedImageId);
         }
     }
 
@@ -856,6 +805,59 @@ public class EditPostSettingsFragment extends Fragment
         // Since this is only used as a display name, if we can't find the key, we should just
         // return the capitalized key as the name which should be better than returning `null`
         return StringUtils.capitalize(postFormatKey);
+    }
+
+    // Featured Image Helpers
+
+    public void updateFeaturedImage(long featuredImageId) {
+        if (mPost.getFeaturedImageId() == featuredImageId) {
+            return;
+        }
+
+        mPost.setFeaturedImageId(featuredImageId);
+        dispatchUpdatePostAction();
+
+        if (!isAdded()) {
+            return;
+        }
+
+        if (featuredImageId == 0) {
+            mFeaturedImageView.setVisibility(View.GONE);
+            mFeaturedImageButton.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, featuredImageId);
+        if (media == null) {
+            return;
+        }
+
+        mFeaturedImageView.setVisibility(View.VISIBLE);
+        mFeaturedImageButton.setVisibility(View.GONE);
+
+        // Get max width for photon thumbnail
+        int width = DisplayUtils.getDisplayPixelWidth(getActivity());
+        int height = DisplayUtils.getDisplayPixelHeight(getActivity());
+        int size = Math.max(width, height);
+
+        String mediaUri = media.getThumbnailUrl();
+        if (SiteUtils.isPhotonCapable(mSite)) {
+            mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+        }
+
+        WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
+    }
+
+    private void clearFeaturedImage() {
+        updateFeaturedImage(0);
+    }
+
+    private void launchFeaturedMediaPicker() {
+        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
+        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
     }
 
     // FluxC events

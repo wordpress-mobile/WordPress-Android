@@ -786,7 +786,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
             if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
                 if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
-                    mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
+                    mPost.setFeaturedImageId(mPost.getFeaturedImageId());
                     mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
                 }
                 mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -1004,7 +1004,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
-                mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
+                mPost.setFeaturedImageId(mPost.getFeaturedImageId());
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
             mViewPager.setCurrentItem(PAGE_CONTENT);
