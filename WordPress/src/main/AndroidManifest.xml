@@ -4,6 +4,8 @@
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
 
+    <uses-sdk tools:overrideLibrary="org.m4m.android" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

@@ -140,6 +140,8 @@ dependencies {
         exclude group: "com.android.volley";
     }
 
+    compile ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
+
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
     releaseCompile project(path:':libs:networking:WordPressNetworking', configuration: 'release')
