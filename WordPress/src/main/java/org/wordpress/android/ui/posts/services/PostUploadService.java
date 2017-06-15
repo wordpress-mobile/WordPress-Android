@@ -68,7 +68,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PostUploadService extends Service {
-    private static final ArrayList<PostModel> mPostsList = new ArrayList<>();
+    private static final ArrayList<PostModel> mQueuedPostsList = new ArrayList<>();
     private static PostModel mCurrentUploadingPost = null;
     private static Map<String, Object> mCurrentUploadingPostAnalyticsProperties;
     private static boolean mUseLegacyMode;
@@ -90,8 +90,8 @@ public class PostUploadService extends Service {
      * Adds a post to the queue.
      */
     public static void addPostToUpload(PostModel post) {
-        synchronized (mPostsList) {
-            mPostsList.add(post);
+        synchronized (mQueuedPostsList) {
+            mQueuedPostsList.add(post);
         }
     }
 
@@ -123,9 +123,9 @@ public class PostUploadService extends Service {
         }
 
         // Then check the list of posts waiting to be uploaded
-        if (mPostsList.size() > 0) {
-            synchronized (mPostsList) {
-                for (PostModel queuedPost : mPostsList) {
+        if (mQueuedPostsList.size() > 0) {
+            synchronized (mQueuedPostsList) {
+                for (PostModel queuedPost : mQueuedPostsList) {
                     if (queuedPost.getId() == post.getId()) {
                         return true;
                     }
@@ -145,8 +145,8 @@ public class PostUploadService extends Service {
     }
 
     public static void cancelQueuedPostUpload(PostModel post) {
-        synchronized (mPostsList) {
-            Iterator<PostModel> iterator = mPostsList.iterator();
+        synchronized (mQueuedPostsList) {
+            Iterator<PostModel> iterator = mQueuedPostsList.iterator();
             while (iterator.hasNext()) {
                 PostModel postModel = iterator.next();
                 if (postModel.getId() == post.getId()) {
@@ -183,8 +183,8 @@ public class PostUploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        synchronized (mPostsList) {
-            if (mPostsList.size() == 0 || mContext == null) {
+        synchronized (mQueuedPostsList) {
+            if (mQueuedPostsList.size() == 0 || mContext == null) {
                 stopSelf();
                 return START_NOT_STICKY;
             }
@@ -197,11 +197,11 @@ public class PostUploadService extends Service {
     }
 
     private void uploadNextPost() {
-        synchronized (mPostsList) {
+        synchronized (mQueuedPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running
                 mCurrentUploadingPost = null;
                 mCurrentUploadingPostAnalyticsProperties = null;
-                if (mPostsList.size() > 0) {
+                if (mQueuedPostsList.size() > 0) {
                     if (!mUseLegacyMode) {
                         // Skip any posts with pending media uploads
                         PostModel nextPost = getNextUploadablePost();
@@ -211,7 +211,7 @@ public class PostUploadService extends Service {
                             mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
                         }
                     } else {
-                        mCurrentUploadingPost = mPostsList.remove(0);
+                        mCurrentUploadingPost = mQueuedPostsList.remove(0);
                         mCurrentTask = new UploadPostTask();
                         mCurrentTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, mCurrentUploadingPost);
                     }
@@ -223,7 +223,7 @@ public class PostUploadService extends Service {
     }
 
     private PostModel getNextUploadablePost() {
-        Iterator<PostModel> iterator = mPostsList.iterator();
+        Iterator<PostModel> iterator = mQueuedPostsList.iterator();
         while (iterator.hasNext()) {
             PostModel postModel = iterator.next();
             if (!MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
@@ -240,7 +240,7 @@ public class PostUploadService extends Service {
     }
 
     private void showNotificationsForPendingMediaPosts() {
-        for (PostModel postModel : mPostsList) {
+        for (PostModel postModel : mQueuedPostsList) {
             if (MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
                 if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
                     mPostUploadNotifier.createNotificationForPost(postModel, getString(R.string.uploading_post_media));
@@ -254,8 +254,8 @@ public class PostUploadService extends Service {
      * @return the post that was removed - if no post was removed, returns null
      */
     private PostModel removeQueuedPostByLocalId(int localPostId) {
-        synchronized (mPostsList) {
-            Iterator<PostModel> iterator = mPostsList.iterator();
+        synchronized (mQueuedPostsList) {
+            Iterator<PostModel> iterator = mQueuedPostsList.iterator();
             while (iterator.hasNext()) {
                 PostModel postModel = iterator.next();
                 if (postModel.getId() == localPostId) {
@@ -268,7 +268,7 @@ public class PostUploadService extends Service {
     }
 
     private void finishUpload() {
-        synchronized (mPostsList) {
+        synchronized (mQueuedPostsList) {
             mCurrentTask = null;
             mCurrentUploadingPost = null;
             mCurrentUploadingPostAnalyticsProperties = null;
