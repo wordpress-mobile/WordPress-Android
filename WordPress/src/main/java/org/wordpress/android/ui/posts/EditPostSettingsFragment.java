@@ -389,53 +389,6 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    public void updateStatusTextView() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        switch (PostStatus.fromPost(mPost)) {
-            case PUBLISHED:
-            case SCHEDULED:
-            case UNKNOWN:
-                mStatusTextView.setText(statuses[0]);
-                break;
-            case DRAFT:
-                mStatusTextView.setText(statuses[1]);
-                break;
-            case PENDING:
-                mStatusTextView.setText(statuses[2]);
-                break;
-            case PRIVATE:
-                mStatusTextView.setText(statuses[3]);
-                break;
-        }
-    }
-
-    private PostStatus getCurrentPostStatus() {
-        int index = getCurrentPostStatusIndex();
-        switch (index) {
-            case 0:
-                return PostStatus.PUBLISHED;
-            case 1:
-                return PostStatus.DRAFT;
-            case 2:
-                return PostStatus.PENDING;
-            case 3:
-                return PostStatus.PRIVATE;
-            default:
-                return PostStatus.UNKNOWN;
-        }
-    }
-
-    private int getCurrentPostStatusIndex() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        String currentStatus = mStatusTextView.getText().toString();
-        for (int i = 0; i < statuses.length; i++) {
-            if (currentStatus.equalsIgnoreCase(statuses[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public long getFeaturedImageId() {
         return mFeaturedImageId;
     }
@@ -658,8 +611,6 @@ public class EditPostSettingsFragment extends Fragment
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             post.setFeaturedImageId(mFeaturedImageId);
         }
-
-        post.setStatus(getCurrentPostStatus().toString());
     }
 
     private void updateSaveButton() {
@@ -987,18 +938,12 @@ public class EditPostSettingsFragment extends Fragment
     private void showStatusDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.post_settings_status);
-        int checkedItem = getCurrentPostStatusIndex();
-        // Current index should never be -1, but if if is, we don't want to crash
-        if (checkedItem == -1) {
-            checkedItem = 0;
-        }
-        builder.setSingleChoiceItems(R.array.post_settings_statuses, checkedItem, null);
+        builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
-                String newStatus = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                mStatusTextView.setText(newStatus);
-                updateSaveButton();
+                int index = listView.getCheckedItemPosition();
+                updatePostStatus(getPostStatusAtIndex(index));
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -1172,7 +1117,63 @@ public class EditPostSettingsFragment extends Fragment
         dispatchUpdatePostAction();
     }
 
+    private void updatePostStatus(PostStatus postStatus) {
+        mPost.setStatus(postStatus.toString());
+        updateStatusTextView();
+        dispatchUpdatePostAction();
+        updateSaveButton();
+    }
+
     private void dispatchUpdatePostAction() {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+    }
+
+    // Post Status Helpers
+
+    public void updateStatusTextView() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        switch (PostStatus.fromPost(mPost)) {
+            case PUBLISHED:
+            case SCHEDULED:
+            case UNKNOWN:
+                mStatusTextView.setText(statuses[0]);
+                break;
+            case DRAFT:
+                mStatusTextView.setText(statuses[1]);
+                break;
+            case PENDING:
+                mStatusTextView.setText(statuses[2]);
+                break;
+            case PRIVATE:
+                mStatusTextView.setText(statuses[3]);
+                break;
+        }
+    }
+
+    private PostStatus getPostStatusAtIndex(int index) {
+        switch (index) {
+            case 0:
+                return PostStatus.PUBLISHED;
+            case 1:
+                return PostStatus.DRAFT;
+            case 2:
+                return PostStatus.PENDING;
+            case 3:
+                return PostStatus.PRIVATE;
+            default:
+                return PostStatus.UNKNOWN;
+        }
+    }
+
+    private int getCurrentPostStatusIndex() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        String currentStatus = mPost.getStatus();
+        for (int i = 0; i < statuses.length; i++) {
+            if (currentStatus.equalsIgnoreCase(statuses[i])) {
+                return i;
+            }
+        }
+        // This is a fallback which we should never need
+        return 0;
     }
 }
