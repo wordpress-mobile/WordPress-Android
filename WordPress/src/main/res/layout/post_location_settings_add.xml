@@ -13,7 +13,7 @@
         android:id="@+id/addLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_location"
+        android:text="@string/post_settings_add_location"
         android:textSize="@dimen/text_sz_large"
         android:drawableLeft="@drawable/ic_location_on_grey_600_24dp"
         android:drawablePadding="8dp" />

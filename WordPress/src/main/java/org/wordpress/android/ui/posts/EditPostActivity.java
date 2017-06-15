@@ -479,7 +479,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case PUBLISHED:
             case UNKNOWN:
                 if (mPost.isLocalDraft()) {
-                    return getString(R.string.publish_post);
+                    return getString(R.string.post_status_publish_post);
                 } else {
                     return getString(R.string.update_verb);
                 }
@@ -699,7 +699,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     return;
                 }
                 // Location permission denied
-                ToastUtils.showToast(this, getString(R.string.add_location_permission_required));
+                ToastUtils.showToast(this, getString(R.string.post_settings_add_location_permission_required));
                 break;
             case MEDIA_PERMISSION_REQUEST_CODE:
                 boolean shouldShowContextMenu = true;

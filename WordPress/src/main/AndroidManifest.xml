@@ -196,7 +196,7 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.posts.PostSettingsTagsActivity"
-            android:label="@string/post_tags"
+            android:label="@string/post_settings_tags"
             android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -12,6 +11,8 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -91,7 +92,6 @@ public class EditPostSettingsFragment extends Fragment
     private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
-    private static final String CATEGORY_PREFIX_TAG = "category-";
     private static final int ACTIVITY_REQUEST_CODE_SELECT_TAGS = 6;
 
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
@@ -218,12 +218,11 @@ public class EditPostSettingsFragment extends Fragment
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
         mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
-        mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
-        mPubDateText.setOnClickListener(this);
+        mPubDateText = (TextView) rootView.findViewById(R.id.publish_date);
 
-        TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
-        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
-        mFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
+        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.post_featured_image);
+        mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
+        CardView featuredImageCardView = (CardView) rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
@@ -233,7 +232,6 @@ public class EditPostSettingsFragment extends Fragment
                     view.showContextMenu();
                 }
             });
-
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -241,9 +239,7 @@ public class EditPostSettingsFragment extends Fragment
                 }
             });
         } else {
-            featuredImageLabel.setVisibility(View.GONE);
-            mFeaturedImageView.setVisibility(View.GONE);
-            mFeaturedImageButton.setVisibility(View.GONE);
+            featuredImageCardView.setVisibility(View.GONE);
         }
 
         final LinearLayout excerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
@@ -299,6 +295,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showPostPasswordDialog();
+            }
+        });
+
+        final LinearLayout publishDateContainer = (LinearLayout) rootView.findViewById(R.id.publish_date_container);
+        publishDateContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostDateSelectionDialog();
             }
         });
 
@@ -370,11 +374,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void updateTagsTextView() {
         String tags = TextUtils.join(",", mPost.getTagNameList());
-        if (!TextUtils.isEmpty(tags)) {
-            mTagsTextView.setText(tags);
-        } else {
-            mTagsTextView.setText(R.string.not_set);
-        }
+        // If `tags` is empty, the hint "Not Set" will be shown instead
+        mTagsTextView.setText(tags);
     }
 
     public void updateStatusTextView() {
@@ -513,9 +514,7 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.pubDate) {
-            showPostDateSelectionDialog();
-        } else if (id == R.id.locationText) {
+        if (id == R.id.locationText) {
             viewLocation();
         } else if (id == R.id.updateLocation) {
             showLocationSearch();
@@ -767,9 +766,9 @@ public class EditPostSettingsFragment extends Fragment
         public void afterTextChanged(Editable s) {
             String buttonText;
             if (s.length() > 0) {
-                buttonText = getResources().getString(R.string.search_location);
+                buttonText = getResources().getString(R.string.post_settings_search_location);
             } else {
-                buttonText = getResources().getString(R.string.search_current_location);
+                buttonText = getResources().getString(R.string.post_settings_search_current_location);
             }
             mButtonSearchLocation.setText(buttonText);
         }
@@ -786,7 +785,7 @@ public class EditPostSettingsFragment extends Fragment
         View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
         TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
-        locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
+        locationLabel.setText(getResources().getString(R.string.post_settings_location).toUpperCase());
 
         mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
         mLocationText.setOnClickListener(this);
@@ -890,7 +889,7 @@ public class EditPostSettingsFragment extends Fragment
         if (location != null) {
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            updateLocationText(getString(R.string.location_not_found));
+            updateLocationText(getString(R.string.post_settings_location_not_found));
             setLocationStatus(LocationStatus.NOT_FOUND);
         }
     }
@@ -922,7 +921,7 @@ public class EditPostSettingsFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        Toast.makeText(getActivity(), getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getResources().getText(R.string.post_settings_location_not_found), Toast.LENGTH_SHORT).show();
     }
 
     private void updateLocationText(String locationName) {
@@ -931,7 +930,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostExcerptDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentExcerpt, getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
+                mCurrentExcerpt, getString(R.string.post_settings_excerpt), getString(R.string.post_settings_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -945,7 +944,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showSlugDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentSlug, getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
+                mCurrentSlug, getString(R.string.post_settings_slug), getString(R.string.post_settings_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -980,7 +979,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showStatusDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.post_settings_status);
         int checkedItem = getCurrentPostStatusIndex();
         // Current index should never be -1, but if if is, we don't want to crash
@@ -1011,8 +1010,8 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.post_settings_format);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        builder.setTitle(R.string.post_settings_post_format);
         builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -1029,7 +1028,7 @@ public class EditPostSettingsFragment extends Fragment
     private void showPostPasswordDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 mPost.getPassword(), getString(R.string.password),
-                getString(R.string.post_password_dialog_hint), false);
+                getString(R.string.post_settings_password_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -1128,11 +1127,8 @@ public class EditPostSettingsFragment extends Fragment
                 sb.append(it.next().getName());
             }
         }
-        if (sb.toString().isEmpty()) {
-            mCategoriesTextView.setText(R.string.not_set);
-        } else {
-            mCategoriesTextView.setText(sb);
-        }
+        // If `sb` is empty, the hint "Not Set" will be shown instead
+        mCategoriesTextView.setText(sb);
     }
 
     @SuppressWarnings("unused")
