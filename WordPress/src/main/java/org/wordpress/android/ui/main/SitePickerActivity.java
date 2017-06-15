@@ -192,7 +192,7 @@ public class SitePickerActivity extends AppCompatActivity
             case RequestCodes.ADD_ACCOUNT:
             case RequestCodes.CREATE_SITE:
                 if (resultCode == RESULT_OK) {
-                    getAdapter().loadSites();
+                    debounceLoadSites();
                     setResult(resultCode, data);
                     finish();
                 }
@@ -217,7 +217,7 @@ public class SitePickerActivity extends AppCompatActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
         if (!event.isError()) {
-            getAdapter().loadSites();
+            debounceLoadSites();
         } else {
             // shouldn't happen
             AppLog.e(AppLog.T.DB, "Encountered unexpected error while attempting to remove site: " + event.error);
@@ -231,6 +231,10 @@ public class SitePickerActivity extends AppCompatActivity
         if (mSwipeToRefreshHelper.isRefreshing()) {
             mSwipeToRefreshHelper.setRefreshing(false);
         }
+        debounceLoadSites();
+    }
+
+    private void debounceLoadSites() {
         mDebouncer.debounce(Void.class, new Runnable() {
             @Override
             public void run() {
