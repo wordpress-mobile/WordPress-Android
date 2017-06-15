@@ -27,7 +27,7 @@ public class WPPermissionUtils {
     /*
      * returns true if we know the app has asked for the passed permission
      */
-    public static boolean isPermissionAsked(@NonNull Context context, @NonNull String permission) {
+    private static boolean isPermissionAsked(@NonNull Context context, @NonNull String permission) {
         AppPrefs.PrefKey key = getPermissionKey(permission);
         if (key == null) {
             return false;
@@ -71,23 +71,21 @@ public class WPPermissionUtils {
     public static void setPermissionListAsked(int requestCode,
                                               @NonNull String permissions[],
                                               @NonNull int[] grantResults) {
-        for (int i = 0; i < grantResults.length; i++) {
-            track(requestCode, permissions[i], grantResults[i]);
-        }
-
-        // remember that the list of permissions has been asked
-        for (String permission : permissions) {
-            AppPrefs.PrefKey key = getPermissionKey(permission);
+        for (int i = 0; i < permissions.length; i++) {
+            AppPrefs.PrefKey key = getPermissionKey(permissions[i]);
             if (key != null) {
+                boolean isFirstTime = !AppPrefs.keyExists(key);
+                track(requestCode, permissions[i], grantResults[i], isFirstTime);
                 AppPrefs.setBoolean(key, true);
             }
         }
+
     }
 
-    private static void track(int requestCode, @NonNull String permission, int result) {
-        AppPrefs.PrefKey key = getPermissionKey(permission);
-        boolean isFirstTime = key != null && !AppPrefs.keyExists(key);
-
+    private static void track(int requestCode,
+                              @NonNull String permission,
+                              int result,
+                              boolean isFirstTime) {
         Map<String, String> props = new HashMap<>();
         props.put("permission", permission);
         props.put("request_code", Integer.toString(requestCode));
