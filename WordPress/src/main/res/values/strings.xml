@@ -1412,6 +1412,7 @@
     <string name="my_site_no_sites_view_drake">Illustration</string>
     <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
     <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
+    <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
