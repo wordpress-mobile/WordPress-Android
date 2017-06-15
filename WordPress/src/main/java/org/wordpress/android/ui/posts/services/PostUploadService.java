@@ -144,6 +144,18 @@ public class PostUploadService extends Service {
         return mCurrentUploadingPost != null && mCurrentUploadingPost.getId() == post.getId();
     }
 
+    public static void cancelQueuedPostUpload(PostModel post) {
+        synchronized (mPostsList) {
+            Iterator<PostModel> iterator = mPostsList.iterator();
+            while (iterator.hasNext()) {
+                PostModel postModel = iterator.next();
+                if (postModel.getId() == post.getId()) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

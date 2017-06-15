@@ -502,6 +502,11 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
+                if (PostUploadService.isPostUploadingOrQueued(post)) {
+                    // If the post is uploading media, allow the media to continue uploading, but don't upload the
+                    // post itself when they finish (since we're about to edit it again)
+                    PostUploadService.cancelQueuedPostUpload(post);
+                }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_SUBMIT:
