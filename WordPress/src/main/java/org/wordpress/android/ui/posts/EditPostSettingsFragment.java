@@ -89,6 +89,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORIES;
 
 public class EditPostSettingsFragment extends Fragment
         implements View.OnClickListener, TextView.OnEditorActionListener {
@@ -443,9 +444,9 @@ public class EditPostSettingsFragment extends Fragment
             switch (requestCode) {
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
-                    if (extras != null && extras.containsKey("selectedCategories")) {
+                    if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORIES)) {
                         @SuppressWarnings("unchecked")
-                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable("selectedCategories");
+                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable(KEY_SELECTED_CATEGORIES);
                         mCategories = categoryList;
                         populateSelectedCategories();
                     }

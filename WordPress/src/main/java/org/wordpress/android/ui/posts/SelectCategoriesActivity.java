@@ -47,6 +47,8 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
 public class SelectCategoriesActivity extends AppCompatActivity {
+    public static final String KEY_SELECTED_CATEGORIES = "KEY_SELECTED_CATEGORIES";
+
     private ListView mListView;
     private TextView mEmptyView;
     private ListScrollPositionManager mListScrollPositionManager;
@@ -257,7 +259,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         for (Long categoryRemoteId : mSelectedCategories) {
             categories.add(mTaxonomyStore.getCategoryByRemoteId(mSite, categoryRemoteId));
         }
-        bundle.putSerializable("selectedCategories", new ArrayList<>(categories));
+        bundle.putSerializable(KEY_SELECTED_CATEGORIES, new ArrayList<>(categories));
         Intent mIntent = new Intent();
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);
