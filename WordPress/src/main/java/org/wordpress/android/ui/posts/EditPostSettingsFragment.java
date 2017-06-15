@@ -366,25 +366,6 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
-    private void updateTagsTextView() {
-        String tags = TextUtils.join(",", mPost.getTagNameList());
-        // If `tags` is empty, the hint "Not Set" will be shown instead
-        mTagsTextView.setText(tags);
-    }
-
-    private void updatePublishDateTextView() {
-        String pubDate = mPost.getDateCreated();
-        if (StringUtils.isNotEmpty(pubDate)) {
-            try {
-                String formattedDate = DateUtils.formatDateTime(getActivity(),
-                        DateTimeUtils.timestampFromIso8601Millis(pubDate), getDateTimeFlags());
-                mPublishDateTextView.setText(formattedDate);
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-        }
-    }
-
     private int getDateTimeFlags() {
         int flags = 0;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
@@ -514,61 +495,6 @@ public class EditPostSettingsFragment extends Fragment
         return handled;
     }
 
-    private void showPostDateSelectionDialog() {
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, mYear, mMonth, mDay);
-        datePickerDialog.setTitle(R.string.select_date);
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getText(android.R.string.ok),
-                new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                mYear = datePickerDialog.getDatePicker().getYear();
-                mMonth = datePickerDialog.getDatePicker().getMonth();
-                mDay = datePickerDialog.getDatePicker().getDayOfMonth();
-                showPostTimeSelectionDialog();
-            }
-        });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
-                new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                mIsCustomPublishDate = true;
-                mPublishDateTextView.setText(R.string.immediately);
-                updateSaveButton();
-            }
-        });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(android.R.string.cancel),
-                new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
-        datePickerDialog.show();
-    }
-
-    private void showPostTimeSelectionDialog() {
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                mHour = selectedHour;
-                mMinute = selectedMinute;
-
-                Date javaDate = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-                long javaTimestamp = javaDate.getTime();
-
-                try {
-                    String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, getDateTimeFlags());
-                    mCustomPublishDate = DateTimeUtils.iso8601FromDate(javaDate);
-                    mPublishDateTextView.setText(formattedDate);
-                    mIsCustomPublishDate = true;
-
-                    updateSaveButton();
-                } catch (RuntimeException e) {
-                    AppLog.e(T.POSTS, e);
-                }
-            }
-        }, mHour, mMinute, DateFormat.is24HourFormat(getActivity()));
-        timePickerDialog.setTitle(R.string.select_time);
-        timePickerDialog.show();
-    }
-
     /**
      * Updates given post object with current status of settings fields
      */
@@ -613,10 +539,343 @@ public class EditPostSettingsFragment extends Fragment
         }
     }
 
+    private void showPostExcerptDialog() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mPost.getExcerpt(), getString(R.string.post_settings_excerpt),
+                getString(R.string.post_settings_excerpt_dialog_hint), false);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        updateExcerpt(input);
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
+    }
+
+    private void showSlugDialog() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mPost.getSlug(), getString(R.string.post_settings_slug),
+                getString(R.string.post_settings_slug_dialog_hint), true);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        updateSlug(input);
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
+    }
+
+    private void showCategoriesActivity() {
+        Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
+        categoriesIntent.putExtra(WordPress.SITE, mSite);
+
+        // Make sure the PostModel is up to date with current category selections
+        updatePostSettings(mPost);
+        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
+
+        startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
+    }
+
+    private void showTagsActivity() {
+        // Fetch/refresh the tags in preparation for the the PostSettingsTagsActivity
+        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
+
+        Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
+        tagsIntent.putExtra(WordPress.SITE, mSite);
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
+        startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
+    }
+
+    private void showStatusDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        builder.setTitle(R.string.post_settings_status);
+        builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ListView listView = ((AlertDialog)dialog).getListView();
+                int index = listView.getCheckedItemPosition();
+                updatePostStatus(getPostStatusAtIndex(index));
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
+    }
+
+    private void showPostFormatDialog() {
+        int checkedItem = 0;
+        if (!TextUtils.isEmpty(mPost.getPostFormat())) {
+            for (int i = 0; i < mPostFormatKeys.size(); i++) {
+                if (mPost.getPostFormat().equals(mPostFormatKeys.get(i))) {
+                    checkedItem = i;
+                    break;
+                }
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        builder.setTitle(R.string.post_settings_post_format);
+        builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
+        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                ListView listView = ((AlertDialog)dialog).getListView();
+                String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
+                mPostFormatTextView.setText(formatName);
+                mPost.setPostFormat(getPostFormatKeyFromName(formatName));
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.show();
+    }
+
+    private void showPostPasswordDialog() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mPost.getPassword(), getString(R.string.password),
+                getString(R.string.post_settings_password_dialog_hint), false);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        mPost.setPassword(input);
+                        mPasswordTextView.setText(mPost.getPassword());
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
+    }
+
+    private void showPostDateSelectionDialog() {
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, mYear, mMonth, mDay);
+        datePickerDialog.setTitle(R.string.select_date);
+        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getText(android.R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mYear = datePickerDialog.getDatePicker().getYear();
+                        mMonth = datePickerDialog.getDatePicker().getMonth();
+                        mDay = datePickerDialog.getDatePicker().getDayOfMonth();
+                        showPostTimeSelectionDialog();
+                    }
+                });
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mIsCustomPublishDate = true;
+                        mPublishDateTextView.setText(R.string.immediately);
+                        updateSaveButton();
+                    }
+                });
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(android.R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        datePickerDialog.show();
+    }
+
+    private void showPostTimeSelectionDialog() {
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        mHour = selectedHour;
+                        mMinute = selectedMinute;
+
+                        Date javaDate = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
+                        long javaTimestamp = javaDate.getTime();
+
+                        try {
+                            String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, getDateTimeFlags());
+                            mCustomPublishDate = DateTimeUtils.iso8601FromDate(javaDate);
+                            mPublishDateTextView.setText(formattedDate);
+                            mIsCustomPublishDate = true;
+
+                            updateSaveButton();
+                        } catch (RuntimeException e) {
+                            AppLog.e(T.POSTS, e);
+                        }
+                    }
+                }, mHour, mMinute, DateFormat.is24HourFormat(getActivity()));
+        timePickerDialog.setTitle(R.string.select_time);
+        timePickerDialog.show();
+    }
+
+    // Helpers
+
     private void updateSaveButton() {
         if (isAdded()) {
             getActivity().invalidateOptionsMenu();
         }
+    }
+
+    private void updateExcerpt(String excerpt) {
+        mPost.setExcerpt(excerpt);
+        mExcerptTextView.setText(mPost.getExcerpt());
+        dispatchUpdatePostAction();
+    }
+
+    private void updateSlug(String slug) {
+        mPost.setSlug(slug);
+        mExcerptTextView.setText(mPost.getSlug());
+        dispatchUpdatePostAction();
+    }
+
+    private void updatePostStatus(PostStatus postStatus) {
+        mPost.setStatus(postStatus.toString());
+        updateStatusTextView();
+        dispatchUpdatePostAction();
+        updateSaveButton();
+    }
+
+    public void updateStatusTextView() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        switch (PostStatus.fromPost(mPost)) {
+            case PUBLISHED:
+            case SCHEDULED:
+            case UNKNOWN:
+                mStatusTextView.setText(statuses[0]);
+                break;
+            case DRAFT:
+                mStatusTextView.setText(statuses[1]);
+                break;
+            case PENDING:
+                mStatusTextView.setText(statuses[2]);
+                break;
+            case PRIVATE:
+                mStatusTextView.setText(statuses[3]);
+                break;
+        }
+    }
+
+    private void updateLocationText(String locationName) {
+        mLocationText.setText(locationName);
+    }
+
+    private void updateTagsTextView() {
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        // If `tags` is empty, the hint "Not Set" will be shown instead
+        mTagsTextView.setText(tags);
+    }
+
+    private void updatePublishDateTextView() {
+        String pubDate = mPost.getDateCreated();
+        if (StringUtils.isNotEmpty(pubDate)) {
+            try {
+                String formattedDate = DateUtils.formatDateTime(getActivity(),
+                        DateTimeUtils.timestampFromIso8601Millis(pubDate), getDateTimeFlags());
+                mPublishDateTextView.setText(formattedDate);
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
+            }
+        }
+    }
+
+    private void populateSelectedCategories() {
+        StringBuilder sb = new StringBuilder();
+        Iterator<TermModel> it = mCategories.iterator();
+        if (it.hasNext()) {
+            sb.append(it.next().getName());
+            while (it.hasNext()) {
+                sb.append(", ");
+                sb.append(it.next().getName());
+            }
+        }
+        // If `sb` is empty, the hint "Not Set" will be shown instead
+        mCategoriesTextView.setText(sb);
+    }
+
+    private void dispatchUpdatePostAction() {
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+    }
+
+    // Post Status Helpers
+
+    private PostStatus getPostStatusAtIndex(int index) {
+        switch (index) {
+            case 0:
+                return PostStatus.PUBLISHED;
+            case 1:
+                return PostStatus.DRAFT;
+            case 2:
+                return PostStatus.PENDING;
+            case 3:
+                return PostStatus.PRIVATE;
+            default:
+                return PostStatus.UNKNOWN;
+        }
+    }
+
+    private int getCurrentPostStatusIndex() {
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        String currentStatus = mPost.getStatus();
+        for (int i = 0; i < statuses.length; i++) {
+            if (currentStatus.equalsIgnoreCase(statuses[i])) {
+                return i;
+            }
+        }
+        // This is a fallback which we should never need
+        return 0;
+    }
+
+    // Post Format Helpers
+
+    private void updatePostFormatKeysAndNames() {
+        // Default values
+        mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
+        mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
+                .getStringArray(R.array.post_format_display_names)));
+
+        // If we have specific values for this site, use them
+        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
+        for (PostFormatModel postFormatModel : postFormatModels) {
+            if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
+                mPostFormatKeys.add(postFormatModel.getSlug());
+                mPostFormatNames.add(postFormatModel.getDisplayName());
+            }
+        }
+    }
+
+    private String getPostFormatKeyFromName(String postFormatName) {
+        for (int i = 0; i < mPostFormatNames.size(); i++) {
+            if (postFormatName.equalsIgnoreCase(mPostFormatNames.get(i))) {
+                return mPostFormatKeys.get(i);
+            }
+        }
+        return POST_FORMAT_STANDARD_KEY;
+    }
+
+    private String getPostFormatNameFromKey(String postFormatKey) {
+        for (int i = 0; i < mPostFormatKeys.size(); i++) {
+            if (postFormatKey.equalsIgnoreCase(mPostFormatKeys.get(i))) {
+                return mPostFormatNames.get(i);
+            }
+        }
+        // Since this is only used as a display name, if we can't find the key, we should just
+        // return the capitalized key as the name which should be better than returning `null`
+        return StringUtils.capitalize(postFormatKey);
+    }
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
+        switch (event.causeOfChange) {
+            case FETCH_CATEGORIES:
+                mCategories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
+                populateSelectedCategories();
+                break;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
+            return;
+        }
+        updatePostFormatKeysAndNames();
     }
 
     /**
@@ -838,6 +1097,47 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     /*
+     * changes the left drawable on the location text to match the passed status
+     */
+    private void setLocationStatus(LocationStatus status) {
+        if (!isAdded()) {
+            return;
+        }
+
+        // animate location text when searching
+        if (status == LocationStatus.SEARCHING) {
+            updateLocationText(getString(R.string.loading));
+
+            Animation aniBlink = AnimationUtils.loadAnimation(getActivity(), R.anim.blink);
+            if (aniBlink != null) {
+                mLocationText.startAnimation(aniBlink);
+            }
+        } else {
+            mLocationText.clearAnimation();
+        }
+
+        final int drawableId;
+        switch (status) {
+            case FOUND:
+                drawableId = R.drawable.ic_location_found_black_translucent_40_32dp;
+                break;
+            case NOT_FOUND:
+                drawableId = R.drawable.ic_location_off_black_translucent_40_32dp;
+                break;
+            case SEARCHING:
+                drawableId = R.drawable.ic_location_searching_black_40_32dp;
+                break;
+            case NONE:
+                drawableId = 0;
+                break;
+            default:
+                return;
+        }
+
+        mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+    }
+
+    /*
      * called when location is retrieved/updated for this post - looks up the address to
      * display for the lat/long
      */
@@ -879,301 +1179,5 @@ public class EditPostSettingsFragment extends Fragment
         }
         Toast.makeText(getActivity(), getResources().getText(R.string.post_settings_location_not_found),
                 Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateLocationText(String locationName) {
-        mLocationText.setText(locationName);
-    }
-
-    private void showPostExcerptDialog() {
-        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getExcerpt(), getString(R.string.post_settings_excerpt),
-                getString(R.string.post_settings_excerpt_dialog_hint), false);
-        dialog.setPostSettingsInputDialogListener(
-                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
-                    @Override
-                    public void onInputUpdated(String input) {
-                        updateExcerpt(input);
-                    }
-                });
-        dialog.show(getFragmentManager(), null);
-    }
-
-    private void showSlugDialog() {
-        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getSlug(), getString(R.string.post_settings_slug),
-                getString(R.string.post_settings_slug_dialog_hint), true);
-        dialog.setPostSettingsInputDialogListener(
-                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
-                    @Override
-                    public void onInputUpdated(String input) {
-                        updateSlug(input);
-                    }
-                });
-        dialog.show(getFragmentManager(), null);
-    }
-
-    private void showCategoriesActivity() {
-        Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-        categoriesIntent.putExtra(WordPress.SITE, mSite);
-
-        // Make sure the PostModel is up to date with current category selections
-        updatePostSettings(mPost);
-        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
-
-        startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
-    }
-
-    private void showTagsActivity() {
-        // Fetch/refresh the tags in preparation for the the PostSettingsTagsActivity
-        mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
-
-        Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
-        tagsIntent.putExtra(WordPress.SITE, mSite);
-        String tags = TextUtils.join(",", mPost.getTagNameList());
-        tagsIntent.putExtra(PostSettingsTagsActivity.KEY_TAGS, tags);
-        startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
-    }
-
-    private void showStatusDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        builder.setTitle(R.string.post_settings_status);
-        builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog)dialog).getListView();
-                int index = listView.getCheckedItemPosition();
-                updatePostStatus(getPostStatusAtIndex(index));
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.show();
-    }
-
-    private void showPostFormatDialog() {
-        int checkedItem = 0;
-        if (!TextUtils.isEmpty(mPost.getPostFormat())) {
-            for (int i = 0; i < mPostFormatKeys.size(); i++) {
-                if (mPost.getPostFormat().equals(mPostFormatKeys.get(i))) {
-                    checkedItem = i;
-                    break;
-                }
-            }
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        builder.setTitle(R.string.post_settings_post_format);
-        builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog)dialog).getListView();
-                String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                mPostFormatTextView.setText(formatName);
-                mPost.setPostFormat(getPostFormatKeyFromName(formatName));
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.show();
-    }
-
-    private void showPostPasswordDialog() {
-        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getPassword(), getString(R.string.password),
-                getString(R.string.post_settings_password_dialog_hint), false);
-        dialog.setPostSettingsInputDialogListener(
-                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
-                    @Override
-                    public void onInputUpdated(String input) {
-                        mPost.setPassword(input);
-                        mPasswordTextView.setText(mPost.getPassword());
-                    }
-                });
-        dialog.show(getFragmentManager(), null);
-    }
-
-    private void updatePostFormatKeysAndNames() {
-        // Default values
-        mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
-        mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
-                .getStringArray(R.array.post_format_display_names)));
-
-        // If we have specific values for this site, use them
-        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mSite);
-        for (PostFormatModel postFormatModel : postFormatModels) {
-            if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
-                mPostFormatKeys.add(postFormatModel.getSlug());
-                mPostFormatNames.add(postFormatModel.getDisplayName());
-            }
-        }
-    }
-
-    private String getPostFormatKeyFromName(String postFormatName) {
-        for (int i = 0; i < mPostFormatNames.size(); i++) {
-            if (postFormatName.equalsIgnoreCase(mPostFormatNames.get(i))) {
-                return mPostFormatKeys.get(i);
-            }
-        }
-        return POST_FORMAT_STANDARD_KEY;
-    }
-
-    private String getPostFormatNameFromKey(String postFormatKey) {
-        for (int i = 0; i < mPostFormatKeys.size(); i++) {
-            if (postFormatKey.equalsIgnoreCase(mPostFormatKeys.get(i))) {
-                return mPostFormatNames.get(i);
-            }
-        }
-        // Since this is only used as a display name, if we can't find the key, we should just
-        // return the capitalized key as the name which should be better than returning `null`
-        return StringUtils.capitalize(postFormatKey);
-    }
-
-    /*
-     * changes the left drawable on the location text to match the passed status
-     */
-    private void setLocationStatus(LocationStatus status) {
-        if (!isAdded()) {
-            return;
-        }
-
-        // animate location text when searching
-        if (status == LocationStatus.SEARCHING) {
-            updateLocationText(getString(R.string.loading));
-
-            Animation aniBlink = AnimationUtils.loadAnimation(getActivity(), R.anim.blink);
-            if (aniBlink != null) {
-                mLocationText.startAnimation(aniBlink);
-            }
-        } else {
-            mLocationText.clearAnimation();
-        }
-
-        final int drawableId;
-        switch (status) {
-            case FOUND:
-                drawableId = R.drawable.ic_location_found_black_translucent_40_32dp;
-                break;
-            case NOT_FOUND:
-                drawableId = R.drawable.ic_location_off_black_translucent_40_32dp;
-                break;
-            case SEARCHING:
-                drawableId = R.drawable.ic_location_searching_black_40_32dp;
-                break;
-            case NONE:
-                drawableId = 0;
-                break;
-            default:
-                return;
-        }
-
-        mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-    }
-
-    private void populateSelectedCategories() {
-        StringBuilder sb = new StringBuilder();
-        Iterator<TermModel> it = mCategories.iterator();
-        if (it.hasNext()) {
-            sb.append(it.next().getName());
-            while (it.hasNext()) {
-                sb.append(", ");
-                sb.append(it.next().getName());
-            }
-        }
-        // If `sb` is empty, the hint "Not Set" will be shown instead
-        mCategoriesTextView.setText(sb);
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onTaxonomyChanged(OnTaxonomyChanged event) {
-        switch (event.causeOfChange) {
-            case FETCH_CATEGORIES:
-                mCategories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
-                populateSelectedCategories();
-                break;
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe
-    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
-        if (event.isError()) {
-            AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
-            return;
-        }
-        updatePostFormatKeysAndNames();
-    }
-
-    // Helpers
-
-    private void updateExcerpt(String excerpt) {
-        mPost.setExcerpt(excerpt);
-        mExcerptTextView.setText(mPost.getExcerpt());
-        dispatchUpdatePostAction();
-    }
-
-    private void updateSlug(String slug) {
-        mPost.setSlug(slug);
-        mExcerptTextView.setText(mPost.getSlug());
-        dispatchUpdatePostAction();
-    }
-
-    private void updatePostStatus(PostStatus postStatus) {
-        mPost.setStatus(postStatus.toString());
-        updateStatusTextView();
-        dispatchUpdatePostAction();
-        updateSaveButton();
-    }
-
-    private void dispatchUpdatePostAction() {
-        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
-    }
-
-    // Post Status Helpers
-
-    public void updateStatusTextView() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        switch (PostStatus.fromPost(mPost)) {
-            case PUBLISHED:
-            case SCHEDULED:
-            case UNKNOWN:
-                mStatusTextView.setText(statuses[0]);
-                break;
-            case DRAFT:
-                mStatusTextView.setText(statuses[1]);
-                break;
-            case PENDING:
-                mStatusTextView.setText(statuses[2]);
-                break;
-            case PRIVATE:
-                mStatusTextView.setText(statuses[3]);
-                break;
-        }
-    }
-
-    private PostStatus getPostStatusAtIndex(int index) {
-        switch (index) {
-            case 0:
-                return PostStatus.PUBLISHED;
-            case 1:
-                return PostStatus.DRAFT;
-            case 2:
-                return PostStatus.PENDING;
-            case 3:
-                return PostStatus.PRIVATE;
-            default:
-                return PostStatus.UNKNOWN;
-        }
-    }
-
-    private int getCurrentPostStatusIndex() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        String currentStatus = mPost.getStatus();
-        for (int i = 0; i < statuses.length; i++) {
-            if (currentStatus.equalsIgnoreCase(statuses[i])) {
-                return i;
-            }
-        }
-        // This is a fallback which we should never need
-        return 0;
     }
 }
