@@ -376,18 +376,22 @@ public class EditPostSettingsFragment extends Fragment
         String pubDate = mPost.getDateCreated();
         if (StringUtils.isNotEmpty(pubDate)) {
             try {
-                int flags = 0;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
                 String formattedDate = DateUtils.formatDateTime(getActivity(),
-                        DateTimeUtils.timestampFromIso8601Millis(pubDate), flags);
+                        DateTimeUtils.timestampFromIso8601Millis(pubDate), getDateTimeFlags());
                 mPublishDateTextView.setText(formattedDate);
             } catch (RuntimeException e) {
                 AppLog.e(T.POSTS, e);
             }
         }
+    }
+
+    private int getDateTimeFlags() {
+        int flags = 0;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+        return flags;
     }
 
     public long getFeaturedImageId() {
@@ -550,12 +554,7 @@ public class EditPostSettingsFragment extends Fragment
                 long javaTimestamp = javaDate.getTime();
 
                 try {
-                    int flags = 0;
-                    flags |= DateUtils.FORMAT_SHOW_DATE;
-                    flags |= DateUtils.FORMAT_ABBREV_MONTH;
-                    flags |= DateUtils.FORMAT_SHOW_YEAR;
-                    flags |= DateUtils.FORMAT_SHOW_TIME;
-                    String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, flags);
+                    String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, getDateTimeFlags());
                     mCustomPublishDate = DateTimeUtils.iso8601FromDate(javaDate);
                     mPublishDateTextView.setText(formattedDate);
                     mIsCustomPublishDate = true;
