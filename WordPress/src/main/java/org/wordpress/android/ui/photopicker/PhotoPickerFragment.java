@@ -496,7 +496,7 @@ public class PhotoPickerFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
+        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
             checkPermissions();

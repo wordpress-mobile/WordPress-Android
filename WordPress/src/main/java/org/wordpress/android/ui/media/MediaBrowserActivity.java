@@ -309,7 +309,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
+        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, results);
 
         // only MEDIA_PERMISSION_REQUEST_CODE is handled
         if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {

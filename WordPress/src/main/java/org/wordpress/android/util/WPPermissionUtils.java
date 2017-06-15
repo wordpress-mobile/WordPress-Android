@@ -54,7 +54,9 @@ public class WPPermissionUtils {
     /*
      * remember that the list of permissions has been asked
      */
-    public static void setPermissionListAsked(@NonNull String[] permissions) {
+    public static void setPermissionListAsked(int requestCode,
+                                              @NonNull String permissions[],
+                                              @NonNull int[] grantResults) {
         for (String permission : permissions) {
             AppPrefs.PrefKey key = getPermissionKey(permission);
             if (key != null) {

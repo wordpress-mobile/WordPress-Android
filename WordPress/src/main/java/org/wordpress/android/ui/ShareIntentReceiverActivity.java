@@ -126,7 +126,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
+        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
         if (requestCode == SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
             for (int grantResult : grantResults) {
                 if (grantResult == PackageManager.PERMISSION_DENIED) {

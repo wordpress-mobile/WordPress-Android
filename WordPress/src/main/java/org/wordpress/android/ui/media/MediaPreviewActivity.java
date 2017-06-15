@@ -572,7 +572,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
+        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
         if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
             boolean canSaveMedia = true;
             for (int grantResult : grantResults) {
