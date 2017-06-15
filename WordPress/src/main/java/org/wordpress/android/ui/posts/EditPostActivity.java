@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,7 +7,6 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -669,74 +667,28 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                this, requestCode, permissions, grantResults, true);
 
-        switch (requestCode) {
-            case WPPermissionUtils.EDITOR_LOCATION_PERMISSION_REQUEST_CODE:
-                boolean shouldShowLocation = false;
-                // Check if at least one of the location permission (coarse or fine) is granted
-                for (int grantResult : grantResults) {
-                    if (grantResult == PackageManager.PERMISSION_GRANTED) {
-                        shouldShowLocation = true;
-                    }
-                }
-                if (shouldShowLocation) {
+        if (allGranted) {
+            switch (requestCode) {
+                case WPPermissionUtils.EDITOR_LOCATION_PERMISSION_REQUEST_CODE:
                     // Permission request was granted, show Location buttons in Settings
                     mEditPostSettingsFragment.showLocationSearch();
 
                     // After permission request was granted add GeoTag to the new post (if GeoTagging is enabled)
                     mEditPostSettingsFragment.searchLocation();
-
-                    return;
-                }
-                // Location permission denied
-                ToastUtils.showToast(this, getString(R.string.add_location_permission_required));
-                break;
-            case WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE:
-                boolean shouldShowContextMenu = true;
-                for (int i = 0; i < grantResults.length; ++i) {
-                    switch (permissions[i]) {
-                        case Manifest.permission.CAMERA:
-                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                shouldShowContextMenu = false;
-                            }
-                            break;
-                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                shouldShowContextMenu = false;
-                            } else {
-                                refreshBlogMedia();
-                            }
-                            break;
-                    }
-                }
-                if (shouldShowContextMenu) {
+                    break;
+                case WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE:
                     if (mMenuView != null) {
                         super.openContextMenu(mMenuView);
                         mMenuView = null;
                     }
-                } else {
-                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
-                }
-                break;
-            case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                boolean mediaAccessGranted = false;
-                for (int i = 0; i < grantResults.length; ++i) {
-                    switch (permissions[i]) {
-                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                                mediaAccessGranted = true;
-                            }
-                            break;
-                    }
-                }
-                if (mediaAccessGranted) {
+                    break;
+                case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
                     runOnUiThread(mFetchMediaRunnable);
-                } else {
-                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
-                }
-            default:
-                break;
+                    break;
+            }
         }
     }
 

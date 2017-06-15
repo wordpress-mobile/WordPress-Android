@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -570,19 +569,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
-        if (requestCode == WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE) {
-            boolean canSaveMedia = true;
-            for (int grantResult : grantResults) {
-                if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                    canSaveMedia = false;
-                }
-            }
-            if (canSaveMedia) {
-                saveMedia();
-            } else {
-                ToastUtils.showToast(this, R.string.error_media_insufficient_fs_permissions);
-            }
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                this, requestCode, permissions, grantResults, true);
+        if (allGranted && requestCode == WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE) {
+            saveMedia();
         }
     }
 

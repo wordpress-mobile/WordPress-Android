@@ -2,12 +2,10 @@ package org.wordpress.android.ui.photopicker;
 
 import android.Manifest;
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentCompat;
@@ -478,23 +476,12 @@ public class PhotoPickerFragment extends Fragment {
         FragmentCompat.requestPermissions(this, array, WPPermissionUtils.PHOTO_PICKER_PERMISSION_REQUEST_CODE);
     }
 
-    /*
-     * open the device's settings page for this app so the user can edit permissions
-     */
-    private void showAppSettings() {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-        intent.setData(uri);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
+        WPPermissionUtils.setPermissionListAsked(
+                getActivity(), requestCode, permissions, grantResults, false);
 
         if (requestCode == WPPermissionUtils.PHOTO_PICKER_PERMISSION_REQUEST_CODE) {
             checkPermissions();
@@ -523,13 +510,13 @@ public class PhotoPickerFragment extends Fragment {
             // app so the user can change permissions there
             TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
             int allowId = isAlwaysDenied ?
-                    R.string.photo_picker_soft_ask_edit_permissions : R.string.photo_picker_soft_ask_allow;
+                    R.string.button_edit_permissions : R.string.photo_picker_soft_ask_allow;
             txtAllow.setText(allowId);
             txtAllow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (isPermissionAlwaysDenied()) {
-                        showAppSettings();
+                        WPPermissionUtils.showAppSettings(getActivity());
                     } else {
                         requestPermissions();
                     }

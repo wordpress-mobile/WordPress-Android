@@ -2,11 +2,18 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
@@ -23,6 +30,51 @@ public class WPPermissionUtils {
     public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE  = 50;
     public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE     = 60;
     public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
+
+    /**
+     * called by the onRequestPermissionsResult() of various activities and fragments
+     *
+     * @param activity      host activity
+     * @param requestCode   request code passed to ContextCompat.checkSelfPermission
+     * @param permissions   list of permissions
+     * @param grantResults  list of results for above permissions
+     * @param checkForAlwaysDenied check if any permissions have been always denied, show dialog if so
+     * @return true if all permissions granted
+     */
+    public static boolean setPermissionListAsked(@NonNull Activity activity,
+                                                 int requestCode,
+                                                 @NonNull String permissions[],
+                                                 @NonNull int[] grantResults,
+                                                 boolean checkForAlwaysDenied) {
+        // track the passed list of permissions and remembers that they've been asked
+        boolean allGranted = true;
+        for (int i = 0; i < permissions.length; i++) {
+            AppPrefs.PrefKey key = getPermissionKey(permissions[i]);
+            if (key != null) {
+                boolean isFirstTime = !AppPrefs.keyExists(key);
+                track(requestCode, permissions[i], grantResults[i], isFirstTime);
+                AppPrefs.setBoolean(key, true);
+            }
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                allGranted = false;
+            }
+        }
+
+        // show a dialog if any of these permissions have been always denied
+        if (!allGranted && checkForAlwaysDenied) {
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    allGranted = false;
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
+                        showPermissionAlwaysDeniedDialog(activity, permissions[i]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return allGranted;
+    }
 
     /*
      * returns true if we know the app has asked for the passed permission
@@ -64,24 +116,6 @@ public class WPPermissionUtils {
         return false;
     }
 
-    /*
-     * called by the onRequestPermissionsResult() of various activities/fragments - tracks the
-     * passed list of permissions and remembers that they've been asked
-     */
-    public static void setPermissionListAsked(int requestCode,
-                                              @NonNull String permissions[],
-                                              @NonNull int[] grantResults) {
-        for (int i = 0; i < permissions.length; i++) {
-            AppPrefs.PrefKey key = getPermissionKey(permissions[i]);
-            if (key != null) {
-                boolean isFirstTime = !AppPrefs.keyExists(key);
-                track(requestCode, permissions[i], grantResults[i], isFirstTime);
-                AppPrefs.setBoolean(key, true);
-            }
-        }
-
-    }
-
     private static void track(int requestCode,
                               @NonNull String permission,
                               int result,
@@ -98,6 +132,9 @@ public class WPPermissionUtils {
         }
     }
 
+    /*
+     * key in shared preferences which stores whether the passed permission has been asked for
+     */
     private static AppPrefs.PrefKey getPermissionKey(@NonNull String permission) {
         switch (permission) {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
@@ -114,5 +151,58 @@ public class WPPermissionUtils {
                 AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;
         }
+    }
+
+    /*
+     * called when the app detects that the user has permanently denied a permission, shows a dialog
+     * alerting them to this fact and enabling them to visit the app settings to edit permissions
+     */
+    private static void showPermissionAlwaysDeniedDialog(@NonNull final Context context, @NonNull String permission) {
+        String permissionName;
+        switch (permission) {
+            case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
+            case android.Manifest.permission.READ_EXTERNAL_STORAGE:
+                permissionName = context.getString(R.string.permission_storage);
+                break;
+            case android.Manifest.permission.CAMERA:
+                permissionName = context.getString(R.string.permission_camera);
+                break;
+            case android.Manifest.permission.ACCESS_COARSE_LOCATION:
+            case android.Manifest.permission.ACCESS_FINE_LOCATION:
+                permissionName = context.getString(R.string.permission_location);
+                break;
+            default:
+                AppLog.w(AppLog.T.UTILS, "No dialog for requested permission");
+                return;
+        }
+
+        String title = context.getString(R.string.permissions_denied_title);
+        String message = String.format(
+                context.getString(R.string.permissions_denied_message),
+                "<strong>" + permissionName + "</strong>");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(Html.fromHtml(message))
+                .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showAppSettings(context);
+                    }
+                })
+                .setNegativeButton(R.string.button_not_now, null);
+        builder.show();
+    }
+
+    /*
+     * open the device's settings page for this app so the user can edit permissions
+     */
+    public static void showAppSettings(@NonNull Context context) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", context.getPackageName(), null);
+        intent.setData(uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

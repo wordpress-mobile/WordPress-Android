@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -306,16 +305,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
-        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, results);
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                this, requestCode, permissions, results, true);
 
-        if (requestCode == WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE) {
-            for (int grantResult : results) {
-                if (grantResult == PackageManager.PERMISSION_DENIED) {
-                    ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
-                    return;
-                }
-            }
-
+        if (allGranted && requestCode == WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE) {
             showAddMediaPopup();
         }
     }
