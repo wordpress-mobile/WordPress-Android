@@ -525,6 +525,9 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
+                // TODO: Async: Update this behavior to handle pressing Delete/Trash while the post has uploading media
+                // Currently, the button is tappable while media are uploading, but nothing happens
+
                 // prevent deleting post while it's being uploaded
                 if (!PostUploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
