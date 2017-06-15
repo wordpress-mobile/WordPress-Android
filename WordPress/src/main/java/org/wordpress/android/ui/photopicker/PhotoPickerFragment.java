@@ -10,7 +10,6 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v13.app.ActivityCompat;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -81,9 +80,6 @@ public class PhotoPickerFragment extends Fragment {
     // true = user has granted the necessary permissions
     private boolean mHasPermissions;
 
-    // true = user has denied the necessary permissions AND checked "don't ask again"
-    private boolean mPermissionsDeniedAlways;
-
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
     private boolean mDeviceOnly;
@@ -91,7 +87,6 @@ public class PhotoPickerFragment extends Fragment {
     private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
     private static final String ARG_PHOTOS_ONLY = "photos_only";
     private static final String ARG_DEVICE_ONLY = "device_only";
-    private static final String ARG_PERMISSIONS_DENIED = "permissions_denied";
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
@@ -121,7 +116,6 @@ public class PhotoPickerFragment extends Fragment {
             mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
             mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY, false);
             mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY, false);
-            mPermissionsDeniedAlways = args.getBoolean(ARG_PERMISSIONS_DENIED, false);
         }
     }
 
@@ -433,6 +427,20 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     /*
+     * returns true if any of the required permissions have been denied AND the user checked "Never ask again"
+     */
+    private boolean isPermissionAlwaysDenied() {
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                if (WPPermissionUtils.isPermissionAlwaysDenied(getActivity(), permission)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /*
      * load the photos if we have the necessary permissions, otherwise show the "soft ask" view
      * which asks the user to allow the permissions
      */
@@ -443,9 +451,7 @@ public class PhotoPickerFragment extends Fragment {
         for (String permission : PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 mHasPermissions = false;
-                if (WPPermissionUtils.isPermissionAlwaysDenied(getActivity(), permission)) {
-                    mPermissionsDeniedAlways = true;
-                }
+                break;
             }
         }
 
@@ -492,19 +498,6 @@ public class PhotoPickerFragment extends Fragment {
         WPPermissionUtils.setPermissionListAsked(permissions);
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            // determine whether the user denied permissions AND checked "do not ask again"
-            mPermissionsDeniedAlways = false;
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    boolean showRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-                            getActivity(), permissions[i]);
-                    if (!showRationale) {
-                        mPermissionsDeniedAlways = true;
-                        break;
-                    }
-                }
-            }
-
             checkPermissions();
         }
     }
@@ -516,8 +509,10 @@ public class PhotoPickerFragment extends Fragment {
     private void showSoftAskView(boolean show) {
         if (!isAdded()) return;
 
+        boolean isAlwaysDenied = isPermissionAlwaysDenied();
+
         if (show) {
-            int labelId = mPermissionsDeniedAlways ?
+            int labelId = isAlwaysDenied ?
                     R.string.photo_picker_soft_ask_permissions_denied : R.string.photo_picker_soft_ask_label;
             String appName = "<strong>" + getString(R.string.app_name) + "</strong>";
             String label = String.format(getString(labelId), appName);
@@ -528,13 +523,13 @@ public class PhotoPickerFragment extends Fragment {
             // denied them permanently, in which case take them to the device settings for this
             // app so the user can change permissions there
             TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
-            int allowId = mPermissionsDeniedAlways ?
+            int allowId = isAlwaysDenied ?
                     R.string.photo_picker_soft_ask_edit_permissions : R.string.photo_picker_soft_ask_allow;
             txtAllow.setText(allowId);
             txtAllow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mPermissionsDeniedAlways) {
+                    if (isPermissionAlwaysDenied()) {
                         showAppSettings();
                     } else {
                         requestPermissions();
