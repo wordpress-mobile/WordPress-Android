@@ -60,6 +60,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -571,6 +572,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
         if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
             boolean canSaveMedia = true;
             for (int grantResult : grantResults) {

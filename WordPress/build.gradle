@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -136,7 +136,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:60bc5ecbc915998d58fa480f3bd8af457bad824f') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:62b76313888008eddf7f7221394f168195b8a6b6') {
         exclude group: "com.android.volley";
     }
 

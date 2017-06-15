@@ -1414,6 +1414,7 @@
     <string name="my_site_no_sites_view_drake">Illustration</string>
     <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
     <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
+    <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -1442,8 +1443,10 @@
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
 
     <!--TabBar Accessibility Labels-->
-    <string name="tabbar_accessibility_label_my_site">My Site</string>
-    <string name="tabbar_accessibility_label_me">Me</string>
+    <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
+    <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
+    <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
+    <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="site_privacy_private_desc">I would like my site to be private, visible only to users I choose</string>
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
