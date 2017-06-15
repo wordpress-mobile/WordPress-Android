@@ -638,6 +638,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void updateExcerpt(String excerpt) {
+        if (mPost.getExcerpt().equals(excerpt)) {
+            return;
+        }
         mPost.setExcerpt(excerpt);
         mExcerptTextView.setText(mPost.getExcerpt());
         dispatchUpdatePostAction();
@@ -728,6 +731,8 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void dispatchUpdatePostAction() {
+        mPost.setIsLocallyChanged(true);
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
     }
 
