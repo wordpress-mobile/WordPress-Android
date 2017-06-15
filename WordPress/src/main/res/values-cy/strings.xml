@@ -31,9 +31,6 @@ Language: cy_GB
 	<string name="confirm">Cadarnhau</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Methu cysylltu. Cawsom wall 403 wrth geisio cael mynediad at\n    eich pwynt terfyn XMLRPC safle. Mae ap angen hynny er mwyn cyfathrebu â\'ch safle. Cysylltwch â eich gwesteiwr\n         i ddatrys y broblem.</string>
 	<string name="xmlrpc_post_blocked_error">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
-	<string name="reader_liked_default_tag">Cofnodion | Hoffi</string>
-	<string name="reader_followed_default_tag">Gwefannau Rwy\'n Eu Dilyn</string>
-	<string name="reader_discover_default_tag">Darganfod</string>
 	<string name="reader_empty_followed_blogs_search_title">Dim gwefannau cyfatebol</string>
 	<string name="reader_hint_search_followed_sites">Chwilio drwy\'r gwefannau rwy\'n eu dilyn</string>
 	<string name="visual_editor_disabled">Golygydd Gweledol wedi ei analluogi</string>
@@ -758,7 +755,6 @@ Language: cy_GB
 	<string name="sending_content">Llwytho cynnwys %s</string>
 	<string name="older_two_days">Mwy na 2 ddiwrnod</string>
 	<string name="older_month">Mwy na mis</string>
-	<string name="select_a_blog">Dewis gwefan WordPress</string>
 	<string name="stats_no_blog">Nid oedd modd llwytho ystadegau\'r blog dan sylw</string>
 	<string name="older_last_week">Mwy nag wythnos</string>
 	<string name="more">Rhagor</string>
@@ -1072,7 +1068,6 @@ Language: cy_GB
 	<string name="stats_view_visitors_and_views">Ymwelwyr a Golygon</string>
 	<string name="stats">Ystadegau</string>
 	<string name="share_action">Rhannu</string>
-	<string name="share_action_title">Ychwanegu at …</string>
 	<string name="post_excerpt">Dyfyniad</string>
 	<string name="theme_auth_error_title">Methwyd estyn themâu</string>
 	<string name="theme_set_success">Gosodwyd y thema\'n llwyddiannus!</string>
@@ -1095,8 +1090,6 @@ Language: cy_GB
 	<string name="media_gallery_type">Math</string>
 	<string name="media_gallery_image_order_reverse">Gwrthdroi</string>
 	<string name="media_gallery_image_order_random">Hap</string>
-	<string name="media_add_popup_capture_video">Cipio fideo</string>
-	<string name="media_add_popup_capture_photo">Cipio ffoto</string>
 	<string name="unattached">Heb ei atodi</string>
 	<string name="images">Delweddau</string>
 	<string name="all">Y Cyfan</string>
@@ -1168,13 +1161,11 @@ Language: cy_GB
 	<string name="status">Statws</string>
 	<string name="location">Lleoliad</string>
 	<string name="sdcard_title">Mae angen cerdyn SD</string>
-	<string name="select_video">Dewiswch fideo o\'r oriel</string>
 	<string name="media">Cyfrwng</string>
 	<string name="delete">Dileu</string>
 	<string name="approve">Cymeradwyo</string>
 	<string name="none">Dim</string>
 	<string name="blogs">Blogiau</string>
-	<string name="select_photo">Dewiswch lun o\'r oriel</string>
 	<string name="no">Na</string>
 	<string name="yes">Iawn</string>
 	<string name="reply">Ateb</string>

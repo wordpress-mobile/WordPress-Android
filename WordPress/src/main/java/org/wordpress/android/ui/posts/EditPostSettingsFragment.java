@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
@@ -12,9 +11,9 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -83,6 +82,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -93,7 +93,6 @@ public class EditPostSettingsFragment extends Fragment
     private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
-    private static final String CATEGORY_PREFIX_TAG = "category-";
     private static final int ACTIVITY_REQUEST_CODE_SELECT_TAGS = 6;
 
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
@@ -102,20 +101,20 @@ public class EditPostSettingsFragment extends Fragment
     private PostModel mPost;
     private SiteModel mSite;
 
-    private EditText mPasswordEditText;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
+    private TextView mCategoriesTextView;
     private TextView mTagsTextView;
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
+    private TextView mPasswordTextView;
     private TextView mPubDateText;
-    private ViewGroup mSectionCategories;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
     private long mFeaturedImageId;
 
-    private List<TermModel> mCategories;
+    private List<TermModel> mCategories = new ArrayList<>();
 
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
@@ -213,17 +212,16 @@ public class EditPostSettingsFragment extends Fragment
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
+        mCategoriesTextView = (TextView) rootView.findViewById(R.id.post_categories);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
-        mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
-        mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
-        mPubDateText.setOnClickListener(this);
-        mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
+        mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
+        mPubDateText = (TextView) rootView.findViewById(R.id.publish_date);
 
-        TextView featuredImageLabel = (TextView) rootView.findViewById(R.id.featuredImageLabel);
-        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.featuredImage);
-        mFeaturedImageButton = (Button) rootView.findViewById(R.id.addFeaturedImage);
+        mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.post_featured_image);
+        mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
+        CardView featuredImageCardView = (CardView) rootView.findViewById(R.id.post_featured_image_card_view);
 
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             registerForContextMenu(mFeaturedImageView);
@@ -233,7 +231,6 @@ public class EditPostSettingsFragment extends Fragment
                     view.showContextMenu();
                 }
             });
-
             mFeaturedImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -241,9 +238,7 @@ public class EditPostSettingsFragment extends Fragment
                 }
             });
         } else {
-            featuredImageLabel.setVisibility(View.GONE);
-            mFeaturedImageView.setVisibility(View.GONE);
-            mFeaturedImageButton.setVisibility(View.GONE);
+            featuredImageCardView.setVisibility(View.GONE);
         }
 
         final LinearLayout excerptContainer = (LinearLayout) rootView.findViewById(R.id.post_excerpt_container);
@@ -259,6 +254,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showSlugDialog();
+            }
+        });
+
+        final LinearLayout categoriesContainer = (LinearLayout) rootView.findViewById(R.id.post_categories_container);
+        categoriesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCategoriesActivity();
             }
         });
 
@@ -286,10 +289,26 @@ public class EditPostSettingsFragment extends Fragment
             }
         });
 
+        final LinearLayout passwordContainer = (LinearLayout) rootView.findViewById(R.id.post_password_container);
+        passwordContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostPasswordDialog();
+            }
+        });
+
+        final LinearLayout publishDateContainer = (LinearLayout) rootView.findViewById(R.id.publish_date_container);
+        publishDateContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPostDateSelectionDialog();
+            }
+        });
+
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
-            rootView.findViewById(R.id.sectionTags).setVisibility(View.GONE);
-            rootView.findViewById(R.id.sectionCategories).setVisibility(View.GONE);
+            rootView.findViewById(R.id.post_categories_container).setVisibility(View.GONE);
+            rootView.findViewById(R.id.post_tags_container).setVisibility(View.GONE);
             formatContainer.setVisibility(View.GONE);
         }
 
@@ -325,6 +344,7 @@ public class EditPostSettingsFragment extends Fragment
         mExcerptTextView.setText(mPost.getExcerpt());
         mSlugTextView.setText(mPost.getSlug());
         mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+        mPasswordTextView.setText(mPost.getPassword());
         updateTagsTextView();
 
         String pubDate = mPost.getDateCreated();
@@ -343,10 +363,6 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        if (!TextUtils.isEmpty(mPost.getPassword())) {
-            mPasswordEditText.setText(mPost.getPassword());
-        }
-
         updateStatusTextView();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImage(mPost.getFeaturedImageId());
@@ -355,11 +371,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void updateTagsTextView() {
         String tags = TextUtils.join(",", mPost.getTagNameList());
-        if (!TextUtils.isEmpty(tags)) {
-            mTagsTextView.setText(tags);
-        } else {
-            mTagsTextView.setText(R.string.not_set);
-        }
+        // If `tags` is empty, the hint "Not Set" will be shown instead
+        mTagsTextView.setText(tags);
     }
 
     public void updateStatusTextView() {
@@ -498,20 +511,7 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.pubDate) {
-            showPostDateSelectionDialog();
-        } else if (id == R.id.selectCategories) {
-            Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-            categoriesIntent.putExtra(WordPress.SITE, mSite);
-
-            // Make sure the PostModel is up to date with current category selections
-            updatePostSettings(mPost);
-            categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
-
-            startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
-        } else if (id == R.id.categoryButton) {
-            onCategoryButtonClick(v);
-        } else if (id == R.id.locationText) {
+        if (id == R.id.locationText) {
             viewLocation();
         } else if (id == R.id.updateLocation) {
             showLocationSearch();
@@ -610,7 +610,6 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
 
-        String password = EditTextUtils.getText(mPasswordEditText);
         boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
@@ -647,7 +646,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         post.setStatus(getCurrentPostStatus().toString());
-        post.setPassword(password);
     }
 
     /*
@@ -763,9 +761,9 @@ public class EditPostSettingsFragment extends Fragment
         public void afterTextChanged(Editable s) {
             String buttonText;
             if (s.length() > 0) {
-                buttonText = getResources().getString(R.string.search_location);
+                buttonText = getResources().getString(R.string.post_settings_search_location);
             } else {
-                buttonText = getResources().getString(R.string.search_current_location);
+                buttonText = getResources().getString(R.string.post_settings_search_current_location);
             }
             mButtonSearchLocation.setText(buttonText);
         }
@@ -782,7 +780,7 @@ public class EditPostSettingsFragment extends Fragment
         View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
         TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
-        locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
+        locationLabel.setText(getResources().getString(R.string.post_settings_location).toUpperCase());
 
         mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
         mLocationText.setOnClickListener(this);
@@ -886,7 +884,7 @@ public class EditPostSettingsFragment extends Fragment
         if (location != null) {
             setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            updateLocationText(getString(R.string.location_not_found));
+            updateLocationText(getString(R.string.post_settings_location_not_found));
             setLocationStatus(LocationStatus.NOT_FOUND);
         }
     }
@@ -918,7 +916,7 @@ public class EditPostSettingsFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        Toast.makeText(getActivity(), getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getResources().getText(R.string.post_settings_location_not_found), Toast.LENGTH_SHORT).show();
     }
 
     private void updateLocationText(String locationName) {
@@ -927,7 +925,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showPostExcerptDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getExcerpt(), getString(R.string.post_excerpt), getString(R.string.post_excerpt_dialog_hint), false);
+                mPost.getExcerpt(), getString(R.string.post_settings_excerpt),
+                getString(R.string.post_settings_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -940,7 +939,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private void showSlugDialog() {
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mPost.getSlug(), getString(R.string.post_slug), getString(R.string.post_slug_dialog_hint), true);
+                mPost.getSlug(), getString(R.string.post_settings_slug),
+                getString(R.string.post_settings_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
@@ -949,6 +949,17 @@ public class EditPostSettingsFragment extends Fragment
                     }
                 });
         dialog.show(getFragmentManager(), null);
+    }
+
+    private void showCategoriesActivity() {
+        Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
+        categoriesIntent.putExtra(WordPress.SITE, mSite);
+
+        // Make sure the PostModel is up to date with current category selections
+        updatePostSettings(mPost);
+        categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
+
+        startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 
     private void showTagsActivity() {
@@ -963,7 +974,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showStatusDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.post_settings_status);
         int checkedItem = getCurrentPostStatusIndex();
         // Current index should never be -1, but if if is, we don't want to crash
@@ -971,10 +982,10 @@ public class EditPostSettingsFragment extends Fragment
             checkedItem = 0;
         }
         builder.setSingleChoiceItems(R.array.post_settings_statuses, checkedItem, null);
-        builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ListView lw = ((AlertDialog)dialog).getListView();
-                String newStatus = (String) lw.getAdapter().getItem(lw.getCheckedItemPosition());
+                ListView listView = ((AlertDialog)dialog).getListView();
+                String newStatus = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
                 mStatusTextView.setText(newStatus);
                 updatePostSettingsAndSaveButton();
             }
@@ -994,8 +1005,8 @@ public class EditPostSettingsFragment extends Fragment
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.post_settings_format);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        builder.setTitle(R.string.post_settings_post_format);
         builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -1007,6 +1018,21 @@ public class EditPostSettingsFragment extends Fragment
         });
         builder.setNegativeButton(R.string.cancel, null);
         builder.show();
+    }
+
+    private void showPostPasswordDialog() {
+        PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
+                mPost.getPassword(), getString(R.string.password),
+                getString(R.string.post_settings_password_dialog_hint), false);
+        dialog.setPostSettingsInputDialogListener(
+                new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
+                    @Override
+                    public void onInputUpdated(String input) {
+                        mPost.setPassword(input);
+                        mPasswordTextView.setText(mPost.getPassword());
+                    }
+                });
+        dialog.show(getFragmentManager(), null);
     }
 
     private void updatePostFormatKeysAndNames() {
@@ -1086,76 +1112,18 @@ public class EditPostSettingsFragment extends Fragment
         mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 
-    /**
-     * Categories
-     */
-
-    private void onCategoryButtonClick(View v) {
-        if (mCategories == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_generic);
-            return;
-        }
-
-        // Get category name by removing prefix from the tag
-        boolean listChanged = false;
-        String categoryName = (String) v.getTag();
-        categoryName = categoryName.replaceFirst(CATEGORY_PREFIX_TAG, "");
-
-        // Remove clicked category from list
-        for (int i = 0; i < mCategories.size(); i++) {
-            if (mCategories.get(i).getName().equals(categoryName)) {
-                mCategories.remove(i);
-                listChanged = true;
-                break;
-            }
-        }
-
-        // Recreate category views
-        if (listChanged) {
-            populateSelectedCategories();
-        }
-    }
-
     private void populateSelectedCategories() {
-        // Remove previous category buttons if any + select category button
-        List<View> viewsToRemove = new ArrayList<>();
-        for (int i = 0; i < mSectionCategories.getChildCount(); i++) {
-            View v = mSectionCategories.getChildAt(i);
-            if (v == null)
-                return;
-            Object tag = v.getTag();
-            if (tag != null && tag.getClass() == String.class &&
-                    (((String) tag).startsWith(CATEGORY_PREFIX_TAG) || tag.equals("select-category"))) {
-                viewsToRemove.add(v);
+        StringBuilder sb = new StringBuilder();
+        Iterator<TermModel> it = mCategories.iterator();
+        if (it.hasNext()) {
+            sb.append(it.next().getName());
+            while (it.hasNext()) {
+                sb.append(", ");
+                sb.append(it.next().getName());
             }
         }
-        for (View viewToRemove : viewsToRemove) {
-            mSectionCategories.removeView(viewToRemove);
-        }
-        viewsToRemove.clear();
-
-        // New category buttons
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-
-        if (mCategories != null) {
-            for (TermModel category : mCategories) {
-                AppCompatButton buttonCategory = (AppCompatButton) layoutInflater.inflate(R.layout.category_button,
-                        null);
-                if (category != null && category.getName() != null && buttonCategory != null) {
-                    buttonCategory.setText(Html.fromHtml(category.getName()));
-                    buttonCategory.setTag(CATEGORY_PREFIX_TAG + category.getName());
-                    buttonCategory.setOnClickListener(this);
-                    mSectionCategories.addView(buttonCategory);
-                }
-            }
-        }
-
-        // Add select category button once the category list has been initialized
-        Button selectCategory = (Button) layoutInflater.inflate(R.layout.category_select_button, null);
-        if (selectCategory != null && mCategories != null) {
-            selectCategory.setOnClickListener(this);
-            mSectionCategories.addView(selectCategory);
-        }
+        // If `sb` is empty, the hint "Not Set" will be shown instead
+        mCategoriesTextView.setText(sb);
     }
 
     @SuppressWarnings("unused")

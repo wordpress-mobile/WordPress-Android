@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<org.wordpress.android.widgets.CheckedLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/category_row_height"
-    android:orientation="horizontal"
+<org.wordpress.android.widgets.CheckedLinearLayout
     android:id="@+id/categoryRow"
-    android:clickable="false">
-    <ImageView android:layout_width="@dimen/category_row_height"
-               android:layout_height="@dimen/category_row_height"
-               app:srcCompat="@drawable/ic_level_indicator_grey_800_24dp"
-               android:id="@+id/categoryRowLevelIndicator" android:scaleType="fitEnd"/>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="@dimen/category_row_height"
+    android:clickable="false"
+    android:orientation="horizontal">
+
     <CheckedTextView
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:gravity="center_vertical"
-            android:textColor="#464646"
-            android:paddingLeft="6dip"
-            android:paddingRight="6dip"
-            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-            android:id="@+id/categoryRowText"/>
+        android:id="@+id/categoryRowText"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:checkMark="@drawable/category_checkmark"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="Pony Category" />
 </org.wordpress.android.widgets.CheckedLinearLayout>

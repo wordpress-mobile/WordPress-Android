@@ -643,7 +643,6 @@ Language: vi_VN
 	<string name="older_month">Cũ hơn 1 tháng</string>
 	<string name="more">Nhiều hơn</string>
 	<string name="older_two_days">Cũ hơn 2 ngày</string>
-	<string name="select_a_blog">Chọn một site WordPress</string>
 	<string name="uploading_total">Đang tải lên %1$d của %2$d</string>
 	<string name="mnu_comment_liked">Đã thích</string>
 	<string name="comment">Bình luận</string>
@@ -938,7 +937,6 @@ Language: vi_VN
 	<string name="theme_activate_button">Kích hoạt</string>
 	<string name="theme_activating_button">Kích hoạt</string>
 	<string name="theme_set_success">Cài đặt chủ đề thành công!</string>
-	<string name="share_action_title">Thêm vào...</string>
 	<string name="share_action">Chia sẻ</string>
 	<string name="media_gallery_image_order_random">Ngẫu nhiên</string>
 	<string name="media_gallery_image_order_reverse">Đảo ngược</string>
@@ -975,8 +973,6 @@ Language: vi_VN
 	<string name="passcode_re_enter_passcode">Nhập lại mã PIN của bạn</string>
 	<string name="passcode_change_passcode">Thay đổi mã PIN</string>
 	<string name="unattached">Không được đính kèm</string>
-	<string name="media_add_popup_capture_photo">Chụp ảnh</string>
-	<string name="media_add_popup_capture_video">Quay video</string>
 	<string name="upload">Tải lên</string>
 	<string name="discard">Hủy bỏ</string>
 	<string name="sign_in">Đăng nhập</string>
@@ -1044,12 +1040,10 @@ Language: vi_VN
 	<string name="status">Trạng thái</string>
 	<string name="location">Vị trí</string>
 	<string name="sdcard_title">Yêu cầu thẻ SD</string>
-	<string name="select_video">Chọn một video từ bộ sưu tập</string>
 	<string name="media">Media</string>
 	<string name="delete">Xóa</string>
 	<string name="none">Không</string>
 	<string name="blogs">Blog</string>
-	<string name="select_photo">Chọn một ảnh từ bộ sưu tập</string>
 	<string name="error">Lỗi</string>
 	<string name="cancel">Hủy bỏ</string>
 	<string name="save">Lưu</string>

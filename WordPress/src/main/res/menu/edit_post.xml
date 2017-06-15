@@ -9,5 +9,5 @@
     <item
         android:id="@+id/menu_save_post"
         app:showAsAction="always"
-        android:title="@string/publish_post"/>
+        android:title="@string/post_status_publish_post"/>
 </menu>

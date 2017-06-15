@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
@@ -13,10 +14,10 @@
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="#00000000"
+            android:paddingTop="@dimen/margin_medium"
+            android:clipToPadding="false"
             android:divider="@drawable/list_divider"
-            android:dividerHeight="1px"
-            android:textColor="#444444" />
+            android:dividerHeight="1dp" />
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
