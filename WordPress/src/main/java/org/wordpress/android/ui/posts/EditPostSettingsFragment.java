@@ -108,7 +108,7 @@ public class EditPostSettingsFragment extends Fragment
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
-    private TextView mPubDateText;
+    private TextView mPublishDateTextView;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
 
@@ -120,8 +120,8 @@ public class EditPostSettingsFragment extends Fragment
     private LocationHelper mLocationHelper;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private String mCustomPubDate = "";
-    private boolean mIsCustomPubDate;
+    private String mCustomPublishDate = "";
+    private boolean mIsCustomPublishDate;
 
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
@@ -217,7 +217,7 @@ public class EditPostSettingsFragment extends Fragment
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
         mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
-        mPubDateText = (TextView) rootView.findViewById(R.id.publish_date);
+        mPublishDateTextView = (TextView) rootView.findViewById(R.id.publish_date);
 
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.post_featured_image);
         mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
@@ -357,7 +357,7 @@ public class EditPostSettingsFragment extends Fragment
                 flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
                 String formattedDate = DateUtils.formatDateTime(getActivity(),
                         DateTimeUtils.timestampFromIso8601Millis(pubDate), flags);
-                mPubDateText.setText(formattedDate);
+                mPublishDateTextView.setText(formattedDate);
             } catch (RuntimeException e) {
                 AppLog.e(T.POSTS, e);
             }
@@ -557,8 +557,8 @@ public class EditPostSettingsFragment extends Fragment
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
                 new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mIsCustomPubDate = true;
-                mPubDateText.setText(R.string.immediately);
+                mIsCustomPublishDate = true;
+                mPublishDateTextView.setText(R.string.immediately);
                 updatePostSettingsAndSaveButton();
             }
         });
@@ -588,9 +588,9 @@ public class EditPostSettingsFragment extends Fragment
                     flags |= DateUtils.FORMAT_SHOW_YEAR;
                     flags |= DateUtils.FORMAT_SHOW_TIME;
                     String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, flags);
-                    mCustomPubDate = DateTimeUtils.iso8601FromDate(javaDate);
-                    mPubDateText.setText(formattedDate);
-                    mIsCustomPubDate = true;
+                    mCustomPublishDate = DateTimeUtils.iso8601FromDate(javaDate);
+                    mPublishDateTextView.setText(formattedDate);
+                    mIsCustomPublishDate = true;
 
                     updatePostSettingsAndSaveButton();
                 } catch (RuntimeException e) {
@@ -610,14 +610,14 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
 
-        boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
+        boolean publishImmediately = EditTextUtils.getText(mPublishDateTextView).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
-        if (mIsCustomPubDate && publishImmediately && !post.isLocalDraft()) {
+        if (mIsCustomPublishDate && publishImmediately && !post.isLocalDraft()) {
             publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
         } else if (!publishImmediately) {
-            if (mIsCustomPubDate) {
-                publicationDateIso8601 = mCustomPubDate;
+            if (mIsCustomPublishDate) {
+                publicationDateIso8601 = mCustomPublishDate;
             } else if (StringUtils.isNotEmpty(post.getDateCreated())) {
                 publicationDateIso8601 = post.getDateCreated();
             }
@@ -916,7 +916,8 @@ public class EditPostSettingsFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        Toast.makeText(getActivity(), getResources().getText(R.string.post_settings_location_not_found), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getResources().getText(R.string.post_settings_location_not_found),
+                Toast.LENGTH_SHORT).show();
     }
 
     private void updateLocationText(String locationName) {
