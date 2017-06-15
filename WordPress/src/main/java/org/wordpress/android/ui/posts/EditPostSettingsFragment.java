@@ -862,7 +862,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private boolean checkForLocationPermission() {
         return isAdded() && PermissionUtils.checkLocationPermissions(getActivity(),
-                WPPermissionUtils.POST_LOCATION_PERMISSION_REQUEST_CODE);
+                WPPermissionUtils.EDITOR_LOCATION_PERMISSION_REQUEST_CODE);
     }
 
     public void showLocationSearch() {

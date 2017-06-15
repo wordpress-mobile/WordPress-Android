@@ -672,7 +672,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case WPPermissionUtils.POST_LOCATION_PERMISSION_REQUEST_CODE:
+            case WPPermissionUtils.EDITOR_LOCATION_PERMISSION_REQUEST_CODE:
                 boolean shouldShowLocation = false;
                 // Check if at least one of the location permission (coarse or fine) is granted
                 for (int grantResult : grantResults) {
@@ -692,7 +692,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 // Location permission denied
                 ToastUtils.showToast(this, getString(R.string.add_location_permission_required));
                 break;
-            case WPPermissionUtils.POST_MEDIA_PERMISSION_REQUEST_CODE:
+            case WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE:
                 boolean shouldShowContextMenu = true;
                 for (int i = 0; i < grantResults.length; ++i) {
                     switch (permissions[i]) {
@@ -719,7 +719,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
                 break;
-            case WPPermissionUtils.POST_DRAG_DROP_PERMISSION_REQUEST_CODE:
+            case WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE:
                 boolean mediaAccessGranted = false;
                 for (int i = 0; i < grantResults.length; ++i) {
                     switch (permissions[i]) {
@@ -2176,7 +2176,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mDroppedMediaUris = mediaUris;
-        if (PermissionUtils.checkAndRequestStoragePermission(this, WPPermissionUtils.POST_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
+        if (PermissionUtils.checkAndRequestStoragePermission(this, WPPermissionUtils.EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE)) {
             runOnUiThread(mFetchMediaRunnable);
         }
     }
@@ -2246,7 +2246,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
 
         if (videoUrl.isEmpty()) {
-            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, WPPermissionUtils.POST_MEDIA_PERMISSION_REQUEST_CODE)) {
+            if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE)) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

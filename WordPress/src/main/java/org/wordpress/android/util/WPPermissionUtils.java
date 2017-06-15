@@ -10,21 +10,19 @@ import android.support.v4.content.ContextCompat;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WPPermissionUtils {
 
     // permission request codes
-    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE     = 1;
-    public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE   = 2;
-    public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE   = 3;
-    public static final int PHOTO_PICKER_PERMISSION_REQUEST_CODE    = 4;
-    public static final int POST_LOCATION_PERMISSION_REQUEST_CODE   = 5;
-    public static final int POST_MEDIA_PERMISSION_REQUEST_CODE      = 6;
-    public static final int POST_DRAG_DROP_PERMISSION_REQUEST_CODE  = 7;
+    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE      = 1;
+    public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE    = 2;
+    public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE    = 3;
+    public static final int PHOTO_PICKER_PERMISSION_REQUEST_CODE     = 4;
+    public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE  = 5;
+    public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE     = 6;
+    public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 7;
 
     /*
      * returns true if we know the app has asked for the passed permission
@@ -87,34 +85,9 @@ public class WPPermissionUtils {
     }
 
     private static void track(int requestCode, @NonNull String permission, int result) {
-        String sender;
-        switch (requestCode) {
-            case SHARE_MEDIA_PERMISSION_REQUEST_CODE:
-                sender = "sharing_intent";
-                break;
-            case MEDIA_BROWSER_PERMISSION_REQUEST_CODE:
-                sender = "media_browser";
-                break;
-            case MEDIA_PREVIEW_PERMISSION_REQUEST_CODE:
-                sender = "media_preview";
-                break;
-            case PHOTO_PICKER_PERMISSION_REQUEST_CODE:
-                // TODO: should we track where the photo picker was called from?
-                sender = "photo_picker";
-                break;
-            case POST_LOCATION_PERMISSION_REQUEST_CODE:
-            case POST_MEDIA_PERMISSION_REQUEST_CODE:
-            case POST_DRAG_DROP_PERMISSION_REQUEST_CODE:
-                sender = "editor";
-                break;
-            default:
-                sender = "unknown";
-                break;
-        }
-
         Map<String, String> props = new HashMap<>();
         props.put("permission", permission);
-        props.put("sender", sender);
+        props.put("request_code", Integer.toString(requestCode));
 
         if (result == PackageManager.PERMISSION_GRANTED) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.APP_PERMISSION_GRANTED, props);
