@@ -1689,4 +1689,9 @@
     <!-- smart toasts -->
     <string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
     <string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
+
+
+    <!-- Video processing -->
+    <string name="video_crunching_message">Crunching your video</string>
+    <string name="video_optimization_generic_error_message">An error occurred while compressing your video</string>
 </resources>
