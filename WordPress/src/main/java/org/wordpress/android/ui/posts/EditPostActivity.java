@@ -79,6 +79,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -122,6 +123,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -150,12 +152,12 @@ import de.greenrobot.event.EventBus;
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
         PhotoPickerFragment.PhotoPickerListener {
-    public static final String EXTRA_POST = "postModel";
+    public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
-    public static final String EXTRA_HAS_UNFINISHED_MEDIA = "hasUnfinishedMedia";
+    public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
     public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
@@ -270,7 +272,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
         if (savedInstanceState == null) {
-            if (!getIntent().hasExtra(EXTRA_POST)
+            if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                     || Intent.ACTION_SEND.equals(action)
                     || Intent.ACTION_SEND_MULTIPLE.equals(action)
                     || NEW_MEDIA_POST.equals(action)
@@ -308,16 +310,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
             } else if (extras != null) {
                 // Load post passed in extras
-                mPost = (PostModel) extras.getSerializable(EXTRA_POST);
+                mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
                     mPost = MediaUploadService.updatePostWithCurrentlyCompletedUploads(mPost);
                     mIsPage = mPost.isPage();
                 }
-            } else {
-                // A postId extra must be passed to this activity
-                showErrorAndFinish(R.string.post_not_found);
-                return;
             }
         } else {
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
@@ -389,7 +387,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost();
+                                            mEditPostPreviewFragment.loadPost(mPost);
                                         }
                                     }
                                 });
@@ -685,6 +683,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE:
                 boolean shouldShowLocation = false;
@@ -802,23 +802,26 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return true;
         }
 
-        // Disable format bar buttons while a media upload is in progress
-        if (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress()) {
-            ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
-            return false;
-        }
-
         if (itemId == R.id.menu_save_post) {
             publishPost();
-        } else if (itemId == R.id.menu_preview_post) {
-            mViewPager.setCurrentItem(PAGE_PREVIEW);
-        } else if (itemId == R.id.menu_post_settings) {
-            InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
-            imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-            if (mShowNewEditor || mShowAztecEditor) {
-                mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
+        } else {
+            // TODO Drop this for Aztec when we have reattachment working
+            // Disable other action bar buttons while a media upload is in progress
+            if (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress()) {
+                ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
+                return false;
             }
-            mViewPager.setCurrentItem(PAGE_SETTINGS);
+
+            if (itemId == R.id.menu_preview_post) {
+                mViewPager.setCurrentItem(PAGE_PREVIEW);
+            } else if (itemId == R.id.menu_post_settings) {
+                InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                if (mShowNewEditor || mShowAztecEditor) {
+                    mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
+                }
+                mViewPager.setCurrentItem(PAGE_SETTINGS);
+            }
         }
         return false;
     }
@@ -858,6 +861,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             case REQUEST_TOO_LARGE:
                 errorMessage = getString(R.string.media_error_too_large_upload);
+                break;
+            case SERVER_ERROR:
+                errorMessage = getString(R.string.media_error_internal_server_error);
+                break;
+            case TIMEOUT:
+                errorMessage = getString(R.string.media_error_timeout);
                 break;
             case GENERIC_ERROR:
             default:
@@ -1032,7 +1041,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         protected Void doInBackground(Void... params) {
+            if (!mSite.getHasCapabilityPublishPosts()) {
+               if (PostStatus.fromPost(mPost) != PostStatus.DRAFT && PostStatus.fromPost(mPost) != PostStatus.PENDING) {
+                   mPost.setStatus(PostStatus.PENDING.toString());
+               }
+            }
 
+            savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
@@ -1091,10 +1106,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     private void saveResult(boolean saved, boolean savedLocally) {
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
-        i.putExtra(EXTRA_HAS_UNFINISHED_MEDIA, hasUnfinishedMedia());
+        i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
-        i.putExtra(EXTRA_POST, mPost);
+        i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         setResult(RESULT_OK, i);
     }
 
@@ -1239,7 +1254,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         }
                     }
 
-                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasUnfinishedMedia()
+                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasFailedMedia()
                             && NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         savePostOnlineAndFinishAsync(isFirstTimePublish);
                     } else {
@@ -1261,9 +1276,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
     }
 
-    private boolean hasUnfinishedMedia() {
-        return mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress() ||
-                mEditorFragment.hasFailedMediaUploads();
+    /**
+     * Can be dropped and replaced by mEditorFragment.hasFailedMediaUploads() when we drop the visual editor.
+     * mEditorFragment.isActionInProgress() was added to address a timing issue when adding media and immediately
+     * publishing or exiting the visual editor. It's not safe to upload the post in this state.
+     * See https://github.com/wordpress-mobile/WordPress-Editor-Android/issues/294
+     */
+    private boolean hasFailedMedia() {
+        return mEditorFragment.hasFailedMediaUploads() || mEditorFragment.isActionInProgress();
     }
 
     private boolean updatePostObject() {
@@ -1328,7 +1348,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 1:
                     return EditPostSettingsFragment.newInstance(mSite, mPost);
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite, mPost);
+                    return EditPostPreviewFragment.newInstance(mSite);
             }
         }
 
@@ -1441,7 +1461,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 if (mediaFile == null) {
                     continue;
                 }
-                String replacement = getUploadErrorHtml(mediaFile.getMediaId(), mediaFile.getFilePath());
+                String replacement = getUploadErrorHtml(String.valueOf(mediaFile.getId()), mediaFile.getFilePath());
                 matcher.appendReplacement(stringBuffer, replacement);
             }
             matcher.appendTail(stringBuffer);
@@ -1845,6 +1865,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     break;
                 case RequestCodes.TAKE_PHOTO:
                     try {
+                        WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
                         File f = new File(mMediaCapturePath);
                         Uri capturedImageUri = Uri.fromFile(f);
                         if (!addMedia(capturedImageUri)) {
@@ -2218,7 +2239,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mDroppedMediaUris = mediaUris;
-
         if (PermissionUtils.checkAndRequestStoragePermission(this, DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE)) {
             runOnUiThread(mFetchMediaRunnable);
         }
@@ -2266,11 +2286,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String localMediaId, boolean delete) {
+    public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
             MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
             if (mediaModel != null) {
-                MediaPayload payload = new MediaPayload(mSite, mediaModel);
+                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
             }
         } else {

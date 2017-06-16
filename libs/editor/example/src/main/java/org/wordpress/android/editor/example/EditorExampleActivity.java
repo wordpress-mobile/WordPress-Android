@@ -197,7 +197,7 @@ public class EditorExampleActivity extends AppCompatActivity implements EditorFr
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
+    public void onMediaUploadCancelClicked(String mediaId) {
 
     }
 

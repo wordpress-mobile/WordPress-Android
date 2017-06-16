@@ -1319,19 +1319,24 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         });
     }
 
-    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta, String uploadStatus) {
+    public void onMediaTapped(final String mediaId, final MediaType mediaType, final JSONObject meta,
+                              String uploadStatus) {
         if (mediaType == null || !isAdded()) {
             return;
         }
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
+                if (TextUtils.isEmpty(mediaId) || StringUtils.stringToInt(mediaId) <= 0) {
+                    return;
+                }
+
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId);
 
                         mWebView.post(new Runnable() {
                             @Override
@@ -1360,6 +1365,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 dialog.show();
                 break;
             case ATTR_STATUS_FAILED:
+                if (TextUtils.isEmpty(mediaId) || StringUtils.stringToInt(mediaId) <= 0) {
+                    return;
+                }
+
                 // Retry media upload
                 mEditorFragmentListener.onMediaRetryClicked(mediaId);
 
@@ -1453,7 +1462,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onMediaRemoved(String mediaId) {
         mUploadingMedia.remove(mediaId);
         mFailedMediaIds.remove(mediaId);
-        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId);
     }
 
     @Override

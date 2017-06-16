@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
@@ -68,6 +69,7 @@ public class PostsListFragment extends Fragment
         PostsListAdapter.OnPostButtonClickListener {
 
     public static final int POSTS_REQUEST_COUNT = 20;
+    public static final String TAG = "posts_list_fragment_tag";
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
@@ -93,10 +95,11 @@ public class PostsListFragment extends Fragment
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
 
-    public static PostsListFragment newInstance(SiteModel site) {
+    public static PostsListFragment newInstance(SiteModel site, boolean isPage) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
+        bundle.putBoolean(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -106,17 +109,10 @@ public class PostsListFragment extends Fragment
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        EventBus.getDefault().register(this);
-        mDispatcher.register(this);
-
         updateSiteOrFinishActivity(savedInstanceState);
 
-        if (isAdded()) {
-            Bundle extras = getActivity().getIntent().getExtras();
-            if (extras != null) {
-                mIsPage = extras.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
-            }
-        }
+        EventBus.getDefault().register(this);
+        mDispatcher.register(this);
     }
 
     @Override
@@ -131,11 +127,14 @@ public class PostsListFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+                mIsPage = getArguments().getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                mIsPage = getActivity().getIntent().getBooleanExtra(PostsListActivity.EXTRA_VIEW_PAGES, false);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
         }
 
         if (mSite == null) {
@@ -206,10 +205,11 @@ public class PostsListFragment extends Fragment
             return;
         }
 
-        final PostModel post = (PostModel)data.getSerializableExtra(EditPostActivity.EXTRA_POST);
-        boolean hasUnfinishedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_UNFINISHED_MEDIA, false);
-        if (hasUnfinishedMedia) {
-            showSnackbar(R.string.editor_post_saved_locally_unfinished_media, R.string.button_edit,
+        final PostModel post = mPostStore.
+                getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
+        if (hasFailedMedia) {
+            showSnackbar(R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -383,11 +383,21 @@ public class PostsListFragment extends Fragment
     }
 
     /*
-     * upload start, reload so correct status on uploading post appears
+     * Upload started, reload so correct status on uploading post appears
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (isAdded() && mSite.getId() == event.mLocalBlogId) {
+        if (isAdded() && mSite != null && mSite.getId() == event.mLocalBlogId) {
+            loadPosts(LoadMode.FORCED);
+        }
+    }
+
+    /*
+    * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
+    */
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostUploadCanceled event) {
+        if (isAdded() && mSite != null && mSite.getId() == event.localSiteId) {
             loadPosts(LoadMode.FORCED);
         }
     }
@@ -492,6 +502,11 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
+                if (PostUploadService.isPostUploadingOrQueued(post)) {
+                    // If the post is uploading media, allow the media to continue uploading, but don't upload the
+                    // post itself when they finish (since we're about to edit it again)
+                    PostUploadService.cancelQueuedPostUpload(post);
+                }
                 ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_SUBMIT:
@@ -510,8 +525,11 @@ public class PostsListFragment extends Fragment
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
+                // TODO: Async: Update this behavior to handle pressing Delete/Trash while the post has uploading media
+                // Currently, the button is tappable while media are uploading, but nothing happens
+
                 // prevent deleting post while it's being uploaded
-                if (!PostUploadService.isPostUploading(post)) {
+                if (!PostUploadService.isPostUploadingOrQueued(post)) {
                     trashPost(post);
                 }
                 break;
@@ -619,6 +637,7 @@ public class PostsListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
     }
 
     @SuppressWarnings("unused")
@@ -683,6 +702,17 @@ public class PostsListFragment extends Fragment
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);
                 mPostsListAdapter.mediaChanged(mediaModel);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.media != null && event.completed) {
+            PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
+            if (post != null && PostUploadService.isPostUploadingOrQueued(post)) {
+                loadPosts(LoadMode.FORCED);
             }
         }
     }

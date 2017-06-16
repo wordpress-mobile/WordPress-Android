@@ -7,8 +7,6 @@ Language: cs_CZ
 -->
 <resources>
 	<string name="photo_picker_title">Zvolit obrázek</string>
-	<string name="editor_post_saved_online_not_published">Příspěvek je uložený jako koncept. Je potřeba ho publikovat. </string>
-	<string name="editor_post_saved_online">Příspěvek je uložený. </string>
 	<string name="media_encoder_quality_100">Maximální</string>
 	<string name="media_encoder_quality_95">Hodně vysoká</string>
 	<string name="media_encoder_quality_90">Vysoká</string>
@@ -22,9 +20,6 @@ Language: cs_CZ
 	<string name="update_draft">Aktualizovat koncept</string>
 	<string name="image_quality">Kvalita obrázku</string>
 	<string name="error_unknown_post_type">Neznámý formát příspěvku</string>
-	<string name="reader_liked_default_tag">Příspěvek I To se mi líbí</string>
-	<string name="reader_discover_default_tag">Objevit</string>
-	<string name="reader_followed_default_tag">Sledované stránky</string>
 	<string name="reader_empty_followed_blogs_search_title">Neodpovídají žádné weby</string>
 	<string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
 	<string name="visual_editor_disabled">Vizuální editor zakázán</string>
@@ -766,7 +761,6 @@ Language: cs_CZ
 	<string name="create_new_blog_wpcom">Vytvořit web na WordPress.com</string>
 	<string name="more">Více</string>
 	<string name="new_blog_wpcom_created">WordPress.com web byl vytvořen!</string>
-	<string name="select_a_blog">Vybrat web WordPress</string>
 	<string name="reader_empty_followed_blogs_title">Zatím nesledujete žádné weby</string>
 	<string name="signing_out">Odhlašuji...</string>
 	<string name="mnu_comment_liked">To se mi líbí</string>
@@ -1056,7 +1050,6 @@ Language: cs_CZ
 	<string name="stats_totals_plays">Přehrávání</string>
 	<string name="stats_view_tags_and_categories">Štítky a rubriky</string>
 	<string name="theme_auth_error_title">Nepodařilo se načíst vzhled</string>
-	<string name="share_action_title">Přidat do ...</string>
 	<string name="theme_activating_button">Aktivace</string>
 	<string name="theme_set_success">Úspěšně nastavený vzhled!</string>
 	<string name="themes_features_label">Funkce</string>
@@ -1075,7 +1068,6 @@ Language: cs_CZ
 	<string name="media_edit_caption_hint">Zadejte titulek</string>
 	<string name="themes">Šablony</string>
 	<string name="stats_entry_authors">Autor</string>
-	<string name="media_add_popup_capture_photo">Zachytit fotografii</string>
 	<string name="media_gallery_type_squares">Čtverce</string>
 	<string name="media_gallery_type_circles">Kruhy</string>
 	<string name="stats_view_clicks">Kliknutí</string>
@@ -1085,7 +1077,6 @@ Language: cs_CZ
 	<string name="passcode_preference_title">Zámek PIN</string>
 	<string name="passcode_turn_off">Vypnout zámek PIN</string>
 	<string name="passcode_turn_on">Zapnout zámek PIN</string>
-	<string name="media_add_popup_capture_video">Natočit video</string>
 	<string name="media_gallery_type_tiled">Dlaždice</string>
 	<string name="stats_view_visitors_and_views">Návštěvnící a zobrazení</string>
 	<string name="stats_entry_country">Země</string>
@@ -1159,13 +1150,11 @@ Language: cs_CZ
 	<string name="status">Stav</string>
 	<string name="sdcard_title">Vyžadována SD karta</string>
 	<string name="location">Umístění</string>
-	<string name="select_video">Vybrat video z galerie</string>
 	<string name="media">Média</string>
 	<string name="delete">Vymazat</string>
 	<string name="approve">Schválit</string>
 	<string name="none">Žádný</string>
 	<string name="blogs">Weby</string>
-	<string name="select_photo">Vyberte fotografii z galerie</string>
 	<string name="reply">Odpovědět</string>
 	<string name="preview">Náhled</string>
 	<string name="on">na</string>
