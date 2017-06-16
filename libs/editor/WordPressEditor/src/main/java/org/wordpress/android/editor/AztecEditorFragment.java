@@ -985,7 +985,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     public void onClick(DialogInterface dialog, int id) {
 
                         if (mUploadingMediaProgressMax.containsKey(localMediaId)) {
-                            mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId, true);
+                            mEditorFragmentListener.onMediaUploadCancelClicked(localMediaId);
 
                             switch (mediaType) {
                                 case IMAGE:

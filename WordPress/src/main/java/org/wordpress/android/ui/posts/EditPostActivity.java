@@ -2285,11 +2285,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     @Override
-    public void onMediaUploadCancelClicked(String localMediaId, boolean delete) {
+    public void onMediaUploadCancelClicked(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
             MediaModel mediaModel = mMediaStore.getMediaWithLocalId(Integer.valueOf(localMediaId));
             if (mediaModel != null) {
-                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel, delete);
+                CancelMediaPayload payload = new CancelMediaPayload(mSite, mediaModel);
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
             }
         } else {
