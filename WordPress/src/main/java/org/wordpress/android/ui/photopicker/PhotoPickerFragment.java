@@ -85,8 +85,6 @@ public class PhotoPickerFragment extends Fragment {
     private static final String ARG_PHOTOS_ONLY = "photos_only";
     private static final String ARG_DEVICE_ONLY = "device_only";
 
-    private static final int PERMISSION_REQUEST_CODE = 1;
-
     // TODO: a future PR should only request WRITE_EXTERNAL_STORAGE since that's all we need
     // to show photos. we should request CAMERA permission when the camera icon is tapped.
     private static final String[] PERMISSIONS =
@@ -478,7 +476,7 @@ public class PhotoPickerFragment extends Fragment {
             }
         }
         String[] array = list.toArray(new String[list.size()]);
-        FragmentCompat.requestPermissions(this, array, PERMISSION_REQUEST_CODE);
+        FragmentCompat.requestPermissions(this, array, WPPermissionUtils.PHOTO_PICKER_PERMISSION_REQUEST_CODE);
     }
 
     /*
@@ -497,9 +495,9 @@ public class PhotoPickerFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
+        WPPermissionUtils.setPermissionListAsked(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (requestCode == WPPermissionUtils.PHOTO_PICKER_PERMISSION_REQUEST_CODE) {
             checkPermissions();
         }
     }

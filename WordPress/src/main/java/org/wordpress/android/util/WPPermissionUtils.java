@@ -7,14 +7,27 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WPPermissionUtils {
+
+    // permission request codes
+    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE      = 10;
+    public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE    = 20;
+    public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE    = 30;
+    public static final int PHOTO_PICKER_PERMISSION_REQUEST_CODE     = 40;
+    public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE  = 50;
+    public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE     = 60;
+    public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
 
     /*
      * returns true if we know the app has asked for the passed permission
      */
-    public static boolean isPermissionAsked(@NonNull Context context, @NonNull String permission) {
+    private static boolean isPermissionAsked(@NonNull Context context, @NonNull String permission) {
         AppPrefs.PrefKey key = getPermissionKey(permission);
         if (key == null) {
             return false;
@@ -52,14 +65,36 @@ public class WPPermissionUtils {
     }
 
     /*
-     * remember that the list of permissions has been asked
+     * called by the onRequestPermissionsResult() of various activities/fragments - tracks the
+     * passed list of permissions and remembers that they've been asked
      */
-    public static void setPermissionListAsked(@NonNull String[] permissions) {
-        for (String permission : permissions) {
-            AppPrefs.PrefKey key = getPermissionKey(permission);
+    public static void setPermissionListAsked(int requestCode,
+                                              @NonNull String permissions[],
+                                              @NonNull int[] grantResults) {
+        for (int i = 0; i < permissions.length; i++) {
+            AppPrefs.PrefKey key = getPermissionKey(permissions[i]);
             if (key != null) {
+                boolean isFirstTime = !AppPrefs.keyExists(key);
+                track(requestCode, permissions[i], grantResults[i], isFirstTime);
                 AppPrefs.setBoolean(key, true);
             }
+        }
+
+    }
+
+    private static void track(int requestCode,
+                              @NonNull String permission,
+                              int result,
+                              boolean isFirstTime) {
+        Map<String, String> props = new HashMap<>();
+        props.put("permission", permission);
+        props.put("request_code", Integer.toString(requestCode));
+        props.put("is_first_time", Boolean.toString(isFirstTime));
+
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_PERMISSION_GRANTED, props);
+        } else if (result == PackageManager.PERMISSION_DENIED) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_PERMISSION_DENIED, props);
         }
     }
 
