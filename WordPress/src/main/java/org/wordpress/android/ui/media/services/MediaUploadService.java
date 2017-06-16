@@ -111,18 +111,18 @@ public class MediaUploadService extends Service {
         if (event.canceled) {
             // Upload canceled
             AppLog.i(T.MEDIA, "Upload successfully canceled.");
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED, getMediaFromQueueById(event.media.getId()), null);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED, getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else if (event.completed) {
             // Upload completed
             AppLog.i(T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
-
-            // here we need to edit the corresponding post
-            updatePostWithMediaUrl(event.media);
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromQueueById(event.media.getId()), null);
-
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
+            if (!anyMediaPendingForThisPost(event.media.getLocalPostId())) {
+                // no more media left for this Post, process it
+                savePostToDb(updatePostWithCurrentlyCompletedUploads(mMediaStore, mPostStore.getPostByLocalPostId(event.media.getLocalPostId())));
+            }
             uploadNextInQueue();
         } else {
             // Upload Progress
@@ -135,7 +135,7 @@ public class MediaUploadService extends Service {
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(T.MEDIA, "Error uploading media: " + event.error.message);
         // TODO: Don't update the state here, it needs to be done in FluxC
-        MediaModel media = getMediaFromQueueById(event.media.getId());
+        MediaModel media = getMediaFromInProgressQueueById(event.media.getId());
         if (media != null) {
             media.setUploadState(UploadState.FAILED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -151,34 +151,30 @@ public class MediaUploadService extends Service {
         uploadNextInQueue();
     }
 
-    private synchronized void updatePostWithMediaUrl(MediaModel media){
-        if (media != null) {
-            PostModel post = mPostStore.getPostByLocalPostId(media.getLocalPostId());
-            if (post != null) {
-                // actually replace the media ID with the media uri
-                MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-                PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
-                if (modifiedPost != null) {
-                    post = modifiedPost;
-                }
-
-                // we changed the post, so let’s mark this down
-                if (!post.isLocalDraft()) {
-                    post.setIsLocallyChanged(true);
-                }
-                post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-
-                // finally save the post
-                savePostToDb(post);
+    private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
+                                                     MediaUploadReadyListener processor){
+        if (media != null && post != null && processor != null) {
+            // actually replace the media ID with the media uri
+            PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()), FluxCUtils.mediaFileFromMediaModel(media));
+            if (modifiedPost != null) {
+                post = modifiedPost;
             }
+
+            // we changed the post, so let’s mark this down
+            if (!post.isLocalDraft()) {
+                post.setIsLocallyChanged(true);
+            }
+            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+
         }
+        return post;
     }
 
     private synchronized void savePostToDb(PostModel post) {
         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
     }
 
-    private void uploadNextInQueue() {
+    private synchronized void uploadNextInQueue() {
 
         MediaModel next = getNextMediaToUpload();
 
@@ -200,15 +196,31 @@ public class MediaUploadService extends Service {
         dispatchUploadAction(next, site);
     }
 
-    private void completeUploadWithId(int id) {
-        MediaModel media = getMediaFromQueueById(id);
+    private synchronized void completeUploadWithId(int id) {
+        MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             mInProgressUploads.remove(media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
         }
     }
 
-    private MediaModel getMediaFromQueueById(int id) {
+    private boolean anyMediaPendingForThisPost(int localPostId) {
+        for (MediaModel media : mPendingUploads) {
+            if (media.getLocalPostId() == localPostId) {
+                return true;
+            }
+        }
+
+        for (MediaModel media : mInProgressUploads) {
+            if (media.getLocalPostId() == localPostId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private MediaModel getMediaFromInProgressQueueById(int id) {
         for (MediaModel media : mInProgressUploads) {
             if (media.getId() == id)
                 return media;
@@ -302,12 +314,27 @@ public class MediaUploadService extends Service {
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
-    private void stopServiceIfUploadsComplete(){
+    private void stopServiceIfUploadsComplete() {
         AppLog.i(T.MEDIA, "Media Upload Service > completed");
         if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
             AppLog.i(T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
             stopSelf();
         }
+    }
+
+    public static synchronized PostModel updatePostWithCurrentlyCompletedUploads(MediaStore store, PostModel post) {
+        // now get the list of completed media for this post, so we can make post content
+        // updates in one go and save only once
+        if (post != null) {
+            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+            List<MediaModel> mediaList = store.getMediaForPostWithState(post, UploadState.UPLOADED);
+            if (mediaList != null && !mediaList.isEmpty()) {
+                for (MediaModel media : mediaList) {
+                    post = updatePostWithMediaUrl(post, media, processor);
+                }
+            }
+        }
+        return post;
     }
 
     // App events
@@ -369,8 +396,7 @@ public class MediaUploadService extends Service {
             AppLog.i(T.MEDIA, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());
-            if (queuedMedia.getLocalSiteId() == mediaModel.getLocalSiteId() &&
-                    StringUtils.equals(queuedMedia.getFilePath(), mediaModel.getFilePath())) {
+            if (areTheseTheSameMedia(queuedMedia, mediaModel)) {
                 return true;
             }
         }
@@ -379,10 +405,17 @@ public class MediaUploadService extends Service {
             AppLog.i(T.MEDIA, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());
-            if (queuedMedia.getLocalSiteId() == mediaModel.getLocalSiteId() &&
-                    StringUtils.equals(queuedMedia.getFilePath(), mediaModel.getFilePath())) {
+            if (areTheseTheSameMedia(queuedMedia, mediaModel)) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private boolean areTheseTheSameMedia(MediaModel media1, MediaModel media2) {
+        if (media1.getLocalSiteId() == media2.getLocalSiteId() &&
+                StringUtils.equals(media1.getFilePath(), media2.getFilePath())) {
+            return true;
         }
         return false;
     }

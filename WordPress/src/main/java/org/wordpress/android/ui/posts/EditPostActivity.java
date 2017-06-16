@@ -313,6 +313,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
+                    mPost = MediaUploadService.updatePostWithCurrentlyCompletedUploads(mMediaStore, mPost);
                     mIsPage = mPost.isPage();
                 }
             }
