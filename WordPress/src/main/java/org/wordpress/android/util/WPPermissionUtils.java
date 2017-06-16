@@ -12,9 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -178,16 +175,14 @@ public class WPPermissionUtils {
                 return;
         }
 
-        LayoutInflater inflater = activity.getLayoutInflater();
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.permission_denied_dialog, null);
-        String message = String.format(
+        String message = "<strong>" + activity.getString(R.string.permissions_denied_title) + "</strong>"
+                + "<br /><br />"
+                + String.format(
                 activity.getString(R.string.permissions_denied_message),
                 "<strong>" + permissionName + "</strong>");
-        ((TextView) view.findViewById(R.id.text_message)).setText(Html.fromHtml(message));
 
-        int themeId = R.style.Theme_AppCompat_Light_Dialog;
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity, themeId)
-                .setView(view)
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setMessage(Html.fromHtml(message))
                 .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
