@@ -84,9 +84,16 @@ public class MediaUploadService extends Service {
 
     @Override
     public void onDestroy() {
+        // cancel in-progress uploads
         for (MediaModel oneUpload : mInProgressUploads) {
             cancelUpload(oneUpload, false);
         }
+        
+        // update posts with any completed uploads in our post->media map
+        for (Integer postId : mCompletedUploads.keySet()) {
+            savePostToDb(updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId)));
+        }
+
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         AppLog.i(T.MEDIA, "Media Upload Service > destroyed");
