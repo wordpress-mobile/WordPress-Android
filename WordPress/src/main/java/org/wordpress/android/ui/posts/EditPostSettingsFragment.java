@@ -1,42 +1,38 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.apache.commons.lang3.StringUtils;
 import org.greenrobot.eventbus.Subscribe;
@@ -58,7 +54,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
@@ -71,11 +66,9 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.ListUtils;
-import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.helpers.LocationHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,13 +79,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class EditPostSettingsFragment extends Fragment
-        implements View.OnClickListener, TextView.OnEditorActionListener {
+import static android.app.Activity.RESULT_OK;
+
+public class EditPostSettingsFragment extends Fragment {
     private static final String KEY_POST = "KEY_POST";
     private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final int ACTIVITY_REQUEST_CODE_SELECT_TAGS = 6;
+    private static final int ACTIVITY_REQUEST_CODE_PICK_LOCATION = 7;
 
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
@@ -102,6 +97,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
+    private TextView mLocationTextView;
     private TextView mCategoriesTextView;
     private TextView mTagsTextView;
     private TextView mStatusTextView;
@@ -118,7 +114,6 @@ public class EditPostSettingsFragment extends Fragment
     private List<TermModel> mCategories = new ArrayList<>();
 
     private PostLocation mPostLocation;
-    private LocationHelper mLocationHelper;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String mCustomPubDate = "";
@@ -126,8 +121,6 @@ public class EditPostSettingsFragment extends Fragment
 
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
-
-    private enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
@@ -213,6 +206,7 @@ public class EditPostSettingsFragment extends Fragment
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
+        mLocationTextView = (TextView) rootView.findViewById(R.id.post_location);
         mCategoriesTextView = (TextView) rootView.findViewById(R.id.post_categories);
         mTagsTextView = (TextView) rootView.findViewById(R.id.post_tags);
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
@@ -255,6 +249,14 @@ public class EditPostSettingsFragment extends Fragment
             @Override
             public void onClick(View view) {
                 showSlugDialog();
+            }
+        });
+
+        final LinearLayout locationContainer = (LinearLayout) rootView.findViewById(R.id.post_location_container);
+        locationContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLocationPicker();
             }
         });
 
@@ -315,7 +317,7 @@ public class EditPostSettingsFragment extends Fragment
 
         initSettingsFields();
         populateSelectedCategories();
-        initLocation(rootView);
+        initLocation();
         return rootView;
     }
 
@@ -477,6 +479,12 @@ public class EditPostSettingsFragment extends Fragment
             Bundle extras;
 
             switch (requestCode) {
+                case ACTIVITY_REQUEST_CODE_PICK_LOCATION:
+                    if (resultCode == RESULT_OK) {
+                        Place place = PlacePicker.getPlace(getActivity(), data);
+                        setLocation(place);
+                    }
+                    break;
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
                     if (extras != null && extras.containsKey("selectedCategories")) {
@@ -488,7 +496,7 @@ public class EditPostSettingsFragment extends Fragment
                     break;
                 case ACTIVITY_REQUEST_CODE_SELECT_TAGS:
                     extras = data.getExtras();
-                    if (resultCode == Activity.RESULT_OK && extras != null) {
+                    if (resultCode == RESULT_OK && extras != null) {
                         String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
                         if (selectedTags != null) {
                             String tags = selectedTags.replace("\n", " ");
@@ -498,7 +506,7 @@ public class EditPostSettingsFragment extends Fragment
                     }
                     break;
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
-                    if (resultCode == Activity.RESULT_OK) {
+                    if (resultCode == RESULT_OK) {
                         ArrayList<Long> ids = ListUtils.
                                 fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
                         if (ids == null || ids.size() == 0) {
@@ -509,40 +517,6 @@ public class EditPostSettingsFragment extends Fragment
                     }
             }
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.locationText) {
-            viewLocation();
-        } else if (id == R.id.updateLocation) {
-            showLocationSearch();
-        } else if (id == R.id.removeLocation) {
-            removeLocation();
-            showLocationAdd();
-        } else if (id == R.id.addLocation) {
-            // Init Location settings when we switch to the fragment, that could trigger the opening of
-            // a dialog asking the user to enable the Geolocation permission (starting Android 6.+).
-            if (checkForLocationPermission()) {
-                showLocationSearch();
-            }
-        } else if (id == R.id.searchLocation) {
-            if (checkForLocationPermission()) {
-                searchLocation();
-            }
-        }
-    }
-
-    @Override
-    public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-        boolean handled = false;
-        int id = view.getId();
-        if (id == R.id.searchLocationText && actionId == EditorInfo.IME_ACTION_SEARCH && checkForLocationPermission()) {
-            searchLocation();
-            handled = true;
-        }
-        return handled;
     }
 
     private void showPostDateSelectionDialog() {
@@ -664,268 +638,37 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     /**
-     * Location methods
-     */
-
-    /*
      * retrieves and displays the friendly address for a lat/long location
      */
-    private class GetAddressTask extends AsyncTask<Double, Void, Address> {
-        double latitude;
-        double longitude;
-
+    private class FetchAndSetAddressAsyncTask extends AsyncTask<Double, Void, Address> {
         @Override
         protected void onPreExecute() {
-            setLocationStatus(LocationStatus.SEARCHING);
-            showLocationView();
         }
 
         @Override
         protected Address doInBackground(Double... args) {
             // args will be the latitude, longitude to look up
-            latitude = args[0];
-            longitude = args[1];
-
+            double latitude = args[0];
+            double longitude = args[1];
             return GeocoderUtils.getAddressFromCoords(getActivity(), latitude, longitude);
         }
 
         protected void onPostExecute(Address address) {
-            setLocationStatus(LocationStatus.FOUND);
-            if (address == null) {
-                // show lat/long when Geocoder fails (ugly, but better than not showing anything
-                // or showing an error since the location has been assigned to the post already)
-                updateLocationText(Double.toString(latitude) + ", " + Double.toString(longitude));
-            } else {
-                String locationName = GeocoderUtils.getLocationNameFromAddress(address);
-                updateLocationText(locationName);
-            }
-        }
-    }
-
-    private class GetCoordsTask extends AsyncTask<String, Void, Address> {
-        @Override
-        protected void onPreExecute() {
-            setLocationStatus(LocationStatus.SEARCHING);
-            showLocationView();
-        }
-
-        @Override
-        protected Address doInBackground(String... args) {
-            String locationName = args[0];
-
-            return GeocoderUtils.getAddressFromLocationName(getActivity(), locationName);
-        }
-
-        @Override
-        protected void onPostExecute(Address address) {
-            setLocationStatus(LocationStatus.FOUND);
-            showLocationView();
-
-            if (address != null) {
-                double[] coordinates = GeocoderUtils.getCoordsFromAddress(address);
-                setLocation(coordinates[0], coordinates[1]);
-
-                String locationName = GeocoderUtils.getLocationNameFromAddress(address);
-                updateLocationText(locationName);
-            } else {
-                showLocationNotAvailableError();
-                showLocationSearch();
-            }
-        }
-    }
-
-    private LocationHelper.LocationResult locationResult = new LocationHelper.LocationResult() {
-        @Override
-        public void gotLocation(final Location location) {
-            if (getActivity() == null)
-                return;
-            // note that location will be null when requesting location fails
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    setLocation(location);
+            if (address.getMaxAddressLineIndex() > 0) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; ; ++i) {
+                    sb.append(address.getAddressLine(i));
+                    if (i == address.getMaxAddressLineIndex()) {
+                        sb.append(".");
+                        break;
+                    } else {
+                        sb.append(", ");
+                    }
                 }
-            });
-        }
-    };
-
-    private View mLocationAddSection;
-    private View mLocationSearchSection;
-    private View mLocationViewSection;
-    private TextView mLocationText;
-    private EditText mLocationEditText;
-    private Button mButtonSearchLocation;
-
-    private TextWatcher mLocationEditTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            String buttonText;
-            if (s.length() > 0) {
-                buttonText = getResources().getString(R.string.post_settings_search_location);
-            } else {
-                buttonText = getResources().getString(R.string.post_settings_search_current_location);
+                mLocationTextView.setText(sb.toString());
             }
-            mButtonSearchLocation.setText(buttonText);
+            // Else, do nothing (keep the "lat, long" format).
         }
-    };
-
-    /*
-     * called when activity is created to initialize the location provider, show views related
-     * to location if enabled for this blog, and retrieve the current location if necessary
-     */
-    private void initLocation(ViewGroup rootView) {
-        if (!mPost.supportsLocation()) return;
-
-        // show the location views if a provider was found and this is a post on a blog that has location enabled
-        View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
-
-        TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
-        locationLabel.setText(getResources().getString(R.string.post_settings_location).toUpperCase());
-
-        mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
-        mLocationText.setOnClickListener(this);
-
-        mLocationAddSection = locationRootView.findViewById(R.id.sectionLocationAdd);
-        mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
-        mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
-
-        Button addLocation = (Button) locationRootView.findViewById(R.id.addLocation);
-        addLocation.setOnClickListener(this);
-
-        mButtonSearchLocation = (Button) locationRootView.findViewById(R.id.searchLocation);
-        mButtonSearchLocation.setOnClickListener(this);
-
-        mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
-        mLocationEditText.setOnEditorActionListener(this);
-        mLocationEditText.addTextChangedListener(mLocationEditTextWatcher);
-
-        Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
-        Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
-        updateLocation.setOnClickListener(this);
-        removeLocation.setOnClickListener(this);
-
-        // if this post has location attached to it, look up the location address
-        if (mPost.hasLocation()) {
-            showLocationView();
-            PostLocation location = mPost.getLocation();
-            setLocation(location.getLatitude(), location.getLongitude());
-        } else {
-            showLocationAdd();
-        }
-    }
-
-    private boolean checkForLocationPermission() {
-        return isAdded() && PermissionUtils.checkLocationPermissions(getActivity(),
-                EditPostActivity.LOCATION_PERMISSION_REQUEST_CODE);
-    }
-
-    public void showLocationSearch() {
-        mLocationAddSection.setVisibility(View.GONE);
-        mLocationSearchSection.setVisibility(View.VISIBLE);
-        mLocationViewSection.setVisibility(View.GONE);
-
-        EditTextUtils.showSoftInput(mLocationEditText);
-    }
-
-    private void showLocationAdd() {
-        mLocationAddSection.setVisibility(View.VISIBLE);
-        mLocationSearchSection.setVisibility(View.GONE);
-        mLocationViewSection.setVisibility(View.GONE);
-    }
-
-    private void showLocationView() {
-        mLocationAddSection.setVisibility(View.GONE);
-        mLocationSearchSection.setVisibility(View.GONE);
-        mLocationViewSection.setVisibility(View.VISIBLE);
-    }
-
-    public void searchLocation() {
-        if (!isAdded() || mLocationEditText == null) return;
-
-        EditTextUtils.hideSoftInput(mLocationEditText);
-        String location = EditTextUtils.getText(mLocationEditText);
-
-        removeLocation();
-
-        if (location.isEmpty()) {
-            fetchCurrentLocation();
-        } else {
-            new GetCoordsTask().execute(location);
-        }
-    }
-
-    /*
-     * get the current location
-     */
-    private void fetchCurrentLocation() {
-        if (!isAdded()) {
-            return;
-        }
-        if (mLocationHelper == null) {
-            mLocationHelper = new LocationHelper();
-        }
-        boolean canGetLocation = mLocationHelper.getLocation(getActivity(), locationResult);
-
-        if (canGetLocation) {
-            setLocationStatus(LocationStatus.SEARCHING);
-            showLocationView();
-        } else {
-            setLocation(null);
-            showLocationNotAvailableError();
-            showLocationAdd();
-        }
-    }
-
-    /*
-     * called when location is retrieved/updated for this post - looks up the address to
-     * display for the lat/long
-     */
-    private void setLocation(Location location) {
-        if (location != null) {
-            setLocation(location.getLatitude(), location.getLongitude());
-        } else {
-            updateLocationText(getString(R.string.post_settings_location_not_found));
-            setLocationStatus(LocationStatus.NOT_FOUND);
-        }
-    }
-
-    private void setLocation(double latitude, double longitude) {
-        mPostLocation = new PostLocation(latitude, longitude);
-        new GetAddressTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
-    }
-
-    private void removeLocation() {
-        mPostLocation = null;
-        mPost.clearLocation();
-
-        updateLocationText("");
-        setLocationStatus(LocationStatus.NONE);
-    }
-
-    private void viewLocation() {
-        if (mPostLocation != null && mPostLocation.isValid()) {
-            String locationString = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
-            ActivityLauncher.openUrlExternal(getActivity(), locationString);
-        } else {
-            showLocationNotAvailableError();
-            showLocationAdd();
-        }
-    }
-
-    private void showLocationNotAvailableError() {
-        if (!isAdded()) {
-            return;
-        }
-        Toast.makeText(getActivity(), getResources().getText(R.string.post_settings_location_not_found), Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateLocationText(String locationName) {
-        mLocationText.setText(locationName);
     }
 
     private void showPostExcerptDialog() {
@@ -954,6 +697,32 @@ public class EditPostSettingsFragment extends Fragment
                     }
                 });
         dialog.show(getFragmentManager(), null);
+    }
+
+    private void showLocationPicker() {
+        if (!isAdded()) {
+            return;
+        }
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        // Pre-pick the previous selected location if any
+        LatLng latLng = null;
+        if (mPostLocation != null) {
+            latLng = new LatLng(mPostLocation.getLatitude(), mPostLocation.getLongitude());
+        } else if (mPost.hasLocation()) {
+            PostLocation location = mPost.getLocation();
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        if (latLng != null) {
+            builder.setLatLngBounds(new LatLngBounds(latLng, latLng));
+        }
+        // Show the picker
+        try {
+            startActivityForResult(builder.build(getActivity()), ACTIVITY_REQUEST_CODE_PICK_LOCATION);
+        } catch (GooglePlayServicesNotAvailableException nae) {
+            ToastUtils.showToast(getActivity(), R.string.post_settings_error_placepicker_missing_play_services);
+        } catch (GooglePlayServicesRepairableException re) {
+            GooglePlayServicesUtil.getErrorDialog(re.getConnectionStatusCode(), getActivity(), 0);
+        }
     }
 
     private void showCategoriesActivity() {
@@ -1076,47 +845,6 @@ public class EditPostSettingsFragment extends Fragment
         return StringUtils.capitalize(postFormatKey);
     }
 
-    /*
-     * changes the left drawable on the location text to match the passed status
-     */
-    private void setLocationStatus(LocationStatus status) {
-        if (!isAdded()) {
-            return;
-        }
-
-        // animate location text when searching
-        if (status == LocationStatus.SEARCHING) {
-            updateLocationText(getString(R.string.loading));
-
-            Animation aniBlink = AnimationUtils.loadAnimation(getActivity(), R.anim.blink);
-            if (aniBlink != null) {
-                mLocationText.startAnimation(aniBlink);
-            }
-        } else {
-            mLocationText.clearAnimation();
-        }
-
-        final int drawableId;
-        switch (status) {
-            case FOUND:
-                drawableId = R.drawable.ic_location_found_black_translucent_40_32dp;
-                break;
-            case NOT_FOUND:
-                drawableId = R.drawable.ic_location_off_black_translucent_40_32dp;
-                break;
-            case SEARCHING:
-                drawableId = R.drawable.ic_location_searching_black_40_32dp;
-                break;
-            case NONE:
-                drawableId = 0;
-                break;
-            default:
-                return;
-        }
-
-        mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-    }
-
     private void populateSelectedCategories() {
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = mCategories.iterator();
@@ -1129,6 +857,27 @@ public class EditPostSettingsFragment extends Fragment
         }
         // If `sb` is empty, the hint "Not Set" will be shown instead
         mCategoriesTextView.setText(sb);
+    }
+
+    private void setLocation(Place place) {
+        if (mPostLocation == null) {
+            mPostLocation = new PostLocation();
+        }
+        mPostLocation.setLatitude(place.getLatLng().latitude);
+        mPostLocation.setLongitude(place.getLatLng().longitude);
+        mLocationTextView.setText(place.getAddress());
+    }
+
+    private void initLocation() {
+        if (mPost.hasLocation()) {
+            mPostLocation = null;
+            mLocationTextView.setText(getString(R.string.post_settings_not_set));
+        } else {
+            mPostLocation = mPost.getLocation();
+            mLocationTextView.setText(mPost.getLocation().getLatitude() + ", " + mPost.getLocation().getLongitude());
+            // Asynchronously get the address from the location coordinates
+            new FetchAndSetAddressAsyncTask().execute(mPost.getLocation().getLatitude(), mPost.getLocation().getLongitude());
+        }
     }
 
     @SuppressWarnings("unused")

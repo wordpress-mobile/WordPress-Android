@@ -692,17 +692,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         shouldShowLocation = true;
                     }
                 }
-                if (shouldShowLocation) {
-                    // Permission request was granted, show Location buttons in Settings
-                    mEditPostSettingsFragment.showLocationSearch();
-
-                    // After permission request was granted add GeoTag to the new post (if GeoTagging is enabled)
-                    mEditPostSettingsFragment.searchLocation();
-
-                    return;
+                if (!shouldShowLocation) {
+                    // Location permission denied
+                    ToastUtils.showToast(this, getString(R.string.post_settings_add_location_permission_required));
                 }
-                // Location permission denied
-                ToastUtils.showToast(this, getString(R.string.post_settings_add_location_permission_required));
                 break;
             case MEDIA_PERMISSION_REQUEST_CODE:
                 boolean shouldShowContextMenu = true;
