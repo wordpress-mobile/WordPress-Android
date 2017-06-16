@@ -836,6 +836,10 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private String getPostFormatNameFromKey(String postFormatKey) {
+        if (TextUtils.isEmpty(postFormatKey)) {
+            postFormatKey = POST_FORMAT_STANDARD_KEY;
+        }
+
         for (int i = 0; i < mPostFormatKeys.size(); i++) {
             if (postFormatKey.equalsIgnoreCase(mPostFormatKeys.get(i))) {
                 return mPostFormatNames.get(i);
