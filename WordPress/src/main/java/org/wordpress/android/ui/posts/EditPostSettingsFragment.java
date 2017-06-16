@@ -697,10 +697,13 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void updateSlug(String slug) {
+        if (mPost.getSlug().equals(slug)) {
+            return;
+        }
         mPost.setSlug(slug);
         dispatchUpdatePostAction();
         if (isAdded()) {
-            mExcerptTextView.setText(mPost.getSlug());
+            mSlugTextView.setText(mPost.getSlug());
         }
     }
 
