@@ -58,6 +58,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -441,6 +442,8 @@ public class MeFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[]
             grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
         switch (requestCode) {
             case CAMERA_AND_MEDIA_PERMISSION_REQUEST_CODE:
                 if (permissions.length == 0) {

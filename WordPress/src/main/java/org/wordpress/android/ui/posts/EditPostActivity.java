@@ -122,6 +122,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -680,6 +681,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE:
                 boolean shouldShowLocation = false;
@@ -2207,7 +2210,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
         mDroppedMediaUris = mediaUris;
-
         if (PermissionUtils.checkAndRequestStoragePermission(this, DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE)) {
             runOnUiThread(mFetchMediaRunnable);
         }
@@ -2258,7 +2260,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onMediaUploadCancelClicked(String mediaId, boolean delete) {
         if (!TextUtils.isEmpty(mediaId)) {
             int localMediaId = Integer.valueOf(mediaId);
-            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId));
+            EventBus.getDefault().post(new PostEvents.PostMediaCanceled(localMediaId, delete));
         } else {
             // Passed mediaId is incorrect: cancel all uploads
             ToastUtils.showToast(this, getString(R.string.error_all_media_upload_canceled));
