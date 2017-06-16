@@ -389,7 +389,7 @@ public class EditPostSettingsFragment extends Fragment
         updatePublishDateTextView();
         updateCategoriesTextView();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            updateFeaturedImage(mPost.getFeaturedImageId());
+            updateFeaturedImageView();
         }
     }
 
@@ -911,18 +911,25 @@ public class EditPostSettingsFragment extends Fragment
 
         mPost.setFeaturedImageId(featuredImageId);
         dispatchUpdatePostAction();
+        updateFeaturedImageView();
+    }
 
+    private void clearFeaturedImage() {
+        updateFeaturedImage(0);
+    }
+
+    private void updateFeaturedImageView() {
         if (!isAdded()) {
             return;
         }
 
-        if (featuredImageId == 0) {
+        if (!mPost.hasFeaturedImage()) {
             mFeaturedImageView.setVisibility(View.GONE);
             mFeaturedImageButton.setVisibility(View.VISIBLE);
             return;
         }
 
-        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, featuredImageId);
+        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mPost.getFeaturedImageId());
         if (media == null) {
             return;
         }
@@ -941,10 +948,6 @@ public class EditPostSettingsFragment extends Fragment
         }
 
         WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
-    }
-
-    private void clearFeaturedImage() {
-        updateFeaturedImage(0);
     }
 
     private void launchFeaturedMediaPicker() {

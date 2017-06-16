@@ -783,9 +783,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (itemId == R.id.menu_post_settings) {
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-            if (mShowNewEditor || mShowAztecEditor) {
-                mEditPostSettingsFragment.updateFeaturedImage(mPost.getFeaturedImageId());
-            }
             mViewPager.setCurrentItem(PAGE_SETTINGS);
         }
         return false;
@@ -2240,7 +2237,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     @Override
     public void onFeaturedImageChanged(long mediaId) {
-        mPost.setFeaturedImageId(mediaId);
         mEditPostSettingsFragment.updateFeaturedImage(mediaId);
     }
 
