@@ -185,7 +185,8 @@ public class WPPermissionUtils {
                 "<strong>" + permissionName + "</strong>");
         ((TextView) view.findViewById(R.id.text_message)).setText(Html.fromHtml(message));
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+        int themeId = R.style.Theme_AppCompat_Light_Dialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity, themeId)
                 .setView(view)
                 .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {
                     @Override
