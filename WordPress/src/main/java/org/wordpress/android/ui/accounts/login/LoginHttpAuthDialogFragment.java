@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -82,7 +84,32 @@ public class LoginHttpAuthDialogFragment extends DialogFragment {
             }
         });
 
-        return alert.create();
+        final AlertDialog alertDialog = alert.create();
+
+        // update the Next button when username edit box changes
+        usernameEditText.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                updateButton(alertDialog, usernameEditText);
+            }
+        });
+
+        // update the Next button on first appearance
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                updateButton(alertDialog, usernameEditText);
+            }
+        });
+
+        return alertDialog;
+    }
+
+    private void updateButton(AlertDialog alertDialog, EditText editText) {
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled((editText.getText().length() > 0));
     }
 
     private void sendResult(String username, String password) {
