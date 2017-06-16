@@ -534,11 +534,7 @@ public class EditPostSettingsFragment extends Fragment
     private void showCategoriesActivity() {
         Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, mSite);
-
-        // Make sure the PostModel is up to date with current category selections
-        updatePostSettings(mPost);
         categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
-
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 
