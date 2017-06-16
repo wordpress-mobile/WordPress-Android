@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -72,7 +73,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -129,6 +129,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private String mMediaCapturePath;
     private boolean mImagesOnly;
     private MediaBrowserType mBrowserType;
+    private int mLastAddMediaItemClickedPosition;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -309,7 +311,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 this, requestCode, permissions, results, true);
 
         if (allGranted && requestCode == WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE) {
-            showAddMediaPopup();
+            doAddMediaItemClicked(mLastAddMediaItemClickedPosition);
         }
     }
 
@@ -347,10 +349,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
-                AppLockManager.getInstance().setExtendedTimeout();
-                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE)) {
-                    showAddMediaPopup();
-                }
+                showAddMediaPopup();
                 return true;
             case R.id.menu_search:
                 mSearchMenuItem = item;
@@ -655,20 +654,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.actionbar_add_media_cell, items));
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        WordPressMediaUtils.launchCamera(MediaBrowserActivity.this, BuildConfig.APPLICATION_ID, MediaBrowserActivity.this);
-                        break;
-                    case 1:
-                        WordPressMediaUtils.launchVideoCamera(MediaBrowserActivity.this);
-                        break;
-                    case 2:
-                        WordPressMediaUtils.launchPictureLibrary(MediaBrowserActivity.this);
-                        break;
-                    case 3:
-                        WordPressMediaUtils.launchVideoLibrary(MediaBrowserActivity.this);
-                        break;
-                }
+                doAddMediaItemClicked(position);
                 mAddMediaPopup.dismiss();
             }
         });
@@ -696,6 +682,39 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
             View gridView = findViewById(R.id.recycler);
             mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+        }
+    }
+
+    private static final int ITEM_CAPTURE_PHOTO = 0;
+    private static final int ITEM_CAPTURE_VIDEO = 1;
+    private static final int ITEM_CHOOSE_PHOTO  = 2;
+    private static final int ITEM_CHOOSE_VIDEO  = 3;
+
+    private void doAddMediaItemClicked(int position) {
+        mLastAddMediaItemClickedPosition = position;
+
+        String[] permissions;
+        if (position == ITEM_CAPTURE_PHOTO || position == ITEM_CAPTURE_VIDEO) {
+            permissions = new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        } else {
+            permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        }
+        if (PermissionUtils.checkAndRequestPermissions(
+                this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
+            switch (position) {
+                case ITEM_CAPTURE_PHOTO:
+                    WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
+                    break;
+                case ITEM_CAPTURE_VIDEO:
+                    WordPressMediaUtils.launchVideoCamera(this);
+                    break;
+                case ITEM_CHOOSE_PHOTO:
+                    WordPressMediaUtils.launchPictureLibrary(this);
+                    break;
+                case ITEM_CHOOSE_VIDEO:
+                    WordPressMediaUtils.launchVideoLibrary(this);
+                    break;
+            }
         }
     }
 
