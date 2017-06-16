@@ -88,7 +88,7 @@ public class MediaUploadService extends Service {
         for (MediaModel oneUpload : mInProgressUploads) {
             cancelUpload(oneUpload, false);
         }
-        
+
         // update posts with any completed uploads in our post->media map
         for (Integer postId : mCompletedUploads.keySet()) {
             savePostToDb(updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId)));
@@ -351,13 +351,13 @@ public class MediaUploadService extends Service {
         // updates in one go and save only once
         if (post != null) {
             MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-            List<MediaModel> mediaList = mCompletedUploads.get(new Long(post.getId()));
+            List<MediaModel> mediaList = mCompletedUploads.get(new Integer(post.getId()));
             if (mediaList != null && !mediaList.isEmpty()) {
                 for (MediaModel media : mediaList) {
                     post = updatePostWithMediaUrl(post, media, processor);
                 }
                 // finally remove all completed uploads for this post, as they've been taken care of
-                mCompletedUploads.remove(new Long(post.getId()));
+                mCompletedUploads.remove(new Integer(post.getId()));
             }
         }
         return post;
