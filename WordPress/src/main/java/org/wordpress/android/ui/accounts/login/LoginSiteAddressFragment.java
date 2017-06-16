@@ -116,9 +116,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         rootView.findViewById(R.id.login_site_address_help).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mLoginListener != null) {
-                    showSiteAddressHelp();
-                }
+                showSiteAddressHelp();
             }
         });
 
