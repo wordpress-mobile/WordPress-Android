@@ -960,6 +960,10 @@ public class EditPostSettingsFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(OnTaxonomyChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type);
+            return;
+        }
         switch (event.causeOfChange) {
             case FETCH_CATEGORIES:
                 updateCategoriesTextView();
