@@ -254,7 +254,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if (holder instanceof PageViewHolder) {
             PageViewHolder pageHolder = (PageViewHolder) holder;
             if (StringUtils.isNotEmpty(post.getTitle())) {
-                pageHolder.txtTitle.setText(post.getTitle());
+                // Unescape HTML
+                String cleanPageTitle = StringEscapeUtils.unescapeHtml4(post.getTitle());
+                pageHolder.txtTitle.setText(cleanPageTitle);
             } else {
                 pageHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
             }
