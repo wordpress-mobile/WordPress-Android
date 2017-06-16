@@ -377,6 +377,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void initSettingsFields() {
+        if (!isAdded()) {
+            return;
+        }
         mExcerptTextView.setText(mPost.getExcerpt());
         mSlugTextView.setText(mPost.getSlug());
         mPasswordTextView.setText(mPost.getPassword());
@@ -434,7 +437,6 @@ public class EditPostSettingsFragment extends Fragment
                         if (ids == null || ids.size() == 0) {
                             return;
                         }
-
                         updateFeaturedImage(ids.get(0));
                     }
             }
@@ -500,6 +502,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostExcerptDialog() {
+        if (!isAdded()) {
+            return;
+        }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 mPost.getExcerpt(), getString(R.string.post_settings_excerpt),
                 getString(R.string.post_settings_excerpt_dialog_hint), false);
@@ -514,6 +519,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showSlugDialog() {
+        if (!isAdded()) {
+            return;
+        }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 mPost.getSlug(), getString(R.string.post_settings_slug),
                 getString(R.string.post_settings_slug_dialog_hint), true);
@@ -539,7 +547,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showTagsActivity() {
-        // Fetch/refresh the tags in preparation for the the PostSettingsTagsActivity
+        // Fetch/refresh the tags in preparation for the PostSettingsTagsActivity
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
 
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
@@ -550,6 +558,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showStatusDialog() {
+        if (!isAdded()) {
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.post_settings_status);
         builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
@@ -565,6 +576,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostFormatDialog() {
+        if (!isAdded()) {
+            return;
+        }
         int checkedItem = 0;
         if (!TextUtils.isEmpty(mPost.getPostFormat())) {
             for (int i = 0; i < mPostFormatKeys.size(); i++) {
@@ -590,6 +604,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostPasswordDialog() {
+        if (!isAdded()) {
+            return;
+        }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 mPost.getPassword(), getString(R.string.password),
                 getString(R.string.post_settings_password_dialog_hint), false);
@@ -604,6 +621,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostDateSelectionDialog() {
+        if (!isAdded()) {
+            return;
+        }
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, mYear, mMonth, mDay);
         datePickerDialog.setTitle(R.string.select_date);
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getText(android.R.string.ok),
@@ -632,6 +652,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showPostTimeSelectionDialog() {
+        if (!isAdded()) {
+            return;
+        }
         final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -671,14 +694,18 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
         mPost.setExcerpt(excerpt);
-        mExcerptTextView.setText(mPost.getExcerpt());
         dispatchUpdatePostAction();
+        if (isAdded()) {
+            mExcerptTextView.setText(mPost.getExcerpt());
+        }
     }
 
     private void updateSlug(String slug) {
         mPost.setSlug(slug);
-        mExcerptTextView.setText(mPost.getSlug());
         dispatchUpdatePostAction();
+        if (isAdded()) {
+            mExcerptTextView.setText(mPost.getSlug());
+        }
     }
 
     private void updatePassword(String password) {
@@ -687,7 +714,9 @@ public class EditPostSettingsFragment extends Fragment
         }
         mPost.setPassword(password);
         dispatchUpdatePostAction();
-        mPasswordTextView.setText(mPost.getPassword());
+        if (isAdded()) {
+            mPasswordTextView.setText(mPost.getPassword());
+        }
     }
 
     private void updateCategories(List<TermModel> categoryList) {
@@ -699,8 +728,8 @@ public class EditPostSettingsFragment extends Fragment
             categoryIds.add(category.getRemoteTermId());
         }
         mPost.setCategoryIdList(categoryIds);
-        updateCategoriesTextView();
         dispatchUpdatePostAction();
+        updateCategoriesTextView();
     }
 
     private void updatePostStatus(String postStatus) {
@@ -708,8 +737,8 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
         mPost.setStatus(postStatus);
-        updateStatusTextView();
         dispatchUpdatePostAction();
+        updateStatusTextView();
         updateSaveButton();
     }
 
@@ -718,11 +747,14 @@ public class EditPostSettingsFragment extends Fragment
             return;
         }
         mPost.setPostFormat(postFormat);
-        updatePostFormatTextView();
         dispatchUpdatePostAction();
+        updatePostFormatTextView();
     }
 
     public void updateStatusTextView() {
+        if (!isAdded()) {
+            return;
+        }
         String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
         int index = getCurrentPostStatusIndex();
         // We should never get an OutOfBoundsException here, but if we do,
@@ -731,20 +763,30 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void updateLocationText(String locationName) {
-        mLocationText.setText(locationName);
+        if (isAdded()) {
+            mLocationText.setText(locationName);
+        }
     }
 
     private void updateTagsTextView() {
+        if (!isAdded()) {
+            return;
+        }
         String tags = TextUtils.join(",", mPost.getTagNameList());
         // If `tags` is empty, the hint "Not Set" will be shown instead
         mTagsTextView.setText(tags);
     }
 
     private void updatePostFormatTextView() {
-        mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+        if (isAdded()) {
+            mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+        }
     }
 
     private void updatePublishDateTextView() {
+        if (!isAdded()) {
+            return;
+        }
         String pubDate = mPost.getDateCreated();
         if (StringUtils.isNotEmpty(pubDate)) {
             try {
@@ -758,6 +800,9 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void updateCategoriesTextView() {
+        if (!isAdded()) {
+            return;
+        }
         List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = categories.iterator();
@@ -1027,6 +1072,9 @@ public class EditPostSettingsFragment extends Fragment
 
         @Override
         public void afterTextChanged(Editable s) {
+            if (!isAdded()){
+                return;
+            }
             String buttonText;
             if (s.length() > 0) {
                 buttonText = getResources().getString(R.string.post_settings_search_location);
@@ -1042,7 +1090,7 @@ public class EditPostSettingsFragment extends Fragment
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
-        if (!mPost.supportsLocation()) return;
+        if (!isAdded() || !mPost.supportsLocation()) return;
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
@@ -1083,11 +1131,14 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private boolean checkForLocationPermission() {
-        return isAdded() && PermissionUtils.checkLocationPermissions(getActivity(),
+        return PermissionUtils.checkLocationPermissions(getActivity(),
                 EditPostActivity.LOCATION_PERMISSION_REQUEST_CODE);
     }
 
     public void showLocationSearch() {
+        if (!isAdded()) {
+            return;
+        }
         mLocationAddSection.setVisibility(View.GONE);
         mLocationSearchSection.setVisibility(View.VISIBLE);
         mLocationViewSection.setVisibility(View.GONE);
@@ -1096,12 +1147,18 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void showLocationAdd() {
+        if (!isAdded()) {
+            return;
+        }
         mLocationAddSection.setVisibility(View.VISIBLE);
         mLocationSearchSection.setVisibility(View.GONE);
         mLocationViewSection.setVisibility(View.GONE);
     }
 
     private void showLocationView() {
+        if (!isAdded()) {
+            return;
+        }
         mLocationAddSection.setVisibility(View.GONE);
         mLocationSearchSection.setVisibility(View.GONE);
         mLocationViewSection.setVisibility(View.VISIBLE);
