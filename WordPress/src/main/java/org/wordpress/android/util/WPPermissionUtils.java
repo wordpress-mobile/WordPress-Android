@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -176,13 +177,11 @@ public class WPPermissionUtils {
                 return;
         }
 
-        String title = activity.getString(R.string.permissions_denied_title);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.permission_denied_dialog, null);
         String message = String.format(
                 activity.getString(R.string.permissions_denied_message),
                 "<strong>" + permissionName + "</strong>");
-
-        ViewGroup view = (ViewGroup) activity.getLayoutInflater().inflate(R.layout.permission_denied_dialog, null);
-        ((TextView) view.findViewById(R.id.text_title)).setText(title);
         ((TextView) view.findViewById(R.id.text_message)).setText(Html.fromHtml(message));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
