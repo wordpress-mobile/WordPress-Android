@@ -116,7 +116,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -166,7 +165,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
     public static final int DRAG_AND_DROP_MEDIA_PERMISSION_REQUEST_CODE = 3;
-    public static final int PHOTO_PICKER_PERMISSION_REQUEST_CODE = 4;
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -543,15 +541,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * user has requested to show the photo picker
      */
     void showPhotoPicker() {
-        // request permissions if we don't already have them
-        if (!PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, PHOTO_PICKER_PERMISSION_REQUEST_CODE)) {
-            return;
-        }
-
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
             initPhotoPicker();
-            SmartToast.show(this, SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
         }
 
         // hide soft keyboard
@@ -727,28 +719,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         super.openContextMenu(mMenuView);
                         mMenuView = null;
                     }
-                } else {
-                    ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
-                }
-                break;
-            case PHOTO_PICKER_PERMISSION_REQUEST_CODE:
-                boolean canShowPhotoPicker = true;
-                for (int i = 0; i < grantResults.length; ++i) {
-                    switch (permissions[i]) {
-                        case Manifest.permission.CAMERA:
-                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                canShowPhotoPicker = false;
-                            }
-                            break;
-                        case Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                                canShowPhotoPicker = false;
-                            }
-                            break;
-                    }
-                }
-                if (canShowPhotoPicker) {
-                    showPhotoPicker();
                 } else {
                     ToastUtils.showToast(this, getString(R.string.access_media_permission_required));
                 }
