@@ -36,8 +36,10 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
 
@@ -97,6 +99,17 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_username_password_screen, container, false);
+
+        if (mIsWpcom) {
+            ((TextView) rootView.findViewById(R.id.login_site_address)).setText(mSiteAddress);
+
+            WPNetworkImageView imgBlavatar = (WPNetworkImageView) rootView.findViewById(R.id.login_blavatar);
+            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
+            imgBlavatar.setImageUrl(GravatarUtils.blavatarFromUrl(mSiteAddress, blavatarSz),
+                    WPNetworkImageView.ImageType.BLAVATAR);
+
+            rootView.findViewById(R.id.login_site_info_layout).setVisibility(View.VISIBLE);
+        }
 
         mUsernameEditText = (EditText) rootView.findViewById(R.id.login_username);
         mUsernameEditText.addTextChangedListener(this);
