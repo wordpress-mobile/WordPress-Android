@@ -45,6 +45,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
+        buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
     }
 
     productFlavors {
@@ -54,6 +55,7 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -73,6 +75,7 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             ext.enableCrashlytics = false
         }
     }
