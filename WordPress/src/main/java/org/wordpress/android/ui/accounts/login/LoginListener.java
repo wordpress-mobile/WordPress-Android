@@ -23,6 +23,7 @@ public interface LoginListener {
     void loggedInViaPassword();
 
     // Login Site Address input callbacks
+    void alreadyLoggedInWpcom();
     void gotWpcomSiteAddress();
     void gotXmlRpcEndpoint(String siteAddress);
     void helpWithSiteAddress();

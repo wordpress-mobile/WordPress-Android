@@ -66,6 +66,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         return false;
     }
 
+    private void launchEpilogueAndFinish() {
+        ActivityLauncher.showMainActivityAndLoginEpilogue(this);
+        finish();
+    }
+
     // LoginListener implementation methods
 
     @Override
@@ -128,8 +133,13 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void loggedInViaPassword() {
-        ActivityLauncher.showMainActivityAndLoginEpilogue(this);
-        finish();
+        launchEpilogueAndFinish();
+    }
+
+    @Override
+    public void alreadyLoggedInWpcom() {
+        ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
+        launchEpilogueAndFinish();
     }
 
     @Override

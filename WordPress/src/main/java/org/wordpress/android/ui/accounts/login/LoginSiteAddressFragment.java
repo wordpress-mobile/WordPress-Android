@@ -43,6 +43,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -71,6 +72,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     private boolean mInProgress;
     private String mRequestedSiteAddress;
 
+    @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
     @Inject HTTPAuthManager mHTTPAuthManager;
     @Inject MemorizingTrustManager mMemorizingTrustManager;
@@ -359,7 +361,16 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         if (event.isError()) {
             if (event.error == DiscoveryError.WORDPRESS_COM_SITE) {
                 AppLog.e(T.API, "Inputted a wpcom address in site address screen.");
-                mLoginListener.gotWpcomSiteAddress();
+
+                // If the user is already logged in a wordpress.com account, bail out
+                if (mAccountStore.hasAccessToken()) {
+                    String currentUsername = mAccountStore.getAccount().getUserName();
+                    AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername);
+                    mLoginListener.alreadyLoggedInWpcom();
+                } else {
+                    mLoginListener.gotWpcomSiteAddress();
+                }
+
                 return;
             } else {
                 AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
