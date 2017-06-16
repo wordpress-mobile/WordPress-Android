@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -154,38 +156,41 @@ public class WPPermissionUtils {
      * called when the app detects that the user has permanently denied a permission, shows a dialog
      * alerting them to this fact and enabling them to visit the app settings to edit permissions
      */
-    private static void showPermissionAlwaysDeniedDialog(@NonNull final Context context,
+    private static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
                                                          @NonNull String permission) {
         String permissionName;
         switch (permission) {
             case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
             case android.Manifest.permission.READ_EXTERNAL_STORAGE:
-                permissionName = context.getString(R.string.permission_storage);
+                permissionName = activity.getString(R.string.permission_storage);
                 break;
             case android.Manifest.permission.CAMERA:
-                permissionName = context.getString(R.string.permission_camera);
+                permissionName = activity.getString(R.string.permission_camera);
                 break;
             case android.Manifest.permission.ACCESS_COARSE_LOCATION:
             case android.Manifest.permission.ACCESS_FINE_LOCATION:
-                permissionName = context.getString(R.string.permission_location);
+                permissionName = activity.getString(R.string.permission_location);
                 break;
             default:
                 AppLog.w(AppLog.T.UTILS, "No dialog for requested permission");
                 return;
         }
 
-        String title = context.getString(R.string.permissions_denied_title);
+        String title = activity.getString(R.string.permissions_denied_title);
         String message = String.format(
-                context.getString(R.string.permissions_denied_message),
+                activity.getString(R.string.permissions_denied_message),
                 "<strong>" + permissionName + "</strong>");
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setTitle(title)
-                .setMessage(Html.fromHtml(message))
+        ViewGroup view = (ViewGroup) activity.getLayoutInflater().inflate(R.layout.permission_denied_dialog, null);
+        ((TextView) view.findViewById(R.id.text_title)).setText(title);
+        ((TextView) view.findViewById(R.id.text_message)).setText(Html.fromHtml(message));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setView(view)
                 .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showAppSettings(context);
+                        showAppSettings(activity);
                     }
                 })
                 .setNegativeButton(R.string.button_not_now, null);
