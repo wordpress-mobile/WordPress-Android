@@ -127,6 +127,7 @@ public class PhotoPickerFragment extends Fragment {
     public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
         mAllowMultiSelect = options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
         mPhotosOnly = options.contains(PhotoPickerOption.PHOTOS_ONLY);
+        mDeviceOnly = options.contains(PhotoPickerOption.DEVICE_ONLY);
 
         if (hasAdapter()) {
             getAdapter().setAllowMultiSelect(mAllowMultiSelect);
