@@ -1797,13 +1797,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    private boolean compressVideo(String path) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+    private boolean enqueueVideoCompression(String path) {
+        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
             // Video downsampling -> API18 or higher
-            return false;
-        }
-
-        if (!BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE) {
             return false;
         }
 
@@ -1818,7 +1814,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         final VideoOptimizationProgressListener progressListener = new VideoOptimizationProgressListener(this, outFilePath);
         final MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(this, path, outFilePath, progressListener);
         if (mediaComposer == null) {
-            ToastUtils.showToast(this, R.string.video_optimization_generic_error_message, Duration.LONG);
+            ToastUtils.showToast(this, R.string.video_optimization_cant_optimize, Duration.LONG);
             return false;
         }
 
@@ -1833,7 +1829,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         });
         progressListener.setProgressDialog(progressDialog);
 
-
         mediaComposer.start();
         return true;
     }
@@ -1846,9 +1841,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
-        if (BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE && isVideo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+        if (isVideo && WPMediaUtils.isVideoOptimizationAvailable()) {
             // Video downsampling -> API18 or higher
-            boolean res = compressVideo(path);
+            boolean res = enqueueVideoCompression(path);
             if (res) {
                 return true;
             }
