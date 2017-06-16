@@ -29,6 +29,49 @@
         tools:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/container_soft_ask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/image_soft_ask"
+            android:layout_width="175dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_soft_ask_media" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_soft_ask_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/margin_extra_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_extra_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:gravity="center"
+            android:text="@string/photo_picker_soft_ask_label"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_soft_ask_allow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/margin_large"
+            android:text="@string/photo_picker_soft_ask_allow"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_wordpress"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
