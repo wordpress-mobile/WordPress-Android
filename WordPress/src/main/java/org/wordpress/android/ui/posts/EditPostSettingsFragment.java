@@ -157,6 +157,7 @@ public class EditPostSettingsFragment extends Fragment
         }
         updateSiteAndFetchPostOrFinishActivity(savedInstanceState);
         updatePostFormatKeysAndNames();
+        fetchSiteSettingsAndUpdateDefaultPostFormat();
 
         // Update post formats and categories, in case anything changed.
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
@@ -192,7 +193,32 @@ public class EditPostSettingsFragment extends Fragment
             ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
-        fetchSiteSettingsAndUpdatePostFormat();
+    }
+
+    private void fetchSiteSettingsAndUpdateDefaultPostFormat() {
+        // we need to fetch site settings in order to get the latest default post format
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, new SiteSettingsListener() {
+            @Override
+            public void onSettingsUpdated(Exception error) {
+                if (error == null && TextUtils.isEmpty(mPost.getPostFormat())) {
+                    updatePostFormat(mSiteSettings.getDefaultPostFormat());
+                }
+            }
+
+            @Override
+            public void onSettingsSaved(Exception error) {
+                // no-op
+            }
+
+            @Override
+            public void onCredentialsValidated(Exception error) {
+                // no-op
+            }
+        });
+        if (mSiteSettings != null) {
+            // init will fetch remote settings for us
+            mSiteSettings.init(true);
+        }
     }
 
     @Override
@@ -353,8 +379,8 @@ public class EditPostSettingsFragment extends Fragment
     private void initSettingsFields() {
         mExcerptTextView.setText(mPost.getExcerpt());
         mSlugTextView.setText(mPost.getSlug());
-        mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
         mPasswordTextView.setText(mPost.getPassword());
+        updatePostFormatTextView();
         updateTagsTextView();
         updateStatusTextView();
         updatePublishDateTextView();
@@ -371,38 +397,6 @@ public class EditPostSettingsFragment extends Fragment
         flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
         return flags;
-    }
-
-    private void fetchSiteSettingsAndUpdatePostFormat() {
-        // we need to fetch site settings in order to get the latest default post format
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, new SiteSettingsListener() {
-            @Override
-            public void onSettingsUpdated(Exception error) {
-                if (error == null && TextUtils.isEmpty(mPost.getPostFormat())) {
-                    mPost.setPostFormat(mSiteSettings.getDefaultPostFormat());
-                    if (mPostFormatKeys != null && mPostFormatNames != null && mPostFormatTextView != null) {
-                        int idx = mPostFormatKeys.indexOf(mPost.getPostFormat());
-                        if (idx != -1) {
-                            mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onSettingsSaved(Exception error) {
-                // no-op
-            }
-
-            @Override
-            public void onCredentialsValidated(Exception error) {
-                // no-op
-            }
-        });
-        if (mSiteSettings != null) {
-            // init will fetch remote settings for us
-            mSiteSettings.init(true);
-        }
     }
 
     @Override
@@ -588,8 +582,7 @@ public class EditPostSettingsFragment extends Fragment
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
                 String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                mPostFormatTextView.setText(formatName);
-                mPost.setPostFormat(getPostFormatKeyFromName(formatName));
+                updatePostFormat(getPostFormatKeyFromName(formatName));
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -709,6 +702,15 @@ public class EditPostSettingsFragment extends Fragment
         updateSaveButton();
     }
 
+    private void updatePostFormat(String postFormat) {
+        if (mPost.getPostFormat().equals(postFormat)) {
+            return;
+        }
+        mPost.setPostFormat(postFormat);
+        updatePostFormatTextView();
+        dispatchUpdatePostAction();
+    }
+
     public void updateStatusTextView() {
         String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
         switch (PostStatus.fromPost(mPost)) {
@@ -737,6 +739,10 @@ public class EditPostSettingsFragment extends Fragment
         String tags = TextUtils.join(",", mPost.getTagNameList());
         // If `tags` is empty, the hint "Not Set" will be shown instead
         mTagsTextView.setText(tags);
+    }
+
+    private void updatePostFormatTextView() {
+        mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
     }
 
     private void updatePublishDateTextView() {
