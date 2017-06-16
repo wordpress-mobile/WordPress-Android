@@ -66,6 +66,8 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -103,6 +105,8 @@ public class EditPostSettingsFragment extends Fragment
 
     private PostModel mPost;
     private SiteModel mSite;
+
+    private SiteSettingsInterface mSiteSettings;
 
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
@@ -188,6 +192,7 @@ public class EditPostSettingsFragment extends Fragment
             ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+        fetchSiteSettingsAndUpdatePostFormat();
     }
 
     @Override
@@ -366,6 +371,38 @@ public class EditPostSettingsFragment extends Fragment
         flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
         flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
         return flags;
+    }
+
+    private void fetchSiteSettingsAndUpdatePostFormat() {
+        // we need to fetch site settings in order to get the latest default post format
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, new SiteSettingsListener() {
+            @Override
+            public void onSettingsUpdated(Exception error) {
+                if (error == null && TextUtils.isEmpty(mPost.getPostFormat())) {
+                    mPost.setPostFormat(mSiteSettings.getDefaultPostFormat());
+                    if (mPostFormatKeys != null && mPostFormatNames != null && mPostFormatTextView != null) {
+                        int idx = mPostFormatKeys.indexOf(mPost.getPostFormat());
+                        if (idx != -1) {
+                            mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onSettingsSaved(Exception error) {
+                // no-op
+            }
+
+            @Override
+            public void onCredentialsValidated(Exception error) {
+                // no-op
+            }
+        });
+        if (mSiteSettings != null) {
+            // init will fetch remote settings for us
+            mSiteSettings.init(true);
+        }
     }
 
     @Override
