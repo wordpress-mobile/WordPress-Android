@@ -650,7 +650,13 @@ public class PostsListFragment extends Fragment
      * from search actions don't have valid local IDs
      */
     private PostModel getPostFromRemoteId(long remoteId) {
-        for (PostModel post : mPostStore.getPostsForSite(mSite)) {
+        List<PostModel> posts;
+        if (!mIsPage) {
+            posts = mPostStore.getPostsForSite(mSite);
+        } else {
+            posts = mPostStore.getPagesForSite(mSite);
+        }
+        for (PostModel post : posts) {
             if (post.getRemotePostId() == remoteId) {
                 return post;
             }
