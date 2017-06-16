@@ -8,7 +8,7 @@ public interface LoginListener {
 
     // Login Email input callbacks
     void showMagicLinkRequestScreen(String email);
-    void loginViaUsernamePassword();
+    void loginViaSiteAddress();
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
@@ -23,8 +23,13 @@ public interface LoginListener {
     void loggedInViaPassword();
 
     // Login Site Address input callbacks
-    void gotSiteAddress(String siteAddress);
+    void alreadyLoggedInWpcom();
+    void gotWpcomSiteAddress();
+    void gotXmlRpcEndpoint(String siteAddress);
+    void helpWithSiteAddress();
 
     // Help callback
     void help();
+
+    void setHelpContext(String faqId, String faqSection);
 }

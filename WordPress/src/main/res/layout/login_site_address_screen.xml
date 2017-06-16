@@ -25,23 +25,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_extra_large"
-                android:text="@string/enter_email_wordpress_com" />
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:text="@string/enter_site_address" />
+
+            <ImageView
+                android:id="@+id/login_icon_globe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_below="@id/label"
+                android:contentDescription="@string/login_globe_icon"
+                app:srcCompat="@drawable/ic_globe_grey_24dp"/>
 
             <android.support.design.widget.TextInputLayout
                 app:theme="@style/LoginTheme.EditText"
-                android:id="@+id/login_email_layout"
+                android:id="@+id/login_site_address_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label"
-                android:layout_marginTop="@dimen/margin_extra_large">
+                android:layout_toRightOf="@+id/login_icon_globe"
+                android:layout_marginLeft="@dimen/margin_extra_large">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/login_email"
+                    android:id="@+id/login_site_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/email_address"
-                    android:inputType="textEmailAddress"
-                    android:drawableLeft="@drawable/ic_user_grey_24dp"
+                    android:hint="@string/login_site_address"
+                    android:inputType="textUri"
                     android:drawablePadding="@dimen/margin_large"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -53,7 +63,7 @@
                 <Button
                     android:theme="@style/LoginTheme.Button"
                     style="@style/Widget.AppCompat.Button.Colored"
-                    android:id="@+id/login_email_next_button"
+                    android:id="@+id/login_next_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -62,16 +72,16 @@
                     android:text="@string/next" />
 
                 <TextView
-                    android:id="@+id/login_site_address"
+                    android:id="@+id/login_site_address_help"
                     style="@style/Base.TextAppearance.AppCompat.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/login_email_next_button"
+                    android:layout_toLeftOf="@+id/login_next_button"
                     android:layout_marginRight="@dimen/margin_extra_extra_extra_large"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
                     android:textColor="@color/blue_wordpress"
-                    android:text="@string/enter_username_password_instead"/>
+                    android:text="@string/login_site_address_help"/>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

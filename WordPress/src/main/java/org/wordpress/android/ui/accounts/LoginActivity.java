@@ -16,6 +16,7 @@ import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
+import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.util.ToastUtils;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
@@ -65,6 +66,11 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         return false;
     }
 
+    private void launchEpilogueAndFinish() {
+        ActivityLauncher.showMainActivityAndLoginEpilogue(this);
+        finish();
+    }
+
     // LoginListener implementation methods
 
     @Override
@@ -92,8 +98,9 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void loginViaUsernamePassword() {
-        ToastUtils.showToast(this, "Fall back to username/password is not implemented yet.");
+    public void loginViaSiteAddress() {
+        LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
+        slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
     }
 
     @Override
@@ -126,17 +133,37 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void loggedInViaPassword() {
-        ActivityLauncher.showMainActivityAndLoginEpilogue(this);
-        finish();
+        launchEpilogueAndFinish();
     }
 
     @Override
-    public void gotSiteAddress(String siteAddress) {
+    public void alreadyLoggedInWpcom() {
+        ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
+        launchEpilogueAndFinish();
+    }
+
+    @Override
+    public void gotWpcomSiteAddress() {
+        ToastUtils.showToast(this, "WPCOM input site address is not implemented yet.");
+    }
+
+    @Override
+    public void gotXmlRpcEndpoint(String siteAddress) {
         ToastUtils.showToast(this, "Input site address is not implemented yet. Input site address: " + siteAddress);
+    }
+
+    @Override
+    public void helpWithSiteAddress() {
+        ToastUtils.showToast(this, "Help finding site address is not implemented yet.");
     }
 
     @Override
     public void help() {
         ToastUtils.showToast(this, "Help is not implemented yet.");
+    }
+
+    @Override
+    public void setHelpContext(String faqId, String faqSection) {
+        // nothing implemented here yet. This will set the context the `help()` callback should work with
     }
 }
