@@ -423,11 +423,7 @@ public class EditPostSettingsFragment extends Fragment
                     extras = data.getExtras();
                     if (resultCode == Activity.RESULT_OK && extras != null) {
                         String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
-                        if (selectedTags != null) {
-                            String tags = selectedTags.replace("\n", " ");
-                            mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
-                            updateTagsTextView();
-                        }
+                        updateTags(selectedTags);
                     }
                     break;
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
@@ -766,6 +762,17 @@ public class EditPostSettingsFragment extends Fragment
         if (isAdded()) {
             mLocationText.setText(locationName);
         }
+    }
+
+    private void updateTags(String selectedTags) {
+        if (!TextUtils.isEmpty(selectedTags)) {
+            String tags = selectedTags.replace("\n", " ");
+            mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+        } else {
+            mPost.setTagNameList(null);
+        }
+        dispatchUpdatePostAction();
+        updateTagsTextView();
     }
 
     private void updateTagsTextView() {
