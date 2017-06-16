@@ -368,7 +368,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
                     AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername);
                     mLoginListener.alreadyLoggedInWpcom();
                 } else {
-                    mLoginListener.gotWpcomSiteAddress();
+                    mLoginListener.gotWpcomSiteAddress(event.failedEndpoint);
                 }
 
                 return;

@@ -143,15 +143,16 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         launchEpilogueAndFinish();
     }
 
-    @Override
-    public void gotWpcomSiteAddress() {
-        ToastUtils.showToast(this, "WPCOM input site address is not implemented yet.");
+    public void gotWpcomSiteAddress(String siteAddress) {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
+                LoginUsernamePasswordFragment.newInstance(siteAddress, true);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override
     public void gotXmlRpcEndpoint(String siteAddress) {
         LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance(siteAddress);
+                LoginUsernamePasswordFragment.newInstance(siteAddress, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 

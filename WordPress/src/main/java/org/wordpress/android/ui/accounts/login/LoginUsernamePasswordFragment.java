@@ -29,6 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -44,8 +45,10 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";
+    private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
 
     private static final String ARG_SITE_ADDRESS = "ARG_SITE_ADDRESS";
+    private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
 
     public static final String TAG = "login_username_password_fragment_tag";
 
@@ -64,15 +67,18 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     private boolean mLoginFinished;
 
     private String mRequestedUsername;
+    private String mRequestedPassword;
 
     private String mSiteAddress;
+    private boolean mIsWpcom;
 
     @Inject Dispatcher mDispatcher;
 
-    public static LoginUsernamePasswordFragment newInstance(String siteAddress) {
+    public static LoginUsernamePasswordFragment newInstance(String siteAddress, boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SITE_ADDRESS, siteAddress);
+        args.putBoolean(ARG_IS_WPCOM, isWpcom);
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,6 +89,7 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mSiteAddress = getArguments().getString(ARG_SITE_ADDRESS);
+        mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
 
         setHasOptionsMenu(true);
     }
@@ -174,6 +181,7 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
             mLoginFinished = savedInstanceState.getBoolean(KEY_LOGIN_FINISHED);
 
             mRequestedUsername = savedInstanceState.getString(KEY_REQUESTED_USERNAME);
+            mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
 
             if (mInProgress) {
                 showProgressDialog();
@@ -204,6 +212,7 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
         outState.putString(KEY_REQUESTED_USERNAME, mRequestedUsername);
+        outState.putString(KEY_REQUESTED_PASSWORD, mRequestedPassword);
     }
 
     @Override
@@ -229,16 +238,22 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         showProgressDialog();
 
         mRequestedUsername = mUsernameEditText.getText().toString();
-        String password = mPasswordEditText.getText().toString();
+        mRequestedPassword = mPasswordEditText.getText().toString();
 
         // clear up the authentication-failed flag before
         mAuthFailed = false;
 
-        SiteStore.RefreshSitesXMLRPCPayload selfHostedPayload = new SiteStore.RefreshSitesXMLRPCPayload();
-        selfHostedPayload.username = mRequestedUsername;
-        selfHostedPayload.password = password;
-        selfHostedPayload.url = mSiteAddress;
-        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfHostedPayload));
+        if (mIsWpcom) {
+            AccountStore.AuthenticatePayload payload =
+                    new AccountStore.AuthenticatePayload(mRequestedUsername, mRequestedPassword);
+            mDispatcher.dispatch(AuthenticationActionBuilder.newAuthenticateAction(payload));
+        } else {
+            SiteStore.RefreshSitesXMLRPCPayload selfHostedPayload = new SiteStore.RefreshSitesXMLRPCPayload();
+            selfHostedPayload.username = mRequestedUsername;
+            selfHostedPayload.password = mRequestedPassword;
+            selfHostedPayload.url = mSiteAddress;
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfHostedPayload));
+        }
     }
 
     private String getCleanedUsername() {
@@ -305,6 +320,7 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         }
 
         mRequestedUsername = null;
+        mRequestedPassword = null;
 
         updateNextButton();
     }
@@ -319,7 +335,11 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
             case INVALID_TOKEN:
             case AUTHORIZATION_REQUIRED:
             case NEEDS_2FA:
-                showError("2FA not supported for self-hosted sites. Please use an app-password.");
+                if (mIsWpcom) {
+                    mLoginListener.needs2fa(mRequestedUsername, mRequestedPassword);
+                } else {
+                    showError("2FA not supported for self-hosted sites. Please use an app-password.");
+                }
                 break;
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
@@ -335,20 +355,36 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
-        // only emitted when the login failed (but not when succeeded)
+        // emitted when wpcom site or when the selfhosted login failed (but not when succeeded)
 
-        if (!isAdded() || mLoginFinished || mRequestedUsername == null) {
+        if (!isAdded() || mLoginFinished) {
             // just bail
             return;
         }
 
         if (event.isError()) {
+            if (mRequestedUsername == null) {
+                // just bail since the operation was cancelled
+                return;
+            }
+
+            mAuthFailed = true;
             AppLog.e(T.API, "Login with username/pass onAuthenticationChanged has error: " + event.error.type + " - " +
                     event.error.message);
 
-            mAuthFailed = true;
-
             handleAuthError(event.error.type, event.error.message);
+
+            // end the progress last since it cleans up the requested username/password and those might be needed
+            //  in handleAuthError()
+            endProgress();
+
+            return;
+        }
+
+        AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
+
+        if (mIsWpcom && mLoginListener != null) {
+            mLoginListener.loggedInViaPassword();
         }
     }
 
