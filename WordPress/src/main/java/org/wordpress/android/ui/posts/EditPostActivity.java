@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.m4m.MediaComposer;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -121,6 +123,7 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -131,6 +134,7 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -1703,6 +1707,137 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+
+    private void dismissProgressDialog(ProgressDialog progressDialog) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            try {
+                progressDialog.dismiss();
+            } catch (IllegalArgumentException e) {
+                // dialog doesn't exist
+            }
+        }
+    }
+
+    private class VideoOptimizationProgressListener implements org.m4m.IProgressListener {
+        private WeakReference<Context> mWeakContext;
+        private final String mOutFilePath;
+        private WeakReference<ProgressDialog> mWeakProgressDialog;
+        private boolean isStopped = false;
+
+        VideoOptimizationProgressListener(Context context, String outFilePath) {
+            mWeakContext = new WeakReference<Context>(context);
+            mOutFilePath = outFilePath;
+        }
+
+        public void setProgressDialog(ProgressDialog progressDialog) {
+            this.mWeakProgressDialog = new WeakReference<ProgressDialog>(progressDialog);;
+        }
+
+        public void setStopped(boolean stopped) {
+            isStopped = stopped;
+        }
+
+        @Override
+        public void onMediaStart() {
+
+        }
+
+        @Override
+        public void onMediaProgress(float progress) {
+
+        }
+
+        @Override
+        public void onMediaDone() {
+            ProgressDialog pd = mWeakProgressDialog.get();
+            dismissProgressDialog(pd);
+            if (isStopped || isFinishing()) {
+                return;
+            }
+            EditPostActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isStopped || isFinishing()) {
+                        return;
+                    }
+                    Uri uri = Uri.parse(mOutFilePath);
+                    MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
+                    MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+                    if (media != null) {
+                        mEditorFragment.appendMediaFile(mediaFile, mOutFilePath, mImageLoader);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onMediaPause() {
+
+        }
+
+        @Override
+        public void onMediaStop() {
+            // This seems to be called called in 2 cases. Do not use to check if we've manually stopped the composer.
+            // 1. When the encoding is done without errors, before onMediaDone!
+            // 2. When we call 'stop' on the media composer.
+        }
+
+        @Override
+        public void onError(Exception exception) {
+            if (isStopped || isFinishing()) {
+                return;
+            }
+            AppLog.e(AppLog.T.MEDIA, "Can't optimize the video", exception);
+            ProgressDialog pd = mWeakProgressDialog.get();
+            dismissProgressDialog(pd);
+            Context context = mWeakContext.get();
+            if (context != null) {
+                ToastUtils.showToast(context, R.string.video_optimization_generic_error_message, Duration.LONG);
+            }
+        }
+    }
+
+    private boolean compressVideo(String path) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            // Video downsampling -> API18 or higher
+            return false;
+        }
+
+        if (!BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE) {
+            return false;
+        }
+
+        // create the destination file
+        File cacheDir = MediaUtils.getDiskCacheDir(this);
+        if (cacheDir != null && !cacheDir.exists()) {
+            cacheDir.mkdirs();
+        }
+        final String outFilePath = cacheDir.getPath()+ "/" + MediaUtils.generateTimeStampedFileName("video/mp4");
+
+        // Setup video optimization objects
+        final VideoOptimizationProgressListener progressListener = new VideoOptimizationProgressListener(this, outFilePath);
+        final MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(this, path, outFilePath, progressListener);
+        if (mediaComposer == null) {
+            ToastUtils.showToast(this, R.string.video_optimization_generic_error_message, Duration.LONG);
+            return false;
+        }
+
+        // setup done. We're ready to optimize!
+
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "", this.getString(R.string.video_crunching_message), true, true, new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                progressListener.setStopped(true);
+                mediaComposer.stop();
+            }
+        });
+        progressListener.setProgressDialog(progressDialog);
+
+
+        mediaComposer.start();
+        return true;
+    }
+
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
         String path = MediaUtils.getRealPathFromURI(this, uri);
 
@@ -1711,6 +1846,13 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        if (BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE && isVideo && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            // Video downsampling -> API18 or higher
+            boolean res = compressVideo(path);
+            if (res) {
+                return true;
+            }
+        }
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
