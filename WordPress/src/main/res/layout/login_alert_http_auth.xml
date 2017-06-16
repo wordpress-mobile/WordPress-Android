@@ -10,10 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- use singleLine (even if deprecated) to have a scrolling single line. -->
         <android.support.design.widget.TextInputEditText
             android:id="@+id/login_http_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="@string/httpuser"/>
     </android.support.design.widget.TextInputLayout>
 
