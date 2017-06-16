@@ -122,7 +122,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
     }
 
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         return mMediaList.size() == 0;
     }
 
@@ -374,12 +374,18 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         private void addMedia(Uri baseUri, boolean isVideo) {
             String[] projection = { ID_COL };
-            Cursor cursor = mContext.getContentResolver().query(
-                    baseUri,
-                    projection,
-                    null,
-                    null,
-                    null);
+            Cursor cursor = null;
+            try {
+                cursor = mContext.getContentResolver().query(
+                        baseUri,
+                        projection,
+                        null,
+                        null,
+                        null);
+            } catch (SecurityException e) {
+                AppLog.e(AppLog.T.MEDIA, e);
+            }
+
             if (cursor == null) {
                 return;
             }
