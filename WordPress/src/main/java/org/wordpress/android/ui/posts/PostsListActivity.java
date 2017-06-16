@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -127,17 +128,23 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
                 return true;
             case R.id.search_posts_list:
                 mSearchMenuItem = item;
-                MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-                MenuItemCompat.expandActionView(mSearchMenuItem);
-
                 mSearchView = (SearchView) item.getActionView();
                 mSearchView.setOnQueryTextListener(this);
 
-                // load last saved query
-                if (!TextUtils.isEmpty(mQuery)) {
-                    onQueryTextSubmit(mQuery);
-                    mSearchView.setQuery(mQuery, true);
+                if (!NetworkUtils.checkConnection(this)) {
+                    mSearchView.clearFocus();
+                    MenuItemCompat.collapseActionView(mSearchMenuItem);
                 }
+                else {
+                    MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+                    MenuItemCompat.expandActionView(mSearchMenuItem);
+                    // load last saved query
+                    if (!TextUtils.isEmpty(mQuery)) {
+                        onQueryTextSubmit(mQuery);
+                        mSearchView.setQuery(mQuery, true);
+                    }
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
