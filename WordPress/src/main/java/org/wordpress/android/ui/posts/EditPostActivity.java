@@ -1860,7 +1860,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         // setup done. We're ready to optimize!
 
-        final ProgressDialog progressDialog = ProgressDialog.show(this, "", this.getString(R.string.video_crunching_message), true, true, new DialogInterface.OnCancelListener() {
+        final ProgressDialog progressDialog = ProgressDialog.show(this, "", this.getString(R.string.video_optimization_in_progress), true, true, new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 progressListener.setStopped(true);

@@ -1696,7 +1696,7 @@
 
 
     <!-- Video processing -->
-    <string name="video_crunching_message">Crunching your video</string>
+    <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
     <string name="video_optimization_cant_optimize">Sorry, we can\'t optimize this video. Using the original file.</string>
     <string name="video_optimization_generic_error_message">An error occurred while compressing your video</string>
 </resources>
