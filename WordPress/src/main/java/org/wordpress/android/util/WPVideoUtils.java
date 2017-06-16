@@ -1,18 +1,22 @@
 package org.wordpress.android.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.MediaCodecInfo;
+import android.os.Build;
 
 import org.m4m.AudioFormat;
 import org.m4m.MediaComposer;
 import org.m4m.MediaFileInfo;
 import org.m4m.Uri;
+import org.m4m.VideoFormat;
 import org.m4m.android.AndroidMediaObjectFactory;
 import org.m4m.android.AudioFormatAndroid;
 import org.m4m.android.VideoFormatAndroid;
 
 import java.io.IOException;
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class WPVideoUtils {
 
     // Default parameters for the video encoder
@@ -28,7 +32,7 @@ public class WPVideoUtils {
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
     private static final int AUDIO_OUTPUT_BIT_RATE = 96 * 1024;
 
-    public static org.m4m.MediaComposer getVideoOptimizationComposer(Context ctx, String inputFile, String outFile, org.m4m.IProgressListener listener) {
+    public static MediaComposer getVideoOptimizationComposer(Context ctx, String inputFile, String outFile, org.m4m.IProgressListener listener) {
         if (ctx == null || inputFile == null || listener == null) {
             AppLog.e(AppLog.T.MEDIA, "Input parameters must be not null!!");
             return null;
@@ -41,25 +45,37 @@ public class WPVideoUtils {
         try {
             mediaFileInfo.setUri(m4mUri);
         } catch (IOException e) {
-            AppLog.e(AppLog.T.EDITOR, "Cannot access the input file at " + inputFile, e);
+            AppLog.e(AppLog.T.MEDIA, "Cannot access the input file at " + inputFile, e);
             return null;
         }
 
-        AudioFormat audioFormat = (org.m4m.AudioFormat) mediaFileInfo.getAudioFormat();
+        // Check the video resolution
+        VideoFormat videoFormat = (VideoFormat) mediaFileInfo.getVideoFormat();
+        if (videoFormat == null) {
+            AppLog.w(AppLog.T.MEDIA, "Input file doesn't contain a video track?");
+            return null;
+        }
+        if (videoFormat.getVideoFrameSize().width() < OUTPUT_WIDTH ||
+                videoFormat.getVideoFrameSize().height() < OUTPUT_HEIGHT) {
+            AppLog.w(AppLog.T.MEDIA, "Input file resolution is lower than than 1280x720. Keeping the original file");
+            return null;
+        }
+
+        AudioFormat audioFormat = (AudioFormat) mediaFileInfo.getAudioFormat();
         boolean isAudioAvailable = audioFormat != null;
 
         MediaComposer mediaComposer = new MediaComposer(factory, listener);
         try{
             mediaComposer.addSourceFile(inputFile);
         } catch (IOException e) {
-            AppLog.e(AppLog.T.EDITOR, "Cannot access the input file at " + inputFile, e);
+            AppLog.e(AppLog.T.MEDIA, "Cannot access the input file at " + inputFile, e);
             return null;
         }
 
         try {
             mediaComposer.setTargetFile(outFile, mediaFileInfo.getRotation());
         } catch (IOException e) {
-            AppLog.e(AppLog.T.EDITOR, "Cannot access/write the output file at " + outFile, e);
+            AppLog.e(AppLog.T.MEDIA, "Cannot access/write the output file at " + outFile, e);
             return null;
         }
 
