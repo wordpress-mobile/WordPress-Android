@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class WPPermissionUtils {
 
-    // permission request codes
+    // permission request codes - note these are reported to analytics so they shouldn't be changed
     public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE          = 10;
     public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE        = 20;
     public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE        = 30;

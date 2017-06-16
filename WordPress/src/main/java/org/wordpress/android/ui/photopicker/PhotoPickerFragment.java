@@ -171,7 +171,7 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        if (savedInstanceState == null && mAllowMultiSelect && isStoragePermissionGranted()) {
+        if (savedInstanceState == null && mAllowMultiSelect && hasStoragePermission()) {
             SmartToast.show(getActivity(), SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
         }
 
@@ -347,7 +347,7 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!isStoragePermissionGranted()) return;
+        if (!hasStoragePermission()) return;
 
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
@@ -369,7 +369,7 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!isStoragePermissionGranted()) return;
+        if (!hasStoragePermission()) return;
 
         if (mGridManager == null || mAdapter == null) {
             reload();
@@ -426,13 +426,14 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    private boolean isStoragePermissionGranted() {
+    private boolean hasStoragePermission() {
         return ContextCompat.checkSelfPermission(
                 getActivity(), permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private boolean isStoragePermissionAlwaysDenied() {
-        return WPPermissionUtils.isPermissionAlwaysDenied(getActivity(), permission.WRITE_EXTERNAL_STORAGE);
+        return WPPermissionUtils.isPermissionAlwaysDenied(
+                getActivity(), permission.WRITE_EXTERNAL_STORAGE);
     }
 
     /*
@@ -442,7 +443,7 @@ public class PhotoPickerFragment extends Fragment {
     public void checkStoragePermission() {
         if (!isAdded()) return;
 
-        if (isStoragePermissionGranted()) {
+        if (hasStoragePermission()) {
             showSoftAskView(false);
             if (mAdapter == null || mAdapter.isEmpty()) {
                 reload();
@@ -454,31 +455,39 @@ public class PhotoPickerFragment extends Fragment {
 
     private void requestStoragePermission() {
         String[] permissions = new String[] { permission.WRITE_EXTERNAL_STORAGE };
-        FragmentCompat.requestPermissions(this, permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
+        FragmentCompat.requestPermissions(
+                this, permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
     private void requestCameraPermission() {
         String[] permissions = new String[] { permission.CAMERA };
-        FragmentCompat.requestPermissions(this, permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
+        FragmentCompat.requestPermissions(
+                this, permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
+        boolean checkForAlwaysDenied =
+                requestCode == WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE;
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
-                getActivity(), requestCode, permissions, grantResults, false);
+                getActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied);
 
-        if (requestCode == WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE) {
-            checkStoragePermission();
-        } else if (allGranted && requestCode == WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE) {
-            doIconClicked(mLastTappedIcon);
+        switch (requestCode) {
+            case WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE:
+                checkStoragePermission();
+                break;
+            case WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE:
+                if (allGranted) {
+                    doIconClicked(mLastTappedIcon);
+                }
+                break;
         }
     }
 
     /*
-     * shows the "soft ask" view which should appear when the necessary permissions haven't
-     * been granted yet
+     * shows the "soft ask" view which should appear when storage permission hasn't been granted
      */
     private void showSoftAskView(boolean show) {
         if (!isAdded()) return;
