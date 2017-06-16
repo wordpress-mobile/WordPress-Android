@@ -693,7 +693,7 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private void updateSlug(String slug) {
-        if (mPost.getSlug().equals(slug)) {
+        if (mPost.getSlug().equalsIgnoreCase(slug)) {
             return;
         }
         mPost.setSlug(slug);
