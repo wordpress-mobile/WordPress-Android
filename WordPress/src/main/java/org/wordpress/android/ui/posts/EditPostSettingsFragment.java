@@ -597,8 +597,7 @@ public class EditPostSettingsFragment extends Fragment
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        mPost.setPassword(input);
-                        mPasswordTextView.setText(mPost.getPassword());
+                        updatePassword(input);
                     }
                 });
         dialog.show(getFragmentManager(), null);
@@ -680,6 +679,15 @@ public class EditPostSettingsFragment extends Fragment
         mPost.setSlug(slug);
         mExcerptTextView.setText(mPost.getSlug());
         dispatchUpdatePostAction();
+    }
+
+    private void updatePassword(String password) {
+        if (mPost.getPassword().equals(password)) {
+            return;
+        }
+        mPost.setPassword(password);
+        dispatchUpdatePostAction();
+        mPasswordTextView.setText(mPost.getPassword());
     }
 
     private void updateCategories(List<TermModel> categoryList) {
