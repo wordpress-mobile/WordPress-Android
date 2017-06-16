@@ -557,7 +557,7 @@ public class EditPostSettingsFragment extends Fragment
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
                 int index = listView.getCheckedItemPosition();
-                updatePostStatus(getPostStatusAtIndex(index));
+                updatePostStatus(getPostStatusAtIndex(index).toString());
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -695,8 +695,11 @@ public class EditPostSettingsFragment extends Fragment
         dispatchUpdatePostAction();
     }
 
-    private void updatePostStatus(PostStatus postStatus) {
-        mPost.setStatus(postStatus.toString());
+    private void updatePostStatus(String postStatus) {
+        if (mPost.getStatus().equals(postStatus)) {
+            return;
+        }
+        mPost.setStatus(postStatus);
         updateStatusTextView();
         dispatchUpdatePostAction();
         updateSaveButton();
@@ -713,22 +716,10 @@ public class EditPostSettingsFragment extends Fragment
 
     public void updateStatusTextView() {
         String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        switch (PostStatus.fromPost(mPost)) {
-            case PUBLISHED:
-            case SCHEDULED:
-            case UNKNOWN:
-                mStatusTextView.setText(statuses[0]);
-                break;
-            case DRAFT:
-                mStatusTextView.setText(statuses[1]);
-                break;
-            case PENDING:
-                mStatusTextView.setText(statuses[2]);
-                break;
-            case PRIVATE:
-                mStatusTextView.setText(statuses[3]);
-                break;
-        }
+        int index = getCurrentPostStatusIndex();
+        // We should never get an OutOfBoundsException here, but if we do,
+        // we should let it crash so we can fix the underlying issue
+        mStatusTextView.setText(statuses[index]);
     }
 
     private void updateLocationText(String locationName) {
@@ -797,15 +788,17 @@ public class EditPostSettingsFragment extends Fragment
     }
 
     private int getCurrentPostStatusIndex() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        String currentStatus = mPost.getStatus();
-        for (int i = 0; i < statuses.length; i++) {
-            if (currentStatus.equalsIgnoreCase(statuses[i])) {
-                return i;
-            }
+        switch (PostStatus.fromPost(mPost)) {
+            case DRAFT:
+                return 1;
+            case PENDING:
+                return 2;
+            case PRIVATE:
+                return 3;
+            default:
+                // PUBLISHED, SCHEDULED, UNKNOWN
+                return 0;
         }
-        // This is a fallback which we should never need
-        return 0;
     }
 
     // Post Format Helpers
