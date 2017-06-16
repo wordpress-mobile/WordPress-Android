@@ -79,7 +79,7 @@ public class MediaUploadService extends Service {
     @Override
     public void onDestroy() {
         for (MediaModel oneUpload : mInProgressUploads) {
-            cancelUpload(oneUpload);
+            cancelUpload(oneUpload, false);
         }
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
@@ -272,11 +272,11 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private void cancelUpload(MediaModel oneUpload) {
+    private void cancelUpload(MediaModel oneUpload, boolean delete) {
         if (oneUpload != null) {
             SiteModel site = mSiteStore.getSiteByLocalId(oneUpload.getLocalSiteId());
             if (site != null) {
-                dispatchCancelAction(oneUpload, site);
+                dispatchCancelAction(oneUpload, site, delete);
             } else {
                 AppLog.i(T.MEDIA, "Unexpected state, site is null. Skipping cancellation of " +
                         "this request - MediaUploadService.");
@@ -295,10 +295,10 @@ public class MediaUploadService extends Service {
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
     }
 
-    private void dispatchCancelAction(@NonNull final MediaModel media, @NonNull final SiteModel site) {
+    private void dispatchCancelAction(@NonNull final MediaModel media, @NonNull final SiteModel site, boolean delete) {
         AppLog.i(T.MEDIA, "Dispatching cancel upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
-        CancelMediaPayload payload = new CancelMediaPayload(site, media);
+        CancelMediaPayload payload = new CancelMediaPayload(site, media, delete);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
@@ -319,12 +319,12 @@ public class MediaUploadService extends Service {
         }
         for (MediaModel inProgressUpload : mInProgressUploads) {
             if (inProgressUpload.getLocalPostId() == event.post.getId()) {
-                cancelUpload(inProgressUpload);
+                cancelUpload(inProgressUpload, true);
             }
         }
         for (MediaModel pendingUpload : mPendingUploads) {
             if (pendingUpload.getLocalPostId() == event.post.getId()) {
-                cancelUpload(pendingUpload);
+                cancelUpload(pendingUpload, true);
             }
         }
     }

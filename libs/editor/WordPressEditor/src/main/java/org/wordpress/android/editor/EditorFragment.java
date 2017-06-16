@@ -1336,7 +1336,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+                        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId);
 
                         mWebView.post(new Runnable() {
                             @Override
@@ -1462,7 +1462,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public void onMediaRemoved(String mediaId) {
         mUploadingMedia.remove(mediaId);
         mFailedMediaIds.remove(mediaId);
-        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId, true);
+        mEditorFragmentListener.onMediaUploadCancelClicked(mediaId);
     }
 
     @Override
