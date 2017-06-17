@@ -422,6 +422,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
         if (media != null) {
+            media.setUploadState(error == null ? UploadState.UPLOADED : UploadState.FAILED);
             removeCallFromCurrentUploadsMap(media.getId());
         }
 
