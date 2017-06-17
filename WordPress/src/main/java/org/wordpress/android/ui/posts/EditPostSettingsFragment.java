@@ -9,8 +9,12 @@ import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
@@ -70,6 +74,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -256,7 +262,7 @@ public class EditPostSettingsFragment extends Fragment {
         locationContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showLocationPicker();
+                showLocationPickerOrPopupMenu(view);
             }
         });
 
@@ -650,10 +656,17 @@ public class EditPostSettingsFragment extends Fragment {
             // args will be the latitude, longitude to look up
             double latitude = args[0];
             double longitude = args[1];
-            return GeocoderUtils.getAddressFromCoords(getActivity(), latitude, longitude);
+            try {
+                return GeocoderUtils.getAddressFromCoords(getActivity(), latitude, longitude);
+            } catch (IllegalArgumentException iae) {
+                return null;
+            }
         }
 
-        protected void onPostExecute(Address address) {
+        protected void onPostExecute(@Nullable Address address) {
+            if (address == null) {
+                return;
+            }
             if (address.getMaxAddressLineIndex() > 0) {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; ; ++i) {
@@ -859,17 +872,24 @@ public class EditPostSettingsFragment extends Fragment {
         mCategoriesTextView.setText(sb);
     }
 
-    private void setLocation(Place place) {
+    private void setLocation(@Nullable Place place) {
         if (mPostLocation == null) {
             mPostLocation = new PostLocation();
         }
+        if (place == null) {
+            mLocationTextView.setText(R.string.post_settings_not_set);
+            mPost.clearLocation();
+            mPostLocation = null;
+            return;
+        }
         mPostLocation.setLatitude(place.getLatLng().latitude);
         mPostLocation.setLongitude(place.getLatLng().longitude);
+        mPost.setLocation(mPostLocation);
         mLocationTextView.setText(place.getAddress());
     }
 
     private void initLocation() {
-        if (mPost.hasLocation()) {
+        if (!mPost.hasLocation()) {
             mPostLocation = null;
             mLocationTextView.setText(getString(R.string.post_settings_not_set));
         } else {
@@ -879,6 +899,47 @@ public class EditPostSettingsFragment extends Fragment {
             new FetchAndSetAddressAsyncTask().execute(mPost.getLocation().getLatitude(), mPost.getLocation().getLongitude());
         }
     }
+
+    private void showLocationPickerOrPopupMenu(@NonNull final View view) {
+        // If the post doesn't have location set, show the picker directly
+        if (!mPost.hasLocation()) {
+            showLocationPicker();
+            return;
+        }
+        if (!isAdded()) {
+            return;
+        }
+
+        // If the post have a location set, show a context menu to change or remove the location
+        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+        popupMenu.inflate(R.menu.post_settings_location_popup);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.menu_change_location) {
+                    showLocationPicker();
+                } else if (menuItem.getItemId() == R.id.menu_remove_location) {
+                    setLocation(null);
+                }
+                return true;
+            }
+        });
+
+        // Using android internal MenuPopupHelper class trick to show the icons
+        try {
+            Field fieldPopup = popupMenu.getClass().getDeclaredField("mPopup");
+            fieldPopup.setAccessible(true);
+            Object menuPopupHelper = fieldPopup.get(popupMenu);
+            MenuPopupHelper popupHelper = (MenuPopupHelper) fieldPopup.get(popupMenu);
+            Class<?> classPopupHelper = Class.forName(popupHelper.getClass().getName());
+            Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+            setForceIcons.invoke(menuPopupHelper, true);
+        } catch (Exception e) {
+            // no op, icons won't show
+        }
+        popupMenu.show();
+    }
+
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
