@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
@@ -381,11 +381,11 @@ public class MediaStore extends Store {
 
     public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
     static {
-        NOT_DELETED_STATES.add(UploadState.DELETING.toString());
-        NOT_DELETED_STATES.add(UploadState.FAILED.toString());
-        NOT_DELETED_STATES.add(UploadState.QUEUED.toString());
-        NOT_DELETED_STATES.add(UploadState.UPLOADED.toString());
-        NOT_DELETED_STATES.add(UploadState.UPLOADING.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.DELETING.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.FAILED.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.QUEUED.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.UPLOADED.toString());
+        NOT_DELETED_STATES.add(MediaUploadState.UPLOADING.toString());
     }
 
     public WellCursor<MediaModel> getNotDeletedSiteMediaAsCursor(SiteModel site) {
@@ -458,11 +458,11 @@ public class MediaStore extends Store {
     }
 
     public List<MediaModel> getLocalSiteMedia(SiteModel siteModel) {
-        UploadState expectedState = UploadState.UPLOADED;
+        MediaUploadState expectedState = MediaUploadState.UPLOADED;
         return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
-    public List<MediaModel> getSiteMediaWithState(SiteModel siteModel, UploadState expectedState) {
+    public List<MediaModel> getSiteMediaWithState(SiteModel siteModel, MediaUploadState expectedState) {
         return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
@@ -494,14 +494,14 @@ public class MediaStore extends Store {
         return MediaSqlUtils.matchPostMedia(postModel.getId());
     }
 
-    public List<MediaModel> getMediaForPostWithState(PostModel postModel, UploadState expectedState) {
+    public List<MediaModel> getMediaForPostWithState(PostModel postModel, MediaUploadState expectedState) {
         return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
                 expectedState);
     }
 
     public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
         List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteModel,
-                MediaModelTable.UPLOAD_STATE, UploadState.DELETING.toString());
+                MediaModelTable.UPLOAD_STATE, MediaUploadState.DELETING.toString());
         return media.size() > 0 ? media.get(0) : null;
     }
 
@@ -579,13 +579,13 @@ public class MediaStore extends Store {
     private void performUploadMedia(MediaPayload payload) {
         String errorMessage = isWellFormedForUpload(payload.media);
         if (errorMessage != null) {
-            payload.media.setUploadState(UploadState.FAILED);
+            payload.media.setUploadState(MediaUploadState.FAILED);
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
             notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media);
             return;
         }
 
-        payload.media.setUploadState(UploadState.UPLOADING);
+        payload.media.setUploadState(MediaUploadState.UPLOADING);
         MediaSqlUtils.insertOrUpdateMedia(payload.media);
 
         if (payload.site.isUsingWpComRestApi()) {
@@ -599,7 +599,7 @@ public class MediaStore extends Store {
         int offset = 0;
         if (payload.loadMore) {
             List<String> list = new ArrayList<>();
-            list.add(UploadState.UPLOADED.toString());
+            list.add(MediaUploadState.UPLOADED.toString());
             offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
         }
         if (payload.site.isUsingWpComRestApi()) {
@@ -645,7 +645,7 @@ public class MediaStore extends Store {
         if (payload.delete) {
             MediaSqlUtils.deleteMedia(media);
         } else {
-            media.setUploadState(UploadState.FAILED);
+            media.setUploadState(MediaUploadState.FAILED);
             MediaSqlUtils.insertOrUpdateMedia(media);
         }
 
