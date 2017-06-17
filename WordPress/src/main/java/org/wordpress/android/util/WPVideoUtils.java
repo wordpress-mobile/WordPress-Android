@@ -26,7 +26,7 @@ public class WPVideoUtils {
 
     private static final int OUTPUT_WIDTH = 1280;
     private static final int OUTPUT_HEIGHT = 720;
-    private static final int OUTPUT_BITRATE_KB = 2000;
+    private static final int OUTPUT_BITRATE_KB = 3000;
 
     // Default parameters for the audio encoder
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
