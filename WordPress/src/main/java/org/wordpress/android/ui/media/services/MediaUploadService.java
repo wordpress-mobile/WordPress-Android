@@ -123,7 +123,7 @@ public class MediaUploadService extends Service {
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(AppLog.T.MEDIA, "Error uploading media: " + event.error.message);
         // TODO: Don't update the state here, it needs to be done in FluxC
-        mCurrentUpload.setUploadState(MediaUploadState.FAILED.name());
+        mCurrentUpload.setUploadState(MediaUploadState.FAILED);
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentUpload));
         // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
         // event.media, event.error
@@ -195,7 +195,7 @@ public class MediaUploadService extends Service {
             // uploading is updated to queued, queued media added to the queue, failed media added to completed list
             for (MediaModel mediaItem : localMedia) {
                 if (MediaUploadState.UPLOADING.toString().equals(mediaItem.getUploadState())) {
-                    mediaItem.setUploadState(MediaUploadState.QUEUED.toString());
+                    mediaItem.setUploadState(MediaUploadState.QUEUED);
                     mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaItem));
                 }
 
@@ -255,7 +255,7 @@ public class MediaUploadService extends Service {
     private void dispatchUploadAction(@NonNull final MediaModel media) {
         AppLog.i(AppLog.T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
-        media.setUploadState(MediaUploadState.UPLOADING.name());
+        media.setUploadState(MediaUploadState.UPLOADING);
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         MediaPayload payload = new MediaPayload(mSite, media);
