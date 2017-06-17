@@ -450,7 +450,7 @@ public class MediaStoreTest {
         for (int i = 0; i < count; ++i) {
             MediaModel next = mMediaStore.getNextSiteMediaToDelete(testSite);
             assertNotNull(next);
-            assertEquals(UploadState.DELETING.toString(), next.getUploadState());
+            assertEquals(UploadState.DELETING, UploadState.fromString(next.getUploadState()));
             assertTrue(pendingDelete.contains(next));
             MediaSqlUtils.deleteMedia(next);
             assertEquals(count * 2 - i - 1, mMediaStore.getSiteMediaCount(testSite));
