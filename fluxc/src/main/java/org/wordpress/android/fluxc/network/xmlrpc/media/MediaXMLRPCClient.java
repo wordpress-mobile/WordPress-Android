@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -422,7 +422,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
         if (media != null) {
-            media.setUploadState(error == null ? UploadState.UPLOADED : UploadState.FAILED);
+            media.setUploadState(error == null ? MediaUploadState.UPLOADED : MediaUploadState.FAILED);
             removeCallFromCurrentUploadsMap(media.getId());
         }
 
@@ -508,7 +508,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             media.setFileUrlLargeSize(getFileUrlForSize(link, metadataMap, "large"));
         }
 
-        media.setUploadState(UploadState.UPLOADED);
+        media.setUploadState(MediaUploadState.UPLOADED);
         return media;
     }
 

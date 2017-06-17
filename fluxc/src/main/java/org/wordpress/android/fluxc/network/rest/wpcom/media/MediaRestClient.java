@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -415,7 +415,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
         if (media != null) {
-            media.setUploadState(error == null ? UploadState.UPLOADED : UploadState.FAILED);
+            media.setUploadState(error == null ? MediaUploadState.UPLOADED : MediaUploadState.FAILED);
         }
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
@@ -497,9 +497,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         media.setVideoPressProcessingDone(from.videopress_processing_done);
         media.setDeleted(MediaWPComRestResponse.DELETED_STATUS.equals(from.status));
         if (!media.getDeleted()) {
-            media.setUploadState(UploadState.UPLOADED);
+            media.setUploadState(MediaUploadState.UPLOADED);
         } else {
-            media.setUploadState(UploadState.DELETED);
+            media.setUploadState(MediaUploadState.DELETED);
         }
         return media;
     }
