@@ -640,7 +640,7 @@ public class MediaStore extends Store {
         if (payload.delete) {
             MediaSqlUtils.deleteMedia(media);
         } else {
-            media.setUploadState(UploadState.FAILED.toString());
+            media.setUploadState(UploadState.FAILED);
             MediaSqlUtils.insertOrUpdateMedia(media);
         }
 
