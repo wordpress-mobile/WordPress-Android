@@ -414,6 +414,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
+        if (media != null) {
+            media.setUploadState(error == null ? UploadState.UPLOADED : UploadState.FAILED);
+        }
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
