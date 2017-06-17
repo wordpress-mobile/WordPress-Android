@@ -14,13 +14,12 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -124,7 +123,7 @@ public class MediaUploadService extends Service {
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(AppLog.T.MEDIA, "Error uploading media: " + event.error.message);
         // TODO: Don't update the state here, it needs to be done in FluxC
-        mCurrentUpload.setUploadState(UploadState.FAILED.name());
+        mCurrentUpload.setUploadState(MediaUploadState.FAILED.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mCurrentUpload));
         // TODO: check whether we need to broadcast the error or maybe it is enough to register for FluxC events
         // event.media, event.error
@@ -195,12 +194,12 @@ public class MediaUploadService extends Service {
         if (localMedia != null && !localMedia.isEmpty()) {
             // uploading is updated to queued, queued media added to the queue, failed media added to completed list
             for (MediaModel mediaItem : localMedia) {
-                if (MediaUploadState.UPLOADING.name().equals(mediaItem.getUploadState())) {
-                    mediaItem.setUploadState(MediaUploadState.QUEUED.name());
+                if (MediaUploadState.UPLOADING.toString().equals(mediaItem.getUploadState())) {
+                    mediaItem.setUploadState(MediaUploadState.QUEUED.toString());
                     mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaItem));
                 }
 
-                if (MediaUploadState.QUEUED.name().equals(mediaItem.getUploadState())) {
+                if (MediaUploadState.QUEUED.toString().equals(mediaItem.getUploadState())) {
                     addUniqueMediaToQueue(mediaItem);
                 }
             }
@@ -256,7 +255,7 @@ public class MediaUploadService extends Service {
     private void dispatchUploadAction(@NonNull final MediaModel media) {
         AppLog.i(AppLog.T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
-        media.setUploadState(UploadState.UPLOADING.name());
+        media.setUploadState(MediaUploadState.UPLOADING.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         MediaPayload payload = new MediaPayload(mSite, media);
