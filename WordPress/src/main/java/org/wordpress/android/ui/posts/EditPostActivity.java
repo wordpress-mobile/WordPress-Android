@@ -1837,15 +1837,22 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         public void onError(Exception exception) {
+            AppLog.e(AppLog.T.MEDIA, "Can't optimize the video", exception);
             if (isStopped || isFinishing()) {
                 return;
             }
-            AppLog.e(AppLog.T.MEDIA, "Can't optimize the video", exception);
             ProgressDialog pd = mWeakProgressDialog.get();
             dismissProgressDialog(pd);
             Context context = mWeakContext.get();
             if (context != null) {
                 ToastUtils.showToast(context, R.string.video_optimization_generic_error_message, Duration.LONG);
+            }
+            // Upload the original file
+            Uri uri = Uri.parse(mOriginalPath);
+            MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
+            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+            if (media != null) {
+                mEditorFragment.appendMediaFile(mediaFile, mOriginalPath, mImageLoader);
             }
         }
     }
