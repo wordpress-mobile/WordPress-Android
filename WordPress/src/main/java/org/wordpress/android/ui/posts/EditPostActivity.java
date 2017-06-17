@@ -111,6 +111,7 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
@@ -1760,12 +1761,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private class VideoOptimizationProgressListener implements org.m4m.IProgressListener {
         private WeakReference<Context> mWeakContext;
+        private final String mOriginalPath;
         private final String mOutFilePath;
         private WeakReference<ProgressDialog> mWeakProgressDialog;
         private boolean isStopped = false;
 
-        VideoOptimizationProgressListener(Context context, String outFilePath) {
+        VideoOptimizationProgressListener(Context context, String originalPath, String outFilePath) {
             mWeakContext = new WeakReference<Context>(context);
+            mOriginalPath = originalPath;
             mOutFilePath = outFilePath;
         }
 
@@ -1800,11 +1803,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     if (isStopped || isFinishing()) {
                         return;
                     }
-                    Uri uri = Uri.parse(mOutFilePath);
+                    // Make sure the resulting file is smaller than the original
+                    long originalFileSize = FileUtils.length(mOriginalPath);
+                    long optimizedFileSize = FileUtils.length(mOutFilePath);
+                    String pathToUse = mOutFilePath;
+                    if (optimizedFileSize > originalFileSize) {
+                        AppLog.w(AppLog.T.MEDIA, "Optimized video is larger than original file "
+                                + optimizedFileSize + " > " + originalFileSize );
+                        pathToUse = mOriginalPath;
+                    }
+
+                    Uri uri = Uri.parse(pathToUse);
                     MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
                     MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
                     if (media != null) {
-                        mEditorFragment.appendMediaFile(mediaFile, mOutFilePath, mImageLoader);
+                        mEditorFragment.appendMediaFile(mediaFile, pathToUse, mImageLoader);
                     }
                 }
             });
@@ -1851,10 +1864,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         final String outFilePath = cacheDir.getPath()+ "/" + MediaUtils.generateTimeStampedFileName("video/mp4");
 
         // Setup video optimization objects
-        final VideoOptimizationProgressListener progressListener = new VideoOptimizationProgressListener(this, outFilePath);
+        final VideoOptimizationProgressListener progressListener = new VideoOptimizationProgressListener(this, path, outFilePath);
         final MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(this, path, outFilePath, progressListener);
         if (mediaComposer == null) {
-            ToastUtils.showToast(this, R.string.video_optimization_cant_optimize, Duration.LONG);
+            AppLog.w(AppLog.T.MEDIA, "Can't optimize this video. Using the original file");
             return false;
         }
 
