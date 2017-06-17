@@ -513,7 +513,7 @@ public class PostUploadService extends Service {
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
             if (finishedMedia == null || finishedMedia.getUploadState() == null ||
-                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.name())) {
+                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
                 mIsMediaError = true;
                 return null;
             }
@@ -543,7 +543,7 @@ public class PostUploadService extends Service {
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
             if (finishedMedia == null || finishedMedia.getUploadState() == null ||
-                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.name())) {
+                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
                 mIsMediaError = true;
                 return null;
             }
