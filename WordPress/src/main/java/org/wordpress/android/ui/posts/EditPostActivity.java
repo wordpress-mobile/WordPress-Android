@@ -1772,15 +1772,19 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                                 + optimizedFileSize + " > " + originalFileSize );
                         pathToUse = mOriginalPath;
                     }
-
-                    Uri uri = Uri.parse(pathToUse);
-                    MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
-                    MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-                    if (media != null) {
-                        mEditorFragment.appendMediaFile(mediaFile, pathToUse, mImageLoader);
-                    }
+                    // Upload the file
+                    uploadFile(pathToUse);
                 }
             });
+        }
+
+        private void uploadFile(String path) {
+            Uri uri = Uri.parse(path);
+            MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
+            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+            if (media != null) {
+                mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
+            }
         }
 
         @Override
@@ -1808,12 +1812,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 ToastUtils.showToast(context, R.string.video_optimization_generic_error_message, Duration.LONG);
             }
             // Upload the original file
-            Uri uri = Uri.parse(mOriginalPath);
-            MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
-            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-            if (media != null) {
-                mEditorFragment.appendMediaFile(mediaFile, mOriginalPath, mImageLoader);
-            }
+            uploadFile(mOriginalPath);
         }
     }
 
