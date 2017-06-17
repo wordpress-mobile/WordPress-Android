@@ -2046,7 +2046,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
-                if (MediaUploadState.QUEUED.name().equals(media.getUploadState())) {
+                if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
                     mediaList.add(media);
                 }
             }
@@ -2196,7 +2196,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        if (MediaUploadState.valueOf(media.getUploadState()) == MediaUploadState.UPLOADED) {
+        if (media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
             // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
