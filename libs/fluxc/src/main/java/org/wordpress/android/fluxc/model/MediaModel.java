@@ -13,12 +13,12 @@ import java.io.Serializable;
 
 @Table
 public class MediaModel extends Payload implements Identifiable, Serializable {
-    public enum UploadState {
+    public enum MediaUploadState {
         QUEUED, UPLOADING, DELETING, DELETED, FAILED, UPLOADED;
 
-        public static UploadState fromString(String stringState) {
+        public static MediaUploadState fromString(String stringState) {
             if (stringState != null) {
-                for (UploadState state: UploadState.values()) {
+                for (MediaUploadState state: MediaUploadState.values()) {
                     if (stringState.equalsIgnoreCase(state.name())) {
                         return state;
                     }
@@ -318,7 +318,7 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
         return mUploadState;
     }
 
-    public void setUploadState(UploadState uploadState) {
+    public void setUploadState(MediaUploadState uploadState) {
         mUploadState = uploadState.toString();
     }
 
