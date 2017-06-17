@@ -583,6 +583,9 @@ public class MediaStore extends Store {
             return;
         }
 
+        payload.media.setUploadState(UploadState.UPLOADING);
+        MediaSqlUtils.insertOrUpdateMedia(payload.media);
+
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.uploadMedia(payload.site, payload.media);
         } else {
