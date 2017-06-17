@@ -579,6 +579,8 @@ public class MediaStore extends Store {
     private void performUploadMedia(MediaPayload payload) {
         String errorMessage = isWellFormedForUpload(payload.media);
         if (errorMessage != null) {
+            payload.media.setUploadState(UploadState.FAILED);
+            MediaSqlUtils.insertOrUpdateMedia(payload.media);
             notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media);
             return;
         }
