@@ -283,7 +283,7 @@ public class MediaStoreTest {
         final MediaModel localMedia = getBasicMedia();
         localMedia.setLocalSiteId(testSiteId);
         localMedia.setMediaId(localMediaId);
-        localMedia.setUploadState(UploadState.UPLOADING.toString());
+        localMedia.setUploadState(UploadState.UPLOADING);
         insertMediaIntoDatabase(localMedia);
 
         // add remote media
@@ -291,7 +291,7 @@ public class MediaStoreTest {
         remoteMedia.setLocalSiteId(testSiteId);
         remoteMedia.setMediaId(remoteMediaId);
         // remote media has a defined upload date, simulated here
-        remoteMedia.setUploadState(UploadState.UPLOADED.toString());
+        remoteMedia.setUploadState(UploadState.UPLOADED);
         insertMediaIntoDatabase(remoteMedia);
 
         SiteModel testSite = getTestSiteWithLocalId(testSiteId);
@@ -435,9 +435,9 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(UploadState.DELETE.toString());
+            pendingDelete.get(i).setUploadState(UploadState.DELETE);
             pendingDelete.get(i).setMediaId(i + (count * 2));
-            other.get(i).setUploadState(UploadState.UPLOADED.toString());
+            other.get(i).setUploadState(UploadState.UPLOADED);
             other.get(i).setMediaId(i + count);
             insertMediaIntoDatabase(pendingDelete.get(i));
             insertMediaIntoDatabase(other.get(i));
@@ -467,9 +467,9 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(UploadState.DELETE.toString());
+            pendingDelete.get(i).setUploadState(UploadState.DELETE);
             pendingDelete.get(i).setMediaId(i + (count * 2));
-            other.get(i).setUploadState(UploadState.DELETED.toString());
+            other.get(i).setUploadState(UploadState.DELETED);
             other.get(i).setMediaId(i + count);
             insertMediaIntoDatabase(pendingDelete.get(i));
             insertMediaIntoDatabase(other.get(i));

@@ -343,7 +343,7 @@ public class MediaSqlUtilsTest {
 
         // Insert one deleted media
         MediaModel image = getTestMedia(42);
-        image.setUploadState(UploadState.DELETED.toString());
+        image.setUploadState(UploadState.DELETED);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
 
         Assert.assertEquals(SMALL_TEST_POOL,
@@ -359,12 +359,12 @@ public class MediaSqlUtilsTest {
 
         // Insert one detached but deleted media
         MediaModel media = getTestMedia(42);
-        media.setUploadState(UploadState.DELETED.toString());
+        media.setUploadState(UploadState.DELETED);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(media));
 
         // Insert one attached media
         media = getTestMedia(43);
-        media.setUploadState(UploadState.UPLOADED.toString());
+        media.setUploadState(UploadState.UPLOADED);
         media.setPostId(42);
 
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(media));
@@ -382,7 +382,7 @@ public class MediaSqlUtilsTest {
         // Insert one deleted image
         MediaModel image = getTestMedia(42);
         image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
-        image.setUploadState(UploadState.DELETED.toString());
+        image.setUploadState(UploadState.DELETED);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
 
         Assert.assertEquals(SMALL_TEST_POOL,
@@ -402,12 +402,12 @@ public class MediaSqlUtilsTest {
 
         // The media item after uploading, updated with the remote media ID, about to be saved locally
         MediaModel mediaFromUploadResponse = MediaSqlUtils.getAllSiteMedia(site).get(0);
-        mediaFromUploadResponse.setUploadState(UploadState.UPLOADED.name());
+        mediaFromUploadResponse.setUploadState(UploadState.UPLOADED);
         mediaFromUploadResponse.setMediaId(42);
 
         // The same media, but fetched from the server from FETCH_MEDIA_LIST (so no local ID until insertion)
         final MediaModel mediaFromMediaListFetch = MediaSqlUtils.getAllSiteMedia(site).get(0);
-        mediaFromMediaListFetch.setUploadState(UploadState.UPLOADED.name());
+        mediaFromMediaListFetch.setUploadState(UploadState.UPLOADED);
         mediaFromMediaListFetch.setMediaId(42);
         mediaFromMediaListFetch.setId(0);
 
@@ -428,7 +428,7 @@ public class MediaSqlUtilsTest {
         for (int i = 0; i < num; ++i) {
             testItemIds[i] = mRandom.nextLong();
             MediaModel media = getTestMedia(testItemIds[i]);
-            media.setUploadState(UploadState.UPLOADED.toString());
+            media.setUploadState(UploadState.UPLOADED);
             Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(media));
         }
         return testItemIds;
@@ -440,7 +440,7 @@ public class MediaSqlUtilsTest {
             testItemIds[i] = Math.abs(mRandom.nextInt());
             MediaModel image = getTestMedia(testItemIds[i]);
             image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
-            image.setUploadState(UploadState.UPLOADED.toString());
+            image.setUploadState(UploadState.UPLOADED);
             Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
         }
         return testItemIds;
