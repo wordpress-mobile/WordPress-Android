@@ -2137,7 +2137,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(startingState.name());
+        media.setUploadState(startingState);
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         if (!mPost.isLocalDraft()) {
             media.setPostId(mPost.getRemotePostId());
@@ -2204,7 +2204,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
-            media.setUploadState(MediaUploadState.QUEUED.name());
+            media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
             startMediaUploadService();
