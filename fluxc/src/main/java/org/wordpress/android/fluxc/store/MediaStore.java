@@ -381,7 +381,7 @@ public class MediaStore extends Store {
 
     public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
     static {
-        NOT_DELETED_STATES.add(UploadState.DELETE.toString());
+        NOT_DELETED_STATES.add(UploadState.DELETING.toString());
         NOT_DELETED_STATES.add(UploadState.FAILED.toString());
         NOT_DELETED_STATES.add(UploadState.QUEUED.toString());
         NOT_DELETED_STATES.add(UploadState.UPLOADED.toString());
@@ -501,7 +501,7 @@ public class MediaStore extends Store {
 
     public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
         List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteModel,
-                MediaModelTable.UPLOAD_STATE, UploadState.DELETE.toString());
+                MediaModelTable.UPLOAD_STATE, UploadState.DELETING.toString());
         return media.size() > 0 ? media.get(0) : null;
     }
 

@@ -435,7 +435,7 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(UploadState.DELETE);
+            pendingDelete.get(i).setUploadState(UploadState.DELETING);
             pendingDelete.get(i).setMediaId(i + (count * 2));
             other.get(i).setUploadState(UploadState.UPLOADED);
             other.get(i).setMediaId(i + count);
@@ -450,7 +450,7 @@ public class MediaStoreTest {
         for (int i = 0; i < count; ++i) {
             MediaModel next = mMediaStore.getNextSiteMediaToDelete(testSite);
             assertNotNull(next);
-            assertEquals(UploadState.DELETE.toString(), next.getUploadState());
+            assertEquals(UploadState.DELETING.toString(), next.getUploadState());
             assertTrue(pendingDelete.contains(next));
             MediaSqlUtils.deleteMedia(next);
             assertEquals(count * 2 - i - 1, mMediaStore.getSiteMediaCount(testSite));
@@ -467,7 +467,7 @@ public class MediaStoreTest {
         final List<MediaModel> pendingDelete = generateRandomizedMediaList(count, testSiteId);
         final List<MediaModel> other = generateRandomizedMediaList(count, testSiteId);
         for (int i = 0; i < count; ++i) {
-            pendingDelete.get(i).setUploadState(UploadState.DELETE);
+            pendingDelete.get(i).setUploadState(UploadState.DELETING);
             pendingDelete.get(i).setMediaId(i + (count * 2));
             other.get(i).setUploadState(UploadState.DELETED);
             other.get(i).setMediaId(i + count);
