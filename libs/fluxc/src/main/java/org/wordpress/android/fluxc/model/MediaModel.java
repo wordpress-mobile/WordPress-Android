@@ -307,6 +307,10 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
         return mUploadState;
     }
 
+    public void setUploadState(UploadState uploadState) {
+        mUploadState = uploadState.toString();
+    }
+
     //
     // Legacy methods
     //
