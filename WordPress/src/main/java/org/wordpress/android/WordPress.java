@@ -6,14 +6,12 @@ import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
@@ -400,33 +398,18 @@ public class WordPress extends MultiDexApplication {
         // Track app upgrade and install
         int versionCode = PackageUtils.getVersionCode(getContext());
 
-        boolean shouldForceEnableAztec = true;
-
         int oldVersionCode = AppPrefs.getLastAppVersionCode();
         if (oldVersionCode == 0) {
             // Track application installed if there isn't old version code
             AnalyticsTracker.track(Stat.APPLICATION_INSTALLED);
             AppPrefs.setNewEditorPromoRequired(false);
-        } else if (oldVersionCode < versionCode) {
-            Map<String, Long> properties = new HashMap<>(1);
+        }
+        if (oldVersionCode != 0 && oldVersionCode < versionCode) {
+            Map<String, Long> properties = new HashMap<String, Long>(1);
             properties.put("elapsed_time_on_create", elapsedTimeOnCreate);
             // app upgraded
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_UPGRADED, properties);
-        } else {
-            shouldForceEnableAztec = false;
         }
-
-        if (shouldForceEnableAztec) {
-            // Auto-enable Aztec for new alpha users
-            if (AppPrefs.isAztecEditorAvailable()) {
-                AppPrefs.setAztecEditorEnabled(true);
-                AppPrefs.setVisualEditorEnabled(false);
-
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                prefs.edit().putString(getString(R.string.pref_key_editor_type), "2").apply();
-            }
-        }
-
         AppPrefs.setLastAppVersionCode(versionCode);
     }
 
