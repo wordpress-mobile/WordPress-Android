@@ -48,22 +48,6 @@ public class PostLocationTest extends InstrumentationTestCase {
     }
 
     public void testInvalidLatitude() {
-        PostLocation maxLoc = null;
-        try {
-            maxLoc = new PostLocation(INVALID_LAT_MAX, 0);
-            Assert.fail("Lat more than max should have failed on instantiation");
-        } catch (IllegalArgumentException e) {
-            assertNull("Invalid instantiation and not null", maxLoc);
-        }
-
-        PostLocation minLoc = null;
-        try {
-            minLoc = new PostLocation(INVALID_LAT_MIN, 0);
-            Assert.fail("Lat less than min should have failed on instantiation");
-        } catch (IllegalArgumentException e) {
-            assertNull("Invalid instantiation and not null", minLoc);
-        }
-
         PostLocation location = new PostLocation();
 
         try {
