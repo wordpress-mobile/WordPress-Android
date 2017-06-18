@@ -123,7 +123,7 @@ public class WPActivityUtils {
             if (!locale.equals(contextLanguage)) {
                 Resources resources = context.getResources();
                 Configuration conf = resources.getConfiguration();
-                conf.locale = new Locale(locale);
+                conf.locale = WPPrefUtils.languageLocale(locale);
                 resources.updateConfiguration(conf, resources.getDisplayMetrics());
             }
         }
