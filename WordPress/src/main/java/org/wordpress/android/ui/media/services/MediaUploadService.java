@@ -50,12 +50,10 @@ public class MediaUploadService extends Service {
 
     private static List<MediaModel> mPendingUploads = new ArrayList<>();
     private static List<MediaModel> mInProgressUploads = new ArrayList<>();
-    // we need this last map so to be able to update the PostModel once with all completed uploads,
-    // as opposed to editing the Post each time a single upload completes.
-    // Also, we need to process each Post's media in a batch, so that's why we are using a map
-    // instead of using a simple List (a map will have a List of MediaModel for their corresponding
-    // PostId where they're supposed to belong to as per the user intent)
-    private static HashMap<Integer, List<MediaModel>> mCompletedUploads = new HashMap<>();
+
+    // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
+    // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
+    private static HashMap<Integer, List<MediaModel>> mCompletedUploadsByPost = new HashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -90,7 +88,7 @@ public class MediaUploadService extends Service {
         }
 
         // update posts with any completed uploads in our post->media map
-        for (Integer postId : mCompletedUploads.keySet()) {
+        for (Integer postId : mCompletedUploadsByPost.keySet()) {
             savePostToDb(updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId)));
         }
 
@@ -220,12 +218,12 @@ public class MediaUploadService extends Service {
     // this keeps a map for all completed media for each post, so we can process the post easily
     // in one go later
     private void addMediaToPostCompletedMediaListMap(MediaModel media) {
-        List<MediaModel> mediaListForPost = mCompletedUploads.get(media.getLocalPostId());
+        List<MediaModel> mediaListForPost = mCompletedUploadsByPost.get(media.getLocalPostId());
         if (mediaListForPost == null) {
             mediaListForPost = new ArrayList<>();
         }
         mediaListForPost.add(media);
-        mCompletedUploads.put(media.getLocalPostId(), mediaListForPost);
+        mCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
     }
 
     private MediaModel getMediaFromQueueById(int id) {
@@ -327,12 +325,12 @@ public class MediaUploadService extends Service {
 
         // we only trigger the actual post modification / processing after we've got
         // no other pending/inprogress uploads, and we have some completed uploads still to be processed
-        if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty() && !mCompletedUploads.isEmpty()) {
+        if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty() && !mCompletedUploadsByPost.isEmpty()) {
             // here we need to edit the corresponding post with all completed uploads
             // also bear in mind the service could be handling media uploads for different posts,
             // so we also need to take into account processing completed uploads in batches through
             // each post
-            for (Integer postId : mCompletedUploads.keySet()) {
+            for (Integer postId : mCompletedUploadsByPost.keySet()) {
                 savePostToDb(updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId)));
             }
         }
@@ -353,13 +351,13 @@ public class MediaUploadService extends Service {
         // updates in one go and save only once
         if (post != null) {
             MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-            List<MediaModel> mediaList = mCompletedUploads.get(post.getId());
+            List<MediaModel> mediaList = mCompletedUploadsByPost.get(post.getId());
             if (mediaList != null && !mediaList.isEmpty()) {
                 for (MediaModel media : mediaList) {
                     post = updatePostWithMediaUrl(post, media, processor);
                 }
                 // finally remove all completed uploads for this post, as they've been taken care of
-                mCompletedUploads.remove(post.getId());
+                mCompletedUploadsByPost.remove(post.getId());
             }
         }
         return post;
