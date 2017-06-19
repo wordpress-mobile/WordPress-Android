@@ -30,10 +30,12 @@ public class PostEvents {
 
     public static class PostMediaCanceled {
         public int localMediaId;
+        public boolean delete;
         public boolean all;
 
-        public PostMediaCanceled(int localMediaId) {
+        public PostMediaCanceled(int localMediaId, boolean delete) {
             this.localMediaId = localMediaId;
+            this.delete = delete;
             this.all = false;
         }
         public PostMediaCanceled(boolean all) {

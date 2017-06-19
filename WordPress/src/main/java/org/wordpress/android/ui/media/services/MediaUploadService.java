@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.UploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.models.MediaUploadState;
@@ -73,7 +74,7 @@ public class MediaUploadService extends Service {
 
     @Override
     public void onDestroy() {
-        cancelCurrentUpload();
+        cancelCurrentUpload(false);
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
         AppLog.i(AppLog.T.MEDIA, "Media Upload Service > destroyed");
@@ -219,9 +220,9 @@ public class MediaUploadService extends Service {
         return mCurrentUpload != null && media.getLocalSiteId() == mCurrentUpload.getLocalSiteId();
     }
 
-    private void cancelCurrentUpload() {
+    private void cancelCurrentUpload(boolean delete) {
         if (mCurrentUpload != null) {
-            dispatchCancelAction(mCurrentUpload);
+            dispatchCancelAction(mCurrentUpload, delete);
             mCurrentUpload = null;
         }
     }
@@ -229,19 +230,25 @@ public class MediaUploadService extends Service {
     private void cancelAllUploads() {
         mUploadQueue.clear();
         mUploadQueueTime.clear();
-        cancelCurrentUpload();
+        cancelCurrentUpload(false);
     }
 
-    private void cancelUpload(int localMediaId) {
+    private void cancelUpload(int localMediaId, boolean delete) {
         // Cancel if it's currently uploading
         if (mCurrentUpload != null && mCurrentUpload.getId() == localMediaId) {
-            cancelCurrentUpload();
+            AppLog.d(AppLog.T.MEDIA, "Cancelling current upload, id " + localMediaId);
+            cancelCurrentUpload(delete);
+            return;
         }
         // Remove from the queue
         for(Iterator<MediaModel> i = mUploadQueue.iterator(); i.hasNext();) {
             MediaModel mediaModel = i.next();
             if (mediaModel.getId() == localMediaId) {
                 i.remove();
+                if (delete) {
+                    AppLog.d(AppLog.T.MEDIA, "Deleting media from queue with id " + localMediaId);
+                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+                }
             }
         }
     }
@@ -256,10 +263,10 @@ public class MediaUploadService extends Service {
         mDispatcher.dispatch(MediaActionBuilder.newUploadMediaAction(payload));
     }
 
-    private void dispatchCancelAction(@NonNull final MediaModel media) {
+    private void dispatchCancelAction(@NonNull final MediaModel media, boolean delete) {
         AppLog.i(AppLog.T.MEDIA, "Dispatching cancel upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
-        MediaPayload payload = new MediaPayload(mSite, mCurrentUpload);
+        CancelMediaPayload payload = new CancelMediaPayload(mSite, mCurrentUpload, delete);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
 
@@ -279,7 +286,7 @@ public class MediaUploadService extends Service {
             cancelAllUploads();
             return;
         }
-        cancelUpload(event.localMediaId);
+        cancelUpload(event.localMediaId, event.delete);
     }
 
     // FluxC events
