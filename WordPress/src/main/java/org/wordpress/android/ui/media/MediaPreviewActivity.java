@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -74,8 +73,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     private static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_IS_VIDEO = "is_video";
-
-    private static final int SAVE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private String mContentUri;
     private int mMediaId;
@@ -572,19 +569,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
-        if (requestCode == SAVE_MEDIA_PERMISSION_REQUEST_CODE) {
-            boolean canSaveMedia = true;
-            for (int grantResult : grantResults) {
-                if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                    canSaveMedia = false;
-                }
-            }
-            if (canSaveMedia) {
-                saveMedia();
-            } else {
-                ToastUtils.showToast(this, R.string.error_media_insufficient_fs_permissions);
-            }
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                this, requestCode, permissions, grantResults, true);
+        if (allGranted && requestCode == WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE) {
+            saveMedia();
         }
     }
 
@@ -621,7 +609,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
-        if (!PermissionUtils.checkAndRequestPermissions(this, SAVE_MEDIA_PERMISSION_REQUEST_CODE, permissionList)) {
+        if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE, permissionList)) {
             return;
         }
 
