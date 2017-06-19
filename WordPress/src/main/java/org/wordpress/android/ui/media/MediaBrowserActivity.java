@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -72,6 +73,7 @@ import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -152,6 +154,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
+        }
+
+        if (mBrowserType == null) {
+            // default to browser mode if missing type
+            AppLog.w(AppLog.T.MEDIA, "MediaBrowserType is null. Defaulting to MediaBrowserType.BROWSER mode.");
+            mBrowserType = MediaBrowserType.BROWSER;
         }
 
         setContentView(R.layout.media_browser_activity);
@@ -259,6 +267,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
+                    WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
                     mMediaCapturePath = null;
                     queueFileForUpload(uri, getContentResolver().getType(uri));
@@ -300,6 +309,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
         // only MEDIA_PERMISSION_REQUEST_CODE is handled
         if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {
             return;

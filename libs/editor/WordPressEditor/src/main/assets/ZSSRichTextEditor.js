@@ -3569,7 +3569,10 @@ ZSSField.prototype.sendVideoTappedCallback = function( videoNode ) {
 // MARK: - Callback Execution
 
 ZSSField.prototype.callback = function(callbackScheme, callbackPath) {
-    var url = callbackScheme + ":" + callbackPath;
+    var url = callbackScheme;
+    if (callbackPath) {
+        url = url + ":" + callbackPath;
+    }
 
     if (isUsingiOS) {
         ZSSEditor.callbackThroughIFrame(url);
