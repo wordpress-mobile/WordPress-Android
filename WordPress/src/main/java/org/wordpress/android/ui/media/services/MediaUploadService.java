@@ -422,7 +422,7 @@ public class MediaUploadService extends Service {
             AppLog.i(T.MEDIA, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());
-            if (areTheseTheSameMedia(queuedMedia, mediaModel)) {
+            if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
                 return true;
             }
         }
@@ -431,19 +431,16 @@ public class MediaUploadService extends Service {
             AppLog.i(T.MEDIA, "Looking to add media with path " + mediaModel.getFilePath() + " and site id " +
                     mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath() + ", " +
                     queuedMedia.getLocalSiteId());
-            if (areTheseTheSameMedia(queuedMedia, mediaModel)) {
+            if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean areTheseTheSameMedia(MediaModel media1, MediaModel media2) {
-        if (media1.getLocalSiteId() == media2.getLocalSiteId() &&
-                StringUtils.equals(media1.getFilePath(), media2.getFilePath())) {
-            return true;
-        }
-        return false;
+    private boolean compareBySiteAndFilePath(MediaModel media1, MediaModel media2) {
+        return (media1.getLocalSiteId() == media2.getLocalSiteId() &&
+                StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
 
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
