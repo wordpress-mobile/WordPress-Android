@@ -599,12 +599,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "me_gravatar_tapped";
             case ME_GRAVATAR_TOOLTIP_TAPPED:
                 return "me_gravatar_tooltip_tapped";
-            case ME_GRAVATAR_PERMISSIONS_INTERRUPTED:
-                return "me_gravatar_permissions_interrupted";
-            case ME_GRAVATAR_PERMISSIONS_DENIED:
-                return "me_gravatar_permissions_denied";
-            case ME_GRAVATAR_PERMISSIONS_ACCEPTED:
-                return "me_gravatar_permissions_accepted";
             case ME_GRAVATAR_SHOT_NEW:
                 return "me_gravatar_shot_new";
             case ME_GRAVATAR_GALLERY_PICKED:
@@ -715,6 +709,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_recent_media_selected";
             case MEDIA_PICKER_PREVIEW_OPENED:
                 return "media_picker_preview_opened";
+            case APP_PERMISSION_GRANTED:
+                return "app_permission_granted";
+            case APP_PERMISSION_DENIED:
+                return "app_permission_denied";
             default:
                 return null;
         }

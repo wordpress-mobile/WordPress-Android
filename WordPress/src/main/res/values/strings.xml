@@ -101,6 +101,7 @@
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
     <string name="button_done">Done</string>
+    <string name="button_not_now">Not now</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
@@ -1679,7 +1680,6 @@
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%s was denied permissions to access your photos</string>
-    <string name="photo_picker_soft_ask_edit_permissions">Edit permissions</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -1694,9 +1694,11 @@
     <string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
     <string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
 
-
-    <!-- Video processing -->
-    <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
-    <string name="video_optimization_cant_optimize">Sorry, we can\'t optimize this video. Using the original file.</string>
-    <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
+    <!-- permissions -->
+    <string name="button_edit_permissions">Edit permissions</string>
+    <string name="permissions_denied_title">It looks like you turned off permissions required for this feature</string>
+    <string name="permissions_denied_message">To change this, edit your permissions and make sure %s is enabled</string>
+    <string name="permission_storage">Storage</string>
+    <string name="permission_camera">Camera</string>
+    <string name="permission_location">Location</string>
 </resources>

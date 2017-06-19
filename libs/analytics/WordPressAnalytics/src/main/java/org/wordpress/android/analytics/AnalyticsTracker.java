@@ -114,9 +114,6 @@ public final class AnalyticsTracker {
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
         ME_GRAVATAR_TOOLTIP_TAPPED,
-        ME_GRAVATAR_PERMISSIONS_INTERRUPTED,
-        ME_GRAVATAR_PERMISSIONS_DENIED,
-        ME_GRAVATAR_PERMISSIONS_ACCEPTED,
         ME_GRAVATAR_SHOT_NEW,
         ME_GRAVATAR_GALLERY_PICKED,
         ME_GRAVATAR_CROPPED,
@@ -241,6 +238,8 @@ public final class AnalyticsTracker {
         MEDIA_UPLOAD_ERROR,
         MEDIA_UPLOAD_SUCCESS,
         MEDIA_UPLOAD_CANCELED,
+        APP_PERMISSION_GRANTED,
+        APP_PERMISSION_DENIED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
