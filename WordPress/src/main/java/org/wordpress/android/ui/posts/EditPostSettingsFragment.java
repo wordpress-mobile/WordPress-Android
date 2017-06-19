@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -96,6 +97,7 @@ public class EditPostSettingsFragment extends Fragment {
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
     private static final int ACTIVITY_REQUEST_CODE_SELECT_TAGS = 6;
     private static final int ACTIVITY_REQUEST_CODE_PICK_LOCATION = 7;
+    private static final int ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION = 8;
 
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
@@ -769,7 +771,8 @@ public class EditPostSettingsFragment extends Fragment {
         } catch (GooglePlayServicesNotAvailableException nae) {
             ToastUtils.showToast(getActivity(), R.string.post_settings_error_placepicker_missing_play_services);
         } catch (GooglePlayServicesRepairableException re) {
-            GooglePlayServicesUtil.getErrorDialog(re.getConnectionStatusCode(), getActivity(), 0);
+            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), re.getConnectionStatusCode(),
+                    ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
         }
     }
 
