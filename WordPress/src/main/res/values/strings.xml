@@ -1701,4 +1701,8 @@
     <string name="permission_storage">Storage</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_location">Location</string>
+
+    <!-- Video Optimization -->
+    <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
+    <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
 </resources>
