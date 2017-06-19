@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -27,8 +28,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/categoryTitle"
             android:inputType="text"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            tools:text="Pony" />
 
         <!--  Parent category -->
         <TextView
@@ -46,11 +50,15 @@
 
         <Spinner
             android:id="@+id/parent_category"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/parentDescLabel"
             android:layout_marginBottom="@dimen/margin_large"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
             android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            tools:listitem="@layout/wp_simple_list_item_1" />
     </RelativeLayout>
 </ScrollView>
