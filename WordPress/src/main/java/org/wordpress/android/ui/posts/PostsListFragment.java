@@ -753,6 +753,7 @@ public class PostsListFragment extends Fragment
             if (event.searchResults != null && !ListUtils.isEmpty(event.searchResults.getPosts())) {
                 hideEmptyView();
                 mSearchResults.addAll(event.searchResults.getPosts());
+                setLocalPostIdsOnSearchResults();
                 getPostListAdapter().setPostList(mSearchResults);
             } else {
                 // search returned no results
@@ -774,6 +775,20 @@ public class PostsListFragment extends Fragment
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);
                 getPostListAdapter().mediaChanged(mediaModel);
+            }
+        }
+    }
+
+    private void setLocalPostIdsOnSearchResults() {
+        final List<PostModel> posts = mPostStore.getPostsForSite(mSite);
+        if (mSearchResults.isEmpty() || posts.isEmpty()) {
+            return;
+        }
+        for (PostModel searchResult : mSearchResults) {
+            for (PostModel post : posts) {
+                if (post.getRemotePostId() == searchResult.getRemotePostId()) {
+                    searchResult.setId(post.getId());
+                }
             }
         }
     }
