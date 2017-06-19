@@ -143,16 +143,16 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         launchEpilogueAndFinish();
     }
 
-    public void gotWpcomSiteAddress(String siteAddress) {
+    public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
         LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance(siteAddress, true);
+                LoginUsernamePasswordFragment.newInstance(siteAddress, siteName, siteIconUrl, true);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override
     public void gotXmlRpcEndpoint(String siteAddress) {
         LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance(siteAddress, false);
+                LoginUsernamePasswordFragment.newInstance(siteAddress, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 

@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -50,6 +49,8 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
 
     private static final String ARG_SITE_ADDRESS = "ARG_SITE_ADDRESS";
+    private static final String ARG_SITE_NAME = "ARG_SITE_NAME";
+    private static final String ARG_SITE_ICON_URL = "ARG_SITE_ICON_URL";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
 
     public static final String TAG = "login_username_password_fragment_tag";
@@ -72,14 +73,19 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     private String mRequestedPassword;
 
     private String mSiteAddress;
+    private String mSiteName;
+    private String mSiteIconUrl;
     private boolean mIsWpcom;
 
     @Inject Dispatcher mDispatcher;
 
-    public static LoginUsernamePasswordFragment newInstance(String siteAddress, boolean isWpcom) {
+    public static LoginUsernamePasswordFragment newInstance(String siteAddress, String siteName, String siteIconUrl,
+            boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SITE_ADDRESS, siteAddress);
+        args.putString(ARG_SITE_NAME, siteName);
+        args.putString(ARG_SITE_ICON_URL, siteIconUrl);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
         fragment.setArguments(args);
         return fragment;
@@ -91,6 +97,8 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mSiteAddress = getArguments().getString(ARG_SITE_ADDRESS);
+        mSiteName = getArguments().getString(ARG_SITE_NAME);
+        mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
 
         setHasOptionsMenu(true);
@@ -100,16 +108,20 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_username_password_screen, container, false);
 
-        if (mIsWpcom) {
-            ((TextView) rootView.findViewById(R.id.login_site_address)).setText(mSiteAddress);
+        rootView.findViewById(R.id.login_site_info_layout).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
 
-            WPNetworkImageView imgBlavatar = (WPNetworkImageView) rootView.findViewById(R.id.login_blavatar);
-            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
-            imgBlavatar.setImageUrl(GravatarUtils.blavatarFromUrl(mSiteAddress, blavatarSz),
+        if (mSiteIconUrl != null) {
+            ((WPNetworkImageView) rootView.findViewById(R.id.login_blavatar)).setImageUrl(mSiteIconUrl,
                     WPNetworkImageView.ImageType.BLAVATAR);
-
-            rootView.findViewById(R.id.login_site_info_layout).setVisibility(View.VISIBLE);
         }
+
+        TextView siteNameView = ((TextView) rootView.findViewById(R.id.login_site_title));
+        siteNameView.setText(mSiteName);
+        siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
+
+        TextView siteAddressView = ((TextView) rootView.findViewById(R.id.login_site_address));
+        siteAddressView.setText(mSiteAddress);
+        siteAddressView.setVisibility(mSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mUsernameEditText = (EditText) rootView.findViewById(R.id.login_username);
         mUsernameEditText.addTextChangedListener(this);

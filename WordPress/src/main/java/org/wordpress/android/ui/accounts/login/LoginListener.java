@@ -24,7 +24,7 @@ public interface LoginListener {
 
     // Login Site Address input callbacks
     void alreadyLoggedInWpcom();
-    void gotWpcomSiteAddress(String siteAddress);
+    void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl);
     void gotXmlRpcEndpoint(String siteAddress);
     void helpWithSiteAddress();
 

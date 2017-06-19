@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,15 +28,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -43,7 +52,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils.Callback;
-import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import javax.inject.Inject;
 
@@ -72,6 +81,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
     private boolean mInProgress;
     private String mRequestedSiteAddress;
 
+    @Inject SiteRestClient mSiteRestClient;
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
     @Inject HTTPAuthManager mHTTPAuthManager;
@@ -198,7 +208,35 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         }
 
         mRequestedSiteAddress = getCleanedSiteAddress();
-        mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+
+        Uri uri = Uri.parse(UrlUtils.addUrlSchemeIfNeeded(mRequestedSiteAddress, false));
+        String endpoint = WPCOMREST.sites.getUrlV1() + uri.getHost();
+        WPComGsonRequest req = WPComGsonRequest.buildGetRequest(endpoint, null, SiteWPComRestResponse.class,
+                new Response.Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        endProgress();
+
+                        // it's a wp.com site so, treat it as such.
+                        mLoginListener.gotWpcomSiteInfo(
+                                UrlUtils.removeScheme(response.URL),
+                                response.name,
+                                response.icon == null ? null : response.icon.img);
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError baseNetworkError) {
+                        if (baseNetworkError.type != null && baseNetworkError.type == GenericErrorType.NOT_FOUND) {
+                            // not a wp.com site so, start the discovery process
+                            mDispatcher.dispatch(
+                                    AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+                        } else {
+                            showError(R.string.no_site_error, NO_SITE_HELPSHIFT_FAQ_ID, NO_SITE_HELPSHIFT_FAQ_SECTION);
+                            endProgress();
+                        }
+                    }
+                });
+        mSiteRestClient.add(req);
 
         showProgressDialog();
     }
@@ -368,7 +406,7 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
                     AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername);
                     mLoginListener.alreadyLoggedInWpcom();
                 } else {
-                    mLoginListener.gotWpcomSiteAddress(event.failedEndpoint);
+                    mLoginListener.gotWpcomSiteInfo(event.failedEndpoint, null, null);
                 }
 
                 return;
