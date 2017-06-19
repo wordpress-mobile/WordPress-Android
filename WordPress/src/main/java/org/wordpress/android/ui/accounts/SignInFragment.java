@@ -158,10 +158,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected @Inject HTTPAuthManager mHTTPAuthManager;
     protected @Inject MemorizingTrustManager mMemorizingTrustManager;
 
-    protected boolean mSitesFetched = false;
-    protected boolean mAccountSettingsFetched = false;
-    protected boolean mAccountFetched = false;
-
     private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
     private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
 
@@ -1210,13 +1206,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         AppLog.i(T.NUX, "onAccountChanged: " + event.toString());
 
-        // Success
-        mAccountSettingsFetched |= event.causeOfChange == AccountAction.FETCH_SETTINGS;
-        mAccountFetched |= event.causeOfChange == AccountAction.FETCH_ACCOUNT;
-
-        // Finish activity if sites have been fetched
-        if (mSitesFetched && mAccountSettingsFetched && mAccountFetched) {
-            finishCurrentActivity();
+        if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+            // The user's account info has been fetched and stored - next, fetch the user's settings
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            // The user's account settings have also been fetched and stored - now we can fetch the user's sites
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
         }
     }
 
@@ -1225,8 +1220,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError()) {
             AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.type.toString(), event.error.message);
-
+            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.type.toString(),
+                    event.error.message);
             showAuthError(event.error.type, event.error.message);
             endProgress();
             return;
@@ -1234,7 +1229,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         AppLog.i(T.NUX, "onAuthenticationChanged: " + event.toString());
 
-        fetchAccountSettingsAndSites();
+        if (mAccountStore.hasAccessToken()) {
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            NotificationsUpdateService.startService(getActivity().getApplicationContext());
+        }
     }
 
     @SuppressWarnings("unused")
@@ -1264,12 +1262,9 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         // Login Successful
         trackAnalyticsSignIn();
-        mSitesFetched = true;
 
-        // Finish activity if account settings have been fetched or if it's a wporg site
-        if ((mAccountSettingsFetched && mAccountFetched) || !isWPComLogin()) {
-            finishCurrentActivity();
-        }
+        // Fetching the sites is the last step of both WP.com and self-hosted sign in - we can now finish the activity
+        finishCurrentActivity();
     }
 
     @SuppressWarnings("unused")
@@ -1278,7 +1273,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (event.isError()) {
             AppLog.e(T.API, "onDiscoveryResponse has error: " + event.error.name() + " - " + event.error.toString());
             handleDiscoveryError(event.error, event.failedEndpoint);
-            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.name(), event.error.toString());
+            AnalyticsTracker.track(Stat.LOGIN_FAILED, event.getClass().getSimpleName(), event.error.name(),
+                    event.error.toString());
             return;
         }
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
@@ -1453,18 +1449,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
                 showGenericErrorDialog(errorMessage);
                 break;
-        }
-    }
-
-    private void fetchAccountSettingsAndSites() {
-        if (mAccountStore.hasAccessToken()) {
-            // Fetch user infos
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-            // Fetch sites
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
-            // Start Notification service
-            NotificationsUpdateService.startService(getActivity().getApplicationContext());
         }
     }
 }
