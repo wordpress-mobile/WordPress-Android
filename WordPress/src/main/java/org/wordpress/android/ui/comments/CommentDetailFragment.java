@@ -1040,7 +1040,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private boolean canLike() {
         return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE)
-                && mSite != null && mSite.isWPCom());
+                && mSite != null && SiteUtils.isAccessedViaWPComRest(mSite));
     }
 
     /*
@@ -1071,12 +1071,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
         if (!TextUtils.isEmpty(mNote.getCommentAuthorName()) && mNote.getCommentAuthorName().length() < 28) {
             mEditReply.setHint(String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName()));
-        }
-
-        // adjust enabledActions if this is a Jetpack site
-        if (canLike() && site.isJetpackConnected()) {
-            // delete LIKE action from enabledActions for Jetpack sites
-            mEnabledActions.remove(EnabledActions.ACTION_LIKE);
         }
 
         if (comment != null) {

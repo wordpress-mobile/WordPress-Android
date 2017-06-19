@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-11 20:56:44+0000
+Translation-Revision-Date: 2017-05-26 14:05:25+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+	<string name="error_media_save">Não foi possível salvar a mídia</string>
+	<string name="editor_scheduled_post_saved_online">Post agendado</string>
+	<string name="editor_draft_saved_locally">Rascunho salvo no dispositivo</string>
+	<string name="editor_draft_saved_online">Rascunho salvo online</string>
+	<string name="editor_post_saved_locally">Post salvo no dispositivo</string>
+	<string name="cant_share_unknown_action">Ignorando uma ação requisitada, mas não reconhecida</string>
+	<string name="button_sync">Sincronizar</string>
+	<string name="media_saved_to_device">Mídia salva neste dispositivo</string>
 	<string name="smart_toast_comments_long_press">Toque e segure para selecionar múltiplos comentários</string>
 	<string name="smart_toast_photo_long_press">Toque e segure para selecionar múltiplas fotos</string>
 	<string name="photo_picker_choose_video">Escolher vídeo do dispositivo</string>
@@ -37,10 +45,7 @@ Language: pt_BR
 	<string name="sure_to_remove_account">Remover esse site do aplicativo?</string>
 	<string name="photo_picker_title">Escolha a foto</string>
 	<string name="error_publish_no_network">O dispositivo está off-line. As alterações serão salvas localmente.</string>
-	<string name="editor_post_saved_online_not_published">O post foi salvo online como rascunho. Considere publicá-lo.</string>
-	<string name="editor_post_saved_online">O post foi salvo online</string>
-	<string name="editor_post_saved_locally_not_published">Post salvo apenas localmente. Considere publicá-lo.</string>
-	<string name="editor_post_saved_locally">O post foi salvo no seu dispositivo</string>
+	<string name="editor_post_saved_online">Post salvo online</string>
 	<string name="site_settings_image_quality_hint">Qualidade das imagens. Valores maiores significam melhor qualidade das imagens.</string>
 	<string name="site_settings_optimize_images_summary">Habilite para redimensionar e comprimir imagens</string>
 	<string name="media_encoder_quality_100">Máxima</string>
@@ -91,9 +96,6 @@ Language: pt_BR
 	<string name="confirm">Confirmar</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Não foi possível conectar. Recebemos um erro 403 ao tentar acessar o ponto de extremidade do XMLRPC em seu site. O aplicativo precisa disso para se comunicar com seu site. Entre em contato com seu servidor para resolver este problema.</string>
 	<string name="xmlrpc_post_blocked_error">Não foi possível conectar. Seu servidor está bloqueando solicitações POST e\n       o aplicativo precisa delas para se comunicar com o seu site. Entre em contato com seu servidor para resolver este problema.</string>
-	<string name="reader_liked_default_tag">Posts que eu curti</string>
-	<string name="reader_discover_default_tag">Descubra</string>
-	<string name="reader_followed_default_tag">Sites seguidos</string>
 	<string name="reader_empty_followed_blogs_search_title">Não há sites correspondentes</string>
 	<string name="reader_hint_search_followed_sites">Buscar sites seguidos</string>
 	<string name="visual_editor_disabled">Editor visual desativado</string>
@@ -829,7 +831,6 @@ Language: pt_BR
 	<string name="older_two_days">Há mais de 2 dias</string>
 	<string name="older_last_week">Há mais de uma semana</string>
 	<string name="stats_no_blog">Não foi possível carregar as estatísticas do blog</string>
-	<string name="select_a_blog">Selecione um site do WordPress</string>
 	<string name="uploading_total">Fazendo upload de %1$d de %2$d</string>
 	<string name="mnu_comment_liked">Curtiu</string>
 	<string name="comment">Comentário</string>
@@ -844,6 +845,7 @@ Language: pt_BR
 	<string name="nux_help_description">Visite a central de ajuda para obter respostas para perguntas frequentes, ou visite os fóruns para fazer novas perguntas.</string>
 	<string name="sending_content">Fazendo upload do conteúdo de %s</string>
 	<string name="reader_empty_followed_blogs_title">Você ainda não está seguindo um site</string>
+	<string name="select_a_blog">Escolha um site WordPress</string>
 	<string name="reader_menu_block_blog">Bloquear este blog</string>
 	<string name="reader_toast_err_block_blog">Não é possível bloquear este blog</string>
 	<string name="reader_toast_err_generic">Não é possível executar esta ação</string>
@@ -1109,8 +1111,6 @@ Language: pt_BR
 	<string name="images">Imagens</string>
 	<string name="all">Tudo</string>
 	<string name="unattached">Desanexado</string>
-	<string name="media_add_popup_capture_photo">Capturar foto</string>
-	<string name="media_add_popup_capture_video">Capturar vídeo</string>
 	<string name="themes">Temas</string>
 	<string name="media_edit_title_text">Título</string>
 	<string name="media_edit_caption_text">Legenda</string>
@@ -1120,7 +1120,6 @@ Language: pt_BR
 	<string name="media_edit_success">Atualizado</string>
 	<string name="media_edit_failure">Falha na atualização</string>
 	<string name="themes_details_label">Detalhes</string>
-	<string name="share_action_title">Adicionar para...</string>
 	<string name="stats_view_tags_and_categories">Tags e Categorias</string>
 	<string name="stats_view_clicks">Cliques</string>
 	<string name="stats_timeframe_today">Hoje</string>
@@ -1163,6 +1162,7 @@ Language: pt_BR
 	<string name="passcode_manage">Gerenciar seu código PIN.</string>
 	<string name="stats_view_visitors_and_views">Visitantes e Visualizações</string>
 	<string name="stats">Estatísticas</string>
+	<string name="share_action_title">Adicionar em</string>
 	<string name="upload">Enviar</string>
 	<string name="discard">Descartar</string>
 	<string name="notifications">Notificações</string>
@@ -1230,13 +1230,11 @@ Language: pt_BR
 	<string name="status">Status</string>
 	<string name="location">Localização</string>
 	<string name="sdcard_title">Cartão SD necessário</string>
-	<string name="select_video">Selecionar um vídeo da galeria</string>
 	<string name="media">Mídia</string>
 	<string name="delete">Excluir</string>
 	<string name="approve">Aprovar</string>
 	<string name="none">Nenhum</string>
 	<string name="blogs">Blogs</string>
-	<string name="select_photo">Selecione uma foto da galeria</string>
 	<string name="yes">Sim</string>
 	<string name="no">Não</string>
 	<string name="error">Erro</string>

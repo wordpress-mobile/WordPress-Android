@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-17 05:39:52+0000
+Translation-Revision-Date: 2017-05-25 05:04:15+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="error_media_save">Nie można zapisać pliku mediów</string>
+	<string name="editor_scheduled_post_saved_online">Publikacja wpisu została zaplanowana</string>
+	<string name="editor_draft_saved_locally">Szkic zapisany na twoim urządzeniu</string>
+	<string name="editor_draft_saved_online">Szkic zapisany online</string>
+	<string name="editor_post_saved_locally">Wpis zapisany na twoim urządzeniu</string>
+	<string name="cant_share_unknown_action">Żądanie nierozpoznanej akcji, anulowanie</string>
+	<string name="button_sync">Synchronizuj</string>
+	<string name="media_saved_to_device">Media zapisane na tym urządzeniu</string>
 	<string name="smart_toast_comments_long_press">Stuknij i przytrzymaj aby zaznaczyć więcej komentarzy</string>
 	<string name="smart_toast_photo_long_press">Stuknij i przytrzymaj aby zaznaczyć więcej zdjęć</string>
 	<string name="photo_picker_choose_video">Wybierz film z tego urządzenia</string>
@@ -37,10 +45,7 @@ Language: pl
 	<string name="sure_to_remove_account">Usunąć tą witrynę z aplikacji?</string>
 	<string name="photo_picker_title">Wybierz zdjęcie</string>
 	<string name="error_publish_no_network">Urządzenie jest offline. Zmiany zapisywane lokalnie.</string>
-	<string name="editor_post_saved_online_not_published">Wpis został zapisany online jako szkic. Rozważ opublikowanie.</string>
 	<string name="editor_post_saved_online">Wpis został zapisany online</string>
-	<string name="editor_post_saved_locally_not_published">Wpis zapisany jedynie lokalnie. Rozważ opublikowanie.</string>
-	<string name="editor_post_saved_locally">Wpis został zapisany na twoim urządzeniu</string>
 	<string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
 	<string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
 	<string name="media_encoder_quality_95">Bardzo wysoka</string>
@@ -91,9 +96,6 @@ Language: pl
 	<string name="confirm">Potwierdź</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do punktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu.</string>
 	<string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST - aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
-	<string name="reader_liked_default_tag">Polubione wpisy</string>
-	<string name="reader_discover_default_tag">Odkrywaj</string>
-	<string name="reader_followed_default_tag">Obserwowane witryny</string>
 	<string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria wyszukiwania</string>
 	<string name="reader_hint_search_followed_sites">Przeszukaj obserwowane witryny</string>
 	<string name="preference_editor_legacy">Dotychczasowy</string>
@@ -829,7 +831,6 @@ Language: pl
 	<string name="error_refresh_unauthorized_posts">Nie masz uprawnień, by oglądać lub edytować wpisy</string>
 	<string name="error_refresh_unauthorized_pages">Nie masz uprawnień, by oglądać lub edytować strony</string>
 	<string name="error_refresh_unauthorized_comments">Nie masz uprawnień, by oglądać lub edytować komentarze</string>
-	<string name="select_a_blog">Wybierz witrynę WordPressa</string>
 	<string name="sending_content">Wysyłanie %s treści</string>
 	<string name="uploading_total">Wysyłanie %1$d z %2$d</string>
 	<string name="comment">Komentarz</string>
@@ -844,6 +845,7 @@ Language: pl
 	<string name="reader_empty_posts_liked">Nie polubiłeś jeszcze żadnych wpisów</string>
 	<string name="stats_no_blog">Nie udało się załadować statystyk dla wskazanego blogu</string>
 	<string name="nux_help_description">Przejdź do centrum pomocy, aby uzyskać odpowiedzi na najczęściej zadawane pytania lub odwiedź forum, aby zadać nowe</string>
+	<string name="select_a_blog">Wybierz witrynę WordPress</string>
 	<string name="reader_menu_block_blog">Zablokuj ten blog</string>
 	<string name="reader_toast_err_block_blog">Nie można zablokować tego blogu</string>
 	<string name="reader_toast_blog_blocked">Wpisy z tego blogu nie będą już widoczne</string>
@@ -1109,7 +1111,6 @@ Language: pl
 	<string name="themes">Motywy</string>
 	<string name="all">Wszystkie</string>
 	<string name="unattached">Niezałączone</string>
-	<string name="media_add_popup_capture_video">Nagraj film</string>
 	<string name="media_gallery_image_order_random">Losowa</string>
 	<string name="media_gallery_type">Typ</string>
 	<string name="media_gallery_type_tiled">Kafelki</string>
@@ -1147,10 +1148,8 @@ Language: pl
 	<string name="passcode_set">Ustaw PIN</string>
 	<string name="theme_set_success">Pomyślnie ustawiono motyw!</string>
 	<string name="theme_auth_error_title">Nie udało się pobrać motywów.</string>
-	<string name="media_add_popup_capture_photo">Wykonaj zdjęcie</string>
 	<string name="media_gallery_image_order_reverse">Odwrócona</string>
 	<string name="media_gallery_type_circles">Kręgi</string>
-	<string name="share_action_title">Dodaj do...</string>
 	<string name="stats_view_referrers">Polecający</string>
 	<string name="stats_entry_referrers">Polecający</string>
 	<string name="passcode_manage">Zarządzaj blokadą PIN</string>
@@ -1163,6 +1162,7 @@ Language: pl
 	<string name="media_edit_caption_text">Podpis pod obrazkiem</string>
 	<string name="theme_activating_button">Włączanie</string>
 	<string name="theme_activate_button">Włącz</string>
+	<string name="share_action_title">Dodaj do</string>
 	<string name="discard">Odrzuć</string>
 	<string name="upload">Załaduj</string>
 	<string name="notifications">Powiadomienia</string>
@@ -1230,13 +1230,11 @@ Language: pl
 	<string name="status">Status</string>
 	<string name="location">Lokalizacja</string>
 	<string name="sdcard_title">Wymagana karta pamięci SD</string>
-	<string name="select_video">Wybierz film z galerii</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Usuń</string>
 	<string name="approve">Zaakceptuj</string>
 	<string name="none">Brak</string>
 	<string name="blogs">Blogi</string>
-	<string name="select_photo">Wybierz zdjęcie z galerii</string>
 	<string name="add">Dodaj</string>
 	<string name="yes">Tak</string>
 	<string name="no">Nie</string>

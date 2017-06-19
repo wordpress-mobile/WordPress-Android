@@ -136,7 +136,9 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>
     <string name="media_error_no_permission_upload">You don\'t have permission to upload media to the site</string>
-    <string name="media_error_too_large_upload">The file is too big. Please contact the web hosting provider to fix this issue</string>
+    <string name="media_error_too_large_upload">File too large to upload. Try enabling Optimize Images in Site->Settings</string>
+    <string name="media_error_internal_server_error">Upload error. Try enabling Optimize Images in Site->Settings</string>
+    <string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
     <string name="access_media_permission_required">Permissions required in order to access media</string>
     <string name="add_media_permission_required">Permissions required in order to add media</string>
     <string name="media_fetching">Fetching media…</string>
@@ -640,14 +642,14 @@
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
 
+    <string name="preference_editor_beta" translatable="false">Beta</string>
     <string name="preference_editor_legacy">Legacy</string>
     <string name="preference_editor_visual">Visual</string>
-    <string name="preference_editor_aztec" translatable="false">Aztec</string>
 
     <string-array name="editor_entries" translatable="false">
         <item>@string/preference_editor_legacy</item>
         <item>@string/preference_editor_visual</item>
-        <item>@string/preference_editor_aztec</item>
+        <item>@string/preference_editor_beta</item>
     </string-array>
 
     <string-array name="editor_entries_without_aztec" translatable="false">
@@ -1410,6 +1412,7 @@
     <string name="my_site_no_sites_view_drake">Illustration</string>
     <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
     <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
+    <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -1438,8 +1441,10 @@
     <string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
 
     <!--TabBar Accessibility Labels-->
-    <string name="tabbar_accessibility_label_my_site">My Site</string>
-    <string name="tabbar_accessibility_label_me">Me</string>
+    <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
+    <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
+    <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
+    <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="site_privacy_private_desc">I would like my site to be private, visible only to users I choose</string>
     <string name="site_privacy_hidden_desc">Discourage search engines from indexing this site</string>
     <string name="site_privacy_public_desc">Allow search engines to index this site</string>
@@ -1671,6 +1676,10 @@
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
+    <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_allow">Allow</string>
+    <string name="photo_picker_soft_ask_permissions_denied">%s was denied permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_edit_permissions">Edit permissions</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
