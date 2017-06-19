@@ -915,7 +915,6 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void setLocation(@Nullable Place place) {
         if (place == null) {
-            mLocationTextView.setText(R.string.post_settings_not_set);
             mPost.clearLocation();
             mPostLocation = null;
             return;
