@@ -132,8 +132,10 @@ public class MediaUploadService extends Service {
             AppLog.i(T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
-            // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
-            addMediaToPostCompletedMediaListMap(event.media);
+            if (event.media.getLocalPostId() != 0) {
+                // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
+                addMediaToPostCompletedMediaListMap(event.media);
+            }
             uploadNextInQueue();
         } else {
             // Upload Progress
