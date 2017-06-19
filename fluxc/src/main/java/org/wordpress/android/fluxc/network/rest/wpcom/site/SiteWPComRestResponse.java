@@ -18,6 +18,7 @@ public class SiteWPComRestResponse implements Response {
         public String gmt_offset;
         public String frame_nonce;
         public String unmapped_url;
+        public String max_upload_size;
     }
 
     public class Plan {

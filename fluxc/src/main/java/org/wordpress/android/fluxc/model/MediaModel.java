@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Table
 public class MediaModel extends Payload implements Identifiable, Serializable {
     public enum UploadState {
-        QUEUED, UPLOADING, DELETE, DELETED, FAILED, CANCELED, UPLOADED
+        QUEUED, UPLOADING, DELETE, DELETED, FAILED, UPLOADED
     }
 
     @PrimaryKey
@@ -76,10 +76,6 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     // Set to true on a successful response to delete via WP.com REST API, not stored locally
     private boolean mDeleted;
-
-    // only used to prevent throwing an error if upload ends in failure when a cancel action
-    // was requested - not stored locally
-    private boolean mUploadCancelled;
 
     @Override
     public boolean equals(Object other) {
@@ -357,14 +353,6 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
 
     public boolean getDeleted() {
         return mDeleted;
-    }
-
-    public boolean isUploadCancelled() {
-        return mUploadCancelled;
-    }
-
-    public void setUploadCancelled(boolean uploadCancelled) {
-        mUploadCancelled = uploadCancelled;
     }
 
     public void setFileUrlMediumSize(String file) {

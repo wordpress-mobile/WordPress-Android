@@ -45,7 +45,7 @@ public class CommentSqlUtils {
             // update
             int oldId = commentResult.get(0).getId();
             return WellSql.update(CommentModel.class).whereId(oldId)
-                    .put(comment, new UpdateAllExceptId<CommentModel>()).execute();
+                    .put(comment, new UpdateAllExceptId<>(CommentModel.class)).execute();
         }
     }
 
