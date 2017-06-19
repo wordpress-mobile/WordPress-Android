@@ -33,7 +33,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
@@ -915,14 +914,14 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void setLocation(@Nullable Place place) {
-        if (mPostLocation == null) {
-            mPostLocation = new PostLocation();
-        }
         if (place == null) {
             mLocationTextView.setText(R.string.post_settings_not_set);
             mPost.clearLocation();
             mPostLocation = null;
             return;
+        }
+        if (mPostLocation == null) {
+            mPostLocation = new PostLocation();
         }
         mPostLocation.setLatitude(place.getLatLng().latitude);
         mPostLocation.setLongitude(place.getLatLng().longitude);
@@ -943,12 +942,13 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void showLocationPickerOrPopupMenu(@NonNull final View view) {
+        if (!isAdded()) {
+            return;
+        }
+
         // If the post doesn't have location set, show the picker directly
         if (!mPost.hasLocation()) {
             showLocationPicker();
-            return;
-        }
-        if (!isAdded()) {
             return;
         }
 
