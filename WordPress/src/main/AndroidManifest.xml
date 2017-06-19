@@ -69,6 +69,11 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/com_google_android_geo_api_key"/>
+
         <activity
             android:name=".ui.WPLaunchActivity"
             android:noHistory="true"
