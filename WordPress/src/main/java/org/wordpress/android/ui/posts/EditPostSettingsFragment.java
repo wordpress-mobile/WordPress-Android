@@ -701,23 +701,21 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         protected void onPostExecute(@Nullable Address address) {
-            if (address == null) {
+            if (!isAdded() || address == null || address.getMaxAddressLineIndex() == 0) {
+                // Do nothing (keep the "lat, long" format).
                 return;
             }
-            if (address.getMaxAddressLineIndex() > 0) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; ; ++i) {
-                    sb.append(address.getAddressLine(i));
-                    if (i == address.getMaxAddressLineIndex()) {
-                        sb.append(".");
-                        break;
-                    } else {
-                        sb.append(", ");
-                    }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; ; ++i) {
+                sb.append(address.getAddressLine(i));
+                if (i == address.getMaxAddressLineIndex()) {
+                    sb.append(".");
+                    break;
+                } else {
+                    sb.append(", ");
                 }
-                mLocationTextView.setText(sb.toString());
             }
-            // Else, do nothing (keep the "lat, long" format).
+            mLocationTextView.setText(sb.toString());
         }
     }
 
