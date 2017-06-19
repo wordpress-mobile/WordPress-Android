@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -119,6 +120,25 @@ public class MediaStore extends Store {
         }
     }
 
+    /**
+     * Actions: CANCEL_MEDIA_UPLOAD
+     */
+    public static class CancelMediaPayload extends Payload {
+        public SiteModel site;
+        public MediaModel media;
+        public boolean delete;
+
+        public CancelMediaPayload(SiteModel site, MediaModel media) {
+            this(site, media, true);
+        }
+
+        public CancelMediaPayload(SiteModel site, MediaModel media, boolean delete) {
+            this.site = site;
+            this.media = media;
+            this.delete = delete;
+        }
+    }
+
     //
     // OnChanged events
     //
@@ -138,7 +158,7 @@ public class MediaStore extends Store {
             MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
             mediaError.message = e.getLocalizedMessage();
 
-            if (e instanceof java.net.SocketTimeoutException) {
+            if (e instanceof SocketTimeoutException) {
                 mediaError.type = MediaErrorType.TIMEOUT;
             }
 
@@ -298,7 +318,7 @@ public class MediaStore extends Store {
                 performDeleteMedia((MediaPayload) action.getPayload());
                 break;
             case CANCEL_MEDIA_UPLOAD:
-                performCancelUpload((MediaPayload) action.getPayload());
+                performCancelUpload((CancelMediaPayload) action.getPayload());
                 break;
             case PUSHED_MEDIA:
                 handleMediaPushed((MediaPayload) action.getPayload());
@@ -316,7 +336,7 @@ public class MediaStore extends Store {
                 handleMediaDeleted((MediaPayload) action.getPayload());
                 break;
             case CANCELED_MEDIA_UPLOAD:
-                handleMediaUploaded((ProgressPayload) action.getPayload());
+                handleMediaCanceled((ProgressPayload) action.getPayload());
                 break;
             case UPDATE_MEDIA:
                 updateMedia(((MediaModel) action.getPayload()), true);
@@ -442,6 +462,10 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
     }
 
+    public List<MediaModel> getSiteMediaWithState(SiteModel siteModel, UploadState expectedState) {
+        return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
+    }
+
     public String getUrlForSiteVideoWithVideoPressGuid(SiteModel siteModel, String videoPressGuid) {
         List<MediaModel> media =
                 MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);
@@ -461,9 +485,18 @@ public class MediaStore extends Store {
         return MediaSqlUtils.searchSiteMediaAsCursor(siteModel, MediaModelTable.TITLE, titleSearch);
     }
 
-    public MediaModel getPostMediaWithPath(PostModel postModel, String filePath) {
+    public MediaModel getMediaForPostWithPath(PostModel postModel, String filePath) {
         List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.FILE_PATH, filePath);
         return media.size() > 0 ? media.get(0) : null;
+    }
+
+    public List<MediaModel> getMediaForPost(PostModel postModel) {
+        return MediaSqlUtils.matchPostMedia(postModel.getId());
+    }
+
+    public List<MediaModel> getMediaForPostWithState(PostModel postModel, UploadState expectedState) {
+        return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
+                expectedState);
     }
 
     public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
@@ -598,13 +631,23 @@ public class MediaStore extends Store {
         }
     }
 
-    private void performCancelUpload(@NonNull MediaPayload payload) {
-        if (payload.media != null) {
-            if (payload.site.isUsingWpComRestApi()) {
-                mMediaRestClient.cancelUpload(payload.media);
-            } else {
-                mMediaXmlrpcClient.cancelUpload(payload.media);
-            }
+    private void performCancelUpload(@NonNull CancelMediaPayload payload) {
+        if (payload.media == null) {
+            return;
+        }
+
+        MediaModel media = payload.media;
+        if (payload.delete) {
+            MediaSqlUtils.deleteMedia(media);
+        } else {
+            media.setUploadState(UploadState.FAILED.toString());
+            MediaSqlUtils.insertOrUpdateMedia(media);
+        }
+
+        if (payload.site.isUsingWpComRestApi()) {
+            mMediaRestClient.cancelUpload(media);
+        } else {
+            mMediaXmlrpcClient.cancelUpload(media);
         }
     }
 
@@ -628,6 +671,14 @@ public class MediaStore extends Store {
         if (payload.media != null) {
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
         }
+        emitChange(onMediaUploaded);
+    }
+
+    private void handleMediaCanceled(@NonNull ProgressPayload payload) {
+        OnMediaUploaded onMediaUploaded =
+                new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
+        onMediaUploaded.error = payload.error;
+
         emitChange(onMediaUploaded);
     }
 
