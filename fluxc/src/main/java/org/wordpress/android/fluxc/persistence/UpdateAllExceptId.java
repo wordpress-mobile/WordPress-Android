@@ -6,11 +6,16 @@ import com.yarolegovich.wellsql.WellSql;
 import com.yarolegovich.wellsql.mapper.InsertMapper;
 import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 
-public class UpdateAllExceptId<T> implements InsertMapper<T> {
+class UpdateAllExceptId<T> implements InsertMapper<T> {
+    private final SQLiteMapper<T> mMapper;
+
+    UpdateAllExceptId(Class<T> clazz) {
+        mMapper = WellSql.mapperFor(clazz);
+    }
+
     @Override
     public ContentValues toCv(T item) {
-        SQLiteMapper<T> mapper = WellSql.mapperFor((Class<T>) item.getClass());
-        ContentValues cv = mapper.toCv(item);
+        ContentValues cv = mMapper.toCv(item);
         cv.remove("_id");
         return cv;
     }
