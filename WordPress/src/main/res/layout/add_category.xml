@@ -50,6 +50,7 @@
 
         <Spinner
             android:id="@+id/parent_category"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/parentDescLabel"
