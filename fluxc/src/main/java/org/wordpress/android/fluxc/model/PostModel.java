@@ -458,7 +458,11 @@ public class PostModel extends Payload implements Cloneable, Identifiable, Seria
         }
         String[] stringArray = terms.split(",");
         List<String> stringList = new ArrayList<>();
-        Collections.addAll(stringList, stringArray);
+        for (String s : stringArray) {
+            if (s != null && !s.trim().isEmpty()) {
+                stringList.add(s.trim());
+            }
+        }
         return stringList;
     }
 
