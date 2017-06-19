@@ -152,34 +152,35 @@ public class WPPermissionUtils {
     }
 
     /*
+     * returns the name to display for a permission, ex: "permission.WRITE_EXTERNAL_STORAGE" > "Storage"
+     */
+    public static String getPermissionName(@NonNull Context context, @NonNull String permission) {
+        switch (permission) {
+            case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
+            case android.Manifest.permission.READ_EXTERNAL_STORAGE:
+                return context.getString(R.string.permission_storage);
+            case android.Manifest.permission.CAMERA:
+                return context.getString(R.string.permission_camera);
+            case android.Manifest.permission.ACCESS_COARSE_LOCATION:
+            case android.Manifest.permission.ACCESS_FINE_LOCATION:
+                return context.getString(R.string.permission_location);
+            default:
+                AppLog.w(AppLog.T.UTILS, "No name for requested permission");
+                return context.getString(R.string.unknown);
+        }
+    }
+
+    /*
      * called when the app detects that the user has permanently denied a permission, shows a dialog
      * alerting them to this fact and enabling them to visit the app settings to edit permissions
      */
     private static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
                                                          @NonNull String permission) {
-        String permissionName;
-        switch (permission) {
-            case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
-            case android.Manifest.permission.READ_EXTERNAL_STORAGE:
-                permissionName = activity.getString(R.string.permission_storage);
-                break;
-            case android.Manifest.permission.CAMERA:
-                permissionName = activity.getString(R.string.permission_camera);
-                break;
-            case android.Manifest.permission.ACCESS_COARSE_LOCATION:
-            case android.Manifest.permission.ACCESS_FINE_LOCATION:
-                permissionName = activity.getString(R.string.permission_location);
-                break;
-            default:
-                AppLog.w(AppLog.T.UTILS, "No dialog for requested permission");
-                return;
-        }
-
         String message = "<strong>" + activity.getString(R.string.permissions_denied_title) + "</strong>"
                 + "<br /><br />"
                 + String.format(
                 activity.getString(R.string.permissions_denied_message),
-                "<strong>" + permissionName + "</strong>");
+                "<strong>" + getPermissionName(activity, permission) + "</strong>");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setMessage(Html.fromHtml(message))

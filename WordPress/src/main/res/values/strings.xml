@@ -1744,7 +1744,7 @@
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%s was denied permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. Please edit your permissions and make sure %2$s is enabled.</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
