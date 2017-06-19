@@ -291,6 +291,25 @@
 
             </RelativeLayout>
 
+            <!--Sharing-->
+            <RelativeLayout
+                android:id="@+id/row_sharing"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_sharing_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/my_site_btn_sharing"
+                    android:src="@drawable/my_site_icon_sharing" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_sharing_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_site_sharing_icon"
+                    android:text="@string/my_site_btn_sharing" />
+
+            </RelativeLayout>
+
             <!--Settings-->
             <RelativeLayout
                 android:id="@+id/row_settings"
