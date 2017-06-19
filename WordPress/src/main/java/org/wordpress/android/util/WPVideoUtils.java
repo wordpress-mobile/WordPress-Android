@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.MediaCodecInfo;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 import org.m4m.AudioFormat;
 import org.m4m.MediaComposer;
@@ -32,12 +33,7 @@ public class WPVideoUtils {
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
     private static final int AUDIO_OUTPUT_BIT_RATE = 96 * 1024;
 
-    public static MediaComposer getVideoOptimizationComposer(Context ctx, String inputFile, String outFile, org.m4m.IProgressListener listener) {
-        if (ctx == null || inputFile == null || listener == null) {
-            AppLog.e(AppLog.T.MEDIA, "Input parameters must be not null!!");
-            return null;
-        }
-
+    public static MediaComposer getVideoOptimizationComposer(@NonNull Context ctx, @NonNull String inputFile, @NonNull String outFile, @NonNull org.m4m.IProgressListener listener) {
         AndroidMediaObjectFactory factory = new AndroidMediaObjectFactory(ctx);
 
         Uri m4mUri = new Uri(inputFile);
