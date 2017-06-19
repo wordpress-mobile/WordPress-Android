@@ -78,9 +78,9 @@ public class XMLSerializerUtils {
             pullParser.nextTag(); // TAG_VALUE (<value>)
             // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
             // deserialize fault result
-            Map<String, Object> map = (Map<String, Object>) XMLRPCSerializer.deserialize(pullParser);
-            String faultString = (String) map.get(TAG_FAULT_STRING);
-            int faultCode = (Integer) map.get(TAG_FAULT_CODE);
+            Map<?, ?> map = (Map<?, ?>) XMLRPCSerializer.deserialize(pullParser);
+            String faultString = XMLRPCUtils.safeGetMapValue(map, TAG_FAULT_STRING, "");
+            int faultCode = XMLRPCUtils.safeGetMapValue(map, TAG_FAULT_CODE, 0);
             throw new XMLRPCFault(faultString, faultCode);
         } else {
             throw new XMLRPCException("Bad tag <" + tag + "> in XMLRPC response - neither <params> nor <fault>");
