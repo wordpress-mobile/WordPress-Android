@@ -44,6 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -54,6 +55,7 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
@@ -87,10 +89,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORIES;
 import static android.app.Activity.RESULT_OK;
 
 public class EditPostSettingsFragment extends Fragment {
-    private static final String KEY_POST = "KEY_POST";
     private static final String POST_FORMAT_STANDARD_KEY = "standard";
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
@@ -114,36 +117,31 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mStatusTextView;
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
-    private TextView mPubDateText;
+    private TextView mPublishDateTextView;
     private NetworkImageView mFeaturedImageView;
     private Button mFeaturedImageButton;
-
-    private long mFeaturedImageId;
-    private String mCurrentSlug;
-    private String mCurrentExcerpt;
-
-    private List<TermModel> mCategories = new ArrayList<>();
 
     private PostLocation mPostLocation;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private String mCustomPubDate = "";
-    private boolean mIsCustomPubDate;
+    private String mCustomPublishDate = "";
+    private boolean mIsCustomPublishDate;
 
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
 
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
     @Inject FluxCImageLoader mImageLoader;
 
-    public static EditPostSettingsFragment newInstance(SiteModel site, PostModel post) {
+    public static EditPostSettingsFragment newInstance(SiteModel site, int localPostId) {
         EditPostSettingsFragment fragment = new EditPostSettingsFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putSerializable(KEY_POST, post);
+        bundle.putSerializable(EXTRA_POST_LOCAL_ID, localPostId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -157,22 +155,30 @@ public class EditPostSettingsFragment extends Fragment {
         if (getActivity() != null) {
             PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
         }
-        updateSiteOrFinishActivity(savedInstanceState);
+        updateSiteAndFetchPostOrFinishActivity(savedInstanceState);
         updatePostFormatKeysAndNames();
+        fetchSiteSettingsAndUpdateDefaultPostFormat();
+
+        // Update post formats and categories, in case anything changed.
+        mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
+        if (!mPost.isPage()) {
+            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
+        }
     }
 
-    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
+    private void updateSiteAndFetchPostOrFinishActivity(Bundle savedInstanceState) {
+        int localPostId;
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mPost = (PostModel) getArguments().getSerializable(KEY_POST);
+                localPostId = getArguments().getInt(EXTRA_POST_LOCAL_ID);
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mPost = (PostModel) getActivity().getIntent().getSerializableExtra(KEY_POST);
+                localPostId = getActivity().getIntent().getIntExtra(EXTRA_POST_LOCAL_ID, 0);
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mPost = (PostModel) savedInstanceState.getSerializable(KEY_POST);
+            localPostId = savedInstanceState.getInt(EXTRA_POST_LOCAL_ID);
         }
 
         if (mSite == null) {
@@ -180,19 +186,46 @@ public class EditPostSettingsFragment extends Fragment {
             getActivity().finish();
         }
 
-        // Update post formats and categories, in case anything changed.
-        mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(mSite));
-        if (!mPost.isPage()) {
-            mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(mSite));
+        if (localPostId != 0) {
+            mPost = mPostStore.getPostByLocalPostId(localPostId);
         }
-        fetchSiteSettingsAndUpdatePostFormat();
+        if (mPost == null) {
+            ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+        }
+    }
+
+    private void fetchSiteSettingsAndUpdateDefaultPostFormat() {
+        // we need to fetch site settings in order to get the latest default post format
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, new SiteSettingsListener() {
+            @Override
+            public void onSettingsUpdated(Exception error) {
+                if (error == null && TextUtils.isEmpty(mPost.getPostFormat())) {
+                    updatePostFormat(mSiteSettings.getDefaultPostFormat());
+                }
+            }
+
+            @Override
+            public void onSettingsSaved(Exception error) {
+                // no-op
+            }
+
+            @Override
+            public void onCredentialsValidated(Exception error) {
+                // no-op
+            }
+        });
+        if (mSiteSettings != null) {
+            // init will fetch remote settings for us
+            mSiteSettings.init(true);
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(KEY_POST, mPost);
+        outState.putSerializable(EXTRA_POST_LOCAL_ID, mPost.getId());
     }
 
     @Override
@@ -224,7 +257,7 @@ public class EditPostSettingsFragment extends Fragment {
         mStatusTextView = (TextView) rootView.findViewById(R.id.post_status);
         mPostFormatTextView = (TextView) rootView.findViewById(R.id.post_format);
         mPasswordTextView = (TextView) rootView.findViewById(R.id.post_password);
-        mPubDateText = (TextView) rootView.findViewById(R.id.publish_date);
+        mPublishDateTextView = (TextView) rootView.findViewById(R.id.publish_date);
 
         mFeaturedImageView = (NetworkImageView) rootView.findViewById(R.id.post_featured_image);
         mFeaturedImageButton = (Button) rootView.findViewById(R.id.post_add_featured_image_button);
@@ -322,13 +355,12 @@ public class EditPostSettingsFragment extends Fragment {
 
         if (mPost.isPage()) { // remove post specific views
             excerptContainer.setVisibility(View.GONE);
-            rootView.findViewById(R.id.post_categories_container).setVisibility(View.GONE);
-            rootView.findViewById(R.id.post_tags_container).setVisibility(View.GONE);
+            categoriesContainer.setVisibility(View.GONE);
+            tagsContainer.setVisibility(View.GONE);
             formatContainer.setVisibility(View.GONE);
         }
 
         initSettingsFields();
-        populateSelectedCategories();
         initLocation();
         return rootView;
     }
@@ -346,9 +378,7 @@ public class EditPostSettingsFragment extends Fragment {
                 launchFeaturedMediaPicker();
                 return true;
             case CLEAR_FEATURED_IMAGE_MENU_POSITION:
-                mFeaturedImageId = 0;
-                mFeaturedImageView.setVisibility(View.GONE);
-                mFeaturedImageButton.setVisibility(View.VISIBLE);
+                clearFeaturedImage();
                 return true;
             default:
                 return false;
@@ -356,162 +386,29 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void initSettingsFields() {
-        mCurrentExcerpt = mPost.getExcerpt();
-        mCurrentSlug = mPost.getSlug();
-        mExcerptTextView.setText(mCurrentExcerpt);
-        mSlugTextView.setText(mCurrentSlug);
-        mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+        if (!isAdded()) {
+            return;
+        }
+        mExcerptTextView.setText(mPost.getExcerpt());
+        mSlugTextView.setText(mPost.getSlug());
         mPasswordTextView.setText(mPost.getPassword());
+        updatePostFormatTextView();
         updateTagsTextView();
-
-        String pubDate = mPost.getDateCreated();
-        if (StringUtils.isNotEmpty(pubDate)) {
-            try {
-                int flags = 0;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-                flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-                flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-                String formattedDate = DateUtils.formatDateTime(getActivity(),
-                        DateTimeUtils.timestampFromIso8601Millis(pubDate), flags);
-                mPubDateText.setText(formattedDate);
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-        }
-
         updateStatusTextView();
+        updatePublishDateTextView();
+        updateCategoriesTextView();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            updateFeaturedImage(mPost.getFeaturedImageId());
+            updateFeaturedImageView();
         }
     }
 
-    private void fetchSiteSettingsAndUpdatePostFormat() {
-        // we need to fetch site settings in order to get the latest default post format
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mSite, new SiteSettingsListener() {
-            @Override
-            public void onSettingsUpdated(Exception error) {
-                if (error == null && TextUtils.isEmpty(mPost.getPostFormat())) {
-                    mPost.setPostFormat(mSiteSettings.getDefaultPostFormat());
-                    if (mPostFormatKeys != null && mPostFormatNames != null && mPostFormatTextView != null) {
-                        int idx = mPostFormatKeys.indexOf(mPost.getPostFormat());
-                        if (idx != -1) {
-                            mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onSettingsSaved(Exception error) {
-                // no-op
-            }
-
-            @Override
-            public void onCredentialsValidated(Exception error) {
-                // no-op
-            }
-        });
-        if (mSiteSettings != null) {
-            // init will fetch remote settings for us
-            mSiteSettings.init(true);
-        }
-    }
-
-    private void updateTagsTextView() {
-        String tags = TextUtils.join(",", mPost.getTagNameList());
-        // If `tags` is empty, the hint "Not Set" will be shown instead
-        mTagsTextView.setText(tags);
-    }
-
-    public void updateStatusTextView() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        switch (PostStatus.fromPost(mPost)) {
-            case PUBLISHED:
-            case SCHEDULED:
-            case UNKNOWN:
-                mStatusTextView.setText(statuses[0]);
-                break;
-            case DRAFT:
-                mStatusTextView.setText(statuses[1]);
-                break;
-            case PENDING:
-                mStatusTextView.setText(statuses[2]);
-                break;
-            case PRIVATE:
-                mStatusTextView.setText(statuses[3]);
-                break;
-        }
-    }
-
-    private PostStatus getCurrentPostStatus() {
-        int index = getCurrentPostStatusIndex();
-        switch (index) {
-            case 0:
-                return PostStatus.PUBLISHED;
-            case 1:
-                return PostStatus.DRAFT;
-            case 2:
-                return PostStatus.PENDING;
-            case 3:
-                return PostStatus.PRIVATE;
-            default:
-                return PostStatus.UNKNOWN;
-        }
-    }
-
-    private int getCurrentPostStatusIndex() {
-        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
-        String currentStatus = mStatusTextView.getText().toString();
-        for (int i = 0; i < statuses.length; i++) {
-            if (currentStatus.equalsIgnoreCase(statuses[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public long getFeaturedImageId() {
-        return mFeaturedImageId;
-    }
-
-    public void updateFeaturedImage(long id) {
-        if (mFeaturedImageId != id) {
-            mFeaturedImageId = id;
-            if (mFeaturedImageId > 0) {
-                MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mFeaturedImageId);
-
-                if (media == null || !isAdded()) {
-                    return;
-                }
-
-                mFeaturedImageView.setVisibility(View.VISIBLE);
-                mFeaturedImageButton.setVisibility(View.GONE);
-
-                // Get max width for photon thumbnail
-                int width = DisplayUtils.getDisplayPixelWidth(getActivity());
-                int height = DisplayUtils.getDisplayPixelHeight(getActivity());
-                int size = Math.max(width, height);
-
-                String mediaUri = media.getThumbnailUrl();
-                if (SiteUtils.isPhotonCapable(mSite)) {
-                    mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
-                }
-
-                WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
-            } else {
-                mFeaturedImageView.setVisibility(View.GONE);
-                mFeaturedImageButton.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    private void launchFeaturedMediaPicker() {
-        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
-        intent.putExtra(WordPress.SITE, mSite);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
-        intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
-        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
+    private int getDateTimeFlags() {
+        int flags = 0;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+        return flags;
     }
 
     @Override
@@ -531,22 +428,17 @@ public class EditPostSettingsFragment extends Fragment {
                     break;
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
-                    if (extras != null && extras.containsKey("selectedCategories")) {
+                    if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORIES)) {
                         @SuppressWarnings("unchecked")
-                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable("selectedCategories");
-                        mCategories = categoryList;
-                        populateSelectedCategories();
+                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable(KEY_SELECTED_CATEGORIES);
+                        updateCategories(categoryList);
                     }
                     break;
                 case ACTIVITY_REQUEST_CODE_SELECT_TAGS:
                     extras = data.getExtras();
                     if (resultCode == RESULT_OK && extras != null) {
                         String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
-                        if (selectedTags != null) {
-                            String tags = selectedTags.replace("\n", " ");
-                            mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
-                            updateTagsTextView();
-                        }
+                        updateTags(selectedTags);
                     }
                     break;
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
@@ -556,71 +448,10 @@ public class EditPostSettingsFragment extends Fragment {
                         if (ids == null || ids.size() == 0) {
                             return;
                         }
-
                         updateFeaturedImage(ids.get(0));
                     }
             }
         }
-    }
-
-    private void showPostDateSelectionDialog() {
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, mYear, mMonth, mDay);
-        datePickerDialog.setTitle(R.string.select_date);
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getText(android.R.string.ok),
-                new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                mYear = datePickerDialog.getDatePicker().getYear();
-                mMonth = datePickerDialog.getDatePicker().getMonth();
-                mDay = datePickerDialog.getDatePicker().getDayOfMonth();
-                showPostTimeSelectionDialog();
-            }
-        });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
-                new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                mIsCustomPubDate = true;
-                mPubDateText.setText(R.string.immediately);
-                updatePostSettingsAndSaveButton();
-            }
-        });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(android.R.string.cancel),
-                new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
-        datePickerDialog.show();
-    }
-
-    private void showPostTimeSelectionDialog() {
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                mHour = selectedHour;
-                mMinute = selectedMinute;
-
-                Date javaDate = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-                long javaTimestamp = javaDate.getTime();
-
-                try {
-                    int flags = 0;
-                    flags |= DateUtils.FORMAT_SHOW_DATE;
-                    flags |= DateUtils.FORMAT_ABBREV_MONTH;
-                    flags |= DateUtils.FORMAT_SHOW_YEAR;
-                    flags |= DateUtils.FORMAT_SHOW_TIME;
-                    String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, flags);
-                    mCustomPubDate = DateTimeUtils.iso8601FromDate(javaDate);
-                    mPubDateText.setText(formattedDate);
-                    mIsCustomPubDate = true;
-
-                    updatePostSettingsAndSaveButton();
-                } catch (RuntimeException e) {
-                    AppLog.e(T.POSTS, e);
-                }
-            }
-        }, mHour, mMinute, DateFormat.is24HourFormat(getActivity()));
-        timePickerDialog.setTitle(R.string.select_time);
-        timePickerDialog.show();
     }
 
     /**
@@ -631,163 +462,65 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        boolean publishImmediately = EditTextUtils.getText(mPubDateText).equals(getText(R.string.immediately));
+        boolean publishImmediately = EditTextUtils.getText(mPublishDateTextView).equals(getText(R.string.immediately));
 
         String publicationDateIso8601 = "";
-        if (mIsCustomPubDate && publishImmediately && !post.isLocalDraft()) {
+        if (mIsCustomPublishDate && publishImmediately && !post.isLocalDraft()) {
             publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
         } else if (!publishImmediately) {
-            if (mIsCustomPubDate) {
-                publicationDateIso8601 = mCustomPubDate;
+            if (mIsCustomPublishDate) {
+                publicationDateIso8601 = mCustomPublishDate;
             } else if (StringUtils.isNotEmpty(post.getDateCreated())) {
                 publicationDateIso8601 = post.getDateCreated();
             }
         }
 
         post.setDateCreated(publicationDateIso8601);
-
-        if (post.supportsLocation()) {
-            if (mPostLocation == null) {
-                post.clearLocation();
-            } else {
-                post.setLocation(mPostLocation);
-            }
-        }
-
-        if (mCategories != null) {
-            List<Long> categoryIds = new ArrayList<>();
-            for (TermModel category : mCategories) {
-                categoryIds.add(category.getRemoteTermId());
-            }
-            post.setCategoryIdList(categoryIds);
-        }
-
-        if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
-            post.setFeaturedImageId(mFeaturedImageId);
-        }
-
-        post.setExcerpt(mCurrentExcerpt);
-        post.setSlug(mCurrentSlug);
-        post.setStatus(getCurrentPostStatus().toString());
-    }
-
-    /*
-     * Saves settings to post object and updates save button text in the ActionBar
-     */
-    private void updatePostSettingsAndSaveButton() {
-        if (isAdded()) {
-            updatePostSettings(mPost);
-            getActivity().invalidateOptionsMenu();
-        }
-    }
-
-    /**
-     * retrieves and displays the friendly address for a lat/long location
-     */
-    private class FetchAndSetAddressAsyncTask extends AsyncTask<Double, Void, Address> {
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Address doInBackground(Double... args) {
-            // args will be the latitude, longitude to look up
-            double latitude = args[0];
-            double longitude = args[1];
-            try {
-                return GeocoderUtils.getAddressFromCoords(getActivity(), latitude, longitude);
-            } catch (IllegalArgumentException iae) {
-                return null;
-            }
-        }
-
-        protected void onPostExecute(@Nullable Address address) {
-            if (!isAdded() || address == null || address.getMaxAddressLineIndex() == 0) {
-                // Do nothing (keep the "lat, long" format).
-                return;
-            }
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; ; ++i) {
-                sb.append(address.getAddressLine(i));
-                if (i == address.getMaxAddressLineIndex()) {
-                    sb.append(".");
-                    break;
-                } else {
-                    sb.append(", ");
-                }
-            }
-            mLocationTextView.setText(sb.toString());
-        }
     }
 
     private void showPostExcerptDialog() {
+        if (!isAdded()) {
+            return;
+        }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentExcerpt, getString(R.string.post_settings_excerpt), getString(R.string.post_settings_excerpt_dialog_hint), false);
+                mPost.getExcerpt(), getString(R.string.post_settings_excerpt),
+                getString(R.string.post_settings_excerpt_dialog_hint), false);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        mCurrentExcerpt = input;
-                        mExcerptTextView.setText(mCurrentExcerpt);
+                        updateExcerpt(input);
                     }
                 });
         dialog.show(getFragmentManager(), null);
     }
 
     private void showSlugDialog() {
+        if (!isAdded()) {
+            return;
+        }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
-                mCurrentSlug, getString(R.string.post_settings_slug), getString(R.string.post_settings_slug_dialog_hint), true);
+                mPost.getSlug(), getString(R.string.post_settings_slug),
+                getString(R.string.post_settings_slug_dialog_hint), true);
         dialog.setPostSettingsInputDialogListener(
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        mCurrentSlug = input;
-                        mSlugTextView.setText(mCurrentSlug);
+                        updateSlug(input);
                     }
                 });
         dialog.show(getFragmentManager(), null);
     }
 
-    private void showLocationPicker() {
-        if (!isAdded()) {
-            return;
-        }
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        // Pre-pick the previous selected location if any
-        LatLng latLng = null;
-        if (mPostLocation != null) {
-            latLng = new LatLng(mPostLocation.getLatitude(), mPostLocation.getLongitude());
-        } else if (mPost.hasLocation()) {
-            PostLocation location = mPost.getLocation();
-            latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        }
-        if (latLng != null) {
-            builder.setLatLngBounds(new LatLngBounds(latLng, latLng));
-        }
-        // Show the picker
-        try {
-            startActivityForResult(builder.build(getActivity()), ACTIVITY_REQUEST_CODE_PICK_LOCATION);
-        } catch (GooglePlayServicesNotAvailableException nae) {
-            ToastUtils.showToast(getActivity(), R.string.post_settings_error_placepicker_missing_play_services);
-        } catch (GooglePlayServicesRepairableException re) {
-            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), re.getConnectionStatusCode(),
-                    ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
-        }
-    }
-
     private void showCategoriesActivity() {
         Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, mSite);
-
-        // Make sure the PostModel is up to date with current category selections
-        updatePostSettings(mPost);
-        categoriesIntent.putExtra(SelectCategoriesActivity.KEY_POST, mPost);
-
+        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 
     private void showTagsActivity() {
-        // Fetch/refresh the tags in preparation for the the PostSettingsTagsActivity
+        // Fetch/refresh the tags in preparation for the PostSettingsTagsActivity
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
 
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
@@ -798,20 +531,17 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void showStatusDialog() {
+        if (!isAdded()) {
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.post_settings_status);
-        int checkedItem = getCurrentPostStatusIndex();
-        // Current index should never be -1, but if if is, we don't want to crash
-        if (checkedItem == -1) {
-            checkedItem = 0;
-        }
-        builder.setSingleChoiceItems(R.array.post_settings_statuses, checkedItem, null);
+        builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
-                String newStatus = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                mStatusTextView.setText(newStatus);
-                updatePostSettingsAndSaveButton();
+                int index = listView.getCheckedItemPosition();
+                updatePostStatus(getPostStatusAtIndex(index).toString());
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -819,6 +549,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void showPostFormatDialog() {
+        if (!isAdded()) {
+            return;
+        }
         int checkedItem = 0;
         if (!TextUtils.isEmpty(mPost.getPostFormat())) {
             for (int i = 0; i < mPostFormatKeys.size(); i++) {
@@ -836,8 +569,7 @@ public class EditPostSettingsFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 ListView listView = ((AlertDialog)dialog).getListView();
                 String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                mPostFormatTextView.setText(formatName);
-                mPost.setPostFormat(getPostFormatKeyFromName(formatName));
+                updatePostFormat(getPostFormatKeyFromName(formatName));
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -845,6 +577,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void showPostPasswordDialog() {
+        if (!isAdded()) {
+            return;
+        }
         PostSettingsInputDialogFragment dialog = PostSettingsInputDialogFragment.newInstance(
                 mPost.getPassword(), getString(R.string.password),
                 getString(R.string.post_settings_password_dialog_hint), false);
@@ -852,12 +587,255 @@ public class EditPostSettingsFragment extends Fragment {
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
-                        mPost.setPassword(input);
-                        mPasswordTextView.setText(mPost.getPassword());
+                        updatePassword(input);
                     }
                 });
         dialog.show(getFragmentManager(), null);
     }
+
+    private void showPostDateSelectionDialog() {
+        if (!isAdded()) {
+            return;
+        }
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, mYear, mMonth, mDay);
+        datePickerDialog.setTitle(R.string.select_date);
+        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getText(android.R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mYear = datePickerDialog.getDatePicker().getYear();
+                        mMonth = datePickerDialog.getDatePicker().getMonth();
+                        mDay = datePickerDialog.getDatePicker().getDayOfMonth();
+                        showPostTimeSelectionDialog();
+                    }
+                });
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mIsCustomPublishDate = true;
+                        mPublishDateTextView.setText(R.string.immediately);
+                        updateSaveButton();
+                    }
+                });
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(android.R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        datePickerDialog.show();
+    }
+
+    private void showPostTimeSelectionDialog() {
+        if (!isAdded()) {
+            return;
+        }
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        mHour = selectedHour;
+                        mMinute = selectedMinute;
+
+                        Date javaDate = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
+                        long javaTimestamp = javaDate.getTime();
+
+                        try {
+                            String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, getDateTimeFlags());
+                            mCustomPublishDate = DateTimeUtils.iso8601FromDate(javaDate);
+                            mPublishDateTextView.setText(formattedDate);
+                            mIsCustomPublishDate = true;
+
+                            updateSaveButton();
+                        } catch (RuntimeException e) {
+                            AppLog.e(T.POSTS, e);
+                        }
+                    }
+                }, mHour, mMinute, DateFormat.is24HourFormat(getActivity()));
+        timePickerDialog.setTitle(R.string.select_time);
+        timePickerDialog.show();
+    }
+
+    // Helpers
+
+    private void updateSaveButton() {
+        if (isAdded()) {
+            getActivity().invalidateOptionsMenu();
+        }
+    }
+
+    private void updateExcerpt(String excerpt) {
+        if (mPost.getExcerpt().equals(excerpt)) {
+            return;
+        }
+        mPost.setExcerpt(excerpt);
+        dispatchUpdatePostAction();
+        if (isAdded()) {
+            mExcerptTextView.setText(mPost.getExcerpt());
+        }
+    }
+
+    private void updateSlug(String slug) {
+        if (mPost.getSlug().equalsIgnoreCase(slug)) {
+            return;
+        }
+        mPost.setSlug(slug);
+        dispatchUpdatePostAction();
+        if (isAdded()) {
+            mSlugTextView.setText(mPost.getSlug());
+        }
+    }
+
+    private void updatePassword(String password) {
+        if (mPost.getPassword().equals(password)) {
+            return;
+        }
+        mPost.setPassword(password);
+        dispatchUpdatePostAction();
+        if (isAdded()) {
+            mPasswordTextView.setText(mPost.getPassword());
+        }
+    }
+
+    private void updateCategories(List<TermModel> categoryList) {
+        if (categoryList == null) {
+            return;
+        }
+        List<Long> categoryIds = new ArrayList<>();
+        for (TermModel category : categoryList) {
+            categoryIds.add(category.getRemoteTermId());
+        }
+        mPost.setCategoryIdList(categoryIds);
+        dispatchUpdatePostAction();
+        updateCategoriesTextView();
+    }
+
+    private void updatePostStatus(String postStatus) {
+        if (mPost.getStatus().equals(postStatus)) {
+            return;
+        }
+        mPost.setStatus(postStatus);
+        dispatchUpdatePostAction();
+        updateStatusTextView();
+        updateSaveButton();
+    }
+
+    private void updatePostFormat(String postFormat) {
+        if (mPost.getPostFormat().equals(postFormat)) {
+            return;
+        }
+        mPost.setPostFormat(postFormat);
+        dispatchUpdatePostAction();
+        updatePostFormatTextView();
+    }
+
+    public void updateStatusTextView() {
+        if (!isAdded()) {
+            return;
+        }
+        String[] statuses = getResources().getStringArray(R.array.post_settings_statuses);
+        int index = getCurrentPostStatusIndex();
+        // We should never get an OutOfBoundsException here, but if we do,
+        // we should let it crash so we can fix the underlying issue
+        mStatusTextView.setText(statuses[index]);
+    }
+
+    private void updateTags(String selectedTags) {
+        if (!TextUtils.isEmpty(selectedTags)) {
+            String tags = selectedTags.replace("\n", " ");
+            mPost.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+        } else {
+            mPost.setTagNameList(null);
+        }
+        dispatchUpdatePostAction();
+        updateTagsTextView();
+    }
+
+    private void updateTagsTextView() {
+        if (!isAdded()) {
+            return;
+        }
+        String tags = TextUtils.join(",", mPost.getTagNameList());
+        // If `tags` is empty, the hint "Not Set" will be shown instead
+        mTagsTextView.setText(tags);
+    }
+
+    private void updatePostFormatTextView() {
+        if (isAdded()) {
+            mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
+        }
+    }
+
+    private void updatePublishDateTextView() {
+        if (!isAdded()) {
+            return;
+        }
+        String pubDate = mPost.getDateCreated();
+        if (StringUtils.isNotEmpty(pubDate)) {
+            try {
+                String formattedDate = DateUtils.formatDateTime(getActivity(),
+                        DateTimeUtils.timestampFromIso8601Millis(pubDate), getDateTimeFlags());
+                mPublishDateTextView.setText(formattedDate);
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
+            }
+        }
+    }
+
+    private void updateCategoriesTextView() {
+        if (!isAdded()) {
+            return;
+        }
+        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
+        StringBuilder sb = new StringBuilder();
+        Iterator<TermModel> it = categories.iterator();
+        if (it.hasNext()) {
+            sb.append(it.next().getName());
+            while (it.hasNext()) {
+                sb.append(", ");
+                sb.append(it.next().getName());
+            }
+        }
+        // If `sb` is empty, the hint "Not Set" will be shown instead
+        mCategoriesTextView.setText(sb);
+    }
+
+    private void dispatchUpdatePostAction() {
+        mPost.setIsLocallyChanged(true);
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(mPost));
+    }
+
+    // Post Status Helpers
+
+    private PostStatus getPostStatusAtIndex(int index) {
+        switch (index) {
+            case 0:
+                return PostStatus.PUBLISHED;
+            case 1:
+                return PostStatus.DRAFT;
+            case 2:
+                return PostStatus.PENDING;
+            case 3:
+                return PostStatus.PRIVATE;
+            default:
+                return PostStatus.UNKNOWN;
+        }
+    }
+
+    private int getCurrentPostStatusIndex() {
+        switch (PostStatus.fromPost(mPost)) {
+            case DRAFT:
+                return 1;
+            case PENDING:
+                return 2;
+            case PRIVATE:
+                return 3;
+            default:
+                // PUBLISHED, SCHEDULED, UNKNOWN
+                return 0;
+        }
+    }
+
+    // Post Format Helpers
 
     private void updatePostFormatKeysAndNames() {
         // Default values
@@ -899,18 +877,152 @@ public class EditPostSettingsFragment extends Fragment {
         return StringUtils.capitalize(postFormatKey);
     }
 
-    private void populateSelectedCategories() {
-        StringBuilder sb = new StringBuilder();
-        Iterator<TermModel> it = mCategories.iterator();
-        if (it.hasNext()) {
-            sb.append(it.next().getName());
-            while (it.hasNext()) {
-                sb.append(", ");
-                sb.append(it.next().getName());
+    // Featured Image Helpers
+
+    public void updateFeaturedImage(long featuredImageId) {
+        if (mPost.getFeaturedImageId() == featuredImageId) {
+            return;
+        }
+
+        mPost.setFeaturedImageId(featuredImageId);
+        dispatchUpdatePostAction();
+        updateFeaturedImageView();
+    }
+
+    private void clearFeaturedImage() {
+        updateFeaturedImage(0);
+    }
+
+    private void updateFeaturedImageView() {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (!mPost.hasFeaturedImage()) {
+            mFeaturedImageView.setVisibility(View.GONE);
+            mFeaturedImageButton.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mPost.getFeaturedImageId());
+        if (media == null) {
+            return;
+        }
+
+        mFeaturedImageView.setVisibility(View.VISIBLE);
+        mFeaturedImageButton.setVisibility(View.GONE);
+
+        // Get max width for photon thumbnail
+        int width = DisplayUtils.getDisplayPixelWidth(getActivity());
+        int height = DisplayUtils.getDisplayPixelHeight(getActivity());
+        int size = Math.max(width, height);
+
+        String mediaUri = media.getThumbnailUrl();
+        if (SiteUtils.isPhotonCapable(mSite)) {
+            mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+        }
+
+        WordPressMediaUtils.loadNetworkImage(mediaUri, mFeaturedImageView, mImageLoader);
+    }
+
+    private void launchFeaturedMediaPicker() {
+        Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
+        startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
+    }
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTaxonomyChanged(OnTaxonomyChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type);
+            return;
+        }
+        switch (event.causeOfChange) {
+            case FETCH_CATEGORIES:
+                updateCategoriesTextView();
+                break;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
+        if (event.isError()) {
+            AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
+            return;
+        }
+        updatePostFormatKeysAndNames();
+    }
+
+    /**
+     * retrieves and displays the friendly address for a lat/long location
+     */
+    private class FetchAndSetAddressAsyncTask extends AsyncTask<Double, Void, Address> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Address doInBackground(Double... args) {
+            // args will be the latitude, longitude to look up
+            double latitude = args[0];
+            double longitude = args[1];
+            try {
+                return GeocoderUtils.getAddressFromCoords(getActivity(), latitude, longitude);
+            } catch (IllegalArgumentException iae) {
+                return null;
             }
         }
-        // If `sb` is empty, the hint "Not Set" will be shown instead
-        mCategoriesTextView.setText(sb);
+
+        protected void onPostExecute(@Nullable Address address) {
+            if (!isAdded() || address == null || address.getMaxAddressLineIndex() == 0) {
+                // Do nothing (keep the "lat, long" format).
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; ; ++i) {
+                sb.append(address.getAddressLine(i));
+                if (i == address.getMaxAddressLineIndex()) {
+                    sb.append(".");
+                    break;
+                } else {
+                    sb.append(", ");
+                }
+            }
+            mLocationTextView.setText(sb.toString());
+        }
+    }
+
+    private void showLocationPicker() {
+        if (!isAdded()) {
+            return;
+        }
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        // Pre-pick the previous selected location if any
+        LatLng latLng = null;
+        if (mPostLocation != null) {
+            latLng = new LatLng(mPostLocation.getLatitude(), mPostLocation.getLongitude());
+        } else if (mPost.hasLocation()) {
+            PostLocation location = mPost.getLocation();
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        if (latLng != null) {
+            builder.setLatLngBounds(new LatLngBounds(latLng, latLng));
+        }
+        // Show the picker
+        try {
+            startActivityForResult(builder.build(getActivity()), ACTIVITY_REQUEST_CODE_PICK_LOCATION);
+        } catch (GooglePlayServicesNotAvailableException nae) {
+            ToastUtils.showToast(getActivity(), R.string.post_settings_error_placepicker_missing_play_services);
+        } catch (GooglePlayServicesRepairableException re) {
+            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), re.getConnectionStatusCode(),
+                    ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
+        }
     }
 
     private void setLocation(@Nullable Place place) {
@@ -979,27 +1091,5 @@ public class EditPostSettingsFragment extends Fragment {
             // no op, icons won't show
         }
         popupMenu.show();
-    }
-
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onTaxonomyChanged(OnTaxonomyChanged event) {
-        switch (event.causeOfChange) {
-            case FETCH_CATEGORIES:
-                mCategories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
-                populateSelectedCategories();
-                break;
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe
-    public void onPostFormatsChanged(SiteStore.OnPostFormatsChanged event) {
-        if (event.isError()) {
-            AppLog.e(T.POSTS, "An error occurred while updating the post formats with type: " + event.error.type);
-            return;
-        }
-        updatePostFormatKeysAndNames();
     }
 }
