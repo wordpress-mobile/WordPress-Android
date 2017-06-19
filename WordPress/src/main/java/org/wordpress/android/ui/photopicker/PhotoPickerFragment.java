@@ -1,15 +1,22 @@
 package org.wordpress.android.ui.photopicker;
 
+import android.Manifest;
 import android.app.Fragment;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -25,6 +33,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.SmartToast;
+import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -61,6 +71,7 @@ public class PhotoPickerFragment extends Fragment {
     private RecyclerView mRecycler;
     private PhotoPickerAdapter mAdapter;
     private View mBottomBar;
+    private ViewGroup mSoftAskContainer;
     private ActionMode mActionMode;
     private GridLayoutManager mGridManager;
     private Parcelable mRestoreState;
@@ -74,16 +85,22 @@ public class PhotoPickerFragment extends Fragment {
     private static final String ARG_PHOTOS_ONLY = "photos_only";
     private static final String ARG_DEVICE_ONLY = "device_only";
 
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
+    // TODO: a future PR should only request WRITE_EXTERNAL_STORAGE since that's all we need
+    // to show photos. we should request CAMERA permission when the camera icon is tapped.
+    private static final String[] PERMISSIONS =
+            {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
-                                                  EnumSet<PhotoPickerOption> options) {
+                                                  @NonNull EnumSet<PhotoPickerOption> options) {
         Bundle args = new Bundle();
+        args.putBoolean(ARG_ALLOW_MULTI_SELECT, options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT));
+        args.putBoolean(ARG_PHOTOS_ONLY, options.contains(PhotoPickerOption.PHOTOS_ONLY));
+        args.putBoolean(ARG_DEVICE_ONLY, options.contains(PhotoPickerOption.DEVICE_ONLY));
+
         PhotoPickerFragment fragment = new PhotoPickerFragment();
         fragment.setPhotoPickerListener(listener);
-        if (options != null) {
-            args.putBoolean(ARG_ALLOW_MULTI_SELECT, options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT));
-            args.putBoolean(ARG_PHOTOS_ONLY, options.contains(PhotoPickerOption.PHOTOS_ONLY));
-            args.putBoolean(ARG_DEVICE_ONLY, options.contains(PhotoPickerOption.DEVICE_ONLY));
-        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -91,32 +108,26 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mAllowMultiSelect = savedInstanceState.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
-            mPhotosOnly = savedInstanceState.getBoolean(ARG_PHOTOS_ONLY, false);
-            mDeviceOnly = savedInstanceState.getBoolean(ARG_DEVICE_ONLY, false);
+        Bundle args = getArguments();
+        if (args != null) {
+            mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
+            mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY, false);
+            mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY, false);
         }
     }
 
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
-        mAllowMultiSelect = args != null && args.getBoolean(ARG_ALLOW_MULTI_SELECT);
-        mPhotosOnly = args != null && args.getBoolean(ARG_PHOTOS_ONLY);
-        mDeviceOnly = args != null && args.getBoolean(ARG_DEVICE_ONLY);
+        mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT);
+        mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY);
+        mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(ARG_ALLOW_MULTI_SELECT, mAllowMultiSelect);
-        outState.putBoolean(ARG_PHOTOS_ONLY, mPhotosOnly);
-        outState.putBoolean(ARG_DEVICE_ONLY, mDeviceOnly);
-        super.onSaveInstanceState(outState);
-    }
-
-    public void setOptions(EnumSet<PhotoPickerOption> options) {
-        mAllowMultiSelect = options != null && options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mPhotosOnly = options != null && options.contains(PhotoPickerOption.PHOTOS_ONLY);
+    public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
+        mAllowMultiSelect = options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
+        mPhotosOnly = options.contains(PhotoPickerOption.PHOTOS_ONLY);
+        mDeviceOnly = options.contains(PhotoPickerOption.DEVICE_ONLY);
 
         if (hasAdapter()) {
             getAdapter().setAllowMultiSelect(mAllowMultiSelect);
@@ -136,10 +147,7 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mPhotosOnly) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                        trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
-                    }
+                    doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
                 } else {
                     showCameraPopupMenu(v);
                 }
@@ -149,16 +157,15 @@ public class PhotoPickerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (mPhotosOnly) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                        trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
-                    }
+                    doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
                 } else {
                     showPickerPopupMenu(v);
                 }
 
             }
         });
+
+        mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
 
         View wpMediaIcon = mBottomBar.findViewById(R.id.icon_wpmedia);
         if (mDeviceOnly) {
@@ -167,17 +174,46 @@ public class PhotoPickerFragment extends Fragment {
             wpMediaIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onPhotoPickerIconClicked(PhotoPickerIcon.WP_MEDIA);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
-                    }
+                    doIconClicked(PhotoPickerIcon.WP_MEDIA);
                 }
             });
         }
 
-        reload();
+        if (savedInstanceState == null && mAllowMultiSelect && isPermissionGranted()) {
+            SmartToast.show(getActivity(), SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
+        }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkPermissions();
+    }
+
+    private void doIconClicked(@NonNull PhotoPickerIcon icon) {
+        switch (icon) {
+            case ANDROID_CAPTURE_PHOTO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
+                break;
+            case ANDROID_CAPTURE_VIDEO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, true);
+                break;
+            case ANDROID_CHOOSE_PHOTO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
+                break;
+            case ANDROID_CHOOSE_VIDEO:
+                trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, true);
+                break;
+            case WP_MEDIA:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA);
+                break;
+        }
+
+        if (mListener != null) {
+            mListener.onPhotoPickerIconClicked(icon);
+        }
     }
 
     private void showPickerPopupMenu(@NonNull View view) {
@@ -187,10 +223,7 @@ public class PhotoPickerFragment extends Fragment {
         itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, false);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
                 return true;
             }
         });
@@ -199,10 +232,7 @@ public class PhotoPickerFragment extends Fragment {
         itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY, true);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_VIDEO);
                 return true;
             }
         });
@@ -217,10 +247,7 @@ public class PhotoPickerFragment extends Fragment {
         itemPhoto.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
                 return true;
             }
         });
@@ -229,16 +256,14 @@ public class PhotoPickerFragment extends Fragment {
         itemVideo.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (mListener != null) {
-                    mListener.onPhotoPickerIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
-                    trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, true);
-                }
+                doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_VIDEO);
                 return true;
             }
         });
 
         popup.show();
     }
+
     void setPhotoPickerListener(PhotoPickerListener listener) {
         mListener = listener;
     }
@@ -320,6 +345,8 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
+        if (!isPermissionGranted()) return;
+
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
             mRestoreState = mGridManager.onSaveInstanceState();
@@ -339,6 +366,9 @@ public class PhotoPickerFragment extends Fragment {
             AppLog.w(AppLog.T.POSTS, "Photo picker > can't refresh when not added");
             return;
         }
+
+        if (!isPermissionGranted()) return;
+
         if (mGridManager == null || mAdapter == null) {
             reload();
         } else {
@@ -394,6 +424,129 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
+    /*
+     * returns true if all of the required permissions have been granted
+     */
+    private boolean isPermissionGranted() {
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+     * returns true if any of the required permissions have been denied AND the user checked "Never ask again"
+     */
+    private boolean isPermissionAlwaysDenied() {
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                if (WPPermissionUtils.isPermissionAlwaysDenied(getActivity(), permission)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /*
+     * load the photos if we have the necessary permissions, otherwise show the "soft ask" view
+     * which asks the user to allow the permissions
+     */
+    public void checkPermissions() {
+        if (!isAdded()) return;
+
+        if (isPermissionGranted()) {
+            showSoftAskView(false);
+            if (mAdapter == null || mAdapter.isEmpty()) {
+                reload();
+            }
+        } else {
+            showSoftAskView(true);
+        }
+    }
+
+    /*
+     * request the camera and storage permissions required to access photos
+     */
+    private void requestPermissions() {
+        ArrayList<String> list = new ArrayList<>();
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                list.add(permission);
+            }
+        }
+        String[] array = list.toArray(new String[list.size()]);
+        FragmentCompat.requestPermissions(this, array, PERMISSION_REQUEST_CODE);
+    }
+
+    /*
+     * open the device's settings page for this app so the user can edit permissions
+     */
+    private void showAppSettings() {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
+        intent.setData(uri);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        WPPermissionUtils.setPermissionListAsked(permissions);
+
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            checkPermissions();
+        }
+    }
+
+    /*
+     * shows the "soft ask" view which should appear when the necessary permissions haven't
+     * been granted yet
+     */
+    private void showSoftAskView(boolean show) {
+        if (!isAdded()) return;
+
+        boolean isAlwaysDenied = isPermissionAlwaysDenied();
+
+        if (show) {
+            int labelId = isAlwaysDenied ?
+                    R.string.photo_picker_soft_ask_permissions_denied : R.string.photo_picker_soft_ask_label;
+            String appName = "<strong>" + getString(R.string.app_name) + "</strong>";
+            String label = String.format(getString(labelId), appName);
+            TextView txtLabel = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
+            txtLabel.setText(Html.fromHtml(label));
+
+            // when the user taps Allow, request the required permissions unless the user already
+            // denied them permanently, in which case take them to the device settings for this
+            // app so the user can change permissions there
+            TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
+            int allowId = isAlwaysDenied ?
+                    R.string.photo_picker_soft_ask_edit_permissions : R.string.photo_picker_soft_ask_allow;
+            txtAllow.setText(allowId);
+            txtAllow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isPermissionAlwaysDenied()) {
+                        showAppSettings();
+                    } else {
+                        requestPermissions();
+                    }
+                }
+            });
+
+            mSoftAskContainer.setVisibility(View.VISIBLE);
+            hideBottomBar();
+        } else if (mSoftAskContainer.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mSoftAskContainer, AniUtils.Duration.MEDIUM);
+            showBottomBar();
+            refresh();
+        }
+    }
 
     private void trackAddRecentMediaEvent(List<Uri> uriList) {
         if (uriList == null) {

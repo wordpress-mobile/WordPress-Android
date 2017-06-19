@@ -47,9 +47,12 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,9 +70,11 @@ public class SitePickerActivity extends AppCompatActivity
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
+    private static final String KEY_REFRESHING = "refreshing_sites";
 
     private SitePickerAdapter mAdapter;
     private RecyclerView mRecycleView;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ActionMode mActionMode;
     private MenuItem mMenuEdit;
     private MenuItem mMenuAdd;
@@ -92,6 +97,11 @@ public class SitePickerActivity extends AppCompatActivity
         restoreSavedInstanceState(savedInstanceState);
         setupActionBar();
         setupRecycleView();
+
+        initSwipeToRefreshHelper(findViewById(android.R.id.content));
+        if (savedInstanceState != null) {
+            mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
+        }
     }
 
     @Override
@@ -105,6 +115,7 @@ public class SitePickerActivity extends AppCompatActivity
         outState.putInt(KEY_LOCAL_ID, mCurrentLocalId);
         outState.putBoolean(KEY_IS_IN_SEARCH_MODE, getAdapter().getIsInSearchMode());
         outState.putString(KEY_LAST_SEARCH, getAdapter().getLastSearch());
+        outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
         super.onSaveInstanceState(outState);
     }
 
@@ -181,7 +192,7 @@ public class SitePickerActivity extends AppCompatActivity
             case RequestCodes.ADD_ACCOUNT:
             case RequestCodes.CREATE_SITE:
                 if (resultCode == RESULT_OK) {
-                    getAdapter().loadSites();
+                    debounceLoadSites();
                     setResult(resultCode, data);
                     finish();
                 }
@@ -206,7 +217,7 @@ public class SitePickerActivity extends AppCompatActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteRemoved(OnSiteRemoved event) {
         if (!event.isError()) {
-            getAdapter().loadSites();
+            debounceLoadSites();
         } else {
             // shouldn't happen
             AppLog.e(AppLog.T.DB, "Encountered unexpected error while attempting to remove site: " + event.error);
@@ -217,13 +228,43 @@ public class SitePickerActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
+        if (mSwipeToRefreshHelper.isRefreshing()) {
+            mSwipeToRefreshHelper.setRefreshing(false);
+        }
+        debounceLoadSites();
+    }
+
+    private void debounceLoadSites() {
         mDebouncer.debounce(Void.class, new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 if (!isFinishing()) {
                     getAdapter().loadSites();
                 }
             }
         }, 200, TimeUnit.MILLISECONDS);
+    }
+
+    private void initSwipeToRefreshHelper(View view) {
+        if (view == null) {
+            return;
+        }
+        mSwipeToRefreshHelper = new SwipeToRefreshHelper(
+                this,
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (isFinishing()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+                    }
+                });
     }
 
     private void setupRecycleView() {
