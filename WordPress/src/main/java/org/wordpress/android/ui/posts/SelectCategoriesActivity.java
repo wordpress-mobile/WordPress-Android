@@ -40,14 +40,13 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
 public class SelectCategoriesActivity extends AppCompatActivity {
-    public static final String KEY_SELECTED_CATEGORIES = "KEY_SELECTED_CATEGORIES";
+    public static final String KEY_SELECTED_CATEGORY_IDS = "KEY_SELECTED_CATEGORY_IDS";
 
     private ListView mListView;
     private TextView mEmptyView;
@@ -255,11 +254,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     private void saveAndFinish() {
         Bundle bundle = new Bundle();
         updateSelectedCategoryList();
-        List<TermModel> categories = new ArrayList<>();
-        for (Long categoryRemoteId : mSelectedCategories) {
-            categories.add(mTaxonomyStore.getCategoryByRemoteId(mSite, categoryRemoteId));
-        }
-        bundle.putSerializable(KEY_SELECTED_CATEGORIES, new ArrayList<>(categories));
+        bundle.putSerializable(KEY_SELECTED_CATEGORY_IDS, new ArrayList<>(mSelectedCategories));
         Intent mIntent = new Intent();
         mIntent.putExtras(bundle);
         setResult(RESULT_OK, mIntent);

@@ -89,9 +89,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
-import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORIES;
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORY_IDS;
 
 public class EditPostSettingsFragment extends Fragment {
     private static final String POST_FORMAT_STANDARD_KEY = "standard";
@@ -428,9 +428,9 @@ public class EditPostSettingsFragment extends Fragment {
                     break;
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
                     extras = data.getExtras();
-                    if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORIES)) {
+                    if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORY_IDS)) {
                         @SuppressWarnings("unchecked")
-                        List<TermModel> categoryList = (List<TermModel>) extras.getSerializable(KEY_SELECTED_CATEGORIES);
+                        List<Long> categoryList = (ArrayList<Long>) extras.getSerializable(KEY_SELECTED_CATEGORY_IDS);
                         updateCategories(categoryList);
                     }
                     break;
@@ -695,15 +695,11 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private void updateCategories(List<TermModel> categoryList) {
+    private void updateCategories(List<Long> categoryList) {
         if (categoryList == null) {
             return;
         }
-        List<Long> categoryIds = new ArrayList<>();
-        for (TermModel category : categoryList) {
-            categoryIds.add(category.getRemoteTermId());
-        }
-        mPost.setCategoryIdList(categoryIds);
+        mPost.setCategoryIdList(categoryList);
         dispatchUpdatePostAction();
         updateCategoriesTextView();
     }
