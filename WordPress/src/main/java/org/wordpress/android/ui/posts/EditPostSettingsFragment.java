@@ -80,6 +80,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
@@ -861,7 +862,7 @@ public class EditPostSettingsFragment extends Fragment
 
     private boolean checkForLocationPermission() {
         return isAdded() && PermissionUtils.checkLocationPermissions(getActivity(),
-                EditPostActivity.LOCATION_PERMISSION_REQUEST_CODE);
+                WPPermissionUtils.EDITOR_LOCATION_PERMISSION_REQUEST_CODE);
     }
 
     public void showLocationSearch() {
