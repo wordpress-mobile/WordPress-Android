@@ -223,7 +223,7 @@ public class MediaUploadService extends Service {
             mediaListForPost = new ArrayList<>();
         }
         mediaListForPost.add(media);
-        mCompletedUploads.put(new Integer(media.getLocalPostId()), mediaListForPost);
+        mCompletedUploads.put(media.getLocalPostId(), mediaListForPost);
     }
 
     private MediaModel getMediaFromQueueById(int id) {
@@ -351,13 +351,13 @@ public class MediaUploadService extends Service {
         // updates in one go and save only once
         if (post != null) {
             MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
-            List<MediaModel> mediaList = mCompletedUploads.get(new Integer(post.getId()));
+            List<MediaModel> mediaList = mCompletedUploads.get(post.getId());
             if (mediaList != null && !mediaList.isEmpty()) {
                 for (MediaModel media : mediaList) {
                     post = updatePostWithMediaUrl(post, media, processor);
                 }
                 // finally remove all completed uploads for this post, as they've been taken care of
-                mCompletedUploads.remove(new Integer(post.getId()));
+                mCompletedUploads.remove(post.getId());
             }
         }
         return post;
