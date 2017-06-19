@@ -31,7 +31,7 @@ public class AccountSqlUtils {
             WellSql.insert(account).execute();
             return 0;
         } else {
-            ContentValues cv = new UpdateAllExceptId<AccountModel>().toCv(account);
+            ContentValues cv = new UpdateAllExceptId<>(AccountModel.class).toCv(account);
             return updateAccount(accountResults.get(0).getId(), cv);
         }
     }

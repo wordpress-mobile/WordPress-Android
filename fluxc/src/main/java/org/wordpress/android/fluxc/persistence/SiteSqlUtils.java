@@ -135,7 +135,7 @@ public class SiteSqlUtils {
             int oldId = siteResult.get(0).getId();
             try {
                 return WellSql.update(SiteModel.class).whereId(oldId)
-                        .put(site, new UpdateAllExceptId<SiteModel>()).execute();
+                        .put(site, new UpdateAllExceptId<>(SiteModel.class)).execute();
             } catch (SQLiteConstraintException e) {
                 AppLog.e(T.DB, "Error while updating site: siteId=" + site.getSiteId() + " url=" + site.getUrl()
                         + " xmlrpc=" + site.getXmlRpcUrl(), e);
