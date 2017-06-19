@@ -122,13 +122,13 @@ public class MediaUploadService extends Service {
         if (event.canceled) {
             // Upload canceled
             AppLog.i(T.MEDIA, "Upload successfully canceled.");
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED, getMediaFromQueueById(event.media.getId()), null);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED, getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else if (event.completed) {
             // Upload completed
             AppLog.i(T.MEDIA, "Upload completed - localId=" + event.media.getId() + " title=" + event.media.getTitle());
-            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromQueueById(event.media.getId()), null);
+            trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS, getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             if (event.media.getLocalPostId() != 0) {
                 // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
@@ -146,7 +146,7 @@ public class MediaUploadService extends Service {
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(T.MEDIA, "Error uploading media: " + event.error.message);
         // TODO: Don't update the state here, it needs to be done in FluxC
-        MediaModel media = getMediaFromQueueById(event.media.getId());
+        MediaModel media = getMediaFromInProgressQueueById(event.media.getId());
         if (media != null) {
             media.setUploadState(UploadState.FAILED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -208,7 +208,7 @@ public class MediaUploadService extends Service {
     }
 
     private synchronized void completeUploadWithId(int id) {
-        MediaModel media = getMediaFromQueueById(id);
+        MediaModel media = getMediaFromInProgressQueueById(id);
         if (media != null) {
             mInProgressUploads.remove(media);
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_STARTED, media, null);
@@ -226,7 +226,7 @@ public class MediaUploadService extends Service {
         mCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
     }
 
-    private MediaModel getMediaFromQueueById(int id) {
+    private MediaModel getMediaFromInProgressQueueById(int id) {
         for (MediaModel media : mInProgressUploads) {
             if (media.getId() == id)
                 return media;
