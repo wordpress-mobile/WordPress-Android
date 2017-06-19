@@ -46,6 +46,17 @@ public final class SiteSettingsTable {
         }
     }
 
+    public static void addSharingColumnsToSiteSettingsTable(SQLiteDatabase db) {
+        if (db != null) {
+            db.execSQL(SiteSettingsModel.ADD_SHARING_LABEL);
+            db.execSQL(SiteSettingsModel.ADD_SHARING_BUTTON_STYLE);
+            db.execSQL(SiteSettingsModel.ADD_ALLOW_REBLOG_BUTTON);
+            db.execSQL(SiteSettingsModel.ADD_ALLOW_LIKE_BUTTON);
+            db.execSQL(SiteSettingsModel.ADD_ALLOW_COMMENT_LIKES);
+            db.execSQL(SiteSettingsModel.ADD_TWITTER_USERNAME);
+        }
+    }
+
     public static Map<Integer, CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
