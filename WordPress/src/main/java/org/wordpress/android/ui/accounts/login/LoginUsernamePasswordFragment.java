@@ -108,7 +108,9 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_username_password_screen, container, false);
 
-        rootView.findViewById(R.id.login_site_info_layout).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
+        rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
+        rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
+        rootView.findViewById(R.id.login_blavatar).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
 
         if (mSiteIconUrl != null) {
             ((WPNetworkImageView) rootView.findViewById(R.id.login_blavatar)).setImageUrl(mSiteIconUrl,
