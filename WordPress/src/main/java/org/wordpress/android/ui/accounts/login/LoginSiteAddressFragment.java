@@ -215,6 +215,13 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
                 new Response.Listener<SiteWPComRestResponse>() {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
+                        if (response.jetpack) {
+                            // if Jetpack site, treat it as selfhosted and start the discovery process
+                            mDispatcher.dispatch(
+                                    AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+                            return;
+                        }
+
                         endProgress();
 
                         // it's a wp.com site so, treat it as such.
