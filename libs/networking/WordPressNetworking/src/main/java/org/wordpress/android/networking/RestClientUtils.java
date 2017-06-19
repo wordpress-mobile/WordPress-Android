@@ -257,6 +257,16 @@ public class RestClientUtils {
         post(path, listener, errorListener);
     }
 
+    public void getSharingButtons(String siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/sharing-buttons", siteId);
+        get(path, listener, errorListener);
+    }
+
+    public void setSharingButtons(String siteId, JSONObject params, Listener listener, ErrorListener errorListener) {
+        String path = String.format("sites/%s/sharing-buttons", siteId);
+        post(path, params, null, listener, errorListener);
+    }
+
     public void sendLoginEmail(Map<String, String> params, Listener listener, ErrorListener errorListener) {
         post("auth/send-login-email", params, null, listener, errorListener);
     }

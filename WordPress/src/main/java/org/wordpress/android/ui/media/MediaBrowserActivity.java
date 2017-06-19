@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,7 +73,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -101,8 +99,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return this == MULTI_SELECT_PICKER || this == SINGLE_SELECT_PICKER;
         }
     }
-
-    private static final int MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_IMAGES_ONLY = "images_only";
@@ -133,6 +129,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private String mMediaCapturePath;
     private boolean mImagesOnly;
     private MediaBrowserType mBrowserType;
+    private int mLastAddMediaItemClickedPosition;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -309,21 +307,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                this, requestCode, permissions, results, true);
 
-        // only MEDIA_PERMISSION_REQUEST_CODE is handled
-        if (requestCode != MEDIA_PERMISSION_REQUEST_CODE) {
-            return;
+        if (allGranted && requestCode == WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE) {
+            doAddMediaItemClicked(mLastAddMediaItemClickedPosition);
         }
-
-        for (int grantResult : results) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
-                return;
-            }
-        }
-
-        showAddMediaPopup();
     }
 
     @Override
@@ -360,10 +349,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
-                AppLockManager.getInstance().setExtendedTimeout();
-                if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, MEDIA_PERMISSION_REQUEST_CODE)) {
-                    showAddMediaPopup();
-                }
+                showAddMediaPopup();
                 return true;
             case R.id.menu_search:
                 mSearchMenuItem = item;
@@ -668,20 +654,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.actionbar_add_media_cell, items));
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        WordPressMediaUtils.launchCamera(MediaBrowserActivity.this, BuildConfig.APPLICATION_ID, MediaBrowserActivity.this);
-                        break;
-                    case 1:
-                        WordPressMediaUtils.launchVideoCamera(MediaBrowserActivity.this);
-                        break;
-                    case 2:
-                        WordPressMediaUtils.launchPictureLibrary(MediaBrowserActivity.this);
-                        break;
-                    case 3:
-                        WordPressMediaUtils.launchVideoLibrary(MediaBrowserActivity.this);
-                        break;
-                }
+                doAddMediaItemClicked(position);
                 mAddMediaPopup.dismiss();
             }
         });
@@ -709,6 +682,39 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
             View gridView = findViewById(R.id.recycler);
             mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+        }
+    }
+
+    private static final int ITEM_CAPTURE_PHOTO = 0;
+    private static final int ITEM_CAPTURE_VIDEO = 1;
+    private static final int ITEM_CHOOSE_PHOTO  = 2;
+    private static final int ITEM_CHOOSE_VIDEO  = 3;
+
+    private void doAddMediaItemClicked(int position) {
+        mLastAddMediaItemClickedPosition = position;
+
+        String[] permissions;
+        if (position == ITEM_CAPTURE_PHOTO || position == ITEM_CAPTURE_VIDEO) {
+            permissions = new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        } else {
+            permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        }
+        if (PermissionUtils.checkAndRequestPermissions(
+                this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
+            switch (position) {
+                case ITEM_CAPTURE_PHOTO:
+                    WordPressMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
+                    break;
+                case ITEM_CAPTURE_VIDEO:
+                    WordPressMediaUtils.launchVideoCamera(this);
+                    break;
+                case ITEM_CHOOSE_PHOTO:
+                    WordPressMediaUtils.launchPictureLibrary(this);
+                    break;
+                case ITEM_CHOOSE_VIDEO:
+                    WordPressMediaUtils.launchVideoLibrary(this);
+                    break;
+            }
         }
     }
 
