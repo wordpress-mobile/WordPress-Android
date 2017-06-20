@@ -1744,7 +1744,7 @@
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%s was denied permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -1766,4 +1766,8 @@
     <string name="permission_storage">Storage</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_location">Location</string>
+
+    <!-- Video Optimization -->
+    <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
+    <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
 </resources>

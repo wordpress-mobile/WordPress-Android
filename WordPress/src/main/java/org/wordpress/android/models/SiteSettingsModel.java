@@ -68,6 +68,20 @@ public class SiteSettingsModel {
             " add " + MAX_IMAGE_WIDTH_COLUMN_NAME + " INTEGER;";
     public static final String ADD_IMAGE_COMPRESSION_QUALITY = "alter table " + SETTINGS_TABLE_NAME +
             " add " + IMAGE_ENCODER_QUALITY_COLUMN_NAME + " INTEGER;";
+
+    public static final String ADD_SHARING_LABEL = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + SHARING_LABEL_COLUMN_NAME + " TEXT;";
+    public static final String ADD_SHARING_BUTTON_STYLE = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT;";
+    public static final String ADD_ALLOW_REBLOG_BUTTON = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_ALLOW_LIKE_BUTTON = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_ALLOW_COMMENT_LIKES = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_TWITTER_USERNAME = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + TWITTER_USERNAME_COLUMN_NAME + " TEXT;";
+
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
                     SETTINGS_TABLE_NAME +
@@ -102,13 +116,7 @@ public class SiteSettingsModel {
                     USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
                     WHITELIST_COLUMN_NAME + " BOOLEAN, " +
                     MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
-                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT," +
-                    SHARING_LABEL_COLUMN_NAME + " TEXT," +
-                    SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT," +
-                    ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN," +
-                    ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN," +
-                    ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN," +
-                    TWITTER_USERNAME_COLUMN_NAME + " TEXT" +
+                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
                     ");";
 
     public boolean isInLocalTable;

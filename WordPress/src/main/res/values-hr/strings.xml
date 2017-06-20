@@ -640,11 +640,7 @@ Language: hr
 	<string name="themes_live_preview">Pregled uživo</string>
 	<string name="cannot_delete_multi_media_items">Trenutno se neki medijski zapisi ne mogu izbrisati. Pokušajte ponovno kasnije.</string>
 	<string name="media_error_no_permission">Nemate dopuštenje za pregled galerije medijske zbirke</string>
-	<string name="media_gallery_edit">Uredi galeriju</string>
 	<string name="media_gallery_type_thumbnail_grid">Rešetka sličica</string>
-	<string name="media_gallery_num_columns">Broj stupaca</string>
-	<string name="media_gallery_image_order">Redoslijed slika</string>
-	<string name="media_gallery_settings_title">Postavke galerije</string>
 	<string name="learn_more">Saznajte više</string>
 	<string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
 	<string name="scaled_image_error">Unesite valjanu vrijednost skalirane širine</string>
@@ -762,8 +758,6 @@ Language: hr
 	<string name="media_gallery_type_tiled">Pločice</string>
 	<string name="media_gallery_type_squares">Kvadrati</string>
 	<string name="media_gallery_type">Tip</string>
-	<string name="media_gallery_image_order_reverse">Obrnuti</string>
-	<string name="media_gallery_image_order_random">Nasumično</string>
 	<string name="unattached">Nepriloženo</string>
 	<string name="images">Slike</string>
 	<string name="all">Sve</string>

@@ -13,7 +13,6 @@ Language: nl
 	<string name="editor_post_saved_locally">Bericht opgeslagen op apparaat</string>
 	<string name="cant_share_unknown_action">Aangevraagde actie niet herkend, wordt genegeerd</string>
 	<string name="button_sync">Synchroniseren</string>
-	<string name="media_saved_to_device">Media opgeslagen op dit apparaat</string>
 	<string name="smart_toast_comments_long_press">Tik en hou vast om meerdere reacties te selecteren</string>
 	<string name="smart_toast_photo_long_press">Tik en hou vast om meerdere foto\'s te selecteren</string>
 	<string name="photo_picker_choose_video">Kies video van apparaat</string>
@@ -70,7 +69,6 @@ Language: nl
 	<string name="error_media_parse_error">Kan reactie niet parseren na media-upload</string>
 	<string name="error_upload_params">Fout bij het uploaden van %1$s: %2$s</string>
 	<string name="submit_for_review">Verzenden</string>
-	<string name="media_error_too_large_upload">Het bestand is te groot. Neem contact op met je hostingprovider om het probleem op te lossen</string>
 	<string name="role_subscriber">Abonnee</string>
 	<string name="tell_me_more">Meer informatie</string>
 	<string name="duplicate_site_detected">Er is een dubbele site gevonden.</string>
@@ -1034,11 +1032,7 @@ Language: nl
 	<string name="themes_live_preview">Live voorbeeld</string>
 	<string name="cannot_delete_multi_media_items">Sommige media kan niet worden verwijderd. Probeer het later opnieuw.</string>
 	<string name="media_error_no_permission">Je hebt geen rechten om de mediabibliotheek te bekijken</string>
-	<string name="media_gallery_edit">Galerij bewerken</string>
 	<string name="media_gallery_type_thumbnail_grid">Miniatuurraster</string>
-	<string name="media_gallery_num_columns">Aantal kolommen</string>
-	<string name="media_gallery_image_order">Afbeeldingsvolgorde</string>
-	<string name="media_gallery_settings_title">Galerij-instellingen</string>
 	<string name="learn_more">Meer informatie</string>
 	<string name="post_not_found">Er heeft zich een fout voorgedaan bij het laden van het bericht. Ververs je berichten en probeer het opnieuw.</string>
 	<string name="scaled_image_error">Voer een geldige waarde in voor geschaalde breedte</string>
@@ -1157,8 +1151,6 @@ Language: nl
 	<string name="media_gallery_type_tiled">Tegels</string>
 	<string name="media_gallery_type_squares">Vierkanten</string>
 	<string name="media_gallery_type">Type</string>
-	<string name="media_gallery_image_order_reverse">Omgekeerd</string>
-	<string name="media_gallery_image_order_random">Willekeurig</string>
 	<string name="unattached">Niet gekoppeld</string>
 	<string name="images">Afbeeldingen</string>
 	<string name="all">Alle</string>

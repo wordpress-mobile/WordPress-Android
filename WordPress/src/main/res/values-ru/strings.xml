@@ -50,7 +50,6 @@ Language: ru
 	<string name="error_media_parse_error">Не удалось разобрать ответ после загрузки медиафайла</string>
 	<string name="error_upload_params">При загрузке %1$s произошла ошибка: %2$s</string>
 	<string name="submit_for_review">Отправить</string>
-	<string name="media_error_too_large_upload">Слишком большой файл. Чтобы решить эту проблему, свяжитесь с поставщиком услуг веб-хостинга</string>
 	<string name="signout">Выйти</string>
 	<string name="timespan_now">сейчас</string>
 	<string name="role_viewer">Обозреватель</string>
@@ -917,11 +916,7 @@ Language: ru
 	<string name="themes_live_preview">Предварительный просмотр</string>
 	<string name="cannot_delete_multi_media_items">Некоторые медиа-файлы не могут быть удалены сейчас. Попробуйте позже.</string>
 	<string name="media_error_no_permission">У вас нет прав для просмотра медиа-библиотеки</string>
-	<string name="media_gallery_edit">Редактировать галерею</string>
 	<string name="media_gallery_type_thumbnail_grid">Эскиз сетки</string>
-	<string name="media_gallery_num_columns">Число столбцов</string>
-	<string name="media_gallery_image_order">Порядок изображений</string>
-	<string name="media_gallery_settings_title">Настройки галереи</string>
 	<string name="learn_more">Узнать больше</string>
 	<string name="post_not_found">Произошла ошибка при загрузке поста. Обновите ваши записи и повторите попытку.</string>
 	<string name="scaled_image_error">Введите допустимое значение ширины</string>
@@ -1037,8 +1032,6 @@ Language: ru
 	<string name="media_gallery_type_tiled">Плитка</string>
 	<string name="media_gallery_type_squares">Квадраты</string>
 	<string name="media_gallery_type">Тип</string>
-	<string name="media_gallery_image_order_reverse">Обратить</string>
-	<string name="media_gallery_image_order_random">Случайный</string>
 	<string name="unattached">Неприкреплено</string>
 	<string name="images">Изображения</string>
 	<string name="all">Всё</string>

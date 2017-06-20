@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-26 16:28:19+0000
+Translation-Revision-Date: 2017-06-08 07:37:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="media_error_timeout">Se agotó la respuesta del servidor, puede que tengas una conexión pobre o que sea un error del servidor</string>
+	<string name="media_error_internal_server_error">Error en la subida. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
+	<string name="media_error_too_large_upload">Archivo a subir demasiado grande. Trata de activar Optimizar imágenes en Sitio->Ajustes</string>
+	<string name="media_downloading">Guardando medios en este dispositivo</string>
 	<string name="error_media_save">No fue posible guardar los medios</string>
 	<string name="editor_scheduled_post_saved_online">Entrada programada</string>
 	<string name="editor_draft_saved_locally">Borrador guardado en el dispositivo</string>
@@ -13,7 +17,6 @@ Language: es
 	<string name="editor_post_saved_locally">Entrada guardada en el dispositivo</string>
 	<string name="cant_share_unknown_action">Acción solicitada no reconocida, ingorándola</string>
 	<string name="button_sync">Sinc</string>
-	<string name="media_saved_to_device">Medios guardados en este dispositivo</string>
 	<string name="smart_toast_comments_long_press">Toca y mantiene para elegir varios comentarios</string>
 	<string name="smart_toast_photo_long_press">Toca y mantiene para elegir varias fotos</string>
 	<string name="photo_picker_choose_video">Elige un vídeo del dispositivo</string>
@@ -70,7 +73,6 @@ Language: es
 	<string name="error_media_parse_error">No se ha podido parsear la respuesta tras la carga de medios</string>
 	<string name="error_upload_params">Error durante la carga de %1$s: %2$s</string>
 	<string name="submit_for_review">Enviar</string>
-	<string name="media_error_too_large_upload">El archivo es demasiado grande. Por favor, póngase en contacto con el proveedor de alojamiento para solucionar este problema</string>
 	<string name="role_subscriber">Suscriptor</string>
 	<string name="tell_me_more">Más información</string>
 	<string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
@@ -1034,11 +1036,7 @@ Language: es
 	<string name="themes_live_preview">Vista previa</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>
 	<string name="media_error_no_permission">No tienes permiso para ver la librería multimedia</string>
-	<string name="media_gallery_edit">Editar galería</string>
 	<string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
-	<string name="media_gallery_num_columns">Número de columnas</string>
-	<string name="media_gallery_image_order">Orden de imágenes</string>
-	<string name="media_gallery_settings_title">Ajustes de galería</string>
 	<string name="learn_more">Aprender más</string>
 	<string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
 	<string name="scaled_image_error">Introduce un valor válido de ancho a escala</string>
@@ -1157,8 +1155,6 @@ Language: es
 	<string name="media_gallery_type_tiled">Mosaico</string>
 	<string name="media_gallery_type_squares">Cuadrados</string>
 	<string name="media_gallery_type">Tipo</string>
-	<string name="media_gallery_image_order_reverse">Inverso</string>
-	<string name="media_gallery_image_order_random">Aleatorio</string>
 	<string name="unattached">Sin adjuntar</string>
 	<string name="images">Imágenes</string>
 	<string name="all">Todas</string>

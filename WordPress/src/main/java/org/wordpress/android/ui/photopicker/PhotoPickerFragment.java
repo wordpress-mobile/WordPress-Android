@@ -495,11 +495,18 @@ public class PhotoPickerFragment extends Fragment {
         boolean isAlwaysDenied = isStoragePermissionAlwaysDenied();
 
         if (show) {
-            int labelId = isAlwaysDenied ?
-                    R.string.photo_picker_soft_ask_permissions_denied : R.string.photo_picker_soft_ask_label;
             String appName = "<strong>" + getString(R.string.app_name) + "</strong>";
-            String label = String.format(getString(labelId), appName);
             TextView txtLabel = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
+            String label;
+            if (isAlwaysDenied) {
+                String permissionName = "<strong>"
+                        + WPPermissionUtils.getPermissionName(getActivity(), permission.WRITE_EXTERNAL_STORAGE)
+                        + "</strong>";
+                label = String.format(
+                        getString(R.string.photo_picker_soft_ask_permissions_denied), appName, permissionName);
+            } else {
+                label = String.format(getString(R.string.photo_picker_soft_ask_label), appName);
+            }
             txtLabel.setText(Html.fromHtml(label));
 
             // when the user taps Allow, request the required permissions unless the user already

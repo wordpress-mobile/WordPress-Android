@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-07 12:46:52+0000
+Translation-Revision-Date: 2017-06-07 18:58:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+	<string name="media_insert_as_gallery">Als Galerie hinzufügen.</string>
+	<string name="media_insert_title">mehrere Fotos hinzufügen</string>
+	<string name="media_gallery_column_count_multi">%d Spalten</string>
+	<string name="media_gallery_column_count_single">1 Spalte</string>
 	<string name="editor_confirm_email_prompt_negative">E-Mail erneut senden</string>
 	<string name="editor_confirm_email_prompt_message_with_email">Bei deiner Registrierung haben wir eine E-Mail an %s gesendet. Öffne diese Nachricht und klicke auf den blauen Button, um die Veröffentlichung zu aktivieren.</string>
 	<string name="editor_confirm_email_prompt_message">Bei deiner Registrierung haben wir eine E-Mail an dich gesendet. Öffne diese Nachricht und klicke auf den blauen Button, um die Veröffentlichung zu aktivieren.</string>
@@ -24,19 +28,38 @@ Language: de
 	<string name="site_picker_remove_site_error">Beim Entfernen der Website ist ein Fehler aufgetreten. Bitte versuche es später erneut.</string>
 	<string name="editor_post_saved_locally_unfinished_media">Es befinden sich nicht fertiggestellte Medien-Uploads im Beitrag; er wurde lokal gespeichert.</string>
 	<string name="sure_to_remove_account">Möchtest du diese Website aus der App entfernen?</string>
+	<string name="error_publish_no_network">Gerät ist offline. Änderungen wurden lokal gespeichert.</string>
+	<string name="editor_post_saved_online">Der Beitrag wurde online gespeichert</string>
+	<string name="site_settings_image_quality_hint">Qualität der Bilder. Höhere Werte bedeuten bessere Bilder.</string>
 	<string name="site_settings_optimize_images_summary">Aktivieren, um die Größe von Bildern zu ändern und sie zu komprimieren</string>
+	<string name="media_encoder_quality_100">Maximal</string>
+	<string name="media_encoder_quality_95">Sehr hoch</string>
+	<string name="media_encoder_quality_90">Hoch</string>
+	<string name="media_encoder_quality_85">Mittel</string>
+	<string name="media_encoder_quality_80">Niedrig</string>
+	<string name="media_upload_state_uploaded">Hochgeladen</string>
+	<string name="media_upload_state_failed">Fehlgeschlagen</string>
+	<string name="media_upload_state_deleted">Gelöscht</string>
+	<string name="media_upload_state_deleting">Lösche</string>
+	<string name="media_upload_state_uploading">Lade hoch</string>
 	<string name="media_upload_state_queued">In Warteschlange</string>
 	<string name="update_draft">Entwurf aktualisieren</string>
 	<string name="keep_editing">Weiter bearbeiten</string>
+	<string name="image_quality">Bildqualität</string>
 	<string name="error_all_media_upload_canceled">Aufgrund eines unbekannten Fehlers wurden alle Medien-Uploads abgebrochen. Bitte versuche erneut, die Inhalte hochzuladen</string>
+	<string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
 	<string name="error_unknown_post">Unbekannter Beitrag; eine lokale Kopie dieses Beitrags wurde möglicherweise nicht mit dem Server synchronisiert.</string>
 	<string name="error_fetch_site_after_creation">Die Website wurde erstellt. Gegebenenfalls musst du deine Websites in der Website-Auswahl aktualisieren.</string>
 	<string name="error_media_request_too_large">Medien zu groß für den Upload</string>
 	<string name="error_media_parse_error">Antwort nach Medien-Upload konnte nicht analysiert werden</string>
 	<string name="error_upload_params">Beim Hochladen der %1$s ist ein Fehler aufgetreten: %2$s</string>
 	<string name="submit_for_review">Abschicken</string>
-	<string name="media_error_too_large_upload">Die Datei ist zu groß. Bitte kontaktiere den Webhosting-Anbieter, um dieses Problem zu beheben</string>
+	<string name="role_subscriber">Abonnent</string>
+	<string name="tell_me_more">Weitere Informationen</string>
+	<string name="duplicate_site_detected">Es wurde eine doppelte Website entdeckt.</string>
 	<string name="site_settings_optimize_images">Bilder optimieren</string>
+	<string name="retry">Erneut versuchen</string>
+	<string name="confirm">Bestätigen</string>
 	<string name="reader_empty_followed_blogs_search_title">Keine entsprechenden Websites gefunden</string>
 	<string name="reader_hint_search_followed_sites">Abonnierte Websites durchsuchen</string>
 	<string name="visual_editor_disabled">Visueller Editor deaktiviert</string>
@@ -971,11 +994,7 @@ Language: de
 	<string name="themes_live_preview">Live-Vorschau</string>
 	<string name="cannot_delete_multi_media_items">Einige Mediendateien konnten nicht gelöscht werden. Versuche es später erneut.</string>
 	<string name="media_error_no_permission">Du hast keine Berichtigung die Mediathek zu sehen</string>
-	<string name="media_gallery_edit">Galerie bearbeiten</string>
 	<string name="media_gallery_type_thumbnail_grid">Vorschaubild-Raster</string>
-	<string name="media_gallery_num_columns">Anzahl Spalten</string>
-	<string name="media_gallery_image_order">Bild-Reihenfolge</string>
-	<string name="media_gallery_settings_title">Galerie-Einstellungen</string>
 	<string name="learn_more">Mehr erfahren</string>
 	<string name="post_not_found">Beim Abrufen des Beitrags trat ein Fehler auf. Lade deine Beiträge erneut und versuche es nochmal.</string>
 	<string name="scaled_image_error">Gib eine gültige Breite ein</string>
@@ -1093,8 +1112,6 @@ Language: de
 	<string name="media_gallery_type_tiled">Gekachelt</string>
 	<string name="media_gallery_type_squares">Quadrate</string>
 	<string name="media_gallery_type">Typ</string>
-	<string name="media_gallery_image_order_reverse">Umgekehrt</string>
-	<string name="media_gallery_image_order_random">Zufall</string>
 	<string name="unattached">Unverknüpft</string>
 	<string name="images">Bilder</string>
 	<string name="all">Alle</string>

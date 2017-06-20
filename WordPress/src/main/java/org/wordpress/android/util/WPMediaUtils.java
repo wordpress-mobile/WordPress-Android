@@ -2,7 +2,10 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Build;
 
+import org.wordpress.android.*;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -40,7 +43,6 @@ public class WPMediaUtils {
         return null;
     }
 
-
     public static Uri fixOrientationIssue(Activity activity, String path, boolean isVideo) {
         if (isVideo) {
             return null;
@@ -52,5 +54,9 @@ public class WPMediaUtils {
         }
 
         return null;
+    }
+
+    public static boolean isVideoOptimizationAvailable() {
+        return BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 }
