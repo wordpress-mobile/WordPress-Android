@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.m4m.MediaComposer;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -107,6 +109,7 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
@@ -121,6 +124,7 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -131,6 +135,7 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -1699,6 +1704,27 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        // Video optimization -> API18 or higher
+        if (isVideo && WPMediaUtils.isVideoOptimizationAvailable()) {
+            // Setting up the lister that's called when the video optimization finishes
+            EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
+                @Override
+                public void done(String path) {
+                    android.net.Uri uri = android.net.Uri.parse(path);
+                    MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
+                    MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+                    if (media != null) {
+                        mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
+                    }
+                }
+            };
+            EditPostActivityVideoHelper vHelper = new EditPostActivityVideoHelper(this, listener, path);
+            boolean videoOptimizationStarted = vHelper.startVideoOptimization();
+            // This is true only when video optimization can be started. In this case we just need to wait until it finishes
+            if (videoOptimizationStarted) {
+                return true;
+            }
+        }
         Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(this, mSite, path, isVideo);
         if (optimizedMedia != null) {
             uri = optimizedMedia;
