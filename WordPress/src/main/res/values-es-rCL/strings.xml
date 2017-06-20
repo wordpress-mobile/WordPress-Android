@@ -397,11 +397,7 @@ Language: es_CL
 	<string name="scaled_image_error">Introduce un valor válido de ancho a escala</string>
 	<string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
 	<string name="learn_more">Aprender más</string>
-	<string name="media_gallery_settings_title">Ajustes de galería</string>
-	<string name="media_gallery_image_order">Orden de imágenes</string>
-	<string name="media_gallery_num_columns">Número de columnas</string>
 	<string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
-	<string name="media_gallery_edit">Editar galería</string>
 	<string name="media_error_no_permission">No tienes permiso para ver la librería multimedia</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>
 	<string name="themes_live_preview">Vista previa</string>
@@ -544,8 +540,6 @@ Language: es_CL
 	<string name="all">Todas</string>
 	<string name="images">Imágenes</string>
 	<string name="unattached">Sin adjuntar</string>
-	<string name="media_gallery_image_order_random">Aleatorio</string>
-	<string name="media_gallery_image_order_reverse">Inverso</string>
 	<string name="media_gallery_type">Tipo</string>
 	<string name="media_gallery_type_squares">Cuadrados</string>
 	<string name="media_gallery_type_tiled">Mosaico</string>

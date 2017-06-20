@@ -53,8 +53,6 @@ Language: uz
 	<string name="unattached">Biriktirilmagan</string>
 	<string name="media_gallery_type_circles">Doiralar</string>
 	<string name="themes">Shablonlar</string>
-	<string name="media_gallery_image_order_random">Tasodifiy</string>
-	<string name="media_gallery_image_order_reverse">Teskari</string>
 	<string name="media_gallery_type">Tur</string>
 	<string name="media_gallery_type_squares">Kvadrat</string>
 	<string name="media_gallery_type_tiled">Bir qator</string>

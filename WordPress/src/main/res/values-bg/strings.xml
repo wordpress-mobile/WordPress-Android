@@ -834,7 +834,6 @@ Language: bg
 	<string name="username_or_password_incorrect">Името или паролата, които зададохте, са грешни</string>
 	<string name="nux_cannot_log_in">Свързването е невъзможно с момента</string>
 	<string name="invalid_url_message">Проверете дали зададеният адрес е валиден</string>
-	<string name="media_gallery_num_columns">Брой колони</string>
 	<string name="comment_status_spam">Спам</string>
 	<string name="comment_status_trash">Изхвърлено</string>
 	<string name="mnu_comment_trash">Боклук</string>
@@ -866,9 +865,7 @@ Language: bg
 	<string name="link_enter_url_text">Текст на връзката (по избор)</string>
 	<string name="theme_premium_theme">Премиум тема</string>
 	<string name="new_media">Нов файл</string>
-	<string name="media_gallery_settings_title">Настройки на галерията</string>
 	<string name="local_draft">Локална чернова</string>
-	<string name="media_gallery_image_order">Подредба на изображенията</string>
 	<string name="blog_removed_successfully">Уебсайта беше премахнат успешно</string>
 	<string name="file_not_found">Файла за качване не беше намерен? Бил ли е изтрит или преместен?</string>
 	<string name="media_error_no_permission">Нямате нужните права за да прегледате файловете</string>
@@ -896,7 +893,6 @@ Language: bg
 	<string name="add_comment">Добавяне на коментар</string>
 	<string name="cancel_edit">Отказване</string>
 	<string name="learn_more">Още</string>
-	<string name="media_gallery_edit">Редактиране на галерията</string>
 	<string name="cannot_delete_multi_media_items">Някои от файловете не могат да бъдат изтрити в момента. Опитайте по-късно.</string>
 	<string name="create_a_link">Създаване на връзка</string>
 	<string name="upload_failed">Качването е неуспешно</string>
@@ -1006,7 +1002,6 @@ Language: bg
 	<string name="stats_timeframe_yesterday">Вчера</string>
 	<string name="media_gallery_type_circles">Кръгове</string>
 	<string name="media_gallery_type_squares">Квадрати</string>
-	<string name="media_gallery_image_order_reverse">Обратен ред</string>
 	<string name="media_edit_description_hint">Добави описание</string>
 	<string name="media_edit_success">Обновено</string>
 	<string name="stats_timeframe_today">Днес</string>
@@ -1031,7 +1026,6 @@ Language: bg
 	<string name="stats_view_clicks">Кликове</string>
 	<string name="stats_totals_clicks">Кликове</string>
 	<string name="stats_entry_tags_and_categories">Тема</string>
-	<string name="media_gallery_image_order_random">Произволен</string>
 	<string name="media_gallery_type">Вид</string>
 	<string name="media_gallery_type_tiled">Плочки</string>
 	<string name="media_edit_failure">Актуализирането е неуспешно</string>

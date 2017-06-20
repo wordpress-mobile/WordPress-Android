@@ -390,11 +390,7 @@ Language: hi_IN
 	<string name="themes_live_preview">लाइव पूर्वावलोकन</string>
 	<string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
 	<string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
-	<string name="media_gallery_edit">गैलरी संपादित करें</string>
 	<string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
-	<string name="media_gallery_num_columns">कॉलम की संख्या</string>
-	<string name="media_gallery_image_order">छवि के क्रम</string>
-	<string name="media_gallery_settings_title">गैलरी सेटिंग्स</string>
 	<string name="learn_more">और जानें</string>
 	<string name="post_not_found">पोस्ट लोड करते समय एक त्रुटि हुई.पोस्ट को रिफ्रेश करे और फिर से प्रयास करें</string>
 	<string name="scaled_image_error">एक वैध बढ़ाया चौड़ाई का मान दर्ज करें</string>
@@ -506,8 +502,6 @@ Language: hi_IN
 	<string name="media_gallery_type_tiled">टाइल किया हुआ</string>
 	<string name="media_gallery_type_squares">वर्गाकार</string>
 	<string name="media_gallery_type">प्रकार</string>
-	<string name="media_gallery_image_order_reverse">उल्टा</string>
-	<string name="media_gallery_image_order_random">क्रमरहित</string>
 	<string name="unattached">असंबद्ध</string>
 	<string name="images">छविया</string>
 	<string name="all">सभी</string>

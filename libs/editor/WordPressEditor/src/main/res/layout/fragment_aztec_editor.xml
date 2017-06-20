@@ -11,7 +11,8 @@
         android:id="@+id/formatting_toolbar"
         android:layout_alignParentBottom="true"
         android:layout_height="@dimen/format_bar_height"
-        android:layout_width="match_parent" >
+        android:layout_width="match_parent"
+        aztec:advanced="true" >
     </org.wordpress.aztec.toolbar.AztecToolbar>
 
     <ScrollView

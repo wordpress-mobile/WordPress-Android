@@ -152,8 +152,6 @@ Language: nb_NO
 	<string name="comments_empty_list">Ingen kommentarer</string>
 	<string name="stats_bar_graph_empty">Ingen statistikk tilgjengelig</string>
 	<string name="out_of_memory">Enheten er tom for minne</string>
-	<string name="media_gallery_edit">Rediger galleri</string>
-	<string name="media_gallery_num_columns">Antall kolonner</string>
 	<string name="comment_status_unapproved">Ventende</string>
 	<string name="comment_status_approved">Godkjent</string>
 	<string name="delete_page">Slett side</string>
@@ -187,7 +185,6 @@ Language: nb_NO
 	<string name="preview_post">Forhåndsvis innlegg</string>
 	<string name="image_settings">Bildeinnstillinger</string>
 	<string name="preview_page">Forhåndsvis side</string>
-	<string name="media_gallery_settings_title">Galleri-innstillinger</string>
 	<string name="category_name">Kategorinavn</string>
 	<string name="wordpress_blog">WordPress-blogg</string>
 	<string name="reader_toast_err_add_tag">Kunne ikke legge til dette stikkordet</string>
@@ -233,8 +230,6 @@ Language: nb_NO
 	<string name="all">Alle</string>
 	<string name="images">Bilder</string>
 	<string name="media_gallery_type">Type</string>
-	<string name="media_gallery_image_order_random">Tilfeldig</string>
-	<string name="media_gallery_image_order_reverse">Omvendt</string>
 	<string name="media_edit_title_text">Tittel</string>
 	<string name="media_edit_description_text">Beskrivelse</string>
 	<string name="media_edit_success">Oppdatert</string>

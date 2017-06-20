@@ -2,7 +2,6 @@ package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,6 +28,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +44,6 @@ import javax.inject.Inject;
 public class ShareIntentReceiverActivity extends AppCompatActivity implements OnItemSelectedListener {
     public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
-
-    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 1;
 
     private static final int ADD_TO_NEW_POST = 0;
     private static final int ADD_TO_MEDIA_LIBRARY = 1;
@@ -125,13 +123,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        if (requestCode == SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
-            for (int grantResult : grantResults) {
-                if (grantResult == PackageManager.PERMISSION_DENIED) {
-                    ToastUtils.showToast(this, getString(R.string.add_media_permission_required));
-                    return;
-                }
-            }
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                this, requestCode, permissions, grantResults, true);
+        if (allGranted && requestCode == WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
             shareIt();
         }
     }
@@ -195,6 +189,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
             }
         }
         mActionIndex = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, ADD_TO_NEW_POST);
+        if (mActionIndex < 0 || mActionIndex >= mActionGroup.getChildCount()) {
+            mActionIndex = ADD_TO_NEW_POST;
+        }
         mActionGroup.check(getActionId(mActionIndex));
     }
 
@@ -256,7 +253,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements On
     private void shareIt() {
         if (!isSharingText()) {
             // If we're sharing media, we must check we have Storage permission (needed for media upload).
-            if (!PermissionUtils.checkAndRequestStoragePermission(this, SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
+            if (!PermissionUtils.checkAndRequestStoragePermission(this, WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE)) {
                 return;
             }
         }

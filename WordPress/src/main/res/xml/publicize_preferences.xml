@@ -1,0 +1,77 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/buttons">
+
+        <MultiSelectListPreference
+            android:key="@string/pref_key_sharing_buttons"
+            android:title="@string/sharing_buttons"
+            android:summary="@string/sharing_sharing_buttons_description"/>
+
+        <MultiSelectListPreference
+            android:key="@string/pref_key_more_buttons"
+            android:title="@string/sharing_edit_more_buttons"
+            android:summary="@string/sharing_more_description" />
+
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+            android:key="@string/publicize_label"
+            android:layout="@layout/preference_layout"
+            app:summaryLines="1"
+            app:maxSummaryLines="1"
+            app:dialogMessage="@string/sharing_label_message"
+            android:title="@string/label" />
+
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_publicize_button_style"
+            android:key="@string/publicize_button_style"
+            android:title="@string/button_style"
+            android:entries="@array/publicize_button_style_etries"
+            android:entryValues="@array/publicize_button_style_values"
+            android:defaultValue="-2" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:id="@+id/pref_sharing_reblog_and_like"
+        android:key="@string/pref_key_sharing_reblog_and_like"
+        android:title="@string/site_settings_reblog_and_like_header">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_reblog"
+            android:key="@string/pref_key_reblog"
+            android:title="@string/site_settings_reblog" />
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_like"
+            android:key="@string/pref_key_like"
+            android:title="@string/site_settings_like" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/likes">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:key="@string/pref_key_comment_likes"
+            android:title="@string/sharing_comment_likes"
+            android:summary="@string/sharing_comment_likes_description" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="@string/pref_key_twitter_category"
+        android:title="@string/twitter">
+
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+            android:key="@string/pref_key_twitter_username"
+            android:layout="@layout/preference_layout"
+            app:summaryLines="1"
+            app:maxSummaryLines="1"
+            app:dialogMessage="@string/sharing_twitter_message"
+            android:title="@string/twitter_username" />
+
+    </PreferenceCategory>
+
+
+
+</PreferenceScreen>
