@@ -143,6 +143,31 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
+        URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        String url = WPCOMREST.sites.siteUrl(uri.getHost()).getUrlV1_1();
+
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        SiteModel site = siteResponseToSiteModel(response);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(site));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SiteModel payload = new SiteModel();
+                        payload.error = error;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     public void checkUrlIsWPCom(@NonNull final String testedUrl) {
         String url = WPCOMREST.sites.getUrlV1_1() + testedUrl;
         final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
