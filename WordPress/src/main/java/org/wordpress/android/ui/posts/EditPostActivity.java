@@ -1696,150 +1696,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-
-    private void dismissProgressDialog(ProgressDialog progressDialog) {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            try {
-                progressDialog.dismiss();
-            } catch (IllegalArgumentException e) {
-                // dialog doesn't exist
-            }
-        }
-    }
-
-    private class VideoOptimizationProgressListener implements org.m4m.IProgressListener {
-        private WeakReference<Context> mWeakContext;
-        private final String mOriginalPath;
-        private final String mOutFilePath;
-        private WeakReference<ProgressDialog> mWeakProgressDialog;
-        private boolean isStopped = false;
-
-        VideoOptimizationProgressListener(Context context, String originalPath, String outFilePath) {
-            mWeakContext = new WeakReference<Context>(context);
-            mOriginalPath = originalPath;
-            mOutFilePath = outFilePath;
-        }
-
-        public void setProgressDialog(ProgressDialog progressDialog) {
-            this.mWeakProgressDialog = new WeakReference<ProgressDialog>(progressDialog);;
-        }
-
-        public void setStopped(boolean stopped) {
-            isStopped = stopped;
-        }
-
-        @Override
-        public void onMediaStart() {
-
-        }
-
-        @Override
-        public void onMediaProgress(float progress) {
-
-        }
-
-        @Override
-        public void onMediaDone() {
-            ProgressDialog pd = mWeakProgressDialog.get();
-            dismissProgressDialog(pd);
-            if (isStopped || isFinishing()) {
-                return;
-            }
-            EditPostActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isStopped || isFinishing()) {
-                        return;
-                    }
-                    // Make sure the resulting file is smaller than the original
-                    long originalFileSize = FileUtils.length(mOriginalPath);
-                    long optimizedFileSize = FileUtils.length(mOutFilePath);
-                    String pathToUse = mOutFilePath;
-                    if (optimizedFileSize > originalFileSize) {
-                        AppLog.w(AppLog.T.MEDIA, "Optimized video is larger than original file "
-                                + optimizedFileSize + " > " + originalFileSize );
-                        pathToUse = mOriginalPath;
-                    }
-                    // Upload the file
-                    uploadFile(pathToUse);
-                }
-            });
-        }
-
-        private void uploadFile(String path) {
-            Uri uri = Uri.parse(path);
-            MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
-            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
-            if (media != null) {
-                mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
-            }
-        }
-
-        @Override
-        public void onMediaPause() {
-
-        }
-
-        @Override
-        public void onMediaStop() {
-            // This seems to be called called in 2 cases. Do not use to check if we've manually stopped the composer.
-            // 1. When the encoding is done without errors, before onMediaDone!
-            // 2. When we call 'stop' on the media composer.
-        }
-
-        @Override
-        public void onError(Exception exception) {
-            AppLog.e(AppLog.T.MEDIA, "Can't optimize the video", exception);
-            if (isStopped || isFinishing()) {
-                return;
-            }
-            ProgressDialog pd = mWeakProgressDialog.get();
-            dismissProgressDialog(pd);
-            Context context = mWeakContext.get();
-            if (context != null) {
-                ToastUtils.showToast(context, R.string.video_optimization_generic_error_message, Duration.LONG);
-            }
-            // Upload the original file
-            uploadFile(mOriginalPath);
-        }
-    }
-
-    private boolean enqueueVideoCompression(String path) {
-        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
-            // Video downsampling -> API18 or higher
-            return false;
-        }
-
-        // create the destination file
-        File cacheDir = MediaUtils.getDiskCacheDir(this);
-        if (cacheDir != null && !cacheDir.exists()) {
-            cacheDir.mkdirs();
-        }
-        final String outFilePath = cacheDir.getPath()+ "/" + MediaUtils.generateTimeStampedFileName("video/mp4");
-
-        // Setup video optimization objects
-        final VideoOptimizationProgressListener progressListener = new VideoOptimizationProgressListener(this, path, outFilePath);
-        final MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(this, path, outFilePath, progressListener);
-        if (mediaComposer == null) {
-            AppLog.w(AppLog.T.MEDIA, "Can't optimize this video. Using the original file");
-            return false;
-        }
-
-        // setup done. We're ready to optimize!
-
-        final ProgressDialog progressDialog = ProgressDialog.show(this, "", this.getString(R.string.video_optimization_in_progress), true, true, new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                progressListener.setStopped(true);
-                mediaComposer.stop();
-            }
-        });
-        progressListener.setProgressDialog(progressDialog);
-
-        mediaComposer.start();
-        return true;
-    }
-
     private boolean addMediaVisualEditor(Uri uri, boolean isVideo) {
         String path = MediaUtils.getRealPathFromURI(this, uri);
 
@@ -1848,10 +1704,24 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return false;
         }
 
+        // Video optimization -> API18 or higher
         if (isVideo && WPMediaUtils.isVideoOptimizationAvailable()) {
-            // Video downsampling -> API18 or higher
-            boolean res = enqueueVideoCompression(path);
-            if (res) {
+            // Setting up the lister that's called when the video optimization finishes
+            EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
+                @Override
+                public void done(String path) {
+                    android.net.Uri uri = android.net.Uri.parse(path);
+                    MediaModel media = queueFileForUpload(uri, getContentResolver().getType(uri));
+                    MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(media);
+                    if (media != null) {
+                        mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
+                    }
+                }
+            };
+            EditPostActivityVideoHelper vHelper = new EditPostActivityVideoHelper(this, listener, path);
+            boolean videoOptimizationStarted = vHelper.startVideoOptimization();
+            // This is true only when video optimization can be started. In this case we just need to wait until it finishes
+            if (videoOptimizationStarted) {
                 return true;
             }
         }
