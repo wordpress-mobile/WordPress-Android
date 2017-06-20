@@ -210,8 +210,11 @@ public class PostsListFragment extends Fragment
         mSearchResults.clear();
 
         if (!TextUtils.isEmpty(searchTerm)) {
+            // disable pull-to-refresh while searching
+            mSwipeToRefreshHelper.setEnabled(false);
             mHandler.postDelayed(mSearchRunnable, SEARCH_DELAY_MS);
         } else {
+            mSwipeToRefreshHelper.setEnabled(true);
             loadPosts(LoadMode.IF_CHANGED);
         }
     }
