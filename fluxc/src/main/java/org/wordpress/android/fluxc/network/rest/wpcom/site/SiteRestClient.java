@@ -153,7 +153,17 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
-        URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        URI uri;
+        try {
+            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        } catch (IllegalArgumentException e) {
+            FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+            payload.checkedUrl = siteUrl;
+            payload.error = new SiteError(SiteErrorType.INVALID_SITE);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
+            return;
+        }
+
         String url = WPCOMREST.sites.siteUrl(uri.getHost()).getUrlV1_1();
 
         final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
