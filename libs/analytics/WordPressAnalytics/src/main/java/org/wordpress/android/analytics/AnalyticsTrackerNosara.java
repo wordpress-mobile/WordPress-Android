@@ -394,6 +394,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
                 return "media_photo_optimize_error";
+            case MEDIA_VIDEO_OPTIMIZED:
+                return "media_video_optimized";
+            case MEDIA_VIDEO_OPTIMIZE_ERROR:
+                return "media_video_optimize_error";
+            case MEDIA_VIDEO_CANT_OPTIMIZE:
+                return "media_video_cant_optimize";
             case EDITOR_PUBLISHED_POST:
                 return "editor_post_published";
             case EDITOR_UPDATED_POST:
