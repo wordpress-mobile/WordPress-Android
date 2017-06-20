@@ -121,12 +121,20 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchConnectSiteInfo(@NonNull final String testedUrl) {
+    public void fetchConnectSiteInfo(@NonNull final String siteUrl) {
         // Get a proper URI to reliably retrieve the scheme.
-        URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(testedUrl, false));
+        URI uri;
+        try {
+            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        } catch (IllegalArgumentException e) {
+            SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
+            ConnectSiteInfoPayload payload = new ConnectSiteInfoPayload(siteUrl, siteError);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(payload));
+            return;
+        }
 
         // Sanitize and encode the Url for the API call.
-        String sanitizedURL = UrlUtils.removeScheme(testedUrl);
+        String sanitizedURL = UrlUtils.removeScheme(siteUrl);
         sanitizedURL = sanitizedURL.replace("/", "::");
 
         // Make the call.
@@ -136,15 +144,16 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<ConnectSiteInfoResponse>() {
                     @Override
                     public void onResponse(ConnectSiteInfoResponse response) {
-                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(testedUrl, response);
-                        info.url = testedUrl;
+                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(siteUrl, response);
+                        info.url = siteUrl;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(testedUrl, error);
+                        SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
+                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(siteUrl, siteError);
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 }

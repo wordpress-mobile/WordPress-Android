@@ -116,8 +116,9 @@ public class SiteStore extends Store {
         public boolean isJetpackActive;
         public boolean isJetpackConnected;
         public boolean isWPCom;
+        public SiteError error;
 
-        public ConnectSiteInfoPayload(@NonNull String url, BaseNetworkError error) {
+        public ConnectSiteInfoPayload(@NonNull String url, SiteError error) {
             this.url = url;
             this.error = error;
         }
@@ -881,9 +882,7 @@ public class SiteStore extends Store {
 
     private void handleFetchedConnectSiteInfo(ConnectSiteInfoPayload payload) {
         OnConnectSiteInfoChecked event = new OnConnectSiteInfoChecked(payload);
-        if (payload.isError()) {
-            event.error = new SiteError(SiteErrorType.INVALID_SITE);
-        }
+        event.error = payload.error;
         emitChange(event);
     }
 
