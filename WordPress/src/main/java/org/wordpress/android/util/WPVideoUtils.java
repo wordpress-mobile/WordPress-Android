@@ -17,22 +17,41 @@ import org.m4m.android.VideoFormatAndroid;
 
 import java.io.IOException;
 
+
+/**
+ * This class implements functionality for simple video transcoding.
+ *
+ * Input video is transcoded to 720p (if bigger than 1280x720) by using the H.264 Advanced Video Coding encoder.
+ * Audio track is encoded with Advanced Audio Coding (AAC). Not resampled. Output sample rate and channel count are the same as for input.
+ *
+ */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class WPVideoUtils {
 
     // Default parameters for the video encoder
     private static final String VIDEO_MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
-    private static final int FRAME_RATE = 30;               // 30fps
-    private static final int IFRAME_INTERVAL = 2;           // 2 seconds between I-frames
+    private static final int FRAME_RATE = 30;                     // 30fps
+    private static final int IFRAME_INTERVAL = 2;                 // 2 seconds between I-frames
 
-    private static final int OUTPUT_WIDTH = 1280;
-    private static final int OUTPUT_HEIGHT = 720;
-    private static final int OUTPUT_BITRATE_KB = 3000;
+    private static final int OUTPUT_WIDTH = 1280;                 // Default video width
+    private static final int OUTPUT_HEIGHT = 720;                 // Default video height
+    private static final int OUTPUT_BITRATE_KB = 3000;            // Default bitrate Kbytes
 
     // Default parameters for the audio encoder
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
     private static final int AUDIO_OUTPUT_BIT_RATE = 96 * 1024;
 
+    /**
+     *  This method return the media composer object that is in charge of video optimization.
+     *
+     * @param ctx       The context
+     * @param inputFile Input file path.
+     * @param outFile   Output file path.
+     * @param listener  The event listener
+     *
+     * @return The media composer that is in charge of video transcoding, ready to be started,
+     * or null in case the video cannot be transcoded.
+     */
     public static MediaComposer getVideoOptimizationComposer(@NonNull Context ctx, @NonNull String inputFile, @NonNull String outFile, @NonNull org.m4m.IProgressListener listener) {
         AndroidMediaObjectFactory factory = new AndroidMediaObjectFactory(ctx);
 
