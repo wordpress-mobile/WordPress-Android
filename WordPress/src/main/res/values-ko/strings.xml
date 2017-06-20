@@ -50,7 +50,6 @@ Language: ko_KR
 	<string name="error_media_parse_error">미디어 업로드 후에 응답을 구문 분석할 수 없습니다.</string>
 	<string name="error_upload_params">%1$s을(를) 업로드하는 동안 다음 오류가 발생했습니다. %2$s</string>
 	<string name="submit_for_review">제출하기</string>
-	<string name="media_error_too_large_upload">파일이 너무 큽니다. 웹 호스팅 공급업체에 연락하여 이 문제를 해결하세요.</string>
 	<string name="invalid_verification_code_format">반드시 6자리 숫자이어야 함</string>
 	<string name="confirm_discard_changes">저장하지 않은 변경사항을 버리시겠습니까?</string>
 	<string name="signout">로그아웃</string>
@@ -940,11 +939,7 @@ Language: ko_KR
 	<string name="themes_live_preview">실시간 미리보기</string>
 	<string name="cannot_delete_multi_media_items">일부 미디어를 다시로드 할 수 없습니다. 나중에 다시 시도하십시오.</string>
 	<string name="media_error_no_permission">미디어 라이브러리를 볼 수 있는 권한이 없습니다</string>
-	<string name="media_gallery_edit">갤러리 를 편집</string>
 	<string name="media_gallery_type_thumbnail_grid">썸네일 그리드</string>
-	<string name="media_gallery_num_columns">열 수</string>
-	<string name="media_gallery_image_order">이미지 순서</string>
-	<string name="media_gallery_settings_title">갤러리 설정</string>
 	<string name="learn_more">추가 정보</string>
 	<string name="post_not_found">게시물을 로딩중 에러가 발생했습니다. 새로고침 후 다시 시도하세요.</string>
 	<string name="scaled_image_error">올바른 이미지의 너비를 입력 하십시오</string>
@@ -1062,8 +1057,6 @@ Language: ko_KR
 	<string name="media_gallery_type_tiled">타일 모자이크</string>
 	<string name="media_gallery_type_squares">사각 타일</string>
 	<string name="media_gallery_type">표시 형식</string>
-	<string name="media_gallery_image_order_reverse">순서를 반대로 하는</string>
-	<string name="media_gallery_image_order_random">랜덤</string>
 	<string name="unattached">미사용</string>
 	<string name="images">이미지</string>
 	<string name="all">모든</string>

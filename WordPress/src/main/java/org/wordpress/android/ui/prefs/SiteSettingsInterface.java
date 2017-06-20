@@ -93,6 +93,11 @@ public abstract class SiteSettingsInterface {
     public static final String DEF_FORMAT_PREF_KEY = "site-settings-format-pref";
 
     /**
+     * Key used to access the sharing button style stored in {@link SharedPreferences}.
+     */
+    public static final String SHARING_BUTTON_STYLE_PREF_KEY = "site-settings-sharing-button-style-pref";
+
+    /**
      * Identifies an Ascending (oldest to newest) sort order.
      */
     public static final int ASCENDING_SORT = 0;
@@ -111,6 +116,11 @@ public abstract class SiteSettingsInterface {
      * Key for the Standard post format. Used as default if post format is not set/known.
      */
     private static final String STANDARD_POST_FORMAT_KEY = "standard";
+
+    /**
+     * Standard sharing button style value. Used as default value if button style is unknown.
+     */
+    private static final String STANDARD_SHARING_BUTTON_STYLE = "icon-text";
 
     /**
      * Standard post format value. Used as default display value if post format is unknown.
@@ -508,6 +518,50 @@ public abstract class SiteSettingsInterface {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
+    public String getSharingLabel() {
+        return mSettings.sharingLabel;
+    }
+
+    public @NonNull String getSharingButtonStyle(Context context) {
+        if (TextUtils.isEmpty(mSettings.sharingButtonStyle)) {
+            mSettings.sharingButtonStyle = context.getResources().getStringArray(R.array.sharing_button_style_array)[0];
+        }
+
+        return mSettings.sharingButtonStyle;
+    }
+
+    public @NonNull String getSharingButtonStyleDisplayText(Context context) {
+        String sharingButtonStyle = getSharingButtonStyle(context);
+        String[] styleArray = context.getResources().getStringArray(R.array.sharing_button_style_array);
+        String[] styleDisplayArray = context.getResources().getStringArray(R.array.sharing_button_style_display_array);
+        for (int i = 0; i < styleArray.length; i++) {
+            if (sharingButtonStyle.equals(styleArray[i])) {
+                return styleDisplayArray[i];
+            }
+        }
+
+        return styleDisplayArray[0];
+    }
+
+    public boolean getAllowReblogButton() {
+        return mSettings.allowReblogButton;
+    }
+
+    public boolean getAllowLikeButton() {
+        return mSettings.allowLikeButton;
+    }
+
+    public boolean getAllowCommentLikes() {
+        return mSettings.allowCommentLikes;
+    }
+
+    public @NonNull String getTwitterUsername() {
+        if (mSettings.twitterUsername == null) {
+            mSettings.twitterUsername = "";
+        }
+        return mSettings.twitterUsername;
+    }
+
     public @NonNull String getKeysDescription(int count) {
         if (mActivity == null) return "";
 
@@ -635,6 +689,34 @@ public abstract class SiteSettingsInterface {
 
     public void setBlacklistKeys(List<String> keys) {
         mSettings.blacklist = keys;
+    }
+
+    public void setSharingLabel(String sharingLabel) {
+        mSettings.sharingLabel = sharingLabel;
+    }
+
+    public void setSharingButtonStyle(String sharingButtonStyle) {
+        if (TextUtils.isEmpty(sharingButtonStyle)) {
+            mSettings.sharingButtonStyle = STANDARD_SHARING_BUTTON_STYLE;
+        } else {
+            mSettings.sharingButtonStyle = sharingButtonStyle.toLowerCase();
+        }
+    }
+
+    public void setAllowReblogButton(boolean allowReblogButton) {
+        mSettings.allowReblogButton = allowReblogButton;
+    }
+
+    public void setAllowLikeButton(boolean allowLikeButton) {
+        mSettings.allowLikeButton = allowLikeButton;
+    }
+
+    public void setAllowCommentLikes(boolean allowCommentLikes) {
+        mSettings.allowCommentLikes = allowCommentLikes;
+    }
+
+    public void setTwitterUsername(String twitterUsername) {
+        mSettings.twitterUsername = twitterUsername;
     }
 
     public void setDefaultCategory(int category) {
