@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-23 15:57:02+0000
+Translation-Revision-Date: 2017-06-13 18:20:22+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="media_error_timeout">Sunucu cevabı zaman aşımına uğradı, zayıf bir bağlantınız olabilir ya da sunucu hatası</string>
+	<string name="media_error_internal_server_error">Yükleme hatası. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirin</string>
+	<string name="media_error_too_large_upload">Dosya yüklemek için çok büyük. Site->Ayarlar bölümünden görsellerin optimize edilmesini etkinleştirmeyi deneyin</string>
+	<string name="media_downloading">Ortam dosyaları bu cihazda saklanıyor</string>
 	<string name="error_media_save">Ortam dosyası kaydedilemiyor</string>
 	<string name="editor_scheduled_post_saved_online">Yazı zamanlandı</string>
 	<string name="editor_draft_saved_locally">Taslak cihaz üzerinde kaydedildi</string>
@@ -13,7 +17,6 @@ Language: tr
 	<string name="editor_post_saved_locally">Yazı cihaz üzerinde kaydedildi</string>
 	<string name="cant_share_unknown_action">Tanınmayan eylem talep edildi, göz ardı ediliyor</string>
 	<string name="button_sync">Eşitle</string>
-	<string name="media_saved_to_device">Ortam dosyası bu cihaz üzerinde saklandı</string>
 	<string name="smart_toast_comments_long_press">Birden çok yorum seçmek için dokunun ve basılı tutun</string>
 	<string name="smart_toast_photo_long_press">Birden çok fotoğraf seçmek için dokunun ve basılı tutun</string>
 	<string name="photo_picker_choose_video">Cihazdan bir video seçin</string>
@@ -70,7 +73,6 @@ Language: tr
 	<string name="error_media_parse_error">Ortam yüklemesinden sonra sonuç ayrıştırılamıyor</string>
 	<string name="error_upload_params">%1$s yüklemesinde problem: %2$s</string>
 	<string name="submit_for_review">Gönder</string>
-	<string name="media_error_too_large_upload">Dosya çok büyük. Lütfen bu hatayı çözmesi için yer sağlayıcınızla irtibata geçin</string>
 	<string name="role_subscriber">Abone</string>
 	<string name="tell_me_more">Daha fazlası</string>
 	<string name="duplicate_site_detected">Tekrar eden bir site tespit edildi.</string>
@@ -1034,11 +1036,7 @@ Language: tr
 	<string name="themes_live_preview">Canlı önizleme</string>
 	<string name="cannot_delete_multi_media_items">Bazı medyalar silinemedi. Daha sonra tekrar deneyin</string>
 	<string name="media_error_no_permission">Medya kütüphanesini görüntüleme yetkiniz yok</string>
-	<string name="media_gallery_edit">Galeriyi düzenle</string>
 	<string name="media_gallery_type_thumbnail_grid">Küçük resim</string>
-	<string name="media_gallery_num_columns">Sütun sayısı</string>
-	<string name="media_gallery_image_order">İmaj sırası</string>
-	<string name="media_gallery_settings_title">Galeri ayarları</string>
 	<string name="learn_more">Daha fazla bilgi</string>
 	<string name="post_not_found">Gönderi yüklenirken hata oluştu. Gönderileri yenileyin ve tekrar deneyin</string>
 	<string name="scaled_image_error">Geçerli ölçekte genişlik değeri girin</string>
@@ -1157,8 +1155,6 @@ Language: tr
 	<string name="media_gallery_type_tiled">Döşeme</string>
 	<string name="media_gallery_type_squares">Kare</string>
 	<string name="media_gallery_type">Tip</string>
-	<string name="media_gallery_image_order_reverse">Tersten</string>
-	<string name="media_gallery_image_order_random">Rastgele</string>
 	<string name="unattached">Bağlantısız</string>
 	<string name="images">Resimler</string>
 	<string name="all">Tamamı</string>
