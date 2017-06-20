@@ -462,7 +462,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private String getSaveButtonText() {
-        if (!mSite.getHasCapabilityPublishPosts()) {
+        if (!userCanPublishPosts()) {
             return getString(R.string.submit_for_review);
         }
 
@@ -942,6 +942,18 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return mIsNewPost;
     }
 
+    /*
+     * returns true if the user has permission to publish the post - assumed to be true for
+     * dot.org sites because we can't retrieve their capabilities
+     */
+    private boolean userCanPublishPosts() {
+        if (SiteUtils.isAccessedViaWPComRest(mSite)) {
+            return mSite.getHasCapabilityPublishPosts();
+        } else {
+            return true;
+        }
+    }
+
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
 
         boolean isFirstTimePublish;
@@ -952,8 +964,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
         @Override
         protected Void doInBackground(Void... params) {
-
-            if (!mSite.getHasCapabilityPublishPosts()) {
+            // mark as pending if the user doesn't have publishing rights
+            if (!userCanPublishPosts()) {
                if (PostStatus.fromPost(mPost) != PostStatus.DRAFT && PostStatus.fromPost(mPost) != PostStatus.PENDING) {
                    mPost.setStatus(PostStatus.PENDING.toString());
                }
