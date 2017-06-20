@@ -250,7 +250,10 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
-            mLoginListener.help();
+            if (mLoginListener != null) {
+                mLoginListener.help();
+            }
+
             return true;
         }
 
@@ -363,7 +366,9 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
             case AUTHORIZATION_REQUIRED:
             case NEEDS_2FA:
                 if (mIsWpcom) {
-                    mLoginListener.needs2fa(mRequestedUsername, mRequestedPassword);
+                    if (mLoginListener != null) {
+                        mLoginListener.needs2fa(mRequestedUsername, mRequestedPassword);
+                    }
                 } else {
                     showError("2FA not supported for self-hosted sites. Please use an app-password.");
                 }
