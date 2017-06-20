@@ -78,6 +78,13 @@ public class SiteRestClient extends BaseWPComRestClient {
         public boolean isWPCom;
     }
 
+    public static class FetchWPComSiteResponsePayload extends Payload {
+        public FetchWPComSiteResponsePayload() {
+        }
+        public String checkedUrl;
+        public SiteModel site;
+    }
+
     @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
@@ -152,14 +159,17 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<SiteWPComRestResponse>() {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
-                        SiteModel site = siteResponseToSiteModel(response);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(site));
+                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+                        payload.checkedUrl = siteUrl;
+                        payload.site = siteResponseToSiteModel(response);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        SiteModel payload = new SiteModel();
+                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+                        payload.checkedUrl = siteUrl;
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
                     }

@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
@@ -234,8 +235,10 @@ public class SiteStore extends Store {
     }
 
     public static class OnWPComSiteFetched extends OnChanged<SiteError> {
+        public String checkedUrl;
         public SiteModel site;
-        public OnWPComSiteFetched(@NonNull SiteModel site) {
+        public OnWPComSiteFetched(String checkedUrl, @NonNull SiteModel site) {
+            this.checkedUrl = checkedUrl;
             this.site = site;
         }
     }
@@ -729,7 +732,7 @@ public class SiteStore extends Store {
                 handleFetchedConnectSiteInfo((ConnectSiteInfoPayload) action.getPayload());
                 break;
             case FETCHED_WPCOM_SITE_BY_URL:
-                handleFetchedWPComSiteByUrl((SiteModel) action.getPayload());
+                handleFetchedWPComSiteByUrl((FetchWPComSiteResponsePayload) action.getPayload());
                 break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
@@ -887,8 +890,8 @@ public class SiteStore extends Store {
         mSiteRestClient.fetchWPComSiteByUrl(payload);
     }
 
-    private void handleFetchedWPComSiteByUrl(SiteModel payload) {
-        OnWPComSiteFetched event = new OnWPComSiteFetched(payload);
+    private void handleFetchedWPComSiteByUrl(FetchWPComSiteResponsePayload payload) {
+        OnWPComSiteFetched event = new OnWPComSiteFetched(payload.checkedUrl, payload.site);
         if (payload.isError()) {
             event.error = new SiteError(SiteErrorType.INVALID_SITE);
         }

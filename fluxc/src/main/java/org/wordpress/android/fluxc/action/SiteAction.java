@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
@@ -53,7 +54,7 @@ public enum SiteAction implements IAction {
     EXPORTED_SITE,
     @Action(payloadType = ConnectSiteInfoPayload.class)
     FETCHED_CONNECT_SITE_INFO,
-    @Action(payloadType = SiteModel.class)
+    @Action(payloadType = FetchWPComSiteResponsePayload.class)
     FETCHED_WPCOM_SITE_BY_URL,
 
     // Local actions
