@@ -116,13 +116,7 @@ public class SiteSettingsModel {
                     USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
                     WHITELIST_COLUMN_NAME + " BOOLEAN, " +
                     MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
-                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT," +
-                    SHARING_LABEL_COLUMN_NAME + " TEXT," +
-                    SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT," +
-                    ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN," +
-                    ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN," +
-                    ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN," +
-                    TWITTER_USERNAME_COLUMN_NAME + " TEXT" +
+                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
                     ");";
 
     public boolean isInLocalTable;
