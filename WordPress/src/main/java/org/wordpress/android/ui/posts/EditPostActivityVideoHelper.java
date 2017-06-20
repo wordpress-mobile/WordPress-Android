@@ -178,12 +178,12 @@ public class EditPostActivityVideoHelper {
         public void onMediaDone() {
             ProgressDialog pd = mWeakProgressDialog.get();
             dismissProgressDialog(pd);
-            if (isStopped) {
-                return;
-            }
 
             trackVideoProcessingEvents(false, null);
 
+            if (isStopped) {
+                return;
+            }
             final EditPostActivity parentActivity = mEditPostActivityWeakReference.get();
             if (parentActivity == null || parentActivity.isFinishing()) {
                 return;
@@ -224,11 +224,11 @@ public class EditPostActivityVideoHelper {
         @Override
         public void onError(Exception exception) {
             AppLog.e(AppLog.T.MEDIA, "Can't optimize the video", exception);
+            trackVideoProcessingEvents(true, exception);
+
             if (isStopped) {
                 return;
             }
-
-            trackVideoProcessingEvents(true, exception);
 
             final EditPostActivity parentActivity = mEditPostActivityWeakReference.get();
             if (parentActivity == null || parentActivity.isFinishing()) {
