@@ -400,11 +400,7 @@ Language: az
 	<string name="scaled_image_error">Keçərli miqyasda genişlik dəyəri daxil edin</string>
 	<string name="post_not_found">Yazı yüklənərkən xəta baş verdi. Yazını təzələyin və təkrar cəhd edin.</string>
 	<string name="learn_more">Daha ətraflı məlumat</string>
-	<string name="media_gallery_settings_title">Qalereya parametrləri</string>
-	<string name="media_gallery_image_order">Təsvir sırası</string>
-	<string name="media_gallery_num_columns">Sütun miqdarı</string>
 	<string name="media_gallery_type_thumbnail_grid">Miniatür təsvir</string>
-	<string name="media_gallery_edit">Qalereyanı redaktə et</string>
 	<string name="media_error_no_permission">Media kitabxanasına baxma izniniz yoxdur</string>
 	<string name="cannot_delete_multi_media_items">Bəzi media faylları silinmədi. Daha sonra təkrar yoxlayın.</string>
 	<string name="themes_live_preview">Canlı ön izləmə</string>
@@ -478,8 +474,6 @@ Language: az
 	<string name="stats_entry_authors">Müəllif</string>
 	<string name="stats_entry_posts_and_pages">Başlıq</string>
 	<string name="all">Tamamı</string>
-	<string name="media_gallery_image_order_random">Qarışıq</string>
-	<string name="media_gallery_image_order_reverse">Təkrar</string>
 	<string name="stats_entry_country">Ölkə</string>
 	<string name="stats_entry_tags_and_categories">Bəhs</string>
 	<string name="stats_entry_referrers">Yönləndirmə</string>

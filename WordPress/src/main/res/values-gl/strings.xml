@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-12-04 11:51:25+0000
+Translation-Revision-Date: 2017-06-18 10:59:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
@@ -270,6 +270,7 @@ Language: gl_ES
 	<string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
 	<string name="editor_post_settings_set_featured_image">Poñer como imaxe destacada</string>
 	<string name="editor_post_settings_featured_image">Imaxe destacada</string>
+	<string name="new_editor_promo_title">Editor novo</string>
 	<string name="visual_editor_enabled">Editor visual habilitado</string>
 	<string name="editor_content_placeholder">Comparte aquí as túas anécdotas...</string>
 	<string name="editor_page_title_placeholder">Título da páxina</string>
@@ -558,6 +559,7 @@ Language: gl_ES
 	<string name="stats_insights">Información</string>
 	<string name="stats_sign_in_jetpack_different_com_account">Para ver as estatísticas, inicia sesión na conta de WordPress.com que utilizaches para conectar a Jetpack.</string>
 	<string name="stats_other_recent_stats_moved_label">Estás a buscar outras estatísticas recentes? Trasladámolas á páxina "Información".</string>
+	<string name="me_disconnect_from_wordpress_com">Desconectarse de WordPress.com</string>
 	<string name="me_btn_login_logout">Entrar/Saír</string>
 	<string name="me_connect_to_wordpress_com">Conectarse a WordPress.com</string>
 	<string name="site_picker_cant_hide_current_site">"%s" non foi ocultado porque é o sitio actual</string>
@@ -702,6 +704,7 @@ Language: gl_ES
 	<string name="mnu_comment_liked">Gustou</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="sending_content">Cargando o contido de %s</string>
+	<string name="select_a_blog">Escolle un sitio de WordPress</string>
 	<string name="stats_no_blog">Non foi posible cargar as estatísticas do blogue requirido</string>
 	<string name="older_last_week">Con máis dunha semana de antigüidade</string>
 	<string name="older_two_days">Con máis de dous días de antigüidade</string>
@@ -842,6 +845,7 @@ Language: gl_ES
 	<string name="reader_toast_err_remove_tag">Non foi posible borrar esta etiqueta</string>
 	<string name="reader_toast_err_add_tag">Non foi posible engadir esta etiqueta</string>
 	<string name="reader_title_applog">Rexistro da aplicación</string>
+	<string name="jetpack_message_not_admin">O plugin Jetppack é necesario para as estatísticas. Contacta co administrador do sitio.</string>
 	<string name="fatal_db_error">Houbo un erro mentres se creaba a base de datos da aplicación. Proba a reinstalar a aplicación.</string>
 	<string name="error_blog_hidden">Este blogue non se pode cargar porque está oculto. Habilítao de novo na configuración e proba outra vez.</string>
 	<string name="wordpress_blog">Blogue feito con WordPress</string>
@@ -916,11 +920,7 @@ Language: gl_ES
 	<string name="themes_live_preview">Vista previa </string>
 	<string name="cannot_delete_multi_media_items">Non se poden eliminar algún ficheiros neste momento. Téntao de novo máis tarde.</string>
 	<string name="media_error_no_permission">Non tes permiso para ver a Biblioteca Multimedia</string>
-	<string name="media_gallery_edit">Editar a galería</string>
 	<string name="media_gallery_type_thumbnail_grid">Grella de miniaturas</string>
-	<string name="media_gallery_num_columns">Número de columnas</string>
-	<string name="media_gallery_image_order">Orde das imaxes</string>
-	<string name="media_gallery_settings_title">Configuración da Galería</string>
 	<string name="learn_more">Saber máis</string>
 	<string name="post_not_found">Houbo un erro mentres se cargaba o artigo. Actualiza os artigos e téntao de novo.</string>
 	<string name="scaled_image_error">Introduce un valor de largura a escala válido</string>
@@ -1018,6 +1018,7 @@ Language: gl_ES
 	<string name="stats_view_visitors_and_views">Lectores e visitas</string>
 	<string name="stats">Estatísticas</string>
 	<string name="share_action">Compartir</string>
+	<string name="share_action_title">Engadir a ...</string>
 	<string name="post_excerpt">Extracto</string>
 	<string name="theme_auth_error_title">Fallou a procura de temas</string>
 	<string name="theme_set_success">Tema activado con éxito!</string>
@@ -1038,8 +1039,6 @@ Language: gl_ES
 	<string name="media_gallery_type_tiled">Mosaico</string>
 	<string name="media_gallery_type_squares">Cadrados</string>
 	<string name="media_gallery_type">Tipo</string>
-	<string name="media_gallery_image_order_reverse">Inverso</string>
-	<string name="media_gallery_image_order_random">Aleatorio</string>
 	<string name="unattached">Sen anexar</string>
 	<string name="images">Imaxes</string>
 	<string name="all">Todo</string>

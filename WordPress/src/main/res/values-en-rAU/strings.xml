@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-23 09:00:07+0000
+Translation-Revision-Date: 2017-06-07 22:14:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
+	<string name="media_error_internal_server_error">Upload error. Try enabling Optimise Images in Site->Settings</string>
+	<string name="media_error_too_large_upload">File too large to upload. Try enabling Optimise Images in Site->Settings</string>
+	<string name="media_downloading">Saving media to this device</string>
 	<string name="error_media_save">Unable to save media</string>
 	<string name="editor_scheduled_post_saved_online">Post scheduled</string>
 	<string name="editor_draft_saved_locally">Draft saved on device</string>
@@ -13,7 +17,6 @@ Language: en_AU
 	<string name="editor_post_saved_locally">Post saved on device</string>
 	<string name="cant_share_unknown_action">Unrecognised action requested, ignoring</string>
 	<string name="button_sync">Sync</string>
-	<string name="media_saved_to_device">Media saved to this device</string>
 	<string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
 	<string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
 	<string name="photo_picker_choose_video">Choose video from device</string>
@@ -70,7 +73,6 @@ Language: en_AU
 	<string name="error_media_parse_error">Could not parse response after media upload</string>
 	<string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
 	<string name="submit_for_review">Submit</string>
-	<string name="media_error_too_large_upload">The file is too big. Please contact the web hosting provider to fix this issue</string>
 	<string name="role_subscriber">Subscriber</string>
 	<string name="tell_me_more">Tell me more</string>
 	<string name="duplicate_site_detected">A duplicate site has been detected.</string>
@@ -1034,11 +1036,7 @@ Language: en_AU
 	<string name="themes_live_preview">Live preview</string>
 	<string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
 	<string name="media_error_no_permission">You don\'t have permission to view the media library</string>
-	<string name="media_gallery_edit">Edit gallery</string>
 	<string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
-	<string name="media_gallery_num_columns">Number of columns</string>
-	<string name="media_gallery_image_order">Image order</string>
-	<string name="media_gallery_settings_title">Gallery settings</string>
 	<string name="learn_more">Learn more</string>
 	<string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
 	<string name="scaled_image_error">Enter a valid scaled width value</string>
@@ -1157,8 +1155,6 @@ Language: en_AU
 	<string name="media_gallery_type_tiled">Tiled</string>
 	<string name="media_gallery_type_squares">Squares</string>
 	<string name="media_gallery_type">Type</string>
-	<string name="media_gallery_image_order_reverse">Reverse</string>
-	<string name="media_gallery_image_order_random">Random</string>
 	<string name="unattached">Unattached</string>
 	<string name="images">Images</string>
 	<string name="all">All</string>
