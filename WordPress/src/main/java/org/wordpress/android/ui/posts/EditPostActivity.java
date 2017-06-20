@@ -462,7 +462,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private String getSaveButtonText() {
-        if (!canPublishPost()) {
+        if (!userCanPublishPosts()) {
             return getString(R.string.submit_for_review);
         }
 
@@ -946,7 +946,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * returns true if the user has permission to publish the post - assumed to be true for
      * dot.org sites because we can't retrieve their capabilities
      */
-    private boolean canPublishPost() {
+    private boolean userCanPublishPosts() {
         if (SiteUtils.isAccessedViaWPComRest(mSite)) {
             return mSite.getHasCapabilityPublishPosts();
         } else {
@@ -965,7 +965,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         @Override
         protected Void doInBackground(Void... params) {
             // mark as pending if the user doesn't have publishing rights
-            if (!canPublishPost()) {
+            if (!userCanPublishPosts()) {
                if (PostStatus.fromPost(mPost) != PostStatus.DRAFT && PostStatus.fromPost(mPost) != PostStatus.PENDING) {
                    mPost.setStatus(PostStatus.PENDING.toString());
                }
