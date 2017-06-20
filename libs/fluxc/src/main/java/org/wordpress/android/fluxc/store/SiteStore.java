@@ -233,6 +233,13 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnWPComSiteFetched extends OnChanged<SiteError> {
+        public SiteModel site;
+        public OnWPComSiteFetched(@NonNull SiteModel site) {
+            this.site = site;
+        }
+    }
+
     public static class SuggestDomainError implements OnChangedError {
         public SuggestDomainErrorType type;
         public String message;
@@ -694,6 +701,9 @@ public class SiteStore extends Store {
             case FETCH_CONNECT_SITE_INFO:
                 fetchConnectSiteInfo((String) action.getPayload());
                 break;
+            case FETCH_WPCOM_SITE_BY_URL:
+                fetchWPComSiteByUrl((String) action.getPayload());
+                break;
             case IS_WPCOM_URL:
                 checkUrlIsWPCom((String) action.getPayload());
                 break;
@@ -717,6 +727,9 @@ public class SiteStore extends Store {
                 break;
             case FETCHED_CONNECT_SITE_INFO:
                 handleFetchedConnectSiteInfo((ConnectSiteInfoPayload) action.getPayload());
+                break;
+            case FETCHED_WPCOM_SITE_BY_URL:
+                handleFetchedWPComSiteByUrl((SiteModel) action.getPayload());
                 break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
@@ -864,6 +877,18 @@ public class SiteStore extends Store {
 
     private void handleFetchedConnectSiteInfo(ConnectSiteInfoPayload payload) {
         OnConnectSiteInfoChecked event = new OnConnectSiteInfoChecked(payload);
+        if (payload.isError()) {
+            event.error = new SiteError(SiteErrorType.INVALID_SITE);
+        }
+        emitChange(event);
+    }
+
+    private void fetchWPComSiteByUrl(String payload) {
+        mSiteRestClient.fetchWPComSiteByUrl(payload);
+    }
+
+    private void handleFetchedWPComSiteByUrl(SiteModel payload) {
+        OnWPComSiteFetched event = new OnWPComSiteFetched(payload);
         if (payload.isError()) {
             event.error = new SiteError(SiteErrorType.INVALID_SITE);
         }
