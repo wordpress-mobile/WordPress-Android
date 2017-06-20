@@ -128,7 +128,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * full post
      */
     class ReaderPostViewHolder extends RecyclerView.ViewHolder {
-        private final CardView cardView;
+        public final CardView cardView;
 
         private final TextView txtTitle;
         private final TextView txtText;
@@ -142,6 +142,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ImageView imgMore;
         private final ImageView imgVideoOverlay;
         private final ImageView imgVisit;
+        private final LinearLayout visit;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatarOrBlavatar;
@@ -179,6 +180,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             imgAvatarOrBlavatar = (WPNetworkImageView) itemView.findViewById(R.id.image_avatar_or_blavatar);
             imgMore = (ImageView) itemView.findViewById(R.id.image_more);
             imgVisit = (ImageView) itemView.findViewById(R.id.image_visit_icon);
+            visit = (LinearLayout) itemView.findViewById(R.id.visit);
 
             layoutDiscover = (ViewGroup) itemView.findViewById(R.id.layout_discover);
             imgDiscoverAvatar = (WPNetworkImageView) layoutDiscover.findViewById(R.id.image_discover_avatar);
@@ -200,8 +202,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             };
-            txtVisit.setOnClickListener(visitListener);
-            imgVisit.setOnClickListener(visitListener);
+            visit.setOnClickListener(visitListener);
 
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
@@ -435,6 +436,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.txtTitle.getLayoutParams();
             params.topMargin = titleMargin;
         }
+
+        holder.visit.setContentDescription(holder.cardView.getContext().getString(R.string.reader_label_visit) + " " + post.getTitle());
 
         // show the video overlay (play icon) when there's a featured video
         holder.imgVideoOverlay.setVisibility(post.getCardType() == ReaderCardType.VIDEO ? View.VISIBLE : View.GONE);
@@ -785,6 +788,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (canShowComments) {
             holder.commentCount.setCount(post.numReplies);
             holder.commentCount.setVisibility(View.VISIBLE);
+            holder.commentCount.setContentDescription(holder.cardView.getContext().getString(R.string.theme_view) + " "
+                    + ReaderUtils.getShortCommentLabelText(holder.cardView.getContext(), post.numReplies));
             holder.commentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
