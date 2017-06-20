@@ -32,6 +32,8 @@ import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.SiteError;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.util.UrlUtils;
@@ -79,10 +81,10 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     public static class FetchWPComSiteResponsePayload extends Payload {
-        public FetchWPComSiteResponsePayload() {
-        }
+        public FetchWPComSiteResponsePayload() {}
         public String checkedUrl;
         public SiteModel site;
+        public SiteError error;
     }
 
     @Inject
@@ -170,7 +172,12 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
                         payload.checkedUrl = siteUrl;
-                        payload.error = error;
+                        if (error instanceof WPComGsonNetworkError
+                                && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError))) {
+                            payload.error = new SiteError(SiteErrorType.UNAUTHORIZED);
+                        } else {
+                            payload.error = new SiteError(SiteErrorType.INVALID_SITE);
+                        }
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
                     }
                 }

@@ -269,6 +269,7 @@ public class SiteStore extends Store {
     public enum SiteErrorType {
         INVALID_SITE,
         DUPLICATE_SITE,
+        UNAUTHORIZED,
         GENERIC_ERROR
     }
 
@@ -892,9 +893,7 @@ public class SiteStore extends Store {
 
     private void handleFetchedWPComSiteByUrl(FetchWPComSiteResponsePayload payload) {
         OnWPComSiteFetched event = new OnWPComSiteFetched(payload.checkedUrl, payload.site);
-        if (payload.isError()) {
-            event.error = new SiteError(SiteErrorType.INVALID_SITE);
-        }
+        event.error = payload.error;
         emitChange(event);
     }
 
