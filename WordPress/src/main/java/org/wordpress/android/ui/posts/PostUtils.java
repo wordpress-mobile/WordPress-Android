@@ -267,6 +267,10 @@ public class PostUtils {
                     posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
                 return i;
             }
+            if (posts.get(i).getRemotePostId() == post.getRemotePostId() &&
+                    posts.get(i).getRemoteSiteId() == post.getRemoteSiteId()) {
+                return i;
+            }
         }
         return -1;
     }
