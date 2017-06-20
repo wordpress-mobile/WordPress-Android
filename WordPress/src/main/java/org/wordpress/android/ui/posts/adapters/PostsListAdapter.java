@@ -89,6 +89,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean mIsLoadingPosts;
 
+    private int mLastHiddenIndex = -1;
+
     private final List<PostModel> mPosts = new ArrayList<>();
     private final List<PostModel> mHiddenPosts = new ArrayList<>();
     private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
@@ -562,15 +564,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void hidePost(PostModel post) {
         mHiddenPosts.add(post);
 
-        int position = PostUtils.indexOfPostInList(post, mPosts);
-        if (position > -1) {
-            mPosts.remove(position);
+        mLastHiddenIndex = PostUtils.indexOfPostInList(post, mPosts);
+        if (mLastHiddenIndex > -1) {
+            mPosts.remove(mLastHiddenIndex);
             if (mPosts.size() > 0) {
-                notifyItemRemoved(position);
+                notifyItemRemoved(mLastHiddenIndex);
 
                 //when page is removed update the next one in case we need to show a header
                 if (mIsPage) {
-                    notifyItemChanged(position);
+                    notifyItemChanged(mLastHiddenIndex);
                 }
             } else {
                 // we must call notifyDataSetChanged when the only post has been deleted - if we
@@ -583,8 +585,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void unhidePost(PostModel post) {
         if (mHiddenPosts.remove(post)) {
-            loadPosts(LoadMode.IF_CHANGED);
+            if (mLastHiddenIndex > 0 && mLastHiddenIndex < mPosts.size() + 1) {
+                mPosts.add(mLastHiddenIndex, post);
+                notifyItemInserted(mLastHiddenIndex);
+            } else {
+                mPosts.add(post);
+                notifyDataSetChanged();
+            }
         }
+        mLastHiddenIndex = -1;
     }
 
     public interface OnLoadMoreListener {
