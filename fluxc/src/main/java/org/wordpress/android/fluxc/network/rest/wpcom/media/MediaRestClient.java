@@ -113,7 +113,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.w(T.MEDIA, "error editing remote media: " + error);
+                        AppLog.e(T.MEDIA, "error editing remote media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaPushed(site, media, mediaError);
                     }
@@ -186,7 +186,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         notifyMediaUploaded(media, error);
                     }
                 } else {
-                    AppLog.w(T.MEDIA, "error uploading media: " + response);
+                    AppLog.e(T.MEDIA, "error uploading media: " + response.message());
                     notifyMediaUploaded(media, parseUploadError(response, site));
                 }
             }
@@ -239,7 +239,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
+                        AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaListFetched(site, mediaError);
                     }
@@ -277,7 +277,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
+                        AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaFetched(site, media, mediaError);
                     }
@@ -314,7 +314,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
+                        AppLog.e(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                         if (mediaError == MediaErrorType.NOT_FOUND) {
                             AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
