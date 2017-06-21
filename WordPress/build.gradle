@@ -45,6 +45,7 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
+        buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
     }
 
     productFlavors {
@@ -54,11 +55,13 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
+            buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
+            buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
         }
     }
 
