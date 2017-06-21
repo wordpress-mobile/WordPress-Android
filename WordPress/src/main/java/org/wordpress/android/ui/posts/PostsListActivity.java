@@ -28,7 +28,7 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
 
-    private static final String SAVED_QUERY = "SAVED_QUERY";
+    private static final String EXTRA_SAVED_QUERY = "savedQuery";
 
     private boolean mIsPage = false;
     private PostsListFragment mPostList;
@@ -188,14 +188,14 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putString(SAVED_QUERY, mQuery);
+        outState.putString(EXTRA_SAVED_QUERY, mQuery);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        mQuery = savedInstanceState.getString(SAVED_QUERY);
+        mQuery = savedInstanceState.getString(EXTRA_SAVED_QUERY);
     }
 
     @Override
