@@ -92,7 +92,10 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
     @Override
     protected void onPause() {
         super.onPause();
+
+        // collapse search view when paused
         if (mSearchMenuItem != null) {
+            // save the query temporarily so it won't get erased when search view collapses
             String tempQuery = mQuery;
             MenuItemCompat.collapseActionView(mSearchMenuItem);
             mQuery = tempQuery;
