@@ -56,7 +56,7 @@ public class EditPostActivityVideoHelper {
             return false;
         }
 
-        if (!WPMediaUtils.isVideoOptimizationAvailable(parentActivity, siteModel)) {
+        if (!WPMediaUtils.isVideoOptimizationEnabled(parentActivity, siteModel)) {
             // Video optimization -> API18 or higher
             return false;
         }

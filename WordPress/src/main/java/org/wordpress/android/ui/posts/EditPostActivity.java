@@ -1717,7 +1717,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         // Video optimization -> API18 or higher
-        if (isVideo && WPMediaUtils.isVideoOptimizationAvailable(this, mSite)) {
+        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled(this, mSite)) {
             // Setting up the lister that's called when the video optimization finishes
             EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
                 @Override
