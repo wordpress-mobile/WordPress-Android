@@ -50,6 +50,9 @@
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
     <string name="pref_key_site_image_quality" translatable="false">wp_pref_site_default_image_quality</string>
+    <string name="pref_key_optimize_video" translatable="false">wp_pref_key_optimize_video</string>
+    <string name="pref_key_site_video_width" translatable="false">wp_pref_site_default_video_width</string>
+    <string name="pref_key_site_video_encoder_bitrate" translatable="false">wp_pref_site_default_encoder_bitrate</string>
     <string name="pref_key_site_discussion" translatable="false">wp_pref_site_discussion</string>
     <string name="pref_key_site_allow_comments" translatable="false">wp_pref_site_allow_comments</string>
     <string name="pref_key_site_allow_comments_nested" translatable="false">wp_pref_site_allow_comments_nested</string>
@@ -289,6 +292,34 @@
         <item>90</item>
         <item>95</item>
         <item>100</item>
+    </string-array>
+
+    <string-array name="site_settings_video_width_entries" translatable="false">
+        <item>640 px</item>
+        <item>1024 px</item>
+        <item>1280 px</item>
+    </string-array>
+
+    <string-array name="site_settings_video_width_values" translatable="false">
+        <item>640</item>
+        <item>1024</item>
+        <item>1280</item>
+    </string-array>
+
+    <string-array name="site_settings_video_bitrate_entries" translatable="false">
+        <item>1000 KB</item>
+        <item>2000 KB</item>
+        <item>3000 KB</item>
+        <item>4000 KB</item>
+        <item>5000 KB</item>
+    </string-array>
+
+    <string-array name="site_settings_video_bitrate_values" translatable="false">
+        <item>1000</item>
+        <item>2000</item>
+        <item>3000</item>
+        <item>4000</item>
+        <item>5000</item>
     </string-array>
 
 </resources>
