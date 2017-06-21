@@ -32,13 +32,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
@@ -472,7 +472,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                                 // update upload state
                                 for (int itemId : mGridAdapter.getSelectedItems()) {
                                     MediaModel media = mMediaStore.getMediaWithLocalId(itemId);
-                                    media.setUploadState(MediaUploadState.DELETING.name());
+                                    media.setUploadState(MediaUploadState.DELETING);
                                     mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
                                 }
                                 mGridAdapter.clearSelection();

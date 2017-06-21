@@ -48,12 +48,12 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
@@ -556,7 +556,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     continue;
                 }
                 mediaToDelete.add(mediaModel);
-                mediaModel.setUploadState(MediaUploadState.DELETING.name());
+                mediaModel.setUploadState(MediaUploadState.DELETING);
                 mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
                 sanitizedIds.add(String.valueOf(currentId));
             }
@@ -816,7 +816,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(MediaUploadState.QUEUED.name());
+        media.setUploadState(MediaUploadState.QUEUED);
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         addMediaToUploadService(media);
