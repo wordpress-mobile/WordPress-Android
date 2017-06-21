@@ -392,15 +392,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private int getDateTimeFlags() {
-        int flags = 0;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
-        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
-        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
-        return flags;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -595,7 +586,6 @@ public class EditPostSettingsFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         updatePublishDate(new Date());
-                        updatePublishDateTextView();
                     }
                 });
         datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, resources.getString(android.R.string.cancel),
@@ -734,6 +724,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePublishDate(Date date) {
         mPost.setDateCreated(DateTimeUtils.iso8601FromDate(date));
+        updatePublishDateTextView();
         dispatchUpdatePostAction();
         updateSaveButton();
     }
@@ -916,6 +907,15 @@ public class EditPostSettingsFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar;
+    }
+
+    private int getDateTimeFlags() {
+        int flags = 0;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_DATE;
+        flags |= android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_YEAR;
+        flags |= android.text.format.DateUtils.FORMAT_SHOW_TIME;
+        return flags;
     }
 
     // FluxC events
