@@ -134,6 +134,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             return;
         }
 
+        if (media == null || media.getId() == 0) {
+            // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
+            MediaError error = new MediaError(MediaErrorType.INVALID_ID);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
         if (!MediaUtils.canReadFile(media.getFilePath())) {
             MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
             notifyMediaUploaded(media, error);
