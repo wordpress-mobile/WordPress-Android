@@ -194,7 +194,6 @@ Language: az
 	<string name="reader_label_comments_on">Şərh</string>
 	<string name="reader_title_photo_viewer">%1$d / %2$d</string>
 	<string name="error_refresh_unauthorized_posts">Yazıya baxmağa və ya onu redaktə etməyə izniniz yoxdur</string>
-	<string name="select_a_blog">WordPress saytı seç</string>
 	<string name="mnu_comment_liked">Bəyənildi</string>
 	<string name="comment">Şərh</string>
 	<string name="comment_trashed">Şərh zibil qutusuna göndərildi</string>
@@ -401,11 +400,7 @@ Language: az
 	<string name="scaled_image_error">Keçərli miqyasda genişlik dəyəri daxil edin</string>
 	<string name="post_not_found">Yazı yüklənərkən xəta baş verdi. Yazını təzələyin və təkrar cəhd edin.</string>
 	<string name="learn_more">Daha ətraflı məlumat</string>
-	<string name="media_gallery_settings_title">Qalereya parametrləri</string>
-	<string name="media_gallery_image_order">Təsvir sırası</string>
-	<string name="media_gallery_num_columns">Sütun miqdarı</string>
 	<string name="media_gallery_type_thumbnail_grid">Miniatür təsvir</string>
-	<string name="media_gallery_edit">Qalereyanı redaktə et</string>
 	<string name="media_error_no_permission">Media kitabxanasına baxma izniniz yoxdur</string>
 	<string name="cannot_delete_multi_media_items">Bəzi media faylları silinmədi. Daha sonra təkrar yoxlayın.</string>
 	<string name="themes_live_preview">Canlı ön izləmə</string>
@@ -479,11 +474,6 @@ Language: az
 	<string name="stats_entry_authors">Müəllif</string>
 	<string name="stats_entry_posts_and_pages">Başlıq</string>
 	<string name="all">Tamamı</string>
-	<string name="media_gallery_image_order_random">Qarışıq</string>
-	<string name="media_gallery_image_order_reverse">Təkrar</string>
-	<string name="media_add_popup_capture_photo">Foto tut</string>
-	<string name="media_add_popup_capture_video">Video tut</string>
-	<string name="share_action_title">Əlavə et</string>
 	<string name="stats_entry_country">Ölkə</string>
 	<string name="stats_entry_tags_and_categories">Bəhs</string>
 	<string name="stats_entry_referrers">Yönləndirmə</string>
@@ -586,7 +576,6 @@ Language: az
 	<string name="notification_vibrate">Vibrasiya</string>
 	<string name="notification_blink">Məlumatlandırma işığını parlat</string>
 	<string name="status">Status</string>
-	<string name="select_video">Qalereyadan bir video seçin</string>
 	<string name="sdcard_title">SD Kart Gərəkdir</string>
 	<string name="location">Mövqe</string>
 	<string name="media">Media</string>
@@ -594,7 +583,6 @@ Language: az
 	<string name="approve">Təsdiqlə</string>
 	<string name="none">Heç biri</string>
 	<string name="blogs">Bloqlar</string>
-	<string name="select_photo">Qalereyadan bir foto seçin</string>
 	<string name="no">Xeyr</string>
 	<string name="yes">Bəli</string>
 	<string name="reply">Cavabla</string>

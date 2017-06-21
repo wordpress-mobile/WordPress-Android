@@ -343,7 +343,7 @@ public class PostUploadService extends Service {
                 if (m.find()) {
                     String imageUri = m.group(1);
                     if (!imageUri.equals("")) {
-                        MediaModel mediaModel = mMediaStore.getPostMediaWithPath(mPost, imageUri);
+                        MediaModel mediaModel = mMediaStore.getMediaForPostWithPath(mPost, imageUri);
                         if (mediaModel == null) {
                             mIsMediaError = true;
                             continue;
@@ -588,6 +588,10 @@ public class PostUploadService extends Service {
                  return getString(R.string.error_media_parse_error);
             case REQUEST_TOO_LARGE:
                 return getString(R.string.error_media_request_too_large);
+             case SERVER_ERROR:
+                 return getString(R.string.media_error_internal_server_error);
+             case TIMEOUT:
+                 return getString(R.string.media_error_timeout);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;

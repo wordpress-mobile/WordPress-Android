@@ -81,13 +81,13 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     private boolean mIsUpdatingComments;
     private boolean mHasUpdatedComments;
     private boolean mIsSubmittingComment;
+    private boolean mUpdateOnResume;
+
     private DirectOperation mDirectOperation;
     private long mReplyToCommentId;
     private long mCommentId;
     private int mRestorePosition;
     private String mInterceptedUri;
-
-    private boolean mBackFromLogin;
 
     @Inject AccountStore mAccountStore;
 
@@ -127,14 +127,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
-            // we need to re-request comments every time this activity is shown in order to
-            // correctly reflect deletions and nesting changes - skipped when there's no
-            // connection so we can show existing comments while offline
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
-            }
         }
-
 
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(this,
                 (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
@@ -167,7 +160,8 @@ public class ReaderCommentListActivity extends AppCompatActivity {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID), false);
         }
 
-        refreshComments();
+        // update the post and its comments upon creation
+        mUpdateOnResume = (savedInstanceState == null);
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
         mSuggestionAdapter = SuggestionUtils.setupSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
@@ -189,24 +183,24 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         }
     };
 
+    // to do a complete refresh we need to get updated post and new comments
     private void updatePostAndComments() {
-        //to do a complete refresh we need to get updated post and new comments
         ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (isFinishing()) {
-                    return;
-                }
-
-                if (result.isNewOrChanged()) {
-                    getCommentAdapter().setPost(mPost); //pass updated post to the adapter
-                    ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId); //clear all the previous comments
-                    updateComments(false, false); //load first page of comments
-                } else {
-                    setRefreshing(false);
+                if (!isFinishing() && result.isNewOrChanged()) {
+                    // get the updated post and pass it to the adapter
+                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+                    if (post != null) {
+                        getCommentAdapter().setPost(post);
+                        mPost = post;
+                    }
                 }
             }
         });
+
+        // load the first page of comments
+        updateComments(true, false);
     }
 
     @Override
@@ -214,18 +208,12 @@ public class ReaderCommentListActivity extends AppCompatActivity {
         super.onResume();
         EventBus.getDefault().register(this);
 
-        if (mBackFromLogin) {
-            if (NetworkUtils.isNetworkAvailable(this)) {
-                // purge and reload the comments since logged in changes some info (example: isLikedByCurrentUser)
-                ReaderCommentTable.purgeCommentsForPost(mBlogId, mPostId);
-                updatePostAndComments();
-            }
-
-            // clear up the back-from-login flag anyway
-            mBackFromLogin = false;
-        }
-
         refreshComments();
+
+        if (mUpdateOnResume && NetworkUtils.isNetworkAvailable(this)) {
+            updatePostAndComments();
+            mUpdateOnResume = false;
+        }
     }
 
     @SuppressWarnings("unused")
@@ -316,7 +304,7 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     }
 
     private boolean loadPost() {
-        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, true);
+        mPost = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
         if (mPost == null) {
             return false;
         }
@@ -677,8 +665,9 @@ public class ReaderCommentListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // if user is returning from login, make sure to update the post and its comments
         if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
-            mBackFromLogin = true;
+            mUpdateOnResume = true;
         }
     }
 }

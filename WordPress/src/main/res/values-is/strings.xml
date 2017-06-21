@@ -26,10 +26,6 @@ Language: is
 	<string name="sure_to_remove_account">Fjarlægja þennan vef úr appinu?</string>
 	<string name="photo_picker_title">Veldu mynd</string>
 	<string name="error_publish_no_network">Tæki er ónettengt. Breytingar vistaðar staðbundið.</string>
-	<string name="editor_post_saved_online_not_published">Færslan var vistuð á netinu sem drög. Hugleiddu hvort þú viljir birta hana.</string>
-	<string name="editor_post_saved_online">Færslan var vistuð á netinu</string>
-	<string name="editor_post_saved_locally_not_published">Færsla einungis vistuð staðbundið. Hugleiddu hvort þú viljir birta hana.</string>
-	<string name="editor_post_saved_locally">Færslan var vistuð í tækinu þínu</string>
 	<string name="site_settings_image_quality_hint">Gæði mynda. Hærra gildi þýðir betri gæði mynda.</string>
 	<string name="site_settings_optimize_images_summary">Virkjaðu til þess að minnka og þjappa myndum</string>
 	<string name="media_encoder_quality_100">Hámark</string>
@@ -54,7 +50,6 @@ Language: is
 	<string name="error_media_parse_error">Gat ekki þýtt svar eftir upphleðslu skráar</string>
 	<string name="error_upload_params">Villa við að hlaða upp %1$s: %2$s</string>
 	<string name="submit_for_review">Áfram</string>
-	<string name="media_error_too_large_upload">Skráin er of stór. Vinsamlegast hafið samband við hýsingaraðila til þess að laga þetta vandamál.</string>
 	<string name="role_subscriber">Áskrifandi</string>
 	<string name="tell_me_more">Segðu mér meira</string>
 	<string name="duplicate_site_detected">Fleiri en eitt eintak af vef fannst.</string>
@@ -80,9 +75,6 @@ Language: is
 	<string name="confirm">Staðfesta</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Gat ekki tengst. Við fengum 403 villu þegar við reyndum að tengjast\n       XMLRPC endapunkti vefsins þíns. Forritið þarfnast hans til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess\n        að leysa úr þessu vandamáli.</string>
 	<string name="xmlrpc_post_blocked_error">Gat ekki tengst. Vefþjónninn þinn lokar á POST fyrirspurnir og forritið þarfnast þeirra\n        til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess að leysa úr þessu vandamáli.</string>
-	<string name="reader_liked_default_tag">Færslur sem mér líkar við</string>
-	<string name="reader_discover_default_tag">Uppgötva</string>
-	<string name="reader_followed_default_tag">Vefir sem ég fylgi</string>
 	<string name="reader_empty_followed_blogs_search_title">Engir vefir fundust</string>
 	<string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
 	<string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
@@ -804,7 +796,6 @@ Language: is
 	<string name="mnu_comment_liked">Líkar við</string>
 	<string name="uploading_total">Hleð upp %1$d af %2$d</string>
 	<string name="sending_content">Hleð upp %s efni</string>
-	<string name="select_a_blog">Veldu WordPress vef</string>
 	<string name="stats_no_blog">Ekki var hægt að hlaða tölfræði fyrir bloggið</string>
 	<string name="older_last_week">Eldri en vika</string>
 	<string name="older_two_days">Eldri en 2 dagar</string>
@@ -1020,11 +1011,7 @@ Language: is
 	<string name="themes_live_preview">Lifandi forsýn</string>
 	<string name="cannot_delete_multi_media_items">Ekki var hægt að eyða öllum skrám í þetta sinn. Reyndu aftur síðar.</string>
 	<string name="media_error_no_permission">Þú hefur ekki heimild til þess að skoða skráarsafnið</string>
-	<string name="media_gallery_edit">Breyta myndasafni</string>
 	<string name="media_gallery_type_thumbnail_grid">Þumlur á grind</string>
-	<string name="media_gallery_num_columns">Fjöldi dálka</string>
-	<string name="media_gallery_image_order">Röðun mynda</string>
-	<string name="media_gallery_settings_title">Stillingar myndasafns</string>
 	<string name="learn_more">Lesa meira</string>
 	<string name="post_not_found">Villa kom upp við að hlaða færslur. Endurfrískaðu færsluna og reyndu aftur.</string>
 	<string name="scaled_image_error">Sláðu inn gilt gildi minnkunar</string>
@@ -1122,7 +1109,6 @@ Language: is
 	<string name="stats_view_visitors_and_views">Gestir og flettingar</string>
 	<string name="stats">Tölfræði</string>
 	<string name="share_action">Deila</string>
-	<string name="share_action_title">Bæta í ...</string>
 	<string name="post_excerpt">Útdráttur</string>
 	<string name="theme_auth_error_title">Tókst ekki að sækja þemu</string>
 	<string name="theme_set_success">Þema skilgreint</string>
@@ -1143,10 +1129,6 @@ Language: is
 	<string name="media_gallery_type_tiled">Flísalagt</string>
 	<string name="media_gallery_type_squares">Kassar</string>
 	<string name="media_gallery_type">Tegund</string>
-	<string name="media_gallery_image_order_reverse">Snúa við</string>
-	<string name="media_gallery_image_order_random">Af handahófi</string>
-	<string name="media_add_popup_capture_video">Grípa myndband</string>
-	<string name="media_add_popup_capture_photo">Grípa mynd</string>
 	<string name="unattached">Ótengt</string>
 	<string name="images">Myndir</string>
 	<string name="all">Allt</string>
@@ -1216,7 +1198,6 @@ Language: is
 	<string name="notification_sound">Hljóð tilkynninga</string>
 	<string name="notification_blink">Blikka tilkynningaljós</string>
 	<string name="status">Staða</string>
-	<string name="select_video">Veldu myndband úr myndasafni</string>
 	<string name="sdcard_title">SD minnikorts krafist</string>
 	<string name="location">Staðsetning</string>
 	<string name="media">Skrár</string>
@@ -1224,7 +1205,6 @@ Language: is
 	<string name="delete">Eyða</string>
 	<string name="none">Ekkert</string>
 	<string name="blogs">Blogg</string>
-	<string name="select_photo">Veldu mynd úr myndasafni</string>
 	<string name="no">Nei</string>
 	<string name="yes">Já</string>
 	<string name="notification_settings">Stillingar tilkynninga</string>

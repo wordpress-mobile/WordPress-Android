@@ -499,7 +499,6 @@ Language: sk
 	<string name="mnu_comment_liked">Lajknuté</string>
 	<string name="uploading_total">Nahrávanie %1$d z %2$d</string>
 	<string name="sending_content">Nahrávanie obsahu %s</string>
-	<string name="select_a_blog">Vybrať WordPress stránku</string>
 	<string name="stats_no_blog">Nebolo možné načítať štatistiky pre vybraný blog</string>
 	<string name="older_last_week">Staršie ako týždeň</string>
 	<string name="older_two_days">Staršie ako 2 dni</string>
@@ -711,11 +710,7 @@ Language: sk
 	<string name="themes_live_preview">Živý náhľad</string>
 	<string name="cannot_delete_multi_media_items">Niektoré súbory nie je možné teraz zmazať. skúste neskôr.</string>
 	<string name="media_error_no_permission">Nemáte práva na zobrazenie knižnice súborov</string>
-	<string name="media_gallery_edit">Upraviť galériu</string>
 	<string name="media_gallery_type_thumbnail_grid">Mriežka s náhľadmi</string>
-	<string name="media_gallery_num_columns">Počet stĺpcov</string>
-	<string name="media_gallery_image_order">Poradie obrázkov</string>
-	<string name="media_gallery_settings_title">Nastavenia galérie</string>
 	<string name="learn_more">Zistiť viac</string>
 	<string name="post_not_found">Počas načítania príspevku sa vyskytla chyba. Obnovte príspevky a skúste znova.</string>
 	<string name="scaled_image_error">Zadajte správnu hodnotu šírky</string>
@@ -809,7 +804,6 @@ Language: sk
 	<string name="stats_view_visitors_and_views">Návštevníci a zobrazenia</string>
 	<string name="stats">Štatistiky</string>
 	<string name="share_action">Zdielať</string>
-	<string name="share_action_title">Pridať  ...</string>
 	<string name="post_excerpt">Zhrnutie</string>
 	<string name="theme_auth_error_title">Preberanie témy sa nepodarilo</string>
 	<string name="theme_set_success">Téma úspešne nastavená!</string>
@@ -830,10 +824,6 @@ Language: sk
 	<string name="media_gallery_type_tiled">Dlaždice</string>
 	<string name="media_gallery_type_squares">Štvorce</string>
 	<string name="media_gallery_type">Typ</string>
-	<string name="media_gallery_image_order_reverse">Opačné poradie</string>
-	<string name="media_gallery_image_order_random">Náhodné</string>
-	<string name="media_add_popup_capture_video">Natočiť video</string>
-	<string name="media_add_popup_capture_photo">Spraviť fotku</string>
 	<string name="unattached">Nepriložené</string>
 	<string name="images">Obrázky</string>
 	<string name="all">Všetko</string>
@@ -897,7 +887,6 @@ Language: sk
 	<string name="notification_vibrate">Vibrovať</string>
 	<string name="notification_blink">Blikať oznamovacie svetlo</string>
 	<string name="status">Stav</string>
-	<string name="select_video">Vyberte video z galérie</string>
 	<string name="sdcard_title">Vyžadovaná SD karta</string>
 	<string name="location">Umiestnenie</string>
 	<string name="media">Súbory</string>
@@ -905,7 +894,6 @@ Language: sk
 	<string name="delete">Zmazať</string>
 	<string name="none">Žiadny</string>
 	<string name="blogs">Blogy</string>
-	<string name="select_photo">Vybrať foografiu z galérie</string>
 	<string name="no">Nie</string>
 	<string name="yes">Áno</string>
 	<string name="notification_settings">Nastavenie upozornení</string>

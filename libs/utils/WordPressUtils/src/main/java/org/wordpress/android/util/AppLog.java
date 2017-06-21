@@ -25,7 +25,7 @@ import static java.lang.String.format;
 public class AppLog {
     // T for Tag
     public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING,
-        SIMPERIUM, SUGGESTION, MAIN, SETTINGS, PLANS, PEOPLE}
+        SIMPERIUM, SUGGESTION, MAIN, SETTINGS, PLANS, PEOPLE, SHARING}
 
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;

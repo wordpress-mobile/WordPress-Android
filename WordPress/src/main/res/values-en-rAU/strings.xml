@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-11 21:42:26+0000
+Translation-Revision-Date: 2017-06-07 22:14:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="media_error_timeout">Server response timed out, you may have a poor connection or server error</string>
+	<string name="media_error_internal_server_error">Upload error. Try enabling Optimise Images in Site->Settings</string>
+	<string name="media_error_too_large_upload">File too large to upload. Try enabling Optimise Images in Site->Settings</string>
+	<string name="media_downloading">Saving media to this device</string>
+	<string name="error_media_save">Unable to save media</string>
+	<string name="editor_scheduled_post_saved_online">Post scheduled</string>
+	<string name="editor_draft_saved_locally">Draft saved on device</string>
+	<string name="editor_draft_saved_online">Draft saved online</string>
+	<string name="editor_post_saved_locally">Post saved on device</string>
+	<string name="cant_share_unknown_action">Unrecognised action requested, ignoring</string>
+	<string name="button_sync">Sync</string>
 	<string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
 	<string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
 	<string name="photo_picker_choose_video">Choose video from device</string>
@@ -37,10 +48,7 @@ Language: en_AU
 	<string name="sure_to_remove_account">Remove this site from the app?</string>
 	<string name="photo_picker_title">Choose photo</string>
 	<string name="error_publish_no_network">Device is offline. Changes saved locally.</string>
-	<string name="editor_post_saved_online_not_published">The post was saved online as a draft. Consider publishing it.</string>
-	<string name="editor_post_saved_online">The post was saved online</string>
-	<string name="editor_post_saved_locally_not_published">Post saved locally only. Consider publishing it.</string>
-	<string name="editor_post_saved_locally">The post was saved on your device</string>
+	<string name="editor_post_saved_online">Post saved online</string>
 	<string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
 	<string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
 	<string name="media_encoder_quality_100">Maximum</string>
@@ -65,7 +73,6 @@ Language: en_AU
 	<string name="error_media_parse_error">Could not parse response after media upload</string>
 	<string name="error_upload_params">Error while uploading the %1$s: %2$s</string>
 	<string name="submit_for_review">Submit</string>
-	<string name="media_error_too_large_upload">The file is too big. Please contact the web hosting provider to fix this issue</string>
 	<string name="role_subscriber">Subscriber</string>
 	<string name="tell_me_more">Tell me more</string>
 	<string name="duplicate_site_detected">A duplicate site has been detected.</string>
@@ -91,9 +98,6 @@ Language: en_AU
 	<string name="confirm">Confirm</string>
 	<string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
 	<string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
-	<string name="reader_liked_default_tag">Posts I Like</string>
-	<string name="reader_followed_default_tag">Followed Sites</string>
-	<string name="reader_discover_default_tag">Discover</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
 	<string name="visual_editor_disabled">Visual Editor disabled</string>
@@ -816,7 +820,7 @@ Language: en_AU
 	<string name="mnu_comment_liked">Liked</string>
 	<string name="uploading_total">Uploading %1$d of %2$d</string>
 	<string name="sending_content">Uploading %s content</string>
-	<string name="select_a_blog">Select a WordPress site</string>
+	<string name="select_a_blog">Choose a WordPress site</string>
 	<string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
 	<string name="older_last_week">Older than a week</string>
 	<string name="older_two_days">Older than 2 days</string>
@@ -1032,11 +1036,7 @@ Language: en_AU
 	<string name="themes_live_preview">Live preview</string>
 	<string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
 	<string name="media_error_no_permission">You don\'t have permission to view the media library</string>
-	<string name="media_gallery_edit">Edit gallery</string>
 	<string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
-	<string name="media_gallery_num_columns">Number of columns</string>
-	<string name="media_gallery_image_order">Image order</string>
-	<string name="media_gallery_settings_title">Gallery settings</string>
 	<string name="learn_more">Learn more</string>
 	<string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
 	<string name="scaled_image_error">Enter a valid scaled width value</string>
@@ -1134,7 +1134,7 @@ Language: en_AU
 	<string name="stats_view_visitors_and_views">Visitors and Views</string>
 	<string name="stats">Stats</string>
 	<string name="share_action">Share</string>
-	<string name="share_action_title">Add to …</string>
+	<string name="share_action_title">Add to</string>
 	<string name="post_excerpt">Excerpt</string>
 	<string name="theme_auth_error_title">Failed to fetch themes</string>
 	<string name="theme_set_success">Successfully set theme!</string>
@@ -1155,10 +1155,6 @@ Language: en_AU
 	<string name="media_gallery_type_tiled">Tiled</string>
 	<string name="media_gallery_type_squares">Squares</string>
 	<string name="media_gallery_type">Type</string>
-	<string name="media_gallery_image_order_reverse">Reverse</string>
-	<string name="media_gallery_image_order_random">Random</string>
-	<string name="media_add_popup_capture_video">Capture video</string>
-	<string name="media_add_popup_capture_photo">Capture photo</string>
 	<string name="unattached">Unattached</string>
 	<string name="images">Images</string>
 	<string name="all">All</string>
@@ -1228,7 +1224,6 @@ Language: en_AU
 	<string name="notification_sound">Notification sound</string>
 	<string name="notification_blink">Blink notification light</string>
 	<string name="status">Status</string>
-	<string name="select_video">Select a video from gallery</string>
 	<string name="sdcard_title">SD Card Required</string>
 	<string name="location">Location</string>
 	<string name="media">Media</string>
@@ -1236,7 +1231,6 @@ Language: en_AU
 	<string name="delete">Delete</string>
 	<string name="none">None</string>
 	<string name="blogs">Blogs</string>
-	<string name="select_photo">Select a photo from gallery</string>
 	<string name="no">No</string>
 	<string name="yes">Yes</string>
 	<string name="notification_settings">Notification Settings</string>

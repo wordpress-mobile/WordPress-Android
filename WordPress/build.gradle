@@ -2,10 +2,9 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
-
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
@@ -37,8 +36,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-58"
-        versionCode 412
+        versionName "alpha-61"
+        versionCode 423
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -46,6 +45,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
+        buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
+        buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
         buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
@@ -57,12 +58,15 @@ android {
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
+            buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
+            buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
         }
     }
 
@@ -77,6 +81,7 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             ext.enableCrashlytics = false
         }
     }
@@ -141,9 +146,11 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:116c712bcaa901a357fff869cac8ed30d036a045') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:8680c825896d7c457f55c86bbb19357260996d0d') {
         exclude group: "com.android.volley";
     }
+
+    compile ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')

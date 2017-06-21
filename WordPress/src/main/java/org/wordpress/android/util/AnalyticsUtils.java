@@ -358,7 +358,7 @@ public class AnalyticsUtils {
             megapixels = Math.floor(megapixels);
             properties.put("megapixels", (int) megapixels);
         } else {
-            long videoDurationMS = MediaUtils.getVideoDurationMS(context, file);
+            long videoDurationMS = VideoUtils.getVideoDurationMS(context, file);
             properties.put("duration_secs", (int)videoDurationMS/1000);
         }
 

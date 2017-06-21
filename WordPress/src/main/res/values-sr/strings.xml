@@ -220,7 +220,6 @@ Language: sr_RS
 	<string name="mnu_comment_liked">Свиђа се</string>
 	<string name="uploading_total">Отпремљивање %1$d од %2$d</string>
 	<string name="sending_content">Отпремљивање %s садржаја</string>
-	<string name="select_a_blog">Одаберите Вордпрес веб место</string>
 	<string name="stats_no_blog">Статистике не могу бити учитане за тражени блог</string>
 	<string name="older_two_days">Старије од два дана</string>
 	<string name="older_last_week">Старије од недељу дана</string>
@@ -347,8 +346,6 @@ Language: sr_RS
 	<string name="page_not_published">Стање стране није објављено</string>
 	<string name="post_not_found">Дошло је до грешке током учитавања чланка. Освежите списак чланака и пробајте поново.</string>
 	<string name="comment_status_spam">Непожељни коментар</string>
-	<string name="media_gallery_num_columns">Број ступаца</string>
-	<string name="media_gallery_settings_title">Подешавања галерије</string>
 	<string name="dlg_spamming_comments">Означавам као непожељно</string>
 	<string name="mnu_comment_spam">Непожељни коментар</string>
 	<string name="post_format">Облик чланка</string>
@@ -411,7 +408,6 @@ Language: sr_RS
 	<string name="delete_post">Обриши чланак</string>
 	<string name="share_action_media">Библиотека медија</string>
 	<string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
-	<string name="media_gallery_edit">Уредите галерију</string>
 	<string name="xmlrpc_error">Није могуће повезати се. Унесите пуну путању до xmlrpc.php на свом веб месту и покушајте поново.</string>
 	<string name="email_reserved">Та адреса веб-поште је већ у употреби. Проверите своје поштанско сандуче за поруку за активацију. Уколико не активирате, постаће доступна за неколико дана.</string>
 	<string name="trash_yes">Отпад</string>
@@ -427,7 +423,6 @@ Language: sr_RS
 	<string name="comment_status_unapproved">На чекању</string>
 	<string name="comment_status_approved">Одобрено</string>
 	<string name="media_gallery_type_thumbnail_grid">Мрежа умањених слика</string>
-	<string name="media_gallery_image_order">Редослед слика</string>
 	<string name="learn_more">Сазнајте више</string>
 	<string name="cancel_edit">Одустани од уређивања</string>
 	<string name="connection_error">Грешка у успостављању везе</string>
@@ -495,12 +490,10 @@ Language: sr_RS
 	<string name="media_add_popup_title">Додајте у библиотеку медија</string>
 	<string name="select_from_media_library">Одаберите из библиотеке медија</string>
 	<string name="reader_hint_comment_on_comment">Одговор на коментар…</string>
-	<string name="media_add_popup_capture_photo">Фотографиши</string>
 	<string name="media_gallery_type_slideshow">Приказ слајдова</string>
 	<string name="media_gallery_type">Врста</string>
 	<string name="post_excerpt">Исечак</string>
 	<string name="themes_features_label">Особине</string>
-	<string name="media_add_popup_capture_video">Сними видео снимак</string>
 	<string name="theme_activating_button">Уклучивање</string>
 	<string name="theme_activate_button">Укључи</string>
 	<string name="themes_details_label">Детаљи</string>
@@ -524,7 +517,6 @@ Language: sr_RS
 	<string name="stats_view_visitors_and_views">Посетиоци и прегледи</string>
 	<string name="stats">Статистике</string>
 	<string name="share_action">Подели</string>
-	<string name="share_action_title">Додај на...</string>
 	<string name="theme_set_success">Успешно постављена тема!</string>
 	<string name="stats_totals_plays">Пуштања</string>
 	<string name="stats_totals_clicks">Притискања</string>
@@ -546,8 +538,6 @@ Language: sr_RS
 	<string name="media_edit_title_text">Наслов</string>
 	<string name="media_gallery_type_circles">Кругови</string>
 	<string name="media_gallery_type_squares">Квадрати</string>
-	<string name="media_gallery_image_order_reverse">Обрнутим редоследом</string>
-	<string name="media_gallery_image_order_random">Насумично</string>
 	<string name="stats_timeframe_weeks">Недељу дана</string>
 	<string name="stats_entry_posts_and_pages">Наслов</string>
 	<string name="theme_auth_error_title">Неуспешно добављање тема</string>
@@ -610,14 +600,12 @@ Language: sr_RS
 	<string name="notification_vibrate">Вибрирај</string>
 	<string name="notification_blink">Трепћи светло за обавештење</string>
 	<string name="status">Стање</string>
-	<string name="select_video">Одабери видео снимак из галерије</string>
 	<string name="sdcard_title">SD картица неопходна</string>
 	<string name="location">Локација</string>
 	<string name="media">Медији</string>
 	<string name="delete">Обриши</string>
 	<string name="none">Ниједан</string>
 	<string name="blogs">Блогови</string>
-	<string name="select_photo">Одабери фотографију из галерије</string>
 	<string name="no">Не</string>
 	<string name="yes">Да</string>
 	<string name="reply">Одговор</string>

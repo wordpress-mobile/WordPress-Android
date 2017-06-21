@@ -6,6 +6,9 @@
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
+    <string name="fragment_tag_publicize_list" translatable="false">fragment_publicize_list</string>
+    <string name="fragment_tag_publicize_detail" translatable="false">fragment_publicize_detail</string>
+    <string name="fragment_tag_publicize_webview" translatable="false">fragment_publicize_webview</string>
 
     <!-- Preference keys -->
     <string name="pref_key_account_settings_root" translatable="false">wp_pref_root</string>
@@ -77,6 +80,14 @@
     <string name="pref_key_primary_site" translatable="false">wp_pref_key_primary_site></string>
     <string name="pref_key_web_address" translatable="false">wp_pref_key_web_address</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
+    <string name="pref_key_sharing_reblog_and_like" translatable="false">wp_pref_sharing_reblog_and_like</string>
+    <string name="pref_key_sharing_buttons" translatable="false">wp_pref_sharing_buttons</string>
+    <string name="pref_key_reblog" translatable="false">wp_pref_sharing_reblog</string>
+    <string name="pref_key_like" translatable="false">wp_pref_sharing_like</string>
+    <string name="pref_key_twitter_username" translatable="false">wp_pref_twitter_handle</string>
+    <string name="pref_key_comment_likes" translatable="false">wp_pref_comment_likes</string>
+    <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
+    <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
 
     <!-- Notifications -->
     <string-array name="notifications_blog_settings_values" translatable="false">
@@ -210,6 +221,20 @@
         <item>66</item>
         <item>431</item>
         <item>11</item>
+    </string-array>
+
+    <string-array name="publicize_button_style_etries">
+        <item>@string/publicize_official_buttons</item>
+        <item>@string/publicize_icon_only</item>
+        <item>@string/publicize_icon_and_text</item>
+        <item>@string/publicize_text_only</item>
+    </string-array>
+
+    <string-array name="publicize_button_style_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 
     <!-- Smart Lock for Passwords -->

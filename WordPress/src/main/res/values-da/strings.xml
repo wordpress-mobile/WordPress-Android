@@ -190,7 +190,6 @@ Language: da_DK
 	<string name="pages_empty_list">Endnu ingen sider! Hvorfor ikke lave en?</string>
 	<string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
 	<string name="posting_post">Sender "%s"</string>
-	<string name="select_a_blog">Vælg et WordPress-websted</string>
 	<string name="sending_content">Overfører %s indhold</string>
 	<string name="uploading_total">Overfører %1$d af %2$d</string>
 	<string name="comment_reply_to_user">Besvar %s</string>
@@ -331,7 +330,6 @@ Language: da_DK
 	<string name="local_changes">Lokale ændringer</string>
 	<string name="horizontal_alignment">Vandret justering</string>
 	<string name="link_enter_url_text">Linktekst (valgfri)</string>
-	<string name="media_gallery_image_order">Billederækkefølge</string>
 	<string name="blog_name_invalid">Ugyldig webstedsadresse</string>
 	<string name="blog_title_invalid">Ugyldig webstedstitel</string>
 	<string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette tag</string>
@@ -344,7 +342,6 @@ Language: da_DK
 	<string name="share_action_media">Mediebibliotek</string>
 	<string name="share_action_post">Nyt indlæg</string>
 	<string name="local_draft">Lokal kladde</string>
-	<string name="media_gallery_edit">Rediger galleri</string>
 	<string name="toast_comment_unedited">Kommentar er ikke ændret</string>
 	<string name="required_field">Påkrævet felt</string>
 	<string name="content_required">Kommentar er påkrævet</string>
@@ -357,7 +354,6 @@ Language: da_DK
 	<string name="view_site">Vis websted</string>
 	<string name="new_post">Nyt indlæg</string>
 	<string name="post_format">Indlægsformat</string>
-	<string name="media_gallery_num_columns">Antal kolonner</string>
 	<string name="category_name">Kategorinavn</string>
 	<string name="add_new_category">Tilføj ny kategori</string>
 	<string name="view_in_browser">Vis i browser</string>
@@ -396,7 +392,6 @@ Language: da_DK
 	<string name="theme_current_theme">Nuværende tema</string>
 	<string name="themes_live_preview">Live forhåndsvisning</string>
 	<string name="learn_more">Lær mere</string>
-	<string name="media_gallery_settings_title">Indstillinger for galleri</string>
 	<string name="connection_error">Forbindelsesfejl</string>
 	<string name="add_comment">Tilføj kommentar</string>
 	<string name="edit_post">Rediger indlæg</string>
@@ -468,8 +463,6 @@ Language: da_DK
 	<string name="theme_set_success">Tema indstillet!</string>
 	<string name="media_edit_description_hint">Indtast en beskrivelse her</string>
 	<string name="media_edit_title_hint">Indtast en titel her</string>
-	<string name="media_add_popup_capture_video">Optag video</string>
-	<string name="media_add_popup_capture_photo">Tag billede</string>
 	<string name="unattached">Frigjort</string>
 	<string name="passcode_re_enter_passcode">Genindtast PIN-kode</string>
 	<string name="passcode_enter_passcode">Indtast PIN-kode</string>
@@ -477,7 +470,6 @@ Language: da_DK
 	<string name="passcode_turn_on">Aktiver PIN-lås</string>
 	<string name="passcode_preference_title">PIN-lås</string>
 	<string name="passcode_turn_off">Deaktiver PIN-lås</string>
-	<string name="media_gallery_image_order_random">Tilfældig</string>
 	<string name="media_edit_title_text">Titel</string>
 	<string name="media_edit_description_text">Beskrivelse</string>
 	<string name="media_gallery_type_circles">Cirkler</string>
@@ -509,7 +501,6 @@ Language: da_DK
 	<string name="theme_activate_button">Aktiver</string>
 	<string name="theme_activating_button">Aktiverer</string>
 	<string name="post_excerpt">Uddrag</string>
-	<string name="share_action_title">Tilføj til ...</string>
 	<string name="stats_totals_plays">Afspilninger</string>
 	<string name="passcode_change_passcode">Ændr PIN</string>
 	<string name="passcode_set">PIN ændret</string>
@@ -575,7 +566,6 @@ Language: da_DK
 	<string name="notification_vibrate">Vibrer</string>
 	<string name="notification_blink">Blink beskedlys</string>
 	<string name="status">Status</string>
-	<string name="select_video">Vælg en video fra galleriet</string>
 	<string name="sdcard_title">SD-kort påkrævet</string>
 	<string name="location">Placering</string>
 	<string name="media">Medier</string>
@@ -583,7 +573,6 @@ Language: da_DK
 	<string name="approve">Godkend</string>
 	<string name="none">Ingen</string>
 	<string name="blogs">Blogs</string>
-	<string name="select_photo">Vælg et billede fra galleri</string>
 	<string name="error">Fejl</string>
 	<string name="save">Gem</string>
 	<string name="add">Tilføj</string>

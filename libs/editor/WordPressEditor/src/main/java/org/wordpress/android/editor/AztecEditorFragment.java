@@ -51,7 +51,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecText;
-import org.wordpress.aztec.AztecText.OnMediaTappedListener;
+import org.wordpress.aztec.AztecText.OnImageTappedListener;
 import org.wordpress.aztec.HistoryListener;
 import org.wordpress.aztec.Html;
 import org.wordpress.aztec.source.SourceViewEditText;
@@ -71,7 +71,7 @@ import java.util.UUID;
 public class AztecEditorFragment extends EditorFragmentAbstract implements
         OnImeBackListener,
         EditorMediaUploadListener,
-        OnMediaTappedListener,
+        OnImageTappedListener,
         AztecToolbarClickListener,
         HistoryListener {
 
@@ -164,7 +164,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         content.getHistory().setHistoryListener(this);
 
-        content.setOnMediaTappedListener(this);
+        content.setOnImageTappedListener(this);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
@@ -468,7 +468,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         AztecAttributes attributes = new AztecAttributes();
                         attributes.setValue(ATTR_SRC, mediaUrl);
                         setAttributeValuesIfNotDefault(attributes, mediaFile);
-                        content.insertMedia(drawable, attributes);
+                        content.insertImage(drawable, attributes);
                     }
 
                     @Override
@@ -490,12 +490,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             // Bitmap is too small.  Show image placeholder.
                             ToastUtils.showToast(getActivity(), R.string.error_media_small);
                             Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                            content.insertMedia(drawable, attributes);
+                            content.insertImage(drawable, attributes);
                             return;
                         }
 
                         Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, DisplayUtils.getDisplayPixelWidth(getActivity()));
-                        content.insertMedia(new BitmapDrawable(getResources(), resizedBitmap), attributes);
+                        content.insertImage(new BitmapDrawable(getResources(), resizedBitmap), attributes);
                     }
                 }, 0, 0);
             }
@@ -518,13 +518,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), safeMediaUrl, maxWidth);
 
                 if (bitmapToShow != null) {
-                    content.insertMedia(new BitmapDrawable(getResources(), bitmapToShow), attrs);
+                    content.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
                 } else {
                     // Failed to retrieve bitmap.  Show failed placeholder.
                     ToastUtils.showToast(getActivity(), R.string.error_media_load);
                     Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
                     drawable.setBounds(0, 0, maxWidth, maxWidth);
-                    content.insertMedia(drawable, attrs);
+                    content.insertImage(drawable, attrs);
                 }
 
                 // set intermediate shade overlay
@@ -868,7 +868,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void mediaTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
+    public void onImageTapped(@NotNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
         Set<String> classes = MetadataUtils.getClassAttribute(attrs);
 
         String idName;

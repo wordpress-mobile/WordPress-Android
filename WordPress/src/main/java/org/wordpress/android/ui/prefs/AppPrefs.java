@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.BuildConfig;
@@ -138,8 +139,15 @@ public class AppPrefs {
         SMART_TOAST_WP_MEDIA_BROWSER_LONG_PRESS_COUNTER,
         SMART_TOAST_COMMENTS_LONG_PRESS_COUNTER,
 
+        // permission keys - set once a specific permission has been asked, regardless of response
+        ASKED_PERMISSION_STORAGE_WRITE,
+        ASKED_PERMISSION_STORAGE_READ,
+        ASKED_PERMISSION_CAMERA,
+        ASKED_PERMISSION_LOCATION_COURSE,
+        ASKED_PERMISSION_LOCATION_FINE,
+
         // wizard style login flow active
-        LOGIN_WIZARD_STYLE_ACTIVE,
+        LOGIN_WIZARD_STYLE_ACTIVE
     }
 
     private static SharedPreferences prefs() {
@@ -197,18 +205,21 @@ public class AppPrefs {
         setString(key, Integer.toString(value));
     }
 
-    private static boolean getBoolean(PrefKey key, boolean def) {
-
+    public static boolean getBoolean(PrefKey key, boolean def) {
         String value = getString(key, Boolean.toString(def));
         return Boolean.parseBoolean(value);
     }
 
-    private static void setBoolean(PrefKey key, boolean value) {
+    public static void setBoolean(PrefKey key, boolean value) {
         setString(key, Boolean.toString(value));
     }
 
     private static void remove(PrefKey key) {
         prefs().edit().remove(key.name()).apply();
+    }
+
+    public static boolean keyExists(@NonNull PrefKey key) {
+        return prefs().contains(key.name());
     }
 
     // Exposed methods
@@ -605,4 +616,6 @@ public class AppPrefs {
     public static void setDraftsMigratedToFluxC(boolean migrated) {
         setBoolean(UndeletablePrefKey.DRAFTS_MIGRATED_TO_FLUXC, migrated);
     }
+
+
 }

@@ -705,7 +705,6 @@ Language: bg
 	<string name="uploading_total">Качване на %1$d от %2$d</string>
 	<string name="reader_label_comments_on">Коментари за</string>
 	<string name="stats_no_blog">Възникна грешка при зареждане на статистиката за този блог</string>
-	<string name="select_a_blog">Изберете WordPress уебсайт</string>
 	<string name="reader_empty_comments">Все още няма коментари</string>
 	<string name="pages_empty_list">Все ощя няма страници. Защо не създадете една?</string>
 	<string name="reader_empty_posts_in_tag">Няма публикации с този таг</string>
@@ -835,7 +834,6 @@ Language: bg
 	<string name="username_or_password_incorrect">Името или паролата, които зададохте, са грешни</string>
 	<string name="nux_cannot_log_in">Свързването е невъзможно с момента</string>
 	<string name="invalid_url_message">Проверете дали зададеният адрес е валиден</string>
-	<string name="media_gallery_num_columns">Брой колони</string>
 	<string name="comment_status_spam">Спам</string>
 	<string name="comment_status_trash">Изхвърлено</string>
 	<string name="mnu_comment_trash">Боклук</string>
@@ -867,9 +865,7 @@ Language: bg
 	<string name="link_enter_url_text">Текст на връзката (по избор)</string>
 	<string name="theme_premium_theme">Премиум тема</string>
 	<string name="new_media">Нов файл</string>
-	<string name="media_gallery_settings_title">Настройки на галерията</string>
 	<string name="local_draft">Локална чернова</string>
-	<string name="media_gallery_image_order">Подредба на изображенията</string>
 	<string name="blog_removed_successfully">Уебсайта беше премахнат успешно</string>
 	<string name="file_not_found">Файла за качване не беше намерен? Бил ли е изтрит или преместен?</string>
 	<string name="media_error_no_permission">Нямате нужните права за да прегледате файловете</string>
@@ -897,7 +893,6 @@ Language: bg
 	<string name="add_comment">Добавяне на коментар</string>
 	<string name="cancel_edit">Отказване</string>
 	<string name="learn_more">Още</string>
-	<string name="media_gallery_edit">Редактиране на галерията</string>
 	<string name="cannot_delete_multi_media_items">Някои от файловете не могат да бъдат изтрити в момента. Опитайте по-късно.</string>
 	<string name="create_a_link">Създаване на връзка</string>
 	<string name="upload_failed">Качването е неуспешно</string>
@@ -1007,7 +1002,6 @@ Language: bg
 	<string name="stats_timeframe_yesterday">Вчера</string>
 	<string name="media_gallery_type_circles">Кръгове</string>
 	<string name="media_gallery_type_squares">Квадрати</string>
-	<string name="media_gallery_image_order_reverse">Обратен ред</string>
 	<string name="media_edit_description_hint">Добави описание</string>
 	<string name="media_edit_success">Обновено</string>
 	<string name="stats_timeframe_today">Днес</string>
@@ -1032,16 +1026,12 @@ Language: bg
 	<string name="stats_view_clicks">Кликове</string>
 	<string name="stats_totals_clicks">Кликове</string>
 	<string name="stats_entry_tags_and_categories">Тема</string>
-	<string name="media_add_popup_capture_photo">Снимане</string>
-	<string name="media_add_popup_capture_video">Запис на видео</string>
-	<string name="media_gallery_image_order_random">Произволен</string>
 	<string name="media_gallery_type">Вид</string>
 	<string name="media_gallery_type_tiled">Плочки</string>
 	<string name="media_edit_failure">Актуализирането е неуспешно</string>
 	<string name="themes_details_label">Подробности</string>
 	<string name="themes_features_label">Възможности</string>
 	<string name="theme_auth_error_title">Извличането на теми е неуспешно</string>
-	<string name="share_action_title">Добавяне към ...</string>
 	<string name="share_action">Споделяне</string>
 	<string name="stats">Статистика</string>
 	<string name="stats_view_tags_and_categories">Етикети и категории</string>
@@ -1116,7 +1106,6 @@ Language: bg
 	<string name="notification_blink">Светлинно известяване</string>
 	<string name="notification_sound">Звуково известяване</string>
 	<string name="status">Състояние</string>
-	<string name="select_video">Изберете видео от галерията</string>
 	<string name="location">Местоположение</string>
 	<string name="sdcard_title">Необходима е SD карта</string>
 	<string name="media">Медия</string>
@@ -1124,7 +1113,6 @@ Language: bg
 	<string name="delete">Изтриване</string>
 	<string name="none">Няма</string>
 	<string name="blogs">Блогове</string>
-	<string name="select_photo">Избор на изображение от галерията</string>
 	<string name="no">Не</string>
 	<string name="error">Грешка</string>
 	<string name="cancel">Отказ</string>

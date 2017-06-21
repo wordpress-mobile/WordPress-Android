@@ -2,15 +2,15 @@
 
 <vector
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:height="44dp"
-    android:width="44dp"
-    android:viewportHeight="44"
-    android:viewportWidth="44" >
+    android:height="48dp"
+    android:width="48dp"
+    android:viewportHeight="48"
+    android:viewportWidth="48" >
 
-    <!-- @color/wp_blue -->
+    <!-- @color/wp_grey_dark -->
     <path
-        android:fillColor="#ff0087be"
-        android:pathData="M33,14v2h-3v3h-2v-3h-3v-2h3v-3h2v3H33z M24.5,21c0.828,0,1.5-0.672,1.5-1.5S25.328,18,24.5,18 S23,18.672,23,19.5S23.672,21,24.5,21z M28,24.234l-0.513-0.57c-0.794-0.885-2.181-0.885-2.976,0l-0.656,0.731L19,19l-3,3.333V16h7 v-2h-7c-1.105,0-2,0.895-2,2v12c0,1.105,0.895,2,2,2h12c1.105,0,2-0.895,2-2v-7h-2V24.234z" >
+        android:fillColor="#ff2e4453"
+        android:pathData="M24,15.3c4.8,0,8.7,3.9,8.7,8.7s-3.9,8.7-8.7,8.7s-8.7-3.9-8.7-8.7S19.2,15.3,24,15.3 M24,13.1c-6,0-10.9,4.9-10.9,10.9 S18,34.9,24,34.9S34.9,30,34.9,24S30,13.1,24,13.1L24,13.1z M29.5,22.9h-4.4v-4.4h-2.2v4.4h-4.4v2.2h4.4v4.4h2.2v-4.4h4.4V22.9z" >
     </path>
 
 </vector>

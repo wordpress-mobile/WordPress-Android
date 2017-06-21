@@ -275,7 +275,6 @@ Language: es_CL
 	<string name="older_two_days">Hace más de 2 días</string>
 	<string name="older_last_week">Hace más de 1 semana</string>
 	<string name="stats_no_blog">No se han podido cargar las estadísticas del blog solicitado</string>
-	<string name="select_a_blog">Elegir un sitio de WordPress</string>
 	<string name="sending_content">Cargando el contenido de %s</string>
 	<string name="uploading_total">Cargando %1$d de %2$d</string>
 	<string name="mnu_comment_liked">Me gustó</string>
@@ -398,11 +397,7 @@ Language: es_CL
 	<string name="scaled_image_error">Introduce un valor válido de ancho a escala</string>
 	<string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
 	<string name="learn_more">Aprender más</string>
-	<string name="media_gallery_settings_title">Ajustes de galería</string>
-	<string name="media_gallery_image_order">Orden de imágenes</string>
-	<string name="media_gallery_num_columns">Número de columnas</string>
 	<string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
-	<string name="media_gallery_edit">Editar galería</string>
 	<string name="media_error_no_permission">No tienes permiso para ver la librería multimedia</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>
 	<string name="themes_live_preview">Vista previa</string>
@@ -545,8 +540,6 @@ Language: es_CL
 	<string name="all">Todas</string>
 	<string name="images">Imágenes</string>
 	<string name="unattached">Sin adjuntar</string>
-	<string name="media_gallery_image_order_random">Aleatorio</string>
-	<string name="media_gallery_image_order_reverse">Inverso</string>
 	<string name="media_gallery_type">Tipo</string>
 	<string name="media_gallery_type_squares">Cuadrados</string>
 	<string name="media_gallery_type_tiled">Mosaico</string>
@@ -567,7 +560,6 @@ Language: es_CL
 	<string name="theme_set_success">¡Tema aplicado con exito!</string>
 	<string name="theme_auth_error_title">Error al recibir temas</string>
 	<string name="post_excerpt">Extracto</string>
-	<string name="share_action_title">Añadir a...</string>
 	<string name="share_action">Compartir</string>
 	<string name="stats">Estadísticas</string>
 	<string name="stats_view_clicks">Clics</string>
@@ -594,8 +586,6 @@ Language: es_CL
 	<string name="passcode_preference_title">PIN bloqueado</string>
 	<string name="passcode_turn_off">Desbloquear PIN</string>
 	<string name="passcode_turn_on">Bloquear PIN</string>
-	<string name="media_add_popup_capture_photo">Tomar Foto</string>
-	<string name="media_add_popup_capture_video">Capturar Vídeo</string>
 	<string name="stats_view_visitors_and_views">Visitantes y Visualizaciones</string>
 	<string name="passcode_enter_old_passcode">Introduce tu PIN anterior</string>
 	<string name="upload">Subir</string>
@@ -659,12 +649,10 @@ Language: es_CL
 	<string name="status">Estado</string>
 	<string name="location">Ubicación</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
-	<string name="select_video">Selecciona un video de la galería</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>
 	<string name="none">Ninguno</string>
 	<string name="blogs">Blogs</string>
-	<string name="select_photo">Selecciona una foto de la galería</string>
 	<string name="error">Error</string>
 	<string name="cancel">Cancelar</string>
 	<string name="save">Guardar</string>

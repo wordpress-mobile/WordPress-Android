@@ -8,6 +8,7 @@
         <attr name="summaryLines" format="integer" />
         <attr name="maxSummaryLines" format="integer" />
         <attr name="longClickHint" />
+        <attr name="dialogMessage" format="string" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
@@ -38,7 +39,7 @@
         WPTextView attributes
     -->
     <declare-styleable name="WPTextView">
-        <attr name="fixWidowWords" format="boolean"/>
+        <attr name="fixWidowWords" format="boolean" />
     </declare-styleable>
 
     <!--
@@ -87,6 +88,23 @@
 
     <declare-styleable name="wpBoundedWidth">
         <attr name="bounded_width" format="dimension" />
+    </declare-styleable>
+
+    <!--
+        WPPrefView
+    -->
+    <declare-styleable name="wpPrefView">
+        <attr name="wpPrefType" format="enum">
+            <enum name="text" value="0" />
+            <enum name="toggle" value="1" />
+            <enum name="checklist" value="2" />
+            <enum name="radiolist" value="3" />
+        </attr>
+        <attr name="wpHeading" format="string" />
+        <attr name="wpTitle" format="string" />
+        <attr name="wpSummary" format="string" />
+        <attr name="wpShowDivider" format="boolean" />
+        <attr name="wpTextDialogSubtitle" format="string" />
     </declare-styleable>
 
 </resources>

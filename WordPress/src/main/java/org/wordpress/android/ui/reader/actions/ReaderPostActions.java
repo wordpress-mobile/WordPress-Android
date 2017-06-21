@@ -178,7 +178,7 @@ public class ReaderPostActions {
                     localPost.isCommentsOpen = serverPost.isCommentsOpen;
                     localPost.setTitle(serverPost.getTitle());
                     localPost.setText(serverPost.getText());
-                    ReaderPostTable.addOrUpdatePost(localPost);
+                    ReaderPostTable.updatePost(localPost);
                 }
 
                 // always update liking users regardless of whether changes were detected - this
@@ -261,7 +261,7 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
-                ReaderPostTable.addOrUpdatePost(post);
+                ReaderPostTable.addPost(post);
                 handlePostLikes(post, jsonObject);
                 if (requestListener != null) {
                     requestListener.onSuccess();

@@ -53,8 +53,6 @@ Language: uz
 	<string name="unattached">Biriktirilmagan</string>
 	<string name="media_gallery_type_circles">Doiralar</string>
 	<string name="themes">Shablonlar</string>
-	<string name="media_gallery_image_order_random">Tasodifiy</string>
-	<string name="media_gallery_image_order_reverse">Teskari</string>
 	<string name="media_gallery_type">Tur</string>
 	<string name="media_gallery_type_squares">Kvadrat</string>
 	<string name="media_gallery_type_tiled">Bir qator</string>
@@ -70,7 +68,6 @@ Language: uz
 	<string name="theme_set_success">Shablon muvaffaqiyatli faollashtirildi!</string>
 	<string name="theme_auth_error_title">Shablonlar yuklanmadi</string>
 	<string name="post_excerpt">Sitata</string>
-	<string name="share_action_title">Qo‘sh...</string>
 	<string name="share_action">Bo‘lish</string>
 	<string name="stats">Statistika</string>
 	<string name="stats_view_visitors_and_views">Kirivchular va ko‘rishlar</string>
@@ -88,8 +85,6 @@ Language: uz
 	<string name="stats_totals_views">Ko‘rishlar</string>
 	<string name="stats_totals_clicks">Bosishlar</string>
 	<string name="stats_totals_plays">Ko‘rishlar</string>
-	<string name="media_add_popup_capture_photo">Sur‘atga oling</string>
-	<string name="media_add_popup_capture_video">Videoga oling</string>
 	<string name="stats_view_referrers">Referrerlar</string>
 	<string name="stats_entry_referrers">Referrer</string>
 	<string name="passcode_manage">PIN kod moslamalari</string>
@@ -163,14 +158,12 @@ Language: uz
 	<string name="notification_blink">Yonib-o‘chuvchi xabar</string>
 	<string name="status">Status</string>
 	<string name="location">Manzil</string>
-	<string name="select_video">Galereyadan video tanla</string>
 	<string name="sdcard_title">SD karta kerak</string>
 	<string name="media">Media</string>
 	<string name="delete">O‘chir</string>
 	<string name="approve">Tasdiqla</string>
 	<string name="none">Hech bir</string>
 	<string name="blogs">Bloglar</string>
-	<string name="select_photo">Galereyadan rasm tanlash</string>
 	<string name="no">Yo‘q</string>
 	<string name="yes">Ha</string>
 	<string name="reply">Javob</string>
