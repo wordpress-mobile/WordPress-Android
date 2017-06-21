@@ -96,28 +96,29 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
 
-        add(WPComGsonRequest.buildPostRequest(url, getEditRequestParams(media),
-                MediaWPComRestResponse.class, new Listener<MediaWPComRestResponse>() {
-            @Override
-            public void onResponse(MediaWPComRestResponse response) {
-                MediaModel responseMedia = getMediaFromRestResponse(response);
-                if (responseMedia != null) {
-                    AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
-                    responseMedia.setLocalSiteId(site.getId());
-                    notifyMediaPushed(site, responseMedia, null);
-                } else {
-                    MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                    notifyMediaPushed(site, media, error);
+        add(WPComGsonRequest.buildPostRequest(url, getEditRequestParams(media), MediaWPComRestResponse.class,
+                new Listener<MediaWPComRestResponse>() {
+                    @Override
+                    public void onResponse(MediaWPComRestResponse response) {
+                        MediaModel responseMedia = getMediaFromRestResponse(response);
+                        if (responseMedia != null) {
+                            AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
+                            responseMedia.setLocalSiteId(site.getId());
+                            notifyMediaPushed(site, responseMedia, null);
+                        } else {
+                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                            notifyMediaPushed(site, media, error);
+                        }
+                    }
+                }, new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.w(T.MEDIA, "error editing remote media: " + error);
+                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                        notifyMediaPushed(site, media, mediaError);
+                    }
                 }
-            }
-        }, new BaseErrorListener() {
-            @Override
-            public void onErrorResponse(@NonNull BaseNetworkError error) {
-                AppLog.w(T.MEDIA, "error editing remote media: " + error);
-                MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                notifyMediaPushed(site, media, mediaError);
-            }
-        }));
+        ));
     }
 
     /**
@@ -242,7 +243,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaListFetched(site, mediaError);
                     }
-        }));
+                }
+        ));
     }
 
     /**
@@ -279,7 +281,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaFetched(site, media, mediaError);
                     }
-        }));
+                }
+            ));
     }
 
     /**
@@ -318,7 +321,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         }
                         notifyMediaDeleted(site, media, new MediaError(mediaError));
                     }
-        }));
+                }
+            ));
     }
 
     public void cancelUpload(final MediaModel media) {
