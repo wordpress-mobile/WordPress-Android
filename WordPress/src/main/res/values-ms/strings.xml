@@ -925,11 +925,7 @@ Language: ms
 	<string name="themes_live_preview">Pratonton secara langsung</string>
 	<string name="cannot_delete_multi_media_items">Sesetengah media tidak boleh dihapuskan pada masa ini. Cuba sebentar lagi.</string>
 	<string name="media_error_no_permission">Anda tidak mempunyai kebenaran untuk melihat pustaka media</string>
-	<string name="media_gallery_edit">Sunting galeri</string>
 	<string name="media_gallery_type_thumbnail_grid">Grid gambar kenit</string>
-	<string name="media_gallery_num_columns">Bilangan lajur</string>
-	<string name="media_gallery_image_order">Aturan imej</string>
-	<string name="media_gallery_settings_title">Tetapan galeri</string>
 	<string name="learn_more">Pelajari selanjutnya</string>
 	<string name="post_not_found">Ralat berlaku apabila kiriman dimuatkan. Segar semula kiriman anda dan cuba lagi.</string>
 	<string name="scaled_image_error">Masukkan nilai lebar berskala yang sah</string>
@@ -1047,8 +1043,6 @@ Language: ms
 	<string name="media_gallery_type_tiled">Berjubin</string>
 	<string name="media_gallery_type_squares">Segi empat sama</string>
 	<string name="media_gallery_type">Jenis</string>
-	<string name="media_gallery_image_order_reverse">Songsang</string>
-	<string name="media_gallery_image_order_random">Rawak</string>
 	<string name="unattached">Tidak terikat</string>
 	<string name="images">Imej</string>
 	<string name="all">Semua</string>

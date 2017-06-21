@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -259,10 +260,26 @@ public class ReaderPostTable {
                     args);
     }
 
-    public static void addOrUpdatePost(ReaderPost post) {
-        if (post == null) {
-            return;
-        }
+    public static void updatePost(@NonNull ReaderPost post) {
+        // we need to update a few important fields across all instances of this post - this is
+        // necessary because a post can exist multiple times in the table with different tags
+        ContentValues values = new ContentValues();
+        values.put("title", post.getTitle());
+        values.put("text", post.getText());
+        values.put("num_replies", post.numReplies);
+        values.put("num_likes", post.numLikes);
+        values.put("is_liked", post.isLikedByCurrentUser);
+        values.put("is_followed", post.isFollowedByCurrentUser);
+        values.put("is_comments_open", post.isCommentsOpen);
+        ReaderDatabase.getWritableDb().update(
+                "tbl_posts", values, "pseudo_id=?", new String[]{ post.getPseudoId() });
+
+        ReaderPostList posts = new ReaderPostList();
+        posts.add(post);
+        addOrUpdatePosts(null, posts);
+    }
+
+    public static void addPost(@NonNull ReaderPost post) {
         ReaderPostList posts = new ReaderPostList();
         posts.add(post);
         addOrUpdatePosts(null, posts);

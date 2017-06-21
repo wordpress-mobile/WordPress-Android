@@ -346,8 +346,6 @@ Language: sr_RS
 	<string name="page_not_published">Стање стране није објављено</string>
 	<string name="post_not_found">Дошло је до грешке током учитавања чланка. Освежите списак чланака и пробајте поново.</string>
 	<string name="comment_status_spam">Непожељни коментар</string>
-	<string name="media_gallery_num_columns">Број ступаца</string>
-	<string name="media_gallery_settings_title">Подешавања галерије</string>
 	<string name="dlg_spamming_comments">Означавам као непожељно</string>
 	<string name="mnu_comment_spam">Непожељни коментар</string>
 	<string name="post_format">Облик чланка</string>
@@ -410,7 +408,6 @@ Language: sr_RS
 	<string name="delete_post">Обриши чланак</string>
 	<string name="share_action_media">Библиотека медија</string>
 	<string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
-	<string name="media_gallery_edit">Уредите галерију</string>
 	<string name="xmlrpc_error">Није могуће повезати се. Унесите пуну путању до xmlrpc.php на свом веб месту и покушајте поново.</string>
 	<string name="email_reserved">Та адреса веб-поште је већ у употреби. Проверите своје поштанско сандуче за поруку за активацију. Уколико не активирате, постаће доступна за неколико дана.</string>
 	<string name="trash_yes">Отпад</string>
@@ -426,7 +423,6 @@ Language: sr_RS
 	<string name="comment_status_unapproved">На чекању</string>
 	<string name="comment_status_approved">Одобрено</string>
 	<string name="media_gallery_type_thumbnail_grid">Мрежа умањених слика</string>
-	<string name="media_gallery_image_order">Редослед слика</string>
 	<string name="learn_more">Сазнајте више</string>
 	<string name="cancel_edit">Одустани од уређивања</string>
 	<string name="connection_error">Грешка у успостављању везе</string>
@@ -542,8 +538,6 @@ Language: sr_RS
 	<string name="media_edit_title_text">Наслов</string>
 	<string name="media_gallery_type_circles">Кругови</string>
 	<string name="media_gallery_type_squares">Квадрати</string>
-	<string name="media_gallery_image_order_reverse">Обрнутим редоследом</string>
-	<string name="media_gallery_image_order_random">Насумично</string>
 	<string name="stats_timeframe_weeks">Недељу дана</string>
 	<string name="stats_entry_posts_and_pages">Наслов</string>
 	<string name="theme_auth_error_title">Неуспешно добављање тема</string>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-24 20:23:50+0000
+Translation-Revision-Date: 2017-06-07 18:09:35+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="media_error_timeout">Răspunsul serverului a expirat, ar putea fi o conexiune slabă sau o eroare de server</string>
+	<string name="media_error_internal_server_error">Eroare la încărcare. Încearcă activarea Optimizează imagini în Sit->Setări</string>
+	<string name="media_error_too_large_upload">Fișier prea mare pentru a-l încărca. Încearcă activarea Optimizează imagini în Sit->Setări</string>
+	<string name="media_downloading">Salvez media pe acest dispozitiv</string>
 	<string name="error_media_save">Nu pot salva media</string>
 	<string name="editor_scheduled_post_saved_online">Articol programat</string>
 	<string name="editor_draft_saved_locally">Ciornă salvată pe dispozitiv</string>
@@ -13,7 +17,6 @@ Language: ro
 	<string name="editor_post_saved_locally">Articol salvat pe dispozitiv</string>
 	<string name="cant_share_unknown_action">S-a cerut o acțiunea nerecunoscută, ignor</string>
 	<string name="button_sync">Sincronizare</string>
-	<string name="media_saved_to_device">Media salvată pe acest dispozitiv</string>
 	<string name="smart_toast_comments_long_press">Atinge și ține apăsat pentru a selecta mai multe comentarii</string>
 	<string name="smart_toast_photo_long_press">Atinge și ține apăsat pentru a selecta mai multe fotografii</string>
 	<string name="photo_picker_choose_video">Alege video de pe dispozitiv</string>
@@ -70,7 +73,6 @@ Language: ro
 	<string name="error_media_parse_error">N-am putut interpreta răspunsul după încărcarea media</string>
 	<string name="error_upload_params">Eroare în timpul încărcării %1$s: %2$s</string>
 	<string name="submit_for_review">Trimite</string>
-	<string name="media_error_too_large_upload">Fișierul este prea mare. Te rog contactează furnizorul de găzduire web pentru a rezolva această problemă</string>
 	<string name="role_subscriber">Abonat</string>
 	<string name="tell_me_more">Spune-mi mai mult</string>
 	<string name="duplicate_site_detected">A fost detectat un sit duplicat.</string>
@@ -1034,11 +1036,7 @@ Language: ro
 	<string name="themes_live_preview">Previzualizare live</string>
 	<string name="cannot_delete_multi_media_items">Unele elemente media nu pot fi șterse acum. Încearcă din nou mai târziu.</string>
 	<string name="media_error_no_permission">Nu ai permisiunea de a vizualiza bibioteca media</string>
-	<string name="media_gallery_edit">Editează galeria</string>
 	<string name="media_gallery_type_thumbnail_grid">Grilă miniaturi</string>
-	<string name="media_gallery_num_columns">Număr de coloane</string>
-	<string name="media_gallery_image_order">Ordine imagini</string>
-	<string name="media_gallery_settings_title">Setări galerie</string>
 	<string name="learn_more">Află mai mult</string>
 	<string name="post_not_found">A apărut o eroare la încărcarea articolului. Reîmprospătează articolele și încearcă din nou.</string>
 	<string name="scaled_image_error">Introdu o valoare validă de lățime</string>
@@ -1157,8 +1155,6 @@ Language: ro
 	<string name="media_gallery_type_tiled">Placat</string>
 	<string name="media_gallery_type_squares">Pătrate</string>
 	<string name="media_gallery_type">Tip</string>
-	<string name="media_gallery_image_order_reverse">Invers</string>
-	<string name="media_gallery_image_order_random">Aleatoriu</string>
 	<string name="unattached">Neatașate</string>
 	<string name="images">Imagini</string>
 	<string name="all">Toate</string>

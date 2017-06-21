@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="48dp"
+    android:width="48dp"
+    android:viewportHeight="48"
+    android:viewportWidth="48" >
+
+    <!-- @color/wp_grey_lighten_20 -->
+    <path
+        android:fillColor="#ffc8d7e1"
+        android:pathData="M23.9,29.4c1.2,0,2.2,1,2.2,2.2c0,1.2-1,2.2-2.2,2.2s-2.2-1-2.2-2.2C21.7,30.4,22.7,29.4,23.9,29.4z M21.7,16.3 c0,1.2,1,2.2,2.2,2.2s2.2-1,2.2-2.2c0-1.2-1-2.2-2.2-2.2S21.7,15.1,21.7,16.3z M21.7,23.9c0,1.2,1,2.2,2.2,2.2s2.2-1,2.2-2.2 s-1-2.2-2.2-2.2S21.7,22.7,21.7,23.9z" >
+    </path>
+
+</vector>
