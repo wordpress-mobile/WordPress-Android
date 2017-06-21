@@ -84,7 +84,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -585,7 +584,7 @@ public class EditPostSettingsFragment extends Fragment {
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        updatePublishDate(new Date());
+                        updatePublishDate(Calendar.getInstance());
                     }
                 });
         datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, resources.getString(android.R.string.cancel),
@@ -600,16 +599,16 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        Calendar calendar = getCurrentPublishDateAsCalendar();
+        final Calendar calendar = getCurrentPublishDateAsCalendar();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        Date javaDate = new Date(selectedYear - 1900, selectedMonth, selectedDay,
-                                selectedHour, selectedMinute);
-                        updatePublishDate(javaDate);
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+                        updatePublishDate(selectedCalendar);
                     }
                 }, hour, minute, DateFormat.is24HourFormat(getActivity()));
         timePickerDialog.setTitle(R.string.select_time);
@@ -722,8 +721,8 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private void updatePublishDate(Date date) {
-        mPost.setDateCreated(DateTimeUtils.iso8601FromDate(date));
+    private void updatePublishDate(Calendar calendar) {
+        mPost.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
         updatePublishDateTextView();
         dispatchUpdatePostAction();
         updateSaveButton();
@@ -898,14 +897,11 @@ public class EditPostSettingsFragment extends Fragment {
     // Publish Date Helpers
 
     private Calendar getCurrentPublishDateAsCalendar() {
-        Date date;
         if (PostUtils.shouldPublishImmediately(mPost)) {
-            date = new Date();
-        } else {
-            date = DateTimeUtils.dateFromIso8601(mPost.getDateCreated());
+            return Calendar.getInstance();
         }
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(DateTimeUtils.dateFromIso8601(mPost.getDateCreated()));
         return calendar;
     }
 
