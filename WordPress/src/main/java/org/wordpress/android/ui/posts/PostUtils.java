@@ -286,10 +286,15 @@ public class PostUtils {
     }
 
     static boolean shouldPublishImmediately(PostModel postModel) {
-        boolean isDraft = PostStatus.fromPost(postModel) == PostStatus.DRAFT;
+        boolean optionAvailable = shouldPublishImmediatelyOptionBeAvailable(postModel);
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
         Date now = new Date();
         // For drafts with publish dates in the past, we should publish immediately
-        return isDraft && !pubDate.after(now);
+        return optionAvailable && !pubDate.after(now);
+    }
+
+    // Only drafts should have the option to publish immediately to avoid user confusion
+    static boolean shouldPublishImmediatelyOptionBeAvailable(PostModel postModel) {
+        return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 }
