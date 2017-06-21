@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -187,7 +189,12 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogStats(getActivity(), getSelectedSite());
+                if (!mAccountStore.hasAccessToken()) {
+                    // If the user is not connected to WordPress.com, ask him to connect first.
+                    startWPComLoginActivity();
+                } else {
+                    ActivityLauncher.viewBlogStats(getActivity(), getSelectedSite());
+                }
             }
         });
 
@@ -271,6 +278,12 @@ public class MySiteFragment extends Fragment
         return rootView;
     }
 
+    private void startWPComLoginActivity() {
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        LoginMode.JETPACK_STATS.putInto(loginIntent);
+        startActivityForResult(loginIntent, RequestCodes.DO_LOGIN);
+    }
+
     private void showSitePicker() {
         if (isAdded()) {
             ActivityLauncher.showSitePickerForResult(getActivity(), getSelectedSite());
@@ -282,6 +295,11 @@ public class MySiteFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
+            case RequestCodes.DO_LOGIN:
+                if (resultCode == Activity.RESULT_OK) {
+                    ActivityLauncher.viewBlogStats(getActivity(), getSelectedSite());
+                }
+                break;
             case RequestCodes.SITE_PICKER:
                 if (resultCode == Activity.RESULT_OK) {
                     //reset comments status filter

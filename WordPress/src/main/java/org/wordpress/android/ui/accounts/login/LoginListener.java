@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.accounts.login;
 
+import org.wordpress.android.ui.accounts.LoginMode;
+
 public interface LoginListener {
+    LoginMode getLoginMode();
+
     // Login Prologue callbacks
     void nextPromo();
     void showEmailLoginScreen();
