@@ -136,10 +136,10 @@ public class SiteSettingsFragment extends PreferenceFragment
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
 
-    private SiteModel mSite;
+    public SiteModel mSite;
 
     // Can interface with WP.com or WP.org
-    private SiteSettingsInterface mSiteSettings;
+    public SiteSettingsInterface mSiteSettings;
 
     // Reference to the list of items being edited in the current list editor
     private List<String> mEditingList;
@@ -196,7 +196,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mExportSitePref;
     private Preference mDeleteSitePref;
 
-    private boolean mEditingEnabled = true;
+    public boolean mEditingEnabled = true;
 
     // Reference to the state of the fragment
     private boolean mIsFragmentPaused = false;
@@ -243,10 +243,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         mSiteSettings = SiteSettingsInterface.getInterface(activity, mSite, this);
 
         setRetainInstance(true);
-        addPreferencesFromResource(R.xml.site_settings);
+        addPreferencesFromResource();
 
         // toggle which preferences are shown and set references
         initPreferences();
+    }
+
+    public void addPreferencesFromResource() {
+        addPreferencesFromResource(R.xml.site_settings);
     }
 
     @Override
@@ -644,7 +648,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.
      */
-    private void initPreferences() {
+    public void initPreferences() {
         mTitlePref = (EditTextPreference) getChangePref(R.string.pref_key_site_title);
         mTaglinePref = (EditTextPreference) getChangePref(R.string.pref_key_site_tagline);
         mAddressPref = (EditTextPreference) getChangePref(R.string.pref_key_site_address);
@@ -965,7 +969,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         showNumberPickerDialog(args, MULTIPLE_LINKS_REQUEST_CODE, "multiple-links-dialog");
     }
 
-    private void setPreferencesFromSiteSettings() {
+    public void setPreferencesFromSiteSettings() {
         mOptimizedImage.setChecked(mSiteSettings.getOptimizedImage());
         setDetailListPreferenceValue(mImageWidthPref,
                 String.valueOf(mSiteSettings.getMaxImageWidth()),
@@ -1077,7 +1081,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mReceivePingbacksNested.setChecked(newValue);
     }
 
-    private void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
+    public void setDetailListPreferenceValue(DetailListPreference pref, String value, String summary) {
         pref.setValue(value);
         pref.setSummary(summary);
         pref.refreshAdapter();
@@ -1087,7 +1091,7 @@ public class SiteSettingsFragment extends PreferenceFragment
      * Helper method to perform validation and set multiple properties on an EditTextPreference.
      * If newValue is equal to the current preference text no action will be taken.
      */
-    private void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
+    public void changeEditTextPreferenceValue(EditTextPreference pref, String newValue) {
         if (newValue == null || pref == null || pref.getEditText().isInEditMode()) return;
 
         if (!newValue.equals(pref.getSummary())) {
@@ -1281,7 +1285,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         return view;
     }
 
-    private boolean shouldShowListPreference(DetailListPreference preference) {
+    public boolean shouldShowListPreference(DetailListPreference preference) {
         return preference != null && preference.getEntries() != null && preference.getEntries().length > 0;
     }
 

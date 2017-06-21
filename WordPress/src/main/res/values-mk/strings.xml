@@ -275,11 +275,7 @@ Language: mk
 	<string name="blog_name_must_include_letters">Адресата на страницата мора да содржи барем една буква (a-z)</string>
 	<string name="email_reserved">Оваа адреса за е-пошта е веќе искористена. Проверете го вашето влезно сандаче за порака за активирање. Доколку не активирате може да се обидете повторно за неколку дена.</string>
 	<string name="privacy_policy">Полиса за приватност</string>
-	<string name="media_gallery_image_order">Подредба на слики</string>
 	<string name="themes_live_preview">Преглед во живо</string>
-	<string name="media_gallery_settings_title">Галерија поднесувања</string>
-	<string name="media_gallery_num_columns">Број на колони</string>
-	<string name="media_gallery_edit">Уредување на галерија</string>
 	<string name="media_error_no_permission">Немате достап за да ја видете медиа библиотеката</string>
 	<string name="cannot_delete_multi_media_items">Некои медиа арихи неможат да бидат избришани во моментот. Обидете се покасно.</string>
 	<string name="media_gallery_type_thumbnail_grid">Мини-мрежа</string>
@@ -366,7 +362,6 @@ Language: mk
 	<string name="themes">Теми</string>
 	<string name="stats_timeframe_days">Денови</string>
 	<string name="passcode_change_passcode">Промени ПИН</string>
-	<string name="media_gallery_image_order_reverse">Обратно</string>
 	<string name="media_gallery_type">Тип</string>
 	<string name="media_gallery_type_squares">Квадрати</string>
 	<string name="media_gallery_type_tiled">Плочки</string>
@@ -409,7 +404,6 @@ Language: mk
 	<string name="stats_entry_tags_and_categories">Тема</string>
 	<string name="stats_entry_authors">Автор</string>
 	<string name="images">Слики</string>
-	<string name="media_gallery_image_order_random">Случајни</string>
 	<string name="stats_view_referrers">Препорачувачи</string>
 	<string name="stats_entry_referrers">Препорачувач</string>
 	<string name="unattached">Неприкачени</string>

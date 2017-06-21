@@ -6,9 +6,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -273,5 +275,20 @@ public class WordPressMediaUtils {
         }
 
         return posterUrl;
+    }
+
+    /*
+     * passes a newly-created media file to the media scanner service so it's available to
+     * the media content provider - use this after capturing or downloading media to ensure
+     * that it appears in the stock Gallery app
+     */
+    public static void scanMediaFile(@NonNull Context context, @NonNull String localMediaPath) {
+        MediaScannerConnection.scanFile(context,
+                new String[]{localMediaPath}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        AppLog.d(T.MEDIA, "Media scanner finished scanning " + path);
+                    }
+                });
     }
 }

@@ -358,6 +358,10 @@
             android:theme="@style/ReaderMediaViewerTheme" />
 
         <!-- Other activities -->
+        <activity
+            android:name=".ui.publicize.PublicizeListActivity"
+            android:label="@string/sharing"
+            android:theme="@style/Calypso.NoActionBar"/>
 
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
@@ -484,6 +488,11 @@
             android:name=".ui.reader.services.ReaderCommentService"
             android:exported="false"
             android:label="Reader Comment Service" />
+        <service
+            android:name=".ui.publicize.services.PublicizeUpdateService"
+            android:label="Publicize Update Service"
+            android:exported="false" />
+
         <service
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"

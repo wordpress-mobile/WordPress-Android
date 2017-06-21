@@ -50,7 +50,6 @@ Language: is
 	<string name="error_media_parse_error">Gat ekki þýtt svar eftir upphleðslu skráar</string>
 	<string name="error_upload_params">Villa við að hlaða upp %1$s: %2$s</string>
 	<string name="submit_for_review">Áfram</string>
-	<string name="media_error_too_large_upload">Skráin er of stór. Vinsamlegast hafið samband við hýsingaraðila til þess að laga þetta vandamál.</string>
 	<string name="role_subscriber">Áskrifandi</string>
 	<string name="tell_me_more">Segðu mér meira</string>
 	<string name="duplicate_site_detected">Fleiri en eitt eintak af vef fannst.</string>
@@ -1012,11 +1011,7 @@ Language: is
 	<string name="themes_live_preview">Lifandi forsýn</string>
 	<string name="cannot_delete_multi_media_items">Ekki var hægt að eyða öllum skrám í þetta sinn. Reyndu aftur síðar.</string>
 	<string name="media_error_no_permission">Þú hefur ekki heimild til þess að skoða skráarsafnið</string>
-	<string name="media_gallery_edit">Breyta myndasafni</string>
 	<string name="media_gallery_type_thumbnail_grid">Þumlur á grind</string>
-	<string name="media_gallery_num_columns">Fjöldi dálka</string>
-	<string name="media_gallery_image_order">Röðun mynda</string>
-	<string name="media_gallery_settings_title">Stillingar myndasafns</string>
 	<string name="learn_more">Lesa meira</string>
 	<string name="post_not_found">Villa kom upp við að hlaða færslur. Endurfrískaðu færsluna og reyndu aftur.</string>
 	<string name="scaled_image_error">Sláðu inn gilt gildi minnkunar</string>
@@ -1134,8 +1129,6 @@ Language: is
 	<string name="media_gallery_type_tiled">Flísalagt</string>
 	<string name="media_gallery_type_squares">Kassar</string>
 	<string name="media_gallery_type">Tegund</string>
-	<string name="media_gallery_image_order_reverse">Snúa við</string>
-	<string name="media_gallery_image_order_random">Af handahófi</string>
 	<string name="unattached">Ótengt</string>
 	<string name="images">Myndir</string>
 	<string name="all">Allt</string>

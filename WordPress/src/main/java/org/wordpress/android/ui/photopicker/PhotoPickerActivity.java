@@ -139,6 +139,7 @@ public class PhotoPickerActivity extends AppCompatActivity
             // user took a photo with the device camera
             case RequestCodes.TAKE_PHOTO:
                 try {
+                    WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     File f = new File(mMediaCapturePath);
                     Uri capturedImageUri = Uri.fromFile(f);
                     mediaSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
