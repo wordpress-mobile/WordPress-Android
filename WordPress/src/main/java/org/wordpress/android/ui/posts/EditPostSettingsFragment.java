@@ -592,6 +592,11 @@ public class EditPostSettingsFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
+        if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(mPost)) {
+            // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
+            // We can't set the min date to now, so we need to subtract some amount of time
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        }
         datePickerDialog.show();
     }
 
