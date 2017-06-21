@@ -105,8 +105,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         AppLog.i(T.MEDIA, "Media updated on remote: " + media.getTitle());
                         notifyMediaPushed(site, media, null);
                     }
-                },
-                new BaseErrorListener() {
+                }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.e(T.MEDIA, "error response to XMLRPC.EDIT_MEDIA request: " + error);
@@ -119,7 +118,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         }
                     }
                 }
-            ));
+        ));
     }
 
     /**
@@ -241,14 +240,6 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         });
     }
 
-    private void removeCallFromCurrentUploadsMap(int id) {
-        // clean from the current uploads map
-        mCurrentUploadCalls.remove(id);
-        AppLog.d(T.MEDIA, "mediaXMLRPCClient: removed id: " + id + " from current"
-                + " uploads, remaining: "
-                + mCurrentUploadCalls.size());
-    }
-
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
@@ -277,8 +268,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                             notifyMediaListFetched(site, error);
                         }
                     }
-                },
-                new BaseErrorListener() {
+                }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.e(T.MEDIA, "XMLRPC.GET_MEDIA_LIBRARY error response:", error.volleyError);
@@ -286,7 +276,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         notifyMediaListFetched(site, mediaError);
                     }
                 }
-            ));
+        ));
     }
 
     public void fetchMedia(final SiteModel site, final MediaModel media) {
@@ -338,8 +328,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                             }
                         }
                     }
-                },
-                new BaseErrorListener() {
+                }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.v(T.MEDIA, "XMLRPC.GET_MEDIA_ITEM error response: " + error);
@@ -380,8 +369,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         AppLog.v(T.MEDIA, "Successful response from XMLRPC.DELETE_MEDIA");
                         notifyMediaDeleted(site, media, null);
                     }
-                },
-                new BaseErrorListener() {
+                }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AppLog.v(T.MEDIA, "Error response from XMLRPC.DELETE_MEDIA:" + error);
@@ -411,6 +399,12 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
             // report the upload was successfully cancelled
             notifyMediaUploadCanceled(media);
         }
+    }
+
+    private void removeCallFromCurrentUploadsMap(int id) {
+        mCurrentUploadCalls.remove(id);
+        AppLog.d(T.MEDIA, "mediaXMLRPCClient: removed id: " + id + " from current uploads, remaining: "
+                + mCurrentUploadCalls.size());
     }
 
     //
