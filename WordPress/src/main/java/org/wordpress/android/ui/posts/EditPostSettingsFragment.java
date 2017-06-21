@@ -764,12 +764,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded() || TextUtils.isEmpty(mPost.getDateCreated())) {
             return;
         }
-        boolean isDraft = PostStatus.fromPost(mPost) == PostStatus.DRAFT;
-        Date pubDate = DateTimeUtils.dateFromIso8601(mPost.getDateCreated());
-        Date now = new Date();
-        // If the publish date is now or in the past and it's a draft we should show "immediately"
-        // For this case, we'll also update the date just before publishing so it's published at current time
-        if (isDraft && !pubDate.after(now)) {
+        if (PostUtils.shouldPublishImmediately(mPost)) {
             mPublishDateTextView.setText(R.string.immediately);
         } else {
             String formattedDate = DateUtils.formatDateTime(getActivity(),
