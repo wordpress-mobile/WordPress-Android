@@ -584,7 +584,8 @@ public class EditPostSettingsFragment extends Fragment {
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        updatePublishDate(Calendar.getInstance());
+                        Calendar now = Calendar.getInstance();
+                        updatePublishDate(now);
                     }
                 });
         datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, resources.getString(android.R.string.cancel),
@@ -734,12 +735,12 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updatePublishDateTextView() {
-        if (!isAdded() || TextUtils.isEmpty(mPost.getDateCreated())) {
+        if (!isAdded()) {
             return;
         }
         if (PostUtils.shouldPublishImmediately(mPost)) {
             mPublishDateTextView.setText(R.string.immediately);
-        } else {
+        } else if (!TextUtils.isEmpty(mPost.getDateCreated())){
             String formattedDate = DateUtils.formatDateTime(getActivity(),
                     DateTimeUtils.timestampFromIso8601Millis(mPost.getDateCreated()), getDateTimeFlags());
             mPublishDateTextView.setText(formattedDate);
