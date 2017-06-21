@@ -112,11 +112,20 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_ITALIC:
                 predefinedEventProperties.put("button", "italic");
                 break;
-            case EDITOR_TAPPED_LINK:
+            case EDITOR_TAPPED_LINK_ADDED:
                 predefinedEventProperties.put("button", "link");
+                break;
+            case EDITOR_TAPPED_LINK_REMOVED:
+                predefinedEventProperties.put("button", "unlink");
                 break;
             case EDITOR_TAPPED_LIST:
                 predefinedEventProperties.put("button", "list");
+                break;
+            case EDITOR_TAPPED_LIST_ORDERED:
+                predefinedEventProperties.put("button", "ordered_list");
+                break;
+            case EDITOR_TAPPED_LIST_UNORDERED:
+                predefinedEventProperties.put("button", "unordered_list");
                 break;
             case EDITOR_TAPPED_MORE:
                 predefinedEventProperties.put("button", "more");
@@ -139,15 +148,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
-                break;
-            case EDITOR_TAPPED_ORDERED_LIST:
-                predefinedEventProperties.put("button", "ordered_list");
-                break;
-            case EDITOR_TAPPED_UNLINK:
-                predefinedEventProperties.put("button", "unlink");
-                break;
-            case EDITOR_TAPPED_UNORDERED_LIST:
-                predefinedEventProperties.put("button", "unordered_list");
                 break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
@@ -476,7 +476,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_ITALIC:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_LINK:
+            case EDITOR_TAPPED_LINK_ADDED:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST:
                 return "editor_button_tapped";
@@ -494,11 +494,11 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_HTML:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_ORDERED_LIST:
+            case EDITOR_TAPPED_LIST_ORDERED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_UNLINK:
+            case EDITOR_TAPPED_LINK_REMOVED:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_UNORDERED_LIST:
+            case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
             case NOTIFICATIONS_ACCESSED:
                 return "notifications_accessed";

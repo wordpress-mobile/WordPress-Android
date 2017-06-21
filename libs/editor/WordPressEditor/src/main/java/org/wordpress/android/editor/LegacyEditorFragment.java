@@ -433,7 +433,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
                 }
             } else if (id == R.id.link) {
-                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_BUTTON_TAPPED);
+                mEditorFragmentListener.onTrackableEvent(TrackableEvent.LINK_ADDED_BUTTON_TAPPED);
                 mSelectionStart = mContentEditText.getSelectionStart();
                 mStyleStart = mSelectionStart;
                 mSelectionEnd = mContentEditText.getSelectionEnd();

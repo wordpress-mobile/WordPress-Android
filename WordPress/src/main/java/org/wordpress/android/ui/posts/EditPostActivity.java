@@ -2317,12 +2317,21 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case ITALIC_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_ITALIC);
                 break;
-            case LINK_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK);
+            case LINK_ADDED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_ADDED);
                 hidePhotoPicker();
+                break;
+            case LINK_REMOVED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LINK_REMOVED);
                 break;
             case LIST_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST);
+                break;
+            case LIST_ORDERED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_ORDERED);
+                break;
+            case LIST_UNORDERED_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_LIST_UNORDERED);
                 break;
             case MEDIA_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
@@ -2333,9 +2342,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case NEXT_PAGE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_NEXT_PAGE);
                 break;
-            case OL_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_ORDERED_LIST);
-                break;
             case PARAGRAPH_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_PARAGRAPH);
                 break;
@@ -2345,14 +2351,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case STRIKETHROUGH_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
                 break;
-            case UL_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNORDERED_LIST);
-                break;
             case UNDERLINE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNDERLINE);
-                break;
-            case UNLINK_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_UNLINK);
                 break;
         }
     }
