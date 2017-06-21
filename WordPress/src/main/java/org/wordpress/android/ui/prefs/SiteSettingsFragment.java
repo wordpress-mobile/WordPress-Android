@@ -67,6 +67,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.HashMap;
@@ -742,7 +743,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         setDetailListPreferenceValue(mVideoEncorderBitratePref,
                 String.valueOf(mSiteSettings.getVideoEncoderBitrate()),
                 getLabelForVideoEncoderBitrateValue(mSiteSettings.getVideoEncoderBitrate()));
-        if (!BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE) {
+        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_site_this_device, R.string.pref_key_optimize_video);
             WPPrefUtils.removePreference(this, R.string.pref_key_site_this_device, R.string.pref_key_site_video_width);
             WPPrefUtils.removePreference(this, R.string.pref_key_site_this_device, R.string.pref_key_site_video_encoder_bitrate);

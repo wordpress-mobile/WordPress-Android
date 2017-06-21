@@ -58,10 +58,12 @@ public class WPMediaUtils {
         return null;
     }
 
-    public static boolean isVideoOptimizationAvailable(Activity activity, SiteModel siteModel) {
-        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
+    public static boolean isVideoOptimizationAvailable() {
         return BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
-                && siteSettings != null && siteSettings.init(false).getOptimizedVideo();
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+    }
+    public static boolean isVideoOptimizationEnabled(Activity activity, SiteModel siteModel) {
+        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
+        return isVideoOptimizationAvailable() && siteSettings != null && siteSettings.init(false).getOptimizedVideo();
     }
 }
