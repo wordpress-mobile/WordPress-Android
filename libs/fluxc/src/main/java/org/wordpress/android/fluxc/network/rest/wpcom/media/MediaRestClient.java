@@ -260,7 +260,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
-            mCurrentUploadCalls.remove(mediaModelId);
+            removeCallFromCurrentUploadsMap(media.getId());
             correspondingCall.cancel();
 
             // report the upload was successfully cancelled
@@ -322,16 +322,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
                         notifyMediaUploaded(media, error);
                     }
-                    // clean from the current uploads map
-                    mCurrentUploadCalls.remove(media.getId());
-                    AppLog.d(T.MEDIA, "mediaRestClient: removed id: " + media.getId() + " from current"
-                            + " uploads, remaining: "
-                            + mCurrentUploadCalls.size());
                 } else {
                     AppLog.w(T.MEDIA, "error uploading media: " + response);
                     notifyMediaUploaded(media, parseUploadError(response, siteModel));
-                    // clean from the current uploads map
-                    mCurrentUploadCalls.remove(media.getId());
                 }
             }
 
@@ -348,11 +341,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 // instance timeouts should be raised instead of GENERIC_ERROR
                 MediaError error = MediaError.fromIOException(e);
                 notifyMediaUploaded(media, error);
-
-                // clean from the current uploads map
-                mCurrentUploadCalls.remove(media.getId());
             }
         });
+    }
+
+    private void removeCallFromCurrentUploadsMap(int id) {
+        mCurrentUploadCalls.remove(id);
+        AppLog.d(T.MEDIA, "mediaXMLRPCClient: removed id: " + id + " from current uploads, remaining: "
+                + mCurrentUploadCalls.size());
     }
 
     //
@@ -416,7 +412,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
         if (media != null) {
             media.setUploadState(error == null ? MediaUploadState.UPLOADED : MediaUploadState.FAILED);
+            removeCallFromCurrentUploadsMap(media.getId());
         }
+
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
