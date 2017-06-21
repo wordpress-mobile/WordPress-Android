@@ -2312,6 +2312,34 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case MORE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
                 break;
+            case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
+                break;
+            case ELLIPSIS_EXPAND_BUTTON_TAPPED:
+                break;
+            case HEADING_BUTTON_TAPPED:
+                break;
+            case HEADING_1_BUTTON_TAPPED:
+                break;
+            case HEADING_2_BUTTON_TAPPED:
+                break;
+            case HEADING_3_BUTTON_TAPPED:
+                break;
+            case HEADING_4_BUTTON_TAPPED:
+                break;
+            case HEADING_5_BUTTON_TAPPED:
+                break;
+            case HEADING_6_BUTTON_TAPPED:
+                break;
+            case HORIZONTAL_RULE_BUTTON_TAPPED:
+                break;
+            case LIST_BUTTON_TAPPED:
+                break;
+            case NEXT_PAGE_BUTTON_TAPPED:
+                break;
+            case PARAGRAPH_BUTTON_TAPPED:
+                break;
+            case PREFORMAT_BUTTON_TAPPED:
+                break;
         }
     }
 
