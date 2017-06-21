@@ -962,6 +962,7 @@
     <!-- post date selection -->
     <string name="publish_date">Publish</string>
     <string name="immediately">Immediately</string>
+    <string name="now">Now</string>
     <string name="select_date">Select date</string>
     <string name="select_time">Select time</string>
 

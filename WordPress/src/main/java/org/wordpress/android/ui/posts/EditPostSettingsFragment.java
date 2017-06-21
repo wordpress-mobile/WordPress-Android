@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -572,9 +573,11 @@ public class EditPostSettingsFragment extends Fragment {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
+        Resources resources = getResources();
+
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, year, month, day);
         datePickerDialog.setTitle(R.string.select_date);
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getText(android.R.string.ok),
+        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         int selectedYear = datePickerDialog.getDatePicker().getYear();
@@ -583,16 +586,16 @@ public class EditPostSettingsFragment extends Fragment {
                         showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDate);
                     }
                 });
-        if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(mPost)) {
-            datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            updatePublishDate(new Date());
-                            updatePublishDateTextView();
-                        }
-                    });
-        }
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(android.R.string.cancel),
+        String neutralButtonTitle = PostUtils.shouldPublishImmediatelyOptionBeAvailable(mPost)
+                ? resources.getString(R.string.immediately) : resources.getString(R.string.now);
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        updatePublishDate(new Date());
+                        updatePublishDateTextView();
+                    }
+                });
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, resources.getString(android.R.string.cancel),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                     }
