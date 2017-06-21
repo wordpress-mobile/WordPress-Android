@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -8,6 +9,8 @@ import android.support.annotation.NonNull;
 import org.m4m.MediaComposer;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
@@ -47,14 +50,14 @@ public class EditPostActivityVideoHelper {
         mVideoOptimizationListener = listener;
     }
 
-    public boolean startVideoOptimization() {
-        if (!WPMediaUtils.isVideoOptimizationAvailable()) {
-            // Video optimization -> API18 or higher
+    public boolean startVideoOptimization(SiteModel siteModel) {
+        EditPostActivity parentActivity = mEditPostActivityWeakReference.get();
+        if (parentActivity == null || parentActivity.isFinishing()) {
             return false;
         }
 
-        EditPostActivity parentActivity = mEditPostActivityWeakReference.get();
-        if (parentActivity == null || parentActivity.isFinishing()) {
+        if (!WPMediaUtils.isVideoOptimizationAvailable(parentActivity, siteModel)) {
+            // Video optimization -> API18 or higher
             return false;
         }
 
@@ -68,9 +71,17 @@ public class EditPostActivityVideoHelper {
         }
         mOutFilePath = cacheDir.getPath()+ "/" + MediaUtils.generateTimeStampedFileName("video/mp4");
 
+        // Read site settings
+        final SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(parentActivity, siteModel, null);
+        if(siteSettings == null) {
+            return false;
+        }
+        siteSettings.init(false);
+
         // Setup video optimization objects
         final VideoOptimizationProgressListener progressListener = new VideoOptimizationProgressListener();
-        final MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(parentActivity, mOriginalPath, mOutFilePath, progressListener);
+        final MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(parentActivity, mOriginalPath, mOutFilePath, progressListener,
+                siteSettings.getMaxVideoWidth(),siteSettings.getVideoEncoderBitrate());
         if (mediaComposer == null) {
             AppLog.w(AppLog.T.MEDIA, "Can't optimize this video. Using the original file");
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE,
