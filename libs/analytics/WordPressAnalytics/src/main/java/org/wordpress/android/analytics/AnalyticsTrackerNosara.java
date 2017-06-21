@@ -71,6 +71,41 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_BOLD:
                 predefinedEventProperties.put("button", "bold");
                 break;
+            case EDITOR_TAPPED_ELLIPSIS_COLLAPSE:
+                predefinedEventProperties.put("button", "overflow_ellipsis");
+                predefinedEventProperties.put("action", "made_hidden");
+                break;
+            case EDITOR_TAPPED_ELLIPSIS_EXPAND:
+                predefinedEventProperties.put("button", "overflow_ellipsis");
+                predefinedEventProperties.put("action", "made_visible");
+                break;
+            case EDITOR_TAPPED_HEADING:
+                predefinedEventProperties.put("button", "header");
+                break;
+            case EDITOR_TAPPED_HEADING_1:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h1");
+                break;
+            case EDITOR_TAPPED_HEADING_2:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h2");
+                break;
+            case EDITOR_TAPPED_HEADING_3:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h3");
+                break;
+            case EDITOR_TAPPED_HEADING_4:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h4");
+                break;
+            case EDITOR_TAPPED_HEADING_5:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h5");
+                break;
+            case EDITOR_TAPPED_HEADING_6:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "h6");
+                break;
             case EDITOR_TAPPED_IMAGE:
                 predefinedEventProperties.put("button", "image");
                 break;
@@ -80,8 +115,21 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_LINK:
                 predefinedEventProperties.put("button", "link");
                 break;
+            case EDITOR_TAPPED_LIST:
+                predefinedEventProperties.put("button", "list");
+                break;
             case EDITOR_TAPPED_MORE:
                 predefinedEventProperties.put("button", "more");
+                break;
+            case EDITOR_TAPPED_NEXT_PAGE:
+                predefinedEventProperties.put("button", "next_page");
+                break;
+            case EDITOR_TAPPED_PARAGRAPH:
+                predefinedEventProperties.put("button", "header_selection");
+                predefinedEventProperties.put("heading_style", "none");
+                break;
+            case EDITOR_TAPPED_PREFORMAT:
+                predefinedEventProperties.put("button", "preformat");
                 break;
             case EDITOR_TAPPED_STRIKETHROUGH:
                 predefinedEventProperties.put("button", "strikethrough");
@@ -410,13 +458,41 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
                 return "editor_button_tapped";
+            case EDITOR_TAPPED_ELLIPSIS_COLLAPSE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_ELLIPSIS_EXPAND:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_1:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_2:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_3:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_4:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_5:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HEADING_6:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_HORIZONTAL_RULE:
+                return "editor_button_tapped";
             case EDITOR_TAPPED_IMAGE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_ITALIC:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LINK:
                 return "editor_button_tapped";
+            case EDITOR_TAPPED_LIST:
+                return "editor_button_tapped";
             case EDITOR_TAPPED_MORE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_NEXT_PAGE:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_PARAGRAPH:
+                return "editor_button_tapped";
+            case EDITOR_TAPPED_PREFORMAT:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_STRIKETHROUGH:
                 return "editor_button_tapped";
