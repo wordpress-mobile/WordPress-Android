@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -568,10 +569,11 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        Calendar calendar = getCurrentPublishDateAsCalendar();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         Resources resources = getResources();
 
@@ -580,10 +582,11 @@ public class EditPostSettingsFragment extends Fragment {
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        int selectedYear = datePickerDialog.getDatePicker().getYear();
-                        int selectedMonth = datePickerDialog.getDatePicker().getMonth();
-                        int selectedDate = datePickerDialog.getDatePicker().getDayOfMonth();
-                        showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDate);
+                        DatePicker datePicker = datePickerDialog.getDatePicker();
+                        int selectedYear = datePicker.getYear();
+                        int selectedMonth = datePicker.getMonth();
+                        int selectedDay = datePicker.getDayOfMonth();
+                        showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDay);
                     }
                 });
         String neutralButtonTitle = PostUtils.shouldPublishImmediatelyOptionBeAvailable(mPost)
@@ -607,9 +610,9 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        Calendar calendar = getCurrentPublishDateAsCalendar();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
         final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -899,6 +902,20 @@ public class EditPostSettingsFragment extends Fragment {
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
         intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
+    }
+
+    // Publish Date Helpers
+
+    private Calendar getCurrentPublishDateAsCalendar() {
+        Date date;
+        if (PostUtils.shouldPublishImmediately(mPost)) {
+            date = new Date();
+        } else {
+            date = DateTimeUtils.dateFromIso8601(mPost.getDateCreated());
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 
     // FluxC events
