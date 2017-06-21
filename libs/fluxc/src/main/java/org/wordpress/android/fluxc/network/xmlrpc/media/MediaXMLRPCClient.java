@@ -218,7 +218,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         notifyMediaUploaded(media, mediaError);
                     }
                 } else {
-                    AppLog.w(T.MEDIA, "error uploading media: " + response.message());
+                    AppLog.e(T.MEDIA, "error uploading media: " + response.message());
                     MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
                     error.message = response.message();
                     notifyMediaUploaded(media, error);
@@ -331,7 +331,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "XMLRPC.GET_MEDIA_ITEM error response: " + error);
+                        AppLog.e(T.MEDIA, "XMLRPC.GET_MEDIA_ITEM error response: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         if (isFreshUpload) {
                             // we tried to fetch a media that's just uploaded but failed, so we should return
@@ -372,7 +372,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "Error response from XMLRPC.DELETE_MEDIA:" + error);
+                        AppLog.e(T.MEDIA, "Error response from XMLRPC.DELETE_MEDIA:" + error);
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                         notifyMediaDeleted(site, media, new MediaError(mediaError));
                     }
