@@ -123,14 +123,88 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Uploads a single media item to a WP.com site.
      */
-    public void uploadMedia(final SiteModel site, final MediaModel mediaToUpload) {
-        if (mediaToUpload == null || mediaToUpload.getId() == 0) {
+    public void uploadMedia(final SiteModel site, final MediaModel media) {
+        if (media == null || media.getId() == 0) {
             // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
             MediaError error = new MediaError(MediaErrorType.INVALID_ID);
-            notifyMediaUploaded(mediaToUpload, error);
+            notifyMediaUploaded(media, error);
             return;
         }
-        performUpload(mediaToUpload, site);
+
+        if (!MediaUtils.canReadFile(media.getFilePath())) {
+            MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
+        String url = WPCOMREST.sites.site(site.getSiteId()).media.new_.getUrlV1_1();
+        RestUploadRequestBody body = new RestUploadRequestBody(media, getEditRequestParams(media), this);
+        if (site.hasMaxUploadSize() && body.contentLength() > site.getMaxUploadSize()) {
+            // Abort upload if it exceeds the site upload limit
+            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
+                    + site.getMaxUploadSize());
+            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
+        String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
+
+        Request request = new Request.Builder()
+                .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
+                .addHeader("User-Agent", mUserAgent.toString())
+                .url(url)
+                .post(body)
+                .build();
+
+        Call call = mOkHttpClient.newCall(request);
+        mCurrentUploadCalls.put(media.getId(), call);
+
+        AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    AppLog.d(T.MEDIA, "media upload successful: " + response);
+                    String jsonBody = response.body().string();
+
+                    Gson gson = new Gson();
+                    JsonReader reader = new JsonReader(new StringReader(jsonBody));
+                    reader.setLenient(true);
+                    MultipleMediaResponse mediaResponse = gson.fromJson(reader, MultipleMediaResponse.class);
+
+                    List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, site.getId());
+                    if (responseMedia != null && !responseMedia.isEmpty()) {
+                        MediaModel uploadedMedia = responseMedia.get(0);
+                        uploadedMedia.setId(media.getId());
+                        uploadedMedia.setLocalPostId(media.getLocalPostId());
+
+                        notifyMediaUploaded(uploadedMedia, null);
+                    } else {
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        notifyMediaUploaded(media, error);
+                    }
+                } else {
+                    AppLog.w(T.MEDIA, "error uploading media: " + response);
+                    notifyMediaUploaded(media, parseUploadError(response, site));
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                AppLog.w(T.MEDIA, "media upload failed: " + e);
+                if (!mCurrentUploadCalls.containsKey(media.getId())) {
+                    // This call has already been removed from the in-progress list - probably because it was cancelled
+                    // In that case this has already been handled and there's nothing to do
+                    return;
+                }
+
+                // TODO it would be great to raise some more fine grained errors here, for
+                // instance timeouts should be raised instead of GENERIC_ERROR
+                MediaError error = MediaError.fromIOException(e);
+                notifyMediaUploaded(media, error);
+            }
+        });
     }
 
     /**
@@ -266,83 +340,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             // report the upload was successfully cancelled
             notifyMediaUploadCanceled(media);
         }
-    }
-
-    private void performUpload(final MediaModel media, final SiteModel siteModel) {
-        if (!MediaUtils.canReadFile(media.getFilePath())) {
-            MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
-            notifyMediaUploaded(media, error);
-            return;
-        }
-
-        String url = WPCOMREST.sites.site(siteModel.getSiteId()).media.new_.getUrlV1_1();
-        RestUploadRequestBody body = new RestUploadRequestBody(media, getEditRequestParams(media), this);
-        if (siteModel.hasMaxUploadSize() && body.contentLength() > siteModel.getMaxUploadSize()) {
-            // Abort upload if it exceeds the site upload limit
-            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
-                    + siteModel.getMaxUploadSize());
-            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
-            notifyMediaUploaded(media, error);
-            return;
-        }
-
-        String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
-
-        Request request = new Request.Builder()
-                .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
-                .addHeader("User-Agent", mUserAgent.toString())
-                .url(url)
-                .post(body)
-                .build();
-
-        Call call = mOkHttpClient.newCall(request);
-        mCurrentUploadCalls.put(media.getId(), call);
-
-        AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
-        call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    AppLog.d(T.MEDIA, "media upload successful: " + response);
-                    String jsonBody = response.body().string();
-
-                    Gson gson = new Gson();
-                    JsonReader reader = new JsonReader(new StringReader(jsonBody));
-                    reader.setLenient(true);
-                    MultipleMediaResponse mediaResponse = gson.fromJson(reader, MultipleMediaResponse.class);
-
-                    List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, siteModel.getId());
-                    if (responseMedia != null && !responseMedia.isEmpty()) {
-                        MediaModel uploadedMedia = responseMedia.get(0);
-                        uploadedMedia.setId(media.getId());
-                        uploadedMedia.setLocalPostId(media.getLocalPostId());
-
-                        notifyMediaUploaded(uploadedMedia, null);
-                    } else {
-                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                        notifyMediaUploaded(media, error);
-                    }
-                } else {
-                    AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    notifyMediaUploaded(media, parseUploadError(response, siteModel));
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                AppLog.w(T.MEDIA, "media upload failed: " + e);
-                if (!mCurrentUploadCalls.containsKey(media.getId())) {
-                    // This call has already been removed from the in-progress list - probably because it was cancelled
-                    // In that case this has already been handled and there's nothing to do
-                    return;
-                }
-
-                // TODO it would be great to raise some more fine grained errors here, for
-                // instance timeouts should be raised instead of GENERIC_ERROR
-                MediaError error = MediaError.fromIOException(e);
-                notifyMediaUploaded(media, error);
-            }
-        });
     }
 
     private void removeCallFromCurrentUploadsMap(int id) {
