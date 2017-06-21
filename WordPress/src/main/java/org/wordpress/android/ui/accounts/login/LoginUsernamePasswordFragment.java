@@ -38,6 +38,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
@@ -48,7 +49,8 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     private static final String KEY_REQUESTED_USERNAME = "KEY_REQUESTED_USERNAME";
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
 
-    private static final String ARG_SITE_ADDRESS = "ARG_SITE_ADDRESS";
+    private static final String ARG_INPUT_SITE_ADDRESS = "ARG_INPUT_SITE_ADDRESS";
+    private static final String ARG_ENDPOINT_ADDRESS = "ARG_ENDPOINT_ADDRESS";
     private static final String ARG_SITE_NAME = "ARG_SITE_NAME";
     private static final String ARG_SITE_ICON_URL = "ARG_SITE_ICON_URL";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
@@ -72,18 +74,20 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
     private String mRequestedUsername;
     private String mRequestedPassword;
 
-    private String mSiteAddress;
+    private String mInputSiteAddress;
+    private String mEndpointAddress;
     private String mSiteName;
     private String mSiteIconUrl;
     private boolean mIsWpcom;
 
     @Inject Dispatcher mDispatcher;
 
-    public static LoginUsernamePasswordFragment newInstance(String siteAddress, String siteName, String siteIconUrl,
-            boolean isWpcom) {
+    public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
+            String siteName, String siteIconUrl, boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_SITE_ADDRESS, siteAddress);
+        args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
+        args.putString(ARG_ENDPOINT_ADDRESS, endpointAddress);
         args.putString(ARG_SITE_NAME, siteName);
         args.putString(ARG_SITE_ICON_URL, siteIconUrl);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
@@ -96,7 +100,8 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        mSiteAddress = getArguments().getString(ARG_SITE_ADDRESS);
+        mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
+        mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS);
         mSiteName = getArguments().getString(ARG_SITE_NAME);
         mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
@@ -122,8 +127,8 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
 
         TextView siteAddressView = ((TextView) rootView.findViewById(R.id.login_site_address));
-        siteAddressView.setText(mSiteAddress);
-        siteAddressView.setVisibility(mSiteAddress != null ? View.VISIBLE : View.GONE);
+        siteAddressView.setText(UrlUtils.removeScheme(cleanupInputAddress(mInputSiteAddress)));
+        siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mUsernameEditText = (EditText) rootView.findViewById(R.id.login_username);
         mUsernameEditText.addTextChangedListener(this);
@@ -179,6 +184,14 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
         });
 
         return rootView;
+    }
+
+    private String cleanupInputAddress(String address) {
+        if (address.toLowerCase().endsWith("/xmlrpc.php")) {
+            return address.substring(0, address.lastIndexOf("xmlrpc.php"));
+        } else {
+            return address;
+        }
     }
 
     @Override
@@ -281,7 +294,7 @@ public class LoginUsernamePasswordFragment extends Fragment implements TextWatch
             SiteStore.RefreshSitesXMLRPCPayload selfHostedPayload = new SiteStore.RefreshSitesXMLRPCPayload();
             selfHostedPayload.username = mRequestedUsername;
             selfHostedPayload.password = mRequestedPassword;
-            selfHostedPayload.url = mSiteAddress;
+            selfHostedPayload.url = mEndpointAddress;
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesXmlRpcAction(selfHostedPayload));
         }
     }

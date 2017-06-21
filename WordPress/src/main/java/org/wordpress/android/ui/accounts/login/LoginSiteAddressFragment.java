@@ -399,6 +399,9 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
             return;
         }
 
+        // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
+        final String requestedSiteAddress = mRequestedSiteAddress;
+
         if (mInProgress) {
             endProgress();
         }
@@ -425,6 +428,6 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
         }
 
         AppLog.i(T.NUX, "Discovery succeeded, endpoint: " + event.xmlRpcEndpoint);
-        mLoginListener.gotXmlRpcEndpoint(event.xmlRpcEndpoint);
+        mLoginListener.gotXmlRpcEndpoint(requestedSiteAddress, event.xmlRpcEndpoint);
     }
 }
