@@ -2336,9 +2336,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             case MEDIA_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_IMAGE);
                 break;
-            case MORE_BUTTON_TAPPED:
-                AnalyticsTracker.track(Stat.EDITOR_TAPPED_MORE);
-                break;
             case NEXT_PAGE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_NEXT_PAGE);
                 break;
@@ -2347,6 +2344,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             case PREFORMAT_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_PREFORMAT);
+                break;
+            case READ_MORE_BUTTON_TAPPED:
+                AnalyticsTracker.track(Stat.EDITOR_TAPPED_READ_MORE);
                 break;
             case STRIKETHROUGH_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_STRIKETHROUGH);
