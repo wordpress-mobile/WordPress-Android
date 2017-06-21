@@ -423,10 +423,6 @@ Language: gd_GB
 	<string name="cannot_delete_multi_media_items">Tha meadhanan ann ach gabh an sguabadh às an-dràsta fhèin. Feuch ris a-rithist an ceann greis.</string>
 	<string name="media_error_no_permission">Chan eil cead agad coimhead air leabhar-lann nam meadhanan</string>
 	<string name="media_gallery_type_thumbnail_grid">Griod nan dealbhagan</string>
-	<string name="media_gallery_edit">Deasaich an gailearaidh</string>
-	<string name="media_gallery_settings_title">Roghainnean a’ ghailearaidh</string>
-	<string name="media_gallery_image_order">Òrdugh nan dealbhan</string>
-	<string name="media_gallery_num_columns">Àireamh de cholbhan</string>
 	<string name="post_not_found">Thachair mearachd rè luchdadh a’ phuist. Ath-nuadhaich na puist is feuch ris a-rithist.</string>
 	<string name="learn_more">Barrachd fiosrachaidh</string>
 	<string name="scaled_image_error">Cuir a-steach luach sgèileadh leud dligheach</string>
@@ -499,8 +495,6 @@ Language: gd_GB
 	<string name="all">Na h-uile</string>
 	<string name="images">Dealbhan</string>
 	<string name="unattached">Gun cheangal ris</string>
-	<string name="media_gallery_image_order_random">Air thuaiream</string>
-	<string name="media_gallery_image_order_reverse">Òrdugh contrarra</string>
 	<string name="media_gallery_type">Seòrsa</string>
 	<string name="media_gallery_type_squares">Ceàrnagan</string>
 	<string name="media_gallery_type_tiled">Mar leacan</string>

@@ -20,6 +20,7 @@ import android.widget.ScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -75,6 +76,7 @@ public class MySiteFragment extends Fragment
     private ScrollView mScrollView;
     private ImageView mNoSiteDrakeImageView;
     private WPTextView mCurrentPlanNameTextView;
+    private View mSharingView;
 
     private int mFabTargetYTranslation;
     private int mBlavatarSz;
@@ -140,6 +142,7 @@ public class MySiteFragment extends Fragment
         mPlanContainer = (RelativeLayout) rootView.findViewById(R.id.row_plan);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
+        mSharingView = rootView.findViewById(R.id.row_sharing);
         mAdminView = (RelativeLayout) rootView.findViewById(R.id.row_admin);
         mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         mNoSiteView = (LinearLayout) rootView.findViewById(R.id.no_site_view);
@@ -241,6 +244,13 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewBlogSettingsForResult(getActivity(), getSelectedSite());
+            }
+        });
+
+        mSharingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
             }
         });
 
@@ -346,6 +356,11 @@ public class MySiteFragment extends Fragment
         int themesVisibility = ThemeBrowserActivity.isAccessible(getSelectedSite()) ? View.VISIBLE : View.GONE;
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
+
+        // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
+        int sharingVisibility = BuildConfig.SHARING_FEATURE_AVAILABLE &&
+                SiteUtils.isAccessedViaWPComRest(getSelectedSite()) ? View.VISIBLE : View.GONE;
+        mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site
         boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessedViaWPComRest(site);

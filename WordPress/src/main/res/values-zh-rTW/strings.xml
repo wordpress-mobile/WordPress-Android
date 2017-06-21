@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-29 07:23:55+0000
+Translation-Revision-Date: 2017-06-20 08:11:53+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+	<string name="media_error_timeout">伺服器回應逾時，可能是因為你的連線品質不佳或伺服器發生錯誤</string>
+	<string name="media_error_internal_server_error">上傳錯誤。請嘗試在「網站」->「設定」中啟用「將圖片最佳化」的功能</string>
+	<string name="media_error_too_large_upload">檔案太大，無法上傳。請嘗試在「網站」->「設定」中啟用「將圖片最佳化」的功能</string>
+	<string name="media_downloading">將媒體儲存到此裝置</string>
+	<string name="error_media_save">無法儲存媒體</string>
+	<string name="editor_scheduled_post_saved_online">文章已排程</string>
+	<string name="editor_draft_saved_locally">草稿已儲存於裝置</string>
+	<string name="editor_draft_saved_online">草稿已線上儲存</string>
+	<string name="editor_post_saved_locally">文章已儲存於裝置</string>
+	<string name="cant_share_unknown_action">無法辨識的要求動作，予以忽略</string>
+	<string name="button_sync">同步處理</string>
 	<string name="smart_toast_comments_long_press">輕觸並按住以選取多則留言</string>
 	<string name="smart_toast_photo_long_press">輕觸並按住以選取多張照片</string>
 	<string name="photo_picker_choose_video">從裝置中選擇影片</string>
@@ -62,7 +73,6 @@ Language: zh_TW
 	<string name="error_media_parse_error">媒體上傳後，無法剖析回應</string>
 	<string name="error_upload_params">上傳 %1$s 時發生錯誤：%2$s</string>
 	<string name="submit_for_review">送出</string>
-	<string name="media_error_too_large_upload">此檔案太大。請聯絡網頁主機服務提供者解決此問題</string>
 	<string name="role_subscriber">訂閱者</string>
 	<string name="tell_me_more">我想瞭解更多</string>
 	<string name="duplicate_site_detected">已偵測到重複的網站。</string>
@@ -1026,11 +1036,7 @@ Language: zh_TW
 	<string name="themes_live_preview">即時預覽</string>
 	<string name="cannot_delete_multi_media_items">目前無法刪除部分媒體。請稍後再試一次。</string>
 	<string name="media_error_no_permission">你沒有檢視媒體庫的權限</string>
-	<string name="media_gallery_edit">編輯藝廊</string>
 	<string name="media_gallery_type_thumbnail_grid">縮圖格線</string>
-	<string name="media_gallery_num_columns">欄位數</string>
-	<string name="media_gallery_image_order">圖片順序</string>
-	<string name="media_gallery_settings_title">藝廊設定</string>
 	<string name="learn_more">瞭解更多</string>
 	<string name="post_not_found">載入文章時發生錯誤。重新整理你的文章，然後再試一次。</string>
 	<string name="scaled_image_error">輸入有效縮放的寬度值</string>
@@ -1149,8 +1155,6 @@ Language: zh_TW
 	<string name="media_gallery_type_tiled">磁磚</string>
 	<string name="media_gallery_type_squares">方塊</string>
 	<string name="media_gallery_type">型態</string>
-	<string name="media_gallery_image_order_reverse">反轉順序</string>
-	<string name="media_gallery_image_order_random">隨機</string>
 	<string name="unattached">未附加</string>
 	<string name="images">圖片</string>
 	<string name="all">全部</string>

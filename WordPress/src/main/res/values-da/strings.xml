@@ -330,7 +330,6 @@ Language: da_DK
 	<string name="local_changes">Lokale ændringer</string>
 	<string name="horizontal_alignment">Vandret justering</string>
 	<string name="link_enter_url_text">Linktekst (valgfri)</string>
-	<string name="media_gallery_image_order">Billederækkefølge</string>
 	<string name="blog_name_invalid">Ugyldig webstedsadresse</string>
 	<string name="blog_title_invalid">Ugyldig webstedstitel</string>
 	<string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette tag</string>
@@ -343,7 +342,6 @@ Language: da_DK
 	<string name="share_action_media">Mediebibliotek</string>
 	<string name="share_action_post">Nyt indlæg</string>
 	<string name="local_draft">Lokal kladde</string>
-	<string name="media_gallery_edit">Rediger galleri</string>
 	<string name="toast_comment_unedited">Kommentar er ikke ændret</string>
 	<string name="required_field">Påkrævet felt</string>
 	<string name="content_required">Kommentar er påkrævet</string>
@@ -356,7 +354,6 @@ Language: da_DK
 	<string name="view_site">Vis websted</string>
 	<string name="new_post">Nyt indlæg</string>
 	<string name="post_format">Indlægsformat</string>
-	<string name="media_gallery_num_columns">Antal kolonner</string>
 	<string name="category_name">Kategorinavn</string>
 	<string name="add_new_category">Tilføj ny kategori</string>
 	<string name="view_in_browser">Vis i browser</string>
@@ -395,7 +392,6 @@ Language: da_DK
 	<string name="theme_current_theme">Nuværende tema</string>
 	<string name="themes_live_preview">Live forhåndsvisning</string>
 	<string name="learn_more">Lær mere</string>
-	<string name="media_gallery_settings_title">Indstillinger for galleri</string>
 	<string name="connection_error">Forbindelsesfejl</string>
 	<string name="add_comment">Tilføj kommentar</string>
 	<string name="edit_post">Rediger indlæg</string>
@@ -474,7 +470,6 @@ Language: da_DK
 	<string name="passcode_turn_on">Aktiver PIN-lås</string>
 	<string name="passcode_preference_title">PIN-lås</string>
 	<string name="passcode_turn_off">Deaktiver PIN-lås</string>
-	<string name="media_gallery_image_order_random">Tilfældig</string>
 	<string name="media_edit_title_text">Titel</string>
 	<string name="media_edit_description_text">Beskrivelse</string>
 	<string name="media_gallery_type_circles">Cirkler</string>

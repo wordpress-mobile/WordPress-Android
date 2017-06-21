@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-05-16 03:21:29+0000
+Translation-Revision-Date: 2017-06-16 10:48:28+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+	<string name="smart_toast_comments_long_press">اضغط مع الاستمرار لتحديد العديد من التعليقات</string>
+	<string name="smart_toast_photo_long_press">اضغط مع الاستمرار لتحديد العديد من الصور</string>
+	<string name="photo_picker_choose_video">اختيار مقطع فيديو من الجهاز</string>
+	<string name="photo_picker_choose_photo">اختيار صورة من الجهاز</string>
+	<string name="new_editor_promo_description">يتضمن تطبيق وردبرس.كوم الآن محررًا رائعًا جديدًا. جرِّبه من خلال إنشاء مقالة جديدة.</string>
+	<string name="media_insert_as_gallery">إضافة كمعرض</string>
+	<string name="wp_media_title">وسائط ووردبرس</string>
+	<string name="media_insert_individually">إضافة على حدى</string>
 	<string name="media_gallery_column_count_single">عمود 1</string>
 	<string name="media_gallery_column_count_multi">%d أعمدة</string>
+	<string name="media_insert_title">إضافة العديد من الصور</string>
 	<string name="editor_confirm_email_prompt_negative">إعادة إرسال البريد الإلكتروني</string>
 	<string name="toast_saving_post_as_draft">حفظ المقالة بشكل مسودة</string>
 	<string name="photo_picker_capture_video">خذ فيديو</string>
@@ -41,7 +50,6 @@ Language: ar
 	<string name="error_media_parse_error">يتعذر تحليل الاستجابة بعد رفع الوسائط</string>
 	<string name="error_upload_params">حدث خطأ أثناء رفع %1$s: %2$s</string>
 	<string name="submit_for_review">إرسال</string>
-	<string name="media_error_too_large_upload">الملف كبير جدًا. يُرجى الاتصال بمزود خدمة استضافة الويب لإصلاح هذه المشكلة</string>
 	<string name="role_subscriber">مشترك</string>
 	<string name="tell_me_more">أرغب في معرفة المزيد</string>
 	<string name="duplicate_site_detected">تم اكتشاف موقع متكرر.</string>
@@ -49,6 +57,12 @@ Language: ar
 	<string name="already_logged_in_wpcom_same_username">أنت قيد تسجيل الدخول بالفعل إلى حساب وردبرس.كوم الخاص بك. ينبغي أن يظهر موقعك في منتقي المواقع، تأكد من أنَّه ليس مخفيًا.</string>
 	<string name="already_logged_in_wpcom">أنت قيد تسجيل الدخول بالفعل إلى حساب وردبرس.كوم، ولا يمكنك إضافة موقع وردبرس.كوم مرتبط بحساب آخر.</string>
 	<string name="migration_error_not_connected">فشلت عملية الترحيل: حاول تشغيل التطبيق عندما يتوفر لديك\n اتصال بالشبكة.</string>
+	<string name="migration_message">تحديث تطبيق ووردبريس...</string>
+	<string name="checking_username">التحقق من اسم المستخدم</string>
+	<string name="jetpack_different_com_account">مواقع Jetpack التي تنتمي إلى حسابات ووردبريس.كوم المختلفة غير مدعومة</string>
+	<string name="jetpack_use_com_account">لإضافة موقع Jetpack الخاص بك، سجل الدخول إلى حساب وردبرس.كوم الذي استخدمته للاتصال بـ Jetpack.</string>
+	<string name="jetpack_message">يجب تثبيت إضافة Jetpack وتفعيلها. هل ترغب في تثبيت Jetpack أو تفعيله؟</string>
+	<string name="error_media_load">تعذر تحميل الوسائط</string>
 	<string name="retry">إعادة المحاولة</string>
 	<string name="confirm">تأكيد</string>
 	<string name="xmlrpc_endpoint_forbidden_error">تعذر الاتصال. تلقينا الخطأ 403 عند محاولة الوصول إلى\n نقطة نهاية موقعك XMLRPC. يحتاج التطبيق إلى ذلك للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل\n هذه المشكلة.</string>
@@ -860,8 +874,6 @@ Language: ar
 	<string name="remove_account">إزالة الموقع</string>
 	<string name="connection_error">خطأ في الاتصال</string>
 	<string name="theme_current_theme">القالب الحالي</string>
-	<string name="media_gallery_num_columns">عدد الاعمدة</string>
-	<string name="media_gallery_settings_title">اعدادات المعرض</string>
 	<string name="upload_failed">فشل الرفع</string>
 	<string name="delete_post">حذف المقال</string>
 	<string name="delete_page">حذف الصفحة</string>
@@ -886,7 +898,6 @@ Language: ar
 	<string name="scaled_image_error">أدخل قيمة عرض تحجيم صالحة</string>
 	<string name="post_not_found">حدث خطأ أثناء تحميل المقال . قم بتحديث مقالاتك ثم أعد المحاولة.</string>
 	<string name="xmlrpc_error">تعذر الاتصال. أدخل المسار الكامل لملف xmlrpc.php الموجود على موقعك ثم أعد المحاولة</string>
-	<string name="media_gallery_edit">تعديل المعرض</string>
 	<string name="media_error_no_permission">ليس لديك تصريح لعرض مكتبة الوسائط</string>
 	<string name="themes_live_preview">المعاينة المباشرة</string>
 	<string name="create_a_link">إنشاء رابط</string>
@@ -951,7 +962,6 @@ Language: ar
 	<string name="mnu_comment_trash">حذف</string>
 	<string name="dlg_approving_comments">تتم الآن الموافقة</string>
 	<string name="dlg_trashing_comments">إرسال إلى سلة المهملات</string>
-	<string name="media_gallery_image_order">طلب صورة</string>
 	<string name="comment_status_unapproved">معلق</string>
 	<string name="dlg_unapproving_comments">غير مصدق</string>
 	<string name="notifications_empty_all">ليست هناك تنبيهات…حتى الآن.</string>
@@ -1015,7 +1025,6 @@ Language: ar
 	<string name="all">الكل</string>
 	<string name="themes">القوالب</string>
 	<string name="images">الصور</string>
-	<string name="media_gallery_image_order_random">عشوائي</string>
 	<string name="media_gallery_type">النوع</string>
 	<string name="media_edit_title_text">العنوان</string>
 	<string name="media_edit_description_text">الوصف</string>
@@ -1030,7 +1039,6 @@ Language: ar
 	<string name="stats_entry_country">الدولة</string>
 	<string name="stats_totals_clicks">النقرات</string>
 	<string name="unattached">غير مرفق</string>
-	<string name="media_gallery_image_order_reverse">عكس</string>
 	<string name="media_edit_description_hint">أدخل الوصف هنا</string>
 	<string name="media_edit_title_hint">أدخل العنوان هنا</string>
 	<string name="media_edit_caption_hint">أدخل الكلمات التوضيحية هنا</string>

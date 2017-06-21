@@ -950,11 +950,7 @@ Language: el_GR
 	<string name="themes_live_preview">Ζωντανή προεπισκόπηση</string>
 	<string name="cannot_delete_multi_media_items">Μερικά πολυμέσα δεν ήταν δυνατόν να διαγραφούν αυτή τη στιγμή. Δοκιμάστε ξανά αργότερα.</string>
 	<string name="media_error_no_permission">Δεν έχετε δικαίωμα προβολής της βιβλιοθήκης πολυμέσων</string>
-	<string name="media_gallery_edit">Επεξεργασία της γκαλερί</string>
 	<string name="media_gallery_type_thumbnail_grid">Πλέγμα μικρογραφιών</string>
-	<string name="media_gallery_num_columns">Αριθμός στηλών</string>
-	<string name="media_gallery_image_order">Σειρά εικόνων</string>
-	<string name="media_gallery_settings_title">Ρυθμίσεις Βιβλιοθήκης</string>
 	<string name="learn_more">Μάθετε περισσότερα</string>
 	<string name="post_not_found">Προέκυψε σφάλμα κατά τη φόρτωση του άρθρου. Ανανεώστε τα άρθρα σας και δοκιμάστε ξανά.</string>
 	<string name="scaled_image_error">Εισάγετε μια έγκυρη τιμή κλιμάκωσης πλάτους</string>
@@ -1069,8 +1065,6 @@ Language: el_GR
 	<string name="media_gallery_type_tiled">Πλακίδια</string>
 	<string name="media_gallery_type_squares">Τετράγωνα</string>
 	<string name="media_gallery_type">Τύπος</string>
-	<string name="media_gallery_image_order_reverse">Αντίστροφα</string>
-	<string name="media_gallery_image_order_random">Τυχαία</string>
 	<string name="unattached">Μη συνδεδεμένα</string>
 	<string name="images">Εικόνες</string>
 	<string name="all">Όλα</string>

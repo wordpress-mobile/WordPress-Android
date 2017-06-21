@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.photopicker;
 
-import android.Manifest;
+import android.Manifest.permission;
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentCompat;
@@ -76,6 +74,7 @@ public class PhotoPickerFragment extends Fragment {
     private GridLayoutManager mGridManager;
     private Parcelable mRestoreState;
     private PhotoPickerListener mListener;
+    private PhotoPickerIcon mLastTappedIcon;
 
     private boolean mAllowMultiSelect;
     private boolean mPhotosOnly;
@@ -84,13 +83,6 @@ public class PhotoPickerFragment extends Fragment {
     private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
     private static final String ARG_PHOTOS_ONLY = "photos_only";
     private static final String ARG_DEVICE_ONLY = "device_only";
-
-    private static final int PERMISSION_REQUEST_CODE = 1;
-
-    // TODO: a future PR should only request WRITE_EXTERNAL_STORAGE since that's all we need
-    // to show photos. we should request CAMERA permission when the camera icon is tapped.
-    private static final String[] PERMISSIONS =
-            {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   @NonNull EnumSet<PhotoPickerOption> options) {
@@ -179,7 +171,7 @@ public class PhotoPickerFragment extends Fragment {
             });
         }
 
-        if (savedInstanceState == null && mAllowMultiSelect && isPermissionGranted()) {
+        if (savedInstanceState == null && mAllowMultiSelect && hasStoragePermission()) {
             SmartToast.show(getActivity(), SmartToast.SmartToastType.PHOTO_PICKER_LONG_PRESS);
         }
 
@@ -189,10 +181,20 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        checkPermissions();
+        checkStoragePermission();
     }
 
     private void doIconClicked(@NonNull PhotoPickerIcon icon) {
+        mLastTappedIcon = icon;
+
+        if (icon == PhotoPickerIcon.ANDROID_CAPTURE_PHOTO || icon == PhotoPickerIcon.ANDROID_CAPTURE_VIDEO) {
+            if (ContextCompat.checkSelfPermission(
+                    getActivity(), permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestCameraPermission();
+                return;
+            }
+        }
+
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 trackSelectedOtherSourceEvents(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA, false);
@@ -345,7 +347,7 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!isPermissionGranted()) return;
+        if (!hasStoragePermission()) return;
 
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
@@ -367,7 +369,7 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!isPermissionGranted()) return;
+        if (!hasStoragePermission()) return;
 
         if (mGridManager == null || mAdapter == null) {
             reload();
@@ -424,40 +426,24 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    /*
-     * returns true if all of the required permissions have been granted
-     */
-    private boolean isPermissionGranted() {
-        for (String permission : PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
+    private boolean hasStoragePermission() {
+        return ContextCompat.checkSelfPermission(
+                getActivity(), permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private boolean isStoragePermissionAlwaysDenied() {
+        return WPPermissionUtils.isPermissionAlwaysDenied(
+                getActivity(), permission.WRITE_EXTERNAL_STORAGE);
     }
 
     /*
-     * returns true if any of the required permissions have been denied AND the user checked "Never ask again"
+     * load the photos if we have the necessary permission, otherwise show the "soft ask" view
+     * which asks the user to allow the permission
      */
-    private boolean isPermissionAlwaysDenied() {
-        for (String permission : PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                if (WPPermissionUtils.isPermissionAlwaysDenied(getActivity(), permission)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /*
-     * load the photos if we have the necessary permissions, otherwise show the "soft ask" view
-     * which asks the user to allow the permissions
-     */
-    public void checkPermissions() {
+    public void checkStoragePermission() {
         if (!isAdded()) return;
 
-        if (isPermissionGranted()) {
+        if (hasStoragePermission()) {
             showSoftAskView(false);
             if (mAdapter == null || mAdapter.isEmpty()) {
                 reload();
@@ -467,58 +453,60 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    /*
-     * request the camera and storage permissions required to access photos
-     */
-    private void requestPermissions() {
-        ArrayList<String> list = new ArrayList<>();
-        for (String permission : PERMISSIONS) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                list.add(permission);
-            }
-        }
-        String[] array = list.toArray(new String[list.size()]);
-        FragmentCompat.requestPermissions(this, array, PERMISSION_REQUEST_CODE);
+    private void requestStoragePermission() {
+        String[] permissions = new String[] { permission.WRITE_EXTERNAL_STORAGE };
+        FragmentCompat.requestPermissions(
+                this, permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
-    /*
-     * open the device's settings page for this app so the user can edit permissions
-     */
-    private void showAppSettings() {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-        intent.setData(uri);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+    private void requestCameraPermission() {
+        String[] permissions = new String[] { permission.CAMERA };
+        FragmentCompat.requestPermissions(
+                this, permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
-        WPPermissionUtils.setPermissionListAsked(permissions);
+        boolean checkForAlwaysDenied =
+                requestCode == WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE;
+        boolean allGranted = WPPermissionUtils.setPermissionListAsked(
+                getActivity(), requestCode, permissions, grantResults, checkForAlwaysDenied);
 
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            checkPermissions();
+        switch (requestCode) {
+            case WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE:
+                checkStoragePermission();
+                break;
+            case WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE:
+                if (allGranted) {
+                    doIconClicked(mLastTappedIcon);
+                }
+                break;
         }
     }
 
     /*
-     * shows the "soft ask" view which should appear when the necessary permissions haven't
-     * been granted yet
+     * shows the "soft ask" view which should appear when storage permission hasn't been granted
      */
     private void showSoftAskView(boolean show) {
         if (!isAdded()) return;
 
-        boolean isAlwaysDenied = isPermissionAlwaysDenied();
+        boolean isAlwaysDenied = isStoragePermissionAlwaysDenied();
 
         if (show) {
-            int labelId = isAlwaysDenied ?
-                    R.string.photo_picker_soft_ask_permissions_denied : R.string.photo_picker_soft_ask_label;
             String appName = "<strong>" + getString(R.string.app_name) + "</strong>";
-            String label = String.format(getString(labelId), appName);
             TextView txtLabel = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_label);
+            String label;
+            if (isAlwaysDenied) {
+                String permissionName = "<strong>"
+                        + WPPermissionUtils.getPermissionName(getActivity(), permission.WRITE_EXTERNAL_STORAGE)
+                        + "</strong>";
+                label = String.format(
+                        getString(R.string.photo_picker_soft_ask_permissions_denied), appName, permissionName);
+            } else {
+                label = String.format(getString(R.string.photo_picker_soft_ask_label), appName);
+            }
             txtLabel.setText(Html.fromHtml(label));
 
             // when the user taps Allow, request the required permissions unless the user already
@@ -526,15 +514,15 @@ public class PhotoPickerFragment extends Fragment {
             // app so the user can change permissions there
             TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
             int allowId = isAlwaysDenied ?
-                    R.string.photo_picker_soft_ask_edit_permissions : R.string.photo_picker_soft_ask_allow;
+                    R.string.button_edit_permissions : R.string.photo_picker_soft_ask_allow;
             txtAllow.setText(allowId);
             txtAllow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isPermissionAlwaysDenied()) {
-                        showAppSettings();
+                    if (isStoragePermissionAlwaysDenied()) {
+                        WPPermissionUtils.showAppSettings(getActivity());
                     } else {
-                        requestPermissions();
+                        requestStoragePermission();
                     }
                 }
             });

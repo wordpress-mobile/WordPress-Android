@@ -62,7 +62,6 @@ Language: sq_AL
 	<string name="error_media_parse_error">S’mund të përtypet përgjigja pas ngarkimit të medias</string>
 	<string name="error_upload_params">Gabim teksa ngarkohej %1$s: %2$s</string>
 	<string name="submit_for_review">Parashtroje</string>
-	<string name="media_error_too_large_upload">Kartela është shumë e madhe. Ju lutemi, lidhuni me furnizuesin e strehimit web, që të ndreqë këtë problem</string>
 	<string name="role_subscriber">Pajtimtar</string>
 	<string name="tell_me_more">Tregomëni më tepër</string>
 	<string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
@@ -948,11 +947,7 @@ Language: sq_AL
 	<string name="cancel_edit">Anuloni përpunimin</string>
 	<string name="scaled_image_error">Jepni një vlerë të vlefshme gjerësie të ripërmasuar</string>
 	<string name="learn_more">Mësoni më tepër</string>
-	<string name="media_gallery_settings_title">Rregullime galerie</string>
-	<string name="media_gallery_image_order">Renditje figurash</string>
-	<string name="media_gallery_num_columns">Numër shtyllash</string>
 	<string name="media_gallery_type_thumbnail_grid">Rrjetë miniaturash</string>
-	<string name="media_gallery_edit">Përpunoni galeri</string>
 	<string name="themes_live_preview">Paraparje &lt;em>Live&lt;/em></string>
 	<string name="theme_current_theme">Tema e tanishme</string>
 	<string name="theme_premium_theme">Temë me pagesë</string>
@@ -1104,7 +1099,6 @@ Language: sq_AL
 	<string name="all">Krejt</string>
 	<string name="images">Figura</string>
 	<string name="unattached">Të pabashkëngjitura</string>
-	<string name="media_gallery_image_order_random">Kuturu</string>
 	<string name="media_gallery_type">Lloj</string>
 	<string name="media_gallery_type_squares">Katrorë</string>
 	<string name="media_gallery_type_tiled">Tjegullëzuar</string>
@@ -1150,7 +1144,6 @@ Language: sq_AL
 	<string name="passcode_preference_title">Kyçje PIN-i</string>
 	<string name="passcode_turn_off">Aktivizo kyçje PIN-i</string>
 	<string name="passcode_turn_on">Çaktivizo kyçje PIN-i</string>
-	<string name="media_gallery_image_order_reverse">Përmbyse</string>
 	<string name="passcode_set">PIN u caktua</string>
 	<string name="media_edit_failure">S&amp;#8217;u përditësua dot</string>
 	<string name="passcode_enter_passcode">Jepni PIN-in tuaj</string>

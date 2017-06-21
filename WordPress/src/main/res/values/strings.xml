@@ -99,6 +99,7 @@
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
     <string name="button_done">Done</string>
+    <string name="button_not_now">Not now</string>
 
     <!-- timestamps for posts / pages -->
     <string name="today">Today</string>
@@ -1414,6 +1415,7 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_publish">Publish</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
+    <string name="my_site_btn_sharing">Sharing</string>
     <string name="my_site_btn_site_settings">Settings</string>
     <string name="my_site_btn_comments" translatable="false">@string/comments</string>
     <string name="my_site_btn_switch_site">Switch Site</string>
@@ -1471,6 +1473,70 @@
     <!-- Noticons -->
     <string name="noticon_clock" translatable="false">\uf303</string>
     <string name="noticon_note" translatable="false">\uf814</string>
+
+    <!-- Publicize and sharing -->
+    <string name="sharing">Sharing</string>
+    <string name="connections_label">Connections</string>
+    <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
+    <string name="connected_accounts_label">Connected accounts</string>
+    <string name="connection_service_label">Publicize to %s</string>
+    <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
+    <string name="share_btn_connect">Connect</string>
+    <string name="share_btn_disconnect">Disconnect</string>
+    <string name="share_btn_reconnect">Reconnect</string>
+    <string name="share_btn_connect_another_account">Connect another account</string>
+    <string name="dlg_confirm_publicize_disconnect">Disconnect from %s?</string>
+    <string name="connecting_social_network">Connecting %s</string>
+    <string name="connection_chooser_message">Select the account you wish to authorize. Note that your posts will be shared to the selected account automatically.</string>
+    <string name="icon_and_text_display">Icon &amp; Text</string>
+    <string name="icon_only_display">Icon Only</string>
+    <string name="text_only_display">Text Only</string>
+    <string name="official_buttons_display">Official Buttons</string>
+    <string-array name="sharing_button_style_display_array" translatable="false">
+        <item>@string/icon_and_text_display</item>
+        <item>@string/icon_only_display</item>
+        <item>@string/text_only_display</item>
+        <item>@string/official_buttons_display</item>
+    </string-array>
+    <string name="icon_text" translatable="false">icon-text</string>
+    <string name="icon" translatable="false">icon</string>
+    <string name="text" translatable="false">text</string>
+    <string name="official" translatable="false">official</string>
+    <string-array name="sharing_button_style_array" translatable="false">
+        <item>@string/icon_text</item>
+        <item>@string/icon</item>
+        <item>@string/text</item>
+        <item>@string/official</item>
+    </string-array>
+    <string name="publicize_official_buttons">Official Buttons</string>
+    <string name="publicize_icon_only">Icon Only</string>
+    <string name="publicize_icon_and_text"><![CDATA[Icon & Text]]></string>
+    <string name="publicize_text_only">Text Only</string>
+    <string name="publicize_label" translatable="false">publicize_label</string>
+    <string name="publicize_button_style" translatable="false">publicize_button_style</string>
+    <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
+    <string name="site_settings_reblog">Show Reblog Button</string>
+    <string name="site_settings_like">Show Like Button</string>
+    <string name="manage">Manage</string>
+    <string name="sharing_buttons">Sharing buttons</string>
+    <string name="more_buttons">"More" Buttons</string>
+    <string name="label">Label</string>
+    <string name="button_style">Button Style</string>
+    <string name="sharing_comment_likes">Comment Likes</string>
+    <string name="twitter_username">Twitter Username</string>
+    <string name="sharing_sharing_buttons_description">Select which buttons are shown under your posts</string>
+    <string name="sharing_more_description">A \"More\" button contains a dropdown which displays sharing buttons</string>
+    <string name="sharing_edit_more_buttons">Edit \"More\" Buttons</string>
+    <string name="buttons">Buttons</string>
+    <string name="visual">Visual</string>
+    <string name="sharing_comment_likes_description">Allow all comments to be Liked by you and your readers</string>
+    <string name="likes">Likes</string>
+    <string name="twitter">Twitter</string>
+    <string name="connected">Connected</string>
+    <string name="cannot_connect_account_error">The %s connection could not be made because no account was selected.</string>
+    <string name="connecting_account">Connecting account</string>
+    <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
+    <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -1688,8 +1754,7 @@
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%s was denied permissions to access your photos</string>
-    <string name="photo_picker_soft_ask_edit_permissions">Edit permissions</string>
+    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -1703,4 +1768,16 @@
     <!-- smart toasts -->
     <string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
     <string name="smart_toast_comments_long_press">Tap and hold to select multiple comments</string>
+
+    <!-- permissions -->
+    <string name="button_edit_permissions">Edit permissions</string>
+    <string name="permissions_denied_title">It looks like you turned off permissions required for this feature</string>
+    <string name="permissions_denied_message">To change this, edit your permissions and make sure %s is enabled</string>
+    <string name="permission_storage">Storage</string>
+    <string name="permission_camera">Camera</string>
+    <string name="permission_location">Location</string>
+
+    <!-- Video Optimization -->
+    <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
+    <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
 </resources>

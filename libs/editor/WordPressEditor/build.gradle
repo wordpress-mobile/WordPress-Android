@@ -51,7 +51,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.wordpress:utils:1.16.0'
-    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v1.0-beta.1')
+    compile ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:v1.0-beta.2')
 }
 
 signing {

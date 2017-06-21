@@ -460,6 +460,10 @@
     <!-- Plans Styles -->
     <style name="PlansProgressBar" parent="@android:style/Widget.Holo.ProgressBar" />
 
+    <style name="WPPrefSwitch">
+        <item name="colorControlActivated">@color/blue_wordpress</item>
+    </style>
+
     <!--Post Settings Styles-->
     <style name="PostSettingsCardView">
         <item name="android:layout_width">match_parent</item>
