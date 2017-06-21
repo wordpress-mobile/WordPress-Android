@@ -71,7 +71,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -122,10 +121,6 @@ public class EditPostSettingsFragment extends Fragment {
     private Button mFeaturedImageButton;
 
     private PostLocation mPostLocation;
-
-    private int mYear, mMonth, mDay, mHour, mMinute;
-    private String mCustomPublishDate = "";
-    private boolean mIsCustomPublishDate;
 
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
@@ -241,13 +236,6 @@ public class EditPostSettingsFragment extends Fragment {
         if (rootView == null || mPost == null) {
             return null;
         }
-
-        Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
 
         mExcerptTextView = (TextView) rootView.findViewById(R.id.post_excerpt);
         mSlugTextView = (TextView) rootView.findViewById(R.id.post_slug);
@@ -458,24 +446,6 @@ public class EditPostSettingsFragment extends Fragment {
      * Updates given post object with current status of settings fields
      */
     public void updatePostSettings(PostModel post) {
-        if (!isAdded() || post == null) {
-            return;
-        }
-
-        boolean publishImmediately = EditTextUtils.getText(mPublishDateTextView).equals(getText(R.string.immediately));
-
-        String publicationDateIso8601 = "";
-        if (mIsCustomPublishDate && publishImmediately && !post.isLocalDraft()) {
-            publicationDateIso8601 = DateTimeUtils.iso8601FromDate(new Date());
-        } else if (!publishImmediately) {
-            if (mIsCustomPublishDate) {
-                publicationDateIso8601 = mCustomPublishDate;
-            } else if (StringUtils.isNotEmpty(post.getDateCreated())) {
-                publicationDateIso8601 = post.getDateCreated();
-            }
-        }
-
-        post.setDateCreated(publicationDateIso8601);
     }
 
     private void showPostExcerptDialog() {
@@ -597,23 +567,27 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, mYear, mMonth, mDay);
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, year, month, day);
         datePickerDialog.setTitle(R.string.select_date);
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getText(android.R.string.ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mYear = datePickerDialog.getDatePicker().getYear();
-                        mMonth = datePickerDialog.getDatePicker().getMonth();
-                        mDay = datePickerDialog.getDatePicker().getDayOfMonth();
-                        showPostTimeSelectionDialog();
+                        int selectedYear = datePickerDialog.getDatePicker().getYear();
+                        int selectedMonth = datePickerDialog.getDatePicker().getMonth();
+                        int selectedDate = datePickerDialog.getDatePicker().getDayOfMonth();
+                        showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDate);
                     }
                 });
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getText(R.string.immediately),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mIsCustomPublishDate = true;
-                        mPublishDateTextView.setText(R.string.immediately);
-                        updateSaveButton();
+                        updatePublishDate(new Date());
+                        updatePublishDateTextView();
                     }
                 });
         datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getText(android.R.string.cancel),
@@ -624,32 +598,22 @@ public class EditPostSettingsFragment extends Fragment {
         datePickerDialog.show();
     }
 
-    private void showPostTimeSelectionDialog() {
+    private void showPostTimeSelectionDialog(final int selectedYear, final int selectedMonth, final int selectedDay) {
         if (!isAdded()) {
             return;
         }
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
         final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        mHour = selectedHour;
-                        mMinute = selectedMinute;
-
-                        Date javaDate = new Date(mYear - 1900, mMonth, mDay, mHour, mMinute);
-                        long javaTimestamp = javaDate.getTime();
-
-                        try {
-                            String formattedDate = DateUtils.formatDateTime(getActivity(), javaTimestamp, getDateTimeFlags());
-                            mCustomPublishDate = DateTimeUtils.iso8601FromDate(javaDate);
-                            mPublishDateTextView.setText(formattedDate);
-                            mIsCustomPublishDate = true;
-
-                            updateSaveButton();
-                        } catch (RuntimeException e) {
-                            AppLog.e(T.POSTS, e);
-                        }
+                        Date javaDate = new Date(selectedYear - 1900, selectedMonth, selectedDay,
+                                selectedHour, selectedMinute);
+                        updatePublishDate(javaDate);
                     }
-                }, mHour, mMinute, DateFormat.is24HourFormat(getActivity()));
+                }, hour, minute, DateFormat.is24HourFormat(getActivity()));
         timePickerDialog.setTitle(R.string.select_time);
         timePickerDialog.show();
     }
@@ -758,6 +722,12 @@ public class EditPostSettingsFragment extends Fragment {
         if (isAdded()) {
             mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
         }
+    }
+
+    private void updatePublishDate(Date date) {
+        mPost.setDateCreated(DateTimeUtils.iso8601FromDate(date));
+        dispatchUpdatePostAction();
+        updateSaveButton();
     }
 
     private void updatePublishDateTextView() {
