@@ -17,6 +17,7 @@ import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
+import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.util.ToastUtils;
 
 public class LoginActivity extends AppCompatActivity implements LoginListener {
@@ -142,19 +143,27 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         launchEpilogueAndFinish();
     }
 
-    @Override
-    public void gotWpcomSiteAddress() {
-        ToastUtils.showToast(this, "WPCOM input site address is not implemented yet.");
+    public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
+                LoginUsernamePasswordFragment.newInstance(siteAddress, siteAddress, siteName, siteIconUrl, true);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override
-    public void gotXmlRpcEndpoint(String siteAddress) {
-        ToastUtils.showToast(this, "Input site address is not implemented yet. Input site address: " + siteAddress);
+    public void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress) {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
+                LoginUsernamePasswordFragment.newInstance(inputSiteAddress, endpointAddress, null, null, false);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override
     public void helpWithSiteAddress() {
         ToastUtils.showToast(this, "Help finding site address is not implemented yet.");
+    }
+
+    @Override
+    public void loggedInViaUsernamePassword() {
+        launchEpilogueAndFinish();
     }
 
     @Override
