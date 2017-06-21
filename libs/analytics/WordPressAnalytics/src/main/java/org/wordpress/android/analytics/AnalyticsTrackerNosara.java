@@ -127,9 +127,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_LIST_UNORDERED:
                 predefinedEventProperties.put("button", "unordered_list");
                 break;
-            case EDITOR_TAPPED_MORE:
-                predefinedEventProperties.put("button", "more");
-                break;
             case EDITOR_TAPPED_NEXT_PAGE:
                 predefinedEventProperties.put("button", "next_page");
                 break;
@@ -139,6 +136,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case EDITOR_TAPPED_PREFORMAT:
                 predefinedEventProperties.put("button", "preformat");
+                break;
+            case EDITOR_TAPPED_READ_MORE:
+                predefinedEventProperties.put("button", "more");
                 break;
             case EDITOR_TAPPED_STRIKETHROUGH:
                 predefinedEventProperties.put("button", "strikethrough");
@@ -486,7 +486,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST:
                 return "editor_button_tapped";
-            case EDITOR_TAPPED_MORE:
+            case EDITOR_TAPPED_READ_MORE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_NEXT_PAGE:
                 return "editor_button_tapped";

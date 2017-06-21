@@ -119,10 +119,10 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_LIST,
         EDITOR_TAPPED_LIST_ORDERED, // Visual editor only
         EDITOR_TAPPED_LIST_UNORDERED, // Visual editor only
-        EDITOR_TAPPED_MORE,
         EDITOR_TAPPED_NEXT_PAGE,
         EDITOR_TAPPED_PARAGRAPH,
         EDITOR_TAPPED_PREFORMAT,
+        EDITOR_TAPPED_READ_MORE,
         EDITOR_TAPPED_STRIKETHROUGH,
         EDITOR_TAPPED_UNDERLINE,
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
