@@ -297,4 +297,10 @@ public class PostUtils {
     static boolean shouldPublishImmediatelyOptionBeAvailable(PostModel postModel) {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
+
+    static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
+        if (shouldPublishImmediately(postModel)) {
+            postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
+        }
+    }
 }
