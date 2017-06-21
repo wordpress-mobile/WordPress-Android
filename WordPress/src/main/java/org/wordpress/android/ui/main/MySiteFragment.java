@@ -357,9 +357,9 @@ public class MySiteFragment extends Fragment
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
-        // sharing is only exposed for wp.com blogs
-        int sharingVisibility = BuildConfig.SHARING_FEATURE_AVAILABLE && getSelectedSite().isWPCom()
-                ? View.VISIBLE : View.GONE;
+        // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
+        int sharingVisibility = BuildConfig.SHARING_FEATURE_AVAILABLE &&
+                SiteUtils.isAccessedViaWPComRest(getSelectedSite()) ? View.VISIBLE : View.GONE;
         mSharingView.setVisibility(sharingVisibility);
 
         // show settings for all self-hosted to expose Delete Site
