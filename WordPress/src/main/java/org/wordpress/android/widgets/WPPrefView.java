@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -219,6 +220,27 @@ public class WPPrefView extends LinearLayout implements
                 a.recycle();
             }
         }
+    }
+
+    private static final String KEY_LIST_ITEMS = "prefview_listitems";
+
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("superState", super.onSaveInstanceState());
+        bundle.putSerializable(KEY_LIST_ITEMS, mListItems);
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            PrefListItems items = (PrefListItems) bundle.getSerializable(KEY_LIST_ITEMS);
+            setListItems(items);
+            state = bundle.getParcelable("superState");
+        }
+        super.onRestoreInstanceState(state);
     }
 
     public void setOnPrefChangedListener(OnPrefChangedListener listener) {
