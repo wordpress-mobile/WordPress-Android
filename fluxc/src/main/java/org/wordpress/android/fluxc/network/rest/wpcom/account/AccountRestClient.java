@@ -167,12 +167,12 @@ public class AccountRestClient extends BaseWPComRestClient {
     public void pushAccountSettings(Map<String, Object> body) {
         if (body == null || body.isEmpty()) return;
         String url = WPCOMREST.me.settings.getUrlV1_1();
-        // Note: we have to use a HashMap as a response here because the API response format is different depending
+        // Note: we have to use a Map as a response here because the API response format is different depending
         // of the request we do.
-        add(WPComGsonRequest.buildPostRequest(url, body, HashMap.class,
-                new Listener<HashMap>() {
+        add(WPComGsonRequest.buildPostRequest(url, body, Map.class,
+                new Listener<Map<String, Object>>() {
                     @Override
-                    public void onResponse(HashMap response) {
+                    public void onResponse(Map<String, Object> response) {
                         AccountPushSettingsResponsePayload payload = new AccountPushSettingsResponsePayload(null);
                         payload.settings = response;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSettingsAction(payload));

@@ -32,7 +32,7 @@ public class TaxonomySqlUtils {
             return 1;
         } else {
             return WellSql.update(TermModel.class).whereId(termResult.get(0).getId())
-                    .put(term, new UpdateAllExceptId<TermModel>()).execute();
+                    .put(term, new UpdateAllExceptId<>(TermModel.class)).execute();
         }
     }
 
