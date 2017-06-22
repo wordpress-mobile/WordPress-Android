@@ -259,11 +259,9 @@ public class SiteSqlUtils {
     public static int removeWPComRestSitesAbsentFromList(@NonNull List<SiteModel> sites) {
         // get all local WP.com+Jetpack sites
         List<SiteModel> localSites = WellSql.select(SiteModel.class)
-                .where().beginGroup()
+                .where()
                 .equals(SiteModelTable.ORIGIN, SiteModel.ORIGIN_WPCOM_REST)
-                .or()
-                .equals(SiteModelTable.IS_WPCOM, true)
-                .endGroup().endWhere().getAsModel();
+                .endWhere().getAsModel();
 
         if (localSites.size() > 0) {
             // iterate through all local WP.com+Jetpack sites
