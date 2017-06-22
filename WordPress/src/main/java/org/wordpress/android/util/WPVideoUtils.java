@@ -21,7 +21,7 @@ import java.io.IOException;
 /**
  * This class implements functionality for simple video transcoding.
  *
- * Input video is transcoded to 720p (if bigger than 1280x720) by using the H.264 Advanced Video Coding encoder.
+ * Input video is transcoded by using the H.264 Advanced Video Coding encoder.
  * Audio track is encoded with Advanced Audio Coding (AAC). Not resampled. Output sample rate and channel count are the same as for input.
  *
  */
@@ -32,10 +32,6 @@ public class WPVideoUtils {
     private static final String VIDEO_MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
     private static final int FRAME_RATE = 30;                     // 30fps
     private static final int IFRAME_INTERVAL = 2;                 // 2 seconds between I-frames
-
-    private static final int OUTPUT_WIDTH = 1280;                 // Default video width
-    private static final int OUTPUT_HEIGHT = 720;                 // Default video height
-    private static final int OUTPUT_BITRATE_KB = 3000;            // Default bitrate Kbytes
 
     // Default parameters for the audio encoder
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
@@ -52,7 +48,9 @@ public class WPVideoUtils {
      * @return The media composer that is in charge of video transcoding, ready to be started,
      * or null in case the video cannot be transcoded.
      */
-    public static MediaComposer getVideoOptimizationComposer(@NonNull Context ctx, @NonNull String inputFile, @NonNull String outFile, @NonNull org.m4m.IProgressListener listener) {
+    public static MediaComposer getVideoOptimizationComposer(@NonNull Context ctx, @NonNull String inputFile, @NonNull String outFile,
+                                                             @NonNull org.m4m.IProgressListener listener,
+                                                             int width, int bitrate) {
         AndroidMediaObjectFactory factory = new AndroidMediaObjectFactory(ctx);
 
         Uri m4mUri = new Uri(inputFile);
@@ -70,11 +68,18 @@ public class WPVideoUtils {
             AppLog.w(AppLog.T.MEDIA, "Input file doesn't contain a video track?");
             return null;
         }
-        if (videoFormat.getVideoFrameSize().width() < OUTPUT_WIDTH ||
-                videoFormat.getVideoFrameSize().height() < OUTPUT_HEIGHT) {
-            AppLog.w(AppLog.T.MEDIA, "Input file resolution is lower than than 1280x720. Keeping the original file");
+        if (videoFormat.getVideoFrameSize().width() < width) {
+            AppLog.w(AppLog.T.MEDIA, "Input file width is lower than than " + width + ". Keeping the original file");
             return null;
         }
+        if (videoFormat.getVideoFrameSize().height() == 0) {
+            AppLog.w(AppLog.T.MEDIA, "Input file height is unknown. Can't calculate the correct ratio for resizing. Keeping the original file");
+            return null;
+        }
+        // Calculate the height keeping the correct aspect ratio
+        float percentage = (float) width / videoFormat.getVideoFrameSize().width();
+        float proportionateHeight = videoFormat.getVideoFrameSize().height() * percentage;
+        int height = (int) Math.rint(proportionateHeight);
 
         AudioFormat audioFormat = (AudioFormat) mediaFileInfo.getAudioFormat();
         boolean isAudioAvailable = audioFormat != null;
@@ -94,7 +99,7 @@ public class WPVideoUtils {
             return null;
         }
 
-        configureVideoEncoderWithDefaults(mediaComposer);
+        configureVideoEncoderWithDefaults(mediaComposer, width, height, bitrate);
 
         if (isAudioAvailable) {
             configureAudioEncoder(mediaComposer, audioFormat);
@@ -103,9 +108,9 @@ public class WPVideoUtils {
         return mediaComposer;
     }
 
-    private static void configureVideoEncoderWithDefaults(MediaComposer mediaComposer) {
-        VideoFormatAndroid videoFormat = new VideoFormatAndroid(VIDEO_MIME_TYPE, OUTPUT_WIDTH, OUTPUT_HEIGHT);
-        videoFormat.setVideoBitRateInKBytes(OUTPUT_BITRATE_KB);
+    private static void configureVideoEncoderWithDefaults(MediaComposer mediaComposer, int width, int height, int bitrate) {
+        VideoFormatAndroid videoFormat = new VideoFormatAndroid(VIDEO_MIME_TYPE, width, height);
+        videoFormat.setVideoBitRateInKBytes(bitrate);
         videoFormat.setVideoFrameRate(FRAME_RATE);
         videoFormat.setVideoIFrameInterval(IFRAME_INTERVAL);
         mediaComposer.setTargetVideoFormat(videoFormat);

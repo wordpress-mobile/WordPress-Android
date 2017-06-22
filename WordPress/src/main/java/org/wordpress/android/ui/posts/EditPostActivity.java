@@ -1717,7 +1717,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         // Video optimization -> API18 or higher
-        if (isVideo && WPMediaUtils.isVideoOptimizationAvailable()) {
+        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled(this, mSite)) {
             // Setting up the lister that's called when the video optimization finishes
             EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
                 @Override
@@ -1731,7 +1731,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             };
             EditPostActivityVideoHelper vHelper = new EditPostActivityVideoHelper(this, listener, path);
-            boolean videoOptimizationStarted = vHelper.startVideoOptimization();
+            boolean videoOptimizationStarted = vHelper.startVideoOptimization(mSite);
             // This is true only when video optimization can be started. In this case we just need to wait until it finishes
             if (videoOptimizationStarted) {
                 return true;
