@@ -130,10 +130,6 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
                 onBackPressed();
                 return true;
             case R.id.search_posts_list:
-                mSearchMenuItem = item;
-                mSearchView = (SearchView) item.getActionView();
-                mSearchView.setOnQueryTextListener(this);
-
                 if (!NetworkUtils.checkConnection(this)) {
                     mSearchView.clearFocus();
                     MenuItemCompat.collapseActionView(mSearchMenuItem);
