@@ -907,7 +907,10 @@ public class EditPostSettingsFragment extends Fragment {
             return Calendar.getInstance();
         }
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(DateTimeUtils.dateFromIso8601(mPost.getDateCreated()));
+        // Set the currently selected time if available
+        if (!TextUtils.isEmpty(mPost.getDateCreated())) {
+            calendar.setTime(DateTimeUtils.dateFromIso8601(mPost.getDateCreated()));
+        }
         return calendar;
     }
 
