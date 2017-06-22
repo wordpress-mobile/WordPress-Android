@@ -83,6 +83,9 @@ public class WPPrefView extends LinearLayout implements
     private String mTextDialogSubtitle;
     private OnPrefChangedListener mListener;
 
+    private static final String KEY_LIST_ITEMS = "prefview_listitems";
+    private static final String KEY_SUPER_STATE = "prefview_super_state";
+
     /*
      * single item when this is a list preference
      */
@@ -222,12 +225,10 @@ public class WPPrefView extends LinearLayout implements
         }
     }
 
-    private static final String KEY_LIST_ITEMS = "prefview_listitems";
-
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("superState", super.onSaveInstanceState());
+        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
         bundle.putSerializable(KEY_LIST_ITEMS, mListItems);
         return bundle;
     }
@@ -238,7 +239,7 @@ public class WPPrefView extends LinearLayout implements
             Bundle bundle = (Bundle) state;
             PrefListItems items = (PrefListItems) bundle.getSerializable(KEY_LIST_ITEMS);
             setListItems(items);
-            state = bundle.getParcelable("superState");
+            state = bundle.getParcelable(KEY_SUPER_STATE);
         }
         super.onRestoreInstanceState(state);
     }
