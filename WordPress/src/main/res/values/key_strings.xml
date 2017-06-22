@@ -307,11 +307,11 @@
     </string-array>
 
     <string-array name="site_settings_video_bitrate_entries" translatable="false">
-        <item>1000 KB</item>
-        <item>2000 KB</item>
-        <item>3000 KB</item>
-        <item>4000 KB</item>
-        <item>5000 KB</item>
+        <item>@string/media_encoder_quality_80</item>
+        <item>@string/media_encoder_quality_85</item>
+        <item>@string/media_encoder_quality_90</item>
+        <item>@string/media_encoder_quality_95</item>
+        <item>@string/media_encoder_quality_100</item>
     </string-array>
 
     <string-array name="site_settings_video_bitrate_values" translatable="false">

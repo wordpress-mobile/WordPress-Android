@@ -301,7 +301,7 @@
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_video_quality"
             android:key="@string/pref_key_site_video_encoder_bitrate"
-            android:title="@string/site_settings_default_video_bitrate_title"
+            android:title="@string/site_settings_default_video_quality_title"
             android:entries="@array/site_settings_video_bitrate_entries"
             android:entryValues="@array/site_settings_video_bitrate_values"
             android:dependency="@string/pref_key_optimize_video"
