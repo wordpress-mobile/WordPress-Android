@@ -21,6 +21,7 @@ import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -282,5 +283,26 @@ public class PostUtils {
             }
         }
         return list;
+    }
+
+    static boolean shouldPublishImmediately(PostModel postModel) {
+        if (!shouldPublishImmediatelyOptionBeAvailable(postModel)) {
+            return false;
+        }
+        Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
+        Date now = new Date();
+        // For drafts with publish dates in the past, we should publish immediately
+        return !pubDate.after(now);
+    }
+
+    // Only drafts should have the option to publish immediately to avoid user confusion
+    static boolean shouldPublishImmediatelyOptionBeAvailable(PostModel postModel) {
+        return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
+    }
+
+    static void updatePublishDateIfShouldBePublishedImmediately(PostModel postModel) {
+        if (shouldPublishImmediately(postModel)) {
+            postModel.setDateCreated(DateTimeUtils.iso8601FromDate(new Date()));
+        }
     }
 }
