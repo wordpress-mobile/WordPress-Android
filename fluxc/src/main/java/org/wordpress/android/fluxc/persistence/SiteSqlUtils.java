@@ -239,7 +239,7 @@ public class SiteSqlUtils {
      * @param sites
      *  list of sites to keep in local database
      */
-    public static int removeSitesAbsentFromList(@NonNull List<SiteModel> sites) {
+    public static int removeWPComRestSitesAbsentFromList(@NonNull List<SiteModel> sites) {
         // get all local WP.com+Jetpack sites
         List<SiteModel> localSites = WellSql.select(SiteModel.class)
                 .where().beginGroup()

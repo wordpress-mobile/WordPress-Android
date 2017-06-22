@@ -738,7 +738,7 @@ public class SiteStore extends Store {
         } else {
             UpdateSitesResult res = createOrUpdateSites(fetchedSites);
             event.rowsAffected = res.rowsAffected;
-            SiteSqlUtils.removeSitesAbsentFromList(fetchedSites.getSites());
+            SiteSqlUtils.removeWPComRestSitesAbsentFromList(fetchedSites.getSites());
         }
         emitChange(event);
     }
