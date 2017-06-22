@@ -377,6 +377,12 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setTimezone(from.options.gmt_offset);
             site.setFrameNonce(from.options.frame_nonce);
             site.setUnmappedUrl(from.options.unmapped_url);
+            try {
+                site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));
+            } catch (NumberFormatException e) {
+                // Do nothing - the value probably wasn't set ('false'), but we don't want to overwrite any existing
+                // value we stored earlier, as /me/sites/ and /sites/$site/ can return different responses for this
+            }
         }
         if (from.plan != null) {
             try {

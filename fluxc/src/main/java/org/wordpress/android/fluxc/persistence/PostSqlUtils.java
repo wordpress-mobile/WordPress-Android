@@ -50,7 +50,7 @@ public class PostSqlUtils {
             if (overwriteLocalChanges || !postResult.get(0).isLocallyChanged()) {
                 int oldId = postResult.get(0).getId();
                 return WellSql.update(PostModel.class).whereId(oldId)
-                        .put(post, new UpdateAllExceptId<PostModel>()).execute();
+                        .put(post, new UpdateAllExceptId<>(PostModel.class)).execute();
             }
         }
         return 0;
