@@ -84,8 +84,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
     }
 
-    /**
-     */
     public void pushMedia(final SiteModel site, final MediaModel media) {
         if (media == null) {
             // caller may be expecting a notification
@@ -333,9 +331,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
 
         // cancel in-progress upload if necessary
-        int mediaModelId = media.getId();
-        // make sure we know which call/media to look for
-        Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
+        Call correspondingCall = mCurrentUploadCalls.get(media.getId());
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
             removeCallFromCurrentUploadsMap(media.getId());

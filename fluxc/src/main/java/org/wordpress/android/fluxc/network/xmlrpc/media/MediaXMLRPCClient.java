@@ -388,9 +388,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         }
 
         // cancel in-progress upload if necessary
-        int mediaModelId = media.getId();
-        // make sure we know which call/media to look for
-        Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
+        Call correspondingCall = mCurrentUploadCalls.get(media.getId());
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
             removeCallFromCurrentUploadsMap(media.getId());
@@ -417,7 +415,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private void notifyMediaProgress(MediaModel media, float progress, MediaError error) {
-        ProgressPayload payload = new ProgressPayload(media, progress, progress == 1.f, error);
+        ProgressPayload payload = new ProgressPayload(media, progress, false, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
@@ -431,7 +429,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, List<MediaModel> media,
+    private void notifyMediaListFetched(SiteModel site, @NonNull List<MediaModel> media,
                                         boolean loadedMore, boolean canLoadMore) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
                 loadedMore, canLoadMore);
