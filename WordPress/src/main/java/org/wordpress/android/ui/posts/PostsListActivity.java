@@ -154,9 +154,6 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (mPostList != null) {
-            mPostList.search(query);
-        }
         mQuery = query;
         mSearchView.clearFocus();
         return true;
