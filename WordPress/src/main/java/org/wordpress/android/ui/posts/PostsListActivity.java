@@ -140,10 +140,6 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        // load last search query
-        if (!TextUtils.isEmpty(mQuery)) {
-            onQueryTextChange(mQuery);
-        }
         return true;
     }
 
@@ -195,11 +191,6 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
             MenuItemCompat.collapseActionView(mSearchMenuItem);
         } else {
             MenuItemCompat.expandActionView(mSearchMenuItem);
-            // load last saved query
-            if (!TextUtils.isEmpty(mQuery)) {
-                onQueryTextSubmit(mQuery);
-                mSearchView.setQuery(mQuery, true);
-            }
         }
     }
 
