@@ -78,6 +78,11 @@ public class PostsListFragment extends Fragment
     // delay between user typing and performing network search
     private static final long SEARCH_DELAY_MS = 1000L;
 
+    private static final String EXTRA_IS_SEARCHING = "isSearching";
+    private static final String EXTRA_CAN_SEARCH_MORE = "canSearchMore";
+    private static final String EXTRA_SEARCH_TERM = "searchTerm";
+    private static final String EXTRA_SEARCH_OFFSET = "searchOffset";
+
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private PostsListAdapter mPostsListAdapter;
     private View mFabView;
@@ -94,6 +99,7 @@ public class PostsListFragment extends Fragment
     private boolean mShouldCancelPendingDraftNotification = false;
     private int mPostIdForPostToBeDeleted = 0;
 
+    // Search
     private Handler mHandler;
     private boolean mIsSearching = false;
     private boolean mCanSearchMore = true;
@@ -150,6 +156,10 @@ public class PostsListFragment extends Fragment
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+            mIsSearching = savedInstanceState.getBoolean(EXTRA_IS_SEARCHING);
+            mCanSearchMore = savedInstanceState.getBoolean(EXTRA_CAN_SEARCH_MORE);
+            mSearchTerm = savedInstanceState.getString(EXTRA_SEARCH_TERM);
+            mSearchOffset = savedInstanceState.getInt(EXTRA_SEARCH_OFFSET);
         }
 
         if (mSite == null) {
@@ -694,6 +704,10 @@ public class PostsListFragment extends Fragment
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
+        outState.putBoolean(EXTRA_IS_SEARCHING, mIsSearching);
+        outState.putBoolean(EXTRA_CAN_SEARCH_MORE, mCanSearchMore);
+        outState.putString(EXTRA_SEARCH_TERM, mSearchTerm);
+        outState.putInt(EXTRA_SEARCH_OFFSET, mSearchOffset);
     }
 
     @SuppressWarnings("unused")
