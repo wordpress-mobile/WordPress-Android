@@ -64,6 +64,7 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mQuery = savedInstanceState.getString(EXTRA_SAVED_QUERY);
         }
 
         if (mSite == null) {
@@ -175,13 +176,6 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(EXTRA_SAVED_QUERY, mQuery);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        mQuery = savedInstanceState.getString(EXTRA_SAVED_QUERY);
     }
 
     @Override
