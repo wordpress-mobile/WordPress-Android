@@ -130,20 +130,7 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
                 onBackPressed();
                 return true;
             case R.id.search_posts_list:
-                if (!NetworkUtils.checkConnection(this)) {
-                    mSearchView.clearFocus();
-                    MenuItemCompat.collapseActionView(mSearchMenuItem);
-                }
-                else {
-                    MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-                    MenuItemCompat.expandActionView(mSearchMenuItem);
-                    // load last saved query
-                    if (!TextUtils.isEmpty(mQuery)) {
-                        onQueryTextSubmit(mQuery);
-                        mSearchView.setQuery(mQuery, true);
-                    }
-                }
-
+                onSearchPostsListSelected();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -207,6 +194,22 @@ public class PostsListActivity extends AppCompatActivity implements OnActionExpa
 
     public boolean isRefreshing() {
         return mPostList.isRefreshing();
+    }
+
+    /** Called when search MenuItem is selected */
+    private void onSearchPostsListSelected() {
+        if (!NetworkUtils.checkConnection(this)) {
+            // if there's no network we can't perform a search, close the search view
+            mSearchView.clearFocus();
+            MenuItemCompat.collapseActionView(mSearchMenuItem);
+        } else {
+            MenuItemCompat.expandActionView(mSearchMenuItem);
+            // load last saved query
+            if (!TextUtils.isEmpty(mQuery)) {
+                onQueryTextSubmit(mQuery);
+                mSearchView.setQuery(mQuery, true);
+            }
+        }
     }
 
     /**
