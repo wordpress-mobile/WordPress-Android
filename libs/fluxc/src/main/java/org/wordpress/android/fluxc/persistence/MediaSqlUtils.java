@@ -203,11 +203,15 @@ public class MediaSqlUtils {
 
         List<MediaModel> existingMedia;
         if (media.getMediaId() == 0) {
+            // If the remote media ID is 0, this is a local media file and we should only match by local ID
+            // Otherwise, we'd match all local media files for that site
             existingMedia = WellSql.select(MediaModel.class)
                     .where()
                     .equals(MediaModelTable.ID, media.getId())
                     .endWhere().getAsModel();
         } else {
+            // For remote media, we can uniquely identify the media by either its local ID
+            // or its remote media ID + its (local) site ID
             existingMedia = WellSql.select(MediaModel.class)
                     .where().beginGroup()
                     .equals(MediaModelTable.ID, media.getId())
@@ -234,7 +238,7 @@ public class MediaSqlUtils {
             // update, media item already exists
             int oldId = existingMedia.get(0).getId();
             return WellSql.update(MediaModel.class).whereId(oldId)
-                    .put(media, new UpdateAllExceptId<MediaModel>()).execute();
+                    .put(media, new UpdateAllExceptId<>(MediaModel.class)).execute();
         }
     }
 
@@ -245,11 +249,28 @@ public class MediaSqlUtils {
 
     public static int deleteMedia(MediaModel media) {
         if (media == null) return 0;
-        return WellSql.delete(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
-                .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
-                .endGroup().endWhere().execute();
+        if (media.getMediaId() == 0) {
+            // If the remote media ID is 0, this is a local media file and we should only match by local ID
+            // Otherwise, we'd match all local media files for that site
+            return WellSql.delete(MediaModel.class)
+                    .where().beginGroup()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .endGroup().endWhere()
+                    .execute();
+        } else {
+            // For remote media, we can uniquely identify the media by either its local ID
+            // or its remote media ID + its (local) site ID
+            return WellSql.delete(MediaModel.class)
+                    .where().beginGroup()
+                    .equals(MediaModelTable.ID, media.getId())
+                    .or()
+                    .beginGroup()
+                    .equals(MediaModelTable.LOCAL_SITE_ID, media.getLocalSiteId())
+                    .equals(MediaModelTable.MEDIA_ID, media.getMediaId())
+                    .endGroup()
+                    .endGroup().endWhere()
+                    .execute();
+        }
     }
 
     public static int deleteMatchingSiteMedia(SiteModel siteModel, String column, Object value) {
