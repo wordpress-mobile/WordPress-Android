@@ -738,6 +738,9 @@ public class SiteStore extends Store {
         } else {
             UpdateSitesResult res = createOrUpdateSites(fetchedSites);
             event.rowsAffected = res.rowsAffected;
+            if (res.duplicateSiteFound) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
             SiteSqlUtils.removeWPComRestSitesAbsentFromList(fetchedSites.getSites());
         }
         emitChange(event);
