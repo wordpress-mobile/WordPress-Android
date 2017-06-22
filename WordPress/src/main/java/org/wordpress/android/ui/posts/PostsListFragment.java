@@ -508,7 +508,6 @@ public class PostsListFragment extends Fragment
                 requestPosts(true);
             }
         } else if (mCanSearchMore && !mIsSearching) {
-            showLoadMoreProgress();
             mSearchOffset = mSearchResults.size();
             mHandler.post(mSearchRunnable);
         }
