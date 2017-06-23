@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v7.app.ActionBar;
@@ -169,6 +170,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.all));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.images));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.unattached));
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
@@ -372,10 +378,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterEnabled(false);
-        }
-
         // load last search query
         if (!TextUtils.isEmpty(mQuery)) {
             onQueryTextChange(mQuery);
@@ -388,10 +390,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterEnabled(true);
-        }
-
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         invalidateOptionsMenu();
 
@@ -594,11 +592,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private final OnBackStackChangedListener mOnBackStackChangedListener = new OnBackStackChangedListener() {
         @Override
         public void onBackStackChanged() {
-            FragmentManager manager = getFragmentManager();
-            MediaGridFragment mediaGridFragment = (MediaGridFragment) manager.findFragmentById(R.id.mediaGridFragment);
-            if (mediaGridFragment.isVisible()) {
-                mediaGridFragment.refreshSpinnerAdapter();
-            }
             ActivityUtils.hideKeyboard(MediaBrowserActivity.this);
         }
     };
@@ -868,7 +861,5 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     private void updateViews() {
         mMediaGridFragment.refreshMediaFromDB();
-        mMediaGridFragment.updateFilterText();
-        mMediaGridFragment.updateSpinnerAdapter();
     }
 }
