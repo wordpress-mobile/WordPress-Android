@@ -341,27 +341,31 @@ public class ActivityLauncher {
     }
 
     public static void loginForDeeplink(Activity activity) {
+        Intent intent;
+
         if (AppPrefs.isLoginWizardStyleActivated()) {
-            Intent loginIntent = new Intent(activity, LoginActivity.class);
-            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(loginIntent);
-            activity.startActivityForResult(loginIntent, RequestCodes.DO_LOGIN);
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         } else {
-            Intent intent = new Intent(activity, SignInActivity.class);
-            activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+            intent = new Intent(activity, SignInActivity.class);
         }
+
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     public static void loginWithoutMagicLink(Activity activity) {
+        Intent intent;
+
         if (AppPrefs.isLoginWizardStyleActivated()) {
-            Intent loginIntent = new Intent(activity, LoginActivity.class);
-            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(loginIntent);
-            activity.startActivityForResult(loginIntent, RequestCodes.DO_LOGIN);
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         } else {
-            Intent signInIntent = new Intent(activity, SignInActivity.class);
-            signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
-            activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+            intent = new Intent(activity, SignInActivity.class);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
         }
+
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     /*
