@@ -60,9 +60,9 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -875,7 +875,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        MediaUploadService.startService(this, mediaList);
+        UploadService.uploadMedia(this, mediaList);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {

@@ -37,7 +37,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.posts.services.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -226,7 +226,7 @@ public class PostUploadService extends Service {
         Iterator<PostModel> iterator = mQueuedPostsList.iterator();
         while (iterator.hasNext()) {
             PostModel postModel = iterator.next();
-            if (!MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
+            if (!UploadService.hasPendingMediaUploadsForPost(postModel)) {
                 // Fetch latest version of the post, as it might have been updated by the MediaUploadService
                 PostModel latestPost = mPostStore.getPostByLocalPostId(postModel.getId());
                 // TODO Should do some extra validation here
@@ -241,7 +241,7 @@ public class PostUploadService extends Service {
 
     private void showNotificationsForPendingMediaPosts() {
         for (PostModel postModel : mQueuedPostsList) {
-            if (MediaUploadService.hasPendingMediaUploadsForPost(postModel)) {
+            if (UploadService.hasPendingMediaUploadsForPost(postModel)) {
                 if (!mPostUploadNotifier.isDisplayingNotificationForPost(postModel)) {
                     mPostUploadNotifier.createNotificationForPost(postModel, getString(R.string.uploading_post_media));
                 }

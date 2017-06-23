@@ -29,6 +29,7 @@ import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaEditFragment;
@@ -111,6 +112,7 @@ public interface AppComponent {
     void inject(NewBlogFragment object);
     void inject(SignInDialogFragment object);
     void inject(NewUserFragment object);
+    void inject(UploadService object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);

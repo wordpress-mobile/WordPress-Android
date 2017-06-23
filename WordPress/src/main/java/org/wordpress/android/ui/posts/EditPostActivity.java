@@ -86,9 +86,9 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
-import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
@@ -96,7 +96,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerOptio
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostEvents;
-import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -308,7 +307,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 if (mPost != null) {
                     mOriginalPost = mPost.clone();
-                    mPost = MediaUploadService.updatePostWithCurrentlyCompletedUploads(mPost);
+                    mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
                     mIsPage = mPost.isPage();
                 }
             }
@@ -985,12 +984,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             if (isFirstTimePublish) {
-                PostUploadService.addPostToUploadAndTrackAnalytics(mPost);
+                UploadService.addPostToUploadAndTrackAnalytics(mPost);
             } else {
-                PostUploadService.addPostToUpload(mPost);
+                UploadService.addPostToUpload(mPost);
             }
-            PostUploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
-            startService(new Intent(EditPostActivity.this, PostUploadService.class));
+            UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
+            startService(new Intent(EditPostActivity.this, UploadService.class));
             PendingDraftsNotificationsUtils.cancelPendingDraftAlarms(EditPostActivity.this, mPost.getId());
 
             return null;
@@ -2062,7 +2061,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 savePostAsync(new AfterSavePostListener() {
                     @Override
                     public void onPostSave() {
-                        MediaUploadService.startService(EditPostActivity.this, mediaList);
+                        UploadService.uploadMedia(EditPostActivity.this, mediaList);
                     }
                 });
 
