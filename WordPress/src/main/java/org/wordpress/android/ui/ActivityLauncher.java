@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
@@ -336,6 +338,17 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, loginClass);
         intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
+    }
+
+    public static void loginForDeeplink(Activity activity) {
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            Intent loginIntent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(loginIntent);
+            activity.startActivityForResult(loginIntent, RequestCodes.DO_LOGIN);
+        } else {
+            Intent intent = new Intent(activity, SignInActivity.class);
+            activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+        }
     }
 
     public static void loginWithoutMagicLink(Activity activity) {

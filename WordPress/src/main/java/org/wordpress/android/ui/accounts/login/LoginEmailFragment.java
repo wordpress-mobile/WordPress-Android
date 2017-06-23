@@ -34,7 +34,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
-import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -114,9 +113,18 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             }
         });
 
-        if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
-            ((TextView) rootView.findViewById(R.id.label)).setText(R.string.stats_sign_in_jetpack_different_com_account);
-            loginViaSiteAddressView.setVisibility(View.GONE);
+        switch (mLoginListener.getLoginMode()) {
+            case FULL:
+                // all features enabled and with typical values
+                break;
+            case JETPACK_STATS:
+                ((TextView) rootView.findViewById(R.id.label))
+                        .setText(R.string.stats_sign_in_jetpack_different_com_account);
+                loginViaSiteAddressView.setVisibility(View.GONE);
+                break;
+            case WPCOM_LOGIN_DEEPLINK:
+                loginViaSiteAddressView.setVisibility(View.GONE);
+                break;
         }
 
         return rootView;
@@ -320,7 +328,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
                     EditTextUtils.hideSoftInput(mEmailEditText);
-                    mLoginListener.showMagicLinkRequestScreen(event.value);
+                    mLoginListener.gotWpcomEmail(event.value);
                 }
                 break;
             default:
