@@ -10,24 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/media_filter_spinner_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/grey_lighten_30"
-            android:clickable="true"
-            android:paddingLeft="8dp"
-            android:paddingRight="16dp">
-
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/media_filter_spinner"
-                style="@style/DropDownNav.WordPress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:paddingLeft="0dp" />
-        </FrameLayout>
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_filter_result_text"
             android:layout_width="match_parent"
