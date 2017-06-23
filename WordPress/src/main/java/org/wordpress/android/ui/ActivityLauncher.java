@@ -352,12 +352,16 @@ public class ActivityLauncher {
     }
 
     public static void loginWithoutMagicLink(Activity activity) {
-        Class<?> loginClass = BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE ? LoginActivity.class : SignInActivity.class;
-
-        Intent signInIntent = new Intent(activity, loginClass);
-        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
-        activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            Intent loginIntent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(loginIntent);
+            activity.startActivityForResult(loginIntent, RequestCodes.DO_LOGIN);
+        } else {
+            Intent signInIntent = new Intent(activity, SignInActivity.class);
+            signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
+            activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+        }
     }
 
     /*
