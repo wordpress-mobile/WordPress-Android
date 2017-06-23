@@ -50,6 +50,6 @@
         android:layout_marginLeft="@dimen/margin_small"
         android:background="@drawable/preview_icon_background"
         android:padding="@dimen/margin_medium"
-        app:srcCompat="@drawable/ic_preview_white_24dp" />
+        app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
 
 </FrameLayout>
