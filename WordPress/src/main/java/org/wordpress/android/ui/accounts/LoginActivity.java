@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
@@ -94,14 +95,24 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         switch (getLoginMode()) {
             case FULL:
                 ActivityLauncher.showMainActivityAndLoginEpilogue(this);
+                setResult(Activity.RESULT_OK);
+                finish();
                 break;
             case JETPACK_STATS:
-                // nothing specia here. Just go on and finish the activity
+                ActivityLauncher.showLoginEpilogueForResult(this, true);
                 break;
         }
+    }
 
-        setResult(Activity.RESULT_OK);
-        finish();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN) {
+            // we showed the epilogue screen as informational and sites got loaded so, just return to login caller now
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     // LoginListener implementation methods

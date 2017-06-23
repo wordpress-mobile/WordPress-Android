@@ -296,6 +296,12 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn) {
+        Intent intent = new Intent(activity, LoginEpilogueActivity.class);
+        intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
+        activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
+    }
+
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
         if (post == null) return;
 
