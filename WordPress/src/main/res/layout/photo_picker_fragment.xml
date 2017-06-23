@@ -97,7 +97,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:tint="@color/white"
-            app:srcCompat="@drawable/ic_camera_alt_48px" />
+            app:srcCompat="@drawable/ic_camera_white_48dp" />
 
         <ImageView
             android:id="@+id/icon_wpmedia"
