@@ -10,18 +10,24 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.posts.services.MediaUploadReadyProcessor;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.FluxCUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,6 +36,10 @@ public class UploadService extends Service {
     private static final String MEDIA_LIST_KEY = "mediaList";
 
     private static MediaUploadService mMediaUploadService;
+
+    // To avoid conflicts by editing the post each time a single upload completes, this map tracks completed media by
+    // the post they're attached to, allowing us to update the post with the media URLs in a single batch at the end
+    private static HashMap<Integer, List<MediaModel>> mCompletedUploadsByPost = new HashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -49,7 +59,11 @@ public class UploadService extends Service {
     public void onDestroy() {
         // TODO: Cancel in-progress uploads
 
-        // TODO: Update posts with any completed media uploads
+        // update posts with any completed uploads in our post->media map
+        for (Integer postId : mCompletedUploadsByPost.keySet()) {
+            PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
+            mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+        }
 
         mDispatcher.unregister(this);
         AppLog.i(T.MAIN, "Upload Service > destroyed");
@@ -168,15 +182,92 @@ public class UploadService extends Service {
     }
 
     public static synchronized PostModel updatePostWithCurrentlyCompletedUploads(PostModel post) {
-        return MediaUploadService.updatePostWithCurrentlyCompletedUploads(post);
+        // now get the list of completed media for this post, so we can make post content
+        // updates in one go and save only once
+        if (post != null) {
+            MediaUploadReadyListener processor = new MediaUploadReadyProcessor();
+            List<MediaModel> mediaList = mCompletedUploadsByPost.get(post.getId());
+            if (mediaList != null && !mediaList.isEmpty()) {
+                for (MediaModel media : mediaList) {
+                    post = updatePostWithMediaUrl(post, media, processor);
+                }
+                // finally remove all completed uploads for this post, as they've been taken care of
+                mCompletedUploadsByPost.remove(post.getId());
+            }
+        }
+        return post;
     }
 
     public static boolean hasPendingMediaUploadsForPost(PostModel postModel) {
         return MediaUploadService.hasPendingMediaUploadsForPost(postModel);
     }
 
+    // this keeps a map for all completed media for each post, so we can process the post easily
+    // in one go later
+    private void addMediaToPostCompletedMediaListMap(MediaModel media) {
+        List<MediaModel> mediaListForPost = mCompletedUploadsByPost.get(media.getLocalPostId());
+        if (mediaListForPost == null) {
+            mediaListForPost = new ArrayList<>();
+        }
+        mediaListForPost.add(media);
+        mCompletedUploadsByPost.put(media.getLocalPostId(), mediaListForPost);
+    }
+
+    private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
+                                                                 MediaUploadReadyListener processor){
+        if (media != null && post != null && processor != null) {
+            // actually replace the media ID with the media uri
+            PostModel modifiedPost = processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
+                    FluxCUtils.mediaFileFromMediaModel(media));
+            if (modifiedPost != null) {
+                post = modifiedPost;
+            }
+
+            // we changed the post, so let’s mark this down
+            if (!post.isLocalDraft()) {
+                post.setIsLocallyChanged(true);
+            }
+            post.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+
+        }
+        return post;
+    }
+
+    private synchronized void updatePostAndStopServiceIfUploadsComplete(){
+        // we only trigger the actual post modification / processing after we've got
+        // no other pending/inprogress uploads, and we have some completed uploads still to be processed
+        // TODO
+        if (!mCompletedUploadsByPost.isEmpty()) {
+            // here we need to edit the corresponding post with all completed uploads
+            // also bear in mind the service could be handling media uploads for different posts,
+            // so we also need to take into account processing completed uploads in batches through
+            // each post
+            for (Integer postId : mCompletedUploadsByPost.keySet()) {
+                PostModel updatedPost = updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId));
+                mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(updatedPost));
+            }
+        }
+        stopServiceIfUploadsComplete();
+    }
+
+    private void stopServiceIfUploadsComplete() {
+        // TODO: Stop service if no more media or posts are left to upload
+        AppLog.i(T.MAIN, "Upload Service > completed");
+        stopSelf();
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
+        if (event.media == null) {
+            return;
+        }
+
+        if (event.completed) {
+            if (event.media.getLocalPostId() != 0) {
+                // add the MediaModel object within the OnMediaUploaded event to our completedMediaList
+                addMediaToPostCompletedMediaListMap(event.media);
+            }
+        }
     }
 }
