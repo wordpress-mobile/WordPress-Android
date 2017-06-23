@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.media.services;
 
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -44,9 +40,8 @@ import de.greenrobot.event.EventBus;
 /**
  * Started with explicit list of media to upload.
  */
+public class MediaUploadService {
 
-public class MediaUploadService extends Service {
-    private static final String MEDIA_LIST_KEY = "mediaList";
 
     private static List<MediaModel> mPendingUploads = new ArrayList<>();
     private static List<MediaModel> mInProgressUploads = new ArrayList<>();
@@ -60,62 +55,20 @@ public class MediaUploadService extends Service {
     @Inject PostStore mPostStore;
     @Inject SiteStore mSiteStore;
 
-    public static void startService(Context context, ArrayList<MediaModel> mediaList) {
-        if (context == null) {
-            return;
-        }
-        Intent intent = new Intent(context, MediaUploadService.class);
-        intent.putExtra(MediaUploadService.MEDIA_LIST_KEY, mediaList);
-        context.startService(intent);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((WordPress) getApplication()).component().inject(this);
+    public MediaUploadService() {
+        ((WordPress) WordPress.getContext()).component().inject(this);
         AppLog.i(T.MEDIA, "Media Upload Service > created");
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
-        // TODO: recover any media that is in the MediaStore that has not yet been completely uploaded
-        // or better yet, create an auxiliary table to host MediaUploadUnitInfo objects
     }
 
-    @Override
-    public void onDestroy() {
-        // cancel in-progress uploads
-        for (MediaModel oneUpload : mInProgressUploads) {
-            cancelUpload(oneUpload, false);
+    public void uploadMedia(List<MediaModel> mediaList) {
+        if (mediaList != null) {
+            for (MediaModel media : mediaList) {
+                addUniqueMediaToQueue(media);
+            }
         }
-
-        // update posts with any completed uploads in our post->media map
-        for (Integer postId : mCompletedUploadsByPost.keySet()) {
-            savePostToDb(updatePostWithCurrentlyCompletedUploads(mPostStore.getPostByLocalPostId(postId)));
-        }
-
-        mDispatcher.unregister(this);
-        EventBus.getDefault().unregister(this);
-        AppLog.i(T.MEDIA, "Media Upload Service > destroyed");
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // skip this request if no media to upload given
-        if (intent == null || !intent.hasExtra(MEDIA_LIST_KEY)) {
-            AppLog.e(T.MEDIA, "MediaUploadService was killed and restarted with a null intent.");
-            updatePostAndStopServiceIfUploadsComplete();
-            return START_NOT_STICKY;
-        }
-
-        unpackIntent(intent);
         uploadNextInQueue();
-
-        return START_REDELIVER_INTENT;
     }
 
     private void handleOnMediaUploadedSuccess(@NonNull OnMediaUploaded event) {
@@ -250,44 +203,6 @@ public class MediaUploadService extends Service {
         }
     }
 
-    private void unpackIntent(@NonNull Intent intent) {
-
-        // TODO right now, in the case we had pending uploads and the app/service was restarted,
-        // we don't really have a way to tell which media was supposed to be added to which post,
-        // unless we open each draft post from the PostStore and try to see if there was any locally added media to try
-        // and match their IDs.
-        // So let's hold on a bit on this functionality, the service won't be recovering any
-        // pending / missing / cancelled / interrupted uploads for now
-
-//        // add local queued media from store
-//        List<MediaModel> localMedia = mMediaStore.getLocalSiteMedia(site);
-//        if (localMedia != null && !localMedia.isEmpty()) {
-//            // uploading is updated to queued, queued media added to the queue, failed media added to completed list
-//            for (MediaModel mediaItem : localMedia) {
-//
-//                if (MediaUploadState.UPLOADING.name().equals(mediaItem.getUploadState())) {
-//                    mediaItem.setUploadState(MediaUploadState.QUEUED.name());
-//                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaItem));
-//                }
-//
-//                if (MediaUploadState.QUEUED.name().equals(mediaItem.getUploadState())) {
-//                    addUniqueMediaToQueue(mediaItem);
-//                } else if (MediaUploadState.FAILED.name().equals(mediaItem.getUploadState())) {
-//                    getCompletedItems().add(mediaItem);
-//                }
-//            }
-//        }
-
-        // add new media
-        @SuppressWarnings("unchecked")
-        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
-        if (mediaList != null) {
-            for (MediaModel media : mediaList) {
-                addUniqueMediaToQueue(media);
-            }
-        }
-    }
-
     private void cancelUpload(MediaModel oneUpload, boolean delete) {
         if (oneUpload != null) {
             SiteModel site = mSiteStore.getSiteByLocalId(oneUpload.getLocalSiteId());
@@ -338,8 +253,7 @@ public class MediaUploadService extends Service {
     private void stopServiceIfUploadsComplete() {
         AppLog.i(T.MEDIA, "Media Upload Service > completed");
         if (mPendingUploads.isEmpty() && mInProgressUploads.isEmpty()) {
-            AppLog.i(T.MEDIA, "No more items pending in queue. Stopping MediaUploadService.");
-            stopSelf();
+            // TODO: Tell UploadService it can stop
         }
     }
 
@@ -407,7 +321,8 @@ public class MediaUploadService extends Service {
             AppLog.e(T.MEDIA, "Cannot track media upload service events if the original media is null!!");
             return;
         }
-        Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(this, media.isVideo(), null, media.getFilePath());
+        Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(WordPress.getContext(),
+                media.isVideo(), null, media.getFilePath());
         if (properties != null) {
             mediaProperties.putAll(properties);
         }

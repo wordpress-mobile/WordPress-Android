@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -21,10 +22,15 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 public class UploadService extends Service {
+    private static final String MEDIA_LIST_KEY = "mediaList";
+
+    private static MediaUploadService mMediaUploadService;
+
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject PostStore mPostStore;
@@ -57,8 +63,51 @@ public class UploadService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (mMediaUploadService == null) {
+            mMediaUploadService = new MediaUploadService();
+        }
+
+        if (intent.hasExtra(MEDIA_LIST_KEY)) {
+            unpackMediaIntent(intent);
+        }
+
         startService(new Intent(this, PostUploadService.class));
         return START_REDELIVER_INTENT;
+    }
+
+    private void unpackMediaIntent(@NonNull Intent intent) {
+        // TODO right now, in the case we had pending uploads and the app/service was restarted,
+        // we don't really have a way to tell which media was supposed to be added to which post,
+        // unless we open each draft post from the PostStore and try to see if there was any locally added media to try
+        // and match their IDs.
+        // So let's hold on a bit on this functionality, the service won't be recovering any
+        // pending / missing / cancelled / interrupted uploads for now
+
+//        // add local queued media from store
+//        List<MediaModel> localMedia = mMediaStore.getLocalSiteMedia(site);
+//        if (localMedia != null && !localMedia.isEmpty()) {
+//            // uploading is updated to queued, queued media added to the queue, failed media added to completed list
+//            for (MediaModel mediaItem : localMedia) {
+//
+//                if (MediaUploadState.UPLOADING.name().equals(mediaItem.getUploadState())) {
+//                    mediaItem.setUploadState(MediaUploadState.QUEUED.name());
+//                    mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaItem));
+//                }
+//
+//                if (MediaUploadState.QUEUED.name().equals(mediaItem.getUploadState())) {
+//                    addUniqueMediaToQueue(mediaItem);
+//                } else if (MediaUploadState.FAILED.name().equals(mediaItem.getUploadState())) {
+//                    getCompletedItems().add(mediaItem);
+//                }
+//            }
+//        }
+
+        // add new media
+        @SuppressWarnings("unchecked")
+        List<MediaModel> mediaList = (List<MediaModel>) intent.getSerializableExtra(MEDIA_LIST_KEY);
+        if (mediaList != null) {
+            mMediaUploadService.uploadMedia(mediaList);
+        }
     }
 
     /**
@@ -85,8 +134,14 @@ public class UploadService extends Service {
         if (context == null) {
             return;
         }
-        MediaUploadService.startService(context, mediaList);
+
+        if (mMediaUploadService != null) {
+            mMediaUploadService.uploadMedia(mediaList);
+            return;
+        }
+
         Intent intent = new Intent(context, UploadService.class);
+        intent.putExtra(UploadService.MEDIA_LIST_KEY, mediaList);
         context.startService(intent);
     }
 
