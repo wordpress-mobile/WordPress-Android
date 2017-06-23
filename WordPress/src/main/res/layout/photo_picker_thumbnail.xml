@@ -46,10 +46,8 @@
         android:layout_width="@dimen/photo_picker_preview_icon"
         android:layout_height="@dimen/photo_picker_preview_icon"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_small"
         android:background="@drawable/preview_icon_background"
-        android:padding="@dimen/margin_medium"
+        android:padding="@dimen/margin_small"
         app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
 
 </FrameLayout>
