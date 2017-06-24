@@ -69,6 +69,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     static final String TAG = "media_grid_fragment";
 
+    static final int FILTER_NONE        = -1;
     static final int FILTER_ALL         = 0;
     static final int FILTER_IMAGES      = 1;
     static final int FILTER_UNATTACHED  = 2;
@@ -226,32 +227,27 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         return mFilter;
     }
 
+    private List<MediaModel> getFilteredMedia() {
+        switch (mFilter) {
+            case FILTER_IMAGES:
+                return mMediaStore.getSiteImages(mSite);
+            case FILTER_UNATTACHED:
+                return mMediaStore.getUnattachedSiteMedia(mSite);
+            default:
+                return mMediaStore.getAllSiteMedia(mSite);
+        }
+    }
     void setFilter(int filter) {
         mFilter  = filter;
         getArguments().putInt(MediaBrowserActivity.ARG_FILTER, filter);
 
-        List<MediaModel> items;
-        switch (filter) {
-            case FILTER_ALL:
-                items = mMediaStore.getAllSiteMedia(mSite);
-                break;
-            case FILTER_IMAGES:
-                items = mMediaStore.getSiteImages(mSite);
-                break;
-            case FILTER_UNATTACHED:
-                items = mMediaStore.getUnattachedSiteMedia(mSite);
-                break;
-            default:
-                return;
-        }
-
         if (isEmpty()) {
-            getAdapter().setMediaList(items);
+            getAdapter().setMediaList(getFilteredMedia());
         } else {
             // temporarily disable animation - otherwise the user will see items animate
             // when they change the filter
             mRecycler.setItemAnimator(null);
-            getAdapter().setMediaList(items);
+            getAdapter().setMediaList(getFilteredMedia());
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -260,7 +256,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }, 500L);
         }
 
-        if (items.size() == 0) {
+        if (isEmpty()) {
             if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
                 updateEmptyView(EmptyViewMessageType.NO_CONTENT);
             } else {
@@ -475,13 +471,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
-        MediaGridAdapter adapter = (MediaGridAdapter) mRecycler.getAdapter();
-
-        List<MediaModel> mediaList = mMediaStore.getAllSiteMedia(mSite);
-        adapter.setMediaList(mediaList);
+        getAdapter().setMediaList(getFilteredMedia());
 
         mHasRetrievedAllMedia = !event.canLoadMore;
-        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+        getAdapter().setHasRetrievedAll(mHasRetrievedAllMedia);
 
         mIsRefreshing = false;
 
@@ -511,9 +504,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 }
             }
         }
-        MediaGridAdapter adapter = (MediaGridAdapter) mRecycler.getAdapter();
         mHasRetrievedAllMedia = true;
-        adapter.setHasRetrievedAll(true);
+        getAdapter().setHasRetrievedAll(true);
 
         // the activity may be gone by the time we get this, so check for it
         if (getActivity() != null && MediaGridFragment.this.isVisible()) {
