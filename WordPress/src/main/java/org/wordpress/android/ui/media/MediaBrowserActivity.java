@@ -122,7 +122,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private Menu mMenu;
     private TabLayout mTabLayout;
 
-    // Services
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private boolean mDeleteServiceBound;
 
@@ -147,6 +146,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
             mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
+            mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
+            mQuery = savedInstanceState.getString(SAVED_QUERY);
         }
 
         if (mSite == null) {
@@ -183,30 +184,48 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.all));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                setFilter(tab.getPosition());
+        if (mImagesOnly) {
+            mTabLayout.setVisibility(View.GONE);
+            setFilter(MediaGridFragment.FILTER_IMAGES);
+        } else {
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.all));
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
+
+            if (savedInstanceState != null) {
+                int filter = savedInstanceState.getInt(KEY_FILTER);
+                setFilter(filter);
             }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                // noop
-            }
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                setFilter(tab.getPosition());
-            }
-        });
+
+            mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    setFilter(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    // noop
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    setFilter(tab.getPosition());
+                }
+            });
+        }
     }
 
-    private void setFilter(int index) {
-        if (mMediaGridFragment == null) return;
-        if (mMediaGridFragment.getFilter() != index || mMediaGridFragment.isEmpty()) {
-            mMediaGridFragment.setFilter(index);
+    private void setFilter(int filter) {
+        if (mMediaGridFragment != null &&
+                (mMediaGridFragment.getFilter() != filter || mMediaGridFragment.isEmpty())) {
+            mMediaGridFragment.setFilter(filter);
         }
+
+        if (mTabLayout != null && mTabLayout.getSelectedTabPosition() != filter) {
+            mTabLayout.setScrollPosition(filter, 0f, true);
+        }
+
     }
 
     @Override
@@ -260,23 +279,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
-        }
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
-        mQuery = savedInstanceState.getString(SAVED_QUERY);
-        mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
-        mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
-
-        int filter = savedInstanceState.getInt(KEY_FILTER);
-        mTabLayout.setScrollPosition(filter, 0f, true);
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilter(filter);
         }
     }
 
