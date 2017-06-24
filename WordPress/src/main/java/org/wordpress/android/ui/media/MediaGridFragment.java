@@ -63,6 +63,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
     private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
+    private static final String BUNDLE_FILTER = "BUNDLE_FILTER";
+
+    static final int FILTER_ALL         = 0;
+    static final int FILTER_IMAGES      = 1;
+    static final int FILTER_UNATTACHED  = 2;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -80,6 +85,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private ActionMode mActionMode;
     private String mSearchTerm;
+    private int mFilter = FILTER_ALL;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
@@ -105,10 +111,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             boolean imagesOnly = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, false);
             if (imagesOnly) {
                 // TODO
+                mFilter = FILTER_IMAGES;
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
+            mFilter = savedInstanceState.getInt(BUNDLE_FILTER);
         }
 
         if (mSite == null) {
@@ -194,6 +202,37 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement MediaGridListener");
         }
+    }
+
+    void setFilter(int index) {
+        List<MediaModel> items;
+        switch (index) {
+            case FILTER_ALL:
+                items = mMediaStore.getAllSiteMedia(mSite);
+                break;
+            case FILTER_IMAGES:
+                items = mMediaStore.getSiteImages(mSite);
+                break;
+            case FILTER_UNATTACHED:
+                items = mMediaStore.getUnattachedSiteMedia(mSite);
+                break;
+            default:
+                return;
+        }
+
+        mGridAdapter.setMediaList(items);
+        if (items.size() == 0) {
+            //mResultView.setVisibility(View.GONE); // TODO
+        } else {
+            hideEmptyView();
+        }
+        // Overwrite the LOADING message
+        if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        } else {
+            updateEmptyView(mEmptyViewMessageType);
+        }
+
     }
 
     @Override
@@ -322,6 +361,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, mBrowserType);
+        outState.putInt(BUNDLE_FILTER, mFilter);
     }
 
     private void updateActionModeTitle(int selectCount) {

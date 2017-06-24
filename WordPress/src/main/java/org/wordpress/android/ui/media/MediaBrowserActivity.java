@@ -175,6 +175,22 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         tabLayout.addTab(tabLayout.newTab().setText(R.string.all));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.images));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.unattached));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (mMediaGridFragment != null) {
+                    mMediaGridFragment.setFilter(tab.getPosition());
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // noop
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // noop
+            }
+        });
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
