@@ -641,7 +641,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             startMediaDeleteService(mediaToDelete);
         }
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.clearSelectedItems();
+            mMediaGridFragment.clearSelection();
         }
     }
 
@@ -927,6 +927,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void updateViews() {
-        mMediaGridFragment.refreshMediaFromDB();
+        mMediaGridFragment.refresh();
     }
 }

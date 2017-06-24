@@ -145,7 +145,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Override
     public void onResume() {
         super.onResume();
-        refreshMediaFromDB();
+        refresh();
     }
 
     @Override
@@ -325,7 +325,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         handleFetchAllMediaSuccess(event);
     }
 
-    public void refreshMediaFromDB() {
+    /*
+     * refresh the adapter and fetch media if we haven't already done so
+     */
+    public void refresh() {
         if (!isAdded()) return;
 
         getAdapter().setMediaList(getFilteredMedia());
@@ -340,7 +343,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         getAdapter().setMediaList(getFilteredMedia());
     }
 
-    public void clearSelectedItems() {
+    public void clearSelection() {
         getAdapter().clearSelection();
     }
 
@@ -365,35 +368,34 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
-        if (!isAdded()) return;
+        mEmptyViewMessageType = emptyViewMessageType;
 
-        if (mEmptyView != null) {
-            if (getAdapter().getItemCount() == 0) {
-                int stringId = 0;
-                switch (emptyViewMessageType) {
-                    case LOADING:
-                        stringId = R.string.media_fetching;
-                        break;
-                    case NO_CONTENT:
-                        stringId = R.string.media_empty_list;
-                        break;
-                    case NETWORK_ERROR:
-                        stringId = R.string.no_network_message;
-                        break;
-                    case PERMISSION_ERROR:
-                        stringId = R.string.media_error_no_permission;
-                        break;
-                    case GENERIC_ERROR:
-                        stringId = R.string.error_refresh_media;
-                        break;
-                }
+        if (!isAdded() || mEmptyView == null) return;
 
-                mEmptyViewTitle.setText(getText(stringId));
-                mEmptyViewMessageType = emptyViewMessageType;
-                mEmptyView.setVisibility(View.VISIBLE);
-            } else {
-                mEmptyView.setVisibility(View.GONE);
+        if (isEmpty()) {
+            int stringId;
+            switch (emptyViewMessageType) {
+                case LOADING:
+                    stringId = R.string.media_fetching;
+                    break;
+                case NO_CONTENT:
+                    stringId = R.string.media_empty_list;
+                    break;
+                case NETWORK_ERROR:
+                    stringId = R.string.no_network_message;
+                    break;
+                case PERMISSION_ERROR:
+                    stringId = R.string.media_error_no_permission;
+                    break;
+                default:
+                    stringId = R.string.error_refresh_media;
+                    break;
             }
+
+            mEmptyViewTitle.setText(getText(stringId));
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
