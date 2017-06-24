@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v7.app.ActionBar;
@@ -188,6 +189,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mTabLayout.setVisibility(View.GONE);
             setFilter(MediaGridFragment.FILTER_IMAGES);
         } else {
+            int normalColor = ContextCompat.getColor(this, R.color.blue_light);
+            int selectedColor = ContextCompat.getColor(this, R.color.white);
+            mTabLayout.setTabTextColors(normalColor, selectedColor);
+
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.all));
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
