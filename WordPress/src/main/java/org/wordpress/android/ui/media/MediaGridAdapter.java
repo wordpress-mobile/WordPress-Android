@@ -442,7 +442,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     public static int getColumnCount(Context context) {
-        return context.getResources().getInteger(R.integer.media_grid_num_columns);
+        return DisplayUtils.isLandscape(context) ? 4 : 3;
     }
 
     public void setCallback(MediaGridAdapterCallback callback) {
