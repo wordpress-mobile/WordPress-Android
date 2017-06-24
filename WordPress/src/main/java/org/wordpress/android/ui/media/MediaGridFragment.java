@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -65,7 +66,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
     private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
-    private static final String BUNDLE_FILTER = "BUNDLE_FILTER";
+
+    static final String TAG = "media_grid_fragment";
 
     static final int FILTER_ALL         = 0;
     static final int FILTER_IMAGES      = 1;
@@ -102,24 +104,28 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         void onRetryUpload(int localMediaId);
     }
 
+    public static MediaGridFragment newInstance(@NonNull SiteModel site,
+                                                @NonNull MediaBrowserType browserType,
+                                                int filter) {
+        Bundle args = new Bundle();
+        args.putSerializable(WordPress.SITE, site);
+        args.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
+        args.putInt(MediaBrowserActivity.ARG_FILTER, filter);
+
+        MediaGridFragment fragment = new MediaGridFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-            mBrowserType = (MediaBrowserType) getActivity().getIntent().getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            boolean imagesOnly = getActivity().getIntent().getBooleanExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, false);
-            if (imagesOnly) {
-                // TODO
-                mFilter = FILTER_IMAGES;
-            }
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            mFilter = savedInstanceState.getInt(BUNDLE_FILTER);
-        }
+        Bundle args = getArguments();
+        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+        mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
+        mFilter = args.getInt(MediaBrowserActivity.ARG_FILTER);
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -155,7 +161,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.media_grid_fragment, container);
+        View view = inflater.inflate(R.layout.media_grid_fragment, container, false);
 
         mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
@@ -164,11 +170,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
 
-        mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
-        mGridAdapter.setCallback(this);
-        mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
-        mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
-        mRecycler.setAdapter(mGridAdapter);
+        mRecycler.setAdapter(getAdapter());
 
         mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.empty_view_title);
@@ -195,6 +197,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         return view;
     }
 
+    private MediaGridAdapter getAdapter() {
+        if (mGridAdapter == null) {
+            mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
+            mGridAdapter.setCallback(this);
+            mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
+            mGridAdapter.setShowPreviewIcon(mBrowserType.isPicker());
+        }
+        return mGridAdapter;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -216,6 +228,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     void setFilter(int filter) {
         mFilter  = filter;
+        getArguments().putInt(MediaBrowserActivity.ARG_FILTER, filter);
 
         List<MediaModel> items;
         switch (filter) {
@@ -233,12 +246,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         if (isEmpty()) {
-            mGridAdapter.setMediaList(items);
+            getAdapter().setMediaList(items);
         } else {
             // temporarily disable animation - otherwise the user will see items animate
             // when they change the filter
             mRecycler.setItemAnimator(null);
-            mGridAdapter.setMediaList(items);
+            getAdapter().setMediaList(items);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -272,7 +285,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterItemSelected(View sourceView, int position) {
-        int localMediaId = mGridAdapter.getLocalMediaIdAtPosition(position);
+        int localMediaId = getAdapter().getLocalMediaIdAtPosition(position);
         mListener.onMediaItemSelected(sourceView, localMediaId);
     }
 
@@ -304,7 +317,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void refreshMediaFromDB() {
         if (!isAdded()) return;
 
-        if (mGridAdapter.getItemCount() == 0) {
+        if (getAdapter().getItemCount() == 0) {
             if (NetworkUtils.isNetworkAvailable(getActivity())) {
                 if (!mHasRetrievedAllMedia) {
                     fetchMediaList(false);
@@ -318,16 +331,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
         List<MediaModel> mediaList = mMediaStore.searchSiteMediaByTitle(mSite, mSearchTerm);
-        mGridAdapter.setMediaList(mediaList);
+        getAdapter().setMediaList(mediaList);
     }
 
     public void clearSelectedItems() {
-        mGridAdapter.clearSelection();
+        getAdapter().clearSelection();
     }
 
     public void removeFromMultiSelect(int localMediaId) {
-        if (mGridAdapter.isInMultiSelect() && mGridAdapter.isItemSelected(localMediaId)) {
-            mGridAdapter.removeSelectionByLocalId(localMediaId);
+        if (getAdapter().isInMultiSelect() && getAdapter().isItemSelected(localMediaId)) {
+            getAdapter().removeSelectionByLocalId(localMediaId);
         }
     }
 
@@ -341,7 +354,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         if (mEmptyView != null) {
-            if (mGridAdapter.getItemCount() == 0) {
+            if (getAdapter().getItemCount() == 0) {
                 int stringId = 0;
                 switch (emptyViewMessageType) {
                     case LOADING:
@@ -377,14 +390,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void saveState(Bundle outState) {
-        outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(mGridAdapter.getSelectedItems()));
+        outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(getAdapter().getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridManager.findFirstCompletelyVisibleItemPosition());
         outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
-        outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, mGridAdapter.isInMultiSelect());
+        outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, getAdapter().isInMultiSelect());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
-        outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, mBrowserType);
-        outState.putInt(BUNDLE_FILTER, mFilter);
     }
 
     private void updateActionModeTitle(int selectCount) {
@@ -404,15 +414,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                             public void onClick(DialogInterface dialog, int which) {
                                 if (getActivity() instanceof MediaBrowserActivity) {
                                     ((MediaBrowserActivity) getActivity()).deleteMedia(
-                                            mGridAdapter.getSelectedItems());
+                                            getAdapter().getSelectedItems());
                                 }
                                 // update upload state
-                                for (int itemId : mGridAdapter.getSelectedItems()) {
+                                for (int itemId : getAdapter().getSelectedItems()) {
                                     MediaModel media = mMediaStore.getMediaWithLocalId(itemId);
                                     media.setUploadState(MediaUploadState.DELETING);
                                     mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
                                 }
-                                mGridAdapter.clearSelection();
+                                getAdapter().clearSelection();
                                 if (mActionMode != null) {
                                     mActionMode.finish();
                                 }
@@ -427,10 +437,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
         if (isInMultiSelectMode) {
-            mGridAdapter.setInMultiSelect(true);
+            getAdapter().setInMultiSelect(true);
             if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
                 ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
-                mGridAdapter.setSelectedItems(selectedItems);
+                getAdapter().setSelectedItems(selectedItems);
                 mSwipeToRefreshHelper.setEnabled(false);
             }
         }
@@ -438,9 +448,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
-
-        int filter = savedInstanceState.getInt(BUNDLE_FILTER);
-        setFilter(filter);
     }
 
     private void fetchMediaList(boolean loadMore) {
@@ -527,9 +534,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private void setResultIdsAndFinish() {
         Intent intent = new Intent();
-        if (mGridAdapter.getSelectedItemCount() > 0) {
+        if (getAdapter().getSelectedItemCount() > 0) {
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
-            for (Integer localId : mGridAdapter.getSelectedItems()) {
+            for (Integer localId : getAdapter().getSelectedItems()) {
                 MediaModel media = mMediaStore.getMediaWithLocalId(localId);
                 if (media != null) {
                     remoteMediaIds.add(media.getMediaId());
@@ -546,11 +553,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mActionMode = mode;
-            int selectCount = mGridAdapter.getSelectedItemCount();
+            int selectCount = getAdapter().getSelectedItemCount();
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.media_multiselect, menu);
             setSwipeToRefreshEnabled(false);
-            mGridAdapter.setInMultiSelect(true);
+            getAdapter().setInMultiSelect(true);
             updateActionModeTitle(selectCount);
             return true;
         }
@@ -579,7 +586,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             setSwipeToRefreshEnabled(true);
-            mGridAdapter.setInMultiSelect(false);
+            getAdapter().setInMultiSelect(false);
             mActionMode = null;
         }
     }
