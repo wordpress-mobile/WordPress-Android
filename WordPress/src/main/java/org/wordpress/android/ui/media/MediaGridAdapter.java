@@ -432,6 +432,10 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    public boolean isEmpty() {
+        return mMediaList.isEmpty();
+    }
+
     @Override
     public int getItemCount() {
         return mMediaList.size();
