@@ -44,7 +44,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:textAllCaps="true"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_small"
                 android:textStyle="bold"
                 tools:text="PDF" />
 
@@ -57,7 +57,7 @@
                 android:gravity="center_horizontal"
                 android:singleLine="true"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_small"
+                android:textSize="@dimen/text_sz_extra_small"
                 tools:text="filename" />
         </LinearLayout>
 
