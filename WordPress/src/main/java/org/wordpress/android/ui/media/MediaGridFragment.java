@@ -7,8 +7,10 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -161,7 +163,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         int numColumns = MediaGridAdapter.getColumnCount(getActivity());
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
-        mRecycler.setItemAnimator(null);
 
         mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
@@ -231,7 +232,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 return;
         }
 
-        mGridAdapter.setMediaList(items);
+        if (isEmpty()) {
+            mGridAdapter.setMediaList(items);
+        } else {
+            // temporarily disable animation - otherwise the user will see items animate
+            // when they change the filter
+            mRecycler.setItemAnimator(null);
+            mGridAdapter.setMediaList(items);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRecycler.setItemAnimator(new DefaultItemAnimator());
+                }
+            }, 500L);
+        }
+
         if (items.size() == 0) {
             if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
                 updateEmptyView(EmptyViewMessageType.NO_CONTENT);
