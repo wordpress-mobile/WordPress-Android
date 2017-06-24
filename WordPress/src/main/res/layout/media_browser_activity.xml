@@ -13,23 +13,13 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
         android:background="@color/tab_background"
         app:tabIndicatorColor="@color/tab_indicator"
         app:tabMode="fixed" />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/media_browser_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <fragment
-            android:id="@+id/mediaGridFragment"
-            android:name="org.wordpress.android.ui.media.MediaGridFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

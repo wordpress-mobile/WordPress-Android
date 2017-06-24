@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -105,7 +106,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_IMAGES_ONLY = "images_only";
-    private static final String KEY_FILTER = "filter";
+    public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -176,8 +177,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
-        mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-
         // if media was shared add it to the library
         handleSharedMedia();
 
@@ -188,10 +187,24 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         setupTabs();
 
+        int filter;
         if (mImagesOnly) {
-            setFilter(MediaGridFragment.FILTER_IMAGES);
+            filter = MediaGridFragment.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
-            int filter = savedInstanceState.getInt(KEY_FILTER);
+            filter = savedInstanceState.getInt(ARG_FILTER);
+        } else {
+            filter = MediaGridFragment.FILTER_ALL;
+        }
+
+        mMediaGridFragment = (MediaGridFragment) fm.findFragmentByTag(MediaGridFragment.TAG);
+        if (mMediaGridFragment == null) {
+            mMediaGridFragment = MediaGridFragment.newInstance(mSite, mBrowserType, filter);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.media_browser_container, mMediaGridFragment, MediaGridFragment.TAG)
+                    .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        } else {
             setFilter(filter);
         }
     }
@@ -292,7 +305,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         outState.putBoolean(ARG_IMAGES_ONLY, mImagesOnly);
         if (mMediaGridFragment != null) {
-            outState.putInt(KEY_FILTER, mMediaGridFragment.getFilter());
+            outState.putInt(ARG_FILTER, mMediaGridFragment.getFilter());
         }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
