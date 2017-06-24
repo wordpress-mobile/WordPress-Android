@@ -550,17 +550,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         switch (event.cause) {
             case DELETE_MEDIA:
-                if (event.mediaList == null || event.mediaList.isEmpty()) {
-                    break;
-                }
-
-                // If the media was deleted, remove it from multi select if it was selected
-                for (MediaModel mediaModel : event.mediaList) {
-                    int localMediaId = mediaModel.getId();
-                    mMediaGridFragment.removeFromMultiSelect(localMediaId);
+                if (event.mediaList != null) {
+                    // If the media was deleted, remove it from multi select if it was selected
+                    for (MediaModel mediaModel : event.mediaList) {
+                        int localMediaId = mediaModel.getId();
+                        mMediaGridFragment.removeFromMultiSelect(localMediaId);
+                    }
                 }
                 break;
         }
+
         updateViews();
     }
 
