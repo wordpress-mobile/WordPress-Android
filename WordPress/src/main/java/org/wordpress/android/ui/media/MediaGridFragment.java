@@ -14,6 +14,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -69,7 +70,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     static final String TAG = "media_grid_fragment";
 
-    static final int FILTER_NONE        = -1;
     static final int FILTER_ALL         = 0;
     static final int FILTER_IMAGES      = 1;
     static final int FILTER_UNATTACHED  = 2;
@@ -124,9 +124,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         Bundle args = getArguments();
-        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-        mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
-        mFilter = args.getInt(MediaBrowserActivity.ARG_FILTER);
+        if (args != null) {
+            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+            mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
+            mFilter = args.getInt(MediaBrowserActivity.ARG_FILTER);
+        }
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -193,7 +195,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     }
                 });
 
-        restoreState(savedInstanceState);
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState);
+        }
 
         return view;
     }
@@ -228,6 +232,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private List<MediaModel> getFilteredMedia() {
+        if (!TextUtils.isEmpty(mSearchTerm)) {
+            return mMediaStore.searchSiteMediaByTitle(mSite, mSearchTerm);
+        }
+
         switch (mFilter) {
             case FILTER_IMAGES:
                 return mMediaStore.getSiteImages(mSite);
@@ -237,6 +245,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 return mMediaStore.getAllSiteMedia(mSite);
         }
     }
+
     void setFilter(int filter) {
         mFilter  = filter;
         getArguments().putInt(MediaBrowserActivity.ARG_FILTER, filter);
@@ -313,21 +322,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void refreshMediaFromDB() {
         if (!isAdded()) return;
 
-        if (getAdapter().getItemCount() == 0) {
-            if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                if (!mHasRetrievedAllMedia) {
-                    fetchMediaList(false);
-                }
-            } else {
-                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-            }
+        getAdapter().setMediaList(getFilteredMedia());
+
+        if (!mHasRetrievedAllMedia) {
+            fetchMediaList(false);
         }
     }
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        List<MediaModel> mediaList = mMediaStore.searchSiteMediaByTitle(mSite, mSearchTerm);
-        getAdapter().setMediaList(mediaList);
+        getAdapter().setMediaList(getFilteredMedia());
     }
 
     public void clearSelectedItems() {
@@ -428,9 +432,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         dialog.show();
     }
 
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null) return;
-
+    private void restoreState(@NonNull Bundle savedInstanceState) {
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
         if (isInMultiSelectMode) {
             getAdapter().setInMultiSelect(true);
@@ -455,7 +457,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         // do not refresh if in search
-        if (mSearchTerm != null && mSearchTerm.length() > 0) {
+        if (!TextUtils.isEmpty(mSearchTerm)) {
             setRefreshing(false);
             return;
         }
