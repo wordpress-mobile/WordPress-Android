@@ -202,8 +202,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         return view;
     }
 
+    private boolean hasAdapter() {
+        return mGridAdapter != null;
+    }
+
     private MediaGridAdapter getAdapter() {
-        if (mGridAdapter == null) {
+        if (!hasAdapter()) {
             mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
             mGridAdapter.setCallback(this);
             mGridAdapter.setAllowMultiselect(mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER);
@@ -224,7 +228,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     boolean isEmpty() {
-        return mGridAdapter ==  null || mGridAdapter.isEmpty();
+        return hasAdapter() && getAdapter().isEmpty();
     }
 
     int getFilter() {
@@ -249,6 +253,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     void setFilter(int filter) {
         mFilter  = filter;
         getArguments().putInt(MediaBrowserActivity.ARG_FILTER, filter);
+
+        if (!isAdded()) return;
 
         if (isEmpty()) {
             getAdapter().setMediaList(getFilteredMedia());
@@ -339,20 +345,28 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void removeFromMultiSelect(int localMediaId) {
-        if (getAdapter().isInMultiSelect() && getAdapter().isItemSelected(localMediaId)) {
+        if (hasAdapter()
+                && getAdapter().isInMultiSelect()
+                && getAdapter().isItemSelected(localMediaId)) {
             getAdapter().removeSelectionByLocalId(localMediaId);
         }
     }
 
     private void setRefreshing(boolean refreshing) {
-        mSwipeToRefreshHelper.setRefreshing(refreshing);
+        if (isAdded()) {
+            mSwipeToRefreshHelper.setRefreshing(refreshing);
+        }
     }
 
     private void setSwipeToRefreshEnabled(boolean enabled) {
-        mSwipeToRefreshHelper.setEnabled(enabled);
+        if (isAdded()) {
+            mSwipeToRefreshHelper.setEnabled(enabled);
+        }
     }
 
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
+        if (!isAdded()) return;
+
         if (mEmptyView != null) {
             if (getAdapter().getItemCount() == 0) {
                 int stringId = 0;
@@ -384,7 +398,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void hideEmptyView() {
-        if (mEmptyView != null) {
+        if (isAdded() && mEmptyView != null) {
             mEmptyView.setVisibility(View.GONE);
         }
     }
@@ -404,9 +418,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void handleMultiSelectDelete() {
-        if (!isAdded()) {
-            return;
-        }
+        if (!isAdded()) return;
+
         Builder builder = new AlertDialog.Builder(getActivity()).setMessage(R.string.confirm_delete_multi_media)
                                                                 .setCancelable(true).setPositiveButton(
                         R.string.delete, new DialogInterface.OnClickListener() {
@@ -473,6 +486,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
+        if (!isAdded()) return;
+
         getAdapter().setMediaList(getFilteredMedia());
 
         mHasRetrievedAllMedia = !event.canLoadMore;
