@@ -201,7 +201,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mMediaGridFragment = MediaGridFragment.newInstance(mSite, mBrowserType, filter);
             getFragmentManager().beginTransaction()
                     .replace(R.id.media_browser_container, mMediaGridFragment, MediaGridFragment.TAG)
-                    .addToBackStack(null)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         } else {
@@ -246,15 +245,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void setFilter(int filter) {
-        if (mMediaGridFragment != null &&
-                (mMediaGridFragment.getFilter() != filter || mMediaGridFragment.isEmpty())) {
-            mMediaGridFragment.setFilter(filter);
-        }
-
         if (shouldShowTabs()
                 && mTabLayout != null
                 && mTabLayout.getSelectedTabPosition() != filter) {
             mTabLayout.setScrollPosition(filter, 0f, true);
+        }
+
+        if (mMediaGridFragment != null &&
+                (mMediaGridFragment.getFilter() != filter || mMediaGridFragment.isEmpty())) {
+            mMediaGridFragment.setFilter(filter);
         }
     }
 
