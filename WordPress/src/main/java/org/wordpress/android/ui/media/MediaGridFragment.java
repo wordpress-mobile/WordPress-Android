@@ -204,9 +204,19 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    void setFilter(int index) {
+    boolean isEmpty() {
+        return mGridAdapter ==  null || mGridAdapter.isEmpty();
+    }
+
+    int getFilter() {
+        return mFilter;
+    }
+
+    void setFilter(int filter) {
+        mFilter  = filter;
+
         List<MediaModel> items;
-        switch (index) {
+        switch (filter) {
             case FILTER_ALL:
                 items = mMediaStore.getAllSiteMedia(mSite);
                 break;
@@ -222,17 +232,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mGridAdapter.setMediaList(items);
         if (items.size() == 0) {
-            //mResultView.setVisibility(View.GONE); // TODO
+            if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
+                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            } else {
+                updateEmptyView(mEmptyViewMessageType);
+            }
         } else {
             hideEmptyView();
         }
-        // Overwrite the LOADING message
-        if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
-            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-        } else {
-            updateEmptyView(mEmptyViewMessageType);
-        }
-
     }
 
     @Override
@@ -400,8 +407,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null)
-            return;
+        if (savedInstanceState == null) return;
 
         boolean isInMultiSelectMode = savedInstanceState.getBoolean(BUNDLE_IN_MULTI_SELECT_MODE);
         if (isInMultiSelectMode) {
@@ -416,6 +422,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
+
+        int filter = savedInstanceState.getInt(BUNDLE_FILTER);
+        setFilter(filter);
     }
 
     private void fetchMediaList(boolean loadMore) {
