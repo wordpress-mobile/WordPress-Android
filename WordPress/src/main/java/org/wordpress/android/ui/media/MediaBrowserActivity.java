@@ -63,6 +63,7 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -185,10 +186,25 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        setupTabs();
+
         if (mImagesOnly) {
-            mTabLayout.setVisibility(View.GONE);
             setFilter(MediaGridFragment.FILTER_IMAGES);
-        } else {
+        } else if (savedInstanceState != null) {
+            int filter = savedInstanceState.getInt(KEY_FILTER);
+            setFilter(filter);
+        }
+    }
+
+    /*
+     * don't show the tabs when only images are shown
+     */
+    private boolean shouldShowTabs() {
+        return !mImagesOnly;
+    }
+
+    private void setupTabs() {
+        if (shouldShowTabs()) {
             int normalColor = ContextCompat.getColor(this, R.color.blue_light);
             int selectedColor = ContextCompat.getColor(this, R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
@@ -197,27 +213,22 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
 
-            if (savedInstanceState != null) {
-                int filter = savedInstanceState.getInt(KEY_FILTER);
-                setFilter(filter);
-            }
-
             mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     setFilter(tab.getPosition());
                 }
-
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
                     // noop
                 }
-
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
                     setFilter(tab.getPosition());
                 }
             });
+        } else {
+            mTabLayout.setVisibility(View.GONE);
         }
     }
 
@@ -227,10 +238,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mMediaGridFragment.setFilter(filter);
         }
 
-        if (mTabLayout != null && mTabLayout.getSelectedTabPosition() != filter) {
+        if (shouldShowTabs()
+                && mTabLayout != null
+                && mTabLayout.getSelectedTabPosition() != filter) {
             mTabLayout.setScrollPosition(filter, 0f, true);
         }
-
     }
 
     @Override
@@ -414,12 +426,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
+        mMenu.findItem(R.id.menu_new_media).setVisible(false);
+
+        if (shouldShowTabs()) {
+            AniUtils.animateTopBar(mTabLayout, false);
+        }
+
         // load last search query
         if (!TextUtils.isEmpty(mQuery)) {
             onQueryTextChange(mQuery);
         }
-
-        mMenu.findItem(R.id.menu_new_media).setVisible(false);
 
         return true;
     }
@@ -428,6 +444,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public boolean onMenuItemActionCollapse(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         invalidateOptionsMenu();
+
+        if (shouldShowTabs()) {
+            AniUtils.animateTopBar(mTabLayout, true);
+        }
 
         return true;
     }
