@@ -161,6 +161,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         int numColumns = MediaGridAdapter.getColumnCount(getActivity());
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
+        mRecycler.setItemAnimator(null);
 
         mGridAdapter = new MediaGridAdapter(getActivity(), mSite, mImageLoader);
         mGridAdapter.setCallback(this);
