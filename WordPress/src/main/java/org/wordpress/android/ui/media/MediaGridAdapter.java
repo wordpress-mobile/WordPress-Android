@@ -95,7 +95,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (show != mShowPreviewIcon) {
             mShowPreviewIcon = show;
             if (getItemCount() > 0) {
-                notifyDataSetChanged();;
+                notifyDataSetChanged();
             }
         }
     }
