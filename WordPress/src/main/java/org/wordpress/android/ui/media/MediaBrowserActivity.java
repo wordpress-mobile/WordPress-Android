@@ -216,15 +216,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         return mBrowserType == MediaBrowserType.BROWSER;
     }
 
-    public void showTabs() {
-        if (shouldShowTabs() && mTabLayout.getVisibility() != View.VISIBLE) {
-            AniUtils.animateTopBar(mTabLayout, true);
-        }
-    }
+    public void enableTabs(boolean enable) {
+        if (!shouldShowTabs()) return;
 
-    public void hideTabs() {
-        if (mTabLayout.getVisibility() == View.VISIBLE) {
-            AniUtils.animateTopBar(mTabLayout, false);
+        if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mTabLayout, AniUtils.Duration.MEDIUM);
+        } else if (!enable && mTabLayout.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mTabLayout, AniUtils.Duration.MEDIUM, View.INVISIBLE);
         }
     }
 
@@ -453,7 +451,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public boolean onMenuItemActionExpand(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
 
-        hideTabs();
+        enableTabs(false);
 
         // load last search query
         if (!TextUtils.isEmpty(mQuery)) {
@@ -468,7 +466,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         invalidateOptionsMenu();
 
-        showTabs();
+        enableTabs(true);
 
         return true;
     }
@@ -614,13 +612,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        hideTabs();
+        enableTabs(false);
     }
 
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
         super.onSupportActionModeFinished(mode);
-        showTabs();
+        enableTabs(true);
     }
 
     public void deleteMedia(final ArrayList<Integer> ids) {
