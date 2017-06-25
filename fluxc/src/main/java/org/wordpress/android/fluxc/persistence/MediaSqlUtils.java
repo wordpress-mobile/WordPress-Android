@@ -132,12 +132,7 @@ public class MediaSqlUtils {
     }
 
     private static SelectQuery<MediaModel> getSiteImagesQuery(SiteModel siteModel) {
-        return WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
-                .endGroup().endWhere()
-                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_IMAGE);
     }
 
     public static List<MediaModel> getSiteImagesExcluding(SiteModel siteModel, List<Long> filter) {
@@ -148,12 +143,45 @@ public class MediaSqlUtils {
         return getSiteImagesExcludingQuery(siteModel, filter).getAsCursor();
     }
 
+    public static List<MediaModel> getSiteVideos(SiteModel siteModel) {
+        return getSiteVideosQuery(siteModel).getAsModel();
+    }
+
+    public static List<MediaModel> getSiteDocuments(SiteModel siteModel) {
+        return getSiteDocumentsQuery(siteModel).getAsModel();
+    }
+
+    public static List<MediaModel> getSiteAudio(SiteModel siteModel) {
+        return getSiteAudioQuery(siteModel).getAsModel();
+    }
+
     public static SelectQuery<MediaModel> getSiteImagesExcludingQuery(SiteModel siteModel, List<Long> filter) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .isNotIn(MediaModelTable.MEDIA_ID, filter)
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+    }
+
+    private static SelectQuery<MediaModel> getSiteVideosQuery(SiteModel siteModel) {
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_VIDEO);
+    }
+
+    private static SelectQuery<MediaModel> getSiteAudioQuery(SiteModel siteModel) {
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_AUDIO);
+    }
+
+    private static SelectQuery<MediaModel> getSiteDocumentsQuery(SiteModel siteModel) {
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_APPLICATION);
+    }
+
+    private static SelectQuery<MediaModel> getSiteMediaByMimeTypeQuery(SiteModel siteModel, String mimeTypePrefix) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .contains(MediaModelTable.MIME_TYPE, mimeTypePrefix)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
