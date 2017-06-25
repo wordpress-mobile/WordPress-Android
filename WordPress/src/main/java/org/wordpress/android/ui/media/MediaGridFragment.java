@@ -21,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -94,8 +93,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
-    private LinearLayout mEmptyView;
-    private TextView mEmptyViewTitle;
+    private TextView mEmptyView;
     private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
 
     private SiteModel mSite;
@@ -175,8 +173,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mRecycler.setAdapter(getAdapter());
 
-        mEmptyView = (LinearLayout) view.findViewById(R.id.empty_view);
-        mEmptyViewTitle = (TextView) view.findViewById(R.id.empty_view_title);
+        mEmptyView = (TextView) view.findViewById(R.id.empty_view);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = new SwipeToRefreshHelper(getActivity(),
@@ -392,7 +389,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     break;
             }
 
-            mEmptyViewTitle.setText(getText(stringId));
+            mEmptyView.setText(getText(stringId));
             mEmptyView.setVisibility(View.VISIBLE);
         } else {
             mEmptyView.setVisibility(View.GONE);
