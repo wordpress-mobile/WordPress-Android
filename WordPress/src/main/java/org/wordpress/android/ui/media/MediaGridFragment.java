@@ -143,7 +143,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
+
+        if (!mHasRetrievedAllMedia && NetworkUtils.isNetworkAvailable(getActivity())) {
+            fetchMediaList(false);
+        } else {
+            refresh();
+        }
     }
 
     @Override
@@ -323,15 +328,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     /*
-     * refresh the adapter and fetch media if we haven't already done so
+     * refresh the adapter from the local store
      */
     public void refresh() {
-        if (!isAdded()) return;
-
-        getAdapter().setMediaList(getFilteredMedia());
-
-        if (!mHasRetrievedAllMedia) {
-            fetchMediaList(false);
+        if (isAdded()) {
+            getAdapter().setMediaList(getFilteredMedia());
         }
     }
 
