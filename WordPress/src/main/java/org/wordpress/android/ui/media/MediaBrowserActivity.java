@@ -34,10 +34,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -68,6 +70,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -239,6 +242,29 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
                     // noop
+                }
+            });
+
+            // tabMode is set to scrollable in layout, set to fixed if there's enough space to show them all
+            mTabLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    if (mTabLayout.getChildCount() > 0) {
+                        int tabLayoutWidth = 0;
+                        LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
+                        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+                            LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
+                            tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                        }
+
+                        int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);
+                        if (tabLayoutWidth < displayWidth) {
+                            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                        }
+                    }
                 }
             });
         } else {
