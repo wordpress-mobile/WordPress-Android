@@ -25,6 +25,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -216,6 +217,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
      */
     private boolean shouldShowTabs() {
         return mBrowserType == MediaBrowserType.BROWSER;
+    }
+
+    public void enableTabs(boolean enable) {
+        if (!shouldShowTabs()) return;
+
+        if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mTabLayout, AniUtils.Duration.MEDIUM);
+        } else if (!enable && mTabLayout.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mTabLayout, AniUtils.Duration.MEDIUM, View.INVISIBLE);
+        }
     }
 
     private void setupTabs() {
@@ -468,9 +479,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public boolean onMenuItemActionExpand(MenuItem item) {
         mMenu.findItem(R.id.menu_new_media).setVisible(false);
 
-        if (shouldShowTabs()) {
-            AniUtils.animateTopBar(mTabLayout, false);
-        }
+        enableTabs(false);
 
         // load last search query
         if (!TextUtils.isEmpty(mQuery)) {
@@ -485,9 +494,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         invalidateOptionsMenu();
 
-        if (shouldShowTabs()) {
-            AniUtils.animateTopBar(mTabLayout, true);
-        }
+        enableTabs(true);
 
         return true;
     }
@@ -628,6 +635,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             AppLog.d(AppLog.T.MEDIA, "<" + title + "> upload complete");
             updateViews();
         }
+    }
+
+    @Override
+    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+        enableTabs(false);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
+        super.onSupportActionModeFinished(mode);
+        enableTabs(true);
     }
 
     public void deleteMedia(final ArrayList<Integer> ids) {
