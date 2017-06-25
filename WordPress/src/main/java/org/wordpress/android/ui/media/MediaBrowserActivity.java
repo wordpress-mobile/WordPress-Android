@@ -221,9 +221,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             int selectedColor = ContextCompat.getColor(this, R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.all));
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all));         // FILTER_ALL
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images));      // FILTER_IMAGES
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents));   // FILTER_DOCUMENTS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos));      // FILTER_VIDEOS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio));       // FILTER_AUDIO
 
             mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override

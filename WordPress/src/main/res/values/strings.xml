@@ -117,9 +117,11 @@
     <string name="cab_selected">%d selected</string>
 
     <!-- Media  -->
-    <string name="all">All</string>
-    <string name="images">Images</string>
-    <string name="unattached">Unattached</string>
+    <string name="media_all">All</string>
+    <string name="media_images">Images</string>
+    <string name="media_documents">Documents</string>
+    <string name="media_videos">Videos</string>
+    <string name="media_audio">Audio</string>
     <string name="media_gallery_column_count_single">1 column</string>
     <string name="media_gallery_column_count_multi">%d columns</string>
     <string name="media_gallery_type">Type</string>

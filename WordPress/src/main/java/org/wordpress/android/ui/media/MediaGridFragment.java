@@ -42,6 +42,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -71,7 +72,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     static final int FILTER_ALL         = 0;
     static final int FILTER_IMAGES      = 1;
-    static final int FILTER_UNATTACHED  = 2;
+    static final int FILTER_DOCUMENTS   = 2;
+    static final int FILTER_VIDEOS      = 3;
+    static final int FILTER_AUDIO       = 4;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -245,8 +248,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         switch (mFilter) {
             case FILTER_IMAGES:
                 return mMediaStore.getSiteImages(mSite);
-            case FILTER_UNATTACHED:
-                return mMediaStore.getUnattachedSiteMedia(mSite);
+            case FILTER_DOCUMENTS:
+                return mMediaStore.getSiteDocuments(mSite);
+            case FILTER_VIDEOS:
+                return mMediaStore.getSiteVideos(mSite);
+            case FILTER_AUDIO:
+                return mMediaStore.getSiteAudio(mSite);
             default:
                 return mMediaStore.getAllSiteMedia(mSite);
         }
