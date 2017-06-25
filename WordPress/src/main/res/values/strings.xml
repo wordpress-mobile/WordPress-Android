@@ -188,6 +188,10 @@
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="media_empty_list">No media</string>
+    <string name="media_empty_image_list">No images</string>
+    <string name="media_empty_videos_list">No videos</string>
+    <string name="media_empty_documents_list">No documents</string>
+    <string name="media_empty_audio_list">No audio</string>
     <string name="delete">Delete</string>
 
     <!-- Media details -->

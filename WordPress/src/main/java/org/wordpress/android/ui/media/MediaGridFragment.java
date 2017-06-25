@@ -42,7 +42,6 @@ import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -384,7 +383,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     stringId = R.string.media_fetching;
                     break;
                 case NO_CONTENT:
-                    stringId = R.string.media_empty_list;
+                    switch (mFilter) {
+                        case FILTER_IMAGES:
+                            stringId = R.string.media_empty_image_list;
+                            break;
+                        case FILTER_VIDEOS:
+                            stringId = R.string.media_empty_videos_list;
+                            break;
+                        case FILTER_DOCUMENTS:
+                            stringId = R.string.media_empty_documents_list;
+                            break;
+                        case FILTER_AUDIO:
+                            stringId = R.string.media_empty_audio_list;
+                            break;
+                        default:
+                            stringId = R.string.media_empty_list;
+                            break;
+                    }
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;
