@@ -177,7 +177,7 @@ public class MediaSqlUtilsTest {
         }
         for (int i = 0; i < testTitles.length; ++i) {
             List<MediaModel> mediaModels = MediaSqlUtils
-                    .searchSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), MediaModelTable.TITLE, testTitles[i]);
+                    .searchSiteMedia(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID), testTitles[i]);
             Assert.assertEquals(SMALL_TEST_POOL - i, mediaModels.size());
         }
     }
