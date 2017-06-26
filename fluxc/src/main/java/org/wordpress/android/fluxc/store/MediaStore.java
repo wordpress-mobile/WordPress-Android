@@ -489,12 +489,12 @@ public class MediaStore extends Store {
         return media.size() > 0 ? media.get(0).getThumbnailUrl() : null;
     }
 
-    public List<MediaModel> searchSiteMediaByTitle(SiteModel siteModel, String titleSearch) {
-        return MediaSqlUtils.searchSiteMedia(siteModel, MediaModelTable.TITLE, titleSearch);
+    public List<MediaModel> searchSiteMedia(SiteModel siteModel, String searchTerm) {
+        return MediaSqlUtils.searchSiteMedia(siteModel, searchTerm);
     }
 
-    public WellCursor<MediaModel> searchSiteMediaByTitleAsCursor(SiteModel siteModel, String titleSearch) {
-        return MediaSqlUtils.searchSiteMediaAsCursor(siteModel, MediaModelTable.TITLE, titleSearch);
+    public WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel, String searchTerm) {
+        return MediaSqlUtils.searchSiteMediaAsCursor(siteModel, searchTerm);
     }
 
     public MediaModel getMediaForPostWithPath(PostModel postModel, String filePath) {
