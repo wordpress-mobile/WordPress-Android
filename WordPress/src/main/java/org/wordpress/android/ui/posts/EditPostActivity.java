@@ -238,7 +238,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
-        setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -252,6 +251,14 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         //AppPrefs.setAztecEditorEnabled(true);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
+
+        if (mShowAztecEditor) {
+            setContentView(R.layout.new_edit_post_activity);
+        } else if (mShowNewEditor) {
+            setContentView(R.layout.new_edit_post_activity_visual);
+        } else {
+            setContentView(R.layout.new_edit_post_activity_legacy);
+        }
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();

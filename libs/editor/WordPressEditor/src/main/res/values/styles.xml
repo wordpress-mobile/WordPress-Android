@@ -8,8 +8,8 @@
     </style>
 
     <style name="FormatBarButton">
-        <item name="android:minWidth">@dimen/format_bar_height</item>
-        <item name="android:minHeight">@dimen/format_bar_height</item>
+        <item name="android:minWidth">@dimen/visual_format_bar_height</item>
+        <item name="android:minHeight">@dimen/visual_format_bar_height</item>
         <item name="android:textOn">""</item>
         <item name="android:textOff">""</item>
     </style>
