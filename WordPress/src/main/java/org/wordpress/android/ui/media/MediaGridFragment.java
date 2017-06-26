@@ -316,7 +316,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        List<MediaModel> mediaList = mMediaStore.searchSiteMediaByTitle(mSite, mSearchTerm);
+        List<MediaModel> mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
         mGridAdapter.setMediaList(mediaList);
     }
 
