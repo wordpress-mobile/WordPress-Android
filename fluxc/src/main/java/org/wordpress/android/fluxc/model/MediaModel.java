@@ -19,7 +19,7 @@ public class MediaModel extends Payload implements Identifiable, Serializable {
         public static MediaUploadState fromString(String stringState) {
             if (stringState != null) {
                 for (MediaUploadState state: MediaUploadState.values()) {
-                    if (stringState.equalsIgnoreCase(state.name())) {
+                    if (stringState.equalsIgnoreCase(state.toString())) {
                         return state;
                     }
                 }
