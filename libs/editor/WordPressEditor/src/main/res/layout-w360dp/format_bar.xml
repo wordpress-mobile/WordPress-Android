@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:contentDescription="@string/format_bar_description_media"
-                android:background="@drawable/format_bar_button_media_selector"/>
+                android:background="@drawable/visual_format_bar_button_media_selector"/>
 
             <org.wordpress.android.editor.RippleToggleButton
                 android:id="@+id/format_bar_button_bold"
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:contentDescription="@string/format_bar_description_bold"
-                android:background="@drawable/format_bar_button_bold_selector"
+                android:background="@drawable/visual_format_bar_button_bold_selector"
                 android:tag="@string/format_bar_tag_bold"/>
 
             <org.wordpress.android.editor.RippleToggleButton
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:contentDescription="@string/format_bar_description_italic"
-                android:background="@drawable/format_bar_button_italic_selector"
+                android:background="@drawable/visual_format_bar_button_italic_selector"
                 android:tag="@string/format_bar_tag_italic"/>
 
             <org.wordpress.android.editor.RippleToggleButton
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:contentDescription="@string/format_bar_description_quote"
-                android:background="@drawable/format_bar_button_quote_selector"
+                android:background="@drawable/visual_format_bar_button_quote_selector"
                 android:tag="@string/format_bar_tag_blockquote"/>
 
             <org.wordpress.android.editor.RippleToggleButton
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:contentDescription="@string/format_bar_description_ul"
-                android:background="@drawable/format_bar_button_ul_selector"
+                android:background="@drawable/visual_format_bar_button_ul_selector"
                 android:tag="@string/format_bar_tag_unorderedList"/>
 
             <org.wordpress.android.editor.RippleToggleButton
@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:contentDescription="@string/format_bar_description_ol"
-                android:background="@drawable/format_bar_button_ol_selector"
+                android:background="@drawable/visual_format_bar_button_ol_selector"
                 android:tag="@string/format_bar_tag_orderedList"/>
 
             <org.wordpress.android.editor.RippleToggleButton
@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:contentDescription="@string/format_bar_description_link"
-                android:background="@drawable/format_bar_button_link_selector"
+                android:background="@drawable/visual_format_bar_button_link_selector"
                 android:tag="@string/format_bar_tag_link"/>
         </LinearLayout>
 
@@ -108,6 +108,6 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:contentDescription="@string/format_bar_description_html"
-            android:background="@drawable/format_bar_button_html_selector"/>
+            android:background="@drawable/visual_format_bar_button_html_selector"/>
     </LinearLayout>
 </LinearLayout>
