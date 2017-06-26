@@ -191,7 +191,7 @@ public class MySiteFragment extends Fragment
             public void onClick(View v) {
                 if (!mAccountStore.hasAccessToken()) {
                     // If the user is not connected to WordPress.com, ask him to connect first.
-                    startWPComLoginActivity();
+                    startWPComLoginForJetpackStats();
                 } else {
                     ActivityLauncher.viewBlogStats(getActivity(), getSelectedSite());
                 }
@@ -278,7 +278,7 @@ public class MySiteFragment extends Fragment
         return rootView;
     }
 
-    private void startWPComLoginActivity() {
+    private void startWPComLoginForJetpackStats() {
         Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
         LoginMode.JETPACK_STATS.putInto(loginIntent);
         startActivityForResult(loginIntent, RequestCodes.DO_LOGIN);
