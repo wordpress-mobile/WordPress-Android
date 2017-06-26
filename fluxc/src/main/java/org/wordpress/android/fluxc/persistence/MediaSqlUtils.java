@@ -6,7 +6,7 @@ import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 
@@ -324,7 +324,7 @@ public class MediaSqlUtils {
         return WellSql.delete(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .equals(MediaModelTable.UPLOAD_STATE, UploadState.UPLOADED.toString())
+                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
                 .endGroup().endWhere().execute();
     }
 
