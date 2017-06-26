@@ -212,6 +212,7 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
             ToastUtils.showToast(getContext(), R.string.error_fetch_my_profile);
+            return;
         }
 
         if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
