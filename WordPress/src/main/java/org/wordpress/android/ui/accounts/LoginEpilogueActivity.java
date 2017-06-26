@@ -1,18 +1,25 @@
 package org.wordpress.android.ui.accounts;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.ui.ActivityLauncher;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
+import javax.inject.Inject;
+
 public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpilogueFragment.LoginEpilogueListener {
     public static final String EXTRA_SHOW_AND_RETURN = "EXTRA_SHOW_AND_RETURN";
+
+    protected @Inject AccountStore mAccountStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.login_epilogue_activity);
 
@@ -32,7 +39,13 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
 
     @Override
     public void onConnectAnotherSite() {
-        ToastUtils.showToast(this, "Connect another site is not implemented yet.");
+        if (mAccountStore.hasAccessToken()) {
+            ActivityLauncher.addSelfHostedSiteForResult(this);
+        } else {
+            ActivityLauncher.showSignInForResult(this);
+        }
+
+        finish();
     }
 
     @Override

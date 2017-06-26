@@ -16,6 +16,7 @@ import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.NewUserFragment;
@@ -126,6 +127,7 @@ public interface AppComponent {
     void inject(Login2FaFragment object);
     void inject(LoginSiteAddressFragment object);
     void inject(LoginUsernamePasswordFragment object);
+    void inject(LoginEpilogueActivity object);
 
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);
