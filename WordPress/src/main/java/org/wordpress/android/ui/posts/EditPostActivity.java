@@ -72,7 +72,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -1393,7 +1393,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 String stringUri = matcher.group(1);
                 Uri uri = Uri.parse(stringUri);
                 MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(queueFileForUpload(uri,
-                        getContentResolver().getType(uri), UploadState.FAILED));
+                        getContentResolver().getType(uri), MediaUploadState.FAILED));
                 if (mediaFile == null) {
                     continue;
                 }
@@ -1730,7 +1730,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
 
         // Video optimization -> API18 or higher
-        if (isVideo && WPMediaUtils.isVideoOptimizationAvailable()) {
+        if (isVideo && WPMediaUtils.isVideoOptimizationEnabled(this, mSite)) {
             // Setting up the lister that's called when the video optimization finishes
             EditPostActivityVideoHelper.IVideoOptimizationListener listener = new EditPostActivityVideoHelper.IVideoOptimizationListener() {
                 @Override
@@ -1744,7 +1744,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 }
             };
             EditPostActivityVideoHelper vHelper = new EditPostActivityVideoHelper(this, listener, path);
-            boolean videoOptimizationStarted = vHelper.startVideoOptimization();
+            boolean videoOptimizationStarted = vHelper.startVideoOptimization(mSite);
             // This is true only when video optimization can be started. In this case we just need to wait until it finishes
             if (videoOptimizationStarted) {
                 return true;
@@ -1786,7 +1786,8 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     }
 
     private boolean addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri), UploadState.QUEUED);
+        MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri),
+                MediaUploadState.QUEUED);
         if (isVideo) {
             mediaModel.setTitle(getResources().getString(R.string.video));
         } else {
@@ -2058,7 +2059,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (mPendingUploads != null && !mPendingUploads.isEmpty()) {
             final ArrayList<MediaModel> mediaList = new ArrayList<>();
             for (MediaModel media : mPendingUploads) {
-                if (UploadState.QUEUED.name().equals(media.getUploadState())) {
+                if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
                     mediaList.add(media);
                 }
             }
@@ -2100,10 +2101,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
      * if there are issues with the file.
      */
     private MediaModel queueFileForUpload(Uri uri, String mimeType) {
-        return queueFileForUpload(uri, mimeType, UploadState.QUEUED);
+        return queueFileForUpload(uri, mimeType, MediaUploadState.QUEUED);
     }
 
-    private MediaModel queueFileForUpload(Uri uri, String mimeType, UploadState startingState) {
+    private MediaModel queueFileForUpload(Uri uri, String mimeType, MediaUploadState startingState) {
         String path = getRealPathFromURI(uri);
 
         // Invalid file path
@@ -2132,7 +2133,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         return media;
     }
 
-    private MediaModel buildMediaModel(Uri uri, String mimeType, UploadState startingState) {
+    private MediaModel buildMediaModel(Uri uri, String mimeType, MediaUploadState startingState) {
         String path = getRealPathFromURI(uri);
 
         MediaModel media = mMediaStore.instantiateMediaModel();
@@ -2166,7 +2167,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         media.setLocalSiteId(mSite.getId());
         media.setFileExtension(fileExtension);
         media.setMimeType(mimeType);
-        media.setUploadState(startingState.name());
+        media.setUploadState(startingState);
         media.setUploadDate(DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000));
         if (!mPost.isLocalDraft()) {
             media.setPostId(mPost.getRemotePostId());
@@ -2225,7 +2226,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        if (UploadState.valueOf(media.getUploadState()) == UploadState.UPLOADED) {
+        if (media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
             // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
@@ -2233,7 +2234,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         FluxCUtils.mediaFileFromMediaModel(media));
             }
         } else {
-            media.setUploadState(UploadState.QUEUED.name());
+            media.setUploadState(MediaUploadState.QUEUED);
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
             mPendingUploads.add(media);
             startMediaUploadService();

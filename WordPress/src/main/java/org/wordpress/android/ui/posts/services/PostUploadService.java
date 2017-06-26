@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -596,7 +596,8 @@ public class PostUploadService extends Service {
 
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
-            if (finishedMedia == null || finishedMedia.getUploadState() == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
+            if (finishedMedia == null || finishedMedia.getUploadState() == null ||
+                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
                 mIsMediaError = true;
                 return null;
             }
@@ -625,7 +626,8 @@ public class PostUploadService extends Service {
 
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
-            if (finishedMedia == null || finishedMedia.getUploadState() == null || !finishedMedia.getUploadState().equals(UploadState.UPLOADED.name())) {
+            if (finishedMedia == null || finishedMedia.getUploadState() == null ||
+                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
                 mIsMediaError = true;
                 return null;
             }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.PublicizeTable;
+import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeConnectionList;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.models.PublicizeServiceList;
@@ -154,8 +155,10 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
      */
     private boolean mIsTaskRunning = false;
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
-        private PublicizeServiceList tmpServices;
-        private PublicizeConnectionList tmpConnections;
+        private static final String GOOGLE_PLUS_ID = "google_plus";
+
+        private final PublicizeServiceList tmpServices = new PublicizeServiceList();
+        private final PublicizeConnectionList tmpConnections = new PublicizeConnectionList();
 
         @Override
         protected void onPreExecute() {
@@ -167,8 +170,20 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpServices = PublicizeTable.getServiceList();
-            tmpConnections = PublicizeTable.getConnectionsForSite(mSiteId);
+            PublicizeServiceList services = PublicizeTable.getServiceList();
+            for (PublicizeService service: services) {
+                if (!service.getId().equals(GOOGLE_PLUS_ID)) {
+                    tmpServices.add(service);
+                }
+            }
+
+            PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);
+            for (PublicizeConnection connection: connections) {
+                if (!connection.getService().equals(GOOGLE_PLUS_ID)) {
+                    tmpConnections.add(connection);
+                }
+            }
+
             return !(tmpServices.isSameAs(mServices) && tmpConnections.isSameAs(mConnections));
         }
         @Override

@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -145,10 +145,8 @@ public class MediaUploadService extends Service {
 
     private void handleOnMediaUploadedError(@NonNull OnMediaUploaded event) {
         AppLog.w(T.MEDIA, "Error uploading media: " + event.error.message);
-        // TODO: Don't update the state here, it needs to be done in FluxC
         MediaModel media = getMediaFromInProgressQueueById(event.media.getId());
         if (media != null) {
-            media.setUploadState(UploadState.FAILED.name());
             mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
         }
 
@@ -306,7 +304,6 @@ public class MediaUploadService extends Service {
         AppLog.i(T.MEDIA, "Dispatching upload action for media with local id: " + media.getId() +
                 " and path: " + media.getFilePath());
         mInProgressUploads.add(media);
-        media.setUploadState(UploadState.UPLOADING.name());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
         MediaPayload payload = new MediaPayload(site, media);
