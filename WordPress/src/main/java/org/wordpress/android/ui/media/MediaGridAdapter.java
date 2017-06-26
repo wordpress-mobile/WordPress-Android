@@ -22,8 +22,8 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.models.MediaUploadState;
 import org.wordpress.android.ui.FadeInNetworkImageView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -216,7 +216,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.stateTextView.setText(mContext.getString(R.string.retry));
                 holder.stateTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.media_retry_image, 0, 0);
             } else {
-                holder.stateTextView.setText(MediaUploadState.getLabel(mContext, state));
+                holder.stateTextView.setText(getLabelForMediaUploadState(state));
                 holder.stateTextView.setCompoundDrawables(null, null, null, null);
             }
         } else {
@@ -561,5 +561,23 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             }
         }
         return null;
+    }
+
+    private String getLabelForMediaUploadState(MediaUploadState uploadState) {
+        switch (uploadState) {
+            case QUEUED:
+                return mContext.getString(R.string.media_upload_state_queued);
+            case UPLOADING:
+                return mContext.getString(R.string.media_upload_state_uploading);
+            case DELETING:
+                return mContext.getString(R.string.media_upload_state_deleting);
+            case DELETED:
+                return mContext.getString(R.string.media_upload_state_deleted);
+            case FAILED:
+                return mContext.getString(R.string.media_upload_state_failed);
+            case UPLOADED:
+                return mContext.getString(R.string.media_upload_state_uploaded);
+        }
+        return "";
     }
 }
