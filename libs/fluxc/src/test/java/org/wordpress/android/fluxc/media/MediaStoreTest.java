@@ -369,7 +369,7 @@ public class MediaStoreTest {
 
         for (int i = 0; i < testPoolSize; ++i) {
             List<MediaModel> storeMedia = mMediaStore
-                    .searchSiteMediaByTitle(getTestSiteWithLocalId(testSiteId), testTitles[i]);
+                    .searchSiteMedia(getTestSiteWithLocalId(testSiteId), testTitles[i]);
             assertNotNull(storeMedia);
             assertTrue(storeMedia.size() == testPoolSize - i);
         }
