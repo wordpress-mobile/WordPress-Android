@@ -429,6 +429,18 @@ public class MediaStore extends Store {
         return MediaSqlUtils.getSiteImages(siteModel);
     }
 
+    public List<MediaModel> getSiteVideos(SiteModel siteModel) {
+        return MediaSqlUtils.getSiteVideos(siteModel);
+    }
+
+    public List<MediaModel> getSiteAudio(SiteModel siteModel) {
+        return MediaSqlUtils.getSiteAudio(siteModel);
+    }
+
+    public List<MediaModel> getSiteDocuments(SiteModel siteModel) {
+        return MediaSqlUtils.getSiteDocuments(siteModel);
+    }
+
     public WellCursor<MediaModel> getSiteImagesAsCursor(SiteModel siteModel) {
         return MediaSqlUtils.getSiteImagesAsCursor(siteModel);
     }
