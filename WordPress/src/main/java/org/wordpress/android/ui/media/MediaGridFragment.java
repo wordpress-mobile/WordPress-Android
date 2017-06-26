@@ -239,7 +239,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private List<MediaModel> getFilteredMedia() {
         if (!TextUtils.isEmpty(mSearchTerm)) {
-            return mMediaStore.searchSiteMediaByTitle(mSite, mSearchTerm);
+            return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
         }
 
         switch (mFilter) {
