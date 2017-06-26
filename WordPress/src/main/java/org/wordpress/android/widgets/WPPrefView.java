@@ -28,6 +28,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -89,7 +90,7 @@ public class WPPrefView extends LinearLayout implements
     /*
      * single item when this is a list preference
      */
-    public static class PrefListItem {
+    public static class PrefListItem implements Serializable {
         private final String mItemName;   // name to display for this item
         private final String mItemValue;  // value for this item (can be same as name)
         private boolean mIsChecked;       // whether this item is checked
@@ -228,8 +229,8 @@ public class WPPrefView extends LinearLayout implements
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
         bundle.putSerializable(KEY_LIST_ITEMS, mListItems);
+        bundle.putParcelable(KEY_SUPER_STATE, super.onSaveInstanceState());
         return bundle;
     }
 
@@ -342,6 +343,7 @@ public class WPPrefView extends LinearLayout implements
                 if (getContext() instanceof Activity) {
                     Activity activity = (Activity) getContext();
                     WPPrefDialogFragment fragment = WPPrefDialogFragment.newInstance(this);
+                    activity.getFragmentManager().executePendingTransactions();
                     fragment.show(activity.getFragmentManager(), "pref_dialog_tag");
                 }
                 break;
