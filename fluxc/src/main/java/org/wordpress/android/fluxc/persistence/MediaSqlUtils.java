@@ -104,21 +104,26 @@ public class MediaSqlUtils {
         }
     }
 
-    public static List<MediaModel> searchSiteMedia(SiteModel siteModel, String column, String searchTerm) {
-        return searchSiteMediaQuery(siteModel, column, searchTerm).getAsModel();
+    public static List<MediaModel> searchSiteMedia(SiteModel siteModel, String searchTerm) {
+        return searchSiteMediaQuery(siteModel, searchTerm).getAsModel();
     }
 
-    public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel, String column,
+    public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel,
                                                                  String searchTerm) {
-        return searchSiteMediaQuery(siteModel, column, searchTerm).getAsCursor();
+        return searchSiteMediaQuery(siteModel, searchTerm).getAsCursor();
     }
 
-    private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel, String column,
+    private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel,
                                                                 String searchTerm) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .contains(column, searchTerm)
+                .beginGroup()
+                    .contains(MediaModelTable.TITLE, searchTerm)
+                    .or().contains(MediaModelTable.CAPTION, searchTerm)
+                    .or().contains(MediaModelTable.DESCRIPTION, searchTerm)
+                    .or().contains(MediaModelTable.MIME_TYPE, searchTerm)
+                .endGroup()
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
