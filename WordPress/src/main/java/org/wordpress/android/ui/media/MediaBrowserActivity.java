@@ -247,7 +247,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-                    // noop
+                    setFilter(tab.getPosition());
                 }
             });
         } else {
