@@ -269,16 +269,17 @@ public class SiteSqlUtils {
             while (localIterator.hasNext()) {
                 SiteModel localSite = localIterator.next();
 
-                // don't remove local site if the remote ID matches a given site's ID
-                for (SiteModel site : sites) {
-                    if (site.getSiteId() == localSite.getSiteId()) {
-                        localIterator.remove();
-                        break;
-                    }
-                }
                 // don't remove sites with local changes
                 if (PostSqlUtils.getSiteHasLocalChanges(localSite)) {
                     localIterator.remove();
+                } else {
+                    // don't remove local site if the remote ID matches a given site's ID
+                    for (SiteModel site : sites) {
+                        if (site.getSiteId() == localSite.getSiteId()) {
+                            localIterator.remove();
+                            break;
+                        }
+                    }
                 }
             }
 
