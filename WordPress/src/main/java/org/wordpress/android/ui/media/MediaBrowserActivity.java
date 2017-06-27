@@ -420,6 +420,15 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
+    public void onBackPressed() {
+        if (mAddMediaPopup != null && mAddMediaPopup.isShowing()) {
+            mAddMediaPopup.dismiss();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -739,7 +748,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         });
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
-        mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, false);
     }
 
     private void showAddMediaPopup() {
