@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.m4m.MediaComposer;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -109,7 +107,6 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
@@ -124,7 +121,6 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
-import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -135,7 +131,6 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -160,10 +155,10 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_UNFINISHED_MEDIA = "hasUnfinishedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
-    public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
-    public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
-    public static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
-    public static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
+    private static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
+    private static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
+    private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
+    private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -539,7 +534,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     /*
      * user has requested to show the photo picker
      */
-    void showPhotoPicker() {
+    private void showPhotoPicker() {
         // make sure we initialized the photo picker
         if (mPhotoPickerFragment == null) {
             initPhotoPicker();
@@ -570,7 +565,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
-    public void hidePhotoPicker() {
+    private void hidePhotoPicker() {
         if (isPhotoPickerShowing()) {
             mPhotoPickerFragment.finishActionMode();
             AniUtils.animateBottomBar(mPhotoPickerContainer, false);
@@ -927,7 +922,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         handleBackPressed();
     }
 
-    public boolean isNewPost() {
+    private boolean isNewPost() {
         return mIsNewPost;
     }
 
@@ -1053,7 +1048,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             return;
         }
 
-        boolean isFirstTimePublish = isFirstTimePublish();
         boolean postUpdateSuccessful = updatePostObject();
         if (!postUpdateSuccessful) {
             // just return, since the only case updatePostObject() can fail is when the editor
