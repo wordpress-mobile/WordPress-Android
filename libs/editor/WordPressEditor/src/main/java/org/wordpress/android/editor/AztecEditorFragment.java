@@ -323,6 +323,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.fromHtml(text.toString());
         updateFailedMediaList();
         overlayFailedMedia();
+
+        // ToDo:  this is to be removed when feature/async-media is merged
+        // If there are images that are still in progress (because the editor exited before they completed),
+        // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
+        markAllUploadingMediaAsFailed();
     }
 
     /**
@@ -396,6 +401,34 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public boolean isActionInProgress() {
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
+    }
+
+    private void markAllUploadingMediaAsFailed() {
+        // first obtain all the media currently marked as "uploading"
+        AztecText.AttributePredicate uploadingPredicate = new AztecText.AttributePredicate() {
+            @Override
+            public boolean matches(@NonNull Attributes attrs) {
+                AttributesWithClass attributesWithClass = new AttributesWithClass(attrs);
+                return attributesWithClass.hasClass(ATTR_STATUS_UPLOADING);
+            }
+        };
+
+        Set<String> uploadingIdsUponStart = new HashSet<>();
+        for (Attributes attrs : content.getAllElementAttributes(uploadingPredicate)) {
+            uploadingIdsUponStart.add(attrs.getValue(ATTR_ID_WP));
+        }
+
+        // now re-mark them as "failed"
+        for (String mediaId : uploadingIdsUponStart) {
+            if (mediaId != null) {
+                AttributesWithClass attributesWithClass = new AttributesWithClass(
+                        content.getElementAttributes(ImagePredicate.getLocalMediaIdPredicate(mediaId)));
+                attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+                attributesWithClass.addClass(ATTR_STATUS_FAILED);
+                overlayFailedMedia(mediaId, attributesWithClass.getAttributes());
+                mFailedMediaIds.add(mediaId);
+            }
+        }
     }
 
     private void updateFailedMediaList() {
@@ -949,6 +982,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
                                 content.getElementAttributes(mTappedImagePredicate));
                         attributesWithClass.removeClass(ATTR_STATUS_FAILED);
+                        attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
 
                         // set intermediate shade overlay
                         content.setOverlay(mTappedImagePredicate, 0,
