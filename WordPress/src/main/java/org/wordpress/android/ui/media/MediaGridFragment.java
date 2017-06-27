@@ -65,6 +65,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
     private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
+    private static final String BUNDLE_HAS_FETCHED_MEDIA = "BUNDLE_HAS_FETCHED_MEDIA";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
 
     static final String TAG = "media_grid_fragment";
@@ -86,6 +87,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
+    private boolean mHasFetchedMedia;
 
     private ActionMode mActionMode;
     private String mSearchTerm;
@@ -144,7 +146,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onResume() {
         super.onResume();
 
-        if (!mHasRetrievedAllMedia && NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!mHasFetchedMedia && NetworkUtils.isNetworkAvailable(getActivity())) {
             fetchMediaList(false);
         } else {
             refresh();
@@ -408,6 +410,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(getAdapter().getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridManager.findFirstCompletelyVisibleItemPosition());
         outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
+        outState.putBoolean(BUNDLE_HAS_FETCHED_MEDIA, mHasFetchedMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, getAdapter().isInMultiSelect());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
     }
@@ -458,6 +461,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
 
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
+        mHasFetchedMedia = savedInstanceState.getBoolean(BUNDLE_HAS_FETCHED_MEDIA, false);
         mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
     }
@@ -494,6 +498,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mHasRetrievedAllMedia = !event.canLoadMore;
         getAdapter().setHasRetrievedAll(mHasRetrievedAllMedia);
 
+        mHasFetchedMedia = true;
         mIsRefreshing = false;
 
         // the activity may be gone by the time this finishes, so check for it
