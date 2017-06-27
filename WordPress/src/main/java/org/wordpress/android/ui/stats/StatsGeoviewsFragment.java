@@ -83,6 +83,13 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             return;
         }
 
+        // Disable the map on API 18 or lower (Android 4.3 or lower).
+        // See: https://github.com/wordpress-mobile/WordPress-Android/issues/6146
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            AppLog.w(AppLog.T.STATS, "Geo map is disabled on API 18 or lower. Current API: " + Build.VERSION.SDK_INT);
+            return;
+        }
+
         // setting up different margins for the map. We're basically remove left margins since the
         // chart service produce a map that's slightly shifted on the right. See the Web version.
         int dp4 = DisplayUtils.dpToPx(mTopPagerContainer.getContext(), 4);
