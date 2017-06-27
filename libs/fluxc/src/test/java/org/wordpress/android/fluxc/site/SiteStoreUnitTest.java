@@ -675,4 +675,64 @@ public class SiteStoreUnitTest {
         SiteModel pureSelfHosted2 = generateSelfHostedSiteFutureJetpack();
         assertFalse(pureSelfHosted2.isUsingWpComRestApi());
     }
+
+    @Test
+    public void testRemoveWPComRestSitesAbsentFromList()
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        WellSqlTestUtils.setupWordPressComAccount();
+
+        final List<SiteModel> allSites = new ArrayList<>();
+        final List<SiteModel> sitesToKeep = new ArrayList<>();
+
+        for (int i = 0; i < 15; ++i) {
+            switch (i % 3) {
+                case 0:
+                    // add a .com site
+                    SiteModel dotComSite = generateWPComSite();
+                    dotComSite.setSiteId(i + 1);
+                    dotComSite.setUrl("https://pony" + i + ".com");
+                    dotComSite.setXmlRpcUrl("https://pony" + i + ".com/xmlrpc.php");
+                    allSites.add(dotComSite);
+                    break;
+                case 1:
+                    // add a self-hosted Jetpack site
+                    SiteModel jetpackSite = generateJetpackSiteOverRestOnly();
+                    jetpackSite.setSiteId(i + 1);
+                    jetpackSite.setUrl("https://pony" + i + ".com");
+                    jetpackSite.setXmlRpcUrl("https://pony" + i + ".com/xmlrpc.php");
+                    allSites.add(jetpackSite);
+                    break;
+                case 2:
+                    // add a self-hosted non-Jetpack site
+                    SiteModel selfHostedSite = generateSelfHostedNonJPSite();
+                    selfHostedSite.setSiteId(i + 1);
+                    selfHostedSite.setUrl("https://pony" + i + ".com");
+                    selfHostedSite.setXmlRpcUrl("https://pony" + i + ".com/xmlrpc.php");
+                    allSites.add(selfHostedSite);
+                    break;
+            }
+        }
+
+        // add all sites to DB
+        Method createOrUpdateSites = SiteStore.class.getDeclaredMethod("createOrUpdateSites", SitesModel.class);
+        createOrUpdateSites.setAccessible(true);
+        UpdateSitesResult res = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, new SitesModel(allSites));
+
+        assertFalse(res.duplicateSiteFound);
+        assertTrue(res.rowsAffected == 15);
+        assertTrue(mSiteStore.getSitesCount() == 15);
+
+        // add 2 of each kind of site to keep
+        sitesToKeep.addAll(allSites.subList(0, 6));
+
+        // remove six sites (2/3 * (15 - 6))
+        SiteSqlUtils.removeWPComRestSitesAbsentFromList(sitesToKeep);
+
+        assertTrue(mSiteStore.getSitesCount() == 9);
+
+        // make sure all sites in sitesToKeep are in the store
+        for (SiteModel site : sitesToKeep) {
+            assertTrue(mSiteStore.getSiteBySiteId(site.getSiteId()) != null);
+        }
+    }
 }
