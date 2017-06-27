@@ -147,10 +147,8 @@ public class EditPostSettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
+        PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
 
-        if (getActivity() != null) {
-            PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
-        }
         updateSiteAndFetchPostOrFinishActivity(savedInstanceState);
         updatePostFormatKeysAndNames();
         fetchSiteSettingsAndUpdateDefaultPostFormat();
