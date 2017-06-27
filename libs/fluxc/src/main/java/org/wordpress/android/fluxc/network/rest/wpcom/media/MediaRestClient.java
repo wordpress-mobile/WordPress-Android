@@ -344,7 +344,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
     private void removeCallFromCurrentUploadsMap(int id) {
         mCurrentUploadCalls.remove(id);
-        AppLog.d(T.MEDIA, "mediaXMLRPCClient: removed id: " + id + " from current uploads, remaining: "
+        AppLog.d(T.MEDIA, "mediaRestClient: removed id: " + id + " from current uploads, remaining: "
                 + mCurrentUploadCalls.size());
     }
 
