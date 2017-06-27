@@ -622,8 +622,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements ActivityC
             ToastUtils.showToast(this, R.string.error_media_not_found);
             return;
         }
-
-
+        
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(media.getUrl()));
         try {
