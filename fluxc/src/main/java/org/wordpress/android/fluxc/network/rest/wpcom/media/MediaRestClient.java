@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -83,8 +84,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
     }
 
-    /**
-     */
     public void pushMedia(final SiteModel site, final MediaModel media) {
         if (media == null) {
             // caller may be expecting a notification
@@ -95,41 +94,116 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         String url = WPCOMREST.sites.site(site.getSiteId()).media.item(media.getMediaId()).getUrlV1_1();
 
-        add(WPComGsonRequest.buildPostRequest(url, getEditRequestParams(media),
-                MediaWPComRestResponse.class, new Listener<MediaWPComRestResponse>() {
-            @Override
-            public void onResponse(MediaWPComRestResponse response) {
-                MediaModel responseMedia = getMediaFromRestResponse(response);
-                if (responseMedia != null) {
-                    AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
-                    responseMedia.setLocalSiteId(site.getId());
-                    notifyMediaPushed(site, responseMedia, null);
-                } else {
-                    MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                    notifyMediaPushed(site, media, error);
+        add(WPComGsonRequest.buildPostRequest(url, getEditRequestParams(media), MediaWPComRestResponse.class,
+                new Listener<MediaWPComRestResponse>() {
+                    @Override
+                    public void onResponse(MediaWPComRestResponse response) {
+                        MediaModel responseMedia = getMediaFromRestResponse(response);
+                        if (responseMedia != null) {
+                            AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
+                            responseMedia.setLocalSiteId(site.getId());
+                            notifyMediaPushed(site, responseMedia, null);
+                        } else {
+                            MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                            notifyMediaPushed(site, media, error);
+                        }
+                    }
+                }, new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AppLog.e(T.MEDIA, "error editing remote media: " + error);
+                        MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                        notifyMediaPushed(site, media, mediaError);
+                    }
                 }
-            }
-        }, new BaseErrorListener() {
-            @Override
-            public void onErrorResponse(@NonNull BaseNetworkError error) {
-                AppLog.w(T.MEDIA, "error editing remote media: " + error);
-                MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
-                notifyMediaPushed(site, media, mediaError);
-            }
-        }));
+        ));
     }
 
     /**
      * Uploads a single media item to a WP.com site.
      */
-    public void uploadMedia(final SiteModel site, final MediaModel mediaToUpload) {
-        if (mediaToUpload == null || mediaToUpload.getId() == 0) {
+    public void uploadMedia(final SiteModel site, final MediaModel media) {
+        if (media == null || media.getId() == 0) {
             // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
             MediaError error = new MediaError(MediaErrorType.INVALID_ID);
-            notifyMediaUploaded(mediaToUpload, error);
+            notifyMediaUploaded(media, error);
             return;
         }
-        performUpload(mediaToUpload, site);
+
+        if (!MediaUtils.canReadFile(media.getFilePath())) {
+            MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
+        String url = WPCOMREST.sites.site(site.getSiteId()).media.new_.getUrlV1_1();
+        RestUploadRequestBody body = new RestUploadRequestBody(media, getEditRequestParams(media), this);
+        if (site.hasMaxUploadSize() && body.contentLength() > site.getMaxUploadSize()) {
+            // Abort upload if it exceeds the site upload limit
+            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
+                    + site.getMaxUploadSize());
+            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
+        String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
+
+        Request request = new Request.Builder()
+                .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
+                .addHeader("User-Agent", mUserAgent.toString())
+                .url(url)
+                .post(body)
+                .build();
+
+        Call call = mOkHttpClient.newCall(request);
+        mCurrentUploadCalls.put(media.getId(), call);
+
+        AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    AppLog.d(T.MEDIA, "media upload successful: " + response);
+                    String jsonBody = response.body().string();
+
+                    Gson gson = new Gson();
+                    JsonReader reader = new JsonReader(new StringReader(jsonBody));
+                    reader.setLenient(true);
+                    MultipleMediaResponse mediaResponse = gson.fromJson(reader, MultipleMediaResponse.class);
+
+                    List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, site.getId());
+                    if (responseMedia != null && !responseMedia.isEmpty()) {
+                        MediaModel uploadedMedia = responseMedia.get(0);
+                        uploadedMedia.setId(media.getId());
+                        uploadedMedia.setLocalPostId(media.getLocalPostId());
+
+                        notifyMediaUploaded(uploadedMedia, null);
+                    } else {
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        notifyMediaUploaded(media, error);
+                    }
+                } else {
+                    AppLog.e(T.MEDIA, "error uploading media: " + response.message());
+                    notifyMediaUploaded(media, parseUploadError(response, site));
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                AppLog.w(T.MEDIA, "media upload failed: " + e);
+                if (!mCurrentUploadCalls.containsKey(media.getId())) {
+                    // This call has already been removed from the in-progress list - probably because it was cancelled
+                    // In that case this has already been handled and there's nothing to do
+                    return;
+                }
+
+                // TODO it would be great to raise some more fine grained errors here, for
+                // instance timeouts should be raised instead of GENERIC_ERROR
+                MediaError error = MediaError.fromIOException(e);
+                notifyMediaUploaded(media, error);
+            }
+        });
     }
 
     /**
@@ -163,11 +237,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
+                        AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaListFetched(site, mediaError);
                     }
-        }));
+                }
+        ));
     }
 
     /**
@@ -200,11 +275,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "VolleyError Fetching media: " + error);
+                        AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
                         notifyMediaFetched(site, media, mediaError);
                     }
-        }));
+                }
+            ));
     }
 
     /**
@@ -236,14 +312,15 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.v(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
+                        AppLog.e(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
                         MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
                         if (mediaError == MediaErrorType.NOT_FOUND) {
                             AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
                         }
                         notifyMediaDeleted(site, media, new MediaError(mediaError));
                     }
-        }));
+                }
+            ));
     }
 
     public void cancelUpload(final MediaModel media) {
@@ -254,12 +331,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
 
         // cancel in-progress upload if necessary
-        int mediaModelId = media.getId();
-        // make sure we know which call/media to look for
-        Call correspondingCall = mCurrentUploadCalls.get(mediaModelId);
+        Call correspondingCall = mCurrentUploadCalls.get(media.getId());
         if (correspondingCall != null && correspondingCall.isExecuted() && !correspondingCall.isCanceled()) {
             AppLog.d(T.MEDIA, "Canceled in-progress upload: " + media.getFileName());
-            mCurrentUploadCalls.remove(mediaModelId);
+            removeCallFromCurrentUploadsMap(media.getId());
             correspondingCall.cancel();
 
             // report the upload was successfully cancelled
@@ -267,91 +342,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         }
     }
 
-    private void performUpload(final MediaModel media, final SiteModel siteModel) {
-        if (!MediaUtils.canReadFile(media.getFilePath())) {
-            MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
-            notifyMediaUploaded(media, error);
-            return;
-        }
-
-        String url = WPCOMREST.sites.site(siteModel.getSiteId()).media.new_.getUrlV1_1();
-        RestUploadRequestBody body = new RestUploadRequestBody(media, getEditRequestParams(media), this);
-        if (siteModel.hasMaxUploadSize() && body.contentLength() > siteModel.getMaxUploadSize()) {
-            // Abort upload if it exceeds the site upload limit
-            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
-                    + siteModel.getMaxUploadSize());
-            MediaError error = new MediaError(MediaErrorType.REQUEST_TOO_LARGE);
-            notifyMediaUploaded(media, error);
-            return;
-        }
-
-        String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
-
-        Request request = new Request.Builder()
-                .addHeader(WPComGsonRequest.REST_AUTHORIZATION_HEADER, authHeader)
-                .addHeader("User-Agent", mUserAgent.toString())
-                .url(url)
-                .post(body)
-                .build();
-
-        Call call = mOkHttpClient.newCall(request);
-        mCurrentUploadCalls.put(media.getId(), call);
-
-        AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
-        call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    AppLog.d(T.MEDIA, "media upload successful: " + response);
-                    String jsonBody = response.body().string();
-
-                    Gson gson = new Gson();
-                    JsonReader reader = new JsonReader(new StringReader(jsonBody));
-                    reader.setLenient(true);
-                    MultipleMediaResponse mediaResponse = gson.fromJson(reader, MultipleMediaResponse.class);
-
-                    List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, siteModel.getId());
-                    if (responseMedia != null && !responseMedia.isEmpty()) {
-                        MediaModel uploadedMedia = responseMedia.get(0);
-                        uploadedMedia.setId(media.getId());
-                        uploadedMedia.setLocalPostId(media.getLocalPostId());
-
-                        notifyMediaUploaded(uploadedMedia, null);
-                    } else {
-                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
-                        notifyMediaUploaded(media, error);
-                    }
-                    // clean from the current uploads map
-                    mCurrentUploadCalls.remove(media.getId());
-                    AppLog.d(T.MEDIA, "mediaRestClient: removed id: " + media.getId() + " from current"
-                            + " uploads, remaining: "
-                            + mCurrentUploadCalls.size());
-                } else {
-                    AppLog.w(T.MEDIA, "error uploading media: " + response);
-                    notifyMediaUploaded(media, parseUploadError(response, siteModel));
-                    // clean from the current uploads map
-                    mCurrentUploadCalls.remove(media.getId());
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                AppLog.w(T.MEDIA, "media upload failed: " + e);
-                if (!mCurrentUploadCalls.containsKey(media.getId())) {
-                    // This call has already been removed from the in-progress list - probably because it was cancelled
-                    // In that case this has already been handled and there's nothing to do
-                    return;
-                }
-
-                // TODO it would be great to raise some more fine grained errors here, for
-                // instance timeouts should be raised instead of GENERIC_ERROR
-                MediaError error = MediaError.fromIOException(e);
-                notifyMediaUploaded(media, error);
-
-                // clean from the current uploads map
-                mCurrentUploadCalls.remove(media.getId());
-            }
-        });
+    private void removeCallFromCurrentUploadsMap(int id) {
+        mCurrentUploadCalls.remove(id);
+        AppLog.d(T.MEDIA, "mediaRestClient: removed id: " + id + " from current uploads, remaining: "
+                + mCurrentUploadCalls.size());
     }
 
     //
@@ -413,6 +407,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     }
 
     private void notifyMediaUploaded(MediaModel media, MediaError error) {
+        if (media != null) {
+            media.setUploadState(error == null ? MediaUploadState.UPLOADED : MediaUploadState.FAILED);
+            removeCallFromCurrentUploadsMap(media.getId());
+        }
+
         ProgressPayload payload = new ProgressPayload(media, 1.f, error == null, error);
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
@@ -493,9 +492,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         media.setVideoPressProcessingDone(from.videopress_processing_done);
         media.setDeleted(MediaWPComRestResponse.DELETED_STATUS.equals(from.status));
         if (!media.getDeleted()) {
-            media.setUploadState(MediaModel.UploadState.UPLOADED.toString());
+            media.setUploadState(MediaUploadState.UPLOADED);
         } else {
-            media.setUploadState(MediaModel.UploadState.DELETED.toString());
+            media.setUploadState(MediaUploadState.DELETED);
         }
         return media;
     }

@@ -6,7 +6,7 @@ import com.yarolegovich.wellsql.WellCursor;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.UploadState;
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 
@@ -104,21 +104,26 @@ public class MediaSqlUtils {
         }
     }
 
-    public static List<MediaModel> searchSiteMedia(SiteModel siteModel, String column, String searchTerm) {
-        return searchSiteMediaQuery(siteModel, column, searchTerm).getAsModel();
+    public static List<MediaModel> searchSiteMedia(SiteModel siteModel, String searchTerm) {
+        return searchSiteMediaQuery(siteModel, searchTerm).getAsModel();
     }
 
-    public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel, String column,
+    public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel,
                                                                  String searchTerm) {
-        return searchSiteMediaQuery(siteModel, column, searchTerm).getAsCursor();
+        return searchSiteMediaQuery(siteModel, searchTerm).getAsCursor();
     }
 
-    private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel, String column,
+    private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel,
                                                                 String searchTerm) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .contains(column, searchTerm)
+                .beginGroup()
+                    .contains(MediaModelTable.TITLE, searchTerm)
+                    .or().contains(MediaModelTable.CAPTION, searchTerm)
+                    .or().contains(MediaModelTable.DESCRIPTION, searchTerm)
+                    .or().contains(MediaModelTable.MIME_TYPE, searchTerm)
+                .endGroup()
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
@@ -132,12 +137,7 @@ public class MediaSqlUtils {
     }
 
     private static SelectQuery<MediaModel> getSiteImagesQuery(SiteModel siteModel) {
-        return WellSql.select(MediaModel.class)
-                .where().beginGroup()
-                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
-                .endGroup().endWhere()
-                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_IMAGE);
     }
 
     public static List<MediaModel> getSiteImagesExcluding(SiteModel siteModel, List<Long> filter) {
@@ -148,12 +148,45 @@ public class MediaSqlUtils {
         return getSiteImagesExcludingQuery(siteModel, filter).getAsCursor();
     }
 
+    public static List<MediaModel> getSiteVideos(SiteModel siteModel) {
+        return getSiteVideosQuery(siteModel).getAsModel();
+    }
+
+    public static List<MediaModel> getSiteDocuments(SiteModel siteModel) {
+        return getSiteDocumentsQuery(siteModel).getAsModel();
+    }
+
+    public static List<MediaModel> getSiteAudio(SiteModel siteModel) {
+        return getSiteAudioQuery(siteModel).getAsModel();
+    }
+
     public static SelectQuery<MediaModel> getSiteImagesExcludingQuery(SiteModel siteModel, List<Long> filter) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
                 .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
                 .isNotIn(MediaModelTable.MEDIA_ID, filter)
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+    }
+
+    private static SelectQuery<MediaModel> getSiteVideosQuery(SiteModel siteModel) {
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_VIDEO);
+    }
+
+    private static SelectQuery<MediaModel> getSiteAudioQuery(SiteModel siteModel) {
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_AUDIO);
+    }
+
+    private static SelectQuery<MediaModel> getSiteDocumentsQuery(SiteModel siteModel) {
+        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_APPLICATION);
+    }
+
+    private static SelectQuery<MediaModel> getSiteMediaByMimeTypeQuery(SiteModel siteModel, String mimeTypePrefix) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .contains(MediaModelTable.MIME_TYPE, mimeTypePrefix)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
@@ -296,7 +329,7 @@ public class MediaSqlUtils {
         return WellSql.delete(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .equals(MediaModelTable.UPLOAD_STATE, UploadState.UPLOADED.toString())
+                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
                 .endGroup().endWhere().execute();
     }
 
