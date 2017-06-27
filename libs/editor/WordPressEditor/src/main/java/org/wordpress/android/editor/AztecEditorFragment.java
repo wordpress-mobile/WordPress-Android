@@ -327,7 +327,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // ToDo:  this is to be removed when feature/async-media is merged
         // If there are images that are still in progress (because the editor exited before they completed),
         // set them to failed, so the user can restart them (otherwise they will stay stuck in 'uploading' mode)
-        convertUploadingUponStartToFailed();
+        markAllUploadingMediaAsFailed();
     }
 
     /**
@@ -403,7 +403,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return System.currentTimeMillis() - mActionStartedAt < MAX_ACTION_TIME_MS;
     }
 
-    private void convertUploadingUponStartToFailed() {
+    private void markAllUploadingMediaAsFailed() {
         // first obtain all the media currently marked as "uploading"
         AztecText.AttributePredicate uploadingPredicate = new AztecText.AttributePredicate() {
             @Override
