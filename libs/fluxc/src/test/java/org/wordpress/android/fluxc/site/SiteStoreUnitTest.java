@@ -627,6 +627,33 @@ public class SiteStoreUnitTest {
     }
 
     @Test
+    public void testInsertSiteDuplicateXmlRpcTrailingSlash() throws DuplicateSiteException {
+        // It's possible for the URL in `wp.getOptions` to be different from the URL in `wp.getUsersBlogs`,
+        // sometimes just by a trailing slash
+        // This test checks that we can still identify two sites as being identical in this case, and that we quietly
+        // update the existing site rather than throw a duplicate site exception
+        SiteModel selfhostedSite = generateSelfHostedNonJPSite();
+        selfhostedSite.setUrl("http://some.url");
+
+        SiteSqlUtils.insertOrUpdateSite(selfhostedSite);
+
+        SiteModel selfhostedSite2 = generateSelfHostedNonJPSite();
+        selfhostedSite2.setUrl("http://some.url/");
+
+        boolean duplicate = false;
+        try {
+            // Insert the same site with a trailing slash (this should succeed, replacing the existing site)
+            SiteSqlUtils.insertOrUpdateSite(selfhostedSite2);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
+        }
+        assertFalse(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
+    }
+
+    @Test
     public void testUpdateSiteUniqueConstraintFail() throws DuplicateSiteException {
         // Create 2 test sites
         SiteModel site1 = generateTestSite(0, "https://pony1.com", "https://pony1.com/xmlrpc.php", false, true);
