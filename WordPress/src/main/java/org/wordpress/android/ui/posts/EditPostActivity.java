@@ -697,6 +697,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
     }
 
+    private boolean handleBackPressed() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(
+                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
+        if (fragment != null && fragment.isVisible()) {
+            return false;
+        }
+        if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
+            if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
+                mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
+                mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
+            }
+            mViewPager.setCurrentItem(PAGE_CONTENT);
+            invalidateOptionsMenu();
+        } else {
+            savePostAndFinish();
+        }
+        return true;
+    }
+
     // Menu actions
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -705,22 +724,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
-            Fragment fragment = getFragmentManager().findFragmentByTag(
-                    ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
-            if (fragment != null && fragment.isVisible()) {
-                return false;
-            }
-            if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
-                if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
-                    mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
-                    mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
-                }
-                mViewPager.setCurrentItem(PAGE_CONTENT);
-                invalidateOptionsMenu();
-            } else {
-                savePostAndFinish();
-            }
-            return true;
+            return handleBackPressed();
         }
 
         // Disable format bar buttons while a media upload is in progress
@@ -918,29 +922,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onBackPressed() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
-            return;
         }
 
-        Fragment imageSettingsFragment = getFragmentManager().findFragmentByTag(
-                ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
-        if (imageSettingsFragment != null && imageSettingsFragment.isVisible()) {
-            ((ImageSettingsDialogFragment) imageSettingsFragment).dismissFragment();
-            return;
-        }
-
-        if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
-            if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
-                mPost.setFeaturedImageId(mEditPostSettingsFragment.getFeaturedImageId());
-                mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
-            }
-            mViewPager.setCurrentItem(PAGE_CONTENT);
-            invalidateOptionsMenu();
-            return;
-        }
-
-        if (mEditorFragment != null && !mEditorFragment.onBackPressed()) {
-            savePostAndFinish();
-        }
+        handleBackPressed();
     }
 
     public boolean isNewPost() {
