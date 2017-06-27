@@ -649,6 +649,8 @@
     <string name="preference_send_usage_stats">Send statistics</string>
     <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
     <string name="preference_editor">Editor</string>
+    <string name="preference_editor_footer">Editor release notes and bug reporting</string>
+    <string name="preference_editor_footer_description">Info Icon</string>
     <string name="preference_editor_type">Set editor type</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
