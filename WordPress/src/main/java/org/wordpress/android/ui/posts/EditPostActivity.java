@@ -917,6 +917,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onBackPressed() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
+            return;
         }
 
         handleBackPressed();
