@@ -47,6 +47,7 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
     private static final String KEY_REQUESTED_PASSWORD = "KEY_REQUESTED_PASSWORD";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    private static final String ARG_PASSWORD = "ARG_PASSWORD";
 
     public static final String TAG = "login_email_password_fragment_tag";
 
@@ -61,13 +62,15 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
     private String mRequestedPassword;
 
     private String mEmailAddress;
+    private String mPassword;
 
     @Inject Dispatcher mDispatcher;
 
-    public static LoginEmailPasswordFragment newInstance(String emailAddress) {
+    public static LoginEmailPasswordFragment newInstance(String emailAddress, String password) {
         LoginEmailPasswordFragment fragment = new LoginEmailPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
+        args.putString(ARG_PASSWORD, password);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,6 +81,7 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
+        mPassword = getArguments().getString(ARG_PASSWORD);
 
         if (savedInstanceState != null) {
             mRequestedPassword = savedInstanceState.getString(KEY_REQUESTED_PASSWORD);
@@ -93,7 +97,11 @@ public class LoginEmailPasswordFragment extends Fragment implements TextWatcher 
         ((TextView) rootView.findViewById(R.id.login_email)).setText(mEmailAddress);
 
         mPasswordEditText = (EditText) rootView.findViewById(R.id.login_password);
+        if (savedInstanceState == null) {
+            mPasswordEditText.setText(mPassword);
+        }
         mPasswordEditText.addTextChangedListener(this);
+
         mPasswordEditTextLayout = (TextInputLayout) rootView.findViewById(R.id.login_password_layout);
         mPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
