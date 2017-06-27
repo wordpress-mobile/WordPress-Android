@@ -688,11 +688,11 @@ public class SiteStoreUnitTest {
             switch (i % 3) {
                 case 0:
                     // add a .com site
-                    SiteModel dotComSite = generateWPComSite();
-                    dotComSite.setSiteId(i + 1);
-                    dotComSite.setUrl("https://pony" + i + ".com");
-                    dotComSite.setXmlRpcUrl("https://pony" + i + ".com/xmlrpc.php");
-                    allSites.add(dotComSite);
+                    SiteModel wpComSite = generateWPComSite();
+                    wpComSite.setSiteId(i + 1);
+                    wpComSite.setUrl("https://pony" + i + ".com");
+                    wpComSite.setXmlRpcUrl("https://pony" + i + ".com/xmlrpc.php");
+                    allSites.add(wpComSite);
                     break;
                 case 1:
                     // add a self-hosted Jetpack site
