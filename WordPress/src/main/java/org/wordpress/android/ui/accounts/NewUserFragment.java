@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
@@ -48,7 +49,9 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
@@ -72,6 +75,8 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 public class NewUserFragment extends AbstractFragment {
+    public static final String TAG = "new_user_fragment_tag";
+
     public static final int NEW_USER = 1;
     private AutoCompleteTextView mSiteUrlTextField;
     private ArrayAdapter<String> mSiteUrlSuggestionAdapter;
@@ -83,6 +88,8 @@ public class NewUserFragment extends AbstractFragment {
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
     private boolean mEmailAutoCorrected;
+
+    private LoginListener mLoginListener;
 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
@@ -404,8 +411,16 @@ public class NewUserFragment extends AbstractFragment {
         if (!isAdded()) {
             return;
         }
-        getActivity().setResult(Activity.RESULT_OK);
-        getActivity().finish();
+
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            if (mLoginListener != null) {
+                mLoginListener.loggedInViaSigUp();
+            }
+        } else {
+            getActivity().setResult(Activity.RESULT_OK);
+            getActivity().finish();
+        }
+
         PersistentEditTextHelper persistentEditTextHelper = new PersistentEditTextHelper(getActivity());
         persistentEditTextHelper.clearSavedText(mEmailTextField, null);
         persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
@@ -423,18 +438,26 @@ public class NewUserFragment extends AbstractFragment {
             return;
         }
         endProgress();
-        Intent intent = new Intent();
-        intent.putExtra("username", getUsername());
-        intent.putExtra("password", getPassword());
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-        try {
-            getFragmentManager().popBackStack();
-        } catch (IllegalStateException e) {
-            // Catch the ISE exception, because we can't check for the fragment state here
-            // finishAndShowSignInScreen will be called in an Network onError callback so we can't guarantee, the
-            // fragment transaction will be executed. In that case the user already is back on the Log In screen.
-            AppLog.e(T.NUX, e);
+
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            if (mLoginListener != null) {
+                mLoginListener.newUserCreatedButErrored(getEmail(), getPassword());
+            }
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("username", getUsername());
+            intent.putExtra("password", getPassword());
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+            try {
+                getFragmentManager().popBackStack();
+            } catch (IllegalStateException e) {
+                // Catch the ISE exception, because we can't check for the fragment state here
+                // finishAndShowSignInScreen will be called in an Network onError callback so we can't guarantee, the
+                // fragment transaction will be executed. In that case the user already is back on the Log In screen.
+                AppLog.e(T.NUX, e);
+            }
         }
+
         ToastUtils.showToast(getActivity(), R.string.signup_succeed_signin_failed, Duration.LONG);
     }
 
@@ -461,6 +484,26 @@ public class NewUserFragment extends AbstractFragment {
                 startActivity(newAccountIntent);
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            if (context instanceof LoginListener) {
+                mLoginListener = (LoginListener) context;
+            } else {
+                throw new RuntimeException(context.toString() + " must implement LoginListener");
+            }
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mLoginListener = null;
     }
 
     @Override

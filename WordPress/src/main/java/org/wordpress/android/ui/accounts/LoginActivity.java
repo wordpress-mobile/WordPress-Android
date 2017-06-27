@@ -137,7 +137,18 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void doStartSignup() {
-        ToastUtils.showToast(this, "Signup is not implemented yet");
+        NewUserFragment newUserFragment = NewUserFragment.newInstance();
+        slideInFragment(newUserFragment, true, NewUserFragment.TAG);
+    }
+
+    @Override
+    public void loggedInViaSigUp() {
+        loggedInAndFinish();
+    }
+
+    @Override
+    public void newUserCreatedButErrored(String email, String password) {
+        // not implemented yet
     }
 
     @Override
