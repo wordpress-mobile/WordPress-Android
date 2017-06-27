@@ -435,7 +435,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 onBackPressed();
                 return true;
             case R.id.menu_new_media:
-                showAddMediaPopup();
+                if (isAddMediaPopupShowing()) {
+                    hideAddMediaPopup();
+                } else {
+                    showAddMediaPopup();
+                }
                 return true;
             case R.id.menu_search:
                 mSearchMenuItem = item;
@@ -749,6 +753,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         int width = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_width);
         mAddMediaPopup = new PopupWindow(menuView, width, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+    }
+
+    private boolean isAddMediaPopupShowing() {
+        return mAddMediaPopup != null && mAddMediaPopup.isShowing();
+    }
+
+    private void hideAddMediaPopup() {
+        if (mAddMediaPopup != null) {
+            mAddMediaPopup.dismiss();
+        }
     }
 
     private void showAddMediaPopup() {
