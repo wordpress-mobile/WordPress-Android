@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.persistence;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.wellsql.generated.AccountModelTable;
 import com.wellsql.generated.PostFormatModelTable;
@@ -108,11 +107,7 @@ public class SiteSqlUtils {
                 siteResult = WellSql.select(SiteModel.class)
                         .where().beginGroup()
                         .equals(SiteModelTable.SITE_ID, site.getSiteId())
-                        .beginGroup()
-                        .equals(SiteModelTable.URL, stripTrailingSlashes(site.getUrl()))
-                        .or()
-                        .equals(SiteModelTable.URL, addTrailingSlash(site.getUrl()))
-                        .endGroup()
+                        .equals(SiteModelTable.URL, site.getUrl())
                         .endGroup().endWhere().getAsModel();
                 if (!siteResult.isEmpty()) {
                     AppLog.d(T.DB, "Site found by SITE_ID: " + site.getSiteId() + " and URL: " + site.getUrl());
@@ -256,23 +251,5 @@ public class SiteSqlUtils {
             postFormat.setSiteId(site.getId());
         }
         WellSql.insert(postFormats).execute();
-    }
-
-    private static String stripTrailingSlashes(String url) {
-        if (TextUtils.isEmpty(url)) return url;
-
-        while (url.endsWith("/")) {
-            url = url.substring(0, url.length() - 1);
-        }
-        return url;
-    }
-
-    private static String addTrailingSlash(String url) {
-        if (TextUtils.isEmpty(url)) return url;
-
-        if (!url.endsWith("/")) {
-            url = url + "/";
-        }
-        return url;
     }
 }
