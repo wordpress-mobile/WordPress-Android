@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentManager.OnBackStackChangedListener;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,10 +19,13 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
@@ -61,6 +65,7 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
@@ -102,6 +107,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_IMAGES_ONLY = "images_only";
+    public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
@@ -115,13 +121,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaGridFragment mMediaGridFragment;
     private PopupWindow mAddMediaPopup;
 
-    // Views
-    private Toolbar mToolbar;
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
+    private TabLayout mTabLayout;
 
-    // Services
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private boolean mDeleteServiceBound;
 
@@ -146,6 +150,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
             mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
+            mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
+            mQuery = savedInstanceState.getString(SAVED_QUERY);
         }
 
         if (mSite == null) {
@@ -162,8 +168,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         setContentView(R.layout.media_browser_activity);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -173,13 +178,93 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
 
-        mMediaGridFragment = (MediaGridFragment) fm.findFragmentById(R.id.mediaGridFragment);
-
         // if media was shared add it to the library
         handleSharedMedia();
 
         if (savedInstanceState == null && mBrowserType != MediaBrowserType.SINGLE_SELECT_PICKER) {
             SmartToast.show(this, SmartToast.SmartToastType.WP_MEDIA_BROWSER_LONG_PRESS);
+        }
+
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        setupTabs();
+
+        int filter;
+        if (mImagesOnly) {
+            filter = MediaGridFragment.FILTER_IMAGES;
+        } else if (savedInstanceState != null) {
+            filter = savedInstanceState.getInt(ARG_FILTER);
+        } else {
+            filter = MediaGridFragment.FILTER_ALL;
+        }
+
+        mMediaGridFragment = (MediaGridFragment) fm.findFragmentByTag(MediaGridFragment.TAG);
+        if (mMediaGridFragment == null) {
+            mMediaGridFragment = MediaGridFragment.newInstance(mSite, mBrowserType, filter);
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.media_browser_container, mMediaGridFragment, MediaGridFragment.TAG)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        } else {
+            setFilter(filter);
+        }
+    }
+
+    /*
+     * only show tabs when being used as a media browser rather than a media picker
+     */
+    private boolean shouldShowTabs() {
+        return mBrowserType == MediaBrowserType.BROWSER;
+    }
+
+    public void enableTabs(boolean enable) {
+        if (!shouldShowTabs()) return;
+
+        if (enable && mTabLayout.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mTabLayout, AniUtils.Duration.MEDIUM);
+        } else if (!enable && mTabLayout.getVisibility() == View.VISIBLE) {
+            AniUtils.fadeOut(mTabLayout, AniUtils.Duration.MEDIUM, View.INVISIBLE);
+        }
+    }
+
+    private void setupTabs() {
+        if (shouldShowTabs()) {
+            int normalColor = ContextCompat.getColor(this, R.color.blue_light);
+            int selectedColor = ContextCompat.getColor(this, R.color.white);
+            mTabLayout.setTabTextColors(normalColor, selectedColor);
+
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.all));
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
+
+            mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    setFilter(tab.getPosition());
+                }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    // noop
+                }
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    setFilter(tab.getPosition());
+                }
+            });
+        } else {
+            mTabLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void setFilter(int filter) {
+        if (shouldShowTabs()
+                && mTabLayout != null
+                && mTabLayout.getSelectedTabPosition() != filter) {
+            mTabLayout.setScrollPosition(filter, 0f, true);
+        }
+
+        if (mMediaGridFragment != null &&
+                (mMediaGridFragment.getFilter() != filter || mMediaGridFragment.isEmpty())) {
+            mMediaGridFragment.setFilter(filter);
         }
     }
 
@@ -229,20 +314,12 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         outState.putBoolean(ARG_IMAGES_ONLY, mImagesOnly);
+        if (mMediaGridFragment != null) {
+            outState.putInt(ARG_FILTER, mMediaGridFragment.getFilter());
+        }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
-        mQuery = savedInstanceState.getString(SAVED_QUERY);
-        mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
-        mImagesOnly = savedInstanceState.getBoolean(ARG_IMAGES_ONLY);
     }
 
     @Override
@@ -372,28 +449,24 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterEnabled(false);
-        }
+        mMenu.findItem(R.id.menu_new_media).setVisible(false);
+
+        enableTabs(false);
 
         // load last search query
         if (!TextUtils.isEmpty(mQuery)) {
             onQueryTextChange(mQuery);
         }
 
-        mMenu.findItem(R.id.menu_new_media).setVisible(false);
-
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        if (mMediaGridFragment != null) {
-            mMediaGridFragment.setFilterEnabled(true);
-        }
-
         mMenu.findItem(R.id.menu_new_media).setVisible(true);
         invalidateOptionsMenu();
+
+        enableTabs(true);
 
         return true;
     }
@@ -484,17 +557,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         switch (event.cause) {
             case DELETE_MEDIA:
-                if (event.mediaList == null || event.mediaList.isEmpty()) {
-                    break;
-                }
-
-                // If the media was deleted, remove it from multi select if it was selected
-                for (MediaModel mediaModel : event.mediaList) {
-                    int localMediaId = mediaModel.getId();
-                    mMediaGridFragment.removeFromMultiSelect(localMediaId);
+                if (event.mediaList != null) {
+                    // If the media was deleted, remove it from multi select if it was selected
+                    for (MediaModel mediaModel : event.mediaList) {
+                        int localMediaId = mediaModel.getId();
+                        mMediaGridFragment.removeFromMultiSelect(localMediaId);
+                    }
                 }
                 break;
         }
+
         updateViews();
     }
 
@@ -537,6 +609,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
+    @Override
+    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+        enableTabs(false);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
+        super.onSupportActionModeFinished(mode);
+        enableTabs(true);
+    }
+
     public void deleteMedia(final ArrayList<Integer> ids) {
         Set<String> sanitizedIds = new HashSet<>(ids.size());
 
@@ -576,7 +660,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             startMediaDeleteService(mediaToDelete);
         }
         if (mMediaGridFragment != null) {
-            mMediaGridFragment.clearSelectedItems();
+            mMediaGridFragment.clearSelection();
         }
     }
 
@@ -594,11 +678,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private final OnBackStackChangedListener mOnBackStackChangedListener = new OnBackStackChangedListener() {
         @Override
         public void onBackStackChanged() {
-            FragmentManager manager = getFragmentManager();
-            MediaGridFragment mediaGridFragment = (MediaGridFragment) manager.findFragmentById(R.id.mediaGridFragment);
-            if (mediaGridFragment.isVisible()) {
-                mediaGridFragment.refreshSpinnerAdapter();
-            }
             ActivityUtils.hideKeyboard(MediaBrowserActivity.this);
         }
     };
@@ -867,8 +946,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void updateViews() {
-        mMediaGridFragment.refreshMediaFromDB();
-        mMediaGridFragment.updateFilterText();
-        mMediaGridFragment.updateSpinnerAdapter();
+        mMediaGridFragment.refresh();
     }
 }

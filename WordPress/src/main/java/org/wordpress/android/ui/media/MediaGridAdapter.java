@@ -95,7 +95,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         if (show != mShowPreviewIcon) {
             mShowPreviewIcon = show;
             if (getItemCount() > 0) {
-                notifyDataSetChanged();;
+                notifyDataSetChanged();
             }
         }
     }
@@ -432,13 +432,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    public boolean isEmpty() {
+        return mMediaList.isEmpty();
+    }
+
     @Override
     public int getItemCount() {
         return mMediaList.size();
     }
 
     public static int getColumnCount(Context context) {
-        return context.getResources().getInteger(R.integer.media_grid_num_columns);
+        return DisplayUtils.isLandscape(context) ? 4 : 3;
     }
 
     public void setCallback(MediaGridAdapterCallback callback) {
