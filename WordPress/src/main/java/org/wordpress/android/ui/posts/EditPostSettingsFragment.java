@@ -147,10 +147,8 @@ public class EditPostSettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         mDispatcher.register(this);
+        PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
 
-        if (getActivity() != null) {
-            PreferenceManager.setDefaultValues(getActivity(), R.xml.account_settings, false);
-        }
         updateSiteAndFetchPostOrFinishActivity(savedInstanceState);
         updatePostFormatKeysAndNames();
         fetchSiteSettingsAndUpdateDefaultPostFormat();
@@ -401,7 +399,7 @@ public class EditPostSettingsFragment extends Fragment {
 
             switch (requestCode) {
                 case ACTIVITY_REQUEST_CODE_PICK_LOCATION:
-                    if (resultCode == RESULT_OK) {
+                    if (isAdded() && resultCode == RESULT_OK) {
                         Place place = PlacePicker.getPlace(getActivity(), data);
                         setLocation(place);
                     }
@@ -475,6 +473,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void showCategoriesActivity() {
+        if (!isAdded()) {
+            return;
+        }
         Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, mSite);
         categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
@@ -482,6 +483,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void showTagsActivity() {
+        if (!isAdded()) {
+            return;
+        }
         // Fetch/refresh the tags in preparation for the PostSettingsTagsActivity
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
 
@@ -635,9 +639,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         mPost.setExcerpt(excerpt);
         dispatchUpdatePostAction();
-        if (isAdded()) {
-            mExcerptTextView.setText(mPost.getExcerpt());
-        }
+        mExcerptTextView.setText(mPost.getExcerpt());
     }
 
     private void updateSlug(String slug) {
@@ -646,9 +648,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         mPost.setSlug(slug);
         dispatchUpdatePostAction();
-        if (isAdded()) {
-            mSlugTextView.setText(mPost.getSlug());
-        }
+        mSlugTextView.setText(mPost.getSlug());
     }
 
     private void updatePassword(String password) {
@@ -657,9 +657,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         mPost.setPassword(password);
         dispatchUpdatePostAction();
-        if (isAdded()) {
-            mPasswordTextView.setText(mPost.getPassword());
-        }
+        mPasswordTextView.setText(mPost.getPassword());
     }
 
     private void updateCategories(List<Long> categoryList) {
@@ -713,18 +711,14 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateTagsTextView() {
-        if (!isAdded()) {
-            return;
-        }
         String tags = TextUtils.join(",", mPost.getTagNameList());
         // If `tags` is empty, the hint "Not Set" will be shown instead
         mTagsTextView.setText(tags);
     }
 
     private void updatePostFormatTextView() {
-        if (isAdded()) {
-            mPostFormatTextView.setText(getPostFormatNameFromKey(mPost.getPostFormat()));
-        }
+        String postFormat = getPostFormatNameFromKey(mPost.getPostFormat());
+        mPostFormatTextView.setText(postFormat);
     }
 
     private void updatePublishDate(Calendar calendar) {
@@ -748,9 +742,6 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateCategoriesTextView() {
-        if (!isAdded()) {
-            return;
-        }
         List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(mPost, mSite);
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = categories.iterator();
@@ -805,6 +796,9 @@ public class EditPostSettingsFragment extends Fragment {
     // Post Format Helpers
 
     private void updatePostFormatKeysAndNames() {
+        if (!isAdded()) {
+            return;
+        }
         // Default values
         mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
@@ -864,7 +858,6 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-
         if (!mPost.hasFeaturedImage()) {
             mFeaturedImageView.setVisibility(View.GONE);
             mFeaturedImageButton.setVisibility(View.VISIBLE);
@@ -893,6 +886,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void launchFeaturedMediaPicker() {
+        if (!isAdded()) {
+            return;
+        }
         Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
@@ -959,6 +955,9 @@ public class EditPostSettingsFragment extends Fragment {
 
         @Override
         protected Address doInBackground(Double... args) {
+            if (getActivity() == null) {
+                return null;
+            }
             // args will be the latitude, longitude to look up
             double latitude = args[0];
             double longitude = args[1];
@@ -970,7 +969,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         protected void onPostExecute(@Nullable Address address) {
-            if (!isAdded() || address == null || address.getMaxAddressLineIndex() == 0) {
+            if (address == null || address.getMaxAddressLineIndex() == 0) {
                 // Do nothing (keep the "lat, long" format).
                 return;
             }
