@@ -419,6 +419,38 @@ public class SiteStoreUnitTest {
         assertEquals(1, sitesCount);
     }
 
+    @Test
+    public void testInsertDuplicateXmlRpcJetpackSite() throws DuplicateSiteException {
+        SiteModel jetpackXmlRpcSite = generateJetpackSiteOverXMLRPC();
+
+        jetpackXmlRpcSite.setUrl("http://some.url");
+
+        // Insert a Jetpack powered site over XML-RPC
+        SiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite);
+
+        // Set up the same site (by URL/XML-RPC URL), but don't identify it as a Jetpack site
+        // This simulates sites resulting from wp.getUsersBlogs, which don't have the site ID and can't be identified
+        // as Jetpack or not (wp.getOptions is the call that returns that information)
+        SiteModel jetpackXmlRpcSite2 = generateSelfHostedNonJPSite();
+        jetpackXmlRpcSite2.setXmlRpcUrl(jetpackXmlRpcSite.getXmlRpcUrl());
+        jetpackXmlRpcSite2.setUrl(jetpackXmlRpcSite.getUrl());
+        jetpackXmlRpcSite2.setSelfHostedSiteId(jetpackXmlRpcSite.getSelfHostedSiteId());
+        jetpackXmlRpcSite2.setUsername(jetpackXmlRpcSite.getUsername());
+        jetpackXmlRpcSite2.setPassword(jetpackXmlRpcSite.getPassword());
+
+        boolean duplicate = false;
+        try {
+            // Insert the same site but not identified as a Jetpack site
+            // (this should succeed, replacing the existing site, because the site replaced is not using the REST API)
+            SiteSqlUtils.insertOrUpdateSite(jetpackXmlRpcSite2);
+        } catch (DuplicateSiteException e) {
+            // Caught !
+            duplicate = true;
+        }
+        assertFalse(duplicate);
+        int sitesCount = WellSql.select(SiteModel.class).getAsCursor().getCount();
+        assertEquals(1, sitesCount);
+    }
 
     @Test
     public void testGetPostFormats() throws DuplicateSiteException {
