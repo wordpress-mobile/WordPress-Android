@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_width="@dimen/default_dialog_width" >
+
+    <ImageView
+        android:id="@+id/promo_dialog_image"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:srcCompat="@drawable/img_promo_editor" >
+    </ImageView>
+
+    <LinearLayout
+        android:id="@+id/promo_dialog_text"
+        android:layout_below="@+id/promo_dialog_image"
+        android:layout_height="wrap_content"
+        android:layout_width="@dimen/default_dialog_width"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_dialog" >
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/promo_dialog_title"
+            tools:text="@string/new_editor_promo_title"
+            style="@style/StatsModuleTitle" >
+        </org.wordpress.android.widgets.WPTextView>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/promo_dialog_description"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:textColor="@color/grey_darken_20"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="@string/new_editor_promo_description" >
+        </org.wordpress.android.widgets.WPTextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="end|right"
+        android:layout_below="@+id/promo_dialog_text"
+        android:layout_height="wrap_content"
+        android:layout_width="@dimen/default_dialog_width"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_medium" >
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/promo_dialog_button_negative"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:textAllCaps="true"
+            android:textColor="@color/color_accent"
+            tools:text="@string/new_editor_promo_button_negative"
+            style="?android:attr/borderlessButtonStyle" >
+        </android.support.v7.widget.AppCompatButton>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/promo_dialog_button_positive"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:textAllCaps="true"
+            android:textColor="@color/color_accent"
+            tools:text="@string/new_editor_promo_button_positive"
+            style="?android:attr/borderlessButtonStyle" >
+        </android.support.v7.widget.AppCompatButton>
+
+    </LinearLayout>
+
+</RelativeLayout>
