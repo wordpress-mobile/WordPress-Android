@@ -73,6 +73,7 @@ public class SiteStore extends Store {
     public static class FetchedPostFormatsPayload extends Payload {
         public SiteModel site;
         public List<PostFormatModel> postFormats;
+        public PostFormatsError error;
         public FetchedPostFormatsPayload(@NonNull SiteModel site, @NonNull List<PostFormatModel> postFormats) {
             this.site = site;
             this.postFormats = postFormats;
@@ -144,9 +145,15 @@ public class SiteStore extends Store {
 
     public static class PostFormatsError implements OnChangedError {
         public PostFormatsErrorType type;
+        public String message;
 
         public PostFormatsError(PostFormatsErrorType type) {
+            this(type, "");
+        }
+
+        public PostFormatsError(PostFormatsErrorType type, String message) {
             this.type = type;
+            this.message = message;
         }
     }
 
@@ -290,7 +297,8 @@ public class SiteStore extends Store {
 
     public enum PostFormatsErrorType {
         INVALID_SITE,
-        GENERIC_ERROR
+        INVALID_RESPONSE,
+        GENERIC_ERROR;
     }
 
     public enum DeleteSiteErrorType {
@@ -841,8 +849,7 @@ public class SiteStore extends Store {
     private void updatePostFormats(FetchedPostFormatsPayload payload) {
         OnPostFormatsChanged event = new OnPostFormatsChanged(payload.site);
         if (payload.isError()) {
-            // TODO: what kind of error could we get here?
-            event.error = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR);
+            event.error = payload.error;
         } else {
             SiteSqlUtils.insertOrReplacePostFormats(payload.site, payload.postFormats);
         }

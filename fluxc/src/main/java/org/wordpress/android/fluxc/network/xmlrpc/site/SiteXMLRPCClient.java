@@ -21,6 +21,8 @@ import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
+import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
+import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -117,7 +119,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                         } else {
                             FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
                                     Collections.<PostFormatModel>emptyList());
-                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            payload.error = new PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE);
                             mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                         }
                     }
@@ -125,9 +127,20 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        PostFormatsError postFormatsError;
+                        switch (error.type) {
+                            case INVALID_RESPONSE:
+                                postFormatsError = new PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE,
+                                        error.message);
+                                break;
+                            // TODO: what other kind of error could we get here?
+                            default:
+                                postFormatsError = new PostFormatsError(PostFormatsErrorType.GENERIC_ERROR,
+                                        error.message);
+                        }
                         FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
-                                new ArrayList<PostFormatModel>());
-                        payload.error = error;
+                                Collections.<PostFormatModel>emptyList());
+                        payload.error = postFormatsError;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                     }
                 }
