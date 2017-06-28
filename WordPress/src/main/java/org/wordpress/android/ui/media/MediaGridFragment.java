@@ -87,6 +87,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
+    private boolean[] mFetchedFilters = new boolean[MediaFilter.values().length];
+
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
@@ -296,10 +298,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             hideEmptyView();
         }
 
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+        boolean hasFetchedThisFilter = mFetchedFilters[filter.value];
+        if (!hasFetchedThisFilter && NetworkUtils.isNetworkAvailable(getActivity())) {
             fetchMediaList(false);
-        } else {
-
         }
     }
 
@@ -343,6 +344,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             handleFetchAllMediaError(event.error.type);
             return;
         }
+
+        int position = mFilter.getValue();
+        mFetchedFilters[position] = true;
+
         handleFetchAllMediaSuccess(event);
     }
 
@@ -559,10 +564,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         getAdapter().setMediaList(getFilteredMedia());
 
-        if (mFilter == MediaFilter.FILTER_ALL) {
-            mHasRetrievedAllMedia = !event.canLoadMore;
-        }
-
+        mHasRetrievedAllMedia = !event.canLoadMore;
         getAdapter().setHasRetrievedAll(mHasRetrievedAllMedia);
 
         mHasFetchedMedia = true;
