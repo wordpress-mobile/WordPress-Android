@@ -38,8 +38,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         boolean isConnected = NetworkUtils.isNetworkAvailable(context);
-        boolean initialStickyBroadcast = isInitialStickyBroadcast();
-        if (mIsFirstReceive || isConnected != mWasConnected || !initialStickyBroadcast) {
+        if (mIsFirstReceive || isConnected != mWasConnected) {
             postConnectionChangeEvent(isConnected);
         }
     }
