@@ -151,6 +151,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             boolean optimizedImage = mSettings.optimizedImage;
                             int maxImageWidth = mSettings.maxImageWidth;
                             int imageQualitySetting = mSettings.imageQualitySetting;
+                            boolean optimizedVideo = mSettings.optimizedVideo;
+                            int maxVideoWidth = mSettings.maxVideoWidth;
+                            int videoEncoderBitrate = mSettings.videoEncoderBitrate;
 
                             mSettings.copyFrom(mRemoteSettings);
 
@@ -159,6 +162,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                             mSettings.optimizedImage = optimizedImage;
                             mSettings.maxImageWidth = maxImageWidth;
                             mSettings.imageQualitySetting = imageQualitySetting;
+                            mSettings.optimizedVideo = optimizedVideo;
+                            mSettings.maxVideoWidth = maxVideoWidth;
+                            mSettings.videoEncoderBitrate = videoEncoderBitrate;
 
                             SiteSettingsTable.saveSettings(mSettings);
                             notifyUpdatedOnUiThread(null);

@@ -23,7 +23,9 @@
     <string name="tags_separate_with_commas">Separate tags with commas</string>
     <string name="post_content">Content (tap to add text and media)</string>
     <string name="max_thumbnail_px_width">Default Image Width</string>
-    <string name="image_quality">Image quality</string>
+    <string name="image_quality">Image Quality</string>
+    <string name="max_video_px_width">Default Video Width</string>
+    <string name="video_quality">Video Quality</string>
     <string name="password">Password</string>
     <string name="blogs">Blogs</string>
     <string name="account_details">Account details</string>
@@ -469,6 +471,9 @@
     <string name="site_settings_optimize_images">Optimize Images</string>
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_width</string>
     <string name="site_settings_default_image_quality_title" translatable="false">@string/image_quality</string>
+    <string name="site_settings_optimize_videos">Optimize Videos</string>
+    <string name="site_settings_default_video_width_title" translatable="false">@string/max_video_px_width</string>
+    <string name="site_settings_default_video_quality_title" translatable="false">@string/video_quality</string>
     <string name="site_settings_upload_and_link_image_title" translatable="false">@string/upload_full_size_image</string>
     <string name="site_settings_related_posts_title" translatable="false">@string/related_posts</string>
     <string name="site_settings_more_title" translatable="false">@string/more</string>
@@ -496,6 +501,7 @@
     <string name="site_settings_whitelist_known_summary">Comments from known users</string>
     <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
+    <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
 
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
@@ -554,6 +560,8 @@
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
+    <string name="site_settings_video_width_hint">Resizes videos in posts to this size</string>
+    <string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
     <string name="site_settings_related_posts_hint">Show or hide related posts in reader</string>
     <string name="site_settings_more_hint">View all available Discussion settings</string>
     <string name="site_settings_discussion_hint">View and change your sites discussion settings</string>

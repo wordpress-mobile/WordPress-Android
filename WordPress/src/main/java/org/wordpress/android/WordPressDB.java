@@ -26,7 +26,7 @@ import java.io.OutputStream;
 public class WordPressDB {
     private static final String COLUMN_NAME_ID = "_id";
 
-    private static final int DATABASE_VERSION = 56;
+    private static final int DATABASE_VERSION = 57;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -209,6 +209,9 @@ public class WordPressDB {
                 currentVersion++;
             case 55:
                 SiteSettingsTable.addSharingColumnsToSiteSettingsTable(db);
+                currentVersion++;
+            case 56:
+                SiteSettingsTable.addVideoResizeWidthAndQualityToSiteSettingsTable(db);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

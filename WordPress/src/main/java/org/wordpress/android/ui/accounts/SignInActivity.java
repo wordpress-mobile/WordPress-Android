@@ -54,12 +54,16 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     private ProgressDialog mProgressDialog;
     private SiteModel mJetpackSite;
 
+    private boolean isStopped;
+
     @Inject SiteStore mSiteStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+
+        this.isStopped = true;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_activity);
@@ -84,6 +88,20 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         mSmartLockHelper.initSmartLockForPasswords();
 
         ActivityId.trackLastActivity(ActivityId.LOGIN);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        isStopped = false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        isStopped = true;
     }
 
     @Override
@@ -195,12 +213,16 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     private void popBackStackToSignInFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        while (fragmentManager.getBackStackEntryCount() > 1) {
-            fragmentManager.popBackStackImmediate();
-        }
 
-        getSupportFragmentManager().popBackStack();
+        // this can bee called asynchronously from Volley onError handler so we must check if state is OK
+        if (!this.isStopped) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            while (fragmentManager.getBackStackEntryCount() > 1) {
+                fragmentManager.popBackStackImmediate();
+            }
+
+            fragmentManager.popBackStack();
+        }
     }
 
     protected void addSignInFragment() {
