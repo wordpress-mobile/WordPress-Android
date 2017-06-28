@@ -138,11 +138,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         Bundle args = getArguments();
-        if (args != null) {
-            mSite = (SiteModel) args.getSerializable(WordPress.SITE);
-            mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            mFilter = (MediaFilter) args.getSerializable(MediaBrowserActivity.ARG_FILTER);
-        }
+        mSite = (SiteModel) args.getSerializable(WordPress.SITE);
+        mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
+        mFilter = (MediaFilter) args.getSerializable(MediaBrowserActivity.ARG_FILTER);
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -154,12 +152,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        refresh();
     }
 
     @Override
@@ -210,6 +202,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
+        } else {
+            setFilter(mFilter);
         }
 
         return view;
