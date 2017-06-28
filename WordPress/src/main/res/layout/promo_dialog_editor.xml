@@ -47,11 +47,18 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_description"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="@string/new_editor_promo_description" >
+            tools:text="@string/new_editor_promo_description"
+            style="@style/PromoDialogDescription" >
+        </org.wordpress.android.widgets.WPTextView>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/promo_dialog_link"
+            android:clickable="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            tools:text="@string/new_editor_promo_link"
+            style="@style/PromoDialogLink" >
         </org.wordpress.android.widgets.WPTextView>
 
     </LinearLayout>
