@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
@@ -295,6 +297,18 @@ public class WordPress extends MultiDexApplication {
         // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        // Programmatically registering the ConnectionChangeReceiver here for Android >= N as per this:
+        // https://developer.android.com/reference/android/net/ConnectivityManager.html
+        // "Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
+        // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
+        // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid."
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(ConnectionChangeReceiver.getInstance(),
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            // disable ConnectionChangeReceive by default
+            ConnectionChangeReceiver.forceSetEnabled(WordPress.this, false);
+        }
     }
 
     private void runFluxCMigration() {
