@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,13 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         SiteModel updatedSite = updateSiteFromOptions(response, site);
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+                        if (updatedSite != null) {
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+                        } else {
+                            SiteModel site = new SiteModel();
+                            site.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -105,8 +112,15 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object response) {
                         List<PostFormatModel> postFormats = responseToPostFormats(response);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
-                                FetchedPostFormatsPayload(site, postFormats)));
+                        if (postFormats != null) {
+                            FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site, postFormats);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
+                        } else {
+                            FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
+                                    Collections.<PostFormatModel>emptyList());
+                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
@@ -200,6 +214,10 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
     }
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
+        if (!(response instanceof Map)) {
+            return null;
+        }
+
         Map<?, ?> siteOptions = (Map<?, ?>) response;
         String siteTitle = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_title", "");
         if (!siteTitle.isEmpty()) {
@@ -228,6 +246,10 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
     }
 
     private List<PostFormatModel> responseToPostFormats(Object response) {
+        if (!(response instanceof Map)) {
+            return null;
+        }
+
         Map<?, ?> formatsMap = (Map<?, ?>) response;
         List<PostFormatModel> res = new ArrayList<>();
         for (Object key : formatsMap.keySet()) {
