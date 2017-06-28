@@ -35,10 +35,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
@@ -69,6 +71,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -232,9 +235,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             int selectedColor = ContextCompat.getColor(this, R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.all));
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.images));
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.unattached));
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all));         // FILTER_ALL
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images));      // FILTER_IMAGES
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents));   // FILTER_DOCUMENTS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos));      // FILTER_VIDEOS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio));       // FILTER_AUDIO
 
             mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -248,6 +253,29 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
                     setFilter(tab.getPosition());
+                }
+            });
+
+            // tabMode is set to scrollable in layout, set to fixed if there's enough space to show them all
+            mTabLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mTabLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    if (mTabLayout.getChildCount() > 0) {
+                        int tabLayoutWidth = 0;
+                        LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
+                        for (int i = 0; i < mTabLayout.getTabCount(); i++) {
+                            LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
+                            tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                        }
+
+                        int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);
+                        if (tabLayoutWidth < displayWidth) {
+                            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+                            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+                        }
+                    }
                 }
             });
         } else {

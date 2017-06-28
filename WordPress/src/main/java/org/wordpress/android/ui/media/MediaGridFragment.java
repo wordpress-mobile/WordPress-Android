@@ -72,7 +72,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     static final int FILTER_ALL         = 0;
     static final int FILTER_IMAGES      = 1;
-    static final int FILTER_UNATTACHED  = 2;
+    static final int FILTER_DOCUMENTS   = 2;
+    static final int FILTER_VIDEOS      = 3;
+    static final int FILTER_AUDIO       = 4;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -247,8 +249,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         switch (mFilter) {
             case FILTER_IMAGES:
                 return mMediaStore.getSiteImages(mSite);
-            case FILTER_UNATTACHED:
-                return mMediaStore.getUnattachedSiteMedia(mSite);
+            case FILTER_DOCUMENTS:
+                return mMediaStore.getSiteDocuments(mSite);
+            case FILTER_VIDEOS:
+                return mMediaStore.getSiteVideos(mSite);
+            case FILTER_AUDIO:
+                return mMediaStore.getSiteAudio(mSite);
             default:
                 return mMediaStore.getAllSiteMedia(mSite);
         }
@@ -380,7 +386,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     stringId = R.string.media_fetching;
                     break;
                 case NO_CONTENT:
-                    stringId = R.string.media_empty_list;
+                    switch (mFilter) {
+                        case FILTER_IMAGES:
+                            stringId = R.string.media_empty_image_list;
+                            break;
+                        case FILTER_VIDEOS:
+                            stringId = R.string.media_empty_videos_list;
+                            break;
+                        case FILTER_DOCUMENTS:
+                            stringId = R.string.media_empty_documents_list;
+                            break;
+                        case FILTER_AUDIO:
+                            stringId = R.string.media_empty_audio_list;
+                            break;
+                        default:
+                            stringId = R.string.media_empty_list;
+                            break;
+                    }
                     break;
                 case NETWORK_ERROR:
                     stringId = R.string.no_network_message;
@@ -462,8 +484,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mHasFetchedMedia = savedInstanceState.getBoolean(BUNDLE_HAS_FETCHED_MEDIA, false);
-        mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
+        EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
+        updateEmptyView(emptyType);
     }
 
     private void fetchMediaList(boolean loadMore) {
