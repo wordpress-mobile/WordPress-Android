@@ -33,6 +33,7 @@ import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -542,8 +543,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         for (MediaModel media: mediaList) {
-            MediaModel thisMedia = getMediaFromId(media.getId());
-            if (thisMedia == null || !thisMedia.equals(media)) {
+            if (getMediaFromMediaId(media.getMediaId()) == null) {
                 return false;
             }
         }
@@ -552,11 +552,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     /*
-     * returns the media item with the passed media ID in the current media list
+     * returns the media item with the passed (remote) media ID in the current media list
      */
-    private MediaModel getMediaFromId(int id) {
+    private MediaModel getMediaFromMediaId(long mediaId) {
         for (int i = 0; i < mMediaList.size(); i++) {
-            if (mMediaList.get(i).getId() == id) {
+            if (mMediaList.get(i).getMediaId() == mediaId) {
                 return mMediaList.get(i);
             }
         }

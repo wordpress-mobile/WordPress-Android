@@ -159,6 +159,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Override
     public void onResume() {
         super.onResume();
+        refresh();
     }
 
     @Override
