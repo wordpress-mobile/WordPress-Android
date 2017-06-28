@@ -245,6 +245,9 @@ public class LoginSiteAddressFragment extends Fragment implements TextWatcher {
                 });
         mSiteRestClient.add(req);
 
+        // auth token can be invalid so, clean it up for this public API call
+        req.setAccessToken(null);
+
         showProgressDialog();
     }
 
