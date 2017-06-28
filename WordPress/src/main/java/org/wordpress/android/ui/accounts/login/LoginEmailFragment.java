@@ -113,16 +113,20 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             }
         });
 
+        TextView label = ((TextView) rootView.findViewById(R.id.label));
         switch (mLoginListener.getLoginMode()) {
             case FULL:
                 // all features enabled and with typical values
                 break;
             case JETPACK_STATS:
-                ((TextView) rootView.findViewById(R.id.label))
-                        .setText(R.string.stats_sign_in_jetpack_different_com_account);
+                label.setText(R.string.stats_sign_in_jetpack_different_com_account);
                 loginViaSiteAddressView.setVisibility(View.GONE);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
+                loginViaSiteAddressView.setVisibility(View.GONE);
+                break;
+            case WPCOM_REAUTHENTICATE:
+                label.setText(R.string.auth_required);
                 loginViaSiteAddressView.setVisibility(View.GONE);
                 break;
         }

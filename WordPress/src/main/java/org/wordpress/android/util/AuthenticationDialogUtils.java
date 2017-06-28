@@ -5,7 +5,11 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.AuthErrorDialogFragment;
 
 public class AuthenticationDialogUtils {
@@ -27,10 +31,17 @@ public class AuthenticationDialogUtils {
 
         // WP.com errors will show the sign in activity
         if (site.isWPCom()) {
-            Intent signInIntent = new Intent(activity, SignInActivity.class);
-            signInIntent.putExtra(SignInActivity.EXTRA_IS_AUTH_ERROR, true);
-            signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            activity.startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
+            if (AppPrefs.isLoginWizardStyleActivated()) {
+                Intent intent = new Intent(activity, LoginActivity.class);
+                LoginMode.WPCOM_REAUTHENTICATE.putInto(intent);
+                activity.startActivityForResult(intent, RequestCodes.REAUTHENTICATE);
+            } else {
+                Intent signInIntent = new Intent(activity, SignInActivity.class);
+                signInIntent.putExtra(SignInActivity.EXTRA_IS_AUTH_ERROR, true);
+                signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                activity.startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
+            }
+
             return;
         }
 

@@ -589,9 +589,7 @@ public class WPMainActivity extends AppCompatActivity {
                 }
                 break;
             case RequestCodes.REAUTHENTICATE:
-                if (resultCode == RESULT_CANCELED) {
-                    ActivityLauncher.showSignInForResult(this);
-                } else {
+                if (resultCode == RESULT_OK) {
                     // Register for Cloud messaging
                     startService(new Intent(this, GCMRegistrationIntentService.class));
                 }

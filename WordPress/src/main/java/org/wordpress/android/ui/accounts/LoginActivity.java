@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                     break;
                 case JETPACK_STATS:
                 case WPCOM_LOGIN_DEEPLINK:
+                case WPCOM_REAUTHENTICATE:
                     showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
                     break;
             }
@@ -105,6 +106,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             case SELFHOSTED_ONLY:
             case JETPACK_STATS:
             case WPCOM_LOGIN_DEEPLINK:
+            case WPCOM_REAUTHENTICATE:
                 ActivityLauncher.showLoginEpilogueForResult(this, true);
                 break;
         }
