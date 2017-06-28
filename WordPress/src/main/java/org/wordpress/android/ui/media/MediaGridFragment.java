@@ -65,7 +65,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private static final String BUNDLE_SELECTED_STATES = "BUNDLE_SELECTED_STATES";
     private static final String BUNDLE_IN_MULTI_SELECT_MODE = "BUNDLE_IN_MULTI_SELECT_MODE";
     private static final String BUNDLE_SCROLL_POSITION = "BUNDLE_SCROLL_POSITION";
-    private static final String BUNDLE_HAS_RETRIEVED_ALL_MEDIA = "BUNDLE_HAS_RETRIEVED_ALL_MEDIA";
+    private static final String BUNDLE_RETRIEVED_ALL_FILTERS = "BUNDLE_RETRIEVED_ALL_FILTERS";
     private static final String BUNDLE_FETCHED_FILTERS = "BUNDLE_FETCHED_FILTERS";
     private static final String BUNDLE_EMPTY_VIEW_MESSAGE = "BUNDLE_EMPTY_VIEW_MESSAGE";
 
@@ -82,12 +82,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         private MediaFilter(int value) {
             this.value = value;
         }
-        public int getValue() {
+        int getValue() {
             return value;
         }
     }
 
+    // describes which filters we've fetched media for
     private boolean[] mFetchedFilters = new boolean[MediaFilter.values().length];
+
+    // describes which filters we've fetched ALL media for
+    private boolean[] mRetrievedAllFilters = new boolean[MediaFilter.values().length];
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -101,7 +105,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private MediaGridListener mListener;
 
     private boolean mIsRefreshing;
-    private boolean mHasRetrievedAllMedia;
 
     private ActionMode mActionMode;
     private String mSearchTerm;
@@ -242,6 +245,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         return mFilter;
     }
 
+    /*
+     * called when we know we've retrieved and fetched all media for all filters
+     */
+    private void setHasRetrievedMediaForAllFilters() {
+        for (int i = 0; i < mRetrievedAllFilters.length; i++) {
+            mFetchedFilters[i] = true;
+            mRetrievedAllFilters[i] = true;
+        }
+    }
+
     private List<MediaModel> getFilteredMedia() {
         if (!TextUtils.isEmpty(mSearchTerm)) {
             return mMediaStore.searchSiteMedia(mSite, mSearchTerm);
@@ -292,7 +305,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             hideEmptyView();
         }
 
-        mHasRetrievedAllMedia = false;
         boolean hasFetchedThisFilter = mFetchedFilters[filter.value];
         if (!hasFetchedThisFilter && NetworkUtils.isNetworkAvailable(getActivity())) {
             fetchMediaList(false);
@@ -301,7 +313,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterFetchMoreData() {
-        if (!mHasRetrievedAllMedia) {
+        boolean hasFetchedAll = mRetrievedAllFilters[mFilter.value];
+        if (!hasFetchedAll) {
             fetchMediaList(true);
         }
     }
@@ -439,10 +452,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void saveState(Bundle outState) {
         outState.putIntArray(BUNDLE_SELECTED_STATES, ListUtils.toIntArray(getAdapter().getSelectedItems()));
         outState.putInt(BUNDLE_SCROLL_POSITION, mGridManager.findFirstCompletelyVisibleItemPosition());
-        outState.putBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, mHasRetrievedAllMedia);
         outState.putBoolean(BUNDLE_IN_MULTI_SELECT_MODE, getAdapter().isInMultiSelect());
         outState.putString(BUNDLE_EMPTY_VIEW_MESSAGE, mEmptyViewMessageType.name());
         outState.putBooleanArray(BUNDLE_FETCHED_FILTERS, mFetchedFilters);
+        outState.putBooleanArray(BUNDLE_RETRIEVED_ALL_FILTERS, mRetrievedAllFilters);
     }
 
     private void updateActionModeTitle(int selectCount) {
@@ -490,8 +503,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         }
 
-        mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mFetchedFilters = savedInstanceState.getBooleanArray(BUNDLE_FETCHED_FILTERS);
+        mRetrievedAllFilters = savedInstanceState.getBooleanArray(BUNDLE_RETRIEVED_ALL_FILTERS);
+
         EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
         updateEmptyView(emptyType);
@@ -556,12 +570,19 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         getAdapter().setMediaList(getFilteredMedia());
 
-        mHasRetrievedAllMedia = !event.canLoadMore;
-        getAdapter().setHasRetrievedAll(mHasRetrievedAllMedia);
+        boolean hasRetrievedAll = !event.canLoadMore;
+        getAdapter().setHasRetrievedAll(hasRetrievedAll);
 
         mIsRefreshing = false;
+
         int position = mFilter.getValue();
         mFetchedFilters[position] = true;
+
+        if (mFilter == MediaFilter.FILTER_ALL) {
+            setHasRetrievedMediaForAllFilters();
+        } else {
+            mRetrievedAllFilters[position] = hasRetrievedAll;
+        }
 
         // the activity may be gone by the time this finishes, so check for it
         if (getActivity() != null && isVisible()) {
@@ -589,7 +610,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                 }
             }
         }
-        mHasRetrievedAllMedia = true;
+
+        setHasRetrievedMediaForAllFilters();
         getAdapter().setHasRetrievedAll(true);
 
         // the activity may be gone by the time we get this, so check for it
