@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
@@ -489,6 +490,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         updateEmptyView(emptyType);
     }
 
+    private String getMimeTypeForFilter() {
+        switch (mFilter) {
+            case FILTER_AUDIO:
+                return MediaUtils.MIME_TYPE_AUDIO;
+            case FILTER_DOCUMENTS:
+                return MediaUtils.MIME_TYPE_APPLICATION;
+            case FILTER_IMAGES:
+                return MediaUtils.MIME_TYPE_IMAGE;
+            case FILTER_VIDEOS:
+                return MediaUtils.MIME_TYPE_VIDEO;
+            default:
+                return null;
+        }
+    }
+
     private void fetchMediaList(boolean loadMore) {
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -508,7 +524,22 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             updateEmptyView(EmptyViewMessageType.LOADING);
             setRefreshing(true);
 
-            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore);
+            // use a partial mime_type match when fetching media
+            String mimeType;
+            switch (mFilter) {
+                case FILTER_AUDIO:
+                    mimeType = MediaUtils.MIME_TYPE_AUDIO;
+                case FILTER_DOCUMENTS:
+                    mimeType = MediaUtils.MIME_TYPE_APPLICATION;
+                case FILTER_IMAGES:
+                    mimeType = MediaUtils.MIME_TYPE_IMAGE;
+                case FILTER_VIDEOS:
+                    mimeType = MediaUtils.MIME_TYPE_VIDEO;
+                default:
+                    mimeType = null;
+            }
+
+            FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore, mimeType);
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
