@@ -14,11 +14,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialog extends AppCompatDialogFragment {
-
-    private int mDrawableId;
-    private int mTitleId;
-    private int mDescriptionId;
-    private int mButtonLabelId;
+    protected int mButtonLabelId;
+    protected int mDescriptionId;
+    protected int mDrawableId;
+    protected int mTitleId;
 
     public static PromoDialog newInstance(int drawableId, int titleId, int descriptionId, int buttonLabelId) {
         PromoDialog fragment = new PromoDialog();
