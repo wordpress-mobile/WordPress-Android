@@ -800,7 +800,7 @@ public class EditPostSettingsFragment extends Fragment {
     // Post Format Helpers
 
     private void updatePostFormatKeysAndNames() {
-        if (!isAdded()) {
+        if (getActivity() == null) {
             return;
         }
         // Default values
