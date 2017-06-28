@@ -136,14 +136,14 @@ public class XMLRPCRequest extends BaseRequest<Object> {
      * Helper method to capture the Listener's wildcard parameter type and use it to cast the response before
      * calling {@code onResponse()}.
      */
-    private <T> void deliverResponse(final Listener<T> listener, Object rawResponse) {
+    private <K> void deliverResponse(final Listener<K> listener, Object rawResponse) {
         // The XMLRPCSerializer always returns an Object - it's up to the client making the request to know whether
         // it's really an Object[] (i.e., when requesting a list of values from the API).
         // We've already restricted the Listener parameterization to Object and Object[], so we know this is returning
         // a 'safe' type - but it's still up to the client to know if an Object or an Object[] is the expected response.
         // So, we're matching the parsed response to the Listener parameter we were given, trusting that the network
         // client knows what it's doing
-        @SuppressWarnings("unchecked") T response = (T) rawResponse;
+        @SuppressWarnings("unchecked") K response = (K) rawResponse;
         try {
             listener.onResponse(response);
         } catch (ClassCastException e) {
