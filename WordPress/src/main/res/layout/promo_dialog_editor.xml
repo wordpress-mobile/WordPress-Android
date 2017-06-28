@@ -25,11 +25,24 @@
         android:orientation="vertical"
         android:padding="@dimen/margin_dialog" >
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/promo_dialog_title"
-            tools:text="@string/new_editor_promo_title"
-            style="@style/StatsModuleTitle" >
-        </org.wordpress.android.widgets.WPTextView>
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal" >
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/promo_dialog_title"
+                tools:text="@string/new_editor_promo_title"
+                style="@style/PromoDialogTitle" >
+            </org.wordpress.android.widgets.WPTextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/promo_dialog_title_beta"
+                tools:text="@string/new_editor_promo_title_beta"
+                style="@style/PromoDialogTitleBeta" >
+            </org.wordpress.android.widgets.WPTextView>
+
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_description"

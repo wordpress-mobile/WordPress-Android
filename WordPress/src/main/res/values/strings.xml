@@ -981,6 +981,7 @@
     <string name="new_editor_promo_button_positive">Try It</string>
     <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post.</string>
     <string name="new_editor_promo_title">New editor</string>
+    <string name="new_editor_promo_title_beta">Beta</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 

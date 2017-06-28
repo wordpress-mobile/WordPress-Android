@@ -36,6 +36,8 @@
 
     <dimen name="default_dialog_button_height">48dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
+    <dimen name="dialog_beta_padding_horizontal">8dp</dimen>
+    <dimen name="dialog_beta_padding_vertical">6dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_detail_button_size">48dp</dimen>
