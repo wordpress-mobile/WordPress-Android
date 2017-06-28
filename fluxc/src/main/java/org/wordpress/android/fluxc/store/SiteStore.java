@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSit
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
+import org.wordpress.android.fluxc.utils.SiteErrorUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -129,9 +130,15 @@ public class SiteStore extends Store {
 
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
+        public String message;
 
         public SiteError(SiteErrorType type) {
+            this(type, "");
+        }
+
+        public SiteError(SiteErrorType type, String message) {
             this.type = type;
+            this.message = message;
         }
     }
 
@@ -259,7 +266,8 @@ public class SiteStore extends Store {
     public enum SiteErrorType {
         INVALID_SITE,
         DUPLICATE_SITE,
-        GENERIC_ERROR
+        INVALID_RESPONSE,
+        GENERIC_ERROR;
     }
 
     public enum SuggestDomainErrorType {
@@ -804,7 +812,7 @@ public class SiteStore extends Store {
         OnSiteChanged event = new OnSiteChanged(0);
         if (siteModel.isError()) {
             // TODO: what kind of error could we get here?
-            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+            event.error = SiteErrorUtils.genericToSiteError(siteModel.error);
         } else {
             try {
                 event.rowsAffected = SiteSqlUtils.insertOrUpdateSite(siteModel);
@@ -819,7 +827,7 @@ public class SiteStore extends Store {
         OnSiteChanged event = new OnSiteChanged(0);
         if (sitesModel.isError()) {
             // TODO: what kind of error could we get here?
-            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+            event.error = SiteErrorUtils.genericToSiteError(sitesModel.error);
         } else {
             UpdateSitesResult res = createOrUpdateSites(sitesModel);
             event.rowsAffected = res.rowsAffected;
