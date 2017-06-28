@@ -1,12 +1,8 @@
 package org.wordpress.android.networking;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -21,8 +17,6 @@ import de.greenrobot.event.EventBus;
 public class ConnectionChangeReceiver extends BroadcastReceiver {
     private static boolean mIsFirstReceive = true;
     private static boolean mWasConnected = true;
-    private static boolean mIsEnabled = false; // this value must be synchronized with the ConnectionChangeReceiver
-                                               // state in our AndroidManifest
     private static ConnectionChangeReceiver sInstance;
 
     public static class ConnectionChangeEvent {
@@ -55,27 +49,6 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         mWasConnected = isConnected;
         mIsFirstReceive = false;
         EventBus.getDefault().post(new ConnectionChangeEvent(isConnected));
-    }
-
-    public synchronized static void setEnabled(Context context, boolean enabled) {
-        if (mIsEnabled == enabled) {
-            return;
-        }
-        forceSetEnabled(context, enabled);
-    }
-
-    public synchronized static void forceSetEnabled(Context context, boolean enabled) {
-        mIsEnabled = enabled;
-        AppLog.i(T.UTILS, "ConnectionChangeReceiver.setEnabled " + enabled);
-        int flag = (enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED :
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED);
-        ComponentName component = new ComponentName(context, ConnectionChangeReceiver.class);
-        PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(component, flag, PackageManager.DONT_KILL_APP);
-        int  status = pm.getComponentEnabledSetting(component);
-        if (mIsEnabled) {
-            postConnectionChangeEvent(NetworkUtils.isNetworkAvailable(context));
-        }
     }
 
     public static ConnectionChangeReceiver getInstance(){

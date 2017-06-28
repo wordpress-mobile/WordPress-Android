@@ -298,17 +298,6 @@ public class WordPress extends MultiDexApplication {
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
-        // Programmatically registering the ConnectionChangeReceiver here for Android >= N as per this:
-        // https://developer.android.com/reference/android/net/ConnectivityManager.html
-        // "Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
-        // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
-        // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid."
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            registerReceiver(ConnectionChangeReceiver.getInstance(),
-                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-            // disable ConnectionChangeReceive by default
-            ConnectionChangeReceiver.forceSetEnabled(WordPress.this, false);
-        }
     }
 
     private void runFluxCMigration() {
@@ -848,7 +837,12 @@ public class WordPress extends MultiDexApplication {
                     }
                     AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                     AnalyticsTracker.endSession(false);
-                    ConnectionChangeReceiver.setEnabled(WordPress.this, false);
+                    // Programmatically unregistering the ConnectionChangeReceiver here for Android >= N as per this:
+                    // https://developer.android.com/reference/android/net/ConnectivityManager.html
+                    // "Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
+                    // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
+                    // register their BroadcastReceiver with Context.registerReceiver() and that context is still valid."
+                    unregisterReceiver(ConnectionChangeReceiver.getInstance());
                 }
             };
 
@@ -875,7 +869,8 @@ public class WordPress extends MultiDexApplication {
          */
         private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
-            ConnectionChangeReceiver.setEnabled(WordPress.this, true);
+            registerReceiver(ConnectionChangeReceiver.getInstance(),
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
             Map<String, Boolean> properties = new HashMap<>(1);
