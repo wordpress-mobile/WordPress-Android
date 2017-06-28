@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialogEditor extends PromoDialog {
@@ -96,6 +101,16 @@ public class PromoDialogEditor extends PromoDialog {
                 @Override
                 public void onClick(View view) {
                     getDialog().cancel();
+
+                    // Set Aztec enabled and Visual disabled if Aztec is not already enabled.
+                    if (!AppPrefs.isAztecEditorEnabled()) {
+                        AppPrefs.setAztecEditorEnabled(true);
+                        AppPrefs.setVisualEditorEnabled(false);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                        preferences.edit().putString(getString(R.string.pref_key_editor_type), "2").apply();
+                    }
+
+                    ActivityLauncher.addNewPostOrPageForResult(getActivity(), ((WPMainActivity) getActivity()).getSelectedSite(), false, true);
                 }
             }
         );

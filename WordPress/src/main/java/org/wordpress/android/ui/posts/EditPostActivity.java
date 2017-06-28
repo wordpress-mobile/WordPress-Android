@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -45,7 +45,6 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.m4m.MediaComposer;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -109,7 +108,6 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
@@ -124,7 +122,6 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
-import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -135,7 +132,6 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -155,6 +151,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         PhotoPickerFragment.PhotoPickerListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
@@ -206,6 +203,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private boolean mIsNewPost;
     private boolean mIsPage;
+    private boolean mIsPromo;
     private boolean mHasSetPostContent;
 
     private View mPhotoPickerContainer;
@@ -281,6 +279,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 if (extras != null) {
                     mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                    mIsPromo = extras.getBoolean(EXTRA_IS_PROMO);
                 }
                 mIsNewPost = true;
 
@@ -1261,6 +1260,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     if (mShowAztecEditor) {
                         mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
                         mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
+
+                        // Show confirmation message when coming from editor promotion dialog.
+                        if (mIsPromo) {
+                            showSnackbarConfirmation();
+                        }
+
                         return mAztecEditorFragment;
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
@@ -2366,6 +2371,27 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
         else {
             onUploadProgress(event.media, event.progress);
+        }
+    }
+
+    protected void showSnackbarConfirmation() {
+        if (mViewPager != null) {
+            Snackbar.make(
+                        mViewPager,
+                        getString(R.string.new_editor_promo_confirmation_message),
+                        Snackbar.LENGTH_LONG
+                    )
+                    .setAction(
+                        R.string.new_editor_promo_confirmation_action,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ActivityLauncher.viewAppSettings(EditPostActivity.this);
+                                finish();
+                            }
+                        }
+                    )
+                    .show();
         }
     }
 }
