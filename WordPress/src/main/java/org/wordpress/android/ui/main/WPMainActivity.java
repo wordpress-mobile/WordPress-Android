@@ -671,7 +671,7 @@ public class WPMainActivity extends AppCompatActivity {
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError()) {
             if (mSelectedSite != null && event.error.type == AuthenticationErrorType.INVALID_TOKEN) {
-                AuthenticationDialogUtils.showAuthErrorView(this, mSelectedSite);
+                AuthenticationDialogUtils.showAuthErrorView(this, mSiteStore, mSelectedSite);
             }
 
             return;
