@@ -25,7 +25,6 @@ import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +40,9 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(password);
         final XMLRPCRequest request = new XMLRPCRequest(
                 xmlrpcUrl, XMLRPC.GET_USERS_SITES, params,
-                new Listener<Object>() {
+                new Listener<Object[]>() {
                     @Override
-                    public void onResponse(Object response) {
+                    public void onResponse(Object[] response) {
                         SitesModel sites = sitesResponseToSitesModel(response, username, password);
                         if (sites != null) {
                             mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(sites));
@@ -136,17 +135,15 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private SitesModel sitesResponseToSitesModel(Object response, String username, String password) {
-        if (!(response instanceof Object[])) {
-            return null;
-        }
-        Object[] responseArray = (Object[]) response;
+    private SitesModel sitesResponseToSitesModel(Object[] response, String username, String password) {
+        if (response == null) return null;
+
         List<SiteModel> siteArray = new ArrayList<>();
-        for (Object siteObject: responseArray) {
-            if (!(siteObject instanceof HashMap)) {
+        for (Object siteObject: response) {
+            if (!(siteObject instanceof Map)) {
                 continue;
             }
-            HashMap<?, ?> siteMap = (HashMap<?, ?>) siteObject;
+            Map<?, ?> siteMap = (Map<?, ?>) siteObject;
             SiteModel site = new SiteModel();
             site.setSelfHostedSiteId(MapUtils.getMapInt(siteMap, "blogid", 1));
             site.setName(MapUtils.getMapStr(siteMap, "blogName"));
