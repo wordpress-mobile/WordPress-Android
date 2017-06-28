@@ -484,8 +484,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         mHasRetrievedAllMedia = savedInstanceState.getBoolean(BUNDLE_HAS_RETRIEVED_ALL_MEDIA, false);
         mHasFetchedMedia = savedInstanceState.getBoolean(BUNDLE_HAS_FETCHED_MEDIA, false);
-        mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
+        EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
                 getString(BUNDLE_EMPTY_VIEW_MESSAGE));
+        updateEmptyView(emptyType);
     }
 
     private void fetchMediaList(boolean loadMore) {
