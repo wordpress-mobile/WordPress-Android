@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.wordpress.android.fluxc.site.SiteUtils.generateWPComSite;
+import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteXMLRPCClientTest {
@@ -86,7 +86,7 @@ public class SiteXMLRPCClientTest {
 
     @Test
     public void testFetchSite() throws Exception {
-        SiteModel site = generateWPComSite();
+        SiteModel site = generateSelfHostedNonJPSite();
         mCountDownLatch = new CountDownLatch(1);
         mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                           + "<methodResponse><params><param><value>\n"
