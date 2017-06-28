@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -213,10 +214,16 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
     public void fetchMediaList(final SiteModel site, final int offset) {
+        fetchMediaList(site, offset, null);
+    }
+    public void fetchMediaList(final SiteModel site, final int offset, @Nullable String mimeType) {
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(MediaStore.NUM_MEDIA_PER_FETCH));
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
+        }
+        if (mimeType != null && mimeType.length() > 0) {
+            params.put("mime_type", mimeType);
         }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,

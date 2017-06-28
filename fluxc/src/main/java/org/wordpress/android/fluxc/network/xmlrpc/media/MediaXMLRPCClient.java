@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.media;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -244,11 +245,17 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
     public void fetchMediaList(final SiteModel site, final int offset) {
+        fetchMediaList(site, offset, null);
+    }
+    public void fetchMediaList(final SiteModel site, final int offset, @Nullable String mimeType) {
         List<Object> params = getBasicParams(site, null);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("number", MediaStore.NUM_MEDIA_PER_FETCH);
         if (offset > 0) {
             queryParams.put("offset", offset);
+        }
+        if (mimeType != null && mimeType.length() > 0) {
+            queryParams.put("mime_type", mimeType);
         }
         params.add(queryParams);
 
