@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="40dp"
         android:minLines="3"
         tools:text="@string/login_promo_text_anytime"/>
 

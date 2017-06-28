@@ -31,7 +31,7 @@ public class LoginProloguePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return LoginPrologueAnimationFragment.newInstance(mAnims[position], mPromoTexts[position]);
+        return LoginPrologueAnimationFragment.newInstance(mAnims[position], mPromoTexts[position], (position % 2) == 0);
     }
 
     @Override
