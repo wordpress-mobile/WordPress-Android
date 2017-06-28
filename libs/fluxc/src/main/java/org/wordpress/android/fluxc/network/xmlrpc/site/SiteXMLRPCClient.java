@@ -110,7 +110,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        List<PostFormatModel> postFormats = responseToPostFormats(response);
+                        List<PostFormatModel> postFormats = responseToPostFormats(response, site);
                         if (postFormats != null) {
                             FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site, postFormats);
                             mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
@@ -212,6 +212,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
         if (!(response instanceof Map)) {
+            reportParseError(response, oldModel.getXmlRpcUrl(), Map.class);
             return null;
         }
 
@@ -242,8 +243,9 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         return oldModel;
     }
 
-    private List<PostFormatModel> responseToPostFormats(Object response) {
+    private List<PostFormatModel> responseToPostFormats(Object response, SiteModel site) {
         if (!(response instanceof Map)) {
+            reportParseError(response, site.getXmlRpcUrl(), Map.class);
             return null;
         }
 
