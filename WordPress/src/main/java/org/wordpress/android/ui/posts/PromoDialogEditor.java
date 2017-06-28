@@ -13,12 +13,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialogEditor extends PromoDialog {
-    protected int mButtonNegativeLabelId;
-    protected int mButtonPositiveLabelId;
+    protected int mButtonNegativeId;
     protected int mLinkId;
     protected int mTitleBetaId;
 
-    public static PromoDialogEditor newInstance(int drawableId, int titleId, int titleBetaId, int descriptionId, int linkId, int buttonNegativeLabelId, int buttonPositiveLabelId) {
+    public static PromoDialogEditor newInstance(int drawableId, int titleId, int titleBetaId, int descriptionId, int linkId, int buttonNegativeId, int buttonPositiveId) {
         PromoDialogEditor fragment = new PromoDialogEditor();
         Bundle args = new Bundle();
         args.putInt("drawableId", drawableId);
@@ -26,8 +25,8 @@ public class PromoDialogEditor extends PromoDialog {
         args.putInt("titleBetaId", titleBetaId);
         args.putInt("descriptionId", descriptionId);
         args.putInt("linkId", linkId);
-        args.putInt("buttonNegativeLabelId", buttonNegativeLabelId);
-        args.putInt("buttonPositiveLabelId", buttonPositiveLabelId);
+        args.putInt("buttonNegativeId", buttonNegativeId);
+        args.putInt("buttonPositiveId", buttonPositiveId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,8 +39,8 @@ public class PromoDialogEditor extends PromoDialog {
         mTitleBetaId = getArguments().getInt("titleBetaId");
         mDescriptionId = getArguments().getInt("descriptionId");
         mLinkId = getArguments().getInt("linkId");
-        mButtonNegativeLabelId = getArguments().getInt("buttonNegativeLabelId");
-        mButtonPositiveLabelId = getArguments().getInt("buttonPositiveLabelId");
+        mButtonNegativeId = getArguments().getInt("buttonNegativeId");
+        mButtonPositiveId = getArguments().getInt("buttonPositiveId");
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);  // Request window without title.
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
@@ -71,28 +70,34 @@ public class PromoDialogEditor extends PromoDialog {
 
         WPTextView link = (WPTextView) view.findViewById(R.id.promo_dialog_link);
         link.setText(mLinkId);
-        link.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        link.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
             }
-        });
+        );
 
         Button buttonNegative = (Button) view.findViewById(R.id.promo_dialog_button_negative);
-        buttonNegative.setText(mButtonNegativeLabelId);
-        buttonNegative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDialog().cancel();
+        buttonNegative.setText(mButtonNegativeId);
+        buttonNegative.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getDialog().cancel();
+                }
             }
-        });
+        );
 
         Button buttonPositive = (Button) view.findViewById(R.id.promo_dialog_button_positive);
-        buttonPositive.setText(mButtonPositiveLabelId);
-        buttonPositive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDialog().cancel();
+        buttonPositive.setText(mButtonPositiveId);
+        buttonPositive.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getDialog().cancel();
+                }
             }
-        });
+        );
     }
 }

@@ -14,18 +14,18 @@ import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialog extends AppCompatDialogFragment {
-    protected int mButtonLabelId;
+    protected int mButtonPositiveId;
     protected int mDescriptionId;
     protected int mDrawableId;
     protected int mTitleId;
 
-    public static PromoDialog newInstance(int drawableId, int titleId, int descriptionId, int buttonLabelId) {
+    public static PromoDialog newInstance(int drawableId, int titleId, int descriptionId, int buttonPositiveId) {
         PromoDialog fragment = new PromoDialog();
         Bundle args = new Bundle();
         args.putInt("drawableId", drawableId);
         args.putInt("titleId", titleId);
         args.putInt("descriptionId", descriptionId);
-        args.putInt("buttonLabelId", buttonLabelId);
+        args.putInt("buttonPositiveId", buttonPositiveId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,7 +36,7 @@ public class PromoDialog extends AppCompatDialogFragment {
         mDrawableId = getArguments().getInt("drawableId");
         mTitleId = getArguments().getInt("titleId");
         mDescriptionId = getArguments().getInt("descriptionId");
-        mButtonLabelId = getArguments().getInt("buttonLabelId");
+        mButtonPositiveId = getArguments().getInt("buttonPositiveId");
         // request a window without the title
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(false);
@@ -53,8 +53,8 @@ public class PromoDialog extends AppCompatDialogFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Button btn = (Button) view.findViewById(R.id.promo_dialog_button);
-        btn.setText(mButtonLabelId);
+        Button btn = (Button) view.findViewById(R.id.promo_dialog_button_positive);
+        btn.setText(mButtonPositiveId);
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
         image.setImageResource(mDrawableId);
         WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
