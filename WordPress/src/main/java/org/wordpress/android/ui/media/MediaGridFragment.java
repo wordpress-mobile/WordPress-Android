@@ -71,11 +71,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     static final String TAG = "media_grid_fragment";
 
-    static final int FILTER_ALL         = 0;
-    static final int FILTER_IMAGES      = 1;
-    static final int FILTER_DOCUMENTS   = 2;
-    static final int FILTER_VIDEOS      = 3;
-    static final int FILTER_AUDIO       = 4;
+    enum MediaFilter {
+        FILTER_ALL(0),
+        FILTER_IMAGES(1),
+        FILTER_DOCUMENTS(2),
+        FILTER_VIDEOS(3),
+        FILTER_AUDIO(4);
+
+        private final int value;
+        private MediaFilter(int value) {
+            this.value = value;
+        }
+        public int getValue() {
+            return value;
+        }
+    }
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -94,7 +104,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private ActionMode mActionMode;
     private String mSearchTerm;
-    private int mFilter = FILTER_ALL;
+    private MediaFilter mFilter = MediaFilter.FILTER_ALL;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
@@ -110,11 +120,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public static MediaGridFragment newInstance(@NonNull SiteModel site,
                                                 @NonNull MediaBrowserType browserType,
-                                                int filter) {
+                                                @NonNull MediaFilter filter) {
         Bundle args = new Bundle();
         args.putSerializable(WordPress.SITE, site);
         args.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
-        args.putInt(MediaBrowserActivity.ARG_FILTER, filter);
+        args.putSerializable(MediaBrowserActivity.ARG_FILTER, filter);
 
         MediaGridFragment fragment = new MediaGridFragment();
         fragment.setArguments(args);
@@ -130,7 +140,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (args != null) {
             mSite = (SiteModel) args.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) args.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE);
-            mFilter = args.getInt(MediaBrowserActivity.ARG_FILTER);
+            mFilter = (MediaFilter) args.getSerializable(MediaBrowserActivity.ARG_FILTER);
         }
 
         if (mSite == null) {
@@ -148,12 +158,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Override
     public void onResume() {
         super.onResume();
-
-        if (!mHasFetchedMedia && NetworkUtils.isNetworkAvailable(getActivity())) {
-            fetchMediaList(false);
-        } else {
-            refresh();
-        }
     }
 
     @Override
@@ -238,7 +242,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         return hasAdapter() && getAdapter().isEmpty();
     }
 
-    int getFilter() {
+    MediaFilter getFilter() {
         return mFilter;
     }
 
@@ -261,9 +265,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         }
     }
 
-    void setFilter(int filter) {
+    void setFilter(@NonNull MediaFilter filter) {
         mFilter  = filter;
-        getArguments().putInt(MediaBrowserActivity.ARG_FILTER, filter);
+        getArguments().putSerializable(MediaBrowserActivity.ARG_FILTER, filter);
 
         if (!isAdded()) return;
 
@@ -290,6 +294,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             }
         } else {
             hideEmptyView();
+        }
+
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            fetchMediaList(false);
+        } else {
+
         }
     }
 
@@ -549,7 +559,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         getAdapter().setMediaList(getFilteredMedia());
 
-        mHasRetrievedAllMedia = !event.canLoadMore;
+        if (mFilter == MediaFilter.FILTER_ALL) {
+            mHasRetrievedAllMedia = !event.canLoadMore;
+        }
+
         getAdapter().setHasRetrievedAll(mHasRetrievedAllMedia);
 
         mHasFetchedMedia = true;

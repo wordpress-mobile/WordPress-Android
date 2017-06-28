@@ -62,6 +62,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
@@ -138,7 +139,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MediaBrowserType mBrowserType;
     private int mLastAddMediaItemClickedPosition;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,13 +191,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         setupTabs();
 
-        int filter;
+        MediaFilter filter;
         if (mImagesOnly) {
-            filter = MediaGridFragment.FILTER_IMAGES;
+            filter = MediaFilter.FILTER_IMAGES;
         } else if (savedInstanceState != null) {
-            filter = savedInstanceState.getInt(ARG_FILTER);
+            filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
         } else {
-            filter = MediaGridFragment.FILTER_ALL;
+            filter = MediaFilter.FILTER_ALL;
         }
 
         mMediaGridFragment = (MediaGridFragment) fm.findFragmentByTag(MediaGridFragment.TAG);
@@ -244,7 +244,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    setFilter(tab.getPosition());
+                    setFilter(getFilterForPosition(tab.getPosition()));
                 }
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
@@ -252,7 +252,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 @Override
                 public void onTabReselected(TabLayout.Tab tab) {
-                    setFilter(tab.getPosition());
+                    setFilter(getFilterForPosition(tab.getPosition()));
                 }
             });
 
@@ -283,11 +283,25 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
-    private void setFilter(int filter) {
+    private int getPositionForFilter(@NonNull MediaFilter filter) {
+        return filter.getValue();
+    }
+
+    private MediaFilter getFilterForPosition(int position) {
+        for (MediaFilter filter: MediaFilter.values()) {
+            if (filter.getValue() == position) {
+                return filter;
+            }
+        }
+        return MediaFilter.FILTER_ALL;
+    }
+
+    private void setFilter(@NonNull MediaFilter filter) {
+        int position = getPositionForFilter(filter);
         if (shouldShowTabs()
                 && mTabLayout != null
-                && mTabLayout.getSelectedTabPosition() != filter) {
-            mTabLayout.setScrollPosition(filter, 0f, true);
+                && mTabLayout.getSelectedTabPosition() != position) {
+            mTabLayout.setScrollPosition(position, 0f, true);
         }
 
         if (mMediaGridFragment != null &&
@@ -343,7 +357,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         outState.putBoolean(ARG_IMAGES_ONLY, mImagesOnly);
         if (mMediaGridFragment != null) {
-            outState.putInt(ARG_FILTER, mMediaGridFragment.getFilter());
+            outState.putSerializable(ARG_FILTER, mMediaGridFragment.getFilter());
         }
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
