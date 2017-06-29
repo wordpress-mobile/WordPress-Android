@@ -1778,4 +1778,9 @@
     <!-- Video Optimization -->
     <string name="video_optimization_in_progress">Optimizing your video&#8230;</string>
     <string name="video_optimization_generic_error_message">An error occurred while compressing your video. Using the original file.</string>
+
+
+    <!-- Image Optimization promo -->
+    <string name="image_optimization_promo_title">Enable image optimization?</string>
+    <string name="image_optimization_promo_desc">Enabling image optimization will resize and compress pictures before uploading to save bandwidth, and upload time.\n\nYou can always enable it later in Site->Settings.</string>
 </resources>
