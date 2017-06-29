@@ -44,15 +44,15 @@ public abstract class BaseXMLRPCClient {
         };
     }
 
-    public Request add(XMLRPCRequest request) {
+    protected Request add(XMLRPCRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
-    public Request add(DiscoveryRequest request) {
+    protected Request add(DiscoveryRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
-    public Request add(DiscoveryXMLRPCRequest request) {
+    protected Request add(DiscoveryXMLRPCRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
