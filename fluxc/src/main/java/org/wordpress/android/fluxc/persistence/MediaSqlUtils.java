@@ -29,7 +29,9 @@ public class MediaSqlUtils {
         return getMediaWithStatesQuery(site, uploadStates).getAsCursor();
     }
 
-    public static List<MediaModel> getMediaWithStatesAndMimeType(SiteModel site, List<String> uploadStates, String mimeType) {
+    public static List<MediaModel> getMediaWithStatesAndMimeType(SiteModel site,
+                                                                 List<String> uploadStates,
+                                                                 String mimeType) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
