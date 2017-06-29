@@ -549,6 +549,7 @@ public class EditPostSettingsFragment extends Fragment {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         Resources resources = getResources();
+        boolean isPublishImmediatelyAvailable = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost());
 
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, year, month, day);
         datePickerDialog.setTitle(R.string.select_date);
@@ -562,8 +563,8 @@ public class EditPostSettingsFragment extends Fragment {
                         showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDay);
                     }
                 });
-        String neutralButtonTitle = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost())
-                ? resources.getString(R.string.immediately) : resources.getString(R.string.now);
+        String neutralButtonTitle = isPublishImmediatelyAvailable ? resources.getString(R.string.immediately)
+                : resources.getString(R.string.now);
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -576,7 +577,7 @@ public class EditPostSettingsFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 });
-        if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost())) {
+        if (isPublishImmediatelyAvailable) {
             // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
             // We can't set the min date to now, so we need to subtract some amount of time
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -662,11 +663,12 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateTags(String selectedTags) {
+        PostModel postModel = getPost();
         if (!TextUtils.isEmpty(selectedTags)) {
             String tags = selectedTags.replace("\n", " ");
-            getPost().setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
+            postModel.setTagNameList(Arrays.asList(TextUtils.split(tags, ",")));
         } else {
-            getPost().setTagNameList(null);
+            postModel.setTagNameList(null);
         }
         updateTagsTextView();
     }
@@ -696,12 +698,16 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        if (PostUtils.shouldPublishImmediately(getPost())) {
+        PostModel postModel = getPost();
+        if (PostUtils.shouldPublishImmediately(postModel)) {
             mPublishDateTextView.setText(R.string.immediately);
-        } else if (!TextUtils.isEmpty(getPost().getDateCreated())){
-            String formattedDate = DateUtils.formatDateTime(getActivity(),
-                    DateTimeUtils.timestampFromIso8601Millis(getPost().getDateCreated()), getDateTimeFlags());
-            mPublishDateTextView.setText(formattedDate);
+        } else {
+            String dateCreated = postModel.getDateCreated();
+            if (!TextUtils.isEmpty(dateCreated)){
+                String formattedDate = DateUtils.formatDateTime(getActivity(),
+                        DateTimeUtils.timestampFromIso8601Millis(dateCreated), getDateTimeFlags());
+                mPublishDateTextView.setText(formattedDate);
+            }
         }
     }
 
@@ -799,11 +805,12 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId) {
-        if (getPost().getFeaturedImageId() == featuredImageId) {
+        PostModel postModel = getPost();
+        if (postModel.getFeaturedImageId() == featuredImageId) {
             return;
         }
 
-        getPost().setFeaturedImageId(featuredImageId);
+        postModel.setFeaturedImageId(featuredImageId);
         updateFeaturedImageView();
     }
 
@@ -815,14 +822,15 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        if (!getPost().hasFeaturedImage()) {
+        PostModel postModel = getPost();
+        if (!postModel.hasFeaturedImage()) {
             mFeaturedImageView.setVisibility(View.GONE);
             mFeaturedImageButton.setVisibility(View.VISIBLE);
             return;
         }
 
         SiteModel siteModel = mListener.getSite();
-        MediaModel media = mMediaStore.getSiteMediaWithId(siteModel, getPost().getFeaturedImageId());
+        MediaModel media = mMediaStore.getSiteMediaWithId(siteModel, postModel.getFeaturedImageId());
         if (media == null) {
             return;
         }
@@ -857,13 +865,15 @@ public class EditPostSettingsFragment extends Fragment {
     // Publish Date Helpers
 
     private Calendar getCurrentPublishDateAsCalendar() {
-        if (PostUtils.shouldPublishImmediately(getPost())) {
+        PostModel postModel = getPost();
+        if (PostUtils.shouldPublishImmediately(postModel)) {
             return Calendar.getInstance();
         }
         Calendar calendar = Calendar.getInstance();
+        String dateCreated = postModel.getDateCreated();
         // Set the currently selected time if available
-        if (!TextUtils.isEmpty(getPost().getDateCreated())) {
-            calendar.setTime(DateTimeUtils.dateFromIso8601(getPost().getDateCreated()));
+        if (!TextUtils.isEmpty(dateCreated)) {
+            calendar.setTime(DateTimeUtils.dateFromIso8601(dateCreated));
         }
         return calendar;
     }
@@ -949,13 +959,14 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
+        PostModel postModel = getPost();
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         // Pre-pick the previous selected location if any
         LatLng latLng = null;
         if (mPostLocation != null) {
             latLng = new LatLng(mPostLocation.getLatitude(), mPostLocation.getLongitude());
-        } else if (getPost().hasLocation()) {
-            PostLocation location = getPost().getLocation();
+        } else if (postModel.hasLocation()) {
+            PostLocation location = postModel.getLocation();
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
         if (latLng != null) {
@@ -973,8 +984,9 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void setLocation(@Nullable Place place) {
+        PostModel postModel = getPost();
         if (place == null) {
-            getPost().clearLocation();
+            postModel.clearLocation();
             mPostLocation = null;
             return;
         }
@@ -983,19 +995,20 @@ public class EditPostSettingsFragment extends Fragment {
         }
         mPostLocation.setLatitude(place.getLatLng().latitude);
         mPostLocation.setLongitude(place.getLatLng().longitude);
-        getPost().setLocation(mPostLocation);
+        postModel.setLocation(mPostLocation);
         mLocationTextView.setText(place.getAddress());
     }
 
     private void initLocation() {
-        if (!getPost().hasLocation()) {
+        PostModel postModel = getPost();
+        if (!postModel.hasLocation()) {
             mPostLocation = null;
             mLocationTextView.setText(getString(R.string.post_settings_not_set));
         } else {
-            mPostLocation = getPost().getLocation();
-            mLocationTextView.setText(getPost().getLocation().getLatitude() + ", " + getPost().getLocation().getLongitude());
+            mPostLocation = postModel.getLocation();
+            mLocationTextView.setText(mPostLocation.getLatitude() + ", " + mPostLocation.getLongitude());
             // Asynchronously get the address from the location coordinates
-            new FetchAndSetAddressAsyncTask().execute(getPost().getLocation().getLatitude(), getPost().getLocation().getLongitude());
+            new FetchAndSetAddressAsyncTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
         }
     }
 
