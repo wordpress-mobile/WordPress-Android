@@ -218,7 +218,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
         }
-        if (mimeType != null && mimeType.length() > 0) {
+        if (!TextUtils.isEmpty(mimeType)) {
             params.put("mime_type", mimeType);
         }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
