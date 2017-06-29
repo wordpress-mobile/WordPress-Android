@@ -727,6 +727,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         } else if (itemId == R.id.menu_post_settings) {
             InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
             imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+            if (mEditPostSettingsFragment != null) {
+                mEditPostSettingsFragment.refreshViews();
+            }
             mViewPager.setCurrentItem(PAGE_SETTINGS);
         }
         return false;

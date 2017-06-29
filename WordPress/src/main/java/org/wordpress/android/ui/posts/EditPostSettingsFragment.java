@@ -183,6 +183,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof PostSettingsListener) {
@@ -323,8 +324,7 @@ public class EditPostSettingsFragment extends Fragment {
             formatContainer.setVisibility(View.GONE);
         }
 
-        initSettingsFields();
-        initLocation();
+        refreshViews();
         return rootView;
     }
 
@@ -348,7 +348,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    private void initSettingsFields() {
+    public void refreshViews() {
         if (!isAdded()) {
             return;
         }
@@ -361,6 +361,7 @@ public class EditPostSettingsFragment extends Fragment {
         updateStatusTextView();
         updatePublishDateTextView();
         updateCategoriesTextView();
+        initLocation();
         if (AppPrefs.isVisualEditorEnabled() || AppPrefs.isAztecEditorEnabled()) {
             updateFeaturedImageView();
         }
