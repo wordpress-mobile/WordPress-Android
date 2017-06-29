@@ -120,131 +120,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchConnectSiteInfo(@NonNull final String siteUrl) {
-        // Get a proper URI to reliably retrieve the scheme.
-        URI uri;
-        try {
-            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
-        } catch (IllegalArgumentException e) {
-            SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
-            ConnectSiteInfoPayload payload = new ConnectSiteInfoPayload(siteUrl, siteError);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(payload));
-            return;
-        }
-
-        // Sanitize and encode the Url for the API call.
-        String sanitizedURL = UrlUtils.removeScheme(siteUrl);
-        sanitizedURL = sanitizedURL.replace("/", "::");
-
-        // Make the call.
-        String url = WPCOMREST.connect.site_info.protocol(uri.getScheme()).address(sanitizedURL).getUrlV1_1();
-        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, null,
-                ConnectSiteInfoResponse.class,
-                new Listener<ConnectSiteInfoResponse>() {
-                    @Override
-                    public void onResponse(ConnectSiteInfoResponse response) {
-                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(siteUrl, response);
-                        info.url = siteUrl;
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
-                    }
-                },
-                new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
-                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(siteUrl, siteError);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
-                    }
-                }
-        );
-        addUnauthedRequest(request);
-    }
-
-    public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
-        URI uri;
-        try {
-            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
-        } catch (IllegalArgumentException e) {
-            FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
-            payload.checkedUrl = siteUrl;
-            payload.error = new SiteError(SiteErrorType.INVALID_SITE);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
-            return;
-        }
-
-        String url = WPCOMREST.sites.siteUrl(uri.getHost()).getUrlV1_1();
-
-        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
-                SiteWPComRestResponse.class,
-                new Listener<SiteWPComRestResponse>() {
-                    @Override
-                    public void onResponse(SiteWPComRestResponse response) {
-                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
-                        payload.checkedUrl = siteUrl;
-                        payload.site = siteResponseToSiteModel(response);
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
-                    }
-                },
-                new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
-                        payload.checkedUrl = siteUrl;
-
-                        SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
-                        if (error instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) error).apiError) {
-                                case "unauthorized":
-                                    siteErrorType = SiteErrorType.UNAUTHORIZED;
-                                    break;
-                                case "unknown_blog":
-                                    siteErrorType = SiteErrorType.UNKNOWN_SITE;
-                                    break;
-                            }
-                        }
-                        payload.error = new SiteError(siteErrorType);
-
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
-                    }
-                }
-        );
-        addUnauthedRequest(request);
-    }
-
-    public void checkUrlIsWPCom(@NonNull final String testedUrl) {
-        String url = WPCOMREST.sites.getUrlV1_1() + testedUrl;
-        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
-                SiteWPComRestResponse.class,
-                new Listener<SiteWPComRestResponse>() {
-                    @Override
-                    public void onResponse(SiteWPComRestResponse response) {
-                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
-                        payload.url = testedUrl;
-                        payload.isWPCom = true;
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
-                    }
-                },
-                new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
-                        payload.url = testedUrl;
-                        // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
-                        // the WPCom REST API.
-                        if (error instanceof WPComGsonNetworkError
-                            && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError)
-                                || "unknown_blog".equals(((WPComGsonNetworkError) error).apiError))) {
-                            payload.isWPCom = false;
-                        } else {
-                            payload.error = error;
-                        }
-                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
-                    }
-                }
-        );
-        addUnauthedRequest(request);
-    }
-
     public void fetchSite(final SiteModel site) {
         String url = WPCOMREST.sites.getUrlV1_1() + site.getSiteId();
         final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
@@ -394,6 +269,135 @@ public class SiteRestClient extends BaseWPComRestClient {
                 }
         );
         add(request);
+    }
+
+    //
+    // Unauthenticated network calls
+    //
+
+    public void fetchConnectSiteInfo(@NonNull final String siteUrl) {
+        // Get a proper URI to reliably retrieve the scheme.
+        URI uri;
+        try {
+            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        } catch (IllegalArgumentException e) {
+            SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
+            ConnectSiteInfoPayload payload = new ConnectSiteInfoPayload(siteUrl, siteError);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(payload));
+            return;
+        }
+
+        // Sanitize and encode the Url for the API call.
+        String sanitizedURL = UrlUtils.removeScheme(siteUrl);
+        sanitizedURL = sanitizedURL.replace("/", "::");
+
+        // Make the call.
+        String url = WPCOMREST.connect.site_info.protocol(uri.getScheme()).address(sanitizedURL).getUrlV1_1();
+        final WPComGsonRequest<ConnectSiteInfoResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                ConnectSiteInfoResponse.class,
+                new Listener<ConnectSiteInfoResponse>() {
+                    @Override
+                    public void onResponse(ConnectSiteInfoResponse response) {
+                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(siteUrl, response);
+                        info.url = siteUrl;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
+                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(siteUrl, siteError);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
+                    }
+                }
+        );
+        addUnauthedRequest(request);
+    }
+
+    public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
+        URI uri;
+        try {
+            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        } catch (IllegalArgumentException e) {
+            FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+            payload.checkedUrl = siteUrl;
+            payload.error = new SiteError(SiteErrorType.INVALID_SITE);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
+            return;
+        }
+
+        String url = WPCOMREST.sites.siteUrl(uri.getHost()).getUrlV1_1();
+
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+                        payload.checkedUrl = siteUrl;
+                        payload.site = siteResponseToSiteModel(response);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+                        payload.checkedUrl = siteUrl;
+
+                        SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
+                        if (error instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) error).apiError) {
+                                case "unauthorized":
+                                    siteErrorType = SiteErrorType.UNAUTHORIZED;
+                                    break;
+                                case "unknown_blog":
+                                    siteErrorType = SiteErrorType.UNKNOWN_SITE;
+                                    break;
+                            }
+                        }
+                        payload.error = new SiteError(siteErrorType);
+
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
+                    }
+                }
+        );
+        addUnauthedRequest(request);
+    }
+
+    public void checkUrlIsWPCom(@NonNull final String testedUrl) {
+        String url = WPCOMREST.sites.getUrlV1_1() + testedUrl;
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
+                        payload.url = testedUrl;
+                        payload.isWPCom = true;
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        IsWPComResponsePayload payload = new IsWPComResponsePayload();
+                        payload.url = testedUrl;
+                        // "unauthorized" and "unknown_blog" errors expected if the site is not accessible via
+                        // the WPCom REST API.
+                        if (error instanceof WPComGsonNetworkError
+                                && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError)
+                                || "unknown_blog".equals(((WPComGsonNetworkError) error).apiError))) {
+                            payload.isWPCom = false;
+                        } else {
+                            payload.error = error;
+                        }
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
+                    }
+                }
+        );
+        addUnauthedRequest(request);
     }
 
     public void suggestDomains(@NonNull final String query, final boolean includeWordpressCom,
