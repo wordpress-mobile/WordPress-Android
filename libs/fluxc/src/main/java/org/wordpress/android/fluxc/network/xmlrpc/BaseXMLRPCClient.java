@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.network.discovery.DiscoveryXMLRPCRequest;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 
-public class BaseXMLRPCClient {
+public abstract class BaseXMLRPCClient {
     private final RequestQueue mRequestQueue;
     protected final Dispatcher mDispatcher;
     protected UserAgent mUserAgent;

@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryXMLRPCClient;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
-import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
@@ -25,7 +24,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
-import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.comment.CommentXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
@@ -81,22 +79,6 @@ public class ReleaseNetworkModule {
     @Provides
     public UserAgent provideUserAgent(Context appContext) {
         return new UserAgent(appContext);
-    }
-
-    @Singleton
-    @Provides
-    public BaseXMLRPCClient provideBaseXMLRPCClient(Dispatcher dispatcher,
-                                                    @Named("custom-ssl") RequestQueue requestQueue,
-                                                    UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new BaseXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
-    }
-
-    @Singleton
-    @Provides
-    public BaseWPAPIRestClient provideBaseWPAPIClient(Dispatcher dispatcher,
-                                                    @Named("custom-ssl") RequestQueue requestQueue,
-                                                    UserAgent userAgent) {
-        return new BaseWPAPIRestClient(dispatcher, requestQueue, userAgent);
     }
 
     @Singleton
