@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialogEditor extends PromoDialog {
@@ -80,6 +82,7 @@ public class PromoDialogEditor extends PromoDialog {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), EditorReleaseNotesActivity.class));
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_AZTEC_PROMO_LINK);
                 }
             }
