@@ -250,7 +250,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (offset > 0) {
             queryParams.put("offset", offset);
         }
-        if (mimeType != null && mimeType.length() > 0) {
+        if (!TextUtils.isEmpty(mimeType)) {
             queryParams.put("mime_type", mimeType);
         }
         params.add(queryParams);
