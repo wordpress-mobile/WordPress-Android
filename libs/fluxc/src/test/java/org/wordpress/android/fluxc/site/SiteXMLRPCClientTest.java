@@ -189,4 +189,26 @@ public class SiteXMLRPCClientTest {
         mSiteXMLRPCClient.fetchSite(site);
         assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
+
+    @Test
+    public void testFetchSites() throws Exception {
+        mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<methodResponse><params><param><value>\n"
+                + "<array><data><value><struct>\n"
+                + "<member><name>isAdmin</name><value><boolean>1</boolean></value></member>\n"
+                + "<member><name>url</name><value>\n"
+                + "<string>http://docbrown.url/</string>\n"
+                + "</value></member>\n"
+                + "<member><name>blogid</name><value><string>1</string></value></member>\n"
+                + "<member><name>blogName</name><value><string>Doc Brown Testing</string></value></member>\n"
+                + "<member><name>xmlrpc</name><value>\n"
+                + "<string>http://docbrown.url/xmlrpc.php</string>\n"
+                + "</value></member></struct></value></data></array>\n"
+                + "</value></param></params></methodResponse>";
+        final String xmlrpcUrl = "http://docbrown.url/xmlrpc.php";
+
+        mCountDownLatch = new CountDownLatch(1);
+        mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt");
+        assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+    }
 }
