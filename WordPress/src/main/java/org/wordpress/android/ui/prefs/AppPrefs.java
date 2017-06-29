@@ -107,6 +107,9 @@ public class AppPrefs {
         // When we need to show the new editor promo dialog
         AZTEC_EDITOR_PROMO_REQUIRED,
 
+        // When we need to show the new image optimize promo dialog
+        IMAGE_OPTIMIZE_PROMO_REQUIRED,
+
         // Global plans features
         GLOBAL_PLANS_PLANS_FEATURES,
 
@@ -445,6 +448,14 @@ public class AppPrefs {
    public static void setNewEditorPromoRequired(boolean required) {
        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
    }
+
+    public static boolean isImageOptimizePromoRequired() {
+        return getBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, true);
+    }
+
+    public static void setImageOptimizePromoRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, required);
+    }
 
     public static boolean isGravatarChangePromoRequired() {
         return getBoolean(UndeletablePrefKey.GRAVATAR_CHANGE_PROMO_REQUIRED, true);
