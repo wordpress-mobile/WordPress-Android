@@ -31,11 +31,11 @@ public abstract class BaseWPAPIRestClient {
         };
     }
 
-    public Request add(WPAPIGsonRequest request) {
+    protected Request add(WPAPIGsonRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
-    public Request add(WPAPIHeadRequest request) {
+    protected Request add(WPAPIHeadRequest request) {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
