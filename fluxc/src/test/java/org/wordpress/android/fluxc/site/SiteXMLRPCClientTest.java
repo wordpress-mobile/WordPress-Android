@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.TestUtils;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -208,6 +209,49 @@ public class SiteXMLRPCClientTest {
         final String xmlrpcUrl = "http://docbrown.url/xmlrpc.php";
 
         mCountDownLatch = new CountDownLatch(1);
+        mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt");
+        assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+    }
+
+    @Test
+    public void testFetchSitesResponseNotArray() throws Exception {
+        mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<methodResponse><params><param><value>\n"
+                + "<string>disaster!</string>\n"
+                + "</value></param></params></methodResponse>";
+        final String xmlrpcUrl = "http://docbrown.url/xmlrpc.php";
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                // Expect an OnUnexpectedError to be emitted with a parse error
+                OnUnexpectedError event = invocation.getArgumentAt(0, OnUnexpectedError.class);
+                assertEquals(xmlrpcUrl, event.extras.get(OnUnexpectedError.KEY_URL));
+                assertEquals("disaster!", event.extras.get(OnUnexpectedError.KEY_RESPONSE));
+                assertEquals(ClassCastException.class, event.exception.getClass());
+
+                mCountDownLatch.countDown();
+                return null;
+            }
+        }).when(mDispatcher).emitChange(any(Object.class));
+
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                // Expect UPDATE_SITES to be dispatched with an INVALID_RESPONSE error
+                Action action = invocation.getArgumentAt(0, Action.class);
+                assertEquals(SiteAction.UPDATE_SITES, action.getType());
+
+                SitesModel result = (SitesModel) action.getPayload();
+                assertTrue(result.isError());
+                assertEquals(GenericErrorType.INVALID_RESPONSE, result.error.type);
+
+                mCountDownLatch.countDown();
+                return null;
+            }
+        }).when(mDispatcher).dispatch(any(Action.class));
+
+        mCountDownLatch = new CountDownLatch(3);
         mSiteXMLRPCClient.fetchSites(xmlrpcUrl, "thedoc", "gr3@tsc0tt");
         assertTrue(mCountDownLatch.await(TestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
