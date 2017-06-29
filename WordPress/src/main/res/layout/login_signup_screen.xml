@@ -31,16 +31,16 @@
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/login_button"
-            android:theme="@style/WordPress.BlueButton"
+            android:theme="@style/WordPress.PrimaryButton"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:text="@string/log_in"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/create_site_button"
-            android:theme="@style/WordPress.WhiteButton"
+            android:theme="@style/WordPress.StandardButton"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/create_wordpress_site"/>
     </LinearLayout>

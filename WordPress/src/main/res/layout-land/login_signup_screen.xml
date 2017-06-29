@@ -28,22 +28,22 @@
         android:layout_alignParentBottom="true"
         android:background="@color/grey_lighten_30"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_extra_large">
+        android:padding="@dimen/margin_large">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/create_site_button"
-            android:theme="@style/WordPress.WhiteButton"
+            android:theme="@style/WordPress.StandardButton"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/margin_medium"
             android:text="@string/create_wordpress_site"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/login_button"
-            android:theme="@style/WordPress.BlueButton"
+            android:theme="@style/WordPress.PrimaryButton"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/margin_medium"
             android:text="@string/log_in"/>
