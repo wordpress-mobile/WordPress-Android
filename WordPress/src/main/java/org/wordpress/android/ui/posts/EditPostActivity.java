@@ -147,7 +147,7 @@ import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements EditorFragmentListener, EditorDragAndDropListener,
         ActivityCompat.OnRequestPermissionsResultCallback, EditorWebViewCompatibility.ReflectionFailureListener,
-        PhotoPickerFragment.PhotoPickerListener {
+        PhotoPickerFragment.PhotoPickerListener, EditPostSettingsFragment.PostSettingsListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -1238,7 +1238,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         return new LegacyEditorFragment();
                     }
                 case 1:
-                    return EditPostSettingsFragment.newInstance(mSite, mPost.getId());
+                    return EditPostSettingsFragment.newInstance();
                 default:
                     return EditPostPreviewFragment.newInstance(mSite);
             }
@@ -2337,5 +2337,17 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         else {
             onUploadProgress(event.media, event.progress);
         }
+    }
+
+    // Post Settings Listener
+
+    @Override
+    public PostModel getPost() {
+        return mPost;
+    }
+
+    @Override
+    public SiteModel getSite() {
+        return mSite;
     }
 }
