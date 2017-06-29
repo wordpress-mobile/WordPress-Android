@@ -619,7 +619,11 @@ public class MediaStore extends Store {
         if (payload.loadMore) {
             List<String> list = new ArrayList<>();
             list.add(MediaUploadState.UPLOADED.toString());
-            offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
+            if (!TextUtils.isEmpty(payload.mimeType)) {
+                offset = MediaSqlUtils.getMediaWithStatesAndMimeType(payload.site, list, payload.mimeType).size();
+            } else {
+                offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
+            }
         }
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMediaList(payload.site, offset, payload.mimeType);
