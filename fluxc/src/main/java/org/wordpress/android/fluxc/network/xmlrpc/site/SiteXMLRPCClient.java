@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
@@ -31,9 +30,9 @@ import java.util.List;
 import java.util.Map;
 
 public class SiteXMLRPCClient extends BaseXMLRPCClient {
-    public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, AccessToken accessToken,
-                            UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
+    public SiteXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent,
+                            HTTPAuthManager httpAuthManager) {
+        super(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     public void fetchSites(final String xmlrpcUrl, final String username, final String password) {
