@@ -47,7 +47,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -618,27 +617,18 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateExcerpt(String excerpt) {
-        if (getPost().getExcerpt().equals(excerpt)) {
-            return;
-        }
         getPost().setExcerpt(excerpt);
-        mExcerptTextView.setText(getPost().getExcerpt());
+        mExcerptTextView.setText(excerpt);
     }
 
     private void updateSlug(String slug) {
-        if (getPost().getSlug().equalsIgnoreCase(slug)) {
-            return;
-        }
         getPost().setSlug(slug);
-        mSlugTextView.setText(getPost().getSlug());
+        mSlugTextView.setText(slug);
     }
 
     private void updatePassword(String password) {
-        if (getPost().getPassword().equals(password)) {
-            return;
-        }
         getPost().setPassword(password);
-        mPasswordTextView.setText(getPost().getPassword());
+        mPasswordTextView.setText(password);
     }
 
     private void updateCategories(List<Long> categoryList) {
@@ -650,18 +640,12 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updatePostStatus(String postStatus) {
-        if (getPost().getStatus().equals(postStatus)) {
-            return;
-        }
         getPost().setStatus(postStatus);
         updateStatusTextView();
         updateSaveButton();
     }
 
     private void updatePostFormat(String postFormat) {
-        if (getPost().getPostFormat().equals(postFormat)) {
-            return;
-        }
         getPost().setPostFormat(postFormat);
         updatePostFormatTextView();
     }
