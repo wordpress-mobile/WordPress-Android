@@ -148,10 +148,10 @@ public class XMLRPCRequest extends BaseRequest<Object> {
             listener.onResponse(response);
         } catch (ClassCastException e) {
             // If we aren't returning the type the client was expecting, treat this as an API response parse error
-            OnUnexpectedError onUnexpectedError = new OnUnexpectedError(e, "API response parse error: "
-                    + e.getMessage());
-            onUnexpectedError.addExtra("url", getUrl());
-            onUnexpectedError.addExtra("response", response.toString());
+            OnUnexpectedError onUnexpectedError = new OnUnexpectedError(e,
+                    "API response parse error: " + e.getMessage());
+            onUnexpectedError.addExtra(OnUnexpectedError.KEY_URL, getUrl());
+            onUnexpectedError.addExtra(OnUnexpectedError.KEY_RESPONSE, response.toString());
             mOnParseErrorListener.onParseError(onUnexpectedError);
             listener.onResponse(null);
         }

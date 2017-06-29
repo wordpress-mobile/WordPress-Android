@@ -8,6 +8,9 @@ import java.util.Map;
 
 public class ErrorUtils {
     public static class OnUnexpectedError {
+        public static final String KEY_URL = "url";
+        public static final String KEY_RESPONSE = "response";
+
         public Exception exception;
         public String description;
         public Map<String, String> extras = new HashMap<>();
