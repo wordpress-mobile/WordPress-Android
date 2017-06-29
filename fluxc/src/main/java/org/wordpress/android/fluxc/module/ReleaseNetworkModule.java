@@ -85,9 +85,8 @@ public class ReleaseNetworkModule {
     @Provides
     public BaseXMLRPCClient provideBaseXMLRPCClient(Dispatcher dispatcher,
                                                     @Named("custom-ssl") RequestQueue requestQueue,
-                                                    AccessToken token,
                                                     UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new BaseXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new BaseXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -111,9 +110,8 @@ public class ReleaseNetworkModule {
     @Provides
     public SiteXMLRPCClient provideSiteXMLRPCClient(Dispatcher dispatcher,
                                                     @Named("custom-ssl") RequestQueue requestQueue,
-                                                    AccessToken token,
                                                     UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new SiteXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new SiteXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -130,9 +128,8 @@ public class ReleaseNetworkModule {
     public MediaXMLRPCClient provideMediaXMLRPCClient(Dispatcher dispatcher,
                                                       @Named("custom-ssl") RequestQueue requestQueue,
                                                       @Named("custom-ssl") OkHttpClient okHttpClient,
-                                                      AccessToken token, UserAgent userAgent,
-                                                      HTTPAuthManager httpAuthManager) {
-        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClient, token, userAgent, httpAuthManager);
+                                                      UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClient, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -156,9 +153,8 @@ public class ReleaseNetworkModule {
     @Provides
     public PostXMLRPCClient providePostXMLRPCClient(Dispatcher dispatcher,
                                                     @Named("custom-ssl") RequestQueue requestQueue,
-                                                    AccessToken token,
                                                     UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new PostXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new PostXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -173,9 +169,8 @@ public class ReleaseNetworkModule {
     @Provides
     public CommentXMLRPCClient provideCommentXMLRPCClient(Dispatcher dispatcher,
                                                        @Named("custom-ssl") RequestQueue requestQueue,
-                                                       AccessToken token,
                                                        UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new CommentXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new CommentXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton
@@ -190,9 +185,8 @@ public class ReleaseNetworkModule {
     @Provides
     public TaxonomyXMLRPCClient provideTaxonomyXMLRPCClient(Dispatcher dispatcher,
                                                             @Named("custom-ssl") RequestQueue requestQueue,
-                                                            AccessToken token,
                                                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
-        return new TaxonomyXMLRPCClient(dispatcher, requestQueue, token, userAgent, httpAuthManager);
+        return new TaxonomyXMLRPCClient(dispatcher, requestQueue, userAgent, httpAuthManager);
     }
 
     @Singleton

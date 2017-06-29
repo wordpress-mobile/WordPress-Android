@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListene
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.HTTPAuthModel;
 import org.wordpress.android.fluxc.network.UserAgent;
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
@@ -73,9 +72,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
     public MediaXMLRPCClient(Dispatcher dispatcher, RequestQueue requestQueue, OkHttpClient okHttpClient,
-                             AccessToken accessToken, UserAgent userAgent,
-                             HTTPAuthManager httpAuthManager) {
-        super(dispatcher, requestQueue, accessToken, userAgent, httpAuthManager);
+                             UserAgent userAgent, HTTPAuthManager httpAuthManager) {
+        super(dispatcher, requestQueue, userAgent, httpAuthManager);
         mOkHttpClient = okHttpClient;
     }
 
