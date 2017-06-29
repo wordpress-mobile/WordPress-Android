@@ -160,8 +160,8 @@ public class SiteXMLRPCClientTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 // Expect an OnUnexpectedError to be emitted with a parse error
                 OnUnexpectedError event = invocation.getArgumentAt(0, OnUnexpectedError.class);
-                assertEquals(site.getXmlRpcUrl(), event.extras.get("url"));
-                assertEquals("whoops", event.extras.get("response"));
+                assertEquals(site.getXmlRpcUrl(), event.extras.get(OnUnexpectedError.KEY_URL));
+                assertEquals("whoops", event.extras.get(OnUnexpectedError.KEY_RESPONSE));
                 assertEquals(ClassCastException.class, event.exception.getClass());
 
                 mCountDownLatch.countDown();
