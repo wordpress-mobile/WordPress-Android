@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
@@ -7,6 +8,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -2138,9 +2141,52 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onAddMediaClicked() {
         if (!isPhotoPickerShowing()) {
             showPhotoPicker();
+            if (shouldAdvertiseImageOptimization()) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                builder.setTitle(R.string.image_optimization_promo_title);
+                builder.setMessage(R.string.image_optimization_promo_desc);
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(EditPostActivity.this, mSite, null);
+                        if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+                            // null or image optimization already ON. We should not be here though.
+                        } else {
+                            siteSettings.setOptimizedImage(true);
+                            siteSettings.saveSettings();
+                        }
+                    }
+                });
+                builder.setNegativeButton(R.string.no, null);
+                builder.show();
+                // Do not ask again
+                AppPrefs.setImageOptimizePromoRequired(false);
+            }
         } else {
             hidePhotoPicker();
         }
+    }
+
+    private boolean shouldAdvertiseImageOptimization() {
+        boolean isPromoRequired = AppPrefs.isImageOptimizePromoRequired();
+        if (!isPromoRequired) {
+            return false;
+        }
+
+        // Check we can access storage before asking for optimizing image
+        boolean hasStoreAccess = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (!hasStoreAccess) {
+            return false;
+        }
+
+        // Check whether image optimization is already available for the site
+        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(EditPostActivity.this, mSite, null);
+        if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
