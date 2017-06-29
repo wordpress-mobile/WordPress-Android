@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
@@ -38,6 +39,8 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -105,17 +108,25 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<SitesResponse>() {
                     @Override
                     public void onResponse(SitesResponse response) {
-                        List<SiteModel> siteArray = new ArrayList<>();
-                        for (SiteWPComRestResponse siteResponse : response.sites) {
-                            siteArray.add(siteResponseToSiteModel(siteResponse));
+                        if (response != null) {
+                            List<SiteModel> siteArray = new ArrayList<>();
+
+                            for (SiteWPComRestResponse siteResponse : response.sites) {
+                                siteArray.add(siteResponseToSiteModel(siteResponse));
+                            }
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(new SitesModel(siteArray)));
+                        } else {
+                            AppLog.e(T.API, "Received empty response to /me/sites/");
+                            SitesModel payload = new SitesModel(Collections.<SiteModel>emptyList());
+                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(new SitesModel(siteArray)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
+                        SitesModel payload = new SitesModel(Collections.<SiteModel>emptyList());
                         payload.error = error;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
                     }
@@ -131,8 +142,15 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<SiteWPComRestResponse>() {
                     @Override
                     public void onResponse(SiteWPComRestResponse response) {
-                        SiteModel site = siteResponseToSiteModel(response);
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+                        if (response != null) {
+                            SiteModel site = siteResponseToSiteModel(response);
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+                        } else {
+                            AppLog.e(T.API, "Received empty response to /sites/$site/ for " + site.getUrl());
+                            SiteModel payload = new SiteModel();
+                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(payload));
+                        }
                     }
                 },
                 new BaseErrorListener() {
