@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.LanguageUtils;
 
-public class BaseWPComRestClient {
+public abstract class BaseWPComRestClient {
     private AccessToken mAccessToken;
     private final RequestQueue mRequestQueue;
     protected final Dispatcher mDispatcher;
