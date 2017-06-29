@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -79,6 +80,7 @@ public class PromoDialogEditor extends PromoDialog {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_AZTEC_PROMO_LINK);
                 }
             }
         );
@@ -90,6 +92,7 @@ public class PromoDialogEditor extends PromoDialog {
                 @Override
                 public void onClick(View view) {
                     getDialog().cancel();
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_AZTEC_PROMO_NEGATIVE);
                 }
             }
         );
@@ -104,6 +107,7 @@ public class PromoDialogEditor extends PromoDialog {
 
                     // Set Aztec enabled and Visual disabled if Aztec is not already enabled.
                     if (!AppPrefs.isAztecEditorEnabled()) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_AZTEC_PROMO_POSITIVE);
                         AppPrefs.setAztecEditorEnabled(true);
                         AppPrefs.setVisualEditorEnabled(false);
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());

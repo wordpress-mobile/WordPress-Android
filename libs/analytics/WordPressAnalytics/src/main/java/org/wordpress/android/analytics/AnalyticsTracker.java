@@ -114,6 +114,9 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only
+        EDITOR_AZTEC_PROMO_LINK, // Aztec editor only
+        EDITOR_AZTEC_PROMO_NEGATIVE, // Aztec editor only
+        EDITOR_AZTEC_PROMO_POSITIVE, // Aztec editor only
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
         ME_GRAVATAR_TOOLTIP_TAPPED,
