@@ -136,6 +136,17 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             return;
         }
 
+        // here compare the current Note - is it any different from the Note the user is
+        // currently viewing?
+        // if it is, then replace the dataset with the new one.
+        // If not, just let it be.
+        if (mAdapter != null) {
+            Note currentNote = mAdapter.getNoteWithId(mNoteId);
+            if (note.similar(currentNote)) {
+                return;
+            }
+        }
+
         NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
         if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
             filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
@@ -488,5 +499,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             else
                 return null;
         }
+
+        public Note getNoteWithId(String id){
+            for (Note note : mNoteList) {
+                if (note.getId().equalsIgnoreCase(id)) {
+                    return note;
+                }
+            }
+            return null;
+        }
+
     }
 }
