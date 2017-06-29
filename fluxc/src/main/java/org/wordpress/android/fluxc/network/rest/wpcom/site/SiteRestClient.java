@@ -157,7 +157,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 }
         );
-        add(request);
+        addUnauthedRequest(request);
     }
 
     public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
@@ -208,7 +208,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 }
         );
-        add(request);
+        addUnauthedRequest(request);
     }
 
     public void checkUrlIsWPCom(@NonNull final String testedUrl) {
@@ -242,7 +242,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 }
         );
-        add(request);
+        addUnauthedRequest(request);
     }
 
     public void fetchSite(final SiteModel site) {
@@ -423,7 +423,7 @@ public class SiteRestClient extends BaseWPComRestClient {
                     }
                 }
         );
-        add(request);
+        addUnauthedRequest(request);
     }
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
