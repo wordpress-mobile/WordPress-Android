@@ -622,7 +622,6 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         getPost().setExcerpt(excerpt);
-        dispatchUpdatePostAction();
         mExcerptTextView.setText(getPost().getExcerpt());
     }
 
@@ -631,7 +630,6 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         getPost().setSlug(slug);
-        dispatchUpdatePostAction();
         mSlugTextView.setText(getPost().getSlug());
     }
 
@@ -640,7 +638,6 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         getPost().setPassword(password);
-        dispatchUpdatePostAction();
         mPasswordTextView.setText(getPost().getPassword());
     }
 
@@ -649,7 +646,6 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         getPost().setCategoryIdList(categoryList);
-        dispatchUpdatePostAction();
         updateCategoriesTextView();
     }
 
@@ -658,7 +654,6 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         getPost().setStatus(postStatus);
-        dispatchUpdatePostAction();
         updateStatusTextView();
         updateSaveButton();
     }
@@ -668,7 +663,6 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         getPost().setPostFormat(postFormat);
-        dispatchUpdatePostAction();
         updatePostFormatTextView();
     }
 
@@ -690,7 +684,6 @@ public class EditPostSettingsFragment extends Fragment {
         } else {
             getPost().setTagNameList(null);
         }
-        dispatchUpdatePostAction();
         updateTagsTextView();
     }
 
@@ -712,7 +705,6 @@ public class EditPostSettingsFragment extends Fragment {
     private void updatePublishDate(Calendar calendar) {
         getPost().setDateCreated(DateTimeUtils.iso8601FromDate(calendar.getTime()));
         updatePublishDateTextView();
-        dispatchUpdatePostAction();
         updateSaveButton();
     }
 
@@ -742,12 +734,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
         // If `sb` is empty, the hint "Not Set" will be shown instead
         mCategoriesTextView.setText(sb);
-    }
-
-    private void dispatchUpdatePostAction() {
-        getPost().setIsLocallyChanged(true);
-        getPost().setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-        mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(getPost()));
     }
 
     // Post Status Helpers
@@ -834,7 +820,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         getPost().setFeaturedImageId(featuredImageId);
-        dispatchUpdatePostAction();
         updateFeaturedImageView();
     }
 
