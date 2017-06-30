@@ -546,14 +546,19 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             switch (mFilter) {
                 case FILTER_AUDIO:
                     mimeType = MediaUtils.MIME_TYPE_AUDIO;
+                    break;
                 case FILTER_DOCUMENTS:
                     mimeType = MediaUtils.MIME_TYPE_APPLICATION;
+                    break;
                 case FILTER_IMAGES:
                     mimeType = MediaUtils.MIME_TYPE_IMAGE;
+                    break;
                 case FILTER_VIDEOS:
                     mimeType = MediaUtils.MIME_TYPE_VIDEO;
+                    break;
                 default:
                     mimeType = null;
+                    break;
             }
 
             FetchMediaListPayload payload = new FetchMediaListPayload(mSite, loadMore, mimeType);
