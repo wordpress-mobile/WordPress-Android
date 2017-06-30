@@ -485,7 +485,7 @@ public class Note {
     // this method is used to compare two Notes: as it's potentially a very processing intensive operation,
     // we're only comparing the note id, timestamp, and raw JSON length, which is accurate enough for
     // the purpose of checking if the local Note is any different from a remote note.
-    public boolean similar(Note note) {
+    public boolean equalsTimeAndLength(Note note) {
         if (note == null) {
             return false;
         }

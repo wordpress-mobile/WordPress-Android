@@ -142,7 +142,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         // If not, just let it be.
         if (mAdapter != null) {
             Note currentNote = mAdapter.getNoteWithId(mNoteId);
-            if (note.similar(currentNote)) {
+            if (note.equalsTimeAndLength(currentNote)) {
                 return;
             }
         }
