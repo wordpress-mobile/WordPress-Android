@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="70dp"
         android:minLines="3"
         tools:text="@string/login_promo_text_anytime"/>
 
@@ -19,6 +19,6 @@
         android:id="@+id/animation_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="36dp"
         android:layout_below="@+id/promo_text"/>
 </RelativeLayout>
