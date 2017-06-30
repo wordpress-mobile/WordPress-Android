@@ -96,9 +96,16 @@ public class PostUploadNotifier {
 
         // Notification builder
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext.getApplicationContext());
-        String notificationTitle = PostStatus.DRAFT.equals(PostStatus.fromPost(post)) ? (String) mContext.getResources().getText(R.string
-                .draft_uploaded) : ((String) (post.isPage() ? mContext.getResources().getText(R.string
-                .page_published) : mContext.getResources().getText(R.string.post_published)));
+        String notificationTitle;
+        if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
+            notificationTitle = (String) mContext.getResources().getText(R.string
+                    .draft_uploaded);
+        } else if (post.isPage()) {
+            notificationTitle = (String) mContext.getResources().getText(R.string
+                    .page_published);
+        } else {
+            notificationTitle = (String) mContext.getResources().getText(R .string.post_published);
+        }
 
         if (!isFirstTimePublish) {
             notificationTitle = (String) (post.isPage() ? mContext.getResources().getText(R.string
