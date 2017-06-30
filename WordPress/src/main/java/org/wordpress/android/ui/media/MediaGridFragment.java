@@ -280,25 +280,21 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         if (!isAdded()) return;
 
-        if (isEmpty()) {
-            getAdapter().setMediaList(getFilteredMedia());
-            if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
-                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-            } else {
-                updateEmptyView(mEmptyViewMessageType);
+        // temporarily disable animation - otherwise the user will see items animate
+        // when they change the filter
+        mRecycler.setItemAnimator(null);
+        getAdapter().setMediaList(getFilteredMedia());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRecycler.setItemAnimator(new DefaultItemAnimator());
             }
+        }, 500L);
+
+        if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         } else {
-            // temporarily disable animation - otherwise the user will see items animate
-            // when they change the filter
-            mRecycler.setItemAnimator(null);
-            getAdapter().setMediaList(getFilteredMedia());
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mRecycler.setItemAnimator(new DefaultItemAnimator());
-                }
-            }, 500L);
-            hideEmptyView();
+            updateEmptyView(mEmptyViewMessageType);
         }
 
         boolean hasFetchedThisFilter = mFetchedFilters[filter.value];
