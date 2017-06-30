@@ -64,6 +64,7 @@ public class MediaStore extends Store {
     public static class FetchMediaListPayload extends Payload {
         public SiteModel site;
         public boolean loadMore;
+        public String mimeType;
 
         public FetchMediaListPayload(SiteModel site) {
             this.site = site;
@@ -72,6 +73,12 @@ public class MediaStore extends Store {
         public FetchMediaListPayload(SiteModel site, boolean loadMore) {
             this.site = site;
             this.loadMore = loadMore;
+        }
+
+        public FetchMediaListPayload(SiteModel site, boolean loadMore, String mimeType) {
+            this.site = site;
+            this.loadMore = loadMore;
+            this.mimeType = mimeType;
         }
     }
 
@@ -612,12 +619,16 @@ public class MediaStore extends Store {
         if (payload.loadMore) {
             List<String> list = new ArrayList<>();
             list.add(MediaUploadState.UPLOADED.toString());
-            offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
+            if (!TextUtils.isEmpty(payload.mimeType)) {
+                offset = MediaSqlUtils.getMediaWithStatesAndMimeType(payload.site, list, payload.mimeType).size();
+            } else {
+                offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
+            }
         }
         if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.fetchMediaList(payload.site, offset);
+            mMediaRestClient.fetchMediaList(payload.site, offset, payload.mimeType);
         } else {
-            mMediaXmlrpcClient.fetchMediaList(payload.site, offset);
+            mMediaXmlrpcClient.fetchMediaList(payload.site, offset, payload.mimeType);
         }
     }
 
