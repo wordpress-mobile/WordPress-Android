@@ -282,6 +282,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         if (isEmpty()) {
             getAdapter().setMediaList(getFilteredMedia());
+            if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
+                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+            } else {
+                updateEmptyView(mEmptyViewMessageType);
+            }
         } else {
             // temporarily disable animation - otherwise the user will see items animate
             // when they change the filter
@@ -293,15 +298,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     mRecycler.setItemAnimator(new DefaultItemAnimator());
                 }
             }, 500L);
-        }
-
-        if (isEmpty()) {
-            if (mEmptyViewMessageType == EmptyViewMessageType.LOADING) {
-                updateEmptyView(EmptyViewMessageType.NO_CONTENT);
-            } else {
-                updateEmptyView(mEmptyViewMessageType);
-            }
-        } else {
             hideEmptyView();
         }
 
