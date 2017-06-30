@@ -1254,7 +1254,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
+                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                         mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
                         return mAztecEditorFragment;
                     } else if (mShowNewEditor) {
@@ -2279,9 +2279,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE);
+                AppPrefs.setAztecEditorToolbarExpanded(false);
                 break;
             case ELLIPSIS_EXPAND_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND);
+                AppPrefs.setAztecEditorToolbarExpanded(true);
                 break;
             case HEADING_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING);
