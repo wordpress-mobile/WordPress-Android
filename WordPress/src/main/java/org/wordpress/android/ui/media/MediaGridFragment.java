@@ -578,10 +578,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         int position = mFilter.getValue();
         mFetchedFilters[position] = true;
 
-        if (mFilter == MediaFilter.FILTER_ALL) {
-            setHasFetchedMediaForAllFilters();
-        } else {
-            mFetchedAllFilters[position] = hasRetrievedAll;
+        if (hasRetrievedAll) {
+            if (mFilter == MediaFilter.FILTER_ALL) {
+                setHasFetchedMediaForAllFilters();
+            } else {
+                mFetchedAllFilters[position] = true;
+            }
         }
 
         // the activity may be gone by the time this finishes, so check for it
