@@ -79,7 +79,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
             public void onAnimationRepeat(Animator animation) {
                 mCount++;
 
-                if (mCount > 2) {
+                if (mCount > 1) {
                     mCount = 0;
 
                     if (mLoginListener != null) {
