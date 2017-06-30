@@ -1011,6 +1011,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void updateViews() {
-        mMediaGridFragment.refresh();
+        mMediaGridFragment.reload();
     }
 }
