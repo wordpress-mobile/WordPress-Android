@@ -34,7 +34,7 @@ public class EditorReleaseNotesActivity extends WebViewActivity {
 
     @Override
     protected void loadContent() {
-        loadUrl("https://make.wordpress.org/mobile/2017/04/08/introducing-the-aztec-mobile-editors/");
+        loadUrl("https://make.wordpress.org/mobile/whats-new-in-beta-android-editor/");
     }
 
     @Override
