@@ -346,6 +346,15 @@ public class MediaSqlUtils {
                 .endGroup().endWhere().execute();
     }
 
+    public static int deleteAllUploadedSiteMediaWithMimeType(SiteModel siteModel, String mimeType) {
+        return WellSql.delete(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
+                .contains(MediaModelTable.MIME_TYPE, mimeType)
+                .endGroup().endWhere().execute();
+    }
+
     public static int deleteAllMedia() {
         return WellSql.delete(MediaModel.class).execute();
     }

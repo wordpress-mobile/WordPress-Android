@@ -724,7 +724,11 @@ public class MediaStore extends Store {
             // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
             // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
             if (!payload.loadedMore) {
-                MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
+                if (TextUtils.isEmpty(payload.mimeType)) {
+                    MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
+                } else {
+                    MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
+                }
             }
             if (!payload.mediaList.isEmpty()) {
                 for (MediaModel media : payload.mediaList) {
