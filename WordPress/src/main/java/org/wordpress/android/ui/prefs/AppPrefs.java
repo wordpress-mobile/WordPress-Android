@@ -62,6 +62,9 @@ public class AppPrefs {
         // aztec editor enabled
         AZTEC_EDITOR_ENABLED,
 
+        // aztec editor toolbar expanded state
+        AZTEC_EDITOR_TOOLBAR_EXPANDED,
+
         // visual editor enabled
         VISUAL_EDITOR_ENABLED,
 
@@ -415,6 +418,14 @@ public class AppPrefs {
 
     public static boolean isAztecEditorAvailable() {
         return BuildConfig.AZTEC_EDITOR_AVAILABLE || getBoolean(UndeletablePrefKey.AZTEC_EDITOR_AVAILABLE, false);
+    }
+
+    public static boolean isAztecEditorToolbarExpanded() {
+        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
+    }
+
+    public static void setAztecEditorToolbarExpanded(boolean isExpanded) {
+        setBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
     }
 
     // Visual Editor

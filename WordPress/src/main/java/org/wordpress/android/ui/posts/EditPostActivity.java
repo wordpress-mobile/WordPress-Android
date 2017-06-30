@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.m4m.MediaComposer;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.JavaScriptException;
 import org.wordpress.android.R;
@@ -109,7 +107,6 @@ import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FileUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ListUtils;
@@ -124,7 +121,6 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
-import org.wordpress.android.util.WPVideoUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -135,7 +131,6 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -1259,7 +1254,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
+                        mAztecEditorFragment = AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                         mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
                         return mAztecEditorFragment;
                     } else if (mShowNewEditor) {
@@ -2305,9 +2300,11 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                 break;
             case ELLIPSIS_COLLAPSE_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_COLLAPSE);
+                AppPrefs.setAztecEditorToolbarExpanded(false);
                 break;
             case ELLIPSIS_EXPAND_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_ELLIPSIS_EXPAND);
+                AppPrefs.setAztecEditorToolbarExpanded(true);
                 break;
             case HEADING_BUTTON_TAPPED:
                 AnalyticsTracker.track(Stat.EDITOR_TAPPED_HEADING);
