@@ -410,12 +410,6 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    /**
-     * Updates given post object with current status of settings fields
-     */
-    public void updatePostSettings(PostModel post) {
-    }
-
     private void showPostExcerptDialog() {
         if (!isAdded()) {
             return;
