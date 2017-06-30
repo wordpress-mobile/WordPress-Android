@@ -243,12 +243,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
-    public void fetchMediaList(final SiteModel site, final int offset) {
+    public void fetchMediaList(final SiteModel site, final int offset, String mimeType) {
         List<Object> params = getBasicParams(site, null);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("number", MediaStore.NUM_MEDIA_PER_FETCH);
         if (offset > 0) {
             queryParams.put("offset", offset);
+        }
+        if (!TextUtils.isEmpty(mimeType)) {
+            queryParams.put("mime_type", mimeType);
         }
         params.add(queryParams);
 

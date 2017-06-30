@@ -212,11 +212,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchMediaList(final SiteModel site, final int offset) {
+    public void fetchMediaList(final SiteModel site, final int offset, String mimeType) {
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(MediaStore.NUM_MEDIA_PER_FETCH));
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
+        }
+        if (!TextUtils.isEmpty(mimeType)) {
+            params.put("mime_type", mimeType);
         }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
