@@ -91,12 +91,17 @@ public class MediaStore extends Store {
         public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
-        public FetchMediaListResponsePayload(SiteModel site, @NonNull List<MediaModel> mediaList, boolean loadedMore,
-                                             boolean canLoadMore) {
+        public String mimeType;
+        public FetchMediaListResponsePayload(SiteModel site,
+                                             @NonNull List<MediaModel> mediaList,
+                                             boolean loadedMore,
+                                             boolean canLoadMore,
+                                             String mimeType) {
             this.site = site;
             this.mediaList = mediaList;
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
+            this.mimeType = mimeType;
         }
 
         public FetchMediaListResponsePayload(SiteModel site, MediaError error) {
@@ -206,9 +211,11 @@ public class MediaStore extends Store {
     public static class OnMediaListFetched extends OnChanged<MediaError> {
         public SiteModel site;
         public boolean canLoadMore;
-        public OnMediaListFetched(SiteModel site, boolean canLoadMore) {
+        public String mimeType;
+        public OnMediaListFetched(SiteModel site, boolean canLoadMore, String mimeType) {
             this.site = site;
             this.canLoadMore = canLoadMore;
+            this.mimeType = mimeType;
         }
         public OnMediaListFetched(SiteModel site, MediaError error) {
             this.site = site;
@@ -719,14 +726,18 @@ public class MediaStore extends Store {
             // Clear existing media if this is a fresh fetch (loadMore = false in the original request)
             // This is the simplest way of keeping our local media in sync with remote media (in case of deletions)
             if (!payload.loadedMore) {
-                MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
+                if (TextUtils.isEmpty(payload.mimeType)) {
+                    MediaSqlUtils.deleteAllUploadedSiteMedia(payload.site);
+                } else {
+                    MediaSqlUtils.deleteAllUploadedSiteMediaWithMimeType(payload.site, payload.mimeType);
+                }
             }
             if (!payload.mediaList.isEmpty()) {
                 for (MediaModel media : payload.mediaList) {
                     updateMedia(media, false);
                 }
             }
-            onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore);
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore, payload.mimeType);
         }
 
         emitChange(onMediaListFetched);
