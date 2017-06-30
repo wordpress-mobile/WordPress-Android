@@ -1121,6 +1121,7 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
+    <string name="login_email_image">Login email icon</string>
     <string name="login_globe_icon">Site address globe icon</string>
     <string name="login_site_address_help_image">Site address positioning image</string>
     <string name="login_username_image">Login username icon</string>

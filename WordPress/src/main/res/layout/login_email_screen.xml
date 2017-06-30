@@ -27,12 +27,22 @@
                 android:layout_marginTop="@dimen/margin_extra_extra_large"
                 android:text="@string/enter_email_wordpress_com" />
 
-            <android.support.design.widget.TextInputLayout
+            <ImageView
+                android:id="@+id/login_username_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/login_email_layout"
+                android:contentDescription="@string/login_email_image"
+                app:srcCompat="@drawable/ic_user_grey_24dp"/>
+
+            <org.wordpress.android.widgets.WPTextInputLayout
                 app:theme="@style/LoginTheme.EditText"
                 android:id="@+id/login_email_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/label"
+                android:layout_below="@+id/label"
+                android:layout_toRightOf="@+id/login_username_icon"
+                android:layout_toEndOf="@+id/login_username_icon"
                 android:layout_marginTop="@dimen/margin_extra_large">
 
                 <android.support.design.widget.TextInputEditText
@@ -40,10 +50,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email_address"
-                    android:inputType="textEmailAddress"
-                    android:drawableLeft="@drawable/ic_user_grey_24dp"
-                    android:drawablePadding="@dimen/margin_large"/>
-            </android.support.design.widget.TextInputLayout>
+                    android:inputType="textEmailAddress"/>
+            </org.wordpress.android.widgets.WPTextInputLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
