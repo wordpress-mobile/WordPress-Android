@@ -91,12 +91,17 @@ public class MediaStore extends Store {
         public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
-        public FetchMediaListResponsePayload(SiteModel site, @NonNull List<MediaModel> mediaList, boolean loadedMore,
-                                             boolean canLoadMore) {
+        public String mimeType;
+        public FetchMediaListResponsePayload(SiteModel site,
+                                             @NonNull List<MediaModel> mediaList,
+                                             boolean loadedMore,
+                                             boolean canLoadMore,
+                                             String mimeType) {
             this.site = site;
             this.mediaList = mediaList;
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
+            this.mimeType = mimeType;
         }
 
         public FetchMediaListResponsePayload(SiteModel site, MediaError error) {

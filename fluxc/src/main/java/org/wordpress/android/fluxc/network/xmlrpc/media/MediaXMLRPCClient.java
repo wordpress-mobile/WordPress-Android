@@ -243,7 +243,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
-    public void fetchMediaList(final SiteModel site, final int offset, String mimeType) {
+    public void fetchMediaList(final SiteModel site, final int offset, final String mimeType) {
         List<Object> params = getBasicParams(site, null);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("number", MediaStore.NUM_MEDIA_PER_FETCH);
@@ -263,7 +263,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
                             boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
-                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
+                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
                                     + Arrays.toString(response));
@@ -432,10 +432,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, @NonNull List<MediaModel> media,
-                                        boolean loadedMore, boolean canLoadMore) {
+    private void notifyMediaListFetched(SiteModel site,
+                                        @NonNull List<MediaModel> media,
+                                        boolean loadedMore,
+                                        boolean canLoadMore,
+                                        String mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
-                loadedMore, canLoadMore);
+                loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
