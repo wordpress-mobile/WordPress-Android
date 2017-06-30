@@ -205,9 +205,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
-        } else {
-            setFilter(mFilter);
         }
+
+        setFilter(mFilter);
 
         return view;
     }
