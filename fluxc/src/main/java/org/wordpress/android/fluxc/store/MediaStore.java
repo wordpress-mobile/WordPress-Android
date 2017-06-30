@@ -211,9 +211,11 @@ public class MediaStore extends Store {
     public static class OnMediaListFetched extends OnChanged<MediaError> {
         public SiteModel site;
         public boolean canLoadMore;
-        public OnMediaListFetched(SiteModel site, boolean canLoadMore) {
+        public String mimeType;
+        public OnMediaListFetched(SiteModel site, boolean canLoadMore, String mimeType) {
             this.site = site;
             this.canLoadMore = canLoadMore;
+            this.mimeType = mimeType;
         }
         public OnMediaListFetched(SiteModel site, MediaError error) {
             this.site = site;
@@ -735,7 +737,7 @@ public class MediaStore extends Store {
                     updateMedia(media, false);
                 }
             }
-            onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore);
+            onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore, payload.mimeType);
         }
 
         emitChange(onMediaListFetched);
