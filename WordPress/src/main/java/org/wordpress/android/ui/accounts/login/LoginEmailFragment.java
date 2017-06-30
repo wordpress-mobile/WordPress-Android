@@ -104,19 +104,23 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             }
         });
 
-        View loginViaSiteAddressView = rootView.findViewById(R.id.login_site_address);
+        TextView loginViaSiteAddressView = (TextView) rootView.findViewById(R.id.login_site_address);
         loginViaSiteAddressView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
-                    mLoginListener.loginViaSiteAddress();
+                    if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
+                        mLoginListener.loginViaWpcomUsernameInstead();
+                    } else {
+                        mLoginListener.loginViaSiteAddress();
+                    }
                 }
             }
         });
 
         if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
             ((TextView) rootView.findViewById(R.id.label)).setText(R.string.stats_sign_in_jetpack_different_com_account);
-            loginViaSiteAddressView.setVisibility(View.GONE);
+            loginViaSiteAddressView.setText(R.string.enter_username_instead);
         }
 
         return rootView;
