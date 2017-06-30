@@ -212,7 +212,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchMediaList(final SiteModel site, final int offset, String mimeType) {
+    public void fetchMediaList(final SiteModel site, final int offset, final String mimeType) {
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(MediaStore.NUM_MEDIA_PER_FETCH));
         if (offset > 0) {
@@ -230,7 +230,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
                             boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
-                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore);
+                            notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
@@ -419,10 +419,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mDispatcher.dispatch(MediaActionBuilder.newUploadedMediaAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, @NonNull List<MediaModel> media,
-                                        boolean loadedMore, boolean canLoadMore) {
+    private void notifyMediaListFetched(SiteModel site,
+                                        @NonNull List<MediaModel> media,
+                                        boolean loadedMore,
+                                        boolean canLoadMore,
+                                        String mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
-                loadedMore, canLoadMore);
+                loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
