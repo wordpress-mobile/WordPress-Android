@@ -36,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             android:text="@string/create_wordpress_site"/>
 
@@ -45,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginStart="@dimen/margin_medium"
             android:text="@string/log_in"/>
     </LinearLayout>
