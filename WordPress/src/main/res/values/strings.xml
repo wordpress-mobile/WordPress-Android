@@ -269,6 +269,7 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
+    <string name="draft_uploaded">Draft uploaded</string>
     <string name="post_published">Post published</string>
     <string name="page_published">Page published</string>
     <string name="post_updated">Post updated</string>
@@ -1726,17 +1727,23 @@
     <string name="image_width">Width</string>
 
     <!-- Editor: Accessibility - format bar button descriptions -->
+    <string name="format_bar_description_media">Media</string>
+    <string name="format_bar_description_heading">Heading</string>
+    <string name="format_bar_description_list">List</string>
+    <string name="format_bar_description_ol">Ordered List</string>
+    <string name="format_bar_description_ul">Unordered List</string>
+    <string name="format_bar_description_quote">Block Quote</string>
     <string name="format_bar_description_bold">Bold</string>
     <string name="format_bar_description_italic">Italic</string>
+    <string name="format_bar_description_link">Link</string>
     <string name="format_bar_description_underline">Underline</string>
     <string name="format_bar_description_strike">Strikethrough</string>
-    <string name="format_bar_description_quote">Block quote</string>
-    <string name="format_bar_description_link">Insert link</string>
-    <string name="format_bar_description_more">Insert more</string>
-    <string name="format_bar_description_media">Insert media</string>
-    <string name="format_bar_description_ul">Unordered list</string>
-    <string name="format_bar_description_ol">Ordered list</string>
-    <string name="format_bar_description_html">HTML mode</string>
+    <string name="format_bar_description_horizontal_rule">Horizontal Rule</string>
+    <string name="format_bar_description_more">Read More</string>
+    <string name="format_bar_description_page">Page Break</string>
+    <string name="format_bar_description_html">HTML</string>
+    <string name="format_bar_description_ellipsis_collapse">Collapse Toolbar</string>
+    <string name="format_bar_description_ellipsis_expand">Expand Toolbar</string>
     <string name="visual_editor">Visual editor</string>
     <string name="image_thumbnail">Image thumbnail</string>
 
