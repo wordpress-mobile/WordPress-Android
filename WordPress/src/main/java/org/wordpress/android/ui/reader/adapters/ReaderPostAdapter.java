@@ -437,8 +437,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             params.topMargin = titleMargin;
         }
 
-        holder.visit.setContentDescription(holder.cardView.getContext().getString(R.string.reader_label_visit) + " " + post.getTitle());
-
         // show the video overlay (play icon) when there's a featured video
         holder.imgVideoOverlay.setVisibility(post.getCardType() == ReaderCardType.VIDEO ? View.VISIBLE : View.GONE);
 
@@ -760,6 +758,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.likeCount.setCount(post.numLikes);
             holder.likeCount.setSelected(post.isLikedByCurrentUser);
             holder.likeCount.setVisibility(View.VISIBLE);
+            holder.likeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.cardView.getContext(), post.numLikes, post.isLikedByCurrentUser));
             // can't like when logged out
             if (!mIsLoggedOutReader) {
                 holder.likeCount.setOnClickListener(new View.OnClickListener() {
@@ -788,8 +787,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (canShowComments) {
             holder.commentCount.setCount(post.numReplies);
             holder.commentCount.setVisibility(View.VISIBLE);
-            holder.commentCount.setContentDescription(holder.cardView.getContext().getString(R.string.theme_view) + " "
-                    + ReaderUtils.getShortCommentLabelText(holder.cardView.getContext(), post.numReplies));
             holder.commentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
