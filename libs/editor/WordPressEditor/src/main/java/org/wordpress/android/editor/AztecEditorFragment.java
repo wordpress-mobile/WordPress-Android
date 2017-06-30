@@ -325,6 +325,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         overlayProgressingMedia();
 
         mAztecReady = true;
+
     }
 
     /**
@@ -1022,6 +1023,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         AttributesWithClass attributesWithClass = new AttributesWithClass(
                                 content.getElementAttributes(mTappedImagePredicate));
                         attributesWithClass.removeClass(ATTR_STATUS_FAILED);
+                        attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
 
                         // set intermediate shade overlay
                         content.setOverlay(mTappedImagePredicate, 0,
