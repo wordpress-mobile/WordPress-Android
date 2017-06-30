@@ -101,6 +101,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_UNORDERED_LIST:
                 predefinedEventProperties.put("button", "unordered_list");
                 break;
+            case EDITOR_AZTEC_BETA_LINK:
+                predefinedEventProperties.put("source", "beta_link");
+                break;
             case EDITOR_AZTEC_PROMO_LINK:
                 predefinedEventProperties.put("source", "promo_link");
                 break;
@@ -381,6 +384,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_aztec_toggled_off";
             case EDITOR_AZTEC_TOGGLED_ON:
                 return "editor_aztec_toggled_on";
+            case EDITOR_AZTEC_BETA_LINK:
+                return "editor_aztec_beta_link";
             case EDITOR_AZTEC_PROMO_LINK:
                 return "editor_aztec_promo_link";
             case EDITOR_AZTEC_PROMO_NEGATIVE:

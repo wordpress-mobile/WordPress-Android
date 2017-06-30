@@ -2390,6 +2390,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         @Override
                         public void onClick(View view) {
                             startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+                            AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
                         }
                     }
                 )
