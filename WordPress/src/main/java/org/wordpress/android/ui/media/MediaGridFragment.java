@@ -565,6 +565,32 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
         if (!isAdded()) return;
 
+        // make sure the fetched list is still for the current filter
+        if (!TextUtils.isEmpty(event.mimeType)) {
+            MediaFilter filter;
+            switch (event.mimeType) {
+                case MediaUtils.MIME_TYPE_APPLICATION:
+                    filter = MediaFilter.FILTER_DOCUMENTS;
+                    break;
+                case MediaUtils.MIME_TYPE_AUDIO:
+                    filter = MediaFilter.FILTER_AUDIO;
+                    break;
+                case MediaUtils.MIME_TYPE_IMAGE:
+                    filter = MediaFilter.FILTER_IMAGES;
+                    break;
+                case MediaUtils.MIME_TYPE_VIDEO:
+                    filter = MediaFilter.FILTER_VIDEOS;
+                    break;
+                default:
+                    filter = MediaFilter.FILTER_ALL;
+                    break;
+            }
+            if (filter != mFilter) {
+                AppLog.w(AppLog.T.MEDIA, "Fetched media list doesn't match current filter");
+                return;
+            }
+        }
+
         getAdapter().setMediaList(getFilteredMedia());
 
         boolean hasRetrievedAll = !event.canLoadMore;
