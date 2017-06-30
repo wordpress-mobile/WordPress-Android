@@ -1778,7 +1778,7 @@
 
     <!-- Login -->
     <string name="log_in">Log In</string>
-    <string name="create_wordpress_site">Create WordPress site</string>
+    <string name="create_wordpress_site">Create a WordPress site</string>
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site - in realtime.</string>
     <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
