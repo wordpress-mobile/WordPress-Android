@@ -263,6 +263,7 @@
     <!-- post view -->
     <string name="post_id">Post</string>
     <string name="upload_failed">Upload failed</string>
+    <string name="draft_uploaded">Draft uploaded</string>
     <string name="post_published">Post published</string>
     <string name="page_published">Page published</string>
     <string name="post_updated">Post updated</string>
