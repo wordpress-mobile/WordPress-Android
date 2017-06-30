@@ -104,6 +104,9 @@ public class AppPrefs {
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
 
+        // When we need to show the new editor beta snackbar
+        AZTEC_EDITOR_BETA_REQUIRED,
+
         // When we need to show the new editor promo dialog
         AZTEC_EDITOR_PROMO_REQUIRED,
 
@@ -438,11 +441,19 @@ public class AppPrefs {
         return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
-   public static boolean isNewEditorPromoRequired() {
+    public static boolean isNewEditorBetaRequired() {
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, true);
+    }
+
+    public static boolean isNewEditorPromoRequired() {
        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
    }
 
-   public static void setNewEditorPromoRequired(boolean required) {
+    public static void setNewEditorBetaRequired(boolean required) {
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, required);
+    }
+
+    public static void setNewEditorPromoRequired(boolean required) {
        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
    }
 

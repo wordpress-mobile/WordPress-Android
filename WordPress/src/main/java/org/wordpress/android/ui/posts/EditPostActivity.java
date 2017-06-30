@@ -99,6 +99,7 @@ import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -1264,6 +1265,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                         // Show confirmation message when coming from editor promotion dialog.
                         if (mIsPromo) {
                             showSnackbarConfirmation();
+                        // Show open beta message when Aztec is already enabled.
+                        } else if (AppPrefs.isAztecEditorEnabled() && AppPrefs.isNewEditorBetaRequired()) {
+                            showSnackbarBeta();
                         }
 
                         return mAztecEditorFragment;
@@ -2372,6 +2376,25 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         else {
             onUploadProgress(event.media, event.progress);
         }
+    }
+
+    protected void showSnackbarBeta() {
+        Snackbar.make(
+                    mViewPager,
+                    getString(R.string.new_editor_beta_message),
+                    Snackbar.LENGTH_LONG
+                )
+                .setAction(
+                    R.string.new_editor_beta_action,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+                        }
+                    }
+                )
+                .show();
+        AppPrefs.setNewEditorBetaRequired(false);
     }
 
     protected void showSnackbarConfirmation() {
