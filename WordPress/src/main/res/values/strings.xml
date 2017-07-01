@@ -985,6 +985,7 @@
     <string name="new_editor_promo_confirmation_action">Settings</string>
     <string name="new_editor_promo_confirmation_message">New Editor enabled!</string>
     <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post!</string>
+    <string name="new_editor_promo_description_image">Hand Write Image</string>
     <string name="new_editor_promo_link">What\'s new?</string>
     <string name="new_editor_promo_title">Try the new Editor</string>
     <string name="new_editor_promo_title_beta">Beta</string>
