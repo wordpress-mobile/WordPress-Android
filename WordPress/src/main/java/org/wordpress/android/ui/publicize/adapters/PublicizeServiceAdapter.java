@@ -170,17 +170,22 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            PublicizeServiceList services = PublicizeTable.getServiceList();
-            for (PublicizeService service: services) {
-                if (!service.getId().equals(GOOGLE_PLUS_ID)) {
-                    tmpServices.add(service);
-                }
-            }
+            // G+ no longer supports auth in a WebView, so we hide it here unless the user
+            // already has a G+ connection
+            boolean hideGPlus = true;
 
             PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);
             for (PublicizeConnection connection: connections) {
-                if (!connection.getService().equals(GOOGLE_PLUS_ID)) {
-                    tmpConnections.add(connection);
+                if (connection.getService().equals(GOOGLE_PLUS_ID)) {
+                    hideGPlus = false;
+                }
+                tmpConnections.add(connection);
+            }
+
+            PublicizeServiceList services = PublicizeTable.getServiceList();
+            for (PublicizeService service: services) {
+                if (!service.getId().equals(GOOGLE_PLUS_ID) || !hideGPlus) {
+                    tmpServices.add(service);
                 }
             }
 
