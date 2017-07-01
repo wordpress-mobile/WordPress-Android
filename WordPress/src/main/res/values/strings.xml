@@ -986,6 +986,30 @@
     <string name="editor_post_settings_set_featured_image">Set Featured Image</string>
 
 
+    <!-- Aztec -->
+    <string name="dialog_title">Insert link</string>
+    <string name="dialog_edit_hint">http(s)://</string>
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_cancel">Cancel</string>
+
+    <string name="edit_hint">Share your story here&#8230;</string>
+
+    <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
+    <string name="editor_dropped_text_error">Error occurred while dropping text</string>
+    <string name="editor_dropped_title_images_not_allowed">Dropping images in the Title is not allowed</string>
+    <string name="editor_dropped_unsupported_files">Warning: not all dropped items are supported!</string>
+
+    <string name="error_media_small">Media too small to show</string>
+
+    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
+
+    <string name="menu_undo">Undo</string>
+    <string name="menu_redo">Redo</string>
+
+    <string name="post_title">Title</string>
+
+    <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
     <string name="post_format_audio">Audio</string>
