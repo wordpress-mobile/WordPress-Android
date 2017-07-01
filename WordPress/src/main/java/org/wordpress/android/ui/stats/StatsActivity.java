@@ -34,7 +34,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -189,11 +188,6 @@ public class StatsActivity extends AppCompatActivity
             }
         }
 
-        if (!mAccountStore.hasAccessToken()) {
-            // If the user is not connected to WordPress.com, ask him to connect first.
-            startWPComLoginActivity();
-            return;
-        }
         checkIfSiteHasAccessibleStats(mSite);
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
@@ -293,16 +287,6 @@ public class StatsActivity extends AppCompatActivity
             // TODO: if Jetpack site, we should check the stats option is enabled
         }
         return true;
-    }
-
-    private void startWPComLoginActivity() {
-        mResultCode = RESULT_CANCELED;
-        Intent signInIntent = new Intent(this, SignInActivity.class);
-        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_SITE_AUTH, mSite.getId());
-        signInIntent.putExtra(SignInActivity.EXTRA_JETPACK_MESSAGE_AUTH,
-                getString(R.string.stats_sign_in_jetpack_different_com_account)
-        );
-        startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
     }
 
     private void trackStatsAnalytics() {
@@ -551,11 +535,6 @@ public class StatsActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SignInActivity.REQUEST_CODE) {
-            if (resultCode == RESULT_CANCELED) {
-                finish();
-            }
-        }
         if (requestCode == RequestCodes.REQUEST_JETPACK) {
             // Refresh the site in case we're back from Jetpack install Webview
             mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));

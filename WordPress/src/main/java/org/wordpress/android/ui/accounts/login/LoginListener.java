@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.accounts.login;
 
+import org.wordpress.android.ui.accounts.LoginMode;
+
 public interface LoginListener {
+    LoginMode getLoginMode();
+
     // Login Prologue callbacks
     void nextPromo();
     void showEmailLoginScreen();
@@ -9,6 +13,7 @@ public interface LoginListener {
     // Login Email input callbacks
     void showMagicLinkRequestScreen(String email);
     void loginViaSiteAddress();
+    void loginViaWpcomUsernameInstead();
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
