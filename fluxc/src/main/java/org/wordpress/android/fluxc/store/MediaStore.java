@@ -35,7 +35,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class MediaStore extends Store {
-    public static final int NUM_MEDIA_PER_FETCH = 50;
+    public static final int NUM_MEDIA_PER_FETCH = 48;
 
     //
     // Payloads
