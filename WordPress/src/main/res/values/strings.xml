@@ -1219,7 +1219,6 @@
     <string name="reader_label_visit">Visit</string>
     <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
-    <string name="reader_more">Following site menu</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>

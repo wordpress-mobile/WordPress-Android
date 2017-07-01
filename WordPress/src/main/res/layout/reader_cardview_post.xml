@@ -230,7 +230,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/reader_more"
+                android:contentDescription="@string/more"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
                 app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
