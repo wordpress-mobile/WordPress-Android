@@ -191,12 +191,20 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
                         payload.checkedUrl = siteUrl;
-                        if (error instanceof WPComGsonNetworkError
-                                && ("unauthorized".equals(((WPComGsonNetworkError) error).apiError))) {
-                            payload.error = new SiteError(SiteErrorType.UNAUTHORIZED);
-                        } else {
-                            payload.error = new SiteError(SiteErrorType.INVALID_SITE);
+
+                        SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
+                        if (error instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) error).apiError) {
+                                case "unauthorized":
+                                    siteErrorType = SiteErrorType.UNAUTHORIZED;
+                                    break;
+                                case "unknown_blog":
+                                    siteErrorType = SiteErrorType.UNKNOWN_SITE;
+                                    break;
+                            }
                         }
+                        payload.error = new SiteError(siteErrorType);
+
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
                     }
                 }

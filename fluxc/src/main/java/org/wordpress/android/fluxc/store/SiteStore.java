@@ -269,6 +269,7 @@ public class SiteStore extends Store {
 
     public enum SiteErrorType {
         INVALID_SITE,
+        UNKNOWN_SITE,
         DUPLICATE_SITE,
         UNAUTHORIZED,
         GENERIC_ERROR
