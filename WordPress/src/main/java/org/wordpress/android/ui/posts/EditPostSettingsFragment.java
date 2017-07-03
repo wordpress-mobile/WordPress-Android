@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -183,13 +183,14 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof PostSettingsListener) {
-            mListener = (PostSettingsListener) context;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof PostSettingsListener) {
+            mListener = (PostSettingsListener) activity;
         } else {
-            throw new RuntimeException(context.toString() + " must implement PostSettingsListener");
+            throw new RuntimeException(activity.toString() + " must implement PostSettingsListener");
         }
     }
 
