@@ -146,6 +146,15 @@ public class MetadataUtils {
             }
         }
 
+        boolean hasClassStartingWith(String prefix) {
+            for (String cls : mClasses) {
+                if (cls.startsWith(prefix)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         void removeClass(String c) {
             mClasses.remove(c);
         }
@@ -158,9 +167,13 @@ public class MetadataUtils {
             return mClasses;
         }
 
-        AztecAttributes getAttributes() {
+        void updateAttributeClasses() {
             String classesStr = TextUtils.join(" ", mClasses);
             mAztecAttributes.setValue("class", classesStr);
+        }
+
+        AztecAttributes getAttributes() {
+            updateAttributeClasses();
             return mAztecAttributes;
         }
 

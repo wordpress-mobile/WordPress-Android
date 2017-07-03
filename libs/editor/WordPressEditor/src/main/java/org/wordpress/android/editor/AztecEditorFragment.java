@@ -1153,5 +1153,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaFile.getHeight() != DEFAULT_MEDIA_HEIGHT) {
             attributes.setValue(ATTR_DIMEN_HEIGHT, String.valueOf(mediaFile.getHeight()));
         }
+
+        AttributesWithClass attrs = new AttributesWithClass(attributes);
+        if (!attrs.hasClassStartingWith("size")) {
+            attrs.addClass("size-full");
+            attrs.updateAttributeClasses();
+        }
     }
 }
