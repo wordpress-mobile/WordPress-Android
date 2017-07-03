@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:key="@string/pref_key_app_settings_root">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:key="@string/pref_key_app_settings_root" >
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
@@ -31,7 +33,12 @@
             android:entryValues="@array/editor_values"
             android:defaultValue="2"
             android:layout="@layout/preference_layout"
-            android:title="@string/preference_editor_type" />
+            android:title="@string/preference_editor_type"
+            tools:summary="Beta" />
+
+        <Preference
+            android:key="@string/pref_key_editor_footer"
+            android:layout="@layout/preference_layout_editor_footer" />
 
     </PreferenceCategory>
 

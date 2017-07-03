@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -98,6 +99,7 @@ import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.PostEvents;
 import org.wordpress.android.ui.posts.services.PostUploadService;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -150,6 +152,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         PhotoPickerFragment.PhotoPickerListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
@@ -201,6 +204,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
     private boolean mIsNewPost;
     private boolean mIsPage;
+    private boolean mIsPromo;
     private boolean mHasSetPostContent;
 
     private View mPhotoPickerContainer;
@@ -276,6 +280,7 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
 
                 if (extras != null) {
                     mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                    mIsPromo = extras.getBoolean(EXTRA_IS_PROMO);
                 }
                 mIsNewPost = true;
 
@@ -1240,6 +1245,15 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     if (mShowAztecEditor) {
                         mAztecEditorFragment = AztecEditorFragment.newInstance("", "");
                         mAztecEditorFragment.setImageLoader(new AztecImageLoader(getBaseContext()));
+
+                        // Show confirmation message when coming from editor promotion dialog.
+                        if (mIsPromo) {
+                            showSnackbarConfirmation();
+                        // Show open beta message when Aztec is already enabled.
+                        } else if (AppPrefs.isAztecEditorEnabled() && AppPrefs.isNewEditorBetaRequired()) {
+                            showSnackbarBeta();
+                        }
+
                         return mAztecEditorFragment;
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
@@ -2346,6 +2360,47 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         }
         else {
             onUploadProgress(event.media, event.progress);
+        }
+    }
+
+    protected void showSnackbarBeta() {
+        Snackbar.make(
+                    mViewPager,
+                    getString(R.string.new_editor_beta_message),
+                    Snackbar.LENGTH_LONG
+                )
+                .setAction(
+                    R.string.new_editor_beta_action,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(EditPostActivity.this, EditorReleaseNotesActivity.class));
+                            AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
+                        }
+                    }
+                )
+                .show();
+        AppPrefs.setNewEditorBetaRequired(false);
+    }
+
+    protected void showSnackbarConfirmation() {
+        if (mViewPager != null) {
+            Snackbar.make(
+                        mViewPager,
+                        getString(R.string.new_editor_promo_confirmation_message),
+                        Snackbar.LENGTH_LONG
+                    )
+                    .setAction(
+                        R.string.new_editor_promo_confirmation_action,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ActivityLauncher.viewAppSettings(EditPostActivity.this);
+                                finish();
+                            }
+                        }
+                    )
+                    .show();
         }
     }
 }
