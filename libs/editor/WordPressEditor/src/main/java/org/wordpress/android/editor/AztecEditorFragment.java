@@ -54,6 +54,7 @@ import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecText.OnImageTappedListener;
 import org.wordpress.aztec.HistoryListener;
 import org.wordpress.aztec.Html;
+import org.wordpress.aztec.TextFormat;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.AztecToolbarClickListener;
@@ -345,12 +346,32 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onToolbarHtmlModeClicked() {
+    public void onToolbarCollapseButtonClicked() {
+    }
+
+    @Override
+    public void onToolbarExpandButtonClicked() {
+    }
+
+    @Override
+    public void onToolbarFormatButtonClicked(TextFormat textFormat, boolean b) {
+    }
+
+    @Override
+    public void onToolbarHeadingButtonClicked() {
+    }
+
+    @Override
+    public void onToolbarHtmlButtonClicked() {
         if (!isAdded()) {
             return;
         }
 
         checkForFailedUploadAndSwitchToHtmlMode();
+    }
+
+    @Override
+    public void onToolbarListButtonClicked() {
     }
 
     private void checkForFailedUploadAndSwitchToHtmlMode() {
@@ -885,7 +906,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onToolbarAddMediaClicked() {
+    public void onToolbarMediaButtonClicked() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
 
         if (isActionInProgress()) {
