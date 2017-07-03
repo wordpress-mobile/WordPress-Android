@@ -122,8 +122,6 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         if (savedInstanceState == null) {
             mInProgress = true;
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
         } else {
             mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
         }
@@ -222,16 +220,25 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(AccountStore.OnAccountChanged event) {
-        if (!isAdded() || event.causeOfChange != AccountAction.FETCH_ACCOUNT) {
+        if (!isAdded()) {
             return;
         }
 
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "onAccountChanged has error: " + event.error.type + " - " + event.error.message);
             ToastUtils.showToast(getContext(), R.string.error_fetch_my_profile);
+            return;
         }
 
-        refreshAccountDetails();
+        if (event.causeOfChange == AccountAction.FETCH_ACCOUNT) {
+            refreshAccountDetails();
+
+            // The user's account info has been fetched and stored - next, fetch the user's settings
+            mDispatcher.dispatch(AccountActionBuilder.newFetchSettingsAction());
+        } else if (event.causeOfChange == AccountAction.FETCH_SETTINGS) {
+            // The user's account settings have also been fetched and stored - now we can fetch the user's sites
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+        }
     }
 
     @SuppressWarnings("unused")

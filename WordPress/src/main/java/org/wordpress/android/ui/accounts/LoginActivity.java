@@ -154,6 +154,13 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
+    public void loginViaWpcomUsernameInstead() {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
+                "wordpress.com", "wordpress.com", "WordPress.com", "https://s0.wp.com/i/webclip.png", true);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+    }
+
+    @Override
     public void showMagicLinkSentScreen(String email) {
         LoginMagicLinkSentFragment loginMagicLinkSentFragment = LoginMagicLinkSentFragment.newInstance(email);
         slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
