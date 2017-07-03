@@ -98,16 +98,30 @@ public final class AnalyticsTracker {
         EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE,
         EDITOR_TAPPED_BOLD,
+        EDITOR_TAPPED_ELLIPSIS_COLLAPSE,
+        EDITOR_TAPPED_ELLIPSIS_EXPAND,
+        EDITOR_TAPPED_HEADING,
+        EDITOR_TAPPED_HEADING_1,
+        EDITOR_TAPPED_HEADING_2,
+        EDITOR_TAPPED_HEADING_3,
+        EDITOR_TAPPED_HEADING_4,
+        EDITOR_TAPPED_HEADING_5,
+        EDITOR_TAPPED_HEADING_6,
         EDITOR_TAPPED_HTML, // Visual editor only
+        EDITOR_TAPPED_HORIZONTAL_RULE,
         EDITOR_TAPPED_IMAGE,
         EDITOR_TAPPED_ITALIC,
-        EDITOR_TAPPED_LINK,
-        EDITOR_TAPPED_MORE,
+        EDITOR_TAPPED_LINK_ADDED,
+        EDITOR_TAPPED_LINK_REMOVED, // Visual editor only
+        EDITOR_TAPPED_LIST,
+        EDITOR_TAPPED_LIST_ORDERED, // Visual editor only
+        EDITOR_TAPPED_LIST_UNORDERED, // Visual editor only
+        EDITOR_TAPPED_NEXT_PAGE,
+        EDITOR_TAPPED_PARAGRAPH,
+        EDITOR_TAPPED_PREFORMAT,
+        EDITOR_TAPPED_READ_MORE,
         EDITOR_TAPPED_STRIKETHROUGH,
         EDITOR_TAPPED_UNDERLINE,
-        EDITOR_TAPPED_ORDERED_LIST, // Visual editor only
-        EDITOR_TAPPED_UNLINK, // Visual editor only
-        EDITOR_TAPPED_UNORDERED_LIST, // Visual editor only
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only
