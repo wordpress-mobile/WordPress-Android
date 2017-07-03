@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.EditorReleaseNotesActivity;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class PromoDialogEditor extends PromoDialog {
@@ -66,6 +67,7 @@ public class PromoDialogEditor extends PromoDialog {
 
         ImageView image = (ImageView) view.findViewById(R.id.promo_dialog_image);
         image.setImageResource(mDrawableId);
+        image.setVisibility(DisplayUtils.isLandscape(getActivity()) ? View.GONE : View.VISIBLE);
 
         WPTextView title = (WPTextView) view.findViewById(R.id.promo_dialog_title);
         title.setText(mTitleId);
