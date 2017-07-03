@@ -1,13 +1,17 @@
 package org.wordpress.android.util;
 
+import android.*;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
 import org.wordpress.android.*;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
 public class WPMediaUtils {
@@ -62,8 +66,46 @@ public class WPMediaUtils {
         return BuildConfig.VIDEO_OPTIMIZATION_AVAILABLE
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
+
     public static boolean isVideoOptimizationEnabled(Activity activity, SiteModel siteModel) {
         SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, siteModel, null);
         return isVideoOptimizationAvailable() && siteSettings != null && siteSettings.init(false).getOptimizedVideo();
+    }
+
+
+    /**
+     *
+     * Check if we should advertise image optimization feature for the current site.
+     *
+     * The following condition need to be all true:
+     * 1) Image optimization is OFF on the site.
+     * 2) Didn't already ask to enable the feature.
+     * 3) The user has granted storage access to the app.
+     * This is because we don't want to ask so much things to users the first time they try to add a picture to the app.
+     *
+     * @param act The host activity
+     * @param site The site where to check if optimize image is already on or not.
+     * @return true if we should advertise the feature, false otherwise.
+     */
+    public static boolean shouldAdvertiseImageOptimization(Activity act, SiteModel site) {
+        boolean isPromoRequired = AppPrefs.isImageOptimizePromoRequired();
+        if (!isPromoRequired) {
+            return false;
+        }
+
+        // Check we can access storage before asking for optimizing image
+        boolean hasStoreAccess = ContextCompat.checkSelfPermission(
+                act, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (!hasStoreAccess) {
+            return false;
+        }
+
+        // Check whether image optimization is already available for the site
+        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(act, site, null);
+        if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+            return false;
+        }
+
+        return true;
     }
 }
