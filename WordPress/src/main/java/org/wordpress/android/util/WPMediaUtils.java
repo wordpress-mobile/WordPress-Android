@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.*;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -8,12 +7,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 
-import org.wordpress.android.*;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
