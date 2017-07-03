@@ -2139,12 +2139,12 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
         if (!isPhotoPickerShowing()) {
             showPhotoPicker();
             if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-                builder.setTitle(R.string.image_optimization_promo_title);
-                builder.setMessage(R.string.image_optimization_promo_desc);
-                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (which != DialogInterface.BUTTON_POSITIVE) {
+                            return;
+                        }
                         SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(EditPostActivity.this, mSite, null);
                         if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
                             // null or image optimization already ON. We should not be here though.
@@ -2153,11 +2153,9 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                             siteSettings.saveSettings();
                         }
                     }
-                });
-                builder.setNegativeButton(R.string.no, null);
-                builder.show();
-                // Do not ask again
-                AppPrefs.setImageOptimizePromoRequired(false);
+                };
+
+                WPMediaUtils.advertiseImageOptimization(this, listener, null);
             }
         } else {
             hidePhotoPicker();

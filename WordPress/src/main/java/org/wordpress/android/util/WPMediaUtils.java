@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.*;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -9,8 +10,10 @@ import android.support.v4.content.ContextCompat;
 
 import org.wordpress.android.*;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 
@@ -107,5 +110,19 @@ public class WPMediaUtils {
         }
 
         return true;
+    }
+
+    public static void advertiseImageOptimization(final Activity act,
+                                                  DialogInterface.OnClickListener listener,
+                                                  DialogInterface.OnCancelListener onCancelListener) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(act);
+        builder.setTitle(org.wordpress.android.R.string.image_optimization_promo_title);
+        builder.setMessage(org.wordpress.android.R.string.image_optimization_promo_desc);
+        builder.setPositiveButton(org.wordpress.android.R.string.yes, listener);
+        builder.setNegativeButton(R.string.no, listener);
+        builder.setOnCancelListener(onCancelListener);
+        builder.show();
+        // Do not ask again
+        AppPrefs.setImageOptimizePromoRequired(false);
     }
 }
