@@ -53,6 +53,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
                 showPost();
+                finish();
             } else {
                 ActivityLauncher.loginForDeeplink(this);
             }
@@ -68,6 +69,8 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         if (requestCode == RequestCodes.DO_LOGIN && resultCode == RESULT_OK) {
             showPost();
         }
+
+        finish();
     }
 
     private void showPost() {
@@ -87,8 +90,6 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         } else {
             ToastUtils.showToast(this, R.string.error_generic);
         }
-
-        finish();
     }
 
     @Override
