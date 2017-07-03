@@ -291,8 +291,8 @@ public class PostUtils {
         }
         Date pubDate = DateTimeUtils.dateFromIso8601(postModel.getDateCreated());
         Date now = new Date();
-        // For drafts with publish dates in the past, we should publish immediately
-        return !pubDate.after(now);
+        // Publish immediately for posts that don't have any date set yet and drafts with publish dates in the past
+        return pubDate == null || !pubDate.after(now);
     }
 
     // Only drafts should have the option to publish immediately to avoid user confusion
