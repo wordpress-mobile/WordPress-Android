@@ -193,6 +193,7 @@ Language: hu
 	<string name="stats">Statisztika</string>
 	<string name="passcode_preference_title">Azonosítókód lezárás</string>
 	<string name="upload">Feltöltés</string>
+	<string name="manage">Kezelés</string>
 	<string name="discard">Elvetés</string>
 	<string name="notifications">Értesítések</string>
 	<string name="note_reply_successful">Válasz elküldve</string>

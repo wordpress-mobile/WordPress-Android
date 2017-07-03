@@ -1,11 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-06-07 18:09:35+0000
+Translation-Revision-Date: 2017-06-21 17:48:33+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="permission_location">Locație</string>
+	<string name="permission_camera">Aparat foto</string>
+	<string name="permission_storage">Stocare</string>
+	<string name="permissions_denied_message">Pentru a modifica asta, editează-ți permisiunile și asigură-te că %s este activat</string>
+	<string name="permissions_denied_title">Se pare că ai oprit permisiunile necesare pentru această funcționalitate</string>
+	<string name="button_edit_permissions">Editează permisiunile</string>
+	<string name="photo_picker_soft_ask_permissions_denied">Lui %s i s-au refuzat permisiunile de a accesa fotografiile tale</string>
+	<string name="photo_picker_soft_ask_allow">Permite</string>
+	<string name="photo_picker_soft_ask_label">%s are nevoie de permisiuni pentru a-ți accesa fotografiile</string>
+	<string name="sharing_twitter_message">Acest lucru va fi inclus în twituri când oamenii partajează folosind butonul Twitter</string>
+	<string name="sharing_label_message">Modifică textul etichetei pentru butoanele de partajare. Acest text nu va apărea până când nu adaugi cel puțin un buton de partajare.</string>
+	<string name="connecting_account">Conectare la cont</string>
+	<string name="cannot_connect_account_error">Conexiunea %s nu a putut fi efectuată deoarece nu a fost selectat niciun cont.</string>
+	<string name="connected">Conectat</string>
+	<string name="twitter">Twitter</string>
+	<string name="likes">Aprecieri</string>
+	<string name="sharing_comment_likes_description">Permite ca toate comentariile să fie apreciate de tine și de cititorii tăi</string>
+	<string name="visual">Vizual</string>
+	<string name="buttons">Butoane</string>
+	<string name="sharing_edit_more_buttons">Editează butoanele „Mai mult”</string>
+	<string name="sharing_more_description">Un buton „Mai mult” conține o listă derulantă care afișează butoanele de partajare</string>
+	<string name="sharing_sharing_buttons_description">Selectează care butoane sunt arătate sub articolele tale</string>
+	<string name="twitter_username">Nume utilizator Twitter</string>
+	<string name="sharing_comment_likes">Aprecieri comentariu</string>
+	<string name="button_style">Stil buton</string>
+	<string name="label">Etichetă</string>
+	<string name="more_buttons">Butoane „Mai mult”</string>
+	<string name="sharing_buttons">Butoane de partajare</string>
+	<string name="site_settings_like">Arată buton de apreciere</string>
+	<string name="site_settings_reblog">Arată buton de republicare</string>
+	<string name="site_settings_reblog_and_like_header">Republicare și apreciere</string>
+	<string name="publicize_text_only">Numai text</string>
+	<string name="publicize_icon_and_text">Icon și text</string>
+	<string name="publicize_icon_only">Numai icon</string>
+	<string name="publicize_official_buttons">Butoane oficiale</string>
+	<string name="official_buttons_display">Butoane oficiale</string>
+	<string name="text_only_display">Numai text</string>
+	<string name="icon_only_display">Numai icon</string>
+	<string name="icon_and_text_display">Icon și text</string>
+	<string name="connection_chooser_message">Selectează contul pe care vrei să-l autorizezi. Reține că articolele tale vor fi partajate automat în contul selectat.</string>
+	<string name="connecting_social_network">Conectez %s</string>
+	<string name="dlg_confirm_publicize_disconnect">Te deconectezi de la %s?</string>
+	<string name="share_btn_connect_another_account">Conectează alt cont</string>
+	<string name="share_btn_reconnect">Reconectează</string>
+	<string name="share_btn_disconnect">Deconectează</string>
+	<string name="share_btn_connect">Conectează</string>
+	<string name="connection_service_description">Conectează-te pentru a partaja automat articolele blogului tău pe %s.</string>
+	<string name="connection_service_label">Publică pe %s</string>
+	<string name="connected_accounts_label">Conturi conectate</string>
+	<string name="connections_description">Conectează-ți serviciile media socială preferate pentru a partaja automat articole noi cu prietenii.</string>
+	<string name="connections_label">Conexiuni</string>
+	<string name="sharing">Partajare</string>
+	<string name="tabbar_accessibility_label_notifications">Notificări. Administrează-ți notificările.</string>
+	<string name="tabbar_accessibility_label_reader">Cititor. Urmărește conținutul de pe alte situri.</string>
+	<string name="tabbar_accessibility_label_me">Eu. Vizualizează-ți profilul și fă modificări.</string>
+	<string name="tabbar_accessibility_label_my_site">Situl meu. Vizualizează-ți situl și administrează-l, inclusiv statistici.</string>
+	<string name="fab_content_description_write">Scrie</string>
+	<string name="my_site_btn_sharing">Partajare</string>
+	<string name="button_not_now">Nu acum</string>
 	<string name="media_error_timeout">Răspunsul serverului a expirat, ar putea fi o conexiune slabă sau o eroare de server</string>
 	<string name="media_error_internal_server_error">Eroare la încărcare. Încearcă activarea Optimizează imagini în Sit->Setări</string>
 	<string name="media_error_too_large_upload">Fișier prea mare pentru a-l încărca. Încearcă activarea Optimizează imagini în Sit->Setări</string>
@@ -659,8 +718,6 @@ Language: ro
 	<string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">Acest blog nu a fost găsit</string>
 	<string name="undo">Revin</string>
-	<string name="tabbar_accessibility_label_me">Eu</string>
-	<string name="tabbar_accessibility_label_my_site">Situl meu</string>
 	<string name="editor_toast_changes_saved">Modificări salvate</string>
 	<string name="passcodelock_prompt_message">Introdu PIN-ul tău</string>
 	<string name="push_auth_expired">Cererea a expirat. Autentifică-te pe WordPress.com pentru a încerca din nou.</string>
@@ -1160,6 +1217,7 @@ Language: ro
 	<string name="all">Toate</string>
 	<string name="themes">Teme</string>
 	<string name="discard">Renunță</string>
+	<string name="manage">Gestionează</string>
 	<string name="upload">Încărcare</string>
 	<string name="more_notifications">și încă %d.</string>
 	<string name="new_notifications">%d noi notificări</string>

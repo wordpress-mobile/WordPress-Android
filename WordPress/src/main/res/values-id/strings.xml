@@ -610,8 +610,6 @@ Language: id
 	<string name="reader_toast_err_follow_blog_not_authorized">Anda tidak punya otoritas untuk mengakses blog ini.</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog ini tak bisa ditemukan</string>
 	<string name="undo">Urungkan</string>
-	<string name="tabbar_accessibility_label_me">Saya</string>
-	<string name="tabbar_accessibility_label_my_site">Situs Saya</string>
 	<string name="editor_toast_changes_saved">Perubahan disimpan</string>
 	<string name="passcodelock_prompt_message">Masukkan PIN</string>
 	<string name="push_auth_expired">Permintaan sudah kadaluwarsa. Log in ke WordPress.com untuk mencoba lagi.</string>
@@ -1107,6 +1105,7 @@ Language: id
 	<string name="all">Semua</string>
 	<string name="themes">Tema</string>
 	<string name="discard">Batal</string>
+	<string name="manage">Atur</string>
 	<string name="upload">Unggah</string>
 	<string name="more_notifications">dan %d lagi.</string>
 	<string name="new_notifications">%d notifikasi baru</string>

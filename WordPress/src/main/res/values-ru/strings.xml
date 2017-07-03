@@ -547,8 +547,6 @@ Language: ru
 	<string name="reader_toast_err_follow_blog_not_authorized">У вас нет разрешения на доступ к этому блогу.</string>
 	<string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот блог.</string>
 	<string name="undo">Назад</string>
-	<string name="tabbar_accessibility_label_me">Я</string>
-	<string name="tabbar_accessibility_label_my_site">Мой сайт</string>
 	<string name="editor_toast_changes_saved">Обновления сохранены</string>
 	<string name="passcodelock_prompt_message">Введите ваш PIN-код</string>
 	<string name="stats_insights_most_popular_percent_views">%1$d%% просмотров</string>
@@ -1037,6 +1035,7 @@ Language: ru
 	<string name="all">Всё</string>
 	<string name="themes">Темы</string>
 	<string name="discard">Отменить</string>
+	<string name="manage">Управление</string>
 	<string name="upload">Загрузка</string>
 	<string name="more_notifications">и %d ещё.</string>
 	<string name="new_notifications">Новые уведомления: %d</string>

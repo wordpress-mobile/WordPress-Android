@@ -407,6 +407,7 @@ Language: mk
 	<string name="stats_view_referrers">Препорачувачи</string>
 	<string name="stats_entry_referrers">Препорачувач</string>
 	<string name="unattached">Неприкачени</string>
+	<string name="manage">Управувај</string>
 	<string name="upload">Качување</string>
 	<string name="notifications">Известувања</string>
 	<string name="new_notifications">%d нови известувања</string>
