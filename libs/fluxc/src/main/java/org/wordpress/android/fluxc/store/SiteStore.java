@@ -724,7 +724,26 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            case FETCHED_SITES:
+                handleFetchedSites((SitesModel) action.getPayload());
+                break;
         }
+    }
+
+    private void handleFetchedSites(SitesModel fetchedSites) {
+        OnSiteChanged event = new OnSiteChanged(0);
+        if (fetchedSites.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = new SiteError(SiteErrorType.GENERIC_ERROR);
+        } else {
+            UpdateSitesResult res = createOrUpdateSites(fetchedSites);
+            event.rowsAffected = res.rowsAffected;
+            if (res.duplicateSiteFound) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
+            SiteSqlUtils.removeWPComRestSitesAbsentFromList(fetchedSites.getSites());
+        }
+        emitChange(event);
     }
 
     private void removeSite(SiteModel site) {
