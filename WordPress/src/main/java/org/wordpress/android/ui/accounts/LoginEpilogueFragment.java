@@ -120,8 +120,10 @@ public class LoginEpilogueFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mInProgress = true;
-            mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            if (mAccountStore.hasAccessToken()) {
+                mInProgress = true;
+                mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+            }
         } else {
             mInProgress = savedInstanceState.getBoolean(KEY_IN_PROGRESS);
         }

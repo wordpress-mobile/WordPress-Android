@@ -333,10 +333,16 @@ public class ActivityLauncher {
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
-        Class<?> loginClass = BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE ? LoginActivity.class : SignInActivity.class;
+        Intent intent;
 
-        Intent intent = new Intent(activity, loginClass);
-        intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.SELFHOSTED_ONLY.putInto(intent);
+        } else {
+            intent = new Intent(activity, SignInActivity.class);
+            intent.putExtra(SignInActivity.EXTRA_START_FRAGMENT, SignInActivity.ADD_SELF_HOSTED_BLOG);
+        }
+
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
