@@ -96,6 +96,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_IMAGE = Arrays.asList("image/jpeg", "image/png");
 
+    private static boolean mIsToolbarExpanded = false;
+
     private boolean mIsKeyboardOpen = false;
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
@@ -116,7 +118,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private ImagePredicate mTappedImagePredicate;
 
-    public static AztecEditorFragment newInstance(String title, String content) {
+    public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
+        mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -149,6 +152,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
         formattingToolbar.setEditor(content, source);
         formattingToolbar.setToolbarListener(this);
+        formattingToolbar.setExpanded(mIsToolbarExpanded);
 
         title.setOnFocusChangeListener(
             new View.OnFocusChangeListener() {
