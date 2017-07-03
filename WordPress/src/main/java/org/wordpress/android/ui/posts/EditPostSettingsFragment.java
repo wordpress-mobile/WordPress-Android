@@ -103,7 +103,7 @@ public class EditPostSettingsFragment extends Fragment {
     private static final int SELECT_LIBRARY_MENU_POSITION = 100;
     private static final int CLEAR_FEATURED_IMAGE_MENU_POSITION = 101;
 
-    private PostSettingsListener mListener;
+    private EditPostActivityHook mEditPostActivityHook;
     private SiteSettingsInterface mSiteSettings;
 
     private TextView mExcerptTextView;
@@ -129,7 +129,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject Dispatcher mDispatcher;
     @Inject FluxCImageLoader mImageLoader;
 
-    interface PostSettingsListener {
+    interface EditPostActivityHook {
         PostModel getPost();
         SiteModel getSite();
     }
@@ -149,7 +149,7 @@ public class EditPostSettingsFragment extends Fragment {
         fetchSiteSettingsAndUpdateDefaultPostFormat();
 
         // Update post formats and categories, in case anything changed.
-        SiteModel siteModel = mListener.getSite();
+        SiteModel siteModel = getSite();
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(siteModel));
         if (!getPost().isPage()) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel));
@@ -158,7 +158,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void fetchSiteSettingsAndUpdateDefaultPostFormat() {
         // we need to fetch site settings in order to get the latest default post format
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), mListener.getSite(),
+        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
                 new SiteSettingsListener() {
                     @Override
                     public void onSettingsUpdated(Exception error) {
@@ -187,8 +187,8 @@ public class EditPostSettingsFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof PostSettingsListener) {
-            mListener = (PostSettingsListener) activity;
+        if (activity instanceof EditPostActivityHook) {
+            mEditPostActivityHook = (EditPostActivityHook) activity;
         } else {
             throw new RuntimeException(activity.toString() + " must implement PostSettingsListener");
         }
@@ -197,7 +197,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mEditPostActivityHook = null;
     }
 
     @Override
@@ -450,7 +450,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         Intent categoriesIntent = new Intent(getActivity(), SelectCategoriesActivity.class);
-        categoriesIntent.putExtra(WordPress.SITE, mListener.getSite());
+        categoriesIntent.putExtra(WordPress.SITE, getSite());
         categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, getPost().getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
@@ -460,7 +460,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         // Fetch/refresh the tags in preparation for the PostSettingsTagsActivity
-        SiteModel siteModel = mListener.getSite();
+        SiteModel siteModel = getSite();
         mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(siteModel));
 
         Intent tagsIntent = new Intent(getActivity(), PostSettingsTagsActivity.class);
@@ -604,7 +604,11 @@ public class EditPostSettingsFragment extends Fragment {
     // Helpers
 
     private PostModel getPost() {
-        return mListener.getPost();
+        return mEditPostActivityHook.getPost();
+    }
+
+    private SiteModel getSite() {
+        return mEditPostActivityHook.getSite();
     }
 
     private void updateSaveButton() {
@@ -708,7 +712,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void updateCategoriesTextView() {
-        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(getPost(), mListener.getSite());
+        List<TermModel> categories = mTaxonomyStore.getCategoriesForPost(getPost(), getSite());
         StringBuilder sb = new StringBuilder();
         Iterator<TermModel> it = categories.iterator();
         if (it.hasNext()) {
@@ -765,7 +769,7 @@ public class EditPostSettingsFragment extends Fragment {
                 .getStringArray(R.array.post_format_display_names)));
 
         // If we have specific values for this site, use them
-        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(mListener.getSite());
+        List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(getSite());
         for (PostFormatModel postFormatModel : postFormatModels) {
             if (!mPostFormatKeys.contains(postFormatModel.getSlug())) {
                 mPostFormatKeys.add(postFormatModel.getSlug());
@@ -825,7 +829,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
 
-        SiteModel siteModel = mListener.getSite();
+        SiteModel siteModel = getSite();
         MediaModel media = mMediaStore.getSiteMediaWithId(siteModel, postModel.getFeaturedImageId());
         if (media == null) {
             return;
@@ -852,7 +856,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         Intent intent = new Intent(getActivity(), MediaBrowserActivity.class);
-        intent.putExtra(WordPress.SITE, mListener.getSite());
+        intent.putExtra(WordPress.SITE, getSite());
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.SINGLE_SELECT_PICKER);
         intent.putExtra(MediaBrowserActivity.ARG_IMAGES_ONLY, true);
         startActivityForResult(intent, RequestCodes.SINGLE_SELECT_MEDIA_PICKER);
