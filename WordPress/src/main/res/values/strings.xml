@@ -988,9 +988,6 @@
 
     <!-- Aztec -->
     <string name="dialog_link_title">Insert link</string>
-    <string name="dialog_link_edit_hint">http(s)://</string>
-    <string name="dialog_button_ok">OK</string>
-    <string name="dialog_button_cancel">Cancel</string>
 
     <string name="edit_hint">Share your story here&#8230;</string>
 
