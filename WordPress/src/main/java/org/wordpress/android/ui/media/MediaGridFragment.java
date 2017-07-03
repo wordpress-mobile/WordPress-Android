@@ -607,6 +607,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_media));
         }
 
+        setRefreshing(false);
         setHasFetchedMediaForAllFilters();
         getAdapter().setHasRetrievedAll(true);
     }
