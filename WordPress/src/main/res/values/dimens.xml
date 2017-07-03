@@ -214,7 +214,8 @@
     <dimen name="my_site_list_row_icon_size">24dp</dimen>
     <dimen name="my_site_list_row_padding_left">8dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
-    <dimen name="my_site_switch_site_button_padding_bottom">11dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_bottom">16dp</dimen>
+    <dimen name="my_site_switch_site_button_padding_top">15dp</dimen>
     <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
