@@ -483,6 +483,7 @@
         <item name="android:textColor">@color/blue_wordpress</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
@@ -491,10 +492,11 @@
     </style>
 
     <style name="PostSettingsContainer">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/margin_extra_large</item>
         <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
     </style>
 
     <style name="PostSettingsTitle">
