@@ -84,6 +84,34 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         int getValue() {
             return value;
         }
+        private String toMimeType() {
+            switch (this) {
+                case FILTER_AUDIO:
+                    return MediaUtils.MIME_TYPE_AUDIO;
+                case FILTER_DOCUMENTS:
+                    return MediaUtils.MIME_TYPE_APPLICATION;
+                case FILTER_IMAGES:
+                    return MediaUtils.MIME_TYPE_IMAGE;
+                case FILTER_VIDEOS:
+                    return MediaUtils.MIME_TYPE_VIDEO;
+                default:
+                    return null;
+            }
+        }
+        private static MediaFilter fromMimeType(@NonNull String mimeType) {
+            switch (mimeType) {
+                case MediaUtils.MIME_TYPE_APPLICATION:
+                    return MediaFilter.FILTER_DOCUMENTS;
+                case MediaUtils.MIME_TYPE_AUDIO:
+                    return MediaFilter.FILTER_AUDIO;
+                case MediaUtils.MIME_TYPE_IMAGE:
+                    return MediaFilter.FILTER_IMAGES;
+                case MediaUtils.MIME_TYPE_VIDEO:
+                    return MediaFilter.FILTER_VIDEOS;
+                default:
+                    return MediaFilter.FILTER_ALL;
+            }
+        }
     }
 
     // describes which filters we've fetched media for
@@ -343,7 +371,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
         if (event.isError()) {
-            handleFetchAllMediaError(event.error.type);
+            handleFetchAllMediaError(event);
             return;
         }
 
@@ -506,21 +534,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         updateEmptyView(emptyType);
     }
 
-    private String getMimeTypeForFilter() {
-        switch (mFilter) {
-            case FILTER_AUDIO:
-                return MediaUtils.MIME_TYPE_AUDIO;
-            case FILTER_DOCUMENTS:
-                return MediaUtils.MIME_TYPE_APPLICATION;
-            case FILTER_IMAGES:
-                return MediaUtils.MIME_TYPE_IMAGE;
-            case FILTER_VIDEOS:
-                return MediaUtils.MIME_TYPE_VIDEO;
-            default:
-                return null;
-        }
-    }
-
     private void fetchMediaList(boolean loadMore) {
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -540,7 +553,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             updateEmptyView(EmptyViewMessageType.LOADING);
 
             FetchMediaListPayload payload =
-                    new FetchMediaListPayload(mSite, loadMore, getMimeTypeForFilter());
+                    new FetchMediaListPayload(mSite, loadMore, mFilter.toMimeType());
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
@@ -548,30 +561,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
         if (!isAdded()) return;
 
-        // make sure the fetched list is still for the current filter
-        if (!TextUtils.isEmpty(event.mimeType)) {
-            MediaFilter filter;
-            switch (event.mimeType) {
-                case MediaUtils.MIME_TYPE_APPLICATION:
-                    filter = MediaFilter.FILTER_DOCUMENTS;
-                    break;
-                case MediaUtils.MIME_TYPE_AUDIO:
-                    filter = MediaFilter.FILTER_AUDIO;
-                    break;
-                case MediaUtils.MIME_TYPE_IMAGE:
-                    filter = MediaFilter.FILTER_IMAGES;
-                    break;
-                case MediaUtils.MIME_TYPE_VIDEO:
-                    filter = MediaFilter.FILTER_VIDEOS;
-                    break;
-                default:
-                    filter = MediaFilter.FILTER_ALL;
-                    break;
-            }
-            if (filter != mFilter) {
-                AppLog.w(AppLog.T.MEDIA, "Fetched media list doesn't match current filter");
-                return;
-            }
+        // make sure this request was for the current filter
+        if (!TextUtils.isEmpty(event.mimeType)
+                && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
+            return;
         }
 
         getAdapter().setMediaList(getFilteredMedia());
@@ -594,9 +587,15 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         updateEmptyView(EmptyViewMessageType.NO_CONTENT);
     }
 
-    private void handleFetchAllMediaError(MediaErrorType errorType) {
+    private void handleFetchAllMediaError(OnMediaListFetched event) {
+        MediaErrorType errorType = event.error.type;
         AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
         if (!isAdded()) return;
+
+        if (!TextUtils.isEmpty(event.mimeType)
+                && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
+            return;
+        }
 
         boolean isPermissionError = (errorType == MediaErrorType.AUTHORIZATION_REQUIRED);
         if (isPermissionError) {
