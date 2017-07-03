@@ -102,10 +102,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
-            case SELFHOSTED_ONLY:
             case JETPACK_STATS:
             case WPCOM_LOGIN_DEEPLINK:
                 ActivityLauncher.showLoginEpilogueForResult(this, true);
+                break;
+            case SELFHOSTED_ONLY:
+                // skip the epilogue when only added a selfhosted site
+                setResult(Activity.RESULT_OK);
+                finish();
                 break;
         }
     }
