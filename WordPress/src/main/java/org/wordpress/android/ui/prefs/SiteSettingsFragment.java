@@ -347,6 +347,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                              ViewGroup container,
                              Bundle savedInstanceState) {
         // use a wrapper to apply the Calypso theme
+
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+            getActivity().getActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         Context themer = new ContextThemeWrapper(getActivity(), R.style.Calypso_SiteSettingsTheme);
         LayoutInflater localInflater = inflater.cloneInContext(themer);
         View view = super.onCreateView(localInflater, container, savedInstanceState);

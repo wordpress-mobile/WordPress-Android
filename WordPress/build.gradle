@@ -36,8 +36,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "7.7-rc-2"
-        versionCode 422
+        versionName "alpha-61"
+        versionCode 423
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -46,6 +46,7 @@ android {
 
         buildConfigField "boolean", "AZTEC_EDITOR_AVAILABLE", "true"
         buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "false"
+        buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "false"
     }
 
     productFlavors {
@@ -56,6 +57,7 @@ android {
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             buildConfigField "boolean", "SHARING_FEATURE_AVAILABLE", "true"
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
@@ -76,6 +78,7 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             ext.enableCrashlytics = false
         }
     }
@@ -141,6 +144,8 @@ dependencies {
     compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:8680c825896d7c457f55c86bbb19357260996d0d') {
         exclude group: "com.android.volley";
     }
+
+    compile ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
     releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
     debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
