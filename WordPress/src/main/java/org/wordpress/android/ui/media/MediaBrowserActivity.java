@@ -345,10 +345,11 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
                     WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
-                    Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
-                    mMediaCapturePath = null;
-                    queueFileForUpload(uri, getContentResolver().getType(uri));
-                    trackAddMediaFromDeviceEvents(true, false, uri);
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+                        advertiseOptimizeImages();
+                    } else {
+                        enqueueLastTakenPicture();
+                    }
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
@@ -359,6 +360,41 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 break;
         }
+    }
+
+    private void enqueueLastTakenPicture() {
+        Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
+        mMediaCapturePath = null;
+        queueFileForUpload(uri, getContentResolver().getType(uri));
+        trackAddMediaFromDeviceEvents(true, false, uri);
+    }
+
+    private void advertiseOptimizeImages() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(MediaBrowserActivity.this, mSite, null);
+                    if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+                        // null or image optimization already ON. We should not be here though.
+                    } else {
+                        siteSettings.setOptimizedImage(true);
+                        siteSettings.saveSettings();
+                    }
+                }
+
+                enqueueLastTakenPicture();
+            }
+        };
+
+        DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                enqueueLastTakenPicture();
+            }
+        };
+
+        WPMediaUtils.advertiseImageOptimization(this, listener, cancelListener);
     }
 
     /**
@@ -440,11 +476,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 if (isAddMediaPopupShowing()) {
                     hideAddMediaPopup();
                 } else {
-                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        advertiseOptimizeImages();
-                    } else {
-                        showAddMediaPopup();
-                    }
+                    showAddMediaPopup();
                 }
                 return true;
             case R.id.menu_search:
@@ -464,33 +496,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void advertiseOptimizeImages() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(MediaBrowserActivity.this, mSite, null);
-                    if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
-                        // null or image optimization already ON. We should not be here though.
-                    } else {
-                        siteSettings.setOptimizedImage(true);
-                        siteSettings.saveSettings();
-                    }
-                }
-                showAddMediaPopup();
-            }
-        };
-
-        DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                showAddMediaPopup();
-            }
-        };
-
-        WPMediaUtils.advertiseImageOptimization(this, listener, cancelListener);
     }
 
     @Override
