@@ -11,7 +11,7 @@ public interface LoginListener {
     void doStartSignup();
 
     // Login Email input callbacks
-    void showMagicLinkRequestScreen(String email);
+    void gotWpcomEmail(String email);
     void loginViaSiteAddress();
     void loginViaWpcomUsernameInstead();
 

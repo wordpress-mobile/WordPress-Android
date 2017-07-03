@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
                     break;
                 case JETPACK_STATS:
+                case WPCOM_LOGIN_DEEPLINK:
                     showFragment(new LoginEmailFragment(), LoginEmailFragment.TAG);
                     break;
             }
@@ -99,6 +100,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                 finish();
                 break;
             case JETPACK_STATS:
+            case WPCOM_LOGIN_DEEPLINK:
                 ActivityLauncher.showLoginEpilogueForResult(this, true);
                 break;
         }
@@ -135,9 +137,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void showMagicLinkRequestScreen(String email) {
-        LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
-        slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
+    public void gotWpcomEmail(String email) {
+        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK) {
+            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(email);
+            slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
+        } else {
+            LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment.newInstance(email);
+            slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
+        }
     }
 
     @Override

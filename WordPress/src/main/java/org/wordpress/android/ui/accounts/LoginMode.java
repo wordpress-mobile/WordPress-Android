@@ -4,7 +4,8 @@ import android.content.Intent;
 
 public enum LoginMode {
     FULL,
-    JETPACK_STATS;
+    JETPACK_STATS,
+    WPCOM_LOGIN_DEEPLINK;
 
     private static final String ARG_LOGIN_MODE = "ARG_LOGIN_MODE";
 

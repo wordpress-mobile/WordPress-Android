@@ -123,6 +123,20 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
             loginViaSiteAddressView.setText(R.string.enter_username_instead);
         }
 
+        switch (mLoginListener.getLoginMode()) {
+            case FULL:
+                // all features enabled and with typical values
+                break;
+            case JETPACK_STATS:
+                ((TextView) rootView.findViewById(R.id.label))
+                        .setText(R.string.stats_sign_in_jetpack_different_com_account);
+                loginViaSiteAddressView.setVisibility(View.GONE);
+                break;
+            case WPCOM_LOGIN_DEEPLINK:
+                loginViaSiteAddressView.setVisibility(View.GONE);
+                break;
+        }
+
         return rootView;
     }
 
@@ -324,7 +338,7 @@ public class LoginEmailFragment extends Fragment implements TextWatcher {
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
                     EditTextUtils.hideSoftInput(mEmailEditText);
-                    mLoginListener.showMagicLinkRequestScreen(event.value);
+                    mLoginListener.gotWpcomEmail(event.value);
                 }
                 break;
             default:

@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
@@ -338,13 +340,32 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
-    public static void loginWithoutMagicLink(Activity activity) {
-        Class<?> loginClass = BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE ? LoginActivity.class : SignInActivity.class;
+    public static void loginForDeeplink(Activity activity) {
+        Intent intent;
 
-        Intent signInIntent = new Intent(activity, loginClass);
-        signInIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        signInIntent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
-        activity.startActivityForResult(signInIntent, RequestCodes.DO_LOGIN);
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        } else {
+            intent = new Intent(activity, SignInActivity.class);
+        }
+
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
+    public static void loginWithoutMagicLink(Activity activity) {
+        Intent intent;
+
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            intent = new Intent(activity, LoginActivity.class);
+            LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
+        } else {
+            intent = new Intent(activity, SignInActivity.class);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, true);
+        }
+
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     /*
