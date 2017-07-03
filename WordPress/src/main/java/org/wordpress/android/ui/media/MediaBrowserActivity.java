@@ -9,7 +9,6 @@ import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -64,7 +63,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.media.services.MediaUploadService;
-import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -346,7 +344,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 if (resultCode == Activity.RESULT_OK) {
                     WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                        advertiseOptimizeImages();
+                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                                    @Override
+                                    public void done() {
+                                        enqueueLastTakenPicture();
+                                    }
+                                });
                     } else {
                         enqueueLastTakenPicture();
                     }
@@ -367,34 +371,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMediaCapturePath = null;
         queueFileForUpload(uri, getContentResolver().getType(uri));
         trackAddMediaFromDeviceEvents(true, false, uri);
-    }
-
-    private void advertiseOptimizeImages() {
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(MediaBrowserActivity.this, mSite, null);
-                    if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
-                        // null or image optimization already ON. We should not be here though.
-                    } else {
-                        siteSettings.setOptimizedImage(true);
-                        siteSettings.saveSettings();
-                    }
-                }
-
-                enqueueLastTakenPicture();
-            }
-        };
-
-        DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                enqueueLastTakenPicture();
-            }
-        };
-
-        WPMediaUtils.advertiseImageOptimization(this, listener, cancelListener);
     }
 
     /**

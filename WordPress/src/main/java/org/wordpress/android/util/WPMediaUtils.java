@@ -87,7 +87,7 @@ public class WPMediaUtils {
      * @param site The site where to check if optimize image is already on or not.
      * @return true if we should advertise the feature, false otherwise.
      */
-    public static boolean shouldAdvertiseImageOptimization(Activity act, SiteModel site) {
+    public static boolean shouldAdvertiseImageOptimization(final Activity act, final SiteModel site) {
         boolean isPromoRequired = AppPrefs.isImageOptimizePromoRequired();
         if (!isPromoRequired) {
             return false;
@@ -109,14 +109,43 @@ public class WPMediaUtils {
         return true;
     }
 
-    public static void advertiseImageOptimization(final Activity act,
-                                                  DialogInterface.OnClickListener listener,
-                                                  DialogInterface.OnCancelListener onCancelListener) {
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(act);
+    public interface OnAdvertiseImageOptimizationListener {
+        void done();
+    }
+
+    public static void advertiseImageOptimization(final Activity activity,
+                                                  final SiteModel site,
+                                                  final OnAdvertiseImageOptimizationListener listener) {
+
+        DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(activity, site, null);
+                    if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
+                        // null or image optimization already ON. We should not be here though.
+                    } else {
+                        siteSettings.setOptimizedImage(true);
+                        siteSettings.saveSettings();
+                    }
+                }
+
+                listener.done();
+            }
+        };
+
+        DialogInterface.OnCancelListener onCancelListener = new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                listener.done();
+            }
+        };
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(activity);
         builder.setTitle(org.wordpress.android.R.string.image_optimization_promo_title);
         builder.setMessage(org.wordpress.android.R.string.image_optimization_promo_desc);
-        builder.setPositiveButton(org.wordpress.android.R.string.yes, listener);
-        builder.setNegativeButton(R.string.no, listener);
+        builder.setPositiveButton(org.wordpress.android.R.string.yes, onClickListener);
+        builder.setNegativeButton(R.string.no, onClickListener);
         builder.setOnCancelListener(onCancelListener);
         builder.show();
         // Do not ask again

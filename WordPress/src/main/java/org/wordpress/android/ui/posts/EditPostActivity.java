@@ -1788,21 +1788,16 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
                     trackAddMediaFromDeviceEvents(false, false, imageUri);
                     break;
                 case RequestCodes.TAKE_PHOTO:
-                    try {
-                        WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
-                        File f = new File(mMediaCapturePath);
-                        Uri capturedImageUri = Uri.fromFile(f);
-                        if (!addMedia(capturedImageUri)) {
-                            ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
-                        } else {
-                            trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
-                        }
-                        this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                + Environment.getExternalStorageDirectory())));
-                    } catch (RuntimeException e) {
-                        AppLog.e(T.POSTS, e);
-                    } catch (OutOfMemoryError e) {
-                        AppLog.e(T.POSTS, e);
+                    if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
+                        WPMediaUtils.advertiseImageOptimization(this, mSite,
+                                new WPMediaUtils.OnAdvertiseImageOptimizationListener() {
+                                    @Override
+                                    public void done() {
+                                        addLastTakenPicture();
+                                    }
+                                });
+                    } else {
+                        addLastTakenPicture();
                     }
                     break;
                 case RequestCodes.VIDEO_LIBRARY:
@@ -1825,6 +1820,26 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
             }
         }
     }
+
+    private void addLastTakenPicture() {
+        try {
+            WordPressMediaUtils.scanMediaFile(this, mMediaCapturePath);
+            File f = new File(mMediaCapturePath);
+            Uri capturedImageUri = Uri.fromFile(f);
+            if (!addMedia(capturedImageUri)) {
+                ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+            } else {
+                trackAddMediaFromDeviceEvents(true, false, capturedImageUri);
+            }
+            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                    + Environment.getExternalStorageDirectory())));
+        } catch (RuntimeException e) {
+            AppLog.e(T.POSTS, e);
+        } catch (OutOfMemoryError e) {
+            AppLog.e(T.POSTS, e);
+        }
+    }
+
 
     private ArrayList<MediaModel> mPendingUploads = new ArrayList<>();
 
@@ -2138,25 +2153,6 @@ public class EditPostActivity extends AppCompatActivity implements EditorFragmen
     public void onAddMediaClicked() {
         if (!isPhotoPickerShowing()) {
             showPhotoPicker();
-            if (WPMediaUtils.shouldAdvertiseImageOptimization(this, mSite)) {
-                DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which != DialogInterface.BUTTON_POSITIVE) {
-                            return;
-                        }
-                        SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(EditPostActivity.this, mSite, null);
-                        if (siteSettings == null || siteSettings.init(false).getOptimizedImage()) {
-                            // null or image optimization already ON. We should not be here though.
-                        } else {
-                            siteSettings.setOptimizedImage(true);
-                            siteSettings.saveSettings();
-                        }
-                    }
-                };
-
-                WPMediaUtils.advertiseImageOptimization(this, listener, null);
-            }
         } else {
             hidePhotoPicker();
         }
