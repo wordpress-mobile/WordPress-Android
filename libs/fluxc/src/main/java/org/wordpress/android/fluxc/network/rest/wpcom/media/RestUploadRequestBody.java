@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.media;
 
+import android.support.annotation.NonNull;
+
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody;
 import org.wordpress.android.util.AppLog;
@@ -54,7 +56,7 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
     }
 
     @Override
-    public void writeTo(BufferedSink sink) throws IOException {
+    public void writeTo(@NonNull BufferedSink sink) throws IOException {
         CountingSink countingSink = new CountingSink(sink);
         BufferedSink bufferedSink = Okio.buffer(countingSink);
         mMultipartBody.writeTo(bufferedSink);

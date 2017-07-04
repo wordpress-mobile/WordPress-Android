@@ -162,7 +162,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         AppLog.d(T.MEDIA, "starting upload for: " + media.getId());
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     AppLog.d(T.MEDIA, "media upload successful: " + response);
                     String jsonBody = response.body().string();
@@ -190,7 +190,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             }
 
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 AppLog.w(T.MEDIA, "media upload failed: " + e);
                 if (!mCurrentUploadCalls.containsKey(media.getId())) {
                     // This call has already been removed from the in-progress list - probably because it was cancelled
