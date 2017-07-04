@@ -25,7 +25,9 @@ import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.util.AppLog;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -177,6 +179,10 @@ public class MediaStore extends Store {
                 mediaError.type = MediaErrorType.TIMEOUT;
             }
 
+            if (e instanceof ConnectException || e instanceof UnknownHostException) {
+                mediaError.type = MediaErrorType.CONNECTION_ERROR;
+            }
+
             String errorMessage = e.getMessage();
             if (TextUtils.isEmpty(errorMessage)) {
                 return mediaError;
@@ -252,10 +258,11 @@ public class MediaStore extends Store {
         DB_QUERY_FAILURE,
 
         // network errors, occur in response to network requests
-        NOT_FOUND,
         AUTHORIZATION_REQUIRED,
-        PARSE_ERROR,
+        CONNECTION_ERROR,
         NOT_AUTHENTICATED,
+        NOT_FOUND,
+        PARSE_ERROR,
         REQUEST_TOO_LARGE,
         SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
         TIMEOUT,
