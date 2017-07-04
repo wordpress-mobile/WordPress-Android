@@ -57,7 +57,7 @@ import okhttp3.ResponseBody;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #fetchMediaList(SiteModel, int, String)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
+ *     (via {@link #fetchMediaList(SiteModel, int, int, String)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -220,9 +220,9 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchMediaList(final SiteModel site, final int offset, final String mimeType) {
+    public void fetchMediaList(final SiteModel site, final int number, final int offset, final String mimeType) {
         final Map<String, String> params = new HashMap<>();
-        params.put("number", String.valueOf(MediaStore.NUM_MEDIA_PER_FETCH));
+        params.put("number", String.valueOf(number));
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
         }
@@ -237,7 +237,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
-                            boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
+                            boolean canLoadMore = mediaList.size() == number;
                             notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
