@@ -34,6 +34,8 @@ import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.SiteError;
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.util.UrlUtils;
@@ -81,6 +83,13 @@ public class SiteRestClient extends BaseWPComRestClient {
         public boolean isWPCom;
     }
 
+    public static class FetchWPComSiteResponsePayload extends Payload {
+        public FetchWPComSiteResponsePayload() {}
+        public String checkedUrl;
+        public SiteModel site;
+        public SiteError error;
+    }
+
     @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
@@ -96,11 +105,10 @@ public class SiteRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SitesResponse response) {
                         List<SiteModel> siteArray = new ArrayList<>();
-
                         for (SiteWPComRestResponse siteResponse : response.sites) {
                             siteArray.add(siteResponseToSiteModel(siteResponse));
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(new SitesModel(siteArray)));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(new SitesModel(siteArray)));
                     }
                 },
                 new BaseErrorListener() {
@@ -108,19 +116,27 @@ public class SiteRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         SitesModel payload = new SitesModel(new ArrayList<SiteModel>());
                         payload.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSitesAction(payload));
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedSitesAction(payload));
                     }
                 }
         );
         add(request);
     }
 
-    public void fetchConnectSiteInfo(@NonNull final String testedUrl) {
+    public void fetchConnectSiteInfo(@NonNull final String siteUrl) {
         // Get a proper URI to reliably retrieve the scheme.
-        URI uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(testedUrl, false));
+        URI uri;
+        try {
+            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        } catch (IllegalArgumentException e) {
+            SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
+            ConnectSiteInfoPayload payload = new ConnectSiteInfoPayload(siteUrl, siteError);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(payload));
+            return;
+        }
 
         // Sanitize and encode the Url for the API call.
-        String sanitizedURL = UrlUtils.removeScheme(testedUrl);
+        String sanitizedURL = UrlUtils.removeScheme(siteUrl);
         sanitizedURL = sanitizedURL.replace("/", "::");
 
         // Make the call.
@@ -130,16 +146,68 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<ConnectSiteInfoResponse>() {
                     @Override
                     public void onResponse(ConnectSiteInfoResponse response) {
-                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(testedUrl, response);
-                        info.url = testedUrl;
+                        ConnectSiteInfoPayload info = connectSiteInfoFromResponse(siteUrl, response);
+                        info.url = siteUrl;
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(testedUrl, error);
+                        SiteError siteError = new SiteError(SiteErrorType.INVALID_SITE);
+                        ConnectSiteInfoPayload info = new ConnectSiteInfoPayload(siteUrl, siteError);
                         mDispatcher.dispatch(SiteActionBuilder.newFetchedConnectSiteInfoAction(info));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void fetchWPComSiteByUrl(@NonNull final String siteUrl) {
+        URI uri;
+        try {
+            uri = URI.create(UrlUtils.addUrlSchemeIfNeeded(siteUrl, false));
+        } catch (IllegalArgumentException e) {
+            FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+            payload.checkedUrl = siteUrl;
+            payload.error = new SiteError(SiteErrorType.INVALID_SITE);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
+            return;
+        }
+
+        String url = WPCOMREST.sites.siteUrl(uri.getHost()).getUrlV1_1();
+
+        final WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                SiteWPComRestResponse.class,
+                new Listener<SiteWPComRestResponse>() {
+                    @Override
+                    public void onResponse(SiteWPComRestResponse response) {
+                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+                        payload.checkedUrl = siteUrl;
+                        payload.site = siteResponseToSiteModel(response);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        FetchWPComSiteResponsePayload payload = new FetchWPComSiteResponsePayload();
+                        payload.checkedUrl = siteUrl;
+
+                        SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
+                        if (error instanceof WPComGsonNetworkError) {
+                            switch (((WPComGsonNetworkError) error).apiError) {
+                                case "unauthorized":
+                                    siteErrorType = SiteErrorType.UNAUTHORIZED;
+                                    break;
+                                case "unknown_blog":
+                                    siteErrorType = SiteErrorType.UNKNOWN_SITE;
+                                    break;
+                            }
+                        }
+                        payload.error = new SiteError(siteErrorType);
+
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedWpcomSiteByUrlAction(payload));
                     }
                 }
         );

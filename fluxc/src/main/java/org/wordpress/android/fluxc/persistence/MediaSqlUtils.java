@@ -29,6 +29,19 @@ public class MediaSqlUtils {
         return getMediaWithStatesQuery(site, uploadStates).getAsCursor();
     }
 
+    public static List<MediaModel> getMediaWithStatesAndMimeType(SiteModel site,
+                                                                 List<String> uploadStates,
+                                                                 String mimeType) {
+        return WellSql.select(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
+                .contains(MediaModelTable.MIME_TYPE, mimeType)
+                .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
+                .getAsModel();
+    }
+
     public static WellCursor<MediaModel> getImagesWithStatesAsCursor(SiteModel site, List<String> uploadStates) {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
@@ -330,6 +343,15 @@ public class MediaSqlUtils {
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
                 .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
+                .endGroup().endWhere().execute();
+    }
+
+    public static int deleteAllUploadedSiteMediaWithMimeType(SiteModel siteModel, String mimeType) {
+        return WellSql.delete(MediaModel.class)
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .equals(MediaModelTable.UPLOAD_STATE, MediaUploadState.UPLOADED.toString())
+                .contains(MediaModelTable.MIME_TYPE, mimeType)
                 .endGroup().endWhere().execute();
     }
 

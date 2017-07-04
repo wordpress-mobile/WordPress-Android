@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionRespo
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
@@ -117,8 +118,9 @@ public class SiteStore extends Store {
         public boolean isJetpackActive;
         public boolean isJetpackConnected;
         public boolean isWPCom;
+        public SiteError error;
 
-        public ConnectSiteInfoPayload(@NonNull String url, BaseNetworkError error) {
+        public ConnectSiteInfoPayload(@NonNull String url, SiteError error) {
             this.url = url;
             this.error = error;
         }
@@ -247,6 +249,15 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnWPComSiteFetched extends OnChanged<SiteError> {
+        public String checkedUrl;
+        public SiteModel site;
+        public OnWPComSiteFetched(String checkedUrl, @NonNull SiteModel site) {
+            this.checkedUrl = checkedUrl;
+            this.site = site;
+        }
+    }
+
     public static class SuggestDomainError implements OnChangedError {
         public SuggestDomainErrorType type;
         public String message;
@@ -272,9 +283,11 @@ public class SiteStore extends Store {
 
     public enum SiteErrorType {
         INVALID_SITE,
+        UNKNOWN_SITE,
         DUPLICATE_SITE,
         INVALID_RESPONSE,
-        GENERIC_ERROR;
+        UNAUTHORIZED,
+        GENERIC_ERROR
     }
 
     public enum SuggestDomainErrorType {
@@ -710,6 +723,9 @@ public class SiteStore extends Store {
             case FETCH_CONNECT_SITE_INFO:
                 fetchConnectSiteInfo((String) action.getPayload());
                 break;
+            case FETCH_WPCOM_SITE_BY_URL:
+                fetchWPComSiteByUrl((String) action.getPayload());
+                break;
             case IS_WPCOM_URL:
                 checkUrlIsWPCom((String) action.getPayload());
                 break;
@@ -734,13 +750,35 @@ public class SiteStore extends Store {
             case FETCHED_CONNECT_SITE_INFO:
                 handleFetchedConnectSiteInfo((ConnectSiteInfoPayload) action.getPayload());
                 break;
+            case FETCHED_WPCOM_SITE_BY_URL:
+                handleFetchedWPComSiteByUrl((FetchWPComSiteResponsePayload) action.getPayload());
+                break;
             case CHECKED_IS_WPCOM_URL:
                 handleCheckedIsWPComUrl((IsWPComResponsePayload) action.getPayload());
                 break;
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            case FETCHED_SITES:
+                handleFetchedSites((SitesModel) action.getPayload());
+                break;
         }
+    }
+
+    private void handleFetchedSites(SitesModel fetchedSites) {
+        OnSiteChanged event = new OnSiteChanged(0);
+        if (fetchedSites.isError()) {
+            // TODO: what kind of error could we get here?
+            event.error = SiteErrorUtils.genericToSiteError(fetchedSites.error);
+        } else {
+            UpdateSitesResult res = createOrUpdateSites(fetchedSites);
+            event.rowsAffected = res.rowsAffected;
+            if (res.duplicateSiteFound) {
+                event.error = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
+            SiteSqlUtils.removeWPComRestSitesAbsentFromList(fetchedSites.getSites());
+        }
+        emitChange(event);
     }
 
     private void removeSite(SiteModel site) {
@@ -879,9 +917,17 @@ public class SiteStore extends Store {
 
     private void handleFetchedConnectSiteInfo(ConnectSiteInfoPayload payload) {
         OnConnectSiteInfoChecked event = new OnConnectSiteInfoChecked(payload);
-        if (payload.isError()) {
-            event.error = new SiteError(SiteErrorType.INVALID_SITE);
-        }
+        event.error = payload.error;
+        emitChange(event);
+    }
+
+    private void fetchWPComSiteByUrl(String payload) {
+        mSiteRestClient.fetchWPComSiteByUrl(payload);
+    }
+
+    private void handleFetchedWPComSiteByUrl(FetchWPComSiteResponsePayload payload) {
+        OnWPComSiteFetched event = new OnWPComSiteFetched(payload.checkedUrl, payload.site);
+        event.error = payload.error;
         emitChange(event);
     }
 
