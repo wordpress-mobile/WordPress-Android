@@ -102,10 +102,14 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
-            case SELFHOSTED_ONLY:
             case JETPACK_STATS:
             case WPCOM_LOGIN_DEEPLINK:
                 ActivityLauncher.showLoginEpilogueForResult(this, true);
+                break;
+            case SELFHOSTED_ONLY:
+                // skip the epilogue when only added a selfhosted site
+                setResult(Activity.RESULT_OK);
+                finish();
                 break;
         }
     }
@@ -155,6 +159,13 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     public void loginViaSiteAddress() {
         LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
         slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
+    }
+
+    @Override
+    public void loginViaWpcomUsernameInstead() {
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
+                "wordpress.com", "wordpress.com", "WordPress.com", "https://s0.wp.com/i/webclip.png", true);
+        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
     @Override

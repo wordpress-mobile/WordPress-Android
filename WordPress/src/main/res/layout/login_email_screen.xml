@@ -71,7 +71,7 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
                     android:textColor="@color/blue_wordpress"
-                    android:text="@string/enter_username_password_instead"/>
+                    android:text="@string/enter_site_address_instead"/>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
