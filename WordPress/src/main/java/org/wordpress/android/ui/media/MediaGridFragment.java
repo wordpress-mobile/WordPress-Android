@@ -70,6 +70,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     static final String TAG = "media_grid_fragment";
 
+    // should be a multiple of both the column counts (3 in portrait, 4 in landscape)
+    private static final int NUM_MEDIA_PER_FETCH = 48;
+
     enum MediaFilter {
         FILTER_ALL(0),
         FILTER_IMAGES(1),
@@ -553,7 +556,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             updateEmptyView(EmptyViewMessageType.LOADING);
 
             FetchMediaListPayload payload =
-                    new FetchMediaListPayload(mSite, loadMore, mFilter.toMimeType());
+                    new FetchMediaListPayload(mSite, NUM_MEDIA_PER_FETCH, loadMore, mFilter.toMimeType());
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
         }
     }
