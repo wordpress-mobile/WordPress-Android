@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCException;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLSerializerUtils;
-import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
@@ -243,10 +242,10 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
-    public void fetchMediaList(final SiteModel site, final int offset, final String mimeType) {
+    public void fetchMediaList(final SiteModel site, final int number, final int offset, final String mimeType) {
         List<Object> params = getBasicParams(site, null);
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("number", MediaStore.NUM_MEDIA_PER_FETCH);
+        queryParams.put("number", number);
         if (offset > 0) {
             queryParams.put("offset", offset);
         }
@@ -262,7 +261,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                         List<MediaModel> mediaList = getMediaListFromXmlrpcResponse(response, site.getId());
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site via XMLRPC.GET_MEDIA_LIBRARY");
-                            boolean canLoadMore = mediaList.size() == MediaStore.NUM_MEDIA_PER_FETCH;
+                            boolean canLoadMore = mediaList.size() == number;
                             notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                         } else {
                             AppLog.w(T.MEDIA, "could not parse XMLRPC.GET_MEDIA_LIBRARY response: "
